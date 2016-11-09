@@ -52,6 +52,7 @@ under the License.
     <screen name="CommonShipmentDecorator">
         <section>
             <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="shipment" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Shipment" />
                 <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <entity-one entity-name="Shipment" value-field="shipment"/>
@@ -139,7 +140,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="ViewShipment"/>
                 <set filed="shipmentId" from-value="parameters.shipmentId"/>
                 <set field="title" value="${uiLabelMap.FacilityShipment} ${shipmentId}"/>
@@ -195,7 +195,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>                
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="EditShipment"/>
                 <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
@@ -302,7 +301,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditShipmentRouteSegments"/>
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="EditShipmentRouteSegments"/>
 
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentRouteSegments.groovy"/>
@@ -323,7 +321,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="shipmentId" from-field="parameters.shipmentId" />        
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="AddItemsFromOrder"/>        
                 <set field="title" value="${uiLabelMap.ProductAddItemsShipment} ${shipmentId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromOrder.groovy"/>
@@ -343,7 +340,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ViewShipmentReceipts"/>
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="ViewShipmentReceipts"/>
             </actions>
             <widgets>
@@ -383,7 +379,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="facilityId" value="${parameters.facilityId}"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="VerifyPick"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/VerifyPick.groovy"/>
                 <set field="activeSubMenu" value="FacilityPicking"/>
@@ -407,7 +402,6 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="title" value="${uiLabelMap.ProductPackOrder} ${facilityId}"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PackOrder"/>
                 <!-- <set field="facilityMenu" value="FacilityPackOrderSideBar"/>-->
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/PackOrder.groovy"/>
@@ -428,9 +422,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductWeighPackageOnly"/>
-                <!--
+                <!-- let fall under Facility...
                 <set field="activeMainMenuItem" value="shipment"/>  -->
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PackOrder"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/WeightPackage.groovy"/>
             </actions>
@@ -560,7 +553,6 @@ under the License.
             <actions>
                 <property-map resource="ProductEntityLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="ProductReceiveInventoryAgainstPurchaseOrder"/>
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="ProductReceiveInventoryAgainstPO"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/ReceiveInventoryAgainstPurchaseOrder.groovy"/>
@@ -583,7 +575,6 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="ProductAddItemsFromInventory"/>
-                <set field="activeMainMenuItem" value="shipment"/>
                 <set field="activeSubMenuItem" value="AddItemsFromInventory"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/AddItemsFromInventory.groovy"/>
             </actions>

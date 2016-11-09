@@ -111,7 +111,10 @@ under the License.
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
                             <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
+                                <or>
+                                    <if-compare field="doPartyAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
+                                </or>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -150,24 +153,6 @@ under the License.
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true) and (not empty context.party)}">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                     </decorator-section>
-                    <decorator-section name="body">
-                        <!-- SCIPIO: CommonPartyAppDecorator now does this base check
-                        <section>
-                            <!- do check for PARTYMGR, _VIEW permission ->
-                            <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                            </condition>
-                            <widgets>
-                         -->
-                        <decorator-section-include name="body"/>
-                        <!-- 
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                        -->
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -178,9 +163,6 @@ under the License.
             <actions/>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                      <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -191,9 +173,6 @@ under the License.
             <actions/>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -258,9 +237,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -278,52 +254,40 @@ under the License.
                     <field-map field-name="mainAction" value="VIEW"/>
                 </service>
                 <set field="hasBasePermission" from-field="permResult.hasPermission"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyInvitation}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true) and (not empty context.partyInvitation)}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true) and (not empty context.partyInvitation)}">
                         <include-menu name="PartyInvitationTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
                             <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
+                                <not><if-empty field="partyInvitation"/></not>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="partyInvitation"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="${styles.link_nav} ${styles.action_add}"/>
-                                            <link target="/ordermgr/control/orderentry?partyId=${partyInvitation.partyIdFrom}" text="${uiLabelMap.PartyInvitationNewOrder}" style="${styles.link_nav} ${styles.action_add}" url-mode="inter-app"/>
-                                        </container>
-                                        <container style="button-bar">
-                                            <section>
-                                                <condition>
-                                                    <not><if-empty field="title"/></not>
-                                                </condition>
-                                                <widgets>
-                                                    <label>${title} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
-                                                </fail-widgets>
-                                            </section>
-                                        </container>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <container style="button-bar">
+                                    <link target="editPartyInvitation" text="${uiLabelMap.PartyInvitationNewPartyInvitation}" style="${styles.link_nav} ${styles.action_add}"/>
+                                    <link target="/ordermgr/control/orderentry?partyId=${partyInvitation.partyIdFrom}" text="${uiLabelMap.PartyInvitationNewOrder}" style="${styles.link_nav} ${styles.action_add}" url-mode="inter-app"/>
+                                </container>
+                                <container style="button-bar">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="title"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <label>${title} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} "${partyInvitation.partyIdFrom}" [${partyInvitationId}]</label>
+                                        </fail-widgets>
+                                    </section>
+                                </container>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

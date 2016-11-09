@@ -24,7 +24,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

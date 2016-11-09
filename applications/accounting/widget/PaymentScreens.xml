@@ -28,8 +28,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <set field="activeMainMenuItem" value="payments"/>
-                <set field="activeSubMenuItem" value="findPayment"/>
+                <!--<set field="activeSubMenuItem" value="findPayment"/>-->
+                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -386,7 +386,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingManualTransaction"/>
-                <set field="activeMainMenuItem" value="transaction"/>
                 <set field="activeSubMenuItem" value="manualtransactiontab"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ManualTx.groovy"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>

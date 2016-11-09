@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFinancialSummaryReportOptions"/>
-                <set field="activeMainMenuItem" value="FinancialSummryReports"/>
+                <set field="activeMainMenuItem" value="FindFinAccount"/>
 
                 <set field="month" from-field="parameters.month" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
                 <set field="year" from-field="parameters.year" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
@@ -58,8 +58,6 @@ under the License.
     <screen name="FinancialSummaryDataPrep">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="FinancialSummryReports"/>
-
                 <set field="month" from-field="parameters.month" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
                 <set field="year" from-field="parameters.year" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>

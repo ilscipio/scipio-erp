@@ -341,7 +341,6 @@ under the License.
                 <set field="titleProperty" value="AccountingCreateNewDepositSlipForFinancialAccount"/>
                 <set field="activeSubMenuItem" value="findDepositSlips"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
-                <set field="activeMainMenuItem" value="FindFinAccount"/>
                 <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
                 <set field="cardType" from-field="parameters.cardType"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.fromDate"/>

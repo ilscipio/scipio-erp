@@ -364,6 +364,11 @@ under the License.
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
+        <menu-item name="EditQuote" title="${uiLabelMap.OrderQuote}">
+            <link target="EditQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
         <menu-item name="ListQuoteAttributes" title="${uiLabelMap.CommonAttributes}">
             <link target="ListQuoteAttributes">
                 <parameter param-name="quoteId"/>
@@ -625,9 +630,14 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <not><if-empty field="custRequest"/></not>
+                    <not><if-compare field="activeSubMenuItem" operator="equals" value="editRequest"/></not>
+                </or>
+            </condition>
             <link target="EditRequest"/>
         </menu-item>
         <menu-item name="createQuoteFromRequest" title="${uiLabelMap.OrderCreateQuoteFromRequest}">

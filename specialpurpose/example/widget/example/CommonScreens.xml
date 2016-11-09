@@ -93,7 +93,20 @@ under the License.
                         <include-screen name="CommonExampleAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                 <or>
+                                    <if-compare field="doExampleAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                                 </or>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ExampleViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -129,55 +142,44 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for EXAMPLE, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                                <not><if-empty field="example"/></not><!-- This is a check useful when only seed data are loaded -->
                             </condition>
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="example"/></not><!-- This is a check useful when only seed data are loaded -->
+                                        <not><if-empty field="title"/></not>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="h2">${title} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
-                                            </fail-widgets>
-                                        </section>
-                                        <container style="button-bar">
-                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_add}">
-                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
-                                            </link>
-                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_run_sys} ${styles.action_export}">
-                                                <parameter param-name="exampleId"/>
-                                                <image url-mode="raw" src="${iconsLocation}/printer.png"/>
-                                            </link>
-                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.link_run_sys} ${styles.action_export}">
-                                                <parameter param-name="exampleId"/>
-                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
-                                            </link>
-                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="${styles.link_nav} ${styles.action_view}" target-window="_blank">
-                                                <parameter param-name="topic" value="ExampleEditHelp"/>
-                                                <image url-mode="raw" src="${iconsLocation}/help.png"/>
-                                            </link>
-                                        </container>
+                                        <label style="h2">${title} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="h2">${uiLabelMap.ExampleNewExample}</label>
+                                        <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
                                     </fail-widgets>
                                 </section>
-                                <decorator-section-include name="body"/>
+                                <container style="button-bar">
+                                    <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_add}">
+                                        <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                    </link>
+                                    <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_run_sys} ${styles.action_export}">
+                                        <parameter param-name="exampleId"/>
+                                        <image url-mode="raw" src="${iconsLocation}/printer.png"/>
+                                    </link>
+                                    <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.link_run_sys} ${styles.action_export}">
+                                        <parameter param-name="exampleId"/>
+                                        <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                    </link>
+                                    <link target="help" text="${uiLabelMap.CommonHelp}" style="${styles.link_nav} ${styles.action_view}" target-window="_blank">
+                                        <parameter param-name="topic" value="ExampleEditHelp"/>
+                                        <image url-mode="raw" src="${iconsLocation}/help.png"/>
+                                    </link>
+                                </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="h2">${uiLabelMap.ExampleNewExample}</label>
                             </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -208,45 +210,34 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for EXAMPLE, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                                <not><if-empty field="exampleFeature"/></not><!-- This is a check useful when only seed data are loaded -->
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="exampleFeature"/></not><!-- This is a check useful when only seed data are loaded -->
-                                    </condition>
-                                    <widgets>
-                                        <container style="h2">
-                                            <section>
-                                                <condition>
-                                                    <not><if-empty field="title"/></not>
-                                                </condition>
-                                                <widgets>
-                                                    <label>${title} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
-                                                </fail-widgets>
-                                            </section>
-                                        </container>
-                                        <container style="button-bar">
-                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_nav} ${styles.action_add}">
-                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
-                                            </link>
-                                        </container>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <label style="h2">${uiLabelMap.ExampleNewExampleFeature}</label>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <container style="h2">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="title"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <label>${title} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
+                                        </fail-widgets>
+                                    </section>
+                                </container>
+                                <container style="button-bar">
+                                    <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_nav} ${styles.action_add}">
+                                        <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                    </link>
+                                </container>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ExampleViewPermissionError}</label>
+                                <label style="h2">${uiLabelMap.ExampleNewExampleFeature}</label>
                             </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

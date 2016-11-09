@@ -54,7 +54,10 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="@base-permission@" action="_VIEW"/>
+                                <or>
+                                    <if-compare field="do@component-resource-name@AppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
+                                </or>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>

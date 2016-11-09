@@ -27,7 +27,6 @@ under the License.
                 <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
             </condition>
             <actions>
-                <set field="activeMainMenuItem" value="Content"/>
                 <set field="titleProperty" value="PageTitleFindContent"/>
                 <set field="entityName" value="Content"/>
                 <set field="activeSubMenuItem" value="findContent"/>

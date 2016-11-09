@@ -26,7 +26,6 @@ under the License.
     <screen name="viewdatafile">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsDataFileMainTitle"/>
                 <set field="activeSubMenuItem" value="data"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/datafile/viewdatafile.groovy"/>

@@ -47,6 +47,7 @@ under the License.
     <screen name="CommonFacilityGroupDecorator">
         <section>
             <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facilityGroup" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityGroup" />
                 <set field="facilityGroupId" from-field="parameters.facilityGroupId"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
@@ -84,7 +85,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroup"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroup"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
@@ -105,7 +105,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupMembers"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupMembers"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <set field="orderByList[]" value="sequenceNum"/>
@@ -133,7 +132,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRoles"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupRoles"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <get-related value-field="facilityGroup" relation-name="FacilityGroupRole" list="facilityRoles"/>
@@ -160,7 +158,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRollup"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupRollup"/>
                 <set field="parameters.facilityGroupId" from-field="parameters.showFacilityGroupId" default-value="${parameters.facilityGroupId}"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>

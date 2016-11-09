@@ -51,6 +51,8 @@ under the License.
                 
                 <!-- TODO? the logic and decorators for this toggle work, but themes don't seem to respect context.widePage anymore
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/doc/SetDocWidePage.groovy"/>-->
+                
+                <set field="doWebtoolsAppBasePerm" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonDocumentationDecorator" location="${parameters.mainDecoratorLocation}">

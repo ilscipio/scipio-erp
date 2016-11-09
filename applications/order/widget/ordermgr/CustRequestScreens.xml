@@ -24,7 +24,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderFindRequests"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="entityName" value="CustRequest"/>
                 <set field="asm_multipleSelectForm" value="FindRequests"/>
                 <set field="asm_asmListItemPercentOfForm" value="110"/>
@@ -155,7 +154,6 @@ under the License.
             <actions>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="activeSubMenuItem" value="ViewRequest"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="titleProperty" value="PageTitleViewRequest"/>
                 <set field="showRequestManagementLinks" value="Y"/>
             </actions>
@@ -171,14 +169,13 @@ under the License.
     <screen name="EditRequest">
         <section>
             <actions>
-                <set field="titleProperty" value="OrderRequest"/>
                 <set field="activeSubMenuItem" value="editRequest"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <set field="statusId" from-field="custRequest.statusId"/>
                 <entity-one entity-name="StatusItem" value-field="currentStatus"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
+                <set field="titleProperty" value="${groovy: context.custRequest ? 'OrderRequest' : 'OrderNewRequest'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
@@ -225,7 +222,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleRequestRoles"/>
                 <set field="activeSubMenuItem" value="requestroles"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <entity-and entity-name="CustRequestParty" list="custRequestParties">
@@ -249,7 +245,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItems"/>
                 <set field="activeSubMenuItem" value="requestitems"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -280,7 +275,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestItem"/>
                 <set field="activeSubMenuItem" value="requestitem"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
                 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -316,7 +310,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItemNotes"/>
                 <set field="activeSubMenuItem" value="requestitemnotes"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
                 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -347,7 +340,6 @@ under the License.
                 <!-- 
                 <set field="activeSubMenuItem" value="requestitemrequirements"/> -->
                 <set field="activeSubMenuItem" value="workeffortrequirements"/> 
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
                 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -381,7 +373,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleRequestItemQuotes"/>
                 <set field="activeSubMenuItem" value="requestitemquotes"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
                 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -413,7 +404,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditQuoteItemForCustRequest"/>
                 <set field="activeSubMenuItem" value="requestitemquotes"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
@@ -443,7 +433,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCreateQuoteForCustRequest"/>
                 <set field="activeSubMenuItem" value="requestitemquotes"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="activeSubMenu" value="RequestItemSideBar"/>
 
                 <set field="custRequestId"  from-field="parameters.custRequestId"/>
@@ -473,7 +462,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestItemWorkEffort"/>
                 <set field="activeSubMenuItem" value="task"/>
-                <set field="activeMainMenuItem" value="request"/>
 
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="custRequestItemSeqId" from-field="parameters.custRequestItemSeqId"/>
@@ -518,7 +506,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditRequestContent"/>
                 <set field="activeSubMenuItem" value="custRequestContent"/>
-                <set field="activeMainMenuItem" value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">

@@ -75,7 +75,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLead"/>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
@@ -93,7 +92,6 @@ under the License.
     <screen name="ConvertLead">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="ConvertLead"/>
             </actions>
             <widgets>
@@ -124,7 +122,6 @@ under the License.
     <screen name="CloneLead">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="CloneLead"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/actions/CloneLead.groovy"/>
             </actions>
@@ -143,7 +140,6 @@ under the License.
     <screen name="MergeLeads">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="MergeLeads"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
@@ -176,7 +172,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLeadFromVCard"/>
-                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
@@ -211,7 +206,6 @@ under the License.
     <screen name="AddRelatedCompany">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">

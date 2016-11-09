@@ -90,7 +90,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
                 <set field="title" value="${uiLabelMap.ProductNewFacility}" />
@@ -135,22 +134,29 @@ under the License.
                         </decorator-screen>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <section>
-                                    <condition>
-                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
-                                    </condition>
-                                    <widgets>
-                                        <label style="heading">${uiLabelMap.ProductNewFacility}</label>
-                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                                    </fail-widgets>
-                                </section>
-                            </decorator-section>
-                        </decorator-screen>
+                        <section>
+                            <actions>
+                                <set field="activeMainMenuItem" value="facility"/>
+                            </actions>
+                            <widgets>
+                                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
+                                    <decorator-section name="body">
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading">${uiLabelMap.ProductNewFacility}</label>
+                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                            </fail-widgets>
+                                        </section>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
                     </fail-widgets>
                 </section>
             </widgets>
@@ -162,7 +168,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFacilityChildren" />
-                <set field="activeMainMenuItem" value="facility" />
                 <set field="activeSubMenuItem" value="FacilityChildren" />
                 <set field="facilityId" from-field="parameters.facilityId" />
                 <set field="trail" from-field="parameters.trail" default-value="${facilityId}" />
@@ -344,7 +349,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSearchInventoryItemsByLabels"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -515,7 +519,6 @@ under the License.
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleViewFacilityInventoryItemsDetails"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="ViewFacilityInventoryItemsDetails"/>
 
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
@@ -577,7 +580,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="activeSubMenuItem2" value="InventoryItemTotalsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -605,7 +607,6 @@ under the License.
     <screen name="InventoryItemGrandTotals">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="activeSubMenuItem2" value="InventoryItemGrandTotalsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -656,7 +657,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="ViewFacilityInventoryByProduct"/>
                 <set field="activeSubMenuItem2" value="InventoryAverageCostsTab"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -936,7 +936,6 @@ under the License.
             <actions>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditInventoryItem"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
                 <set field="activeSubMenu2Item" value="ViewInventoryItemDetail"/>
 
@@ -970,7 +969,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditInventoryItemLabels"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="EditFacilityInventoryItems"/>
                 <set field="activeSubMenu2Item" value="EditInventoryItemLabels"/>
 
@@ -1002,7 +1000,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PhysicalInventory"/>
                 <set field="facilityId" value="${parameters.facilityId}"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/inventory/FindFacilityPhysicalInventory.groovy"/>
@@ -1114,7 +1111,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <!--<set field="activeSubMenuItem" value="PicklistOptions"/>-->
                 <set field="activeSubMenuItem" value="PARENT"/>
 
@@ -1217,7 +1213,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PicklistManage"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
@@ -1256,7 +1251,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickingMoveStock"/>
-                <set field="activeMainMenuItem" value="facility"/>
                 <set field="activeSubMenuItem" value="PickMoveStock"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>

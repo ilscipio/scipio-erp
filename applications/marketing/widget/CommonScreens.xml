@@ -90,7 +90,21 @@ under the License.
                         <include-screen name="CommonMarketingAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <or>
+                                    <if-compare field="doMarketingAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                                </or>    
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -106,41 +120,19 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.contactListId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.contactListId}" override-by-auto-include="true">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
+                            <condition><not><if-empty field="contactListId"/></not></condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="contactListId"/></not></condition>
-                                    <widgets>
-                                        <label style="heading">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <label style="heading">${uiLabelMap.MarketingContactList} ${contactList.contactListName} [${contactListId}]</label>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

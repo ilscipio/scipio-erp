@@ -123,7 +123,21 @@ under the License.
                         <include-screen name="CommonWebtoolsAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for WEBTOOLS, _VIEW permission -->
+                            <condition>
+                                <or>
+                                    <if-compare field="doWebtoolsAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -88,7 +88,21 @@ under the License.
                         <include-screen name="CommonIsMgrAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for ASSETMAINT, _VIEW permission -->
+                            <condition>
+                                <or>
+                                    <if-compare field="doAssetMaintAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AssetMaintViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -291,8 +305,11 @@ under the License.
     <screen name="CommonIsMgrAppSideBarMenu">
         <section>
             <actions>
+                <!-- too specific?
                 <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="fixedAssetPermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/> -->
+                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="ASSETMAINT"/>
+                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

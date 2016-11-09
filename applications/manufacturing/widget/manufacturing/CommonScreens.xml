@@ -93,7 +93,21 @@ under the License.
                         <include-screen name="CommonManufacturingAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <!-- do check for Manufacturing, _VIEW permission -->
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-compare field="doManufacturingAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

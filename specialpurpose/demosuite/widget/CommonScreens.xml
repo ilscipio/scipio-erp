@@ -48,7 +48,10 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                                <or>
+                                    <if-compare field="doDemoSuiteAppBasePerm" operator="equals" type="Boolean" value="false"/>
+                                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                                </or>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>

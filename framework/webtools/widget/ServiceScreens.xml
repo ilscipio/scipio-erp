@@ -183,7 +183,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
-                <set field="activeMainMenuItem" value="services"/>
                 <set field="activeSubMenuItem" value="runService"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
             </actions>
@@ -205,7 +204,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScheduleJob"/>
-                <set field="activeMainMenuItem" value="services"/>
                 <set field="activeSubMenuItem" value="runService"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ServiceResult.groovy"/>
             </actions>

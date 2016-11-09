@@ -473,13 +473,17 @@
         <include-elements menu-name="BillingAccountTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditBudget">
+    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: redundant
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
             <link target="ListBudgets" />
         </menu-item>
         -->
+        <menu-item name="EditBudget" title="${uiLabelMap.AccountingBudget}">
+            <link target="EditBudget">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
         <menu-item name="BudgetOverview" title="${uiLabelMap.AccountingBudgetOverview}">
             <link target="BudgetOverview">
                 <parameter param-name="budgetId" />

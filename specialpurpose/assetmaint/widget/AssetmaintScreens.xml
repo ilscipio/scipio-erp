@@ -29,12 +29,12 @@
                 <set field="viewSize" value="10" />
                 <set field="createdPeriod" value="month"/>
             </actions>
-            <widgets>
-                <section>
-                    <condition><not><if-empty field="createdPeriod"/></not></condition>
-                    <widgets>                        
-                        <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
+            <widgets>                    
+                <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition><not><if-empty field="createdPeriod"/></not></condition>
+                            <widgets>    
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.WorkEffortAssignedTasks}">
@@ -67,11 +67,13 @@
                                         </screenlet>
                                     </container>
                                 </container>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                    <fail-widgets><label>${uiLabelMap.AssetMaintNoCreatedPeriodFound}</label></fail-widgets>
-                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label>${uiLabelMap.AssetMaintNoCreatedPeriodFound}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

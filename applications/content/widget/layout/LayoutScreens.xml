@@ -24,7 +24,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="FindLayout"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -62,7 +61,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="ListLayout"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -92,7 +90,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayout"/>
 
                 <set field="wrapTemplateId" value="STDWRAP001"/>
@@ -119,7 +116,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayoutSubContent"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayoutSubContent"/>
 
                 <entity-one entity-name="SubContentDataResourceView" value-field="currentValue"/>
@@ -140,7 +136,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayoutText"/>
 
                 <entity-one entity-name="SubContentDataResourceView" value-field="currentValue"/>
@@ -161,7 +156,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayoutHtml"/>
 
                 <entity-one entity-name="SubContentDataResourceView" value-field="currentValue"/>
@@ -182,7 +176,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayoutUrl"/>
 
                 <entity-one entity-name="SubContentDataResourceView" value-field="currentValue"/>
@@ -203,7 +196,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayoutImage"/>
 
                 <entity-one entity-name="SubContentDataResourceView" value-field="currentValue"/>
@@ -224,7 +216,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditLayout"/>
-                <set field="activeMainMenuItem" value="Layout"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditLayout"/>
             </actions>
             <widgets>

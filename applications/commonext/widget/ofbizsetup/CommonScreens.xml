@@ -75,9 +75,6 @@
                             </fail-widgets>
                         </section>
                     </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -94,6 +91,8 @@
                         <include-screen name="CommonSetupAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
+                        <!-- FIXME: is there a common setup VIEW app permission appropriate here? -->
+                        <!-- <if-compare field="doSetupAppBasePerm" operator="equals" type="Boolean" value="false"/>-->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

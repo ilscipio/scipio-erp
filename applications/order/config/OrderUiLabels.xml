@@ -11985,9 +11985,9 @@
         <value xml:lang="zh_TW">營業稅</value>
     </property>
     <property key="OrderSalesTaxIncluded">
-        <value xml:lang="de">Mehrwertsteuer inklusive</value>
-        <value xml:lang="en">Of which Sales Tax included</value>
-        <value xml:lang="en_GB">Of which VAT included</value>
+        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
+        <value xml:lang="en">All prices include Sales Tax</value>
+        <value xml:lang="en_GB">All prices include VAT</value>
         <value xml:lang="fr">Dont TVA incluse </value>
         <value xml:lang="it">Tasse di vendita incluse</value>
         <value xml:lang="ja">消費税込</value>

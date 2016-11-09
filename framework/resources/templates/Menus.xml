@@ -4,4 +4,9 @@
         <!-- Already included in CommonSidebar 
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off"><link target="main"/></menu-item>-->
     </menu>
+    <menu name="MainAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        always-expand-selected-or-ancestor="true">
+        <include-elements menu-name="MainAppBar" recursive="full" />
+    </menu>
+    
 </menus>

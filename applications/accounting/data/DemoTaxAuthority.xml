@@ -65,9 +65,13 @@
     <TaxAuthorityGlAccount taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" organizationPartyId="Company" glAccountId="224000"/>
     <TaxAuthorityCategory taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" productCategoryId="PC-PR-101"/> <!-- Computer Peripherals, a category to be used to test categorized rates -->
     <!-- taxAuthorityRateSeqId left blank to be auto-sequenced during the EE XML import -->
-    <TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX"
+    
+    <!-- SCIPIO: The 1% fallback is more of an example that one could define a general Sales Tax that applies automatically, when no other is applied. 
+                 As this is not really a desired behavior in the real world, we are disabling it here.
+    -->
+    <!--<TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX"
         productCategoryId="" titleTransferEnumId="" minItemPrice="25.00" minPurchase="0.00" taxShipping="N" taxPercentage="1" taxPromotions="N"
-        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax" productStoreId="ScipioShop" />
+        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax"/>-->
     
     <!-- USA TaxAuthority defs -->
     <TaxAuthority taxAuthGeoId="USA" taxAuthPartyId="USA_IRS" taxIdFormatPattern="\d{2}\-\d{7}|\d{3}\-\d{2}\-\d{4}" includeTaxInPrice="N"/>

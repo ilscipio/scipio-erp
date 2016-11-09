@@ -766,4 +766,90 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
+    <xs:element name="condition-to-field" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates children condition elements and sets a field based on the boolean result. 
+                By default, and for String/PlainString types, this returns a string having the value "true"/"false" (String type is for consistency with set operation); 
+                if Boolean type explicitly specified, returns proper Boolean true/false; 
+                special "Indicator" type returns "Y"/"N" as string;
+                all others return null by default and values can be specified through pass-value/fail-value attributes.
+                2016-11-09: New in Scipio; added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="AllConditionals" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="field" use="required" />
+            <xs:attribute name="type" default="String">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="PlainString" />
+                        <xs:enumeration value="String" />
+                        <xs:enumeration value="BigDecimal" />
+                        <xs:enumeration value="Double" />
+                        <xs:enumeration value="Float" />
+                        <xs:enumeration value="List" />
+                        <xs:enumeration value="Long" />
+                        <xs:enumeration value="Integer" />
+                        <xs:enumeration value="Date" />
+                        <xs:enumeration value="Time" />
+                        <xs:enumeration value="Timestamp" />
+                        <xs:enumeration value="Boolean" />
+                        <xs:enumeration value="Object" />
+                        <xs:enumeration value="Map" />
+                        <xs:enumeration value="Indicator" /><!-- SCIPIO: special type; returns "Y" or "N" string instead of true/false -->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="global" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="to-scope" default="screen">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="screen" />
+                        <xs:enumeration value="user" />
+                        <xs:enumeration value="application" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="pass-value">
+                <xs:annotation>
+                    <xs:documentation>Value when condition evaluates to true.
+                        Default: true for Boolean, "true" for String/PlainString, "Y" for Indicator, null for others</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="fail-value">
+                <xs:annotation>
+                    <xs:documentation>Value when condition evaluates to true.
+                        Default: false for Boolean, "false" for String/PlainString, "N" for Indicator, null for others</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="use-when">
+                <xs:annotation>
+                    <xs:documentation>A boolean expression which controls whether the command actually takes place. 
+                        Supports flexible expressions (EL, groovy:), only.
+                        Must resolve to either "true" or "false", as string representation of boolean.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="only-if-field">
+                <xs:annotation>
+                    <xs:documentation>Sets only if the target field is empty or null (empty includes null).
+                        NOTE: 2016-11-09: this respects the global flag if globalContext is present, 
+                            but currently does not respect the to-scope (FIXME?).</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="null" />
+                        <xs:enumeration value="empty" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

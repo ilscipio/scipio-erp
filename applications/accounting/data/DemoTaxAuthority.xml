@@ -67,7 +67,7 @@
     <!-- taxAuthorityRateSeqId left blank to be auto-sequenced during the EE XML import -->
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX"
         productCategoryId="" titleTransferEnumId="" minItemPrice="25.00" minPurchase="0.00" taxShipping="N" taxPercentage="1" taxPromotions="N"
-        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax"/>
+        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax" productStoreId="ScipioShop" />
     
     <!-- USA TaxAuthority defs -->
     <TaxAuthority taxAuthGeoId="USA" taxAuthPartyId="USA_IRS" taxIdFormatPattern="\d{2}\-\d{7}|\d{3}\-\d{2}\-\d{4}" includeTaxInPrice="N"/>

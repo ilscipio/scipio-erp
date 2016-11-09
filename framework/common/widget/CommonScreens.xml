@@ -1434,11 +1434,20 @@ under the License.
     
         Accepts context fields:
         
+        Conditions (Booleans):
+        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.condList - list of extra booleans to check (logically ANDed)
+        
         Permissions:
+        NOTE: 2016-09-11: The perm fields below are limited to simple checks; it is now possible and frequently easier to use
+            cond/condList boolean above in conjunction with the new condition-to-field element instead (see widget-common.xsd), such as:
+            <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                <if-has-permission permission="CATALOG" action="_VIEW"/>
+            </condition-fo-field>
         * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
         * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
-        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (default: none)
-          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs
+        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (logically ANDed) (default: none)
+          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs 
         * commonSideBarMenu.permServ - single map of arguments for a permission service
           * name - service name
           * mainAction - main action
@@ -1447,10 +1456,6 @@ under the License.
           * resource - the resourceDescription arg of permission service interface
         * commonSideBarMenu.permServList - list of maps for permission service calls
           each map supports the same members as permServ
- 
-        Conditions (Booleans):
-        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
-        * commonSideBarMenu.condList - list of extra booleans to check
 
         Menu config:
         * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 

@@ -41,6 +41,7 @@ import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -116,6 +117,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelatedOne(modelWidget, actionElement);
         } else if ("get-related".equals(actionElement.getNodeName())) {
             return new GetRelated(modelWidget, actionElement);
+        } else if ("condition-to-field".equals(actionElement.getNodeName())) { // SCIPIO: new
+            return new ConditionToField(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
             return IncludeActions.newInstance(modelWidget, actionElement);
         } else {
@@ -1103,6 +1106,240 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             runIncludedActions(widget.getSection().getActions(), context);
         }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;condition-to-field&gt; element.
+     * <p>
+     * NOTE: largely derived from SetField.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ConditionToField extends AbstractModelAction {
+        
+        private static final Map<String, Object> defaultPassValueMap;
+        private static final Map<String, Object> defaultFailValueMap;
+        static {
+            Map<String, Object> map = new HashMap<>();
+            map.put("Boolean", Boolean.TRUE);
+            map.put("String", "true");
+            map.put("PlainString", "true");
+            map.put("Indicator", "Y");
+            defaultPassValueMap = map;
+            map = new HashMap<>();
+            map.put("Boolean", Boolean.FALSE);
+            map.put("String", "false");
+            map.put("PlainString", "false");
+            map.put("Indicator", "N");
+            defaultFailValueMap = map;
+        }
+        
+        private final ModelCondition condition;
+        private final FlexibleMapAccessor<Object> field;
+        private final FlexibleStringExpander globalExdr;
+        private final String toScope;
+        private final String type;
+        private final FlexibleStringExpander passValueExdr;
+        private final FlexibleStringExpander failValueExdr;
+        private final FlexibleStringExpander useWhenExdr;
+        private final boolean onlyIfFieldNull;
+        private final boolean onlyIfFieldEmpty;
+
+        public ConditionToField(ModelWidget modelWidget, Element condToFieldElement) {
+            super(modelWidget, condToFieldElement);
+            this.field = FlexibleMapAccessor.getInstance(condToFieldElement.getAttribute("field"));
+            this.globalExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("global"));
+            this.type = condToFieldElement.getAttribute("type");
+            this.toScope = condToFieldElement.getAttribute("to-scope");
+            this.passValueExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("pass-value"));
+            this.failValueExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("fail-value"));
+            this.useWhenExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("use-when"));
+            List<? extends Element> children = UtilXml.childElementList(condToFieldElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, 
+                    UtilValidate.isNotEmpty(children) ? children.get(0) : null);
+            this.onlyIfFieldNull = "null".equals(condToFieldElement.getAttribute("only-if-field"));
+            this.onlyIfFieldEmpty = "empty".equals(condToFieldElement.getAttribute("only-if-field"));
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        private static Object getDefaultVal(boolean condResult, String type) {
+            if (UtilValidate.isEmpty(type)) {
+                type = "String";
+            }
+            return condResult ? defaultPassValueMap.get(type) : defaultFailValueMap.get(type);
+        }
+        
+        @SuppressWarnings("rawtypes")
+        @Override
+        public void runAction(Map<String, Object> context) {
+            String globalStr = this.globalExdr.expandString(context);
+            // default to false
+            boolean global = "true".equals(globalStr);
+            
+            if (!this.useWhenExdr.getOriginal().isEmpty()) {
+                String setIf = this.useWhenExdr.expandString(context);
+                if ("false".equals(setIf)) {
+                    return;
+                } else if (!"true".equals(setIf)) {
+                    throw new IllegalArgumentException("use-when expression '" + 
+                            this.useWhenExdr.getOriginal() + "' in condition-to-field evaluated to non-boolean expression: " + setIf);
+                }
+            }
+            if (onlyIfFieldNull || onlyIfFieldEmpty) {
+                Object currValue;
+                if (global) {
+                    Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                    if (globalCtx != null) {
+                        currValue = this.field.get(globalCtx);
+                    } else {
+                        currValue = this.field.get(context);
+                    }
+                } else {
+                    currValue = this.field.get(context);
+                }
+                if ((onlyIfFieldNull && currValue == null) || (onlyIfFieldEmpty && ObjectType.isEmpty(currValue))) {
+                    ; // we're good
+                } else {
+                    return; // skip
+                }
+            }
+
+            boolean condResult = condition.eval(context);
+            
+            Object newValue = null;
+            boolean convertType;
+            if (condResult) {
+                if (!this.passValueExdr.getOriginal().isEmpty()) {
+                    convertType = true;
+                    newValue = this.passValueExdr.expandString(context);
+                } else {
+                    convertType = false; // optimized
+                    newValue = getDefaultVal(condResult, this.type);
+                }
+            } else {
+                if (!this.failValueExdr.getOriginal().isEmpty()) {
+                    convertType = true;
+                    newValue = this.failValueExdr.expandString(context);
+                } else {
+                    convertType = false; // optimized
+                    newValue = getDefaultVal(condResult, this.type);
+                }
+            }
+            
+            // SCIPIO: NOTE: code below is copied from SetField.runAction
+            // TODO: r
+            
+            if (convertType && UtilValidate.isNotEmpty(this.type)) {
+                try {
+                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, (TimeZone) context.get("timeZone"),
+                            (Locale) context.get("locale"), true);
+                } catch (GeneralException e) {
+                    String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName()
+                            + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
+                
+            }
+            if (this.toScope != null && this.toScope.equals("user")) {
+                String originalName = this.field.getOriginalName();
+                List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
+                String newKey = "";
+                if (currentWidgetTrail != null) {
+                    newKey = StringUtil.join(currentWidgetTrail, "|");
+                }
+                if (UtilValidate.isNotEmpty(newKey)) {
+                    newKey += "|";
+                }
+                newKey += originalName;
+                HttpSession session = (HttpSession) context.get("session");
+                session.setAttribute(newKey, newValue);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue,
+                            module);
+            } else if (this.toScope != null && this.toScope.equals("application")) {
+                String originalName = this.field.getOriginalName();
+                List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
+                String newKey = "";
+                if (currentWidgetTrail != null) {
+                    newKey = StringUtil.join(currentWidgetTrail, "|");
+                }
+                if (UtilValidate.isNotEmpty(newKey)) {
+                    newKey += "|";
+                }
+                newKey += originalName;
+                ServletContext servletContext = (ServletContext) context.get("application");
+                servletContext.setAttribute(newKey, newValue);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: "
+                            + newValue, module);
+            } else {
+                // only do this if it is not global, if global ONLY put it in the global context
+                if (!global) {
+                    if (Debug.verboseOn())
+                        Debug.logVerbose("Setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                    this.field.put(context, newValue);
+                }
+            }
+            if (global) {
+                Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                if (globalCtx != null) {
+                    this.field.put(globalCtx, newValue);
+                } else {
+                    this.field.put(context, newValue);
+                }
+            }
+            // this is a hack for backward compatibility with the JPublish page object
+            Map<String, Object> page = UtilGenerics.checkMap(context.get("page"));
+            if (page != null) {
+                this.field.put(page, newValue);
+            }
+        }
+
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public FlexibleMapAccessor<Object> getField() {
+            return field;
+        }
+
+        public FlexibleStringExpander getGlobalExdr() {
+            return globalExdr;
+        }
+
+        public String getToScope() {
+            return toScope;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public FlexibleStringExpander getPassValueExdr() {
+            return passValueExdr;
+        }
+
+        public FlexibleStringExpander getFailValueExdr() {
+            return failValueExdr;
+        }
+
+        public FlexibleStringExpander getUseWhenExdr() {
+            return useWhenExdr;
+        }
+
+        public boolean isOnlyIfFieldNull() {
+            return onlyIfFieldNull;
+        }
+
+        public boolean isOnlyIfFieldEmpty() {
+            return onlyIfFieldEmpty;
+        }
+
     }
     
     /**

@@ -180,6 +180,58 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilitySettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilitySettings"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityInventoryDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityInventory"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityPickingDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityPicking"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityPackOrderDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityPackOrder"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="main">
         <section>
             <actions>

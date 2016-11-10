@@ -28,21 +28,13 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ShipmentGatewayConfig"/> 
             </actions>
             <widgets>
-                <!-- main defines the regions of the HTML page -->
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
                     </decorator-section>
-                <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
-                                
-                                <!-- Now call the SimpleScreen form -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
+                        <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -61,18 +53,14 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericShipmentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindShipmentGatewayConfig" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListShipmentGatewayConfig" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindShipmentGatewayConfig" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListShipmentGatewayConfig" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -164,18 +152,14 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericShipmentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindShipmentGatewayConfigTypes" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListShipmentGatewayConfigTypes" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindShipmentGatewayConfigTypes" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListShipmentGatewayConfigTypes" location="component://product//widget/facility/ShipmentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

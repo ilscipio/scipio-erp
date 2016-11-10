@@ -116,6 +116,9 @@ under the License.
     <screen name="CommonWebtoolsAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonWebtoolsAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -123,7 +126,18 @@ under the License.
                         <include-screen name="CommonWebtoolsAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for WEBTOOLS, _VIEW permission -->
+                            <condition>
+                                <if-true field="commonWebtoolsAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -290,7 +304,9 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="entity"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -324,6 +340,7 @@ under the License.
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <!-- SCIPIO: TODO: review: it seems like there should be a different perm check here... -->
                             <!-- do check for WEBTOOLS, _VIEW permission -->
                             <condition>
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
@@ -348,7 +365,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="importExport" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -378,8 +397,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="artifact" />
  
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="sideBarMenu" type="NewMap" value="" />
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -412,7 +432,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
                 <!-- SCIPIO: force this item -->
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="labels"/>
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -442,7 +464,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -475,20 +499,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for WEBTOOLS, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -501,7 +511,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
-                <set field="commonSideBarMenu.permList[]" value="ENTITY_MAINT"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="ENTITY_MAINT"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -577,38 +589,15 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: cloned from component://common/widget/SecurityScreens.xml#SecurityDecorator -->
+    <!-- SCIPIO: new
+        TODO?: currently skips the WEBTOOLS perm check, but not really important  -->
     <screen name="SecurityDecorator">
         <section>
             <actions>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
-                <!-- SCIPIO: NOTE: activeSubMenu still supports a location prefix. It is still wanted in this case, in case
-                    the complex nested menu (which doesn't use the location prefix) render fails, because here the fallback menu's location is not in the default Admin menus file.
-                    Also note that "SideBar" suffix is automatically added to the name (SecurityGroupSideBar), so it's not needed here. -->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
-                <service service-name="securityPermissionCheck" result-map="permResult">
-                    <field-map field-name="mainAction" value="VIEW"/>
-                </service>
-                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.SecurityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
+                <decorator-screen name="SecurityDecorator" location="component://common/widget/SecurityScreens.xml">
                 </decorator-screen>
             </widgets>
         </section>
@@ -663,7 +652,10 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
+    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu 
+        NOTE: DefMainSideBarMenu is expected to be safe to render even if the user is missing necessary permissions for the app.
+            Typically used for fallback for missing permissions (even if none of the entries are accessible).
+            For regular browsing it is preferable to invoke MainSideBarMenu with activeSubMenu="TOP", though this can work as well. -->
     <screen name="DefMainSideBarMenu">
         <section>
             <actions>
@@ -682,8 +674,10 @@ under the License.
     <screen name="CommonWebtoolsAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="WEBTOOLS"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonWebtoolsAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonWebtoolsAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

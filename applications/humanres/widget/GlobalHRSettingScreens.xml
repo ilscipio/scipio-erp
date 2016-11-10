@@ -23,7 +23,7 @@
     <screen name="EditSkillTypes">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="SkillType"/>
+                <set field="activeSubMenuItem" value="SkillType"/>
                 <set field="titleProperty" value="PageTitleListSkillTypes"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <entity-one entity-name="SkillType" value-field="skillType"/>
@@ -84,7 +84,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPositionTypes"/>
-                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem" value="EmplPositionTypes"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
                 <set field="emplPositionTypeCtx" from-field="parameters"/>
@@ -113,7 +112,6 @@
     <screen name="EditEmplPositionTypes">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem2" value="EditEmplPositionType"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
@@ -134,11 +132,7 @@
                             </widgets>
                         </section>
                         <screenlet>
-                            <section>
-                                <widgets>
-                                    <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -149,7 +143,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmplPositionTypeRate"/>
-                <set field="activeMainMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem" value="EmplPositionTypes"/>
                 <set field="activeSubMenuItem2" value="EditEmplPositionTypeRate"/>
                 <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
@@ -230,7 +223,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeaveType"/>
-                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <set field="activeSubMenuItem" value="EmplLeaveType"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <entity-one entity-name="EmplLeaveType" value-field="emplLeaveType"/>
@@ -252,7 +244,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmplReasonType"/>
-                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <!--<set field="activeSubMenuItem" value="EmplLeaveReasonType"/>-->
                 <set field="activeSubMenuItem" value="EmplLeaveType"/>
                 <set field="emplLeaveReasonTypeId" from-field="parameters.emplLeaveReasonTypeId"/>
@@ -275,23 +266,18 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePublicHoliday"/>
-                <set field="activeMainMenuItem" value="GlobalHRSettings"/>
                 <set field="activeSubMenuItem" value="publicHoliday"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet id="addPublicHoliday" title="${uiLabelMap.PageTitleAddPublicHoliday}" collapsible="true">
-                                    <include-form name="AddPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </screenlet>
-                                <screenlet id="listPublicHoliday" title="${uiLabelMap.PageTitlePublicHolidayList}" collapsible="true">
-                                    <include-form name="ListPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet id="addPublicHoliday" title="${uiLabelMap.PageTitleAddPublicHoliday}" collapsible="true">
+                            <include-form name="AddPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <screenlet id="listPublicHoliday" title="${uiLabelMap.PageTitlePublicHolidayList}" collapsible="true">
+                            <include-form name="ListPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

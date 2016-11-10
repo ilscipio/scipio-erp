@@ -284,7 +284,7 @@ under the License.
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
+                            <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
                         </container>
                         <include-screen name="orderHeader"/>
                         <container style="clear"/>
@@ -352,22 +352,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet>
-                                    <container>
-                                        <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
-                                    </container>
-                                    <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <container>
+                            <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
+                        </container>
+                        <screenlet>
+                            <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

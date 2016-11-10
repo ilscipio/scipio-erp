@@ -75,9 +75,6 @@
                             </fail-widgets>
                         </section>
                     </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -86,7 +83,12 @@
     <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonSetupAppDecorator">
         <section>
-            <actions>
+            <actions>   
+                <!-- FIXME: is there a common setup VIEW app permission appropriate here?
+                <condition-to-field field="commonSetupAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="SETUP" action="_VIEW"/>
+                </condition-to-field> -->
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -94,7 +96,17 @@
                         <include-screen name="CommonSetupAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonSetupAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -239,9 +251,12 @@
     <screen name="CommonSetupAppSideBarMenu">
         <section>
             <actions>
-                <!-- FIXME? no permission checks on any of the screens? maybe not needed...? -->
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value=""/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value=""/>
+                <!-- FIXME: is there a common setup VIEW app permission appropriate here?
+                <condition-to-field field="commonSetupAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="SETUP" action="_VIEW"/>
+                </condition-to-field> -->
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" value="true"/>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonWebtoolsAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

@@ -26,7 +26,6 @@ under the License.
     <screen name="viewdatafile">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsDataFileMainTitle"/>
                 <set field="activeSubMenuItem" value="data"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/datafile/viewdatafile.groovy"/>
@@ -290,6 +289,97 @@ under the License.
                     <screenlet title="Screen widget include-screens directive test">
                         <include-screen name="DemoExtraWidget1"/>
                         <include-screen name="DemoExtraWidget2"/>
+                    </screenlet>
+                    
+                    <screenlet title="New widget condition-to-field element">
+                        <section share-scope="false">
+                            <actions>
+                                <set field="testField1" value="someValue"/>
+                                <set field="testField2" value="someValue2"/>
+                                
+                                <condition-to-field field="boolRes1" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <condition-to-field field="boolRes2" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="NOTsomeValue"/>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="indicatorRes1" type="Indicator">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                <condition-to-field field="indicatorRes2" type="Indicator">
+                                    <and>
+                                        <if-compare field="testField1" operator="not-equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="stringRes1" type="String">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                    </and>
+                                </condition-to-field>
+                                <condition-to-field field="stringRes2" type="PlainString" fail-value="this is fail-value with some interpolated field ${testField2}">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="not-equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="mapRes1" type="Map" pass-value="{hey=you, its=me}">
+                                    <or>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                    </or>
+                                </condition-to-field>
+                                <condition-to-field field="mapRes2" type="Map" pass-value="{hey=you, its=me}"><!-- tests null -->
+                                    <or>
+                                        <if-compare field="testField1" operator="not-equals" value="someValue"/>
+                                    </or>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="testMap.testBoolList[]">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <condition-to-field field="testMap.testBoolList[]" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="NOTsomeValue"/>
+                                </condition-to-field>
+                                
+                                <set field="boolRes3" value="this is non-empty, won't be overridden"/>
+                                <condition-to-field field="boolRes3" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <set field="boolRes4" value=""/>
+                                <condition-to-field field="boolRes4" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="commonSideBarMenuEmu.cond" type="Boolean" only-if-field="empty">
+                                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                    </or>
+                                </condition-to-field>
+                            </actions>
+                            <widgets>
+                                <label text="boolRes1: '${boolRes1}'"/>
+                                <label text="boolRes2: '${boolRes2}'"/>
+                                <label text="indicatorRes1: '${indicatorRes1}'"/>
+                                <label text="indicatorRes2: '${indicatorRes2}'"/>
+                                <label text="stringRes1: '${stringRes1}'"/>
+                                <label text="stringRes2: '${stringRes2}'"/>
+                                <label text="mapRes1: '${mapRes1}'"/>
+                                <label text="mapRes2 (should be null/empty): '${mapRes2}'"/>
+                                <label text="testMap.testBoolList: '${testMap.testBoolList}'"/>
+                                <label text="boolRes3 (only-if-field='empty'): '${boolRes3}'"/>
+                                <label text="boolRes4 (only-if-field='empty'): '${boolRes4}'"/>
+                                <label text="commonSideBarMenuEmu.cond: '${commonSideBarMenuEmu.cond}'"/>
+                            </widgets>
+                        </section>
                     </screenlet>
                 </screenlet>
             </widgets>

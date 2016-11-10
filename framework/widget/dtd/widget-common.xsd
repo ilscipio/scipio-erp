@@ -33,6 +33,8 @@ under the License.
             <xs:element ref="if-compare-field" />
             <xs:element ref="if-regexp" />
             <xs:element ref="if-empty" />
+            <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
         </xs:choice>
     </xs:complexType>
     <xs:element name="AllConditionals" abstract="true" />
@@ -235,6 +237,26 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="if-empty" substitutionGroup="AllConditionals">
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if-true" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean true
+                OR the string value "true" (case-sensitive).
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if-false" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean false
+                OR the string value "false" (case-sensitive).
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="field" use="required" />
         </xs:complexType>

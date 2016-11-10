@@ -635,16 +635,12 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.ImageManagementShareImage}">
-                                    <include-form name="ImageShare" location="component://product/widget/catalog/ImageManagementForms.xml"/>
-                                    <platform-specific>
-                                        <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageShare.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.ImageManagementShareImage}">
+                            <include-form name="ImageShare" location="component://product/widget/catalog/ImageManagementForms.xml"/>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageShare.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

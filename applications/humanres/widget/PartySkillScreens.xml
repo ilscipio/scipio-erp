@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartySkill"/>
-                <set field="activeMainMenuItem" value="EmplSkills"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- EmplSkills -->
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partySkillsCtx" from-field="parameters"/>
             </actions>
@@ -33,13 +33,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="NewPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="NewPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindPartySkills" location="component://humanres/widget/forms/PartySkillForms.xml"></include-form>
@@ -57,7 +53,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartySkill"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditPartySkills"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
@@ -80,7 +75,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartySkill"/>
-                <set field="activeMainMenuItem" value="PartySkills"/>
+                <set field="activeMainMenuItem" value="Employees"/><!-- EmplSkills -->
                 <set field="partyId" from-field="parameters.employeePartyId"/>
                 <set field="skillTypeId" from-field="parameters.skillTypeId"/>
                 <entity-one entity-name="PartySkill" value-field="partySkill"/>
@@ -89,11 +84,7 @@
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResNewPartySkill}">
-                            <section>
-                                <widgets>
-                                    <include-form name="AddPartySkills" location="component://humanres/widget/forms/PartySkillForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="AddPartySkills" location="component://humanres/widget/forms/PartySkillForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

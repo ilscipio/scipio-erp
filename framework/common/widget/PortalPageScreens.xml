@@ -102,7 +102,7 @@ under the License.
     <screen name="ManagePortalPages">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Dashboard"/>
+                <set field="activeMainMenuItem" value="main"/><!-- Dashboard -->
                 <set field="layoutSettings.javaScripts[]" value="/images/myportal.js" global="true"/>
                 <set field="layoutSettings.styleSheets[+0]" value="/images/myportal.css" global="true"/>
                 <entity-one entity-name="PortalPage" value-field="portalPage"/>

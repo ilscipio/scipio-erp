@@ -22384,4 +22384,28 @@
         <value xml:lang="en">Vendors</value>
         <value xml:lang="fr">Vendeurs</value>
     </property>
+    <property key="AccountingUserOrgNotSpecified">
+        <value xml:lang="de">Benutzer/Organisation nicht angegeben</value>
+        <value xml:lang="en">User/Organization not specified</value>
+    </property>
+    <property key="AccountingBudget">
+        <value xml:lang="de">Budget</value>
+        <value xml:lang="en">Budget</value>
+        <value xml:lang="fr">Budgétaire</value>
+        <value xml:lang="hi_IN">बजट</value>
+        <value xml:lang="it">Bilancio Preventivo</value>
+        <value xml:lang="ja">予算</value>
+        <value xml:lang="nl">Budget</value>
+        <value xml:lang="pt">Orçamento</value>
+        <value xml:lang="ro">Bilant Preventiv</value>
+        <value xml:lang="ru">Бюджет</value>
+        <value xml:lang="th">งบประมาณ</value>
+        <value xml:lang="vi">Ngân sách</value>
+        <value xml:lang="zh">预算</value>
+        <value xml:lang="zh_TW">預算</value>
+    </property>
+    <property key="AccountingPaymentNotFound">
+        <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
+        <value xml:lang="en">Payment ${paymentId} not found...</value>
+    </property>
 </resource>

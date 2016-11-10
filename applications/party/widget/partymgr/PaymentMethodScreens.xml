@@ -38,8 +38,8 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="hasViewPermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPayInfoPermission" operator="equals" value="true" type="Boolean"/>
+                                    <if-true field="hasViewPermission" />
+                                    <if-true field="hasPayInfoPermission" />
                                 </or>
                             </condition>
                             <widgets>

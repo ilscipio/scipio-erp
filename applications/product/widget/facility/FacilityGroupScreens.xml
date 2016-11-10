@@ -47,35 +47,13 @@ under the License.
     <screen name="CommonFacilityGroupDecorator">
         <section>
             <actions>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facilityGroup" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityGroup" />
                 <set field="facilityGroupId" from-field="parameters.facilityGroupId"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -84,7 +62,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroup"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroup"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
             </actions>
@@ -105,7 +82,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupMembers"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupMembers"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <set field="orderByList[]" value="sequenceNum"/>
@@ -133,7 +109,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRoles"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupRoles"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>
                 <get-related value-field="facilityGroup" relation-name="FacilityGroupRole" list="facilityRoles"/>
@@ -160,7 +135,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFacilityGroupRollup"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
                 <set field="activeSubMenuItem" value="EditFacilityGroupRollup"/>
                 <set field="parameters.facilityGroupId" from-field="parameters.showFacilityGroupId" default-value="${parameters.facilityGroupId}"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>

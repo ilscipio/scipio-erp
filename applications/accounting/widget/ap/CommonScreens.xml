@@ -74,14 +74,28 @@ under the License.
     <screen name="CommonApAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonApAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ACCOUNTING, _VIEW permission -->
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonApAppSideBarMenu"/>
                     </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                    <decorator-section name="body">              
+                        <section>
+                            <condition>
+                                <if-true field="commonApAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -149,23 +163,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="editVendor" text="${uiLabelMap.CommonNew} ${uiLabelMap.PartyVendor}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindVendors" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListVendors" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="editVendor" text="${uiLabelMap.CommonNew} ${uiLabelMap.PartyVendor}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindVendors" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListVendors" location="component://accounting/widget/ap/forms/VendorForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -179,10 +189,9 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
                 
                 <!-- sidebar additional perm check -->
-                <set field="permServ" value=""/>
-                <set field="permServ.name" value="acctgInvoicePermissionCheck"/>
-                <set field="permServ.mainAction" value="VIEW"/>
-                <set field="commonSideBarMenu.permServList[]" from-field="permServ"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -222,20 +231,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
-                            </fail-widgets>
-                        </section>
+                        <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -257,22 +255,18 @@ under the License.
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <not><if-empty field="paymentGroup"/></not>
+                            </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="paymentGroup"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="heading">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <label style="heading">${uiLabelMap.AccountingPaymentGroupOverviewFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
                             </widgets>
+                            <fail-widgets>
+                                <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>
+                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -286,13 +280,6 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>            </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -306,9 +293,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -395,8 +379,10 @@ under the License.
     <screen name="CommonApAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="acctgBasePermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+                <condition-to-field field="commonApAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonApAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

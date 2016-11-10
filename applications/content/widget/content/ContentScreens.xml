@@ -23,11 +23,7 @@ under the License.
 
     <screen name="FindContent">
         <section>
-            <condition>
-                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-            </condition>
             <actions>
-                <set field="activeMainMenuItem" value="Content"/>
                 <set field="titleProperty" value="PageTitleFindContent"/>
                 <set field="entityName" value="Content"/>
                 <set field="activeSubMenuItem" value="findContent"/>
@@ -38,35 +34,24 @@ under the License.
             <widgets>
                 <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <!--<link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}"/>
-                                            <link target="ContentSearchOptions" text="${uiLabelMap.CommonAdvancedSearch}" style="${styles.link_nav} ${styles.action_find}"/>-->
-                                            <include-menu name="contentMenu" location="component://content/widget/content/ContentMenus.xml"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindContent" location="component://content/widget/content/ContentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListContent" location="component://content/widget/content/ContentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <!--<link target="EditContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}"/>
+                                    <link target="ContentSearchOptions" text="${uiLabelMap.CommonAdvancedSearch}" style="${styles.link_nav} ${styles.action_find}"/>-->
+                                    <include-menu name="contentMenu" location="component://content/widget/content/ContentMenus.xml"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindContent" location="component://content/widget/content/ContentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListContent" location="component://content/widget/content/ContentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-            <fail-widgets>
-                <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <label style="common-msg-error-perm">${uiLabelMap.ContentUpdatePermissionError}</label>
-                    </decorator-section>
-                </decorator-screen>
-            </fail-widgets>
         </section>
     </screen>
     <screen name="findContentSearchResults">
@@ -97,23 +82,19 @@ under the License.
             <widgets>
                 <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="left">
-                                    <screenlet>
-                                        <container id="EditDocumentTree"/>
-                                        <include-screen name="navigateMenu"/>
-                                    </screenlet>
+                        <container style="left">
+                            <screenlet>
+                                <container id="EditDocumentTree"/>
+                                <include-screen name="navigateMenu"/>
+                            </screenlet>
+                        </container>
+                        <container style="leftonly">
+                            <screenlet title="${uiLabelMap.ContentContent}">
+                                <container id="Document">
+                                    <include-screen name="ListDocument"/>
                                 </container>
-                                <container style="leftonly">
-                                    <screenlet title="${uiLabelMap.ContentContent}">
-                                        <container id="Document">
-                                            <include-screen name="ListDocument"/>
-                                        </container>
-                                    </screenlet>
-                                </container>
-                           </widgets>
-                        </section>
+                            </screenlet>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -381,19 +362,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleListWebSite}">
-                                    <include-form name="ListWebSites" location="component://content/widget/content/ContentForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.PageTitleListWebSite}">
+                            <include-form name="ListWebSites" location="component://content/widget/content/ContentForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

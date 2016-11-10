@@ -489,4 +489,16 @@ under the License.
         </menu-item>
     </menu>
     
+    <!-- SCIPIO: new -->
+    <menu name="FacilitySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditFacility" title="${uiLabelMap.ProductNewFacility}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditFacility"/>
+        </menu-item>
+        <menu-item name="ViewCalendar" title="${uiLabelMap.CommonViewCalendar}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="/workeffort/control/calendar" url-mode="inter-app">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
 </menus>

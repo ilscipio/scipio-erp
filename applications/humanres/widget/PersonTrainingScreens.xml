@@ -136,7 +136,7 @@
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="isCalOwner" operator="equals" value="true" type="Boolean"/>
+                                    <if-true field="isCalOwner" />
                                     <if-empty field="workEffort"/>
                                 </or>
                             </condition>

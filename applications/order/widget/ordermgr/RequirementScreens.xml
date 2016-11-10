@@ -196,11 +196,10 @@ under the License.
     <screen name="EditRequirement">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditRequirement"/>
                 <set field="activeSubMenuItem" value="EditRequirement"/>
-
                 <set field="requirementId" from-field="parameters.requirementId"/>
                 <entity-one entity-name="Requirement" value-field="requirement" auto-field-map="true"/>
+                <set field="titleProperty" value="${groovy: context.requirementId ? 'PageTitleEditRequirement' : 'OrderNewRequirement'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequirementDecorator" location="${parameters.mainDecoratorLocation}">

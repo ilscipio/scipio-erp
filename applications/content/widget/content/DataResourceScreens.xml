@@ -22,7 +22,6 @@ under the License.
     <screen name="FindDataResource">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="findDataResource"/>
                 <set field="titleProperty" value="PageTitleFindDataResource"/>
                 <set field="labelTitleProperty" value="PageTitleFindDataResource"/>
@@ -77,6 +76,7 @@ under the License.
                 <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <!-- FIXME?: missing <condition here?... -->
                             <widgets>
                                 <container id="cmsnav" style="left">
                                     <screenlet title="${uiLabelMap.PageTitleNavigateDataResources}">
@@ -85,11 +85,7 @@ under the License.
                                 </container>
                                 <container id="content-main-section" style="leftonly">
                                     <container id="cmscontent">
-                                        <section>
-                                            <widgets>
-                                                <include-screen name="listDataResources"/>
-                                            </widgets>
-                                        </section>
+                                        <include-screen name="listDataResources"/>
                                     </container>
                                 </container>
                             </widgets>
@@ -154,7 +150,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResource"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResource"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editDataResource"/>
                 <set field="dataResourceId" from-field="parameters.dataResourceId"/>
                 <entity-one entity-name="DataResource" value-field="currentValue"/>
@@ -204,7 +199,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleUploadImageDataResource"/>
                 <set field="labelTitleProperty" value="PageTitleUploadImageDataResource"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="uploadImage"/>
                 <entity-one entity-name="DataResource" value-field="currentValue">
                     <field-map field-name="dataResourceId" from-field="parameters.dataResourceId"/>
@@ -230,7 +224,6 @@ under the License.
     <screen name="AddDataResource">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="adddataresource"/>
             </actions>
             <widgets>
@@ -247,7 +240,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAddDataResourceText"/>
                 <set field="labelTitleProperty" value="PageTitleAddDataResourceText"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="adddataresourcetext"/>
             </actions>
             <widgets>
@@ -264,7 +256,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAddDataResourceUrl"/>
                 <set field="labelTitleProperty" value="PageTitleAddDataResourceUrl"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="adddataresourceurl"/>
             </actions>
             <widgets>
@@ -282,7 +273,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAddDataResourceUpload"/>
                 <set field="labelTitleProperty" value="PageTitleAddDataResourceUpload"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="adddataresourceupload"/>
             </actions>
             <widgets>
@@ -299,7 +289,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleAddDataResourceFromContent"/>
                 <set field="labelTitleProperty" value="PageTitleAddDataResourceFromContent"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="adddataresource"/>
             </actions>
             <widgets>
@@ -316,7 +305,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceText"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceText"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editdataresourcetext"/>
             </actions>
             <widgets>
@@ -333,7 +321,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceUrl"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceUrl"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editdataresourceurl"/>
             </actions>
             <widgets>
@@ -350,7 +337,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceUpload"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceUpload"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editdataresourceupload"/>
             </actions>
             <widgets>
@@ -367,7 +353,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditElectronicText"/>
                 <set field="labelTitleProperty" value="PageTitleEditElectronicText"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editElectronicText"/>
                 <entity-one entity-name="DataResource" value-field="currentValue"/>
             </actions>
@@ -387,7 +372,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceAttribute"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceAttribute"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editDataResourceAttribute"/>
                 <entity-one entity-name="DataResource" value-field="currentValue">
                     <field-map field-name="dataResourceId" from-field="parameters.dataResourceId"/>
@@ -411,7 +395,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceRole"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceRole"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editDataResourceRole"/>
                 <entity-one entity-name="DataResource" value-field="currentValue">
                     <field-map field-name="dataResourceId" from-field="parameters.dataResourceId"/>
@@ -435,7 +418,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceProductFeatures"/>
                 <set field="labelTitleProperty" value="PageTitleEditDataResourceProductFeatures"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editDataResourceProductFeatures"/>
                 <entity-one entity-name="DataResource" value-field="currentValue">
                     <field-map field-name="dataResourceId" from-field="parameters.dataResourceId"/>
@@ -459,7 +441,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditHtmlText"/>
                 <set field="labelTitleProperty" value="PageTitleEditHtmlText"/>
-                <set field="activeMainMenuItem" value="DataResource"/>
                 <set field="activeSubMenuItem" value="editHtmlText"/>
                 <entity-one entity-name="DataResource" value-field="currentValue"/>
             </actions>

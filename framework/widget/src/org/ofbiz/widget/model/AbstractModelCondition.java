@@ -202,6 +202,10 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return new IfRegexp(factory, modelWidget, conditionElement);
             } else if ("if-empty".equals(nodeName)) {
                 return new IfEmpty(factory, modelWidget, conditionElement);
+            } else if ("if-true".equals(nodeName)) { // SCIPIO: new
+                return new IfTrue(factory, modelWidget, conditionElement);
+            } else if ("if-false".equals(nodeName)) { // SCIPIO: new
+                return new IfFalse(factory, modelWidget, conditionElement);
             } else if ("if-entity-permission".equals(nodeName)) {
                 return new IfEntityPermission(factory, modelWidget, conditionElement);
             } else {
@@ -390,6 +394,74 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         public boolean eval(Map<String, Object> context) {
             Object fieldVal = this.fieldAcsr.get(context);
             return ObjectType.isEmpty(fieldVal);
+        }
+
+        public FlexibleMapAccessor<Object> getFieldAcsr() {
+            return fieldAcsr;
+        }
+
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;if-true&gt; element. 
+     * 2016-11-09: New element, added for 1.14.3.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfTrue extends AbstractModelCondition {
+        private final FlexibleMapAccessor<Object> fieldAcsr;
+
+        private IfTrue(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            String fieldAcsr = condElement.getAttribute("field");
+            if (fieldAcsr.isEmpty())
+                fieldAcsr = condElement.getAttribute("field-name");
+            this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            Object fieldVal = this.fieldAcsr.get(context);
+            return (Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal));
+        }
+
+        public FlexibleMapAccessor<Object> getFieldAcsr() {
+            return fieldAcsr;
+        }
+
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;if-false&gt; element. 
+     * 2016-11-09: New element, added for 1.14.3.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfFalse extends AbstractModelCondition {
+        private final FlexibleMapAccessor<Object> fieldAcsr;
+
+        private IfFalse(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            String fieldAcsr = condElement.getAttribute("field");
+            if (fieldAcsr.isEmpty())
+                fieldAcsr = condElement.getAttribute("field-name");
+            this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            Object fieldVal = this.fieldAcsr.get(context);
+            return (Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal));
         }
 
         public FlexibleMapAccessor<Object> getFieldAcsr() {

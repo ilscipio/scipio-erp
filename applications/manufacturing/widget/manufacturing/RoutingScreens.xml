@@ -31,50 +31,23 @@ under the License.
                 
                 <set field="workEffortNameStr" value=" ${routing.workEffortName} [${routing.workEffortId}]"/>
                 <set field="titleFormat" value="\${finalTitle}${groovy: context.routing ? context.workEffortNameStr : ''}"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.routing}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!-- override left-column for routing field check -->
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
-                                    <not><if-empty field="routing"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                        <!--<section>
                             <condition>
-                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                <not><if-empty field="routing"/></not>
                             </condition>
                             <widgets>
-                                <!--<section>
-                                    <condition>
-                                        <not><if-empty field="routing"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="RoutingTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
-                                    </widgets>
-                                </section>-->
-                                <!-- SCIPIO: integrate into title like other apps
-                                <label style="heading">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label> -->
-                                <decorator-section-include name="body"/>
+                                <include-menu name="RoutingTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        </section>-->
+                        <!-- SCIPIO: integrate into title like other apps
+                        <label style="heading">[${uiLabelMap.CommonId} ${routing.workEffortId}] ${routing.workEffortName}</label> -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -91,49 +64,22 @@ under the License.
                 
                 <set field="workEffortNameStr" value=" ${routingTask.workEffortName} [${routingTask.workEffortId}]"/>
                 <set field="titleFormat" value="\${finalTitle}${groovy: context.routingTask ? context.workEffortNameStr : ''}"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.routingTask}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!-- override left-column for routingTask field check -->
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
-                                    <not><if-empty field="routingTask"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                        <!--<section>
                             <condition>
-                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                <not><if-empty field="routingTask"/></not>
                             </condition>
                             <widgets>
-                                <!--<section>
-                                    <condition>
-                                        <not><if-empty field="routingTask"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="RoutingTaskTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
-                                    </widgets>
-                                </section>-->
-                                <!--<label style="heading">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>-->
-                                <decorator-section-include name="body"/>
+                                <include-menu name="RoutingTaskTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        </section>-->
+                        <!--<label style="heading">[${uiLabelMap.CommonId} ${routingTask.workEffortId}] ${routingTask.workEffortName}</label>-->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -146,7 +92,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindRouting"/>
                 <!--<set field="activeSubMenuItem" value="findRouting"/>-->
                 <set field="activeSubMenuItem" value="PARENT"/>
-                <set field="activeMainMenuItem" value="routing"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -157,23 +102,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -216,7 +157,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindRoutingTask"/>
                 <!--<set field="activeSubMenuItem" value="routingTask"/>  -->
                 <set field="activeSubMenuItem" value="PARENT"/>
-                <set field="activeMainMenuItem" value="routingTask"/>
 
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROU_TASK"/>
                 <set field="requestParameters.currentStatusId" to-scope="screen" default-value="ROU_ACTIVE"/>
@@ -224,23 +164,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

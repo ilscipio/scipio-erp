@@ -91,9 +91,9 @@ under the License.
     <screen name="EditPartyInvitation">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitlePartyInvitation"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
+                <set field="titleProperty" value="${groovy: context.partyInvitation ? 'PageTitlePartyInvitation' : 'PartyInvitationNewPartyInvitation'}"/>
                 <set field="activeSubMenuItem" value="${groovy: context.partyInvitation ? 'EditPartyInvitation' : 'PARENT-NOSUB'}"/>
             </actions>
             <widgets>

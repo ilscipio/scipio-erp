@@ -49,6 +49,9 @@
         <!--<menu-item name="classification">
             <sub-menu name="PartyClassification" include="PartyClassificationSideBar"/>
         </menu-item>-->
+        <menu-item name="security">
+            <sub-menu name="SecurityGroup" include="component://common/widget/SecurityMenus.xml#SecurityGroupSideBar"/>
+        </menu-item>
         <menu-item name="partyinv">
             <sub-menu name="PartyInvitation" include="PartyInvitationSideBar"/>
         </menu-item>
@@ -384,6 +387,18 @@
     </menu>
     <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
+    </menu>
+    
+    <!-- SCIPIO: new (combined links) -->
+    <menu name="PartyInvitationSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="editPartyInvitation" title="${uiLabelMap.PartyInvitationNewPartyInvitation}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="editPartyInvitation"/>
+        </menu-item>
+        <menu-item name="invitationNewOrder" title="${uiLabelMap.PartyInvitationNewOrder}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="/ordermgr/control/orderentry" url-mode="inter-app">
+                <parameter param-name="partyId" from-field="partyInvitation.partyIdFrom"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="addShipper">

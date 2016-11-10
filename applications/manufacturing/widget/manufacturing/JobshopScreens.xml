@@ -26,55 +26,28 @@ under the License.
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="jobshop"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="ProductionRun"/>
                 <set field="titleFormat" value="\${finalTitle} ${context.productionRunId}"/>
+                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.productionRun}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!-- override default left-column because extra productionRun check is needed -->
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
-                                    <not><if-empty field="productionRun"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
+                        <!-- SCIPIO: use sidebar
                         <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                                <not><if-empty field="productionRun"/></not>
                             </condition>
                             <widgets>
-                                <!-- SCIPIO: use sidebar
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="productionRun"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="ProductionRunTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
-                                    </widgets>
-                                </section>-->
-                                <!-- SCIPIO: combine into title, like other apps do
-                                <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>-->
-                                <!-- SCIPIO: TODO: REVIEW: maybe don't need this on every screen? -->
-                                <container style="button-bar">
-                                    <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="ProductionRunTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        </section>-->
+                        <!-- SCIPIO: combine into title, like other apps do
+                        <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>-->
+                        <!-- SCIPIO: TODO: REVIEW: maybe don't need this on every screen? -->
+                        <container style="button-bar">
+                            <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_add}"/>
+                        </container>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -559,23 +532,19 @@ under the License.
                 <!-- SCIPIO: NOTE: if this use main-decorator, means jobshop sub-menu only show after a prod. run is chosens -->
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="findProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="listFindProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="findProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="listFindProductionRun" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

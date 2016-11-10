@@ -96,7 +96,6 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsGeosLink"/>
                 <set field="currentUrl" value="LinkGeos"/>
-                <set field="activeMainMenuItem" value="Geos"/>
                 <set field="activeSubMenuItem" value="LinkGeos"/>
                 
                 <set field="noId" value="true"/><!-- see CommonGeoManagementDecorator -->

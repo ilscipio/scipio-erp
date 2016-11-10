@@ -29,10 +29,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                            </widgets>
-                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -281,9 +281,6 @@ under the License.
     </screen>
     <screen name="FindCompDoc">
         <section>
-            <condition>
-                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-            </condition>
             <actions>
                 <set field="menuName" value="empty"/>
                 <set field="titleProperty" value="PageTitleFindCompDoc"/>

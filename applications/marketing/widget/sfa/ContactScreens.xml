@@ -33,42 +33,38 @@ under the License.
                 <set field="title" value="${uiLabelMap.SfaContacts}"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> -->
-                    <decorator-screen name="CommonContactDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
+                <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
+                <decorator-screen name="CommonContactDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                <container style="no-clear">
-                                    <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                        <decorator-section name="search-options">
-                                            <!-- <include-menu name="ContactFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-                                            <include-form name="FindContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
-                                        </decorator-section>
-                                        <decorator-section name="search-results">
-                                            <section>
-                                                <condition>
-                                                    <or>
-                                                        <if-empty field="parameters.all"/>
-                                                        <if-compare field="parameters.all" operator="equals" value="true"/>
-                                                    </or>
-                                                </condition>
-                                                <widgets>
-                                                    <!-- list all contacts -->
-                                                    <!-- <label style="heading" text="${uiLabelMap.SfaAllContacts}"/> -->
-                                                    <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <!-- list my contacts -->
-                                                    <!-- <label style="heading" text="${uiLabelMap.SfaMyContacts}"/> -->
-                                                    <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
-                                                </fail-widgets>
-                                            </section>
-                                        </decorator-section>
-                                    </decorator-screen>
-                                </container>
-                            </widgets>
-                        </section>
+                        <include-menu name="ContactSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <container>
+                            <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                <decorator-section name="search-options">
+                                    <!-- <include-menu name="ContactFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                    <include-form name="FindContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                </decorator-section>
+                                <decorator-section name="search-results">
+                                    <section>
+                                        <condition>
+                                            <or>
+                                                <if-empty field="parameters.all"/>
+                                                <if-compare field="parameters.all" operator="equals" value="true"/>
+                                            </or>
+                                        </condition>
+                                        <widgets>
+                                            <!-- list all contacts -->
+                                            <!-- <label style="heading" text="${uiLabelMap.SfaAllContacts}"/> -->
+                                            <include-form name="ListContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <!-- list my contacts -->
+                                            <!-- <label style="heading" text="${uiLabelMap.SfaMyContacts}"/> -->
+                                            <include-form name="ListMyContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
+                                        </fail-widgets>
+                                    </section>
+                                </decorator-section>
+                            </decorator-screen>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

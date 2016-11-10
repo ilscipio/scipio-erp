@@ -86,6 +86,10 @@ under the License.
     <screen name="CommonManufacturingAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonManufacturingAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for Manufacturing, _VIEW permission -->
+                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -93,7 +97,17 @@ under the License.
                         <include-screen name="CommonManufacturingAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonManufacturingAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -131,8 +145,11 @@ under the License.
     <screen name="CommonManufacturingAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="MANUFACTURING"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonManufacturingAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for Manufacturing, _VIEW permission -->
+                    <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonManufacturingAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

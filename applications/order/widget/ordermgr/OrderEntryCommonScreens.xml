@@ -28,9 +28,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -44,22 +41,18 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderEntryBaseDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <platform-specific>
                                     <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryTabBar.ftl"/></html>
                                 </platform-specific>
-                                    </container>
-                                </container>
-                                <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <decorator-section-include name="body"/>
-                                    </container>
-                                </container>
-                            </widgets>
-                        </section>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -78,18 +71,15 @@ under the License.
                     </decorator-section>                    
                     -->                    
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="screenlet">
-                                    <platform-specific>
-                                        <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCatalogTabBar.ftl"/></html>
-                                    </platform-specific>
-                                    <container style="screenlet-body">
-                                        <decorator-section-include name="body"/>
-                                    </container>
-                                </container>
-                            </widgets>
-                        </section>
+                        <!-- SCIPIO: TODO: review these style classes, may conflict? -->
+                        <container style="screenlet">
+                            <platform-specific>
+                                <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCatalogTabBar.ftl"/></html>
+                            </platform-specific>
+                            <container style="screenlet-body">
+                                <decorator-section-include name="body"/>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

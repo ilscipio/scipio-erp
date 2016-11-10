@@ -109,15 +109,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReturnDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="component://order/webapp/ordermgr/return/returnItems.ftl"/>
-                                    </html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://order/webapp/ordermgr/return/returnItems.ftl"/>
+                            </html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

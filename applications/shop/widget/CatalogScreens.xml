@@ -503,11 +503,7 @@ under the License.
                 </section>
             </widgets>
             <fail-widgets>
-                <section>
-                   <widgets>
-                        <include-screen name="category"/>
-                   </widgets>
-                </section>
+                <include-screen name="category"/>
             </fail-widgets>
         </section>
     </screen>

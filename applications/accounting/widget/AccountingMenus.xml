@@ -473,13 +473,17 @@
         <include-elements menu-name="BillingAccountTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditBudget">
+    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: redundant
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
             <link target="ListBudgets" />
         </menu-item>
         -->
+        <menu-item name="EditBudget" title="${uiLabelMap.AccountingBudget}">
+            <link target="EditBudget">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
         <menu-item name="BudgetOverview" title="${uiLabelMap.AccountingBudgetOverview}">
             <link target="BudgetOverview">
                 <parameter param-name="budgetId" />
@@ -877,6 +881,22 @@
                 <parameter param-name="glAccountCategoryId" />
             </link>
         </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new, replaces manual links -->
+    <menu name="GlAccountListSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListGlAccountsReport" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListGlAccountsReport"/>
+        </menu-item>
+        <menu-item name="ListGlAccountsExport" title="${uiLabelMap.CommonExport}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListGlAccountsExport"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new, combined bar -->
+    <menu name="GlAccountListCombinedTabBar" items-sort-mode="off" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="GlSettingTabBar" recursive="full"/>
+        <include-menu-items menu-name="GlAccountListSubTabBar" recursive="full"/>
     </menu>
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -1747,6 +1767,19 @@
             </link>
         </menu-item>
           -->
+    </menu>
+
+    <!-- SCIPIO: new (NOTE THE PLURAL) -->
+    <menu name="PaymentsSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="newPayment" title="${uiLabelMap.AccountingNewPayment}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="newPayment" />
+        </menu-item>
+        <menu-item name="FindSalesInvoicesByDueDate" title="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <link target="FindSalesInvoicesByDueDate" />
+        </menu-item>
+        <menu-item name="FindPurchaseInvoicesByDueDate" title="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <link target="FindPurchaseInvoicesByDueDate" />
+        </menu-item>
     </menu>
 
     <menu name="PaymentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -40,20 +40,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet>
-                                    <include-form name="FilterUserJobs" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                    <include-form name="UserJobsList" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="FilterUserJobs" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                            <include-form name="UserJobsList" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -69,22 +59,14 @@ under the License.
                 <service service-name="getWorkEffortAssignedActivitiesByRole"/>
                 <service service-name="getWorkEffortAssignedActivitiesByGroup"/>
                 <service service-name="getWorkEffortAssignedTasks"/>
+                
+                <!-- NOTE: HERE WE DO GENERIC PERMISSION instead of manager -->
+                <condition-to-field field="commonWorkEffortAppBasePermCond" type="Boolean">
+                    <if-service-permission service-name="workEffortGenericPermission" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="workEffortGenericPermission" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/task/mytasks.ftl"/></html></platform-specific>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -200,19 +182,15 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="button-bar">
-                                    <link target="AddWorkEffortAndAssoc" text="${uiLabelMap.WorkEffortAddChild}" style="${styles.link_nav} ${styles.action_add}">
-                                        <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
-                                    </link>
-                                    <link target="AddWorkEffortAssoc" text="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" style="${styles.link_nav} ${styles.action_add}">
-                                        <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
-                                    </link>
-                                </container>
-                                <include-tree name="TreeWorkEffort" location="component://workeffort/widget/WorkEffortTrees.xml"/>
-                            </widgets>
-                        </section>
+                        <container style="button-bar">
+                            <link target="AddWorkEffortAndAssoc" text="${uiLabelMap.WorkEffortAddChild}" style="${styles.link_nav} ${styles.action_add}">
+                                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
+                            </link>
+                            <link target="AddWorkEffortAssoc" text="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" style="${styles.link_nav} ${styles.action_add}">
+                                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
+                            </link>
+                        </container>
+                        <include-tree name="TreeWorkEffort" location="component://workeffort/widget/WorkEffortTrees.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -831,25 +809,21 @@ under the License.
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <if-empty field="workEffort"/>
+                            </condition>
+                            <actions>
+                                <set field="quickAssignPartyId" from-field="userLogin.partyId"/>
+                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <if-empty field="workEffort"/>
-                                    </condition>
-                                    <actions>
-                                        <set field="quickAssignPartyId" from-field="userLogin.partyId"/>
-                                    </actions>
-                                    <widgets>
-                                        <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <container style="button-bar">
-                                            <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                        <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                    </fail-widgets>
-                                </section>
+                                <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
+                            <fail-widgets>
+                                <container style="button-bar">
+                                    <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                                <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -870,11 +844,7 @@ under the License.
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-form name="EditICalendarData" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                            </widgets>
-                        </section>
+                        <include-form name="EditICalendarData" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -894,11 +864,7 @@ under the License.
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-tree name="ICalendarTree" location="component://workeffort/widget/WorkEffortTrees.xml"/>
-                            </widgets>
-                        </section>
+                        <include-tree name="ICalendarTree" location="component://workeffort/widget/WorkEffortTrees.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -917,12 +883,8 @@ under the License.
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-form name="EditICalendarPartyAssign" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                <include-form name="ListICalendarPartyAssigns" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                            </widgets>
-                        </section>
+                        <include-form name="EditICalendarPartyAssign" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <include-form name="ListICalendarPartyAssigns" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -941,12 +903,8 @@ under the License.
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-form name="EditICalendarFixedAssetAssign" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                                <include-form name="ListICalendarFixedAssetAssigns" location="component://workeffort/widget/WorkEffortForms.xml"/>
-                            </widgets>
-                        </section>
+                        <include-form name="EditICalendarFixedAssetAssign" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <include-form name="ListICalendarFixedAssetAssigns" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -969,13 +927,9 @@ under the License.
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://workeffort/webapp/workeffort/workeffort/ICalendarHelp.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://workeffort/webapp/workeffort/workeffort/ICalendarHelp.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

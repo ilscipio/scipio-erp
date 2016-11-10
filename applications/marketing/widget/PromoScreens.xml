@@ -43,15 +43,10 @@ under the License.
                             </container>
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
-                                    <section>
-                                        <widgets>
-                                            <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
-                                        </widgets>
-                                    </section>
+                                    <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
                                 </screenlet>
                             </container>
                         </container>
-                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -202,13 +197,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">  
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
+                        </platform-specific>
                         <section>
                             <condition>
                                 <not>

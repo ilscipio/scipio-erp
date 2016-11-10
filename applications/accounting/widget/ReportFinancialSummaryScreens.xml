@@ -248,10 +248,10 @@ under the License.
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
                                     <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                                    <container >
+                                    <container>
                                         <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
                                     </container>
-                                    <container >
+                                    <container>
                                         <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
                                     </container>
                                 </screenlet>
@@ -310,20 +310,12 @@ under the License.
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container >
-                            <label text="${uiLabelMap.AccountingTrialBalance}"/>
-                        </container>
-                        <container >
-                            <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
-                        </container>
+                        <container><label text="${uiLabelMap.AccountingTrialBalance}"/></container>
+                        <container><label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/></container>
                         <include-form name="TrialBalanceFinancialTimePeriodSelection" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                        <container >
-                            <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
-                        </container>
-                        <container >
-                            <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
-                        </container>
+                        <container><label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/></container>
+                        <container><label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/></container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

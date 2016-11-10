@@ -101,11 +101,7 @@
                                         <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
                                     </fail-widgets>
                                 </section>
-                                <section>
-                                    <widgets>
-                                        <include-form name="EditFacility" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
-                                    </widgets>
-                                </section>
+                                <include-form name="EditFacility" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>

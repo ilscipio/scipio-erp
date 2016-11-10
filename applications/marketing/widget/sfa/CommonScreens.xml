@@ -86,6 +86,9 @@ under the License.
     <screen name="CommonSfaAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonSfaAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -96,10 +99,7 @@ under the License.
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
-                                <or>
-                                    <if-compare field="doSfaAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonSfaAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -397,7 +397,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                        <if-true field="showOld" />
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
@@ -737,8 +737,10 @@ under the License.
     <screen name="CommonSfaAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="MARKETING"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonSfaAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonSfaAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

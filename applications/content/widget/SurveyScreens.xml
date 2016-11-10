@@ -30,29 +30,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSurveyDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <!-- SCIPIO: Duplicate
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar"><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                    </decorator-section>
-                                    -->
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindSurvey" location="component://content/widget/survey/SurveyForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListFindSurvey" location="component://content/widget/survey/SurveyForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <!-- SCIPIO: Duplicate
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar"><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
+                            </decorator-section>
+                            -->
+                            <decorator-section name="search-options">
+                                <include-form name="FindSurvey" location="component://content/widget/survey/SurveyForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListFindSurvey" location="component://content/widget/survey/SurveyForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -65,34 +55,13 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/SurveyMenus.xml#Survey" />
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="survey"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.surveyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.surveyId}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <container><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <container><link text="${uiLabelMap.ContentSurveyCreate}" target="EditSurvey" style="${styles.link_nav} ${styles.action_add}"/></container>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

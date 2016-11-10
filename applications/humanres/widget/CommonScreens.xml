@@ -88,6 +88,10 @@ under the License.
     <screen name="CommonHumanResAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonHumanResAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for HumanRes, _VIEW permission -->
+                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -96,13 +100,9 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- SCIPIO: factors out the HUMANRES_VIEW perm check for body for all others  -->
-                        <!-- do check for HumanRes, _VIEW permission -->
                         <section>
                             <condition>
-                                <or>
-                                    <if-compare field="doHumanResAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonHumanResAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -168,11 +168,7 @@ under the License.
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.FormFieldTitle_company}">
-                    <section>
-                        <widgets>
-                            <platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/category/CategoryTree.ftl"/></html></platform-specific>
-                        </widgets>
-                    </section>
+                    <platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/category/CategoryTree.ftl"/></html></platform-specific>
                 </screenlet>
             </widgets>
         </section>
@@ -365,10 +361,9 @@ under the License.
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
                 
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
-                <set field="permServ" value=""/>
-                <set field="permServ.name" value="partyBasePermissionCheck"/>
-                <set field="permServ.mainAction" value="VIEW"/>
-                <set field="commonSideBarMenu.permServList[]" from-field="permServ"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -506,8 +501,11 @@ under the License.
     <screen name="CommonHumanResAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="HUMANRES"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonHumanResAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for HumanRes, _VIEW permission -->
+                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonHumanResAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

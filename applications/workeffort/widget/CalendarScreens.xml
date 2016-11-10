@@ -252,7 +252,7 @@ under the License.
                             <and>
                                 <not><if-empty field="workEffort" /></not>
                                 <if-compare field="workEffort.currentStatusId" operator="not-equals" value="CAL_CANCELLED" />
-                                <if-compare field="isCalOwner" operator="equals" value="true" type="Boolean" />
+                                <if-true field="isCalOwner" />
                             </and>
                             <if-empty field="workEffort" />
                             <if-has-permission permission="WORKEFFORTMGR" action="_ADMIN" />

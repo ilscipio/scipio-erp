@@ -195,7 +195,7 @@ under the License.
                  <set field="userLoginId" from-field="editUserLogin.userLoginId"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.UserLoginUpdateSecuritySettings}">
+                <screenlet><!--  title="${uiLabelMap.UserLoginUpdateSecuritySettings}" -->
                     <include-form name="updateUserLoginSecurity" location="component://common/widget/SecurityForms.xml"/>
                 </screenlet>
             </widgets>
@@ -300,27 +300,39 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: WARN: as-is, this will skip the including app's base perm check (but securityPermissionCheck is probably fine) -->
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
-                <service service-name="securityPermissionCheck" result-map="permResult">
-                    <field-map field-name="mainAction" value="VIEW"/>
-                </service>
-                <set field="hasBasePermission" from-field="permResult.hasPermission"/>
+                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="security"/><!-- server -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
+
+                <condition-to-field field="commonSecurityBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
-                        <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupSideBar"/>
+                    <decorator-section name="left-column" use-when="${(context.widePage != true)}" override-by-auto-include="true"><!--  and (context.commonSecurityBasePermCond == true) -->
+                        <section>
+                            <condition>
+                                <if-true field="commonSecurityBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
-                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true)}" override-by-auto-include="true">
+                    <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.commonSecurityBasePermCond == true)}" override-by-auto-include="true">
                         <include-menu location="component://common/widget/SecurityMenus.xml" name="SecurityGroupTabBar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
+                                <if-true field="commonSecurityBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>

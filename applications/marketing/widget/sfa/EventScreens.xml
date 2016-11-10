@@ -42,16 +42,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.SfaTaskAssignedToMe}" navigation-form-name="MyTasks">
-                                    <include-form name="MyTasks" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.SfaTaskAssignedByMe}" navigation-form-name="MyTasks">
-                                    <include-form name="TasksAssignedByMe" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.SfaTaskAssignedToMe}" navigation-form-name="MyTasks">
+                            <include-form name="MyTasks" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.SfaTaskAssignedByMe}" navigation-form-name="MyTasks">
+                            <include-form name="TasksAssignedByMe" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -65,13 +61,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
-                                    <include-form name="EditEvent" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
+                            <include-form name="EditEvent" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

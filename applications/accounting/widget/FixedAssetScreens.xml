@@ -80,17 +80,20 @@ under the License.
     <screen name="EditFixedAsset">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFixedAsset"/>
                 <set field="activeSubMenuItem" value="EditFixedAsset"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
+                <set field="titleProperty" value="${groovy: context.fixedAsset ? 'PageTitleEditFixedAsset' : 'AccountingNewFixedAsset'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                <and>
+                                    <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    <not><if-empty field="fixedAsset"/></not>
+                                </and>
                             </condition>
                             <widgets>
                                 <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="${styles.link_nav} ${styles.action_add}"/></container>
@@ -466,84 +469,80 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationHistory}">
+                            <label>${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
+                            <label>${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
+                            <label>${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
+                            <label>${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
+                            <label>${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
+                            <label>${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
+                            <section>
+                                <condition>
+                                    <and>
+                                        <not><if-empty field="assetDepreciationResultMap.plannedPastDepreciationTotal"/></not>
+                                        <not><if-empty field="fixedAsset.partyId"/></not>
+                                        <if-compare-field field="assetDepreciationResultMap.plannedPastDepreciationTotal" to-field="depreciation" operator="greater" type="BigDecimal"/>
+                                    </and>
+                                </condition>
+                                <actions>
+                                    <service service-name="getGlAccountFromAccountType" result-map="defaultCreditAccountForDepreciationTransactionResult">
+                                        <field-map field-name="organizationPartyId" from-field="fixedAsset.partyId"/>
+                                        <field-map field-name="acctgTransTypeId" value="DEPRECIATION"/>
+                                        <field-map field-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
+                                        <field-map field-name="debitCreditFlag" value="C"/>
+                                    </service>
+                                    <set field="defaultCreditAccountForDepreciationTransaction" from-field="defaultCreditAccountForDepreciationTransactionResult.glAccountId" default-value=" "/>
+                                    <service service-name="getGlAccountFromAccountType" result-map="defaultDebitAccountForDepreciationTransactionResult">
+                                        <field-map field-name="organizationPartyId" from-field="fixedAsset.partyId"/>
+                                        <field-map field-name="acctgTransTypeId" value="DEPRECIATION"/>
+                                        <field-map field-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
+                                        <field-map field-name="debitCreditFlag" value="D"/>
+                                    </service>
+                                    <set field="defaultDebitAccountForDepreciationTransaction" from-field="defaultDebitAccountForDepreciationTransactionResult.glAccountId" default-value=" "/>
+                                </actions>
+                                <widgets>
+                                    <container>
+                                        <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.link_nav_long} ${styles.action_add}" target="CreateAcctgTransAndEntries">
+                                            <parameter param-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
+                                            <parameter param-name="organizationPartyId" from-field="fixedAsset.partyId"/>
+                                            <parameter param-name="acctgTransTypeId" value="DEPRECIATION"/>
+                                            <parameter param-name="debitGlAccountId" from-field="defaultDebitAccountForDepreciationTransaction"/>
+                                            <parameter param-name="creditGlAccountId" from-field="defaultCreditAccountForDepreciationTransaction"/>
+                                            <parameter param-name="amount" from-field="assetDepreciationResultMap.plannedPastDepreciationTotal"/>
+                                        </link>
+                                    </container>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationMethod}">
+                            <include-form name="AddFixedAssetDepMethod" location="component://accounting/widget/FixedAssetForms.xml"/>
+                            <include-form name="ListFixedAssetDepMethods" location="component://accounting/widget/FixedAssetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingGlMappings}">
+                            <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/FixedAssetForms.xml"/>
+                            <label>${uiLabelMap.PageTitleFixedAssetMappings}</label>
+                            <include-form name="FixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
+                            <label>${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
+                            <include-form name="GlobalFixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
+                        </screenlet>
                         <section>
+                            <condition>
+                                <not><if-empty field="assetDepreciationInfoList"/></not>
+                            </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationHistory}">
-                                    <label>${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
-                                    <label>${uiLabelMap.FormFieldTitle_depreciation}: ${depreciation}</label>
-                                    <label>${uiLabelMap.FormFieldTitle_salvageValue}: ${fixedAsset.salvageValue}</label>
-                                    <label>${uiLabelMap.FormFieldTitle_dateAcquired}: ${fixedAsset.dateAcquired}</label>
-                                    <label>${uiLabelMap.FormFieldTitle_expectedEndOfLife}: ${fixedAsset.expectedEndOfLife}</label>
-                                    <label>${uiLabelMap.FormFieldTitle_NextDepreciationAmount}: ${assetDepreciationResultMap.nextDepreciationAmount}</label>
-                                    <section>
-                                        <condition>
-                                            <and>
-                                                <not><if-empty field="assetDepreciationResultMap.plannedPastDepreciationTotal"/></not>
-                                                <not><if-empty field="fixedAsset.partyId"/></not>
-                                                <if-compare-field field="assetDepreciationResultMap.plannedPastDepreciationTotal" to-field="depreciation" operator="greater" type="BigDecimal"/>
-                                            </and>
-                                        </condition>
-                                        <actions>
-                                            <service service-name="getGlAccountFromAccountType" result-map="defaultCreditAccountForDepreciationTransactionResult">
-                                                <field-map field-name="organizationPartyId" from-field="fixedAsset.partyId"/>
-                                                <field-map field-name="acctgTransTypeId" value="DEPRECIATION"/>
-                                                <field-map field-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
-                                                <field-map field-name="debitCreditFlag" value="C"/>
-                                            </service>
-                                            <set field="defaultCreditAccountForDepreciationTransaction" from-field="defaultCreditAccountForDepreciationTransactionResult.glAccountId" default-value=" "/>
-                                            <service service-name="getGlAccountFromAccountType" result-map="defaultDebitAccountForDepreciationTransactionResult">
-                                                <field-map field-name="organizationPartyId" from-field="fixedAsset.partyId"/>
-                                                <field-map field-name="acctgTransTypeId" value="DEPRECIATION"/>
-                                                <field-map field-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
-                                                <field-map field-name="debitCreditFlag" value="D"/>
-                                            </service>
-                                            <set field="defaultDebitAccountForDepreciationTransaction" from-field="defaultDebitAccountForDepreciationTransactionResult.glAccountId" default-value=" "/>
-                                        </actions>
-                                        <widgets>
-                                            <container>
-                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.link_nav_long} ${styles.action_add}" target="CreateAcctgTransAndEntries">
-                                                    <parameter param-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
-                                                    <parameter param-name="organizationPartyId" from-field="fixedAsset.partyId"/>
-                                                    <parameter param-name="acctgTransTypeId" value="DEPRECIATION"/>
-                                                    <parameter param-name="debitGlAccountId" from-field="defaultDebitAccountForDepreciationTransaction"/>
-                                                    <parameter param-name="creditGlAccountId" from-field="defaultCreditAccountForDepreciationTransaction"/>
-                                                    <parameter param-name="amount" from-field="assetDepreciationResultMap.plannedPastDepreciationTotal"/>
-                                                </link>
-                                            </container>
-                                        </widgets>
-                                    </section>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationMethod}">
-                                    <include-form name="AddFixedAssetDepMethod" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <include-form name="ListFixedAssetDepMethods" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.AccountingGlMappings}">
-                                    <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label>${uiLabelMap.PageTitleFixedAssetMappings}</label>
-                                    <include-form name="FixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                    <label>${uiLabelMap.PageTitleFixedAssetGlobalMappings}</label>
-                                    <include-form name="GlobalFixedAssetTypeGlAccounts" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                </screenlet>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="assetDepreciationInfoList"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
-                                            <include-form name="ListFixedAssetDepreciations" location="component://accounting/widget/FixedAssetForms.xml"/>
-                                        </screenlet>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
-                                            <label>${assetDepreciationResultMessages}</label>
-                                        </screenlet>
-                                    </fail-widgets>
-                                </section>
-                                <screenlet title="${uiLabelMap.AccountingTransactions}">
-                                    <include-form name="FixedAssetTransactions" location="component://accounting/widget/FixedAssetForms.xml"/>
+                                <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
+                                    <include-form name="ListFixedAssetDepreciations" location="component://accounting/widget/FixedAssetForms.xml"/>
                                 </screenlet>
                             </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationReport}">
+                                    <label>${assetDepreciationResultMessages}</label>
+                                </screenlet>
+                            </fail-widgets>
                         </section>
+                        <screenlet title="${uiLabelMap.AccountingTransactions}">
+                            <include-form name="FixedAssetTransactions" location="component://accounting/widget/FixedAssetForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

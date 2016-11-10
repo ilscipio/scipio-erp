@@ -47,21 +47,10 @@
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-
                         <container>
-                            <label style="heading">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
-                            <label style="heading+1">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                            <label style="heading+1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}: ${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
                         </container>
-                        <container>
-                            <link target="EditFacilityInventoryItems" text="${uiLabelMap.ProductInventoryItems}" style="${styles.link_nav} ${styles.action_view}">
-                                <parameter param-name="facilityId" from-field="facilityId"/>
-                            </link>
-                            <!--<link target="ViewFacilityInventoryByProductSimple" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}">
-                                <parameter param-name="facilityId" from-field="facilityId"/>
-                            </link>-->
-                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="${styles.link_run_sys} ${styles.action_export}"/>
-                        </container>
+                        <include-menu name="FacilityInventoryByProductSubTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
 
                         <include-form name="FindFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>
                         <include-form name="ListFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>

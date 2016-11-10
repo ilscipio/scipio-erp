@@ -38,28 +38,24 @@ under the License.
                                 <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <widgets>
-                                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                            <decorator-section name="menu-bar">
-                                                <section>
-                                                    <condition>
-                                                        <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
-                                                    </condition>
-                                                    <widgets>
-                                                        <container style="button-bar"><link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                                    </widgets>
-                                                </section>
-                                            </decorator-section>
-                                            <decorator-section name="search-options">
-                                                <include-form name="FindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
-                                            </decorator-section>
-                                            <decorator-section name="search-results">
-                                                <include-screen name="FacilitySearchResults"/>
-                                            </decorator-section>
-                                        </decorator-screen>
-                                    </widgets>
-                                </section>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar"><link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="${styles.link_nav} ${styles.action_add}"/></container>
+                                            </widgets>
+                                        </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-screen name="FacilitySearchResults"/>
+                                    </decorator-section>
+                                </decorator-screen>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
@@ -90,75 +86,53 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeSubMenuItem" value="EditFacility"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
-                <set field="title" value="${uiLabelMap.ProductNewFacility}" />
+                
+                <set field="titleProperty" value="${groovy: context.facility ? 'ProductEditFacility' : 'ProductNewFacility'}" />
+                <set field="titleFormat" value="\${finalTitle} ${parameters.facilityId}" />
+                
+                <set field="activeSubMenuItem" value="${groovy: context.facility ? 'EditFacility' : 'PARENT-NOSUB'}" />
+                
+                <!-- to workaround decorator -->
+                <set field="displayWithNoFacility" value="${groovy: context.facility ? '' : 'Y'}" />
             </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not><if-empty field="facility"/></not>
-                    </condition>
-                    <actions>
-                       <set field="title" value="${uiLabelMap.ProductEditFacility} ${parameters.facilityId}" />
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="facility"/></not>
+                            </condition>
+                            <widgets>
                                 <section>
                                     <condition>
-                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="UPDATE"/>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="facilityId"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <container style="button-bar button-style-1">
-                                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                    <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="${styles.link_nav} ${styles.action_view}" url-mode="inter-app">
-                                                        <parameter param-name="facilityId"/>
-                                                        <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
-                                                    </link>
-                                                </container>
-                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
-                                            </widgets>
-                                        </section>
+                                        <include-menu name="FacilitySubTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
                                     </widgets>
                                     <fail-widgets>
                                         <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                     </fail-widgets>
                                 </section>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                    <fail-widgets>
-                        <section>
-                            <actions>
-                                <set field="activeMainMenuItem" value="facility"/>
-                            </actions>
-                            <widgets>
-                                <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                                    <decorator-section name="body">
-                                        <section>
-                                            <condition>
-                                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading">${uiLabelMap.ProductNewFacility}</label>
-                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                                            </fail-widgets>
-                                        </section>
-                                    </decorator-section>
-                                </decorator-screen>
                             </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </fail-widgets>
                         </section>
-                    </fail-widgets>
-                </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -758,7 +732,7 @@ under the License.
                 <set field="activeSubMenu" value="FacilitySettings"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar button-style-1">
                             <section>

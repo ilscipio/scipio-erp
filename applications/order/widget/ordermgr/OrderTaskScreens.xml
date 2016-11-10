@@ -73,13 +73,6 @@ Also add this back to appheader.ftl:
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

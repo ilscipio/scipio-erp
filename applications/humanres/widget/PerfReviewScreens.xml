@@ -65,11 +65,7 @@
                 <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonEdit} ${uiLabelMap.HumanResPerfReview}">
-                            <section>
-                                <widgets>
-                                    <include-form name="EditPerfReview" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="EditPerfReview" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

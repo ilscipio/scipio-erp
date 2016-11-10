@@ -54,29 +54,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="FACILITY" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

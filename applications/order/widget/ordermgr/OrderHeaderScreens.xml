@@ -29,19 +29,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <label style="heading">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <label style="heading">${uiLabelMap.CommonId}: ${orderHeader.orderId}</label>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -39,6 +39,9 @@
     <screen name="CommonDemoSuiteAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonDemoSuiteAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -48,10 +51,7 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-compare field="doDemoSuiteAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonDemoSuiteAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -97,8 +97,10 @@
     <screen name="CommonDemoSuiteAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="DEMOSUITE"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonDemoSuiteAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonDemoSuiteAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

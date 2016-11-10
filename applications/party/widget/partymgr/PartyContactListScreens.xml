@@ -31,21 +31,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission action="_VIEW" permission="PARTYMGR"/>
-                            </condition>
-                            <widgets>
-                                <screenlet id="AddPartyContactListPanel" title="${uiLabelMap.PartyContactListPartyCreate}" collapsible="true">
-                                    <include-form location="component://party/widget/partymgr/PartyContactListForms.xml" name="AddPartyContactList"/>
-                                </screenlet>
-                                <include-form location="component://party/widget/partymgr/PartyContactListForms.xml" name="ListPartyContactLists"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet id="AddPartyContactListPanel" title="${uiLabelMap.PartyContactListPartyCreate}" collapsible="true">
+                            <include-form location="component://party/widget/partymgr/PartyContactListForms.xml" name="AddPartyContactList"/>
+                        </screenlet>
+                        <include-form location="component://party/widget/partymgr/PartyContactListForms.xml" name="ListPartyContactLists"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

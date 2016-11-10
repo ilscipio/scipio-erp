@@ -95,6 +95,10 @@ under the License.
     <screen name="CommonOrderAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonOrderAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ORDERMGR, _VIEW permission -->
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -103,12 +107,8 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
                             <condition>
-                                <or>
-                                    <if-compare field="doOrderAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonOrderAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -387,8 +387,11 @@ under the License.
     <screen name="CommonOrderAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="ORDERMGR"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonOrderAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ORDERMGR, _VIEW permission -->
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonOrderAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

@@ -38,23 +38,19 @@ under the License.
                                 <if-empty field="parameters.partyId"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <widgets>
-                                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                            <decorator-section name="menu-bar">
-                                                <container style="button-bar">
-                                                    <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAccount}" style="${styles.link_nav} ${styles.action_add}"/>
-                                                </container>
-                                            </decorator-section>
-                                            <decorator-section name="search-options">
-                                                <include-form name="FindBillingAccounts" location="component://accounting/widget/BillingAccountForms.xml"/>
-                                            </decorator-section>
-                                            <decorator-section name="search-results">
-                                                <include-form name="ListBillingAccounts" location="component://accounting/widget/BillingAccountForms.xml"/>
-                                            </decorator-section>
-                                        </decorator-screen>
-                                    </widgets>
-                                </section>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAccount}" style="${styles.link_nav} ${styles.action_add}"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindBillingAccounts" location="component://accounting/widget/BillingAccountForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListBillingAccounts" location="component://accounting/widget/BillingAccountForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
                             </widgets>
                             <fail-widgets>
                                 <section>
@@ -182,14 +178,10 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>         
-                            <widgets>                
-                                <screenlet title="${uiLabelMap.PageTitleListBillingAccountOrders} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
-                                    <include-form name="ListBillingAccountOrders" location="component://accounting/widget/BillingAccountForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                    <decorator-section name="body">            
+                        <screenlet title="${uiLabelMap.PageTitleListBillingAccountOrders} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
+                            <include-form name="ListBillingAccountOrders" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

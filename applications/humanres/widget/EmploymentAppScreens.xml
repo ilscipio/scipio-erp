@@ -36,14 +36,10 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <!-- SCIPIO: link to our new screen instead: NewEmploymentApp -->
-                                            <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <!-- SCIPIO: link to our new screen instead: NewEmploymentApp -->
+                                    <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>

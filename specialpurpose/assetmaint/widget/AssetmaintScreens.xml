@@ -38,32 +38,24 @@
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.WorkEffortAssignedTasks}">
-                                            <section>                                
-                                                <widgets><include-form name="WorkEffortAssignedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
-                                            </section>
+                                            <include-form name="WorkEffortAssignedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                                         </screenlet>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.WorkEffortCompletedTasks}">    
-                                            <section>                                
-                                                <widgets><include-form name="WorkEffortCompletedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
-                                            </section>
+                                            <include-form name="WorkEffortCompletedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                                         </screenlet>
                                     </container>
                                 </container>
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.WorkEffortAssignedActivities}">                        
-                                            <section>                                
-                                                <widgets><include-form name="WorkEffortAssignedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
-                                            </section>
+                                            <include-form name="WorkEffortAssignedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                                         </screenlet>
                                     </container>
                                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                         <screenlet title="${uiLabelMap.WorkEffortCompletedActivities}">    
-                                            <section>                                
-                                                <widgets><include-form name="WorkEffortCompletedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
-                                            </section>
+                                            <include-form name="WorkEffortCompletedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                                         </screenlet>
                                     </container>
                                 </container>

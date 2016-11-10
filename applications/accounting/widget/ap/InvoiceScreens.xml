@@ -80,25 +80,21 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="NewPurchaseInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindApInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/PurchaseInvoices.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="NewPurchaseInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindApInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/PurchaseInvoices.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -145,20 +141,16 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body"> 
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="CommissionRun" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/CommissionRun.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionRun" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionRun.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -175,20 +167,16 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonApReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="CommissionReport" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/CommissionReport.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionReport" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionReport.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

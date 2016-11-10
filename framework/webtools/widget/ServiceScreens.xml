@@ -55,19 +55,15 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonServiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific><html><html-template location="component://common/webcommon/includes/ServerHour24HourFormatJs.ftl"/></html></platform-specific>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindJobs" location="component://webtools/widget/ServiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListJobs" location="component://webtools/widget/ServiceForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <platform-specific><html><html-template location="component://common/webcommon/includes/ServerHour24HourFormatJs.ftl"/></html></platform-specific>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindJobs" location="component://webtools/widget/ServiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListJobs" location="component://webtools/widget/ServiceForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

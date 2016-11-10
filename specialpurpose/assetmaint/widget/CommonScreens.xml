@@ -81,6 +81,9 @@ under the License.
     <screen name="CommonAssetMaintAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonAssetMaintAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -91,10 +94,7 @@ under the License.
                         <section>
                             <!-- do check for ASSETMAINT, _VIEW permission -->
                             <condition>
-                                <or>
-                                    <if-compare field="doAssetMaintAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonAssetMaintAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -112,16 +112,18 @@ under the License.
     <screen name="CommonFacilityDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" />
+                <!-- SCIPIO: NOTE: SPECIAL SUB-MENU: TODO: REVIEW:
+                    in assetmaint must currently FORCE the sub-menu because the screens from facility
+                    are setting sub-menus not present in assetmaint...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" /> -->
+                <set field="activeSubMenu" value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" />
+                
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -272,11 +274,10 @@ under the License.
     <screen name="CommonAssetMaintAppSideBarMenu">
         <section>
             <actions>
-                <!-- too specific?
-                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="fixedAssetPermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/> -->
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="ASSETMAINT"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonAssetMaintAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonAssetMaintAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

@@ -83,7 +83,7 @@ under the License.
                         </section>
                         <section>
                             <condition>
-                                <if-compare field="showMainExtendedBar" operator="equals" type="Boolean" value="true"/>
+                                <if-true field="showMainExtendedBar" />
                             </condition>
                             <widgets>
                                 <include-screen name="leftbar" />
@@ -102,6 +102,14 @@ under the License.
     <screen name="CommonCatalogAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonCatalogAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                    </or>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -111,15 +119,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-compare field="doCatalogAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
-                                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                        <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                        <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                    </or>
-                                </or>
+                                <if-true field="commonCatalogAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -259,11 +259,7 @@ under the License.
                                         <include-menu name="${TabBarName}" location="component://product/widget/catalog/CatalogMenus.xml"/>                                        
                                     </widgets>
                                     <fail-widgets>
-                                        <section>
-                                            <widgets>
-                                                <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                            </widgets>
-                                        </section>
+                                        <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -737,10 +733,9 @@ under the License.
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
                 
-                <set field="permEntry" value=""/>
-                <set field="permEntry.perm" value="CONTENTMGR"/>
-                <set field="permEntry.action" value="_VIEW"/>
-                <set field="commonSideBarMenu.permList[]" from-field="permEntry"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -798,10 +793,9 @@ under the License.
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
                 
-                <set field="permEntry" value=""/>
-                <set field="permEntry.perm" value="CONTENTMGR"/>
-                <set field="permEntry.action" value="_VIEW"/>
-                <set field="commonSideBarMenu.permList[]" from-field="permEntry"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -838,10 +832,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
                 <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/><!-- SCIPIO: NOTE: nothing for now, this is too generic... -->
                 
-                <set field="permEntry" value=""/>
-                <set field="permEntry.perm" value="CONTENTMGR"/>
-                <set field="permEntry.action" value="_VIEW"/>
-                <set field="commonSideBarMenu.permList[]" from-field="permEntry"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <!-- NOTE: for now this SHOULD delegate to content because many webapps may use this pattern; whereas WebSite is only accessible from catalog -->
@@ -1341,35 +1334,20 @@ under the License.
         (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="CommonCatalogAppSideBarMenu">
         <section>
-            <condition>
-                <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
-                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                </or>
-            </condition>
+            <actions>
+                <condition-to-field field="commonCatalogAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                    </or>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonCatalogAppBasePermCond}"/>
+            </actions>
             <widgets>
-                <section>
-                    <actions>
-                        <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value=""/>
-                        <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value=""/>
-                    </actions>
-                    <widgets>
-                        <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
-                    </widgets>
-                </section>
+                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
             </widgets>
-            <fail-widgets>
-                <section>
-                    <actions>
-                        <set field="commonSideBarMenu.cond" type="Boolean" value="false"/>
-                    </actions>
-                    <widgets>
-                        <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
-                    </widgets>
-                </section>
-            </fail-widgets>
         </section>
     </screen>
     

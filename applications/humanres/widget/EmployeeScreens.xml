@@ -88,7 +88,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                        <if-true field="showOld"/>
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
@@ -106,23 +106,19 @@ under the License.
                                         </container>
                                     </fail-widgets>
                                 </section>
-                                <section>
-                                    <widgets>
-                                        <container style="profile-left">
-                                            <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="trainingsList"/>
-                                        </container>
-                                        <container style="profile-right">
-                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
-                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="profile-left">
+                                    <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="trainingsList"/>
+                                </container>
+                                <container style="profile-right">
+                                    <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
+                                    <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <container>

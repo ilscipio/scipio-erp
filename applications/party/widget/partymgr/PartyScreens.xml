@@ -113,12 +113,11 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
-                                              
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
                                 <!--
                                 <section>
                                     <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                        <if-true field="showOld"/>
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
@@ -135,42 +134,37 @@ under the License.
                                             </link>
                                         </container>
                                     </fail-widgets>
-                                </section>-->
-                                <section>
-                                    <widgets>
-
-                                         <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <!--
-                                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
-                                                    <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                -->
-                                                <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                        </container>
-                                        <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                             </container>
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                        </container>
-                                        <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
-                                             </container>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                 </section>-->
+                                 <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <!--
+                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
+                                            <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        -->
+                                        <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                </container>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                     </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                </container>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
+                                     </container>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <container>
@@ -471,9 +465,9 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="hasViewPermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPcmCreatePermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPcmUpdatePermission" operator="equals" value="true" type="Boolean"/>
+                                    <if-true field="hasViewPermission" />
+                                    <if-true field="hasPcmCreatePermission" />
+                                    <if-true field="hasPcmUpdatePermission" />
                                     <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
                                     <not><if-empty field="mechMap.partyContactMech"/></not>
                                 </or>

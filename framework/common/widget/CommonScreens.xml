@@ -249,7 +249,7 @@ under the License.
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
-                            <not><if-compare operator="equals" field="customSideBar" value="true" type="Boolean"/></not>
+                            <not><if-true field="customSideBar"/></not>
                         </and>
                     </condition>
                     <widgets>
@@ -347,7 +347,7 @@ under the License.
                             <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
                             <section>
                                 <condition>
-                                    <if-compare operator="equals" field="customSideBar" value="true" type="Boolean"/>
+                                    <if-true field="customSideBar" />
                                 </condition>
                                 <widgets>
                                     <!-- Theme styling  -->
@@ -404,11 +404,11 @@ under the License.
                                                     <and>
                                                         <or>
                                                             <if-empty-section section-name="left-column" />
-                                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showLeftColumn" />
                                                         </or>
                                                         <or>
                                                             <if-empty-section section-name="right-column" />
-                                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showRightColumn" />
                                                         </or>
                                                     </and>
                                                 </condition>
@@ -427,12 +427,12 @@ under the License.
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="left-column" />
-                                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showLeftColumn" />
                                                             </or>
                                                         </not>
                                                         <or>
                                                             <if-empty-section section-name="right-column" />
-                                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showRightColumn" />
                                                         </or>
                                                     </and>
                                                 </condition>
@@ -450,12 +450,12 @@ under the License.
                                                     <and>
                                                         <or>
                                                             <if-empty-section section-name="left-column" />
-                                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showLeftColumn" />
                                                         </or>
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="right-column" />
-                                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showRightColumn" />
                                                             </or>
                                                         </not>
                                                     </and>
@@ -475,13 +475,13 @@ under the License.
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="left-column" />
-                                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showLeftColumn" />
                                                             </or>
                                                         </not>
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="right-column" />
-                                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showRightColumn" />
                                                             </or>
                                                         </not>
                                                     </and>
@@ -1063,9 +1063,9 @@ under the License.
                 <section>
                     <condition>
                         <or>
-                            <if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="true" />
+                            <if-true field="findScreenShowResults" />
                             <and>
-                                <not><if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="false" /></not>
+                                <not><if-false field="findScreenShowResults" /></not>
                                 <or>
                                     <if-compare field="httpMethod" operator="equals" value="post" />
                                     <if-compare field="parameters.find" operator="equals" value="true" />
@@ -1389,7 +1389,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                        <if-true field="useCplxMenu" />
                     </condition>
                     <widgets>
                         <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
@@ -1414,7 +1414,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                        <if-true field="useCplxMenu" />
                     </condition>
                     <widgets>
                         <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
@@ -1472,7 +1472,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="hasTargetMenu" operator="equals" type="Boolean" value="true"/>
+                        <if-true field="hasTargetMenu" />
                     </condition>
                     <widgets>
                         <include-screen name="${targetMenuName}" location="${targetMenuLoc}"/>

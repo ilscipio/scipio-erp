@@ -97,105 +97,101 @@ under the License.
                     </decorator-section>                
                     <decorator-section name="content-full-screen">
                         <section>
+                            <condition>
+                                <and>
+                                    <or>
+                                        <if-empty-section section-name="left-column" />
+                                        <if-false field="showLeftColumn" />
+                                    </or>
+                                    <or>
+                                        <if-empty-section section-name="right-column" />
+                                        <if-false field="showRightColumn" />
+                                    </or>
+                                </and>
+                            </condition>
+                            <actions>
+                                <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
+                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <or>
-                                                <if-empty-section section-name="left-column" />
-                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
-                                            </or>
-                                            <or>
-                                                <if-empty-section section-name="right-column" />
-                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
-                                            </or>
-                                        </and>
-                                    </condition>
-                                    <actions>
-                                        <set field="columnMainStyle" value="${styles.grid_sidebar_0_main}"/>
-                                    </actions>
-                                    <widgets>
-                                        <container id="content-main-body">
-                                            <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
-                                        </container>
-                                     </widgets>
-                                </section>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <not>
-                                                <or>
-                                                    <if-empty-section section-name="left-column" />
-                                                    <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
-                                                </or>
-                                            </not>
-                                            <or>
-                                                <if-empty-section section-name="right-column" />
-                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
-                                            </or>
-                                        </and>
-                                    </condition>
-                                    <actions>
-                                       <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
-                                       <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
-                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
-                                    </widgets>
-                                </section>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <or>
-                                                <if-empty-section section-name="left-column" />
-                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
-                                            </or>
-                                            <not>
-                                                <or>
-                                                    <if-empty-section section-name="right-column" />
-                                                    <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
-                                                </or>
-                                            </not>
-                                        </and>
-                                    </condition>
-                                    <actions>
-                                       <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
-                                       <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
-                                        <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
-                                    </widgets>
-                                </section>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <not>
-                                                <or>
-                                                    <if-empty-section section-name="left-column" />
-                                                    <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
-                                                </or>
-                                            </not>
-                                            <not>
-                                                <or>
-                                                    <if-empty-section section-name="right-column" />
-                                                    <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
-                                                </or>
-                                            </not>
-                                        </and>
-                                    </condition>
-                                    <actions>
-                                       <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
-                                       <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
-                                       <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
-                                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
-                                        <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
-                                    </widgets>
-                                </section>
+                                <container id="content-main-body">
+                                    <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                </container>
+                             </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not>
+                                        <or>
+                                            <if-empty-section section-name="left-column" />
+                                            <if-false field="showLeftColumn" />
+                                        </or>
+                                    </not>
+                                    <or>
+                                        <if-empty-section section-name="right-column" />
+                                        <if-false field="showRightColumn" />
+                                    </or>
+                                </and>
+                            </condition>
+                            <actions>
+                               <set field="columnLeftStyle" value="${styles.grid_sidebar_1_side}" />
+                               <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                            </actions>
+                            <widgets>
+                                <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
+                                <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <or>
+                                        <if-empty-section section-name="left-column" />
+                                        <if-false field="showLeftColumn" />
+                                    </or>
+                                    <not>
+                                        <or>
+                                            <if-empty-section section-name="right-column" />
+                                            <if-false field="showRightColumn" />
+                                        </or>
+                                    </not>
+                                </and>
+                            </condition>
+                            <actions>
+                               <set field="columnRightStyle" value="${styles.grid_sidebar_1_side}" />
+                               <set field="columnMainStyle" value="${styles.grid_sidebar_1_main}" />
+                            </actions>
+                            <widgets>
+                                <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <and>
+                                    <not>
+                                        <or>
+                                            <if-empty-section section-name="left-column" />
+                                            <if-false field="showLeftColumn" />
+                                        </or>
+                                    </not>
+                                    <not>
+                                        <or>
+                                            <if-empty-section section-name="right-column" />
+                                            <if-false field="showRightColumn" />
+                                        </or>
+                                    </not>
+                                </and>
+                            </condition>
+                            <actions>
+                               <set field="columnLeftStyle" value="${styles.grid_sidebar_2_side}" />
+                               <set field="columnRightStyle" value="${styles.grid_sidebar_2_side}" />
+                               <set field="columnMainStyle" value="${styles.grid_sidebar_2_main}" />
+                            </actions>
+                            <widgets>
+                                <include-screen name="column-left" location="component://common/widget/CommonScreens.xml"/>
+                                <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                                <include-screen name="column-right" location="component://common/widget/CommonScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -215,30 +211,15 @@ under the License.
             <widgets>
                 <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-content" >
-                        <section>
-                            <widgets>
-                                <container style="${styles.grid_row} ${styles.grid_theme}" id="pre-content-section">
-                                    <decorator-section-include name="pre-content"/>
-                                </container>
-                            </widgets>
-                        </section>
+                        <container style="${styles.grid_row} ${styles.grid_theme}" id="pre-content-section">
+                            <decorator-section-include name="pre-content"/>
+                        </container>
                     </decorator-section>
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <widgets>
-                                <include-screen name="leftbar"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-menu name="ShopSideBar" location="component://shop/widget/CommonMenus.xml"/>
-                            </fail-widgets>
-                        </section>
+                        <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="pre-body" >
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="pre-body"/>
-                            </widgets>
-                        </section>
+                        <decorator-section-include name="pre-body"/>
                     </decorator-section>
                     <decorator-section name="body" >
                         <section>
@@ -435,7 +416,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific>

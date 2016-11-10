@@ -102,23 +102,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditRouting" text="${uiLabelMap.ManufacturingNewRouting}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListRoutings" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -168,23 +164,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRoutingTaskDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditRoutingTask" text="${uiLabelMap.ManufacturingNewRoutingTask}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListRoutingTasks" location="component://manufacturing/widget/manufacturing/RoutingTaskForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

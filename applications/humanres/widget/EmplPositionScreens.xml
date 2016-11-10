@@ -235,11 +235,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResPositionFulfillments}">
-                    <section>
-                        <widgets>
-                            <include-form name="ListEmplPositionFulfilmentInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                        </widgets>
-                    </section>
+                    <include-form name="ListEmplPositionFulfilmentInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                 </screenlet>
             </widgets>
         </section>
@@ -254,11 +250,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResEmplPositionResponsibilities}">
-                    <section>
-                        <widgets>
-                            <include-form name="ListEmplPositionResponsibilityInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                        </widgets>
-                    </section>
+                    <include-form name="ListEmplPositionResponsibilityInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                 </screenlet>
             </widgets>
         </section>
@@ -273,11 +265,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}: ${uiLabelMap.HumanResReportsTo}">
-                    <section>
-                        <widgets>
-                            <include-form name="ListEmplPositionReportsToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                        </widgets>
-                    </section>
+                    <include-form name="ListEmplPositionReportsToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                 </screenlet>
             </widgets>
         </section>
@@ -292,11 +280,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResEmplPositionReportingStruct}: ${uiLabelMap.HumanResReportedTo}">
-                    <section>
-                        <widgets>
-                            <include-form name="ListEmplPositionReportedToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
-                        </widgets>
-                    </section>
+                    <include-form name="ListEmplPositionReportedToInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                 </screenlet>
             </widgets>
         </section>

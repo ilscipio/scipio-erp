@@ -331,6 +331,24 @@ under the License.
     <menu name="EntitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="EntityTabBar" recursive="includes-only" />
     </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EntitySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EntityMaint" title="${uiLabelMap.WebtoolsBackToEntityList}" widget-style="+${styles.action_nav_cancel}">
+            <link target="entitymaint" />
+        </menu-item>
+        <menu-item name="ViewRelations" title="${uiLabelMap.WebtoolsViewRelations}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="ViewRelations">
+                <parameter param-name="entityName" from-field="entityName"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewGeneric" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="ViewGeneric">
+                <parameter param-name="entityName" from-field="entityName"/>
+                <parameter param-name="enableEdit" value="true"/>
+            </link>
+        </menu-item>
+    </menu>
 
     <menu name="PortalPageAdmin">
         <menu-item name="duplicate" title="${uiLabelMap.CommonDuplicate}">

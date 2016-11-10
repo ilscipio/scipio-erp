@@ -82,6 +82,9 @@ under the License.
     <screen name="CommonContentAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonContentAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -91,10 +94,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-compare field="doContentAppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                                </or>
+                                <if-true field="commonContentAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -118,16 +118,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -235,29 +225,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -442,6 +409,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <!--
                     <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.tabBar}" override-by-auto-include="true">
                         <section>
                             <condition>
@@ -453,7 +421,7 @@ under the License.
                                 <include-menu name="${tabBar}" location="component://content/widget/forum/ForumMenus.xml"/>
                             </widgets>
                         </section>
-                    </decorator-section>
+                    </decorator-section>  -->
                     <decorator-section name="body">
                         <label style="heading" text="${pageTitle}"/>
                         <decorator-section-include name="body"/>
@@ -494,8 +462,10 @@ under the License.
     <screen name="CommonContentAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="CONTENTMGR"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonContentAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonContentAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

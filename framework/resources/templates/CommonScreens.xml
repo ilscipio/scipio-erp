@@ -45,6 +45,9 @@
     <screen name="Common@component-resource-name@AppDecorator">
         <section>
             <actions>
+                <condition-to-field field="common@component-resource-name@AppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -54,10 +57,7 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-compare field="do@component-resource-name@AppBasePerm" operator="equals" type="Boolean" value="false"/>
-                                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
-                                </or>
+                                <if-true field="common@component-resource-name@AppBasePermCond"/> 
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -103,8 +103,10 @@
     <screen name="Common@component-resource-name@AppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="@base-permission@"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="common@component-resource-name@AppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${common@component-resource-name@AppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

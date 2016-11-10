@@ -81,7 +81,7 @@ under the License.
                 <section>
                     <condition>
                         <!-- double-include prevention -->
-                        <not><if-compare field="editPaymentMethodDataPrepared" operator="equals" value="true" type="Boolean"/></not>
+                        <not><if-true field="editPaymentMethodDataPrepared" /></not>
                     </condition>
                     <widgets>
                         <section>
@@ -139,7 +139,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific>
@@ -171,7 +171,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editcreditcard.ftl"/></html></platform-specific>
@@ -196,7 +196,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editeftaccount.ftl"/></html></platform-specific>
@@ -221,7 +221,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editgiftcard.ftl"/></html></platform-specific>
@@ -247,7 +247,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/changepassword.ftl"/></html></platform-specific>
@@ -275,7 +275,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/editperson.ftl"/></html></platform-specific>
@@ -365,7 +365,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <include-screen name="messagelist-include"/>
@@ -413,7 +413,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagedetail.ftl"/></html></platform-specific>
@@ -446,7 +446,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/newmsg.ftl"/></html></platform-specific>
@@ -475,7 +475,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <section>
@@ -539,7 +539,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <section>
@@ -722,7 +722,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/viewprofile.ftl"/></html></platform-specific>
@@ -796,7 +796,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/EditProfile.ftl"/></html></platform-specific>
@@ -828,7 +828,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/profile/ManageAddress.ftl"/></html></platform-specific>

@@ -76,6 +76,7 @@ under the License.
                 <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <!-- FIXME?: missing <condition here?... -->
                             <widgets>
                                 <container id="cmsnav" style="left">
                                     <screenlet title="${uiLabelMap.PageTitleNavigateDataResources}">
@@ -84,11 +85,7 @@ under the License.
                                 </container>
                                 <container id="content-main-section" style="leftonly">
                                     <container id="cmscontent">
-                                        <section>
-                                            <widgets>
-                                                <include-screen name="listDataResources"/>
-                                            </widgets>
-                                        </section>
+                                        <include-screen name="listDataResources"/>
                                     </container>
                                 </container>
                             </widgets>

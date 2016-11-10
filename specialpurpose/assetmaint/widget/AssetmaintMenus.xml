@@ -145,4 +145,25 @@
           default-menu-item-name="ViewFacilityInventoryByProduct">
         <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
     </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="FacilityInventoryByProductSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditFacilityInventoryItems" title="${uiLabelMap.ProductInventoryItems}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="EditFacilityInventoryItems">
+                <parameter param-name="facilityId" from-field="facilityId"/>
+            </link>
+        </menu-item>
+        <!--
+        <menu-item name="ViewFacilityInventoryByProductSimple" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ViewFacilityInventoryByProductSimple" >
+                <parameter param-name="facilityId" from-field="facilityId"/>
+            </link>
+        </menu-item>-->
+        <menu-item name="ViewFacilityInventoryByProductReport" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" />
+        </menu-item>
+        <menu-item name="ViewFacilityInventoryByProductExport" title="${uiLabelMap.CommonExport}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" />
+        </menu-item>
+    </menu>
 </menus>

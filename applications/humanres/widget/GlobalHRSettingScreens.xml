@@ -132,11 +132,7 @@
                             </widgets>
                         </section>
                         <screenlet>
-                            <section>
-                                <widgets>
-                                    <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -276,16 +272,12 @@
             <widgets>
                 <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet id="addPublicHoliday" title="${uiLabelMap.PageTitleAddPublicHoliday}" collapsible="true">
-                                    <include-form name="AddPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </screenlet>
-                                <screenlet id="listPublicHoliday" title="${uiLabelMap.PageTitlePublicHolidayList}" collapsible="true">
-                                    <include-form name="ListPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet id="addPublicHoliday" title="${uiLabelMap.PageTitleAddPublicHoliday}" collapsible="true">
+                            <include-form name="AddPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <screenlet id="listPublicHoliday" title="${uiLabelMap.PageTitlePublicHolidayList}" collapsible="true">
+                            <include-form name="ListPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -33,13 +33,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditPartyResume" text="${uiLabelMap.HumanResNewPartyResume}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="EditPartyResume" text="${uiLabelMap.HumanResNewPartyResume}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindPartyResumes" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
@@ -66,11 +62,7 @@
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResEditPartyResume}">
-                             <section>
-                                  <widgets>
-                                       <include-form name="EditPartyResume" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
-                                  </widgets>
-                             </section>
+                            <include-form name="EditPartyResume" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

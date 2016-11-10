@@ -31,40 +31,36 @@ under the License.
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> -->
+                <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
                 <decorator-screen name="CommonLeadDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">              
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <!-- <include-menu name="LeadFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-                                        <include-form name="FindLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <section>
-                                            <condition>
-                                                <or>
-                                                    <if-empty field="parameters.all"/>
-                                                    <if-compare field="parameters.all" operator="equals" value="true"/>
-                                                </or>
-                                            </condition>
-                                            <widgets>
-                                                <!-- list all leads -->
-                                                <!-- <label style="heading" text="${uiLabelMap.SfaAllLeads}"/> -->
-                                                <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <!-- list my leads -->
-                                                <!-- <label style="heading" text="${uiLabelMap.SfaMyLeads}"/> -->
-                                                <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                            </fail-widgets>
-                                        </section>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <!-- <include-menu name="LeadFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                <include-form name="FindLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <section>
+                                    <condition>
+                                        <or>
+                                            <if-empty field="parameters.all"/>
+                                            <if-compare field="parameters.all" operator="equals" value="true"/>
+                                        </or>
+                                    </condition>
+                                    <widgets>
+                                        <!-- list all leads -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaAllLeads}"/> -->
+                                        <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <!-- list my leads -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaMyLeads}"/> -->
+                                        <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

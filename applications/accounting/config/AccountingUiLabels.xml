@@ -22404,4 +22404,8 @@
         <value xml:lang="zh">预算</value>
         <value xml:lang="zh_TW">預算</value>
     </property>
+    <property key="AccountingPaymentNotFound">
+        <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
+        <value xml:lang="en">Payment ${paymentId} not found...</value>
+    </property>
 </resource>

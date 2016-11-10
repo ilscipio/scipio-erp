@@ -31,32 +31,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                  <decorator-section name="menu-bar">
-                                      <section>
-                                          <widgets>
-                                                <container style="button-bar"><link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                          </widgets>      
-                                      </section>
-                                  </decorator-section>
-                                  <decorator-section name="search-options">
-                                      <platform-specific><html><html-template location="component://marketing/webapp/sfa/segment/FindMarketingSegment.ftl"/></html></platform-specific>
-                                  </decorator-section>
-                                  <decorator-section name="search-results">
-                                      <include-screen name="MarketingSegmentSearchResults"/>                        
-                                  </decorator-section>
-                              </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <platform-specific><html><html-template location="component://marketing/webapp/sfa/segment/FindMarketingSegment.ftl"/></html></platform-specific>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="MarketingSegmentSearchResults"/>                        
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -101,11 +88,6 @@ under the License.
     <!-- SegmentGroupClass list Screen -->
     <screen name="listSegmentGroupClass">
         <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                </or>
-            </condition>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
@@ -121,21 +103,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet id="AddSegmentGroupClassPanel" title="${uiLabelMap.MarketingSegmentGroupClassCreate}" collapsible="true">
-                                    <include-form name="AddSegmentGroupClass" location="component://marketing/widget/SegmentForms.xml"/>
-                                </screenlet>
-                                <include-form name="listSegmentGroupClass" location="component://marketing/widget/SegmentForms.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet id="AddSegmentGroupClassPanel" title="${uiLabelMap.MarketingSegmentGroupClassCreate}" collapsible="true">
+                            <include-form name="AddSegmentGroupClass" location="component://marketing/widget/SegmentForms.xml"/>
+                        </screenlet>
+                        <include-form name="listSegmentGroupClass" location="component://marketing/widget/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -145,11 +116,6 @@ under the License.
     <!-- SegmentGroupGeo list Screen -->
     <screen name="listSegmentGroupGeo">
         <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                </or>
-            </condition>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
@@ -164,21 +130,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet id="AddSegmentGroupGeoPanel" title="${uiLabelMap.PageTitleEditSegmentGroupGeo}" collapsible="true">
-                                    <include-form name="AddSegmentGroupGeo" location="component://marketing/widget/SegmentForms.xml"/>
-                                </screenlet>
-                                <include-form name="listSegmentGroupGeo" location="component://marketing/widget/SegmentForms.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet id="AddSegmentGroupGeoPanel" title="${uiLabelMap.PageTitleEditSegmentGroupGeo}" collapsible="true">
+                            <include-form name="AddSegmentGroupGeo" location="component://marketing/widget/SegmentForms.xml"/>
+                        </screenlet>
+                        <include-form name="listSegmentGroupGeo" location="component://marketing/widget/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -188,11 +143,6 @@ under the License.
     <!-- SegmentGroupRole list Screen -->
     <screen name="listSegmentGroupRole">
         <section>
-            <condition>
-                <or>
-                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                </or>
-            </condition>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
@@ -207,21 +157,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSegmentGroupDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet id="AddSegmentGroupRolePanel" title="${uiLabelMap.PageTitleEditSegmentGroupRole}" collapsible="true">
-                                    <include-form name="AddSegmentGroupRole" location="component://marketing/widget/SegmentForms.xml"/>
-                                </screenlet>
-                                <include-form name="listSegmentGroupRole" location="component://marketing/widget/SegmentForms.xml"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet id="AddSegmentGroupRolePanel" title="${uiLabelMap.PageTitleEditSegmentGroupRole}" collapsible="true">
+                            <include-form name="AddSegmentGroupRole" location="component://marketing/widget/SegmentForms.xml"/>
+                        </screenlet>
+                        <include-form name="listSegmentGroupRole" location="component://marketing/widget/SegmentForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

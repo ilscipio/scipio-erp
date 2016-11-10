@@ -163,7 +163,8 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     public static class HtmlTemplate extends ModelScreenWidget {
-        protected FlexibleStringExpander locationExdr;
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+        
 
         public HtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
@@ -190,18 +191,20 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     public static class HtmlTemplateDecorator extends ModelScreenWidget {
-        protected FlexibleStringExpander locationExdr;
-        protected Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+        protected final Map<String, ModelScreenWidget> sectionMap;
 
         public HtmlTemplateDecorator(ModelScreen modelScreen, Element htmlTemplateDecoratorElement) {
             super(modelScreen, htmlTemplateDecoratorElement);
             this.locationExdr = FlexibleStringExpander.getInstance(htmlTemplateDecoratorElement.getAttribute("location"));
 
+            Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
             List<? extends Element> htmlTemplateDecoratorSectionElementList = UtilXml.childElementList(htmlTemplateDecoratorElement, "html-template-decorator-section");
             for (Element htmlTemplateDecoratorSectionElement: htmlTemplateDecoratorSectionElementList) {
                 String name = htmlTemplateDecoratorSectionElement.getAttribute("name");
-                this.sectionMap.put(name, new HtmlTemplateDecoratorSection(modelScreen, htmlTemplateDecoratorSectionElement));
+                sectionMap.put(name, new HtmlTemplateDecoratorSection(modelScreen, htmlTemplateDecoratorSectionElement));
             }
+            this.sectionMap = sectionMap;
         }
 
         @Override
@@ -243,7 +246,7 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     public static class HtmlTemplateDecoratorSection extends ModelScreenWidget {
-        protected List<ModelScreenWidget> subWidgets;
+        protected final List<ModelScreenWidget> subWidgets; // SCIPIO: final added
 
         public HtmlTemplateDecoratorSection(ModelScreen modelScreen, Element htmlTemplateDecoratorSectionElement) {
             super(modelScreen, htmlTemplateDecoratorSectionElement);

@@ -62,6 +62,10 @@ import org.ofbiz.minilang.MiniLangRuntimeException;
 import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.ofbiz.minilang.method.conditional.Conditional;
+import org.ofbiz.minilang.method.conditional.ConditionalFactory;
+import org.ofbiz.minilang.method.conditional.ElseIf;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -122,6 +126,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelated(modelWidget, actionElement);
         } else if ("condition-to-field".equals(actionElement.getNodeName())) { // SCIPIO: new
             return new ConditionToField(modelWidget, actionElement);
+        } else if ("if".equals(actionElement.getNodeName())) { // SCIPIO: new
+            return new MasterIf(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
             return IncludeActions.newInstance(modelWidget, actionElement);
         } else {
@@ -1375,6 +1381,144 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return onlyIfFieldEmpty;
         }
 
+    }
+    
+    /**
+     * Models the &lt;if&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-11: Adapted from org.ofbiz.minilang.method.conditional.MasterIf.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class MasterIf extends AbstractModelAction {
+        private final ModelCondition condition;
+        private final List<ElseIf> elseIfs;
+        private final List<ModelAction> elseSubOps;
+        private final List<ModelAction> thenSubOps;
+
+        public MasterIf(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            Element conditionElement = UtilXml.firstChildElement(element, "condition");
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            Element thenElement = UtilXml.firstChildElement(element, "then");
+            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+            List<? extends Element> elseIfElements = UtilXml.childElementList(element, "else-if");
+            if (elseIfElements.isEmpty()) {
+                this.elseIfs = Collections.emptyList();
+            } else {
+                List<ElseIf> elseIfs = new ArrayList<ElseIf>(elseIfElements.size());
+                for (Element elseIfElement : elseIfElements) {
+                    elseIfs.add(new ElseIf(modelWidget, elseIfElement));
+                }
+                this.elseIfs = Collections.unmodifiableList(elseIfs);
+            }
+            Element elseElement = UtilXml.firstChildElement(element, "else");
+            if (elseElement == null) {
+                this.elseSubOps = Collections.emptyList();
+            } else {
+                this.elseSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, elseElement));
+            }
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            // if conditions fails, always return true; if a sub-op returns false
+            // return false and stop, otherwise return true
+            // return true;
+            // only run subOps if element is empty/null
+            boolean runSubOps = condition.eval(context);
+            if (runSubOps) {
+                AbstractModelAction.runSubActions(this.thenSubOps, context);
+                return;
+            } else {
+                // try the else-ifs
+                if (elseIfs != null) {
+                    for (ElseIf elseIf : elseIfs) {
+                        if (elseIf.eval(context)) {
+                            elseIf.runAction(context);
+                            return;
+                        }
+                    }
+                }
+                if (elseSubOps != null) {
+                    AbstractModelAction.runSubActions(this.elseSubOps, context);
+                    return;
+                }
+            }
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+        
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public List<ElseIf> getElseIfs() {
+            return elseIfs;
+        }
+
+        public List<ModelAction> getElseSubOps() {
+            return elseSubOps;
+        }
+
+        public List<ModelAction> getThenSubOps() {
+            return thenSubOps;
+        }
+    }
+    
+    /**
+     * Models the &lt;else-if&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ElseIf extends AbstractModelAction implements ModelCondition {
+        
+        private final ModelCondition condition;
+        private final List<ModelAction> thenSubOps;
+        
+        public ElseIf(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            Element conditionElement = UtilXml.firstChildElement(element, "condition");
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            Element thenElement = UtilXml.firstChildElement(element, "then");
+            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            AbstractModelAction.runSubActions(this.thenSubOps, context);
+        }
+        
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            return condition.eval(context);
+        }
+        
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public List<ModelAction> getThenSubOps() {
+            return thenSubOps;
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO Auto-generated method stub
+            
+        }
     }
     
     /**

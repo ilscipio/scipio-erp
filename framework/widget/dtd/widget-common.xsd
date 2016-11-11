@@ -926,4 +926,85 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="if" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>
+                Performs conditional processing on blocks of code.
+                This operation specifies combinations of conditions, alternate conditions,
+                and operations to run based on the evaluation of condition expressions.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="condition" type="IfCond-Condition"/>
+                <xs:element name="then" type="IfCond-Then"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="else-if" type="IfCond-ElseIf"/>
+                <xs:element minOccurs="0" name="else" type="IfCond-Else"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="IfCond-Condition">
+        <xs:annotation>
+            <xs:documentation>
+                Combines a group of conditional elements into a single logical (true/false) expression.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AllConditionals"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Then">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition element evaluates to true.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-ElseIf">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a condition and a block of code to be evaluated/executed when a parent condition evaluates to false.
+                This element must contain two sub-elements: condition and then.
+                If the condition of the parent element evaluates to false, then this element's condition will be evaluated,
+                and if that condition evaluates to true, then the operations under the then element will be run.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="condition" type="IfCond-Condition"/>
+            <xs:element name="then" type="IfCond-Then"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Else">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition evaluates to false.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

@@ -350,12 +350,64 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="script" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attribute type="xs:string" name="location" use="required">
+        <xs:annotation>
+            <xs:documentation>Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
+                included in the script attribute or in the element body.
+                
+                SCIPIO: This element's functionality has been extended using the simple-methods-v2 minilang implementation of
+                the element of the same name, to provide inline script functionality, as either child CDATA text or via "script" attribute.
+                PARSING BEHAVIOR: The child CDATA text of this element is NO pre-parsed for special operators or in any way, 
+                    UNLIKE the simple-methods-v2 version and unlike the "script" attribute described below.
+                    The intent is to avoid adulterating larger scripts in any way whatsoever.
+                    The simple-methods-v2 version of this element pre-parses the child text of its script element and
+                    this prevents inline scripts from perfectly emulating separate files.
+                2016-11-10: Enhanced for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute type="xs:string" name="location"><!-- SCIPIO: no longer strictly required: use="required" -->
                 <xs:annotation>
-                    <xs:documentation>Script location.
-                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, evaluated at runtime.</xs:documentation>
+                    <xs:documentation>The script location. The location attribute accepts the component:// file location
+                        protocol. Script functions/methods can be invoked by appending a hash (#) and the
+                        function/method name.
+                        
+                        Required if the script attribute is empty.
+                        
+                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, 
+                        evaluated at runtime (this is NOT a security risk in general; only so the screen uses dangerous fields).
+                        Enhanced for 1.14.2.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="script">
+                <xs:annotation>
+                    <xs:documentation>
+                        A short script (scriptlet). Can be used instead of a file.
+                        The script must be prefixed with the script language followed by a colon (":").
+                        
+                        Required if the location attribute is empty. Attribute type: script.
+                        
+                        SCIPIO: This is borrowed from minilang simple-methods-v2.
+                        NOTE: This is alternative to passing child CDATA text as script.
+                        NOTE: This attributes receives some special pre-parse substitutions as is done
+                            by simple-methods-v2; however only this attribute receives this pre-parsing;
+                            child CDATA text does not.
+                            This parsing is documented in org.ofbiz.base.util.StringUtil.convertOperatorSubstitutions.
+                        2016-11-10: Added for 1.14.3.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="trim-lines" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                        NOTE: This gets rid of indents, but flattens code.
+                        NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
+                        Default: true (to optimize caching speed)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

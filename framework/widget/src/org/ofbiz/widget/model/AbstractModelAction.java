@@ -39,6 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
+import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -57,6 +58,8 @@ import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.MiniLangRuntimeException;
+import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.service.DispatchContext;
@@ -606,6 +609,12 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;script&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-10: Extended to support inline scripts using code from
+     * {@link org.ofbiz.minilang.method.callops.CallScript}
+     * <p>
+     * TODO: The child CDATA text may have some string performance issues due to
+     * huge amounts of whitespace in the XML that is part of the cache key.
      * 
      * @see <code>widget-common.xsd</code>
      */
@@ -614,6 +623,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         //private final String location;
         //private final String method;
         private final FlexibleStringExpander locationExdr;
+        private final Scriptlet scriptlet; // SCIPIO: imported from CallScript
 
         public Script(ModelWidget modelWidget, Element scriptElement) {
             super(modelWidget, scriptElement);
@@ -621,8 +631,23 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             //this.location = WidgetWorker.getScriptLocation(scriptLocation);
             //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
             this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
+            
+            // SCIPIO: code derived from org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
+            String inlineScript = scriptElement.getAttribute("script");
+            if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
+                this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(inlineScript));
+            } else {
+                inlineScript = UtilXml.elementValue(scriptElement);
+                if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
+                    boolean trimLines = "true".equals(scriptElement.getAttribute("trim-lines"));
+                    // SCIPIO: NOTE: do NOT convert operator stuff when using nested child!
+                    this.scriptlet = new Scriptlet(trimLines ? ScriptUtil.trimScriptLines(inlineScript) : inlineScript);
+                } else {
+                    this.scriptlet = null;
+                }
+            }
         }
-
+        
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -630,23 +655,33 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
-            String scriptLocation = this.locationExdr.expandString(context);
-            String location = WidgetWorker.getScriptLocation(scriptLocation);
-            String method = WidgetWorker.getScriptMethodName(scriptLocation);
-            
-            if (location.endsWith(".xml")) {
-                Map<String, Object> localContext = new HashMap<String, Object>();
-                localContext.putAll(context);
-                DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
-                MethodContext methodContext = new MethodContext(ctx, localContext, null);
-                try {
-                    SimpleMethod.runSimpleMethod(location, method, methodContext);
-                    context.putAll(methodContext.getResults());
-                } catch (MiniLangException e) {
-                    throw new GeneralException("Error running simple method at location [" + location + "]", e);
+            if (!this.locationExdr.getOriginal().isEmpty()) {
+                String scriptLocation = this.locationExdr.expandString(context);
+                String location = WidgetWorker.getScriptLocation(scriptLocation);
+                String method = WidgetWorker.getScriptMethodName(scriptLocation);
+                
+                if (location.endsWith(".xml")) {
+                    Map<String, Object> localContext = new HashMap<String, Object>();
+                    localContext.putAll(context);
+                    DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
+                    MethodContext methodContext = new MethodContext(ctx, localContext, null);
+                    try {
+                        SimpleMethod.runSimpleMethod(location, method, methodContext);
+                        context.putAll(methodContext.getResults());
+                    } catch (MiniLangException e) {
+                        throw new GeneralException("Error running simple method at location [" + location + "]", e);
+                    }
+                } else {
+                    ScriptUtil.executeScript(location, method, context);
                 }
-            } else {
-                ScriptUtil.executeScript(location, method, context);
+            }
+            
+            if (this.scriptlet != null) {
+                try {
+                    this.scriptlet.executeScript(context);
+                } catch (Exception e) {
+                    throw new GeneralException("Error running inline script", e);
+                }
             }
         }
 

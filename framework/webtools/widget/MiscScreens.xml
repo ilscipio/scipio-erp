@@ -431,6 +431,54 @@ under the License.
                             </widgets>
                         </section>
                     </screenlet>
+                    
+                    <screenlet title="New If block test">
+                        <section>
+                            <actions>
+                                <set field="testField1" value="true"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField1" value="if block"/></then>
+                                <else-if>
+                                    <condition><if-false field="testField1"/></condition>
+                                    <then><set field="resField1" value="else-if block"/></then>
+                                </else-if>
+                                <else>
+                                    <set field="resField1" value="else block"/>
+                                </else>
+                                </if>
+                                <set field="testField1" value="false"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField2" value="if block"/></then>
+                                <else-if>
+                                    <condition><if-false field="testField1"/></condition>
+                                    <then><set field="resField2" value="else-if block"/></then>
+                                </else-if>
+                                <else>
+                                    <set field="resField2" value="else block"/>
+                                </else>
+                                </if>
+                                <set field="testField1" value="other"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField3" value="if block"/></then>
+                                <else-if>
+                                    <condition><if-false field="testField1"/></condition>
+                                    <then><set field="resField3" value="else-if block"/></then>
+                                </else-if>
+                                <else>
+                                    <set field="resField3" value="else block"/>
+                                </else>
+                                </if>
+                            </actions>
+                            <widgets>
+                                <label text="resField1: ${resField1}"/>
+                                <label text="resField2: ${resField2}"/>
+                                <label text="resField3: ${resField3}"/>
+                            </widgets>
+                        </section>
+                    </screenlet>
                 </screenlet>
             </widgets>
         </section>

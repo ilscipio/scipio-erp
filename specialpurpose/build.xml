@@ -22,7 +22,6 @@
     <filelist id="specialpurpose-builds" dir="specialpurpose"
         files="
         assetmaint/build.xml,
-        example/build.xml,
         demosuite/build.xml
     "/>
 </project>

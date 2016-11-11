@@ -381,6 +381,56 @@ under the License.
                             </widgets>
                         </section>
                     </screenlet>
+                    
+                    <screenlet title="Screen inline FTL templates and inline groovy scripts">
+                        <section>
+                            <actions>
+                                <!-- NOTE: Because of ofbiz internals and conventions in minilang and elsewhere,
+                                    the script type has to be specified at the start of the script using colon syntax.-->
+                                <script><![CDATA[groovy:
+                                    import org.ofbiz.base.util.*;
+                                    Debug.logInfo("Running from inline groovy script!", "LayoutDemoInlineGroovy");
+                                    context.myVarFromInlineGroovy1 = "This was assigned from within inline groovy script & it's working great!";
+                                ]]></script>
+                                <!-- NOTE: the default for trim-lines is TRUE -->
+                                <script trim-lines="false"><![CDATA[groovy:
+                                    import org.ofbiz.base.util.*;
+                                    Debug.logInfo("Running from inline groovy script 2!", "LayoutDemoInlineGroovy");
+                                ]]></script>
+                            </actions>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template><![CDATA[
+                                        <#assign myVar = "This was assigned within inline freemarker template!">
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">${myVar}</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template type="ftl"><![CDATA[
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">Second inline template! Explicit type (default is ftl anyway).<br/>
+                                                myVarFromInlineGroovy1: ${myVarFromInlineGroovy1}</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template trim-lines="false"><![CDATA[ftl:
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">Third inline template, with colon-prefixed type, fully redundant.</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                    </screenlet>
                 </screenlet>
             </widgets>
         </section>

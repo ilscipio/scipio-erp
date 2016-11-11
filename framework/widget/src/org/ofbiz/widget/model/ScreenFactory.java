@@ -114,6 +114,18 @@ public class ScreenFactory {
      * <p>
      * NOTE: the resource must exist, however.
      */
+    public static ModelScreen getScreenFromLocationOrNull(String combinedName)
+            throws IOException, SAXException, ParserConfigurationException {
+        String resourceName = getResourceNameFromCombined(combinedName);
+        String screenName = getScreenNameFromCombined(combinedName);
+        return getScreenFromLocationOrNull(resourceName, screenName);
+    }
+    
+    /**
+     * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
+     * <p>
+     * NOTE: the resource must exist, however.
+     */
     public static ModelScreen getScreenFromLocationOrNull(String resourceName, String screenName)
             throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelScreen> modelScreenMap = getScreensFromLocation(resourceName);

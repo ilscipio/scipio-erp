@@ -732,6 +732,14 @@ public class ModelMenuItem extends ModelWidget {
             return null;
         }
     }
+    
+    public ModelMenuItem getTopParentMenuItem() { // SCIPIO: new
+        ModelMenuItem curr = this;
+        while(curr.getParentMenuItem() != null) {
+            curr = curr.getParentMenuItem();
+        }
+        return curr;
+    }
 
     public FlexibleStringExpander getParentPortalPageId() {
         return parentPortalPageId;

@@ -1605,6 +1605,8 @@
     <#assign dummy = setGlobalContextField("paymentMethodId", "")>
     <li>getLabel (resource not present in uiLabelMap + args explicit off): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", false)}"</li>
     <li>getLabel (resource not present in uiLabelMap + explicit args): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", {"partyId":"INSERTED-PARTYID", "paymentMethodId":"INSERTED-PAYMENTMETHODID"})}"</li>
+    
+    <li>getLabel with orderId: ${getLabel('ProductErrorOrderIdNotFound', 'ProductUiLabels', {"orderId":'WS10000'})}</li>
   </ul>
 </@section>
 
@@ -1695,7 +1697,8 @@
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
 <@section title="Ofbiz Widgets Layout Tests"> 
-  <@render resource=ofbizWidgetsLayoutScreenLocation />
+  <@render type="screen-widget" resource=ofbizWidgetsLayoutScreenLocation />
+  TESTTESTTEST: ${context.commonActionField1!"SDFSDF"}
 
   <@section title="Direct inclusions">
     <p>Button Menu</p>

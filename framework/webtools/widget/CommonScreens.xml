@@ -63,7 +63,7 @@ under the License.
         <actions>
             <script><![CDATA[groovy:
                 import org.ofbiz.base.util.Debug;
-                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin webapp screen render (webapp-common-actions)", "AdminCommonActionsGroovy");
+                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin webapp screen render (webapp-common-actions)", "AdminCommonActions.groovy");
             ]]></script>
             <!-- Make the main side bar name/location available to all (without need for globals) -->
             <include-screen-actions name="MainSideBarMenu"/>
@@ -80,7 +80,7 @@ under the License.
         <actions>
             <script><![CDATA[groovy:
                 import org.ofbiz.base.util.Debug;
-                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin local/static screen render (static-common-actions)", "AdminCommonActionsGroovy");
+                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin local/static screen render (static-common-actions)", "AdminCommonActions.groovy");
             ]]></script>
         </actions>
     </screen>

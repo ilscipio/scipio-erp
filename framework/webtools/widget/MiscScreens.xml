@@ -385,13 +385,13 @@ under the License.
                                     the script type has to be specified at the start of the script using colon syntax.-->
                                 <script><![CDATA[groovy:
                                     import org.ofbiz.base.util.*;
-                                    Debug.logInfo("Running from inline groovy script!", "LayoutDemoInlineGroovy");
+                                    Debug.logInfo("Running from inline groovy script!", "LayoutDemoInline.groovy");
                                     context.myVarFromInlineGroovy1 = "This was assigned from within inline groovy script & it's working great!";
                                 ]]></script>
                                 <!-- NOTE: the default for trim-lines is TRUE -->
                                 <script trim-lines="false"><![CDATA[groovy:
                                     import org.ofbiz.base.util.*;
-                                    Debug.logInfo("Running from inline groovy script 2!", "LayoutDemoInlineGroovy");
+                                    Debug.logInfo("Running from inline groovy script 2!", "LayoutDemoInline.groovy");
                                 ]]></script>
                             </actions>
                             <widgets>

@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 /**
  * SCIPIO: Model for new "screen-group" element, child of top "screens" element, and
- * containing screens ("screen" element).
+ * containing screens ("screen" element or substitute).
  */
 @SuppressWarnings("serial")
 public class ModelScreenGroup extends ModelWidget implements ModelScreens.ScreenEntry {
@@ -143,20 +143,22 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             IncludeScreens includeScreens = new IncludeScreens(childElement, sourceLocation);
             includeScreens.generateDelegatingScreensAsChildren(groupingElement);
         }
-        screenElements.addAll(UtilXml.childElementList(groupingElement, "screen"));
+        screenElements.addAll(UtilXml.childElementList(groupingElement));
         for (Element childElement: screenElements) {
-            // FIXME: Terrible ThreadLocal-based hack for setting default fallback settings
-            FlexibleScreenFallbackSettings prevFallbackSettings = DecoratorScreen.getOverridingDefaultFallbackSettings();
-            try {
-                FlexibleScreenFallbackSettings newSettings = effectiveSettings.getDecoratorScreenSettings().getDefaultDecoratorFallbackSettings();
-                DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ? 
-                                new SimpleFlexibleScreenFallbackSettings(prevFallbackSettings, newSettings) : newSettings);
-                
-                ModelScreen modelScreen = new ModelScreen(childElement, this, sourceLocation);
-                //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
-                screenMap.put(modelScreen.getName(), modelScreen);
-            } finally {
-                DecoratorScreen.setOverridingDefaultFallbackSettings(prevFallbackSettings);
+            if (ModelScreen.isScreenElement(childElement)) {
+                // FIXME: Terrible ThreadLocal-based hack for setting default fallback settings
+                FlexibleScreenFallbackSettings prevFallbackSettings = DecoratorScreen.getOverridingDefaultFallbackSettings();
+                try {
+                    FlexibleScreenFallbackSettings newSettings = effectiveSettings.getDecoratorScreenSettings().getDefaultDecoratorFallbackSettings();
+                    DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ? 
+                                    new SimpleFlexibleScreenFallbackSettings(prevFallbackSettings, newSettings) : newSettings);
+                    
+                    ModelScreen modelScreen = new ModelScreen(childElement, this, sourceLocation);
+                    //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
+                    screenMap.put(modelScreen.getName(), modelScreen);
+                } finally {
+                    DecoratorScreen.setOverridingDefaultFallbackSettings(prevFallbackSettings);
+                }
             }
         }
 
@@ -285,9 +287,11 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                         }
                     }
                     
-                    childElements = UtilXml.childElementList(groupElement, "screen");
+                    childElements = UtilXml.childElementList(groupElement);
                     for(Element screenElement : childElements) {
-                        resolvedScreenNames.add(screenElement.getAttribute("name"));
+                        if (ModelScreen.isScreenElement(screenElement)) {
+                            resolvedScreenNames.add(screenElement.getAttribute("name"));
+                        }
                     }
                 }
                 

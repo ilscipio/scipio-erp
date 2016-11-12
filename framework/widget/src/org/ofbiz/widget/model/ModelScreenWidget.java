@@ -282,6 +282,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final List<ModelScreenWidget> failWidgets;
         private final boolean isMainSection;
         private final FlexibleStringExpander shareScopeExdr;
+        private final boolean actionsOnly; // SCIPIO: extra flag hint
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -290,6 +291,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public Section(ModelScreen modelScreen, Element sectionElement, boolean isMainSection) {
             super(modelScreen, sectionElement);
 
+            boolean hasActionsElement = false;
+            
             // SCIPIO: SHORTHANDS: this code now support having an actions or widgets element in place of section.
             // this is remarkable easy!
             if ("actions".equals(sectionElement.getTagName())) {
@@ -297,6 +300,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 this.actions = AbstractModelAction.readSubActions(modelScreen, sectionElement);
                 this.subWidgets = Collections.emptyList();
                 this.failWidgets = Collections.emptyList();
+                hasActionsElement = true;
             } else if ("widgets".equals(sectionElement.getTagName())) {
                 this.condition = null;
                 this.actions = Collections.emptyList();
@@ -317,6 +321,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
                 if (actionsElement != null) {
                     this.actions = AbstractModelAction.readSubActions(modelScreen, actionsElement);
+                    hasActionsElement = true;
                 } else {
                     this.actions = Collections.emptyList();
                 }
@@ -341,8 +346,17 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
+            this.actionsOnly = hasActionsElement && (condition == null && UtilValidate.isEmpty(subWidgets) &&
+                    UtilValidate.isEmpty(failWidgets));
         }
 
+        /**
+         * SCIPIO: Returns true if this section only contains actions directives.
+         */
+        public boolean isActionsOnly() {
+            return actionsOnly;
+        }
+        
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);

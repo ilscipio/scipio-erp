@@ -882,12 +882,52 @@ Features and Modifications:
         </xs:complexType>
     </xs:element>
     <xs:element name="html-template" substitutionGroup="HtmlWidgets">
-        <xs:complexType>
+        <xs:annotation>
+            <xs:documentation>
+                HTML template, usually a Freemarker *.ftl file by location.
+                SCIPIO: In addition to template location, now supports inline template body 
+                as child CDATA text, along with explicit type attribute.
+                NOTE: The type attribute can also be set as prefix with colon at the start of the child text data.
+                2016-11-10: Enhanced for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true"><!-- SCIPIO: mixed, so supports nested template body -->
             <xs:attributeGroup ref="attlist.html-template" />
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.html-template">
-        <xs:attribute type="xs:string" name="location" use="required" />
+        <xs:attribute type="xs:string" name="location" /><!-- SCIPIO: removed for 1.14.3: use="required" -->
+        <xs:attribute name="type"><!-- SCIPIO: implied: default="ftl" -->
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Explicit template type - may be needed if template is inlined as CDATA text
+                    element, otherwise inferred from location/extension.
+                    Default: 'ftl' when template inlined; by extension when location specified.
+                    NOTE: This can also be specified using colon separator as prefix of the child CDATA text (e.g., "ftl:").
+                    2016-11-10: Added for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="ftl" />
+                    <xs:enumeration value="fo-ftl" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="trim-lines" default="true">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                    NOTE: This gets rid of indents, but flattens markup.
+                    NOTE: This has no real performance impact for ftl templates due to way caching is keyed (doesn't depend on template body).
+                    Default: true</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="html-template-decorator" substitutionGroup="HtmlWidgets">
         <xs:annotation>
@@ -1077,6 +1117,40 @@ Features and Modifications:
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="render-init" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Adds or modifies behavior of new screen renders, for the top level target screens.
+                    2016-11-11: New element, added for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="local">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation>
+                                Render init settings applied to all top level target screens within the local file, applied when
+                                they are chosen as target screen to render.
+                                 
+                                The actions element can be used to auto-include actions, and the recommended pattern is to use 
+                                include-screen-actions directive to include the actions of another screen, by convention
+                                named "static-common-actions".
+                                
+                                NOTE: This is distinct from the webapp-specific render init actions which go by the
+                                    screen name "webapp-common-actions". These actions are more local and always execute
+                                    after the webapp actions and regardless of the webapp through which rendering is done.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" ref="actions"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
     

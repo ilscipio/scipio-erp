@@ -39,6 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
+import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -57,8 +58,14 @@ import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.MiniLangRuntimeException;
+import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.ofbiz.minilang.method.conditional.Conditional;
+import org.ofbiz.minilang.method.conditional.ConditionalFactory;
+import org.ofbiz.minilang.method.conditional.ElseIf;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -119,6 +126,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelated(modelWidget, actionElement);
         } else if ("condition-to-field".equals(actionElement.getNodeName())) { // SCIPIO: new
             return new ConditionToField(modelWidget, actionElement);
+        } else if ("if".equals(actionElement.getNodeName())) { // SCIPIO: new
+            return new MasterIf(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
             return IncludeActions.newInstance(modelWidget, actionElement);
         } else {
@@ -606,6 +615,12 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;script&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-10: Extended to support inline scripts using code from
+     * {@link org.ofbiz.minilang.method.callops.CallScript}
+     * <p>
+     * TODO: The child CDATA text may have some string performance issues due to
+     * huge amounts of whitespace in the XML that is part of the cache key.
      * 
      * @see <code>widget-common.xsd</code>
      */
@@ -614,6 +629,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         //private final String location;
         //private final String method;
         private final FlexibleStringExpander locationExdr;
+        private final Scriptlet scriptlet; // SCIPIO: imported from CallScript
 
         public Script(ModelWidget modelWidget, Element scriptElement) {
             super(modelWidget, scriptElement);
@@ -621,8 +637,23 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             //this.location = WidgetWorker.getScriptLocation(scriptLocation);
             //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
             this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
+            
+            // SCIPIO: code derived from org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
+            String inlineScript = scriptElement.getAttribute("script");
+            if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
+                this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(inlineScript));
+            } else {
+                inlineScript = UtilXml.elementValue(scriptElement);
+                if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
+                    boolean trimLines = "true".equals(scriptElement.getAttribute("trim-lines"));
+                    // SCIPIO: NOTE: do NOT convert operator stuff when using nested child!
+                    this.scriptlet = new Scriptlet(trimLines ? ScriptUtil.trimScriptLines(inlineScript) : inlineScript);
+                } else {
+                    this.scriptlet = null;
+                }
+            }
         }
-
+        
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -630,23 +661,33 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
-            String scriptLocation = this.locationExdr.expandString(context);
-            String location = WidgetWorker.getScriptLocation(scriptLocation);
-            String method = WidgetWorker.getScriptMethodName(scriptLocation);
-            
-            if (location.endsWith(".xml")) {
-                Map<String, Object> localContext = new HashMap<String, Object>();
-                localContext.putAll(context);
-                DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
-                MethodContext methodContext = new MethodContext(ctx, localContext, null);
-                try {
-                    SimpleMethod.runSimpleMethod(location, method, methodContext);
-                    context.putAll(methodContext.getResults());
-                } catch (MiniLangException e) {
-                    throw new GeneralException("Error running simple method at location [" + location + "]", e);
+            if (!this.locationExdr.getOriginal().isEmpty()) {
+                String scriptLocation = this.locationExdr.expandString(context);
+                String location = WidgetWorker.getScriptLocation(scriptLocation);
+                String method = WidgetWorker.getScriptMethodName(scriptLocation);
+                
+                if (location.endsWith(".xml")) {
+                    Map<String, Object> localContext = new HashMap<String, Object>();
+                    localContext.putAll(context);
+                    DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
+                    MethodContext methodContext = new MethodContext(ctx, localContext, null);
+                    try {
+                        SimpleMethod.runSimpleMethod(location, method, methodContext);
+                        context.putAll(methodContext.getResults());
+                    } catch (MiniLangException e) {
+                        throw new GeneralException("Error running simple method at location [" + location + "]", e);
+                    }
+                } else {
+                    ScriptUtil.executeScript(location, method, context);
                 }
-            } else {
-                ScriptUtil.executeScript(location, method, context);
+            }
+            
+            if (this.scriptlet != null) {
+                try {
+                    this.scriptlet.executeScript(context);
+                } catch (Exception e) {
+                    throw new GeneralException("Error running inline script", e);
+                }
             }
         }
 
@@ -1340,6 +1381,144 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return onlyIfFieldEmpty;
         }
 
+    }
+    
+    /**
+     * Models the &lt;if&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-11: Adapted from org.ofbiz.minilang.method.conditional.MasterIf.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class MasterIf extends AbstractModelAction {
+        private final ModelCondition condition;
+        private final List<ElseIf> elseIfs;
+        private final List<ModelAction> elseSubOps;
+        private final List<ModelAction> thenSubOps;
+
+        public MasterIf(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            Element conditionElement = UtilXml.firstChildElement(element, "condition");
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            Element thenElement = UtilXml.firstChildElement(element, "then");
+            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+            List<? extends Element> elseIfElements = UtilXml.childElementList(element, "else-if");
+            if (elseIfElements.isEmpty()) {
+                this.elseIfs = Collections.emptyList();
+            } else {
+                List<ElseIf> elseIfs = new ArrayList<ElseIf>(elseIfElements.size());
+                for (Element elseIfElement : elseIfElements) {
+                    elseIfs.add(new ElseIf(modelWidget, elseIfElement));
+                }
+                this.elseIfs = Collections.unmodifiableList(elseIfs);
+            }
+            Element elseElement = UtilXml.firstChildElement(element, "else");
+            if (elseElement == null) {
+                this.elseSubOps = Collections.emptyList();
+            } else {
+                this.elseSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, elseElement));
+            }
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            // if conditions fails, always return true; if a sub-op returns false
+            // return false and stop, otherwise return true
+            // return true;
+            // only run subOps if element is empty/null
+            boolean runSubOps = condition.eval(context);
+            if (runSubOps) {
+                AbstractModelAction.runSubActions(this.thenSubOps, context);
+                return;
+            } else {
+                // try the else-ifs
+                if (elseIfs != null) {
+                    for (ElseIf elseIf : elseIfs) {
+                        if (elseIf.eval(context)) {
+                            elseIf.runAction(context);
+                            return;
+                        }
+                    }
+                }
+                if (elseSubOps != null) {
+                    AbstractModelAction.runSubActions(this.elseSubOps, context);
+                    return;
+                }
+            }
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+        
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public List<ElseIf> getElseIfs() {
+            return elseIfs;
+        }
+
+        public List<ModelAction> getElseSubOps() {
+            return elseSubOps;
+        }
+
+        public List<ModelAction> getThenSubOps() {
+            return thenSubOps;
+        }
+    }
+    
+    /**
+     * Models the &lt;else-if&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ElseIf extends AbstractModelAction implements ModelCondition {
+        
+        private final ModelCondition condition;
+        private final List<ModelAction> thenSubOps;
+        
+        public ElseIf(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            Element conditionElement = UtilXml.firstChildElement(element, "condition");
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            Element thenElement = UtilXml.firstChildElement(element, "then");
+            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            AbstractModelAction.runSubActions(this.thenSubOps, context);
+        }
+        
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            return condition.eval(context);
+        }
+        
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public List<ModelAction> getThenSubOps() {
+            return thenSubOps;
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO Auto-generated method stub
+            
+        }
     }
     
     /**

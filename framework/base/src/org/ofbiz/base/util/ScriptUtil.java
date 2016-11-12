@@ -487,4 +487,29 @@ public final class ScriptUtil {
             return bindings.values();
         }
     }
+    
+    /**
+     * SCIPIO: Performs String.trim() on every line of script. Completely flattens the code.
+     */
+    public static String trimScriptLines(String body) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new java.io.StringReader(body));
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                sb.append(line.trim());
+                line = reader.readLine();
+                if (line != null) {
+                    sb.append("\n");
+                }
+            }
+        } catch (IOException e) {
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+            }
+        }
+        return sb.toString();
+    }
 }

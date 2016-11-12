@@ -34,6 +34,14 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <section>
+            <actions>
+            </actions>
+        </section>
+    </screen>
+        
     <screen name="ShopDecorator">
         <section>
             <actions>

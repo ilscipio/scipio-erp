@@ -350,12 +350,64 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="script" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attribute type="xs:string" name="location" use="required">
+        <xs:annotation>
+            <xs:documentation>Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
+                included in the script attribute or in the element body.
+                
+                SCIPIO: This element's functionality has been extended using the simple-methods-v2 minilang implementation of
+                the element of the same name, to provide inline script functionality, as either child CDATA text or via "script" attribute.
+                PARSING BEHAVIOR: The child CDATA text of this element is NO pre-parsed for special operators or in any way, 
+                    UNLIKE the simple-methods-v2 version and unlike the "script" attribute described below.
+                    The intent is to avoid adulterating larger scripts in any way whatsoever.
+                    The simple-methods-v2 version of this element pre-parses the child text of its script element and
+                    this prevents inline scripts from perfectly emulating separate files.
+                2016-11-10: Enhanced for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute type="xs:string" name="location"><!-- SCIPIO: no longer strictly required: use="required" -->
                 <xs:annotation>
-                    <xs:documentation>Script location.
-                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, evaluated at runtime.</xs:documentation>
+                    <xs:documentation>The script location. The location attribute accepts the component:// file location
+                        protocol. Script functions/methods can be invoked by appending a hash (#) and the
+                        function/method name.
+                        
+                        Required if the script attribute is empty.
+                        
+                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, 
+                        evaluated at runtime (this is NOT a security risk in general; only so the screen uses dangerous fields).
+                        Enhanced for 1.14.2.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="script">
+                <xs:annotation>
+                    <xs:documentation>
+                        A short script (scriptlet). Can be used instead of a file.
+                        The script must be prefixed with the script language followed by a colon (":").
+                        
+                        Required if the location attribute is empty. Attribute type: script.
+                        
+                        SCIPIO: This is borrowed from minilang simple-methods-v2.
+                        NOTE: This is alternative to passing child CDATA text as script.
+                        NOTE: This attributes receives some special pre-parse substitutions as is done
+                            by simple-methods-v2; however only this attribute receives this pre-parsing;
+                            child CDATA text does not.
+                            This parsing is documented in org.ofbiz.base.util.StringUtil.convertOperatorSubstitutions.
+                        2016-11-10: Added for 1.14.3.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="trim-lines" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                        NOTE: This gets rid of indents, but flattens code.
+                        NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
+                        Default: true (to optimize caching speed)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -874,4 +926,85 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="if" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>
+                Performs conditional processing on blocks of code.
+                This operation specifies combinations of conditions, alternate conditions,
+                and operations to run based on the evaluation of condition expressions.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="condition" type="IfCond-Condition"/>
+                <xs:element name="then" type="IfCond-Then"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="else-if" type="IfCond-ElseIf"/>
+                <xs:element minOccurs="0" name="else" type="IfCond-Else"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="IfCond-Condition">
+        <xs:annotation>
+            <xs:documentation>
+                Combines a group of conditional elements into a single logical (true/false) expression.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AllConditionals"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Then">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition element evaluates to true.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-ElseIf">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a condition and a block of code to be evaluated/executed when a parent condition evaluates to false.
+                This element must contain two sub-elements: condition and then.
+                If the condition of the parent element evaluates to false, then this element's condition will be evaluated,
+                and if that condition evaluates to true, then the operations under the then element will be run.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="condition" type="IfCond-Condition"/>
+            <xs:element name="then" type="IfCond-Then"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Else">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition evaluates to false.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

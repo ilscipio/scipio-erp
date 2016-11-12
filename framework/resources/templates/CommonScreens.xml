@@ -6,6 +6,8 @@
     <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
         <!-- When a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), it will look in our file instead. This prevents extensibility issues. -->
         <decorator-screen-settings default-fallback-location="component://@component-name@/widget/CommonScreens.xml"/>
+        <!-- Static (webapp-agnostic) auto-included actions: these actions will be included at start of render for all top-level screens we define, regardless of which webapp they're rendered through -->
+        <render-init><local><actions><include-screen-actions name="static-common-actions" location="component://@component-name@/widget/CommonScreens.xml"/></actions></local></render-init>
     </screen-settings>
         
     <!-- SCIPIO: The settings for this file (active) -->
@@ -16,6 +18,26 @@
             <include-settings as-name="local-settings" name="common-settings" location="component://@component-name@/widget/CommonScreens.xml"/>
         </auto-include-settings>
     </screen-settings>
+
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) (webapp-aware auto-included actions) -->
+    <screen name="webapp-common-actions">
+        <section>
+            <actions>
+                <!-- Make the main side bar name/location available to all (without need for globals) 
+                    NOTE: these won't be set if our screens are invoked by another webapp, unless it provides some of its own -->
+                <include-screen-actions name="MainSideBarMenu"/>
+                <set field="mainSideBarMenu" from-field="menuCfg"/>
+            </actions>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (static, webapp-agnostic auto-included actions)-->
+    <screen name="static-common-actions">
+        <section>
+            <actions>
+            </actions>
+        </section>
+    </screen>
 
     <screen name="main-decorator">
         <section>

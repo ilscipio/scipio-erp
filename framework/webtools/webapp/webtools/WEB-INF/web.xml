@@ -39,11 +39,32 @@ under the License.
     </context-param>
     <context-param>
         <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable
-            in screen def XML files.
-        </description>
+            in screen def XML files.</description>
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://webtools/widget/CommonScreens.xml</param-value>
     </context-param>
+    <!--<context-param>
+        <description>SCIPIO: The location of a screen whose actions will be executed just before every new screen request 
+            in this webapp, after context is finalized, and AFTER the context stack has been pushed - per-webapp auto-included actions.
+            Has same effect as including actions at the beginning of the target screen to be rendered (but changes with webapp).
+            Default: [mainDecoratorLocation]#webapp-common-actions - If this param is omitted, will use mainDecoratorLocation instead, 
+                with default screen name "webapp-common-actions", so most webapps don't need to specify this param.
+            SEE ALSO: widget-screen.xsd > screen-settings > render-init > local > actions (static, webapp-agnostic auto-included actions)
+            2016-11-11: Added for 1.14.3.</description>
+        <param-name>renderInitScriptScreenLocation</param-name>
+        <param-value>component://webtools/widget/CommonScreens.xml#webapp-common-actions</param-value>
+    </context-param>-->
+    <!--<context-param>
+        <description>SCIPIO: The location of a context preparation script (usually groovy) for this webapp; executed 
+            just before every new screen request, during initial context population, after the rest of context
+            is populated, but BEFORE the context is pushed (so has full control over other context fields).
+            This is simply a webapp-specific version of widgetContextScripts.properties entries and runs just after those.
+            NOTE: In most cases renderInitScriptScreenLocation is more appropriate, unless you specifically need
+                to alter the initial context (e.g. to produce a non-standard context adapted for different purpose).
+            2016-11-11: Added for 1.14.3.</description>
+        <param-name>widgetContextScriptLocation</param-name>
+        <param-value>component://webtools/widget/WidgetContextScript.groovy</param-value>
+    </context-param>-->
 
   <context-param>
     <param-name>GeronimoMultiOfbizInstances</param-name>

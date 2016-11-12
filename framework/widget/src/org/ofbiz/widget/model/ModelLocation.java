@@ -8,6 +8,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class ModelLocation implements Serializable {
 
+    public static final ModelLocation EMPTY_LOCATION = new ModelLocation("", "", false);
+    
     protected final String name;
     protected final String resource;
     
@@ -53,6 +55,14 @@ public class ModelLocation implements Serializable {
         this(address, "", true);
     }
     
+    @Override
+    public String toString() {
+        return getCombinedName();
+    }
+    
+    public String getCombinedName() {
+        return resource + "#" + name;
+    }
 
     public String getName() {
         return name;
@@ -68,6 +78,10 @@ public class ModelLocation implements Serializable {
     
     public boolean hasResource() {
         return !resource.isEmpty();
+    }
+    
+    public boolean isEmpty() {
+        return resource.isEmpty() && name.isEmpty();
     }
     
     public String getResource(String defaultResource) {

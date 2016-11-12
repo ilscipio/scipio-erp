@@ -23,7 +23,7 @@ import org.ofbiz.entity.util.EntityFindOptions
 import org.ofbiz.entity.transaction.*
 import org.ofbiz.base.util.*
 
-module = "ApplyFeaturesFromCategory.groovy";
+module = "ApplyFeaturesFromCategoryGroovy";
 
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 

@@ -22,7 +22,7 @@ import java.sql.Timestamp;
 import org.ofbiz.base.util.*;
 import java.text.*;
 
-final module = "Week.groovy";
+final module = "WeekGroovy";
 
 String startParam = parameters.startTime;
 // SCIPIO: some screens pass start instead of startTime

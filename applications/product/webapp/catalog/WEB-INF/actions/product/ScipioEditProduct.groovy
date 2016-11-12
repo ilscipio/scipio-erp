@@ -2,5 +2,5 @@
  * SCIPIO: EditProduct lookups
  */
 
-final module = "ScipioEditProduct.groovy";
+final module = "ScipioEditProductGroovy";
 

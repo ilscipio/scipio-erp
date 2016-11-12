@@ -48,7 +48,7 @@ import org.ofbiz.service.*;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.ServiceEventHandler;
 
-final module = "runServiceLikeEvent.groovy";
+final module = "runServiceLikeEventGroovy";
 
 doExec = context.rsleArgs.doExec; // boolean for easy conditional execution
 if (doExec == null) {

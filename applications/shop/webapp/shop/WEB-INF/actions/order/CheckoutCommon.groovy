@@ -1,6 +1,6 @@
 
 
-final module = "CheckoutCommon.groovy";
+final module = "CheckoutCommonGroovy";
 
 // SCIPIO: TODO? Determine these in smarter way, to unify anon and registered checkouts
 

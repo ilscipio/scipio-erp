@@ -6,7 +6,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
  
-final module = "CommonUserChecks.groovy";
+final module = "CommonUserChecksGroovy";
 
 userLogin = context.userLogin; // (could be missing entirely)
 permChecksSetGlobal = context.remove("permChecksSetGlobal");

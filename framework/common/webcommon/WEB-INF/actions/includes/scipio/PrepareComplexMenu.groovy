@@ -4,7 +4,7 @@
 
 import org.ofbiz.base.util.*;
 
-final module = "PrepareComplexMenu.groovy";
+final module = "PrepareComplexMenuGroovy";
 
 /* configurable render inputs */
 menuCfg = context.menuCfg ?: [:];

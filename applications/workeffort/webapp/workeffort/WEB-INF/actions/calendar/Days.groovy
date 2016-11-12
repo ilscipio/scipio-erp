@@ -23,7 +23,7 @@ import java.text.*;
 
 import org.ofbiz.base.util.*;
 
-final module = "Days.groovy";
+final module = "DaysGroovy";
 
 String startParam = parameters.startTime;
 // SCIPIO: some screens pass start instead of startTime

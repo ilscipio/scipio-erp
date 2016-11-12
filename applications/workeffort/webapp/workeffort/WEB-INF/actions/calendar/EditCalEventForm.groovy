@@ -9,7 +9,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 
-final module = "EditCalEventForm.groovy";
+final module = "EditCalEventFormGroovy";
 
 workEffort = context.workEffort;
 statusTypeIds = context.statusTypeIds ?: [];

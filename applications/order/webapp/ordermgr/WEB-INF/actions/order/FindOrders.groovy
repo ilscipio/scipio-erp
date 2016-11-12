@@ -23,7 +23,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
 
-module = "FindOrders.groovy";
+module = "FindOrdersGroovy";
 
 // get the order types
 orderTypes = from("OrderType").orderBy("description").queryList();

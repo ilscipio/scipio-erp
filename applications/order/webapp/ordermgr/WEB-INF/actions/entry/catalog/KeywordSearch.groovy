@@ -27,7 +27,7 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
 
-module = "KeywordSearch.groovy";
+module = "KeywordSearchGroovy";
 
 // note: this can be run multiple times in the same request without causing problems, will check to see on its own if it has run again
 ProductSearchSession.processSearchParameters(parameters, request);

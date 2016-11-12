@@ -5,7 +5,7 @@ import org.ofbiz.base.util.*;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 
-final module = "getContextScipioStyles.groovy"
+final module = "getContextScipioStylesGroovy"
 
 setContextScipioStylesAsGlobal = context.setContextScipioStylesAsGlobal
 

@@ -13,7 +13,7 @@ import org.ofbiz.entity.util.EntityUtil
 import org.ofbiz.entity.util.EntityUtilProperties
 import org.ofbiz.service.ServiceUtil
 
-String module = "ProductCategoryContentServices.groovy";
+String module = "ProductCategoryContentServicesGroovy";
 
 // UPLOADING STUFF
 Map<String, Object> uploadProductCategoryImage() {

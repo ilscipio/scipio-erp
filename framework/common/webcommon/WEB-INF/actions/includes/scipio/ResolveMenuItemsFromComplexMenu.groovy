@@ -8,7 +8,7 @@
 
 import org.ofbiz.base.util.Debug;
 
-final module = "ResolveMenuItemsFromComplexMenuGroovy";
+final module = "ResolveMenuItemsFromComplexMenu.groovy";
 
 activeMainMenuItem = context.activeMainMenuItem;
 

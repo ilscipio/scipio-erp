@@ -286,43 +286,58 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
         }
-
+        
         public Section(ModelScreen modelScreen, Element sectionElement, boolean isMainSection) {
             super(modelScreen, sectionElement);
 
-            // read condition under the "condition" element
-            Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
-            if (conditionElement != null) {
-                conditionElement = UtilXml.firstChildElement(conditionElement);
-                this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelScreen, conditionElement);
-            } else {
+            // SCIPIO: SHORTHANDS: this code now support having an actions or widgets element in place of section.
+            // this is remarkable easy!
+            if ("actions".equals(sectionElement.getTagName())) {
                 this.condition = null;
-            }
-
-            // read all actions under the "actions" element
-            Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
-            if (actionsElement != null) {
-                this.actions = AbstractModelAction.readSubActions(modelScreen, actionsElement);
-            } else {
-                this.actions = Collections.emptyList();
-            }
-
-            // read sub-widgets
-            Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
-            if (widgetsElement != null) {
-                List<? extends Element> subElementList = UtilXml.childElementList(widgetsElement);
-                this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
-            } else {
+                this.actions = AbstractModelAction.readSubActions(modelScreen, sectionElement);
                 this.subWidgets = Collections.emptyList();
-            }
-
-            // read fail-widgets
-            Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
-            if (failWidgetsElement != null) {
-                List<? extends Element> failElementList = UtilXml.childElementList(failWidgetsElement);
-                this.failWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), failElementList);
-            } else {
                 this.failWidgets = Collections.emptyList();
+            } else if ("widgets".equals(sectionElement.getTagName())) {
+                this.condition = null;
+                this.actions = Collections.emptyList();
+                List<? extends Element> subElementList = UtilXml.childElementList(sectionElement);
+                this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+                this.failWidgets = Collections.emptyList();
+            } else { // SCIPIO: default/stock case: ("section".equals(sectionElement.getTagName()))
+                // read condition under the "condition" element
+                Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
+                if (conditionElement != null) {
+                    conditionElement = UtilXml.firstChildElement(conditionElement);
+                    this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelScreen, conditionElement);
+                } else {
+                    this.condition = null;
+                }
+    
+                // read all actions under the "actions" element
+                Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
+                if (actionsElement != null) {
+                    this.actions = AbstractModelAction.readSubActions(modelScreen, actionsElement);
+                } else {
+                    this.actions = Collections.emptyList();
+                }
+    
+                // read sub-widgets
+                Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
+                if (widgetsElement != null) {
+                    List<? extends Element> subElementList = UtilXml.childElementList(widgetsElement);
+                    this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+                } else {
+                    this.subWidgets = Collections.emptyList();
+                }
+    
+                // read fail-widgets
+                Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
+                if (failWidgetsElement != null) {
+                    List<? extends Element> failElementList = UtilXml.childElementList(failWidgetsElement);
+                    this.failWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), failElementList);
+                } else {
+                    this.failWidgets = Collections.emptyList();
+                }
             }
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));

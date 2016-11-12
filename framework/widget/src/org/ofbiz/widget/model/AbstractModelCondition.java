@@ -208,6 +208,8 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return new IfFalse(factory, modelWidget, conditionElement);
             } else if ("if-entity-permission".equals(nodeName)) {
                 return new IfEntityPermission(factory, modelWidget, conditionElement);
+            } else if ("if-widget".equals(nodeName)) { // SCIPIO: new
+                return new IfWidget(factory, modelWidget, conditionElement);
             } else {
                 throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
             }
@@ -909,6 +911,56 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
 
         public List<ModelCondition> getSubConditions() {
             return subConditions;
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;if-widget&gt; element. 
+     * 2016-11-11: New element, added for 1.14.3.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfWidget extends AbstractModelCondition {
+        private final FlexibleStringExpander name;
+        private final FlexibleStringExpander location;
+        private final WidgetFactory widgetFactory;
+        private final String operator;
+        private final boolean definedOperator;
+        
+        private IfWidget(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            this.name = FlexibleStringExpander.getInstance(condElement.getAttribute("name"));
+            this.location = FlexibleStringExpander.getInstance(condElement.getAttribute("location"));
+            this.widgetFactory = WidgetFactory.getFactory(condElement.getAttribute("type"));
+            this.operator = condElement.getAttribute("operator");
+            this.definedOperator = "defined".equals(operator);
+            if (!this.definedOperator) {
+                throw new IllegalArgumentException("Unrecognized widget operator: " + operator);
+            }
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            if (definedOperator) {
+                return widgetFactory.isWidgetDefinedAtLocation(
+                        ModelLocation.fromResAndName(this.location.expandString(context),
+                                this.name.expandString(context)));
+            } else {
+                throw new IllegalArgumentException("Unrecognized widget operator: " + operator);
+            }
+        }
+
+        public FlexibleStringExpander getNameExdr() {
+            return name;
+        }
+
+        public FlexibleStringExpander getLocationExdr() {
+            return location;
         }
     }
 }

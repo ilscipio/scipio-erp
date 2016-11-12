@@ -356,7 +356,7 @@ under the License.
                     <decorator-section name="body">
                         <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <!-- <container style="leftclear">
-                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
+                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} [${paymentId}]  ${${extraFunctionName}}"/>
                         </container> -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -571,14 +571,16 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
+                                <!-- SCIPIO: use physical
                                 <and>
                                     <not><if-empty field="taxAuthPartyId"/></not>
                                     <not><if-empty field="taxAuthGeoId"/></not>
-                                </and>
+                                </and> -->
+                                <not><if-empty field="taxAuthority"/></not>
                             </condition>
                             <widgets>
                                 <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${taxAuthGeoId}] ${${extraFunctionName}}"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="body"/>

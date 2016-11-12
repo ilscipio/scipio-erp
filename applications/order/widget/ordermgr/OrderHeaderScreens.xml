@@ -29,7 +29,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="heading">${uiLabelMap.CommonId}: ${orderHeader.orderId}</label>
+                        <label style="heading">${orderHeader.orderId}</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

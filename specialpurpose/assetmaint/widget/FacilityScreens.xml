@@ -48,7 +48,7 @@
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <label style="heading+1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}: ${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                            <label style="heading+1">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}: ${facility.facilityName} [${facilityId}]</label>
                         </container>
                         <include-menu name="FacilityInventoryByProductSubTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
 

@@ -116,7 +116,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="CategoryTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
+                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${productCategoryId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>

@@ -148,7 +148,7 @@ under the License.
                 <decorator-screen name="CommonArAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}] ${${extraFunctionName}}"/>
+                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} [${paymentId}] ${${extraFunctionName}}"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

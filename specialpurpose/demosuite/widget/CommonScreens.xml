@@ -15,6 +15,17 @@
         </auto-include-settings>
     </screen-settings>
 
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <section>
+            <actions>
+                <!-- Make the main side bar name/location available to all (without need for globals) -->
+                <include-screen-actions name="MainSideBarMenu"/>
+                <set field="mainSideBarMenu" from-field="menuCfg"/>
+            </actions>
+        </section>
+    </screen>
+
     <screen name="main-decorator">
         <section>
             <actions>

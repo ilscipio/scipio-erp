@@ -1697,8 +1697,7 @@
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
 <@section title="Ofbiz Widgets Layout Tests"> 
-  <@render type="screen-widget" resource=ofbizWidgetsLayoutScreenLocation />
-  TESTTESTTEST: ${context.commonActionField1!"SDFSDF"}
+  <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
     <p>Button Menu</p>

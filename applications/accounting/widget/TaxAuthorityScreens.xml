@@ -55,13 +55,13 @@ under the License.
     <screen name="EditTaxAuthority">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditTaxAuthority"/>
                 <set field="activeSubMenuItem" value="EditTaxAuthority"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthority"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
+                <set field="titleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthority' : 'AccountingNewTaxAuthority'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">

@@ -331,7 +331,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="heading">${uiLabelMap.ProductInventoryItemsFor} ${facility.facilityName} [${uiLabelMap.CommonId}:${facility.facilityId}]</label>
+                        <label style="heading">${uiLabelMap.ProductInventoryItemsFor} ${facility.facilityName} [${facility.facilityId}]</label>
                         <container>
                             <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="${styles.link_nav} ${styles.action_add}"/>
                             <link target="EditInventoryItem" text="${uiLabelMap.ProductCreateNewInventoryItemFacility}" style="${styles.link_nav} ${styles.action_add}">
@@ -428,7 +428,7 @@ under the License.
                     <decorator-section name="body">
                         <container>
                             <label style="heading">${uiLabelMap.PageTitleEditFacilityInventoryItems} ${uiLabelMap.CommonFor}:</label>
-                            <label style="heading">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                            <label style="heading">${facility.facilityName} [${facilityId}]</label>
                         </container>
                         <container>
                             <link target="ViewFacilityInventoryByProduct" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}">
@@ -495,7 +495,7 @@ under the License.
                 <decorator-screen name="CommonFacilityInventoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="page-title">
-                            <label>${uiLabelMap.ProductInventoryItemsDetailsFor} ${facility.facilityName} [${uiLabelMap.CommonId}:${facility.facilityId}]</label>
+                            <label>${uiLabelMap.ProductInventoryItemsDetailsFor} ${facility.facilityName} [${facility.facilityId}]</label>
                         </container>
                         <container style="button-bar button-style-1">
                             <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="${styles.link_nav} ${styles.action_add}"/>

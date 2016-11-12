@@ -58,7 +58,7 @@ under the License.
                             </condition -->
                             <widgets>
                                 <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${productId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <!--

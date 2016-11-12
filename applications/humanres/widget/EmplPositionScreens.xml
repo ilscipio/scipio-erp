@@ -144,7 +144,7 @@
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="heading" text="${uiLabelMap.HumanResEditEmplPositionReportingStruct} ${uiLabelMap.CommonFor}: [${uiLabelMap.CommonId}:${parameters.emplPositionId}]"/>
+                        <label style="heading" text="${uiLabelMap.HumanResEditEmplPositionReportingStruct} ${uiLabelMap.CommonFor}: [${parameters.emplPositionId}]"/>
                         <screenlet id="AddReportsToEmplPositionReportingStructPanel" title="${uiLabelMap.HumanResAddReportsToEmplPositionReportingStruct}" collapsible="true">
                             <include-form name="AddReportsToEmplPositionReportingStruct" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>

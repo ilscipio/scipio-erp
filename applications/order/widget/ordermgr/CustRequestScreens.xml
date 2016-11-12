@@ -288,7 +288,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <container>
                                 <link target="requestitem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="custRequestId"/>
@@ -321,7 +321,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/request/requestitemnotes.ftl"/></html>
                             </platform-specific>
@@ -354,7 +354,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <container>
                                 <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="custRequestId" from-field="custRequestItem.custRequestId"/>
@@ -388,7 +388,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/request/QuoteLinks.ftl"/></html>
                             </platform-specific>
@@ -420,7 +420,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <include-form name="EditQuoteItemForRequest" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -448,7 +448,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
+                        <screenlet title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}">
                             <include-form name="CreateQuoteAndQuoteItemForRequest" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -477,7 +477,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddCustRequestItemWorkEffortPanel" title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}" collapsible="true">
+                        <screenlet id="AddCustRequestItemWorkEffortPanel" title="${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}" collapsible="true">
                             <link target="EditRequestItem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.link_nav} ${styles.action_add}">
                                 <parameter param-name="custRequestId"/>
                             </link>

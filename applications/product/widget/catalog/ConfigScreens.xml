@@ -143,7 +143,7 @@ under the License.
                 </not>
             </condition>
             <widgets>
-                <screenlet title="${uiLabelMap.ProductComponents} - ${uiLabelMap.CommonId}: ${configOption.configOptionId} - ${configOption.description}">
+                <screenlet title="${uiLabelMap.ProductComponents} - ${configOption.configOptionId} - ${configOption.description}">
                     <include-form name="ProductConfigList" location="component://product/widget/catalog/ConfigForms.xml"/>
                 </screenlet>
                 <section>

@@ -8,16 +8,16 @@
 
 import org.ofbiz.base.util.Debug;
 
-final module "ResolveMenuItemsFromComplexMenuGroovy";
+final module = "ResolveMenuItemsFromComplexMenuGroovy";
 
 activeMainMenuItem = context.activeMainMenuItem;
 
 if (!activeMainMenuItem) {
-    cmplMenuLoc = context.mainSideBarMenu?.location;
-    cmplMenuName = context.mainSideBarMenu?.name;
+    cplxLoc = context.mainSideBarMenu?.location;
+    cplxName = context.mainSideBarMenu?.name;
     
     cplxMenuModel = null;
-    if (cmplMenuLoc && cmplMenuName) {
+    if (cplxLoc && cplxName) {
         cplxMenuModel = null;
         try {
             cplxMenuModel = org.ofbiz.widget.model.MenuFactory.getMenuFromLocation(
@@ -46,8 +46,8 @@ if (!activeMainMenuItem) {
             Debug.logInfo("Automatically determined activeMainMenuItem: " + activeMainMenuItem, module);
         } else {
             Debug.logWarning("Could not find sub menu item activeSubMenu/activeSubMenuItem [" +
-                activeSubMenu + "/" + activeSubMenuItem + "] in menu [" + cmplMenuLoc + "#" +
-                cmplMenuName + "]; unable to determine activeMainMenuItem", module);
+                activeSubMenu + "/" + activeSubMenuItem + "] in menu [" + cplxLoc + "#" +
+                cplxName + "]; unable to determine activeMainMenuItem", module);
         }
     }
 }

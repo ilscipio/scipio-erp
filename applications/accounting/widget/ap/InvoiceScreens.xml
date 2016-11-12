@@ -69,10 +69,16 @@ under the License.
                     <field-map field-name="entityName" value="InvoiceAndType"/>
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                 </service>
-                <!-- SCIPIO: DON'T DO THIS; causes exceptions. ugly workaround below...
+                <!-- SCIPIO: DON'T DO THIS; causes exceptions due to ftl iteration. get rid of the EntityListIterator.
                 <set field="invoices" from-field="result.listIt"/> -->
-                <set field="dummy" value="${groovy: globalContext.tempVal = (context.result?.listIt != null) ? context.result.listIt.getCompleteList() : []; context.result.listIt.close(); return '';}"/>
-                <set field="invoices" from-field="tempVal"/>
+                <script><![CDATA[groovy:
+                    if (context.result?.listIt != null) {
+                        context.invoices = result.listIt.getCompleteList();
+                        result.listIt.close();
+                    } else {
+                        context.invoices = [];
+                    }
+                ]]></script>
                 
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
                 <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${parameters.organizationPartyId}"/>

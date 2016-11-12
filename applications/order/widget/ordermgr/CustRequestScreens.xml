@@ -581,7 +581,6 @@ under the License.
                         <set field="notFromPartyId" from-field="userLogin.partyId"/>
                         <set field="screenletTitle" from-field="uiLabelMap.OrderOpenCompanyCustomerRequests"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -604,7 +603,6 @@ under the License.
                             <order-by field-name="+custRequestDate"/>
                         </entity-condition>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -622,7 +620,6 @@ under the License.
                             <order-by field-name="-custRequestDate"/>
                         </entity-condition>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -643,7 +640,6 @@ under the License.
                             <order-by field-name="-custRequestDate"/>
                         </entity-condition>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>

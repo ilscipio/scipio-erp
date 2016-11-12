@@ -141,7 +141,6 @@
                 <section>
                     <condition><if-empty field="maintHistSeqId"/></condition>
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

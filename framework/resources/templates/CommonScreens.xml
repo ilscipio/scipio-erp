@@ -21,22 +21,18 @@
 
     <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) (webapp-aware auto-included actions) -->
     <screen name="webapp-common-actions">
-        <section>
-            <actions>
-                <!-- Make the main side bar name/location available to all (without need for globals) 
-                    NOTE: these won't be set if our screens are invoked by another webapp, unless it provides some of its own -->
-                <include-screen-actions name="MainSideBarMenu"/>
-                <set field="mainSideBarMenu" from-field="menuCfg"/>
-            </actions>
-        </section>
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) 
+                NOTE: these won't be set if our screens are invoked by another webapp, unless it provides some of its own -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenu" from-field="menuCfg"/>
+        </actions>
     </screen>
     
     <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (static, webapp-agnostic auto-included actions)-->
     <screen name="static-common-actions">
-        <section>
-            <actions>
-            </actions>
-        </section>
+        <actions>
+        </actions>
     </screen>
 
     <screen name="main-decorator">

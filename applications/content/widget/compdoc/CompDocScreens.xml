@@ -1290,8 +1290,6 @@ under the License.
                             <if-compare field="dataResource.dataResourceTypeId" operator="equals" value="SURVEY_RESPONSE"/>
                         </or>
                     </condition>
-                    <widgets>
-                    </widgets>
                 </section>
                 <section>
                     <condition>
@@ -1302,8 +1300,6 @@ under the License.
                             </or>
                         </not>
                     </condition>
-                    <widgets>
-                    </widgets>
                 </section>
             </widgets>
         </section>

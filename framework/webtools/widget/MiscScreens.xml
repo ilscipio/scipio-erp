@@ -59,7 +59,6 @@ under the License.
                         <!-- These are NOT included by include-actions directive. -->
                         <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoCommonActions outside its top section and should not be included by include-actions. [ERROR]"/>
                     </actions>
-                    <widgets/>
                 </section>
             </widgets>
         </section>
@@ -168,7 +167,6 @@ under the License.
                             <actions>
                                 <set field="tableStyle" value="${styles.table_data_list} dark-grid"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <section>
                             <actions>
@@ -176,7 +174,6 @@ under the License.
                                 <set field="headerStyle" value="header-row-2"/>
                                 <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                     </widgets>
@@ -191,7 +188,6 @@ under the License.
                                     <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                                     <set field="viewSize" value="1" type="Integer"/>
                                 </actions>
-                                <widgets/>
                             </section>
                             <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                         </screenlet>
@@ -432,7 +428,7 @@ under the License.
                         </section>
                     </screenlet>
                     
-                    <screenlet title="New If block test">
+                    <screenlet title="New conditional element tests (if, if-widget)">
                         <section>
                             <actions>
                                 <set field="testField1" value="true"/>
@@ -471,11 +467,37 @@ under the License.
                                     <set field="resField3" value="else block"/>
                                 </else>
                                 </if>
+                                
+                                <condition-to-field field="existsCrazyWidget1">
+                                    <if-widget operator="defined" type="screen" location="${parameters.mainDecoratorLocation}" name="crazyWidget1" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMainDecorator">
+                                    <if-widget operator="defined" type="screen" location="${parameters.mainDecoratorLocation}" name="main-decorator" />
+                                </condition-to-field>
+                                <condition-to-field field="existsFormWidgetProgramExport">
+                                    <if-widget operator="defined" type="form" location="component://webtools/widget/MiscForms.xml" name="ProgramExport" />
+                                </condition-to-field>
+                                <condition-to-field field="existsFormWidgetRidiculous">
+                                    <if-widget operator="defined" type="form" location="component://webtools/widget/MiscForms.xml" name="Ridiculous" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMenuWidgetRidiculous">
+                                    <if-widget operator="defined" type="menu" location="component://webtools/widget/Menus.xml" name="Ridiculous" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMenuWidgetWebtoolsAppBar">
+                                    <if-widget operator="defined" type="menu" location="component://webtools/widget/Menus.xml" name="WebtoolsAppBar" />
+                                </condition-to-field>
                             </actions>
                             <widgets>
                                 <label text="resField1: ${resField1}"/>
                                 <label text="resField2: ${resField2}"/>
                                 <label text="resField3: ${resField3}"/>
+                                
+                                <label text="existsCrazyWidget1: ${existsCrazyWidget1}"/>
+                                <label text="existsMainDecorator: ${existsMainDecorator}"/>
+                                <label text="existsFormWidgetProgramExport: ${existsFormWidgetProgramExport}"/>
+                                <label text="existsFormWidgetRidiculous: ${existsFormWidgetRidiculous}"/>
+                                <label text="existsMenuWidgetRidiculous: ${existsMenuWidgetRidiculous}"/>
+                                <label text="existsMenuWidgetWebtoolsAppBar: ${existsMenuWidgetWebtoolsAppBar}"/>
                             </widgets>
                         </section>
                     </screenlet>

@@ -60,17 +60,15 @@ under the License.
             webapp-common-actions (if any) will end up being used instead (similar to main-decorator). 
         2016-11-11: New pattern, added for 1.14.3. -->
     <screen name="webapp-common-actions">
-        <section>
-            <actions>
-                <script><![CDATA[groovy:
-                    import org.ofbiz.base.util.Debug;
-                    if (Debug.verboseOn()) Debug.logVerbose("Begin Admin webapp screen render (webapp-common-actions)", "AdminCommonActionsGroovy");
-                ]]></script>
-                <!-- Make the main side bar name/location available to all (without need for globals) -->
-                <include-screen-actions name="MainSideBarMenu"/>
-                <set field="mainSideBarMenu" from-field="menuCfg"/>
-            </actions>
-        </section>
+        <actions>
+            <script><![CDATA[groovy:
+                import org.ofbiz.base.util.Debug;
+                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin webapp screen render (webapp-common-actions)", "AdminCommonActionsGroovy");
+            ]]></script>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenu" from-field="menuCfg"/>
+        </actions>
     </screen>
     
     <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (discovered via screen-settings, above).
@@ -79,14 +77,12 @@ under the License.
         in the case of screen reuse by other applications. They are still run if the screens are included by another webapp,
         but in that case actions from the screens of the calling webapp will be run before these.  -->
     <screen name="static-common-actions">
-        <section>
-            <actions>
-                <script><![CDATA[groovy:
-                    import org.ofbiz.base.util.Debug;
-                    if (Debug.verboseOn()) Debug.logVerbose("Begin Admin local/static screen render (static-common-actions)", "AdminCommonActionsGroovy");
-                ]]></script>
-            </actions>
-        </section>
+        <actions>
+            <script><![CDATA[groovy:
+                import org.ofbiz.base.util.Debug;
+                if (Debug.verboseOn()) Debug.logVerbose("Begin Admin local/static screen render (static-common-actions)", "AdminCommonActionsGroovy");
+            ]]></script>
+        </actions>
     </screen>
         
     <screen name="main-decorator">

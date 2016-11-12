@@ -97,8 +97,28 @@ Features and Modifications:
     </xs:element>
     <xs:element name="screen" substitutionGroup="AllScreenEntries">
         <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    Screen element.
+                    SCIPIO: 2016-11-11: This element is enhanced to allow an actions element as direct child instead of
+                    forcing a section element declaration. It is ENCOURAGED to OMIT the section element if you
+                    are defining an actions-only containing screen definition, so the intention is more
+                    clear and it discourages the addition of widgets elements;
+                    in turn this allows the include-screen-actions directive to work properly 
+                    (include-screen-actions only includes the actions from the top section actions in a screen,
+                    and it bypasses the condition element).
+                    NOTE: As a result of such construct, such widget cannot have condition elements;
+                        instead you may now use the master "if" actions directive also added for 1.14.3 
+                        in widget-common.xsd (which then works with include-screen-actions).
+                    2016-11-11: Enhanced for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
             <xs:sequence>
-                <xs:element ref="section" />
+                <!-- SCIPIO: 2016-11-11: It is now possible - and encouraged - to define actions-only screens without the  -->
+                <xs:choice>
+                    <xs:element ref="section" />
+                    <xs:element ref="actions" />
+                </xs:choice>
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="transaction-timeout" use="optional">
@@ -191,6 +211,7 @@ Features and Modifications:
             <xs:element ref="if-empty-section" />
             <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
             <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-widget" /><!-- SCIPIO: 2016-11-11: new -->
         </xs:choice>
     </xs:complexType>
 

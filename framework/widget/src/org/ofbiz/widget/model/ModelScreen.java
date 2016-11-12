@@ -18,8 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -44,6 +46,9 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
 
     public static final String module = ModelScreen.class.getName();
 
+    public static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
+            UtilMisc.toSet("screen")); // SCIPIO: new, for future use
+    
     private final String sourceLocation;
     private final FlexibleStringExpander transactionTimeoutExdr;
     // SCIPIO: generalized
@@ -65,11 +70,39 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         // read in the section, which will read all sub-widgets too
         Element sectionElement = UtilXml.firstChildElement(screenElement, "section");
         if (sectionElement == null) {
-            throw new IllegalArgumentException("No section found for the screen definition with name: " + getName());
-        }
+            // SCIPIO: we support actions or widgets block shorthand
+            // NOTE: the XSD may not support widgets block shorthand for now, 
+            // because unlike actions shorthand, widgets shorthand usually ends up counterproductive...
+            sectionElement = UtilXml.firstChildElement(screenElement, "actions");
+            if (sectionElement == null) {
+                sectionElement = UtilXml.firstChildElement(screenElement, "widgets");
+                if (sectionElement == null) {
+                    throw new IllegalArgumentException("No section (or actions/widgets shorthand) found for the screen definition with name: " + getName());
+                }
+            }
+        } 
         this.section = new ModelScreenWidget.Section(this, sectionElement, true);
     }
 
+    /**
+     * SCIPIO: Returns true if this screen only contains actions as content, or in other words,
+     * if this screen represents a collection of reusable actions.
+     * <p>
+     * Note the best way to express this in screen files is to omit the top sections and use
+     * only the actions block.
+     */
+    public boolean isActionsOnly() {
+        return section.isActionsOnly();
+    }
+    
+    /**
+     * SCIPIO: Returns true if the named element is a screen (top-level) element or any element
+     * that can stand in for it.
+     */
+    public static boolean isScreenElement(Element element) {
+        return validScreenElementTagNames.contains(element.getTagName());
+    }
+    
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);

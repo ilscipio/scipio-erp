@@ -35,6 +35,7 @@ under the License.
             <xs:element ref="if-empty" />
             <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
             <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-widget" /><!-- SCIPIO: 2016-11-11: new -->
         </xs:choice>
     </xs:complexType>
     <xs:element name="AllConditionals" abstract="true" />
@@ -261,6 +262,35 @@ under the License.
             <xs:attribute type="xs:string" name="field" use="required" />
         </xs:complexType>
     </xs:element>
+    <xs:element name="if-widget" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Verifies a screen/form/menu widget.
+                For example, "defined" operation checks if exists at the given location.
+                Name/location support flexible expressions.
+                2016-11-11: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" use="required"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="screen" />
+                        <xs:enumeration value="form" />
+                        <xs:enumeration value="menu" />
+                        <xs:enumeration value="tree" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="operator" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="defined" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="AllActions" abstract="true" />
     <xs:element name="set" substitutionGroup="AllActions">
@@ -458,8 +488,13 @@ under the License.
     <xs:element name="include-screen-actions" substitutionGroup="AllActions">
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes a screen's top section actions in this widget's actions where the directive appears.
-                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
-                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+                Name and location support flexible expressions and are resolved at runtime.
+                NOTE: This ignores and bypasses the named screen's condition element.
+                NOTE: This directive includes the actions from the fully-built target widget model (rather than textually), with full recursion implied
+                    but ONLY with respect to other include-screen-actions directives;
+                    this will NOT include actions that would be run as a result of the widgets-element-based include-screen directive.
+                    In other words, the screens referenced with this directive should strive to use solely directives under the
+                    actions element, and even omit the other top directives entirely for clarity.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="name" use="required"/>

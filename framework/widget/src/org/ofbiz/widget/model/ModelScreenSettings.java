@@ -29,12 +29,14 @@ public class ModelScreenSettings extends ModelWidget {
     protected final Boolean active;
     protected final AutoIncludeSettings autoIncludeSettings;
     protected final DecoratorScreenSettings decoratorScreenSettings;
+    protected final RenderInitSettings renderInitSettings;
     
     public ModelScreenSettings(String name, Boolean active) {
         super(name);
         this.active = active;
         this.autoIncludeSettings = null;
         this.decoratorScreenSettings = defaultDecoratorScreenSettings;
+        this.renderInitSettings = null;
     }
     
     public ModelScreenSettings(Element settingsElement, String sourceLocation) {
@@ -54,6 +56,13 @@ public class ModelScreenSettings extends ModelWidget {
         } else {
             this.decoratorScreenSettings = defaultDecoratorScreenSettings;
         }  
+        
+        childElementList = UtilXml.childElementList(settingsElement, "render-init");
+        if (UtilValidate.isNotEmpty(childElementList)) {
+            this.renderInitSettings = new RenderInitSettings(this, childElementList.get(0), sourceLocation);
+        } else {
+            this.renderInitSettings = null;
+        }  
         this.active = UtilMisc.booleanValue(settingsElement.getAttribute("active"));
     }
     
@@ -67,6 +76,7 @@ public class ModelScreenSettings extends ModelWidget {
         }
         this.autoIncludeSettings = (existing.autoIncludeSettings != null) ? existing.autoIncludeSettings : null;
         this.decoratorScreenSettings = new DecoratorScreenSettings(existing.decoratorScreenSettings);
+        this.renderInitSettings = (existing.renderInitSettings != null) ? existing.renderInitSettings : null;
     }
     
     // Merge constructor
@@ -93,6 +103,20 @@ public class ModelScreenSettings extends ModelWidget {
                 this.autoIncludeSettings = null;
             }
         }
+        if (override.renderInitSettings != null) {
+            if (existing.renderInitSettings != null) {
+                this.renderInitSettings = new RenderInitSettings(existing.renderInitSettings,
+                        override.renderInitSettings); 
+            } else {
+                this.renderInitSettings = override.renderInitSettings; 
+            }
+        } else {
+            if (existing.renderInitSettings != null) {
+                this.renderInitSettings = existing.renderInitSettings; 
+            } else {
+                this.renderInitSettings = null;
+            }
+        }
     }
     
     public Boolean getActive() {
@@ -114,12 +138,27 @@ public class ModelScreenSettings extends ModelWidget {
         return decoratorScreenSettings;
     }
 
+    public RenderInitSettings getRenderInitSettings() {
+        return renderInitSettings;
+    }
+    
+    public List<ModelAction> getLocalRenderInitActions() {
+        RenderInitSettings renderInitSettings = this.getRenderInitSettings();
+        if(renderInitSettings == null) {
+            return null;
+        }
+        RenderInitSettings.LocalSettings localSettings = renderInitSettings.getLocalSettings();
+        if (localSettings == null) {
+            return null;
+        }
+        return localSettings.getActions();
+    }
+
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         // TODO Auto-generated method stub
     }
 
-    
     public static class IncludeSettings implements Serializable {
         protected final String name;
         protected final String location;
@@ -322,6 +361,76 @@ public class ModelScreenSettings extends ModelWidget {
             }
         }
         
+    }
+    
+    public static class RenderInitSettings implements Serializable {
+        
+        protected final LocalSettings localSettings;
+        
+        public RenderInitSettings(ModelScreenSettings modelScreenSettings, Element autoSettingsElement, String sourceLocation) {
+            List<? extends Element> childElements = UtilXml.childElementList(autoSettingsElement, "local");
+            if (UtilValidate.isNotEmpty(childElements)) {
+                this.localSettings = new LocalSettings(modelScreenSettings, childElements.get(0), sourceLocation);
+            } else {
+                this.localSettings = new LocalSettings();
+            }
+        }
+        
+        // Copy constructor
+        public RenderInitSettings(RenderInitSettings existing) {
+            this.localSettings = new LocalSettings(existing.localSettings);
+        }
+        
+        // Merge constructor
+        public RenderInitSettings(RenderInitSettings existing, RenderInitSettings override) {
+            this.localSettings = new LocalSettings(existing.localSettings, override.localSettings);
+        }
+        
+        public RenderInitSettings() {
+            this.localSettings = new LocalSettings();
+        }
+     
+        public LocalSettings getLocalSettings() {
+            return localSettings;
+        }
+
+        public static class LocalSettings implements Serializable {
+            
+            protected final List<ModelAction> actions;
+            
+            public LocalSettings(ModelScreenSettings modelScreenSettings, Element autoSettingsElement, String sourceLocation) {
+                ArrayList<ModelAction> actions = new ArrayList<>();
+                List<? extends Element> childElements = UtilXml.childElementList(autoSettingsElement, "actions");
+                for (Element childElement: childElements) {
+                    actions.addAll(AbstractModelAction.readSubActions(modelScreenSettings, childElement));
+                }
+                actions.trimToSize();
+                this.actions = Collections.unmodifiableList(actions);
+            }
+            
+            // Copy constructor
+            public LocalSettings(LocalSettings existing) {
+                // NOTE: all the members are final and read-only, so there's no point deep-copying
+                this.actions = existing.actions;
+            }
+            
+            // Merge constructor
+            public LocalSettings(LocalSettings existing, LocalSettings override) {
+                ArrayList<ModelAction> actions = new ArrayList<>();
+                actions.addAll(existing.actions);
+                actions.addAll(override.actions);
+                actions.trimToSize();
+                this.actions = Collections.unmodifiableList(actions);
+            }
+            
+            public LocalSettings() {
+                this.actions = Collections.emptyList();
+            }
+
+            public List<ModelAction> getActions() {
+                return actions;
+            }
+        }
     }
     
 }

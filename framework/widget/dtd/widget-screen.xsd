@@ -1119,5 +1119,39 @@ Features and Modifications:
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="render-init" substitutionGroup="AllScreenSettingEntries">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Adds or modifies behavior of new screen renders, for the top level target screens.
+                    2016-11-11: New element, added for 1.14.3.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="local">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation>
+                                Render init settings applied to all top level target screens within the local file, applied when
+                                they are chosen as target screen to render.
+                                 
+                                The actions element can be used to auto-include actions, and the recommended pattern is to use 
+                                include-screen-actions directive to include the actions of another screen, by convention
+                                named "static-common-actions".
+                                
+                                NOTE: This is distinct from the webapp-specific render init actions which go by the
+                                    screen name "webapp-common-actions". These actions are more local and always execute
+                                    after the webapp actions and regardless of the webapp through which rendering is done.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" ref="actions"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="screen-settings" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     
 </xs:schema>

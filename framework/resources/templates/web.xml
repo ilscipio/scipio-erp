@@ -21,13 +21,25 @@
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://@component-name@/widget/CommonScreens.xml</param-value>
     </context-param>
-    <!--
-    <context-param>
+    <!--<context-param>
+        <description>SCIPIO: The location of a screen whose actions will be executed just before every new screen request 
+            in this webapp, after context is finalized, and AFTER the context stack has been pushed - in effect, per-webapp auto-included actions.
+            Default: mainDecoratorLocation+#webapp-common-actions
+            2016-11-11: Added for 1.14.3.</description>
+        <param-name>renderInitScriptScreenLocation</param-name>
+        <param-value>component://@component-name@/widget/CommonScreens.xml#webapp-common-actions</param-value>
+    </context-param>-->
+    <!--<context-param>
+        <description>SCIPIO: Initial context-building script, webapp-specific version of widgetContextScripts.properties entries; runs just after those. 
+            Has no default. In most cases renderInitScriptScreenLocation is more appropriate. 2016-11-11: Added for 1.14.3.</description>
+        <param-name>widgetContextScriptLocation</param-name>
+        <param-value>component://@component-name@/widget/WidgetContextScript.groovy</param-value>
+    </context-param>-->
+    <!--<context-param>
         <param-name>widgetVerbose</param-name>
         <param-value>false</param-value>
         <description>Enable widget boundary comments. See org.ofbiz.widget.model.ModelWidget.widgetBoundaryCommentsEnabled().</description>
-    </context-param>
-    -->
+    </context-param>-->
     <context-param>
         <description>Remove unnecessary whitespace from HTML output.</description>
         <param-name>compressHTML</param-name>

@@ -9,7 +9,7 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.entity.util.EntityUtil;
 
-final module = "ProductGroovy";
+final module = "Product.groovy";
 
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;

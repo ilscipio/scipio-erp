@@ -24,7 +24,7 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 
-final module = "ShipSettingsGroovy";
+final module = "ShipSettings.groovy";
 
 cart = session.getAttribute("shoppingCart");
 partyId = cart.getPartyId();

@@ -32,7 +32,7 @@ import javolution.util.FastMap;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
-module = "KeywordSearchGroovy";
+module = "KeywordSearch.groovy";
 
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;

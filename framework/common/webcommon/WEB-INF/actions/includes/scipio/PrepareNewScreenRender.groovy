@@ -13,7 +13,7 @@ import freemarker.template.TemplateScalarModel;
 import org.ofbiz.base.util.*;
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 
-final module = "PrepareNewScreenRenderGroovy"
+final module = "PrepareNewScreenRender.groovy"
 
 Debug.logInfo("Scipio: Preparing new templating API render; clearing request-scope templating vars", module);
 

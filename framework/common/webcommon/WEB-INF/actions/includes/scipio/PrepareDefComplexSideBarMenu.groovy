@@ -6,7 +6,7 @@
 
 //import org.ofbiz.base.util.*;
 
-//final module = "PrepareDefaultComplexSideBarMenuGroovy";
+//final module = "PrepareDefaultComplexSideBarMenu.groovy";
 
 context.activeSubMenu = null;
 // NOTE: it's possible to not want to set this to null...

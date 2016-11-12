@@ -28,7 +28,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
-module = "BreadcrumbsGroovy";
+module = "Breadcrumbs.groovy";
 breadcrumbsList = FastList.newInstance();
 
 

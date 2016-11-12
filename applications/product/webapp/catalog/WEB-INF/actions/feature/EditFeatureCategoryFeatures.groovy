@@ -23,7 +23,7 @@ import org.ofbiz.entity.util.EntityFindOptions
 import org.ofbiz.base.util.*
 import org.ofbiz.entity.transaction.*
 
-module = "EditFeatureCategoryFeaturesGroovy";
+module = "EditFeatureCategoryFeatures.groovy";
 
 context.hasPermission = security.hasEntityPermission("CATALOG", "_VIEW", session);
 

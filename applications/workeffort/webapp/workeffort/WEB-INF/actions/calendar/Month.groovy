@@ -22,7 +22,7 @@ import java.util.*;
 import org.ofbiz.base.util.*;
 import java.text.*;
 
-final module = "MonthGroovy";
+final module = "Month.groovy";
 
 String startParam = parameters.startTime;
 // SCIPIO: some screens pass start instead of startTime

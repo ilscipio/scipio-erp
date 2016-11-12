@@ -23,7 +23,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.base.util.*
 import org.ofbiz.entity.util.EntityUtilProperties;
 
-module = "showvisitsGroovy";
+module = "showvisits.groovy";
 
 partyId = parameters.partyId;
 context.partyId = partyId;

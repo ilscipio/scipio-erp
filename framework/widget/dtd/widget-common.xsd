@@ -458,8 +458,13 @@ under the License.
     <xs:element name="include-screen-actions" substitutionGroup="AllActions">
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes a screen's top section actions in this widget's actions where the directive appears.
-                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
-                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+                Name and location support flexible expressions and are resolved at runtime.
+                NOTE: This ignores and bypasses the named screen's condition element.
+                NOTE: This directive includes the actions from the fully-built target widget model (rather than textually), with full recursion implied
+                    but ONLY with respect to other include-screen-actions directives;
+                    this will NOT include actions that would be run as a result of the widgets-element-based include-screen directive.
+                    In other words, the screens referenced with this directive should strive to use solely directives under the
+                    actions element, and even omit the other top directives entirely for clarity.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="name" use="required"/>

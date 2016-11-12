@@ -41,7 +41,7 @@ import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 
-final module = "ProductDetailGroovy"
+final module = "ProductDetail.groovy"
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     def ct = 0;

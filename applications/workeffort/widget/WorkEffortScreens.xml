@@ -804,7 +804,6 @@ under the License.
                     <actions>
                         <set field="title" value="${uiLabelMap.WorkEffortICalendarAdd}"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

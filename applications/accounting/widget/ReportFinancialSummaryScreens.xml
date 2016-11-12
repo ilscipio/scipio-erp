@@ -56,22 +56,19 @@ under the License.
     </screen>
 
     <screen name="FinancialSummaryDataPrep">
-        <section>
-            <actions>
-                <set field="month" from-field="parameters.month" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
-                <set field="year" from-field="parameters.year" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <set field="currencyUomId" from-field="parameters.currencyUomId"/>
+        <actions>
+            <set field="month" from-field="parameters.month" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
+            <set field="year" from-field="parameters.year" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+            <set field="currencyUomId" from-field="parameters.currencyUomId"/>
 
-                <entity-one entity-name="PartyNameView" value-field="organizationPartyName" auto-field-map="false" use-cache="true">
-                    <field-map field-name="partyId" from-field="organizationPartyId"/>
-                </entity-one>
-                <entity-one entity-name="Uom" value-field="currencyUom" auto-field-map="false" use-cache="true">
-                    <field-map field-name="uomId" from-field="currencyUomId"/>
-                </entity-one>
-            </actions>
-            <widgets></widgets>
-        </section>
+            <entity-one entity-name="PartyNameView" value-field="organizationPartyName" auto-field-map="false" use-cache="true">
+                <field-map field-name="partyId" from-field="organizationPartyId"/>
+            </entity-one>
+            <entity-one entity-name="Uom" value-field="currencyUom" auto-field-map="false" use-cache="true">
+                <field-map field-name="uomId" from-field="currencyUomId"/>
+            </entity-one>
+        </actions>
     </screen>
 
     <screen name="SalesInvoiceByProductCategorySummary">

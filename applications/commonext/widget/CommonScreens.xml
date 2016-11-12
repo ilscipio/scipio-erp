@@ -85,14 +85,12 @@ under the License.
                         <set field="dropdown.textEnd" value="[${defaultOrganizationPartyId}]"/>
                         <set field="layoutSettings.topLines[]" from-field="dropdown" global="true"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition><if-empty field="PartyAcctgPrefAndGroupList"/></condition>
                     <actions>
                        <set field="layoutSettings.suppressTab" value=""/><!-- enable ofbiz setup -->
                     </actions>
-                    <widgets/>
                 </section>
                 <!--<include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>-->
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml" />

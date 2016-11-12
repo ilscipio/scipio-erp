@@ -36,13 +36,11 @@ under the License.
         
     <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
     <screen name="webapp-common-actions">
-        <section>
-            <actions>
-                <!-- Make the main side bar name/location available to all (without need for globals) -->
-                <include-screen-actions name="MainSideBarMenu"/>
-                <set field="mainSideBarMenu" from-field="menuCfg"/>
-            </actions>
-        </section>
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenu" from-field="menuCfg"/>
+        </actions>
     </screen>
         
     <screen name="main-decorator">
@@ -320,7 +318,6 @@ under the License.
                         <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -330,7 +327,6 @@ under the License.
                         <set field="activeSubMenuItem" value="Contacts"/>
                         <set field="currentCommonDecorator" value="CommonContactDecorator"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -340,7 +336,6 @@ under the License.
                         <set field="activeSubMenuItem" value="Accounts"/>
                         <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -349,7 +344,6 @@ under the License.
                     <actions>
                         <set field="currentCommonDecorator" value="CommonSfaAppDecorator"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="${currentCommonDecorator}"><!-- location="${parameters.mainDecoratorLocation}" -->
                     <decorator-section name="body">
@@ -550,7 +544,6 @@ under the License.
                     <actions>
                         <set field="parameters.partyId" from-field="parameters.partyIdFrom"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>

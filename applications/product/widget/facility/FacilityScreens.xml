@@ -774,7 +774,6 @@ under the License.
                     <actions>
                         <set field="titleProperty" value="PageTitleEditFacilityContactMech"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonFacilitySettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
@@ -828,7 +827,6 @@ under the License.
                         <set field="facilityId" from-field="inventoryItem.facilityId"/>
                         <entity-one entity-name="Facility" value-field="facility"/>
                     </actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonFacilityInventoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

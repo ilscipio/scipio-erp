@@ -59,7 +59,6 @@ under the License.
                         <!-- These are NOT included by include-actions directive. -->
                         <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoCommonActions outside its top section and should not be included by include-actions. [ERROR]"/>
                     </actions>
-                    <widgets/>
                 </section>
             </widgets>
         </section>
@@ -168,7 +167,6 @@ under the License.
                             <actions>
                                 <set field="tableStyle" value="${styles.table_data_list} dark-grid"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <section>
                             <actions>
@@ -176,7 +174,6 @@ under the License.
                                 <set field="headerStyle" value="header-row-2"/>
                                 <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                     </widgets>
@@ -191,7 +188,6 @@ under the License.
                                     <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                                     <set field="viewSize" value="1" type="Integer"/>
                                 </actions>
-                                <widgets/>
                             </section>
                             <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                         </screenlet>

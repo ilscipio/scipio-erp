@@ -396,7 +396,6 @@ under the License.
                             <order-by field-name="-entryDate"/>
                         </entity-condition>
                     </actions>
-                    <widgets></widgets>
                 </section>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagelist.ftl"/></html></platform-specific>
             </widgets>

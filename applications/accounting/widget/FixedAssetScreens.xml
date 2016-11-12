@@ -217,7 +217,6 @@ under the License.
                         <set field="titleProperty" value="PageTitleCalendarDay"/>
                         <!-- TODO?<set field="activeSubMenuItem" value="day"/>-->
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -230,7 +229,6 @@ under the License.
                         <set field="titleProperty" value="PageTitleCalendarWeek"/>
                         <!-- <set field="activeSubMenuItem" value="week"/>-->
                     </actions>
-                    <widgets/>
                 </section>
                 <section>
                     <condition>
@@ -240,7 +238,6 @@ under the License.
                         <set field="titleProperty" value="PageTitleCalendarMonth"/>
                         <!-- <set field="activeSubMenuItem" value="month"/>-->
                     </actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
@@ -320,7 +317,6 @@ under the License.
                 <section>
                     <condition><if-empty field="maintHistSeqId"/></condition>
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

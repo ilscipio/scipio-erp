@@ -25,7 +25,9 @@
             <!-- Make the main side bar name/location available to all (without need for globals) 
                 NOTE: these won't be set if our screens are invoked by another webapp, unless it provides some of its own -->
             <include-screen-actions name="MainSideBarMenu"/>
-            <set field="mainSideBarMenu" from-field="menuCfg"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
         </actions>
     </screen>
     
@@ -48,6 +50,10 @@
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://@component-name@/widget/@component-resource-name@Menus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.@component-resource-name@Application}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">

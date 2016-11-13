@@ -39,7 +39,9 @@ under the License.
         <actions>
             <!-- Make the main side bar name/location available to all (without need for globals) -->
             <include-screen-actions name="MainSideBarMenu"/>
-            <set field="mainSideBarMenu" from-field="menuCfg"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
         </actions>
     </screen>
     
@@ -55,7 +57,11 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.AccountingCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="ArAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://accounting/widget/ar/ArMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/>                
+                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/> 
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>             
             </actions>
            <widgets>
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">

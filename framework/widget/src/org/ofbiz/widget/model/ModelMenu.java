@@ -45,6 +45,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelMenuNode.ModelMenuItemGroupNode;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,7 +58,7 @@ import org.xml.sax.SAXException;
  * @see <code>widget-menu.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelMenu extends ModelWidget {
+public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
 
     /*
      * ----------------------------------------------------------------------- *
@@ -144,7 +145,9 @@ public class ModelMenu extends ModelWidget {
     private final boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new
     
     private final FlexibleStringExpander titleStyle; // SCIPIO: new
-    
+    private final List<ModelMenuNode> manualSelectedNodes; // SCIPIO: new: cache of potentially manual selected items
+    private final List<ModelMenuNode> manualExpandedNodes; // SCIPIO: new: cache of potentially manual expanded items
+
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -411,6 +414,15 @@ public class ModelMenu extends ModelWidget {
         Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
         addAllSubMenus(subMenuMap, menuItemList);
         this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
+        
+        // SCIPIO: cache refs to all the manually-flagged items so don't have to at runtime
+        ArrayList<ModelMenuNode> manualSelectedItems = new ArrayList<>();
+        ArrayList<ModelMenuNode> manualExpandedItems = new ArrayList<>();
+        findManualStateFlaggedItems(menuItemList, manualSelectedItems, manualExpandedItems);
+        manualSelectedItems.trimToSize();
+        manualExpandedItems.trimToSize();
+        this.manualSelectedNodes = Collections.unmodifiableList(manualSelectedItems);
+        this.manualExpandedNodes = Collections.unmodifiableList(manualExpandedItems);
     }
 
     /**
@@ -951,6 +963,25 @@ public class ModelMenu extends ModelWidget {
         if (subMenuMap.containsKey("")) {
             Debug.logError("Menu " + this.getName() + " contains an empty key; should not happen", module);
             subMenuMap.remove("");
+        }
+    }
+    
+    /**
+     * SCIPIO: Cache refs to all the manually-flagged items so don't have to at runtime.
+     */
+    void findManualStateFlaggedItems(List<? extends ModelMenuNode> nodeList, List<ModelMenuNode> manualSelectedNodes, List<ModelMenuNode> manualExpandedNodes) {
+        if (nodeList == null) 
+            return;
+        for(ModelMenuNode node : nodeList) {
+            // do in-depth first; lower levels last
+            findManualStateFlaggedItems(node.getChildrenNodes(), manualSelectedNodes, manualExpandedNodes);
+            // do us
+            if (node.getSelected() != null && !node.getSelected().getOriginal().isEmpty()) {
+                manualSelectedNodes.add(node);
+            }
+            if (node.getExpanded() != null && !node.getExpanded().getOriginal().isEmpty()) {
+                manualExpandedNodes.add(node);
+            }
         }
     }
     
@@ -1692,6 +1723,14 @@ public class ModelMenu extends ModelWidget {
         return this.alwaysExpandSelectedOrAncestor;
     }
 
+    public List<ModelMenuNode> getManualSelectedNodes() {
+        return manualSelectedNodes;
+    }
+
+    public List<ModelMenuNode> getManualExpandedNodes() {
+        return manualExpandedNodes;
+    }
+
     /**
      * Renders this menu to a String, i.e. in a text format, as defined with the
      * MenuStringRenderer implementation.
@@ -1845,4 +1884,121 @@ public class ModelMenu extends ModelWidget {
             return menuItem != null;
         }
     }
+
+    // SCIPIO: ModelMenuNode methods
+    
+    @Override
+    public ModelMenuItemNode getParentNode() {
+        return null;
+    }
+
+    @Override
+    public List<ModelMenuItem> getChildrenNodes() {
+        return menuItemList;
+    }
+
+    @Override
+    public FlexibleStringExpander getSelected() {
+        return null;
+    }
+
+    @Override
+    public FlexibleStringExpander getDisabled() {
+        return null;
+    }
+
+    @Override
+    public FlexibleStringExpander getExpanded() {
+        return null;
+    }
+    
+    public static class FlaggedMenuNodes {
+        private final Set<ModelMenuNode> selectedTargets;
+        private final Set<ModelMenuNode> selectedAncestors;
+        private final Set<ModelMenuNode> expanded;
+        
+        public FlaggedMenuNodes(Set<ModelMenuNode> selectedTargets, Set<ModelMenuNode> selectedAncestors,
+                Set<ModelMenuNode> expanded) {
+            super();
+            this.selectedTargets = selectedTargets;
+            this.selectedAncestors = selectedAncestors;
+            this.expanded = expanded;
+        }
+        
+        public static FlaggedMenuNodes resolve(Map<String, Object> context, List<ModelMenuNode> selectedNodeCandidates, 
+                List<ModelMenuNode> expandedNodeCandidates, MenuAndItem mainSelectedMenuAndItem) {
+            Set<ModelMenuNode> selectedTargets = new HashSet<>();
+            Set<ModelMenuNode> selectedAncestors = new HashSet<>();
+            Set<ModelMenuNode> expanded = new HashSet<>();
+            
+            // note: mainSelectedMenuAndItem counts as both selected(On) AND expanded(On)
+            
+            // SELECTED
+            Set<ModelMenuNode> selectedOn = new HashSet<>();
+            Set<ModelMenuNode> selectedOff = new HashSet<>();
+            for(ModelMenuNode node : selectedNodeCandidates) {
+                Boolean selectedBool = UtilMisc.booleanValue(node.getSelected().expandString(context));
+                if (Boolean.TRUE.equals(selectedBool)) {
+                    selectedOn.add(node);
+                } else if (Boolean.TRUE.equals(selectedBool)) {
+                    selectedOff.add(node);
+                }
+            }
+            if (mainSelectedMenuAndItem.getSubMenu() != null) {
+                selectedOn.add(mainSelectedMenuAndItem.getSubMenu());
+            }
+            if (mainSelectedMenuAndItem.getMenuItem() != null) {
+                selectedOn.add(mainSelectedMenuAndItem.getMenuItem());
+            }
+            
+            // TODO
+            
+            // EXPANDED
+            Set<ModelMenuNode> expandedOn = new HashSet<>();
+            Set<ModelMenuNode> expandedOff = new HashSet<>();
+            for(ModelMenuNode node : expandedNodeCandidates) {
+                Boolean expandedBool = UtilMisc.booleanValue(node.getExpanded().expandString(context));
+                if (Boolean.TRUE.equals(expandedBool)) {
+                    expandedOn.add(node);
+                } else if (Boolean.TRUE.equals(expandedBool)) {
+                    expandedOff.add(node);
+                }
+            }
+            if (mainSelectedMenuAndItem.getSubMenu() != null) {
+                expandedOn.add(mainSelectedMenuAndItem.getSubMenu());
+            }
+            if (mainSelectedMenuAndItem.getMenuItem() != null) {
+                expandedOn.add(mainSelectedMenuAndItem.getMenuItem());
+            }
+            
+            // TODO
+            
+            return new FlaggedMenuNodes(selectedTargets, selectedAncestors, expanded);
+        }
+
+        public boolean isSelectedTarget(ModelMenuNode node) {
+            return selectedTargets.contains(node);
+        }
+        
+        public boolean isSelectedAncestor(ModelMenuNode node) {
+            return selectedAncestors.contains(node);
+        }
+        
+        public boolean isExpanded(ModelMenuNode node) {
+            return expanded.contains(node);
+        }
+        
+        public Set<ModelMenuNode> getSelectedTargets() {
+            return selectedTargets;
+        }
+
+        public Set<ModelMenuNode> getSelectedAncestors() {
+            return selectedAncestors;
+        }
+
+        public Set<ModelMenuNode> getExpanded() {
+            return expanded;
+        }
+    }
+    
 }

@@ -17,34 +17,48 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- 
-SCIPIO: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "SCIPIO:" in annotations.
-
-Features and Modifications:
-* All default-xxx-style and xxx-style attributes now support an extended "+/=" prefix.
-  It works similarly to the one used for "class" arguments in Scipio Freemarker standard macros.
-  "+": means this style will be appended to this menu's default or to the parent menu's default,
-       and in general will never replace another style.
-  "=": means this style will replace the menu's default or the parent (extended) menu's default.
-       This is effectively the DEFAULT for all non-empty styles.
-       Currently, this _may_ also affect defaults looked up in the Scipio standard widget macro Freemarker implementation
-       (component://widget/templates/htmlMenuMacroLibrary.ftl).
-* Secondary/extra styles behavior: In Scipio menu widgets, secondary styles such as
-  selected-style and disabled-title-style are now always APPENDED to the main widget-style (and
-  +/= prefix does not affect this).
-  In stock Ofbiz, this behavior is inconsistent; earlier versions used replacement by default.
-  The new appending behavior is the same as used in the Scipio Freemarker @menu macro.
-  It is simpler to use, but has some limitations (can't replace the widget-style).
-* Menus can include each other's elements, independently of "extends".
-  (include-elements, include-actions, include-menu-items)
-* Menu items can be sorted. (items-sort-mode, sort-mode)
-* Menu items can completely override parent ("extends") menu items. (override-mode)
-* Supports sub-menus using new sub-menu element (nested menus), using either inlined
-  menu items or referencing other menus. The sub-menus can also use a "model" for styling
-  purposes without including anything from the referenced menu.
--->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            Menu Widget Definitions
+        
+            SCIPIO: In Scipio, the menu widget language is modified from stock Ofbiz with new elements and
+            modifications to existing elements. The renderer is modified accordingly, and it may have yet
+            additional changes not visible through the language elements alone (may be noted here).
+            Patterns, their descriptions and usage examples can be found in common menu and screen files of Common and Admin apps
+            (see component://common/widget/CommonMenus.xml, component://common/widget/CommonScreens.xml(#ComplexMenu), 
+            component://webtools/widget/Menus.xml, component://webtools/widget/CommonScreens.xml(#MainSideBarMenu)).
+            Changes are prefixed with the string "SCIPIO:" in annotations and comments.
+            
+            Features and Modifications (including but not limited to):
+            * All default-xxx-style and xxx-style attributes now support an extended "+/=" prefix.
+              It works similarly to the one used for "class" arguments in Scipio Freemarker standard macros.
+              "+": means this style will be appended to this menu's default or to the parent menu's default,
+                   and in general will never replace another style.
+              "=": means this style will replace the menu's default or the parent (extended) menu's default.
+                   This is effectively the DEFAULT for all non-empty styles.
+                   Currently, this _may_ also affect defaults looked up in the Scipio standard widget macro Freemarker implementation
+                   (component://widget/templates/htmlMenuMacroLibrary.ftl).
+            * Secondary/extra styles behavior: In Scipio menu widgets, secondary styles such as
+              selected-style and disabled-title-style are now always APPENDED to the main widget-style (and
+              +/= prefix does not affect this).
+              In stock Ofbiz, this behavior is inconsistent; earlier versions used replacement by default.
+              The new appending behavior is the same as used in the Scipio Freemarker @menu macro.
+              It is simpler to use, but has some limitations (can't replace the widget-style).
+            * Menus can include each other's elements, independently of "extends".
+              (include-elements, include-actions, include-menu-items)
+            * Menu items can be sorted. (items-sort-mode, sort-mode)
+            * Menu items can completely override parent ("extends") menu items. (override-mode)
+            * Robust and extensive complex menu and nesting support. Menu items are uniquely
+              identified in a complex menu by sub menu name / sub menu item name pair. 
+              Currently extensive side bar menu patterns used throughout the backend. (sub-menu)
+              (see common menu and screen files of Common and Admin apps for patterns) 
+              
+            To use this and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+            import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+            Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service defs, etc.
+        ]]></xs:documentation>
+    </xs:annotation>
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
     <xs:element name="menus">
         <xs:complexType>
@@ -676,6 +690,22 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <!-- 
+            <xs:attribute type="xs:string" name="selected">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: 2016-11-11: NOT IMPLEMENTED.
+                        A boolean expression (flexible expression) that overrides 
+                        whether this item AND its parents and children should _display_ as selected/selected-ancestor, with priority over other logic.
+                        Should evaluate to one of:
+                        * "true" - always display as either selected or selected-ancestor, and parents as selected-ancestor
+                        * "false" - force display as non-selected, and children as non-selected
+                        * "" (empty) - do not affect selection
+                        NOTE: The expression is usually at any time during the menu processing, including multiple
+                            times at beginning and at the time. The expression should be generic and mostly stateless.</xs:documentation>      
+                </xs:annotation>
+            </xs:attribute>
+            -->
         </xs:complexType>
     </xs:element>
     <xs:element name="link" type="link"/>
@@ -908,6 +938,43 @@ Features and Modifications:
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <!-- 
+            <xs:attribute type="xs:string" name="selected">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: 2016-11-11: NOT IMPLEMENTED.
+                        A boolean expression (flexible expression) that overrides 
+                        whether this sub-menu AND its parents and children should _display_ as selected/selected-ancestor, with priority over other logic.
+                        Should evaluate to one of:
+                        * "true" - always display as either selected or selected-ancestor, and parents as selected-ancestor
+                        * "false" - force display as non-selected, and children as non-selected
+                        * "" (empty) - do not affect selection
+                        NOTE: The expression is usually at any time during the menu processing, including multiple
+                            times at beginning and at the time. The expression should be generic and mostly stateless.</xs:documentation>     
+                </xs:annotation>
+            </xs:attribute>
+            -->
+            <xs:attribute type="xs:string" name="expanded">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: 2016-11-11: NOTE: Only partial implemented
+                        A boolean expression (flexible expression) that overrides 
+                        whether this sub-menu [AND its parents and children - not implemented] should be expanded, with priority over any item selection logic.
+                        Should evaluate to one of:
+                        * "true" - always expand this item [and its parents - not implemented]
+                        * "false" - do not expand / cancel any other plans to expand, and children don't expand
+                        * "" (empty) - do not affect expansion / determined by other such as active selection
+                        NOTE: The expression is usually at any time during the menu processing, including multiple
+                            times at beginning and at the time. The expression should be generic and mostly stateless.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <!-- 
+            <xs:attribute type="xs:string" name="disabled">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: 2016-11-11: NOT IMPLEMENTED. RESERVED for future use.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            -->
         </xs:complexType>
     </xs:element>
 

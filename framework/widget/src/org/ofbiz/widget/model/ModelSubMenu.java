@@ -26,22 +26,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
+import org.ofbiz.widget.model.ModelMenuNode.ModelMenuItemGroupNode;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
 
 /**
  * SCIPIO: Models a sub-menu entry under menu-item.
  * <p>
- * TODO:
- * * Merge constructor
+ * TODO: Merge constructor
  */
 @SuppressWarnings("serial")
-public class ModelSubMenu extends ModelWidget {
+public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode {
 
     public static final String module = ModelSubMenu.class.getName();
     
@@ -64,8 +65,12 @@ public class ModelSubMenu extends ModelWidget {
     
     private final String itemsSortMode;
 
-    private final FlexibleStringExpander shareScope; // SCIPIO: NOTE: 2016-11-02: default is now TRUE    
+    private final FlexibleStringExpander shareScope; // SCIPIO: NOTE: 2016-11-02: default is now TRUE  
     
+    private final FlexibleStringExpander expanded; // 2016-11-11: expansion override
+    private final FlexibleStringExpander selected; // 2016-11-11: selected override
+    private final FlexibleStringExpander disabled; // 2016-11-11: disabled override
+
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
         buildArgs.genBuildArgs.totalSubMenuCount++;
@@ -198,6 +203,9 @@ public class ModelSubMenu extends ModelWidget {
         
         this.itemsSortMode = subMenuElement.getAttribute("items-sort-mode");
         this.shareScope = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("share-scope"));
+        this.expanded = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("expanded"));
+        this.selected = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("selected"));
+        this.disabled = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("disabled"));
     }
 
     // SCIPIO: copy constructor
@@ -240,6 +248,9 @@ public class ModelSubMenu extends ModelWidget {
         
         this.itemsSortMode = existingSubMenu.itemsSortMode;
         this.shareScope = existingSubMenu.shareScope;
+        this.expanded = existingSubMenu.expanded;
+        this.selected = existingSubMenu.selected;
+        this.disabled = existingSubMenu.disabled;
     }
     
     String makeAnonName(BuildArgs buildArgs) {
@@ -433,6 +444,14 @@ public class ModelSubMenu extends ModelWidget {
         String shareScopeString = this.shareScope.expandString(context);
         return "true".equals(shareScopeString); // NOTE: 2016-11-02: default is now TRUE
     }
+    
+    public FlexibleStringExpander getExpandedExdr() {
+        return expanded;
+    }
+    
+    public Boolean getExpand(Map<String, Object> context) {
+        return UtilMisc.booleanValue(this.expanded.expandString(context));
+    }
 
     public void renderSubMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
@@ -546,6 +565,35 @@ public class ModelSubMenu extends ModelWidget {
             this.forceSubMenuModelScope = itemBuildArgs.forceSubMenuModelScope;
             this.extraMenuItems = null;
         }
+    }
+
+    // SCIPIO: ModelMenuNode methods
+    
+    @Override
+    public ModelMenuItem getParentNode() {
+        return getParentMenuItem();
+    }
+
+    @Override
+    public List<ModelMenuItem> getChildrenNodes() {
+        return menuItemList;
+    }
+
+    @Override
+    public FlexibleStringExpander getSelected() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public FlexibleStringExpander getDisabled() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public FlexibleStringExpander getExpanded() {
+        return expanded;
     }
 
 }

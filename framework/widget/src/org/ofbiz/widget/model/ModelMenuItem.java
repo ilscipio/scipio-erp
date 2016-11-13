@@ -44,6 +44,7 @@ import org.ofbiz.widget.model.MenuRenderState.MenuItemState;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.ofbiz.widget.model.ModelMenuNode.ModelMenuItemNode;
 import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
@@ -54,7 +55,7 @@ import org.w3c.dom.Element;
  * @see <code>widget-menu.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelMenuItem extends ModelWidget {
+public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
 
     /*
      * ----------------------------------------------------------------------- *
@@ -121,6 +122,8 @@ public class ModelMenuItem extends ModelWidget {
     private final FlexibleStringExpander disabled; // SCIPIO: new
     
     private final Boolean alwaysExpandSelectedOrAncestor; // SCIPIO: new (override)
+    private final FlexibleStringExpander selected; // SCIPIO: new (override)
+
     
     // ===== CONSTRUCTORS =====
 
@@ -191,6 +194,7 @@ public class ModelMenuItem extends ModelWidget {
             alwaysExpandSelectedOrAncestor = "true".equals(menuItemElement.getAttribute("always-expand-selected-or-ancestor"));
         else 
             alwaysExpandSelectedOrAncestor = null;
+        this.selected = FlexibleStringExpander.getInstance(menuItemElement.getAttribute("selected"));
 
         // SCIPIO: legacy inlined menu-items
         if (buildArgs.omitSubMenus) {
@@ -305,6 +309,7 @@ public class ModelMenuItem extends ModelWidget {
         this.overrideMode = "";
         this.sortMode = "";
         this.alwaysExpandSelectedOrAncestor = null;
+        this.selected = FlexibleStringExpander.getInstance("");
         this.link = new MenuLink(portalPage, parentMenuItem, locale);
         this.modelMenu = parentMenuItem.modelMenu;
         this.subMenuList = Collections.emptyList();
@@ -383,6 +388,7 @@ public class ModelMenuItem extends ModelWidget {
  
         this.overrideMode = existingMenuItem.overrideMode;
         this.alwaysExpandSelectedOrAncestor = existingMenuItem.alwaysExpandSelectedOrAncestor;
+        this.selected = existingMenuItem.selected;
     }
     
     // Merge constructor
@@ -460,6 +466,11 @@ public class ModelMenuItem extends ModelWidget {
             this.alwaysExpandSelectedOrAncestor = overrideMenuItem.alwaysExpandSelectedOrAncestor;
         } else {
             this.alwaysExpandSelectedOrAncestor = existingMenuItem.alwaysExpandSelectedOrAncestor;
+        }
+        if (UtilValidate.isNotEmpty(overrideMenuItem.selected.getOriginal())) {
+            this.selected = overrideMenuItem.selected;
+        } else {
+            this.selected = existingMenuItem.selected;
         }
         
         if (UtilValidate.isNotEmpty(overrideMenuItem.subMenuModel)) {
@@ -650,16 +661,23 @@ public class ModelMenuItem extends ModelWidget {
     }
     
     public Boolean getDisabled(Map<String, Object> context) {
-        String res = this.disabled.expandString(context);
-        if ("true".equals(res)) {
-            return Boolean.TRUE;
-        } else if ("false".equals(res)) {
-            return Boolean.FALSE;
-        } else {
-            return null;
-        }
+        return UtilMisc.booleanValue(this.disabled.expandString(context));
     }
-
+    
+    /**
+     * SCIPIO: Returns if has selected expr defined.
+     */
+    public boolean hasSelectedExpr() {
+        return !this.selected.getOriginal().isEmpty();
+    }
+    
+    /**
+     * SCIPIO: Returns expression determining if selected style override is enabled.
+     */
+    public FlexibleStringExpander getSelected() {
+        return this.selected;
+    }
+    
     public String getEntityName() {
         if (!this.entityName.isEmpty()) {
             return this.entityName;
@@ -1353,6 +1371,23 @@ public class ModelMenuItem extends ModelWidget {
             this.forceSubMenuModelScope = subBuildArgs.forceSubMenuModelScope;
             this.omitSubMenus = false;
         }
+    }
+
+    // SCIPIO: ModelMenuNode methods
+    
+    @Override
+    public ModelMenuItemGroupNode getParentNode() {
+        return getParentSubMenu();
+    }
+
+    @Override
+    public List<ModelSubMenu> getChildrenNodes() {
+        return subMenuList;
+    }
+
+    @Override
+    public FlexibleStringExpander getExpanded() {
+        return null;
     }
 
 }

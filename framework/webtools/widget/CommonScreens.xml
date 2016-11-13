@@ -61,13 +61,15 @@ under the License.
         2016-11-11: New pattern, added for 1.14.3. -->
     <screen name="webapp-common-actions">
         <actions>
-            <script><![CDATA[groovy:
+            <script lang="groovy"><![CDATA[
                 import org.ofbiz.base.util.Debug;
                 if (Debug.verboseOn()) Debug.logVerbose("Begin Admin webapp screen render (webapp-common-actions)", "AdminCommonActions.groovy");
             ]]></script>
             <!-- Make the main side bar name/location available to all (without need for globals) -->
             <include-screen-actions name="MainSideBarMenu"/>
-            <set field="mainSideBarMenu" from-field="menuCfg"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
         </actions>
     </screen>
     
@@ -78,7 +80,7 @@ under the License.
         but in that case actions from the screens of the calling webapp will be run before these.  -->
     <screen name="static-common-actions">
         <actions>
-            <script><![CDATA[groovy:
+            <script lang="groovy"><![CDATA[
                 import org.ofbiz.base.util.Debug;
                 if (Debug.verboseOn()) Debug.logVerbose("Begin Admin local/static screen render (static-common-actions)", "AdminCommonActions.groovy");
             ]]></script>
@@ -104,6 +106,10 @@ under the License.
                 <set field="applicationMenuLocation" value="component://webtools/widget/Menus.xml" global="true"/>
                 <set field="applicationMenuName" value="WebtoolsAppBar" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.FrameworkWebTools}" global="true"/>
+
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
 
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
@@ -641,8 +647,7 @@ under the License.
     <screen name="CommonDocumentationDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="LayoutDemo"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Development" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">

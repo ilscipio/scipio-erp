@@ -24,10 +24,12 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.PatternSyntaxException;
 
@@ -619,12 +621,25 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * SCIPIO: 2016-11-10: Extended to support inline scripts using code from
      * {@link org.ofbiz.minilang.method.callops.CallScript}
      * <p>
-     * TODO: The child CDATA text may have some string performance issues due to
-     * huge amounts of whitespace in the XML that is part of the cache key.
+     * TODO: The child CDATA text should use a proper cache key instead of the
+     * script body as ofbiz(?) coded it (should use: widgetloc#widgetname@line,col).
      * 
      * @see <code>widget-common.xsd</code>
      */
     public static class Script extends AbstractModelAction {
+        
+        /**
+         * SCIPIO: available languages. NOTE: may not same as XSD; this is more permissive.
+         */
+        public static final Set<String> supportedLangs;
+        static {
+            Set<String> langSet = new HashSet<>();
+            langSet.addAll(ScriptUtil.SCRIPT_NAMES);
+            langSet.add("simple-method");
+            langSet.add("simple-map-processor");
+            supportedLangs = Collections.unmodifiableSet(langSet);
+        }
+        
         // SCIPIO: these are patched for dynamic location support
         //private final String location;
         //private final String method;
@@ -638,19 +653,82 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
             this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
             
-            // SCIPIO: code derived from org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
+            // SCIPIO: inline script preparation derived from (but no longer resembles):
+            //   org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
+            String lang = scriptElement.getAttribute("lang");
+            if (!lang.isEmpty() && !supportedLangs.contains(lang)) {
+                Debug.logError("script element: lang attribute unrecognized language: lang=\"" + lang + "\"", module);
+            }
+            
             String inlineScript = scriptElement.getAttribute("script");
-            if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
-                this.scriptlet = new Scriptlet(StringUtil.convertOperatorSubstitutions(inlineScript));
-            } else {
-                inlineScript = UtilXml.elementValue(scriptElement);
-                if (UtilValidate.isNotEmpty(inlineScript) && MiniLangUtil.containsScript(inlineScript)) {
-                    boolean trimLines = "true".equals(scriptElement.getAttribute("trim-lines"));
-                    // SCIPIO: NOTE: do NOT convert operator stuff when using nested child!
-                    this.scriptlet = new Scriptlet(trimLines ? ScriptUtil.trimScriptLines(inlineScript) : inlineScript);
-                } else {
-                    this.scriptlet = null;
+            boolean hasScriptPrefix = startsWithLangPrefix(inlineScript);
+            Scriptlet scriptlet = null;
+            if (hasScriptPrefix || (!inlineScript.isEmpty() && !lang.isEmpty())) {
+                // use script attribute
+                if (!hasScriptPrefix) {
+                    inlineScript = lang + ":" + inlineScript;
                 }
+                inlineScript = StringUtil.convertOperatorSubstitutions(inlineScript);
+                scriptlet = makeScriptlet(inlineScript);
+            } else {
+                if (!inlineScript.isEmpty()) {
+                    Debug.logError("script element: script attribute contains code of unspecified"
+                            + " or unknown language: script=\"" + inlineScript + "\"", module);
+                }
+                inlineScript = UtilXml.elementValue(scriptElement);
+                if (UtilValidate.isNotEmpty(inlineScript)) {
+                    hasScriptPrefix = startsWithLangPrefix(inlineScript);
+                    if (hasScriptPrefix || (!inlineScript.isEmpty() && !lang.isEmpty())) {
+                        // use script child body
+                        if (!hasScriptPrefix) {
+                            inlineScript = lang + ":" + inlineScript;
+                        }
+                        boolean trimLines = "true".equals(scriptElement.getAttribute("trim-lines"));
+                        if (trimLines) {
+                            inlineScript = ScriptUtil.trimScriptLines(inlineScript);
+                        }
+                        // SCIPIO: NOTE: do NOT convert keyword operators when using elem body!
+                        scriptlet = makeScriptlet(inlineScript);
+                    } else {
+                        if (!inlineScript.isEmpty()) {
+                            Debug.logError("script element: script body/child contains code of unspecified"
+                                    + " or unknown language: script=\"" + inlineScript + "\"", module);
+                        }
+                    }
+                }
+            }
+            this.scriptlet = scriptlet;
+        }
+        
+        /**
+         * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a recognized lang prefix.
+         * @param str The string to test
+         * @return <code>true</code> if <code>str</code> starts with a recognized lang prefix
+         */
+        public static boolean startsWithLangPrefix(String str) {
+            if (str.length() > 0) {
+                for (String scriptPrefix : supportedLangs) {
+                    if (str.startsWith(scriptPrefix)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        /**
+         * SCIPIO: makes scriptlet.
+         */
+        private static Scriptlet makeScriptlet(String inlineScript) {
+            if (MiniLangUtil.startsWithScriptPrefix(inlineScript)) {
+                return new Scriptlet(inlineScript);
+            } else {
+                // TODO: simple-method, simple-map-processor
+                int colon = inlineScript.indexOf(':');
+                String lang;
+                lang = (colon > 0) ? inlineScript.substring(0, colon) : "unknown";
+                throw new UnsupportedOperationException("script element: does not yet "
+                        + "support inline scripts for lang [" + lang + "]");
             }
         }
         

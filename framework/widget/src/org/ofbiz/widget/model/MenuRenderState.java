@@ -14,6 +14,8 @@ import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
  * render, such as sub-menu depth.
+ * <p>
+ * NOTE: this probably didn't need to be serializable, but is just in case
  */
 @SuppressWarnings("serial")
 public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implements Serializable {
@@ -28,8 +30,11 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItem selectedMenuAndItem;
+    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
     
     private transient MenuItemState itemState;
+
+    
     
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
@@ -37,6 +42,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         setMaxDepth(1);
         setSubMenuFilter(null);
         this.selectedMenuAndItem = null;
+        this.flaggedMenuNodes = null;
         this.itemState = null;
     }
     
@@ -158,6 +164,10 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     
     public void updateSelectedMenuAndItem(Map<String, Object> context) {
         this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
+        
+        // 2016-11-11: also determine all the possible manually-selected items, which might get crazy...
+        this.flaggedMenuNodes = ModelMenu.FlaggedMenuNodes.resolve(context, modelMenu.getManualSelectedNodes(), 
+                modelMenu.getManualExpandedNodes(), this.selectedMenuAndItem);
     }
     
     // context helper methods

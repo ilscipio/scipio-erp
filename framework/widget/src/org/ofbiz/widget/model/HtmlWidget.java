@@ -165,7 +165,7 @@ public class HtmlWidget extends ModelScreenWidget {
     /**
      * SCIPIO: Renders an inlined template of given type.
      */
-    public static void renderHtmlTemplate(Appendable writer, String body, String type, String templateId, Map<String, Object> context) {
+    public static void renderHtmlTemplate(Appendable writer, String body, String lang, String templateId, Map<String, Object> context) {
         //Debug.logInfo("Rendering inlined template of type [" + type + "] with context: \n" + context, module);
 
         try {
@@ -176,7 +176,7 @@ public class HtmlWidget extends ModelScreenWidget {
             }
 
             Template template = null;
-            if ("fo-ftl".equals(type)) { // FOP can't render correctly escaped characters
+            if ("fo-ftl".equals(lang)) { // FOP can't render correctly escaped characters
                 template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineBasicTemplateCache, FreeMarkerWorker.getDefaultOfbizConfig());
             } else {
                 template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineSpecialTemplateCache, specialConfig);
@@ -288,29 +288,29 @@ public class HtmlWidget extends ModelScreenWidget {
      */
     public static class InlineHtmlTemplate extends HtmlTemplate {
         protected final String templateBody;
-        protected final String type;
+        protected final String lang;
         protected final String templateId;
         
         public InlineHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
-            String type = htmlTemplateElement.getAttribute("type");
+            String lang = htmlTemplateElement.getAttribute("lang");
             this.templateId = modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "@" + this.getStartColumn() + "," + this.getStartLine();
             String templateBody = UtilXml.elementValue(htmlTemplateElement); // htmlTemplateElement.getTextContent();
             for(String tmplType : HtmlTemplate.getSupportedTypes()) {
                 if (templateBody.startsWith(tmplType + ":")) {
                     templateBody = templateBody.substring(tmplType.length() + 1);
-                    type = tmplType;
+                    lang = tmplType;
                     break;
                 }
             }
-            this.type = type;
+            this.lang = lang;
             boolean trimLines = "true".equals(htmlTemplateElement.getAttribute("trim-lines"));
             this.templateBody = trimLines ? ScriptUtil.trimScriptLines(templateBody) : templateBody;
         }
 
         @Override
         public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
-            renderHtmlTemplate(writer, this.templateBody, this.type, this.templateId, context);
+            renderHtmlTemplate(writer, this.templateBody, this.lang, this.templateId, context);
         }
 
         @Override
@@ -319,7 +319,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         public String getType() {
-            return type;
+            return lang;
         }
 
         public String getTemplateId() {

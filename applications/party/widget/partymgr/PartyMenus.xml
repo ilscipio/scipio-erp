@@ -646,10 +646,14 @@
         <actions>
             <!-- SCIPIO: this lookup needed so the menu is consistent on all screens -->
             <!-- FIXME?: no perm checks on this lookup, but not important like those in the target screens/decorator -->
-            <!-- NOTE: CommEventTabBar_ prefix is so this works with or without share-scope -->
-            <!-- FIXME: forced to use globalContext for this right now... nasty -->
-            <set field="dummy" value="${groovy: globalContext.CommEventTabBar_communicationEvent = context.communicationEvent ?: 
-                (parameters.communicationEventId ? delegator.findOne('CommunicationEvent', [communicationEventId: parameters.communicationEventId], false): null); return '';}"/>
+            <!-- NOTE: CommEventTabBar_ prefix is so this works with or without share-scope (TODO: find more standard pattern) -->
+            <script><![CDATA[groovy:
+                communicationEvent = context.communicationEvent;
+                if (communicationEvent == null && parameters.communicationEventId) {
+                    communicationEvent = delegator.findOne('CommunicationEvent', [communicationEventId: parameters.communicationEventId], false);
+                } 
+                context.CommEventTabBar_communicationEvent = communicationEvent;
+            ]]></script>
         </actions>
         <!-- SCIPIO: redundant
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">

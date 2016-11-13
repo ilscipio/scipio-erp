@@ -22,6 +22,70 @@ under the License.
 
     <!-- SCIPIO: Documentation screens -->
 
+    <!-- Developer Documentation screens -->
+    
+    <screen name="DeveloperDocIndex">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WebtoolsDeveloperDocumentation"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="DeveloperDoc"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PARENT"/>
+                
+                <set field="tmplApiBaseWebappUri" value="/docs/templating/ftl/lib"/>
+                <set field="tmplApiMasterWebappUri" value="${tmplApiBaseWebappUri}/standard/htmlTemplate"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonDocumentationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template><![CDATA[
+                                <#assign scpErpRelDesc = getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP">
+                                <p><em><#-- Version: -->${scpErpRelDesc} 
+                                    ${getPropertyValue('scipiometainfo', 'scipio.release.version')!"v?"} 
+                                    (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")}), 
+                                    Freemarker ${.version!}</em></p>
+                                    
+                                <#-- TODO: Localize? -->
+                                <p>This is the local instance hosted version of ${scpErpRelDesc} developer documentation and resources.
+                                  It focuses on providing developer information most closely matching your current version in use,
+                                  and when possible on the portions of documentation most benefitting from interaction and dynamic
+                                  rendering, or yet those requiring manual examination of source files.</p>
+                                  
+                                <p>NOTE: This page is a compilation in progress. For a more comprehensive introduction and documentation, including architectural overview, please visit the 
+                                  <a href="http://www.scipioerp.com/community/developer/" target="_blank">Scipio ERP website 
+                                    at http://www.scipioerp.com/community/developer/</a></p>
+                                
+                              <@section title=getLabel('ContentContents', 'ContentUiLabels')>
+                                <ol>
+                                  <li>
+                                    <@heading><a href="<@ofbizWebappUrl uri=tmplApiMasterWebappUri escapeAs='html'/>">
+                                      ${getLabel('WebtoolsTemplateApiDocsTitle')}</a></@heading> - current, automatically generated from your local instance source files.
+                                    <br/><small>Alternatively, the Scipio website provides a periodically updated version at 
+                                        <a href="http://www.scipioerp.com/community/developer/freemarker-macros/" target="_blank">http://www.scipioerp.com/community/developer/freemarker-macros/</a>.</small>  
+                                    <br/><small>The Toolkit Freemarker source files - fully documented - can be consulted directly under the 
+                                        <code>/framework/common/webcommon/includes/scipio/lib/</code> folder from the root of your local copy.</small>
+                                  </li>
+                                  
+                                  <li>
+                                    <#-- TODO: web-presentable version of the *.xsd files... (XSLT for *.xsd -> *.html maybe?) -->
+                                    <@heading>Screen and Menu Widget Reference</@heading> - is provided as annotations in <code>*.xsd</code> XML Schema definition files 
+                                    under <code>/framework/widget/dtd/</code>, primarily: <code>widget-screen.xsd</code>, <code>widget-common.xsd</code> and
+                                    <code>widget-menu.xsd</code>. These are greatly enhanced and re-documented for Scipio.
+                                    <br/><small>To use these and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+                                        import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+                                        Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service definitions, etc.</small>
+                                  </li>
+                                </ol>
+                              </@section>
+                            ]]></html-template></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+
     <!-- Templating API page rendering screen (builds multiple pages) -->
     <screen name="TemplateApiDocPage">
         <section>

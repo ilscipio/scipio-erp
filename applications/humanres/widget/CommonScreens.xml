@@ -39,7 +39,9 @@ under the License.
         <actions>
             <!-- Make the main side bar name/location available to all (without need for globals) -->
             <include-screen-actions name="MainSideBarMenu"/>
-            <set field="mainSideBarMenu" from-field="menuCfg"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
         </actions>
     </screen>
         
@@ -55,6 +57,10 @@ under the License.
                 <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.HumanResManager}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
                 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.HumanResCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.HumanResCompanySubtitle" global="true"/>

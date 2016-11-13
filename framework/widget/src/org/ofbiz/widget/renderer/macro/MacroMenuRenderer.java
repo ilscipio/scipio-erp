@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -54,13 +53,9 @@ import org.ofbiz.widget.model.ModelSubMenu;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 
-import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
-
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateModelException;
 
 public class MacroMenuRenderer implements MenuStringRenderer {
 
@@ -554,8 +549,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             }
             try {
                 for(ModelSubMenu childSubMenu : menuItem.getSubMenuList()) {
-                    if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu)) {
-                        childSubMenu.renderSubMenuString(writer, context, this);
+                    Boolean expandOvrd = childSubMenu.getExpand(context);
+                    // TODO: expand flag functionality is incomplete - this does not expand parents -
+                    // need functionality from org.ofbiz.widget.model.ModelMenu.FlaggedMenuNodes
+                    if (!Boolean.FALSE.equals(expandOvrd)) { // false expandOvrd prevents expand, true guarantees expand
+                        if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu) || Boolean.TRUE.equals(expandOvrd)) {
+                            childSubMenu.renderSubMenuString(writer, context, this);
+                        }
                     }
                 }
             } finally {

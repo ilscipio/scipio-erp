@@ -103,6 +103,8 @@ public final class ScriptUtil {
                     }
                 }
             }
+            // SCIPIO: Print out all script names in succinct list to help with script maintenance
+            Debug.logInfo("All supported script names: " + writableScriptNames.toString(), module);
         }
         SCRIPT_NAMES = Collections.unmodifiableSet(writableScriptNames);
         Iterator<ScriptHelperFactory> iter = ServiceLoader.load(ScriptHelperFactory.class).iterator();

@@ -18,7 +18,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            Common Widget Definitions
+        
+            SCIPIO: In Scipio, the common widget language is modified from stock Ofbiz with new elements and
+            modifications to existing elements. The renderer is modified accordingly, and it may have yet
+            additional changes not visible through the language elements alone (may be noted here).
+            Changes are prefixed with the string "SCIPIO:" in annotations and comments.
+            
+            Features and Modifications (including but not limited to):
+            * link element boolean attributes full-path/secure/encode no longer hardcode defaults (instead centralized in java),
+              and the meaning, behavior and default behavior of those parameters is ratified for safer and more intuitive use.
+              Reflects @ofbizUrl changes in Freemarker templates and java RequestHandler.makeLink changes.
+              (see @ofbizUrl entry in utilities.ftl - component://common/webcommon/includes/scipio/lib/utilities.ftl;
+              see makeLink and makeLinkAuto methods in RequestHandler.java - org.ofbiz.webapp.control.RequestHandler)
+            * script element is enhanced for full inline script body support (based on simple-methods-v2)
+            * New dedicated actions include directives - include-xxx-actions - notably include-screen-actions,
+              which is shorter and more appropriate way to include actions defined in separate screens.
+            * New master "if" actions directive available (based on simple-methods-v2), which is
+              easier and more appropriate for actions-only conditions than the section conditions element
+            * if-true/if-false conditional shorthand for booleans and string repr. of booleans
+            * if-widget conditional for testing presence of widget definitions
+            
+            To use this and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+            import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+            Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service defs, etc.
+        ]]></xs:documentation>
+    </xs:annotation>
     <xs:complexType name="ConditionRootType">
         <xs:choice>
             <xs:element ref="and" />
@@ -386,43 +413,78 @@ under the License.
                 
                 SCIPIO: This element's functionality has been extended using the simple-methods-v2 minilang implementation of
                 the element of the same name, to provide inline script functionality, as either child CDATA text or via "script" attribute.
-                PARSING BEHAVIOR: The child CDATA text of this element is NO pre-parsed for special operators or in any way, 
-                    UNLIKE the simple-methods-v2 version and unlike the "script" attribute described below.
-                    The intent is to avoid adulterating larger scripts in any way whatsoever.
+                For inline scripts, a script language (groovy, etc.) must be specified, either using the explicit lang attribute (new in Scipio)
+                or by prefixing to the script body followed by colon (no leading spaces; stock ofbiz syntax).
+                
+                PARSING BEHAVIOR: The child CDATA text of this element is NOT parsed for special operators, 
+                    UNLIKE the simple-methods-v2 version and unlike the further "script" attribute described below.
+                    The intent of this difference is to avoid adulterating larger scripts in any way whatsoever.
                     The simple-methods-v2 version of this element pre-parses the child text of its script element and
                     this prevents inline scripts from perfectly emulating separate files.
-                2016-11-10: Enhanced for 1.14.3.</xs:documentation>
+                    
+                2016-11-11: Enhanced for 1.14.3.</xs:documentation>
         </xs:annotation>
         <xs:complexType mixed="true">
+            <xs:attribute name="lang">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Script language, explicit.
+                        Optional for scripts specified by location (extension is used instead; NOTE: 2016-11-11: lang attribute may be ignored for location).
+                        Required for scripts inlined as child CDATA text script body or script attribute, if the
+                        language name is not otherwise prefixed to the script body followed by colon (with no leading space).
+                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix 
+                        as it is less error-prone (prefix is space-sensitive) and supports xml editor completion.
+                        Default: (none)
+                        RECOMMENDED: groovy</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="groovy" />
+                        <xs:enumeration value="simple-method" />
+                        <xs:enumeration value="simple-map-processor" />
+                        <xs:enumeration value="bsh" />
+                        <xs:enumeration value="java" />
+                        <xs:enumeration value="javascript" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="location"><!-- SCIPIO: no longer strictly required: use="required" -->
                 <xs:annotation>
                     <xs:documentation>The script location. The location attribute accepts the component:// file location
                         protocol. Script functions/methods can be invoked by appending a hash (#) and the
                         function/method name.
                         
-                        Required if the script attribute is empty.
+                        Required if the script attribute and script element body (child CDATA text) are empty.
                         
                         SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, 
-                        evaluated at runtime (this is NOT a security risk in general; only so the screen uses dangerous fields).
+                        evaluated at runtime.
+                        WARN: The screens that parametrize script locations and/or names are responsible for using
+                            only safe variables (DO NOT use the parameters map).
                         Enhanced for 1.14.2.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="script">
                 <xs:annotation>
-                    <xs:documentation>
+                    <xs:documentation><![CDATA[
                         A short script (scriptlet). Can be used instead of a file.
-                        The script must be prefixed with the script language followed by a colon (":").
+                        The script must be prefixed with the script language followed by a colon (":"), with no leading spaces,
+                        OR (new in Scipio) the language may be specified in the explicit lang attribute.
                         
-                        Required if the location attribute is empty. Attribute type: script.
+                        Required if the location attribute is empty and there is no script body as child CDATA text. Attribute type: script.
                         
-                        SCIPIO: This is borrowed from minilang simple-methods-v2.
-                        NOTE: This is alternative to passing child CDATA text as script.
-                        NOTE: This attributes receives some special pre-parse substitutions as is done
-                            by simple-methods-v2; however only this attribute receives this pre-parsing;
-                            child CDATA text does not.
-                            This parsing is documented in org.ofbiz.base.util.StringUtil.convertOperatorSubstitutions.
-                        2016-11-10: Added for 1.14.3.
-                    </xs:documentation>
+                        SCIPIO: This attribute and script inlining is borrowed from minilang simple-methods-v2 for use in screens directives.
+                        In Scipio, the main draw is inlining script body as child CDATA text and this attribute is the alternative.
+                        NOTE: This script attribute - but NOT the script body if specified as child CDATA text - is subject to
+                            pre-parsing for special keyword operator substitutions (as done by simple-methods-v2 in stock ofbiz): 
+                              @and, @or, @lteq, @gteq, @lt, @gt 
+                            These are translated to, respectively:
+                              &&, ||, <=, >=, <, >
+                            See org.ofbiz.base.util.StringUtil.convertOperatorSubstitutions for detailed behavior.
+                        NOTE: The context preparation and behavior of this scriptlet behaves slightly differently than that of scripts
+                            inlined into flexible expressions (FlexibleStringExpander) in other attributes.
+                            This one behaves analogous to the dedicated script files when specified by location, unlike the inline
+                            scripts in those flexible expressions (this is part reason for the enhancement of the script element in Scipio).
+                        2016-11-11: Added for 1.14.3.
+                    ]]></xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="trim-lines" default="true">

@@ -53,7 +53,7 @@ under the License.
             </condition>
             <link target="ListPartyCommEvents">
                 <parameter param-name="partyId" from-field="partyId"/>
-                <parameter param-name="activeMainMenuItem" value="Accounts"/>
+                <!-<parameter param-name="activeMainMenuItem" value="Accounts"/>->
             </link>
         </menu-item>
     </menu>

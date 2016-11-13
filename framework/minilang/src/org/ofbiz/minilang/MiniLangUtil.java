@@ -71,13 +71,43 @@ public final class MiniLangUtil {
 
     /**
      * Returns <code>true</code> if <code>str</code> contains a script.
+     * @deprecated SCIPIO: FIXME?: this stock code fails to ensure the lang prefix
+     * is actually at start of the script or checked for any delimiters whatsoever
+     * (including spaces, for which other methods are more strict, 
+     * thus creating inconsistencies against this one, though that is not 
+     * the worst possible issue). until this is better understood and resolved, this is marked 
+     * deprecated (TODO: un-mark deprecated once resolved) and new
+     * code should use {@link #startsWithScriptPrefix} instead in the meantime.
+     * (it is possible the current form has some valid uses, but it seems to
+     * engender anything but, and as-is misleading at best)
+     * 
      * @param str The string to test
      * @return <code>true</code> if <code>str</code> contains a script
      */
+    @Deprecated
     public static boolean containsScript(String str) {
         if (str.length() > 0) {
             for (String scriptPrefix : SCRIPT_PREFIXES) {
                 if (str.contains(scriptPrefix)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a script prefix.
+     * <p>
+     * NOTE: this is an explicit (unabstracted) and safer version of {@link #containsScript}.
+     * 
+     * @param str The string to test
+     * @return <code>true</code> if <code>str</code> starts with a script prefix
+     */
+    public static boolean startsWithScriptPrefix(String str) {
+        if (str.length() > 0) {
+            for (String scriptPrefix : SCRIPT_PREFIXES) {
+                if (str.startsWith(scriptPrefix)) {
                     return true;
                 }
             }

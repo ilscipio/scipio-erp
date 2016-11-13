@@ -17,17 +17,57 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- 
-SCIPIO: In Scipio, the form widget language is modified from stock Ofbiz with new elements and
-modifications to existing elements. Changes are prefixed with the string "SCIPIO:" in annotations.
-
-Features and Modifications:
-* Decorator sections have extended controls to allow auto-inclusion, delegation and
-  conditional definitions. (auto-decorator-section-include, override-by-auto-include, use-when)
-* In our standard implementation, label and section title styles support an advanced
-  syntax. (label's style, title-style)
--->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            Screen Widget Definitions
+        
+            SCIPIO: In Scipio, the screen widget language is modified from stock Ofbiz with new elements and
+            modifications to existing elements. The renderer is modified accordingly, and it may have yet
+            additional changes not visible through the language elements alone (may be noted here).
+            Some webapp-specific renderer configuration is done through web.xml 
+            (see descriptions in component://resources/templates/web.xml and component://webtools/webapp/webtools/WEB-INF/web.xml).
+            Patterns, their descriptions and usage examples can be found in CommonScreens.xml of Common and Admin apps
+            (see component://common/widget/CommonScreens.xml and component://webtools/widget/CommonScreens.xml).
+            Changes are prefixed with the string "SCIPIO:" in annotations and comments.
+            
+            Features and Modifications (including but not limited to):
+            * Decorator sections have extended controls to allow auto-inclusion, delegation and
+              conditional definitions. (auto-decorator-section-include, override-by-auto-include, use-when)
+            * decorator-screen element supports a fallback screen/location when named screen is not found
+            * In Scipio standard implementation, label and section title styles support an advanced
+              syntax. (label's style, title-style)
+            * New screen-settings element and construct for new screen configurable options and defaults, 
+              which are applied to all screens in a file or screen-group.
+              * auto-include-settings allows automatically applying settings from CommonScreens.xml (specially-recognized)
+                to the other screen files (*Screens.xml) found statically in the same local folder and subfolders.
+              * decorator-screen-settings allows configuring the default behavior of the decorator-screen
+                element; supports settings a default fallback location for all screens in a file (usually
+                in conjunction with mainDecoratorLocation) (and/or all adjacent files, with auto-include-settings)
+                Allows implementing a common central decorator pattern using mainDecoratorLocation (pointing to CommonScreens.xml),
+                where mainDecoratorLocation is used liberally as the only parametrized decorator location without consequence 
+                to application extensibility (the only constraint being that decorator names should be as globally unique as possible).
+              * render-init settings allows defining statically auto-included actions for all screens of a file
+                (and/or all adjacent files, with auto-include-settings), which are executed for the first of the local 
+                screens encountered in a request or in other words the screen used as the target view.
+                Eliminates the need to include guarded shared actions manually into every screen in the application,
+                and for context variables can eliminate need for the global context (frequently problematic).
+            * The renderer allows auto-including webapp-specific actions at render init (in addition to 
+              statically included ones mentioned above), which are swapped per-webapp, via web.xml context-param
+              renderInitScriptScreenLocation, similar to main-decorator. 
+              In fact, configuring renderInitScriptScreenLocation is not necessary, as it has
+              a default which is to lookup the screen named "webapp-common-actions" in the location specified
+              by mainDecoratorLocation (already in most apps' web.xml file).
+              Allows setting webapp-swappable context fields, with eliminated need for global context and 
+              dangerous parameters map usage.
+            * The renderer supports custom initial context populating modification scripts, either 
+              system wide (widgetContextScripts.properties) or per-webapp (widgetContextScriptLocation - web.xml).
+              
+            To use this and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+            import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+            Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service defs, etc.
+        ]]></xs:documentation>
+    </xs:annotation>
     <xs:include schemaLocation="http://ofbiz.apache.org/dtds/widget-common.xsd" />
     <xs:element name="screens">
         <xs:complexType>
@@ -907,7 +947,7 @@ Features and Modifications:
             <xs:documentation>
                 HTML template, usually a Freemarker *.ftl file by location.
                 SCIPIO: In addition to template location, now supports inline template body 
-                as child CDATA text, along with explicit type attribute.
+                as child CDATA text, along with explicit lang attribute.
                 NOTE: The type attribute can also be set as prefix with colon at the start of the child text data.
                 2016-11-10: Enhanced for 1.14.3.
             </xs:documentation>
@@ -918,10 +958,10 @@ Features and Modifications:
     </xs:element>
     <xs:attributeGroup name="attlist.html-template">
         <xs:attribute type="xs:string" name="location" /><!-- SCIPIO: removed for 1.14.3: use="required" -->
-        <xs:attribute name="type"><!-- SCIPIO: implied: default="ftl" -->
+        <xs:attribute name="lang"><!-- SCIPIO: implied: default="ftl" -->
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: Explicit template type - may be needed if template is inlined as CDATA text
+                    SCIPIO: Explicit template language - may be needed if template is inlined as CDATA text
                     element, otherwise inferred from location/extension.
                     Default: 'ftl' when template inlined; by extension when location specified.
                     NOTE: This can also be specified using colon separator as prefix of the child CDATA text (e.g., "ftl:").

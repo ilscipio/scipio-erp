@@ -71,7 +71,7 @@ under the License.
                 </service>
                 <!-- SCIPIO: DON'T DO THIS; causes exceptions due to ftl iteration. get rid of the EntityListIterator.
                 <set field="invoices" from-field="result.listIt"/> -->
-                <script><![CDATA[groovy:
+                <script lang="groovy"><![CDATA[
                     if (context.result?.listIt != null) {
                         context.invoices = result.listIt.getCompleteList();
                         result.listIt.close();

@@ -66,9 +66,7 @@ under the License.
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
         </menu-item> -->
-        <!-- TODO: REVIEW NAMES... contain a "& Doc"? maybe -->
-        <!--${uiLabelMap.WebtoolsLayoutDemo} / ${uiLabelMap.CommonDev}-->
-        <menu-item name="LayoutDemo" title="${uiLabelMap.CommonDevelopment}">
+        <menu-item name="Development" title="${uiLabelMap.CommonDevelopment}">
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
         <menu-item name="solrAdmin" title="${uiLabelMap.WebtoolsSolrAdmin}">
@@ -118,8 +116,8 @@ under the License.
         <menu-item name="geoManagement">
             <sub-menu name="geoManagement" include="geoManagementSideBar"/>
         </menu-item> 
-        <menu-item name="LayoutDemo">
-            <sub-menu name="LayoutDemo" include="LayoutDemoSideBar"/>
+        <menu-item name="Development">
+            <sub-menu name="Development" include="DevelopmentSideBar"/>
         </menu-item>
         <menu-item name="solrAdmin"/>
     </menu>
@@ -453,6 +451,36 @@ under the License.
         <include-elements menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>
     
+    <!-- SCIPIO: New (and all below or redefined) -->
+    <menu name="DevelopmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
+        </actions>
+        <menu-item name="LayoutDemo" title="Layout Demo">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" from-field="parameters.debugMode"/><!-- preserve the mode -->
+            </link>
+            <sub-menu name="LayoutDemo" include="LayoutDemoSideBar"/>
+        </menu-item>
+        <menu-item name="DeveloperDocIndex" title="${uiLabelMap.WebtoolsDeveloperDocumentation}">
+            <link target="DeveloperDocIndex"/>
+            <sub-menu name="DeveloperDoc" include="DeveloperDocSideBar"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="DeveloperDocSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
+        </actions>
+        <menu-item name="TemplateApiDoc" title="${uiLabelMap.WebtoolsTemplateApiDocsTitle}">
+            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
+            <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>
+        </menu-item>
+        <menu-item name="ScipioWebsiteLink" title="Scipio ERP Website" sort-mode="off">
+            <link target="http://www.scipioerp.com/community/developer/" url-mode="plain" target-window="_blank"/>
+        </menu-item>
+    </menu>
+    
     <!-- SCIPIO: new -->
     <menu name="TemplateApiDocTabBar" items-sort-mode="off" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
@@ -517,40 +545,46 @@ under the License.
     </menu>
     
     <menu name="LayoutDemoSideBar" items-sort-mode="off" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <actions>
-            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
-            <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
-        </actions>
-        <menu-item name="LayoutDemoDebug" title="Layout Demo (Debug)">
+        <menu-item name="LayoutDemo" title="Regular Demo">
+            <link target="${demoTargetUrl}"/>
+        </menu-item>
+        <menu-item name="LayoutDemoDebug" title="Advanced Demo">
             <link target="${demoTargetUrl}">
                 <parameter param-name="debugMode" value="true"/>
             </link>
         </menu-item>
-        <menu-item name="LayoutDemo" title="Layout Demo">
-            <link target="${demoTargetUrl}"/>
-        </menu-item>
-        <menu-item name="templateApiDocs" title="${uiLabelMap.WebtoolsTemplateApiDocsTitle}">
-            <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
-            <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>
-        </menu-item>
-        <!-- 
-        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
+        <menu-item name="ExampleSideBar" title="Example Sidebar">
             <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" from-field="parameters.debugMode"/>
+            </link>
+            <sub-menu name="LayoutDemoExampleSideBar" include="LayoutDemoExampleSideBar" expanded="true"/><!-- force-expand this always -->
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: FIXME: This belongs in MiscMenus.xml, but such placement currently results in 
+        indirect circular dependencies and stack overflow. such setup may not be uncommon in practice as the
+        circulars are somewhat indirect so a fix is called for... -->
+    <menu name="LayoutDemoExampleSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}" 
+            widget-style="+these-classes-manually-added ${styles.menu_sidebar_itemactive} ${styles.menu_sidebar_itemactivetarget}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="debugMode" from-field="parameters.debugMode"/>
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        -->
         <menu-item name="Enabled" title="${uiLabelMap.CommonEnabled}">
             <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="debugMode" from-field="parameters.debugMode"/>
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" disable-if-empty="nonExistentVar">
+        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" disabled="true"><!-- SCIPIO: we now have a more direct disabled flag: disable-if-empty="nonExistentVar" -->
             <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="debugMode" from-field="parameters.debugMode"/>
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
@@ -570,408 +604,5 @@ under the License.
             </link>
         </menu-item> -->
     </menu>
-    
-    <menu name="LayoutDemoButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="Enabled" title="${uiLabelMap.CommonEnabled}">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-    </menu>
-
-    <!-- SCIPIO: nested menu test -->
-    <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="top1" title="Toplevel1">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-            <menu-item name="nested1" title="Nested1">
-                <link target="${demoTargetUrl}">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
-            <menu-item name="nested2" title="Nested2" sub-menu-style="+my-sub-menu" sub-menu-title="My Sub Menu Title">
-                <link target="${demoTargetUrl}">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-                <menu-item name="nestednested1" title="Nestednested1">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-                <menu-item name="nestednested2" title="Nestednested2">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-                <!-- SCIPIO: This is a sub-dropdown button menu, implemented manually. It's better to use sub-menu-model now (see other menu), but this would be roughly equivalent (in this case). -->
-                <menu-item name="nestednested3" sub-menu-style="menu-type-button-dropdown" sub-menu-title="Nestednested3">
-                    <menu-item name="nestednestednested1" title="Nestednestednested1" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
-                        <link target="${demoTargetUrl}">
-                            <parameter param-name="demoParam1"/>
-                            <parameter param-name="demoParam2"/>
-                            <parameter param-name="demoParam3"/>
-                        </link>
-                    </menu-item>
-                    <menu-item name="nestednestednested2" title="Nestednestednested2" link-style="=${styles.menu_button_dropdown_item}" selected-style="=${styles.menu_button_dropdown_itemactive}">
-                        <link target="${demoTargetUrl}" link-type="hidden-form">
-                            <parameter param-name="demoParam1"/>
-                            <parameter param-name="demoParam2"/>
-                            <parameter param-name="demoParam3"/>
-                        </link>
-                    </menu-item>
-                </menu-item>
-            </menu-item>
-            <menu-item name="nested3" title="Nested3"></menu-item>
-            <menu-item name="nested4" title="Nested4"></menu-item>
-        </menu-item>
-        <menu-item name="top2" title="Toplevel2">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="top3" title="Toplevel3">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-                <image src="/images/products/GZ-1000/small.png" />
-            </link>
-        </menu-item>
-    </menu>
-    
-    <!-- SCIPIO: Just here to demonstrate sub-menu-model local lookup -->
-    <menu name="LayoutDemoButtonDropdownMenuModel" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-link-style="+my-dropdown-item-link">
-    </menu>
-    
-    <!-- SCIPIO: button menu with nested button-dropdown test -->
-    <menu name="LayoutDemoButton2" menu-container-style="+my-special-button-menu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-        default-widget-style="+my-list-item">
-        <menu-item name="top1" title="Toplevel1" widget-style="my-list-item-override-style">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="top2" title="Toplevel2" widget-style="+my-list-item-extra-style">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <!-- SCIPIO: It's now possible to use an inlined sub-menu of different type (with button-dropdown, omit the menu-item title and link and 
-            use sub-menu-title instead). sub-menu-model means the default styles will be fetched from the specified menu
-            instead of this top-level menu. -->
-        <menu-item name="top3">
-            <sub-menu model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" title="Sub-menu, as button-dropdown">
-                <menu-item name="nestednestednested1" title="Nestednestednested1">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-                <menu-item name="nestednestednested2" title="Nestednestednested2">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-        <!-- SCIPIO: DEPRECATED, OLD SYNTAX, DO NOT USE. ALWAYS USE SUB-MENU ELEMENT FROM NOW ON. -->
-        <menu-item name="top3b" sub-menu-model="component://common/widget/CommonMenus.xml#CommonButtonDropdownMenu" sub-menu-title="Sub-menu, as button-dropdown (deprecated)">
-            <menu-item name="nestednestednested1" title="Nestednestednested1">
-                <link target="${demoTargetUrl}">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
-            <menu-item name="nestednestednested2" title="Nestednestednested2">
-                <link target="${demoTargetUrl}" link-type="hidden-form">
-                    <parameter param-name="demoParam1"/>
-                    <parameter param-name="demoParam2"/>
-                    <parameter param-name="demoParam3"/>
-                </link>
-            </menu-item>
-        </menu-item>
-        <menu-item name="top4" title="Toplevel4" disable-if-empty="nonExistentVar">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="top5">
-            <sub-menu id="demo-top5-sub-menu" model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
-                <menu-item name="nestednestednested1" title="Nestednestednested1">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-                <menu-item name="nestednestednested2" title="Nestednestednested2">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-        <!-- A full menu include. The "full" scope is required to preserve the included menu's style. -->
-        <menu-item name="top6"> 
-            <sub-menu include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown" />
-        </menu-item>
-        <!-- Modifies the previous to exclude one of the items and add an extra before -->
-        <menu-item name="top7">
-            <sub-menu name="LayoutDemoButtonDropdownTest2" include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
-                items-sort-mode="displaytext-ignorecase">
-                <!-- extra items -->
-                <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
-                <!-- This menu-ref overrides the sub-menu include (the "include" attribute
-                    in the "sub-menu" element above) default behavior. Here we exclude an item. -->
-                <include-elements menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
-                    <exclude-item name="Enabled"/>
-                </include-elements>
-                <!-- demoTestVar1 comes from the actions of LayoutDemoTest2/1 -->
-                <menu-item name="TestTest" title="Extra item ${demoTestVar1}">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-        <!-- RARE CASE: Two submenus. technically supported, but usually best avoided. -->
-        <menu-item name="top6"> 
-            <sub-menu style="+two-sub-menu-first" name="LayoutDemoButtonDropdownTest3" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (1)" />
-            <sub-menu style="+two-sub-menu-second" name="LayoutDemoButtonDropdownTest4" include="LayoutDemoButtonDropdown" model-scope="full" title="Two submenus (2)" />
-        </menu-item>
-    </menu>
-    
-    <menu name="LayoutDemoButtonDropdown" title="Dropdown button menu" extends="CommonButtonDropdownMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="Enabled" title="${uiLabelMap.CommonEnabled}">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-    </menu>
-
-    <menu name="LayoutDemoTest1">
-        <actions>
-            <set field="demoTestVar1" value="demoTestValue1" />
-        </actions>
-        <menu-item name="DemoTest1" title="Demo Test 1">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="DemoTest2" title="Demo Test 2">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-    </menu>
-    
-    <menu name="LayoutDemoTest2">
-        <include-elements menu-name="LayoutDemoTest1" />
-        <menu-item name="DemoTest3" title="Demo Test 3">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-            </link>
-        </menu-item>
-        <menu-item name="DemoTest4" title="Demo Test 4">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-            </link>
-        </menu-item>
-    </menu>
-    
-    <menu name="LayoutDemoButton2NoSubMenus" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"><!-- Excludes sub-menus -->
-        <include-elements menu-name="LayoutDemoButton2" sub-menus="none"/>
-        <menu-item name="top7">
-            <!-- since we specified this sub-menu manually, it should be left alone by the above filter -->
-            <sub-menu name="LayoutDemoButtonDropdownTest2" include="LayoutDemoButtonDropdown" model-scope="full" title="Separate sub-menu, as button-dropdown, sorted"
-                items-sort-mode="displaytext-ignorecase">
-                <!-- extra items -->
-                <include-elements menu-name="LayoutDemoTest2" recursive="full"/>
-                <!-- This menu-ref overrides the sub-menu include (the "include" attribute
-                    in the "sub-menu" element above) default behavior. Here we exclude an item. -->
-                <include-elements menu-ref="sub-menu-model"><!-- recursive="full" is the default here -->
-                    <exclude-item name="Enabled"/>
-                </include-elements>
-                <!-- demoTestVar1 comes from the actions of LayoutDemoTest2/1 -->
-                <menu-item name="TestTest" title="Extra item ${demoTestVar1}">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-    </menu>
-    
-    <menu name="LayoutDemoTest3">
-        <menu-item name="DemoTest1" title="Demo Test 1">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-            </link>
-        </menu-item>
-        <menu-item name="DemoTest2" title="Demo Test 2">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-            </link>
-            <sub-menu>
-                <menu-item name="DemoTestNested1" title="Demo Test Nested 1">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                    </link>
-                    <sub-menu>
-                        <menu-item name="DemoTestNestedNested1" title="Demo Test Nested Nested 1">
-                            <link target="${demoTargetUrl}">
-                                <parameter param-name="demoParam1"/>
-                            </link>
-                        </menu-item>
-                        <menu-item name="DemoTestNestedNested2" title="Demo Test Nested Nested 2">
-                            <link target="${demoTargetUrl}">
-                                <parameter param-name="demoParam1"/>
-                            </link>
-                        </menu-item>
-                    </sub-menu>
-                </menu-item>
-                <menu-item name="DemoTestNested2" title="Demo Test Nested 2">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-    </menu>
-    
-    <menu name="WebtoolsPlainSiteMapDemo" selected-menu-context-field-name="activeMainMenu" selected-menuitem-context-field-name="activeMainMenuItem">
-        <!-- To achieve this, we can force the scope of all sub-menus to exclude styling using "func" or "none" -->
-        <include-menu-items menu-name="WebtoolsAppSideBar" force-sub-menu-model-scope="none"/>
-    </menu> 
-
-    <menu name="WebtoolsPlainSiteMapDemo2">
-        <include-menu-items menu-name="WebtoolsAppSideBar"/>
-    </menu> 
-    
-    <!-- alternate way using weird extends -->
-    <menu name="WebtoolsPlainSiteMapDemo3" extends="WebtoolsPlainSiteMapDemo2" force-all-sub-menu-model-scope="func">
-        <menu-item name="extraInsertedItem" title="Extra inserted item">
-            <!-- here, the model style will be ignored because of force-all-sub-menu-model-scope (model effectively useless).
-                to honor its style, use only force-extends-sub-menu-model-scope="none" (or "func") instead-->
-            <sub-menu id="demo-top5-sub-menu" model="component://webtools/widget/Menus.xml#LayoutDemoButtonDropdownMenuModel" title="Sub-menu, as button-dropdown">
-                <menu-item name="nestednestednested1" title="Nestednestednested1">
-                    <link target="${demoTargetUrl}">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-                <menu-item name="nestednestednested2" title="Nestednestednested2">
-                    <link target="${demoTargetUrl}" link-type="hidden-form">
-                        <parameter param-name="demoParam1"/>
-                        <parameter param-name="demoParam2"/>
-                        <parameter param-name="demoParam3"/>
-                    </link>
-                </menu-item>
-            </sub-menu>
-        </menu-item>
-    </menu> 
-    
-    <menu name="WebtoolsInlineSectionMenuDemo">
-        <menu-item name="item1" title="Inline-Section Menu Item 1">
-            <link target="${demoTargetUrl}">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-        <menu-item name="item2" title="Inline-Section Menu Item 2">
-            <link target="${demoTargetUrl}" link-type="hidden-form">
-                <parameter param-name="demoParam1"/>
-                <parameter param-name="demoParam2"/>
-                <parameter param-name="demoParam3"/>
-            </link>
-        </menu-item>
-    </menu> 
-
-    <menu name="WebtoolsMenuActionsDemo1">
-        <actions>
-            <set field="commonActionField6" value="This value 6 was set in WebtoolsMenuActionsDemo1. [SUCCESS]"/>
-            <set field="commonActionField7" value="This value 7 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
-            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
-            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo1 but should be overridden... [ERROR]"/>
-        </actions>
-    </menu> 
-    
-    <menu name="WebtoolsMenuActionsDemo2">
-        <actions>
-            <set field="commonActionField7" value="This value 7 was set in WebtoolsMenuActionsDemo2. [SUCCESS]"/>
-            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo2 but should be overridden... [ERROR]"/>
-            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo2 but should be overridden... [ERROR]"/>
-        </actions>
-    </menu> 
-    
-    <menu name="WebtoolsMenuActionsDemo3">
-        <actions>
-            <set field="commonActionField8" value="This value 8 was set in WebtoolsMenuActionsDemo3. [SUCCESS]"/>
-            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo3 but should be overridden... [ERROR]"/>
-        </actions>
-    </menu> 
-    
-    <menu name="WebtoolsMenuActionsDemo4" extends="WebtoolsMenuActionsDemo1">
-        <!-- THREE possible ways to include actions here! -->
-        <include-actions menu-name="WebtoolsMenuActionsDemo2"/><!-- STATIC, textual include (this is rarely used) -->
-        <actions>
-            <include-menu-actions name="WebtoolsMenuActionsDemo3"/><!-- DYNAMIC, non-textual include -->
-            <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo4. [SUCCESS]"/>
-        </actions>
-    </menu> 
 
 </menus>

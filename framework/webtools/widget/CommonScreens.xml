@@ -21,14 +21,18 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
         
-    <!-- SCIPIO: NOTE: The Admin app screen and related definitions have the double-purpose of providing app implementation
-        examples; to this end it also frequently contains descriptions of many patterns used throughout the backend.
-        Some descriptions are also found instead in the common component files such as component://common/widget/CommonScreens.xml and CommonMenus.xml.
+    <!-- SCIPIO: Admin app CommonScreens.xml
+        NOTE: The Admin app screen and related definitions have the double-purpose of implementing Admin 
+        as well as providing app implementation documentation and examples; 
+        to this end it also frequently contains descriptions of many patterns used throughout the backend.
+        Some descriptions are also found instead in the common component files such as component://common/widget/CommonScreens.xml and CommonMenus.xml,
+        and others in the create-component templated files under component://resources/templates/Screens.xml and Menus.xml.
         For more elemental widget language definitions, see corresponding component://widget/dtd/widget-*.xsd files. -->
         
-    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
-    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
-        <!-- When a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), it will look in our CommonScreens.xml file here instead. 
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app (those that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
+    <screen-settings name="common-settings"><!-- All settings are currently valid/needed for this CommonScreens.xml file as well, so we omit the flag that would disable them for this file only: active="false" -->
+        <!-- With the following decorator-screen-settings configuration, when a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), 
+            it will look in our CommonScreens.xml file here instead.
             This prevents the worst application extensibility issues related to the heavy use of mainDecoratorLocation, so that extending applications
             can safely include screens from our app without having to worry about missing decorators in its own CommonScreens.xml file (which otherwise crashes).
             It also mitigates the versatility loss that comes from using a generic parameters.mainDecoratorLocation rather than hundreds of specific 
@@ -45,16 +49,22 @@ under the License.
         <render-init><local><actions><include-screen-actions name="static-common-actions" location="component://webtools/widget/CommonScreens.xml"/></actions></local></render-init>
     </screen-settings>
         
-    <!-- SCIPIO: The settings for this file (active) -->
+    <!-- SCIPIO: The settings for this file (active). 
+        NOTE: 2016-11: currently the common-settings above also apply to this file (both definitions are active), so they are
+            merged together to produce the effective settings for this file (avoiding copy-paste). -->
     <screen-settings name="local-settings">
-        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <!-- These auto-include settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml.
+            These are found by the renderer through a special lookup on the CommonScreens.xml file whenever a screen in the *Screens.xml files in the same or subfolders are rendered. -->
         <auto-include-settings>
-            <!-- Every *Screens.xml file in same folder should include our common-settings defined above -->
+            <!-- Every *Screens.xml file in same folder should include our common-settings defined above.
+                NOTE: Here you could also simply copy-paste the settings under common-settings instead of having this indirect include directive (and then even remove the common-settings above). 
+                    But to keep things versatile, we want the common-settings to be in their own block above so that it's possible to include them manually
+                    or using different patterns than auto-include-settings if the need arises. -->
             <include-settings as-name="local-settings" name="common-settings" location="component://webtools/widget/CommonScreens.xml"/>
         </auto-include-settings>
     </screen-settings>
     
-    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation)
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) (webapp-aware auto-included actions)
         This works similar to manually including actions at the start of every screen invoked by our controller (on condition of the webapp). 
         NOTE: If it is a different webapp invoking our screens, this will not be included, and that webapp's 
             webapp-common-actions (if any) will end up being used instead (similar to main-decorator). 
@@ -73,7 +83,7 @@ under the License.
         </actions>
     </screen>
     
-    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (discovered via screen-settings, above).
+    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (discovered via screen-settings, above) (static, webapp-agnostic auto-included actions)
         This works similar to manually including actions at the start of every screen in this file, with a double-include guard.
         These always execute after webapp-common-actions; however there may be a number of other actions in between them 
         in the case of screen reuse by other applications. They are still run if the screens are included by another webapp,
@@ -87,6 +97,9 @@ under the License.
         </actions>
     </screen>
         
+    <!-- SCIPIO: Admin webapp's implementation of the generic main-decorator pattern. 
+        Every webapp is EXPECTED to define its own main-decorator, which gets included on webapp basis through ${parameters.mainDecoratorLocation} (NOTE: the parameters map is misleading; mainDecoratorLocation is from servlet context attributes which override request parameters in it).
+        Any webapp that extends this one should provide its own main decorator, but it is possible for it to statically reuse definitions from this one.  -->
     <screen name="main-decorator">
         <section>
             <actions>
@@ -150,9 +163,24 @@ under the License.
     </screen>
 
     <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name.
-        This wrapper simplifies the other decorators and screens, and allows extending apps that extend multiple
-        applications to specifically override screen code for this specific application only (important for permissions to
-        be re-implemented correctly by the extending app).  -->
+        Every webapp is EXPECTED to provide a version of this decorator named uniquely after themselves (following "CommonXxxAppDecorator" by convention).
+        
+        This wrapper simplifies the other decorators and screens by providing a common static reusable point for
+        code such as permission check, and if need arises it also allows extending apps that extend multiple applications to 
+        specifically override screen code for this specific application only (important for permissions to
+        be re-implemented correctly by the extending app).
+        
+        This decorator (pattern) was originally primarily designed to provide a central point for statically-reusable code; in other
+        words, permission checks and code that would otherwise be copy-pasted in each top screen or their intermediate decorators,
+        and that are logically tied to the screens (for example, queries of entities specific to webtools are tied to WEBTOOLS_VIEW perm check).
+        Nevertheless, because this is usually included using "${parameters.mainDecoratorLocation}", it is
+        possible for a webapp extending this one to override this decorator. The main reason for doing so would be to add
+        code that modifies the behavior of only the screens of one specific application it is extending (this is
+        otherwise not easily possible with the patterns in stock ofbiz).
+        However, if overriding this way, the extending webapp must take care to fulfill the static contract of the original
+        decorator, especially permission checks; the screens rely on this. The easiest way is to simply delegate
+        statically to the original decorator, if the changes allow. Note that this also true for many of the other
+        intermediate decorators typically named CommonXxxDecorator. -->
     <screen name="CommonWebtoolsAppDecorator">
         <section>
             <actions>
@@ -184,6 +212,8 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: Admin webapp's main screen, implementing dashboard.
+        Generally webapps should define this screen unless they have a different way of handling the controller "main" uri (the uri, however, is not optional). -->
     <screen name="main">
         <section>
             <actions>

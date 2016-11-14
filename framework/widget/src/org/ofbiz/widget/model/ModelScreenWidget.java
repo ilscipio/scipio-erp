@@ -216,6 +216,39 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public String render(String sectionName) throws GeneralException, IOException {
             return render(sectionName, false);
         }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
+         */
+        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
+            if (asString == null) {
+                asString = Boolean.FALSE;
+            }
+            if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
+                MapStack<String> context;
+                if (!(this.context instanceof MapStack<?>)) {
+                    context = MapStack.create(this.context);
+                } else {
+                    context = UtilGenerics.<MapStack<String>>cast(this.context);
+                }
+                context.push();
+                try {
+                    return render(sectionName, asString);
+                } finally {
+                    context.pop();
+                }
+            } else {
+                return render(sectionName, asString);
+            }
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+         * generic object/ftl-friendly version.
+         */
+        public String renderScopedGen(String sectionName, Object asString, Object shareScope) throws GeneralException, IOException {
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
+        }
 
         @Override
         public int size() {

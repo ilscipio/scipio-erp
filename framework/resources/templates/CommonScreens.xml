@@ -2,17 +2,21 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
-    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+    <!-- SCIPIO: CommonScreens.xml for the application.
+        For more information on the patterns herein, refer to the common screens and menu files of the Admin and Common apps,
+        as well as the widget language definitions files (component://widget/dtd/widget-*.xsd). -->
+
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app (that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
+    <screen-settings name="common-settings"><!-- All settings are currently valid/needed for this file as well, so omit: active="false" -->
         <!-- When a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), it will look in our file instead. This prevents extensibility issues. -->
         <decorator-screen-settings default-fallback-location="component://@component-name@/widget/CommonScreens.xml"/>
         <!-- Static (webapp-agnostic) auto-included actions: these actions will be included at start of render for all top-level screens we define, regardless of which webapp they're rendered through -->
         <render-init><local><actions><include-screen-actions name="static-common-actions" location="component://@component-name@/widget/CommonScreens.xml"/></actions></local></render-init>
     </screen-settings>
         
-    <!-- SCIPIO: The settings for this file (active) -->
+    <!-- SCIPIO: The settings for this file (active) (if the above are also active, they are merged together to provide effective settings for this file) -->
     <screen-settings name="local-settings">
-        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml (through a special lookup by renderer) -->
         <auto-include-settings>
             <!-- Every *Screens.xml file in same folder should include our common-settings defined above -->
             <include-settings as-name="local-settings" name="common-settings" location="component://@component-name@/widget/CommonScreens.xml"/>
@@ -31,7 +35,7 @@
         </actions>
     </screen>
     
-    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (static, webapp-agnostic auto-included actions)-->
+    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (static, webapp-agnostic auto-included actions) -->
     <screen name="static-common-actions">
         <actions>
         </actions>

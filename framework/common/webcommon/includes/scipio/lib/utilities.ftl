@@ -61,6 +61,14 @@ NOTE: 2016-07-29: The default for the {{{restoreValues}}} parameter has been cha
     their previous values when the macro call returns. This helps guard against bugs in templates
     that use multiple @render calls as well as nested screens.
 
+NOTE: 2016-11-14: Scope handling is revamped for consistency.
+    A new {{{shareScope}}} parameter is available to control it.
+    The default {{{shareScope}}} for ALL types is now {{{false}}}, meaning the context stack gets pushed/poped.
+    The logical implemented defaults for type {{{screen}}} AND {{{section}}} have CHANGED to {{{false}}}; 
+    they were previously {{{true}}} and this is probably a flaw in the original ofbiz handling of screens
+    and sections in ftl files (their XML equivalents perform stack pushing), though it rarely manifests as
+    an issue due to the ftl bindings being copies from context.
+
 TODO: Reimplement as transform.
 
   * Parameters *
@@ -76,9 +84,9 @@ TODO: Reimplement as transform.
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
                               * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
                                 same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
-                              * {{{menu}}} or {{{include-menu}}} (currently same): an Ofbiz menu (widget) by {{{component://}}} location
-                              * {{{form}}} or {{{include-form}}} (currently same): an Ofbiz form (widget) by {{{component://}}} location
-                              * {{{tree}}} or {{{include-tree}}} (currently same): an Ofbiz tree (widget) by {{{component://}}} location
+                              * {{{menu}}} or {{{include-menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
+                              * {{{form}}} or {{{include-form}}}: an Ofbiz form (widget) by {{{component://}}} location
+                              * {{{tree}}} or {{{include-tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
                               NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
                                   guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
@@ -102,28 +110,31 @@ TODO: Reimplement as transform.
                               output of @render, pass true here.
                               NOTE: not supported for {{{type="section"}}} as this time.
                               TODO: implement for section
+    shareScope              = ((boolean), default: false) Whether context modifications by the widget should be shared with caller (no stack push) or discarded (stack push)
+                              NOTE: 2016-11-14: As of now the logical defaults for all types are {{{false}}}; prior to this,
+                                  the specific types {{{screen}}} and {{{section}}} had logical defaults of true,
+                                  which were probably errors in the original ofbiz. In Scipio, a consistent
+                                  default of {{{false}}} is now implemented for all types.
+                              2016-11-14: Added for 1.14.3.
     maxDepth                = ((int), default: -1) Max menu levels to render [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
     
   * History *
+    Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
-    asString=false maxDepth="" subMenus="">
+    asString=false shareScope="" maxDepth="" subMenus="">
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
-      <#if name?has_content>
-        ${StringUtil.wrapString(screens.render(resource, name, asString))}<#t>
-      <#else>
-        ${StringUtil.wrapString(screens.render(resource, asString))}<#t>
-      </#if>
+        ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
     <#elseif type == "section">
-        ${StringUtil.wrapString(sections.render(name))}<#t>
+        ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
     <#else>
-      <#-- strip -widget from type, because for the rest it's all the same -->
+      <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>
       <#if !name?has_content>
         <#local parts = resource?split("#")>
@@ -133,22 +144,22 @@ TODO: Reimplement as transform.
       <#-- DEV NOTE: WARN: name clashes -->
       <#if type == "menu">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "maxDepth":maxDepth, "subMenus":subMenus
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource
+          "resName":name, "resLocation":resource, "shareScope":shareScope
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource
+          "resName":name, "resLocation":resource, "shareScope":shareScope
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
       <#elseif type == "screen">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource
+          "resName":name, "resLocation":resource, "shareScope":shareScope
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>

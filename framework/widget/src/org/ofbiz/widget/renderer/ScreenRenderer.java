@@ -246,6 +246,66 @@ public class ScreenRenderer {
     }
     
     /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and (unlike the other methods) by default protects the context by pushing it before/after the render,
+     * with optional boolean to bypass it.
+     * <p>
+     * Additionally, this method automatically handles the case where screenName is empty and included in resourceName.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        if (asString == null) {
+            asString = Boolean.FALSE;
+        }
+        if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
+            context.push();
+            try {
+                if (UtilValidate.isNotEmpty(screenName)) {
+                    return render(resourceName, screenName, asString);
+                } else {
+                    return render(resourceName, asString);
+                }
+            } finally {
+                context.pop();
+            }
+        } else { // if (shareScope == Boolean.TRUE)
+            if (UtilValidate.isNotEmpty(screenName)) {
+                return render(resourceName, screenName, asString);
+            } else {
+                return render(resourceName, asString);
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and (unlike the other methods) by default protects the context by pushing it before/after the render,
+     * with optional boolean to bypass it, generic type/ftl friendly version.
+     * <p>
+     * Additionally, this method automatically handles the case where screenName is empty and included in resourceName.
+     * <p>
+     * This overload accepts Objects instead of Booleans, for FTL support.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
+    }
+    
+    /**
      * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION. 
      * <p>
      * Should be run at the beginning of every screen render, just at the moment the top screen

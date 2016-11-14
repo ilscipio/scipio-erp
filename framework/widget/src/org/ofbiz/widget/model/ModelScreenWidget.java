@@ -178,29 +178,43 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.prevSections = prevSections;
         }
 
-        /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
-        public String render(String sectionName) throws GeneralException, IOException {
+        /** 
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+         * <p>
+         * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
+         * */
+        public String render(String sectionName, boolean asString) throws GeneralException, IOException {
             if (includePrevSections) {
                 // SCIPIO: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                    Appendable writer = asString ? new java.io.StringWriter() : this.writer;
+                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
+                    return asString ? writer.toString() : "";
                 }
                 else if (prevSections != null && prevSectionMap != null && prevSectionMap.get(sectionName) != null) {
                     // render previous sections with previous renderer so that it uses the right context
-                    prevSections.render(sectionName);
+                    return prevSections.render(sectionName, asString);
                 }
                 return "";
             }
             else {
                 ModelScreenWidget section = sectionMap.get(sectionName);
+                Appendable writer = asString ? new java.io.StringWriter() : this.writer;
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
                 }
-                return "";
+                return asString ? writer.toString() : "";
             }
+        }
+        
+        /** 
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+         */
+        public String render(String sectionName) throws GeneralException, IOException {
+            return render(sectionName, false);
         }
 
         @Override
@@ -1250,6 +1264,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     sections.render(getName());
                 }
             }
+            UtilGenerics.<MapStack<String>>cast(context).pop();
         }
 
         @Override

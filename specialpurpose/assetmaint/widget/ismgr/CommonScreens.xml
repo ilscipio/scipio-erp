@@ -64,9 +64,9 @@ under the License.
                      then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
                 <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.gif" global="true"/>-->
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -99,6 +99,7 @@ under the License.
                 <condition-to-field field="commonIsMgrAppBasePermCond" type="Boolean" only-if-field="empty">
                     <!-- do check for ASSETMAINT, _VIEW permission -->
                     <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                    <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
             </actions>
             <widgets>
@@ -129,83 +130,54 @@ under the License.
         <section>
             <actions>
                 <property-map resource="IsMgrUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ComputerHardware"/>
-                
+                <if>
+                    <condition><not><if-empty field="fixedAssetId"/></not></condition>
+                    <then><set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" /></then>
+                    <else>
+                        <set field="activeSubMenu" value="TOP" />
+                        <set field="activeSubMenuItem" value="ComputerHardware" />
+                    </else>
+                </if>
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${fixedAssetId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonIsMgrAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section share-scope="false">
+                    <decorator-section name="body">
+                        <!-- SCIPIO: handled above
+                        <section>
                             <condition>
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
-                            <actions>
-                                <!-- SCIPIO: TODO: move these actions outside here using tests in actions instead -->
-                                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
-                            </actions>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <section share-scope="false">
-                                    <actions>
-                                        <set field="activeSubMenu" value="TOP" />
-                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem" />
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <!-- SCIPIO: handled above
                                 <section>
                                     <condition>
-                                        <not><if-empty field="fixedAssetId"/></not>
+                                        <not><if-empty field="title"/></not>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </fail-widgets>
                                 </section>
-                                -->
-                                <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="title"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading" text="${title}"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]}"/>
+                                    </fail-widgets>
+                                </section>
                             </fail-widgets>
                         </section>
+                        -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -217,72 +189,52 @@ under the License.
         <section>
             <actions>
                 <property-map resource="IsMgrUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ComputerSoftware"/>
                 <!-- SCIPIO: currently no sub-menu:
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerSoftware" />
                 -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem" default-value="" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ComputerSoftware" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${fixedAssetId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonIsMgrAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!--
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true">
-                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/ismgr/Menus.xml#ComputerHardware" />
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                     -->
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
+                        <!-- 
                         <section>
                             <condition>
-                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                                <not><if-empty field="fixedAssetId"/></not>
                             </condition>
                             <widgets>
-                                <!-- 
                                 <section>
                                     <condition>
-                                        <not><if-empty field="fixedAssetId"/></not>
+                                        <not><if-empty field="title"/></not>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]}"/>
-                                            </fail-widgets>
-                                        </section>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </fail-widgets>
                                 </section>
-                                -->
-                                <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="title"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading" text="${title}"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]}"/>
+                                    </fail-widgets>
+                                </section>
                             </fail-widgets>
                         </section>
+                        -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -323,6 +275,7 @@ under the License.
                 <condition-to-field field="commonIsMgrAppBasePermCond" type="Boolean" only-if-field="empty">
                     <!-- do check for ASSETMAINT, _VIEW permission -->
                     <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                    <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
                 <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonIsMgrAppBasePermCond}"/>
             </actions>

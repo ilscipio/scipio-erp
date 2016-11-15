@@ -70,9 +70,9 @@
                 <set field="applicationMenuLocation" value="component://commonext/widget/ofbizsetup/Menus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.SetupApp}" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -146,35 +146,15 @@
                 <set field="partyId" from-field="parties[0].partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                        <not><if-empty field="taxAuthority"/></not>
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and context.activeMainMenuItem != 'init'}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                        <!-- SCIPIO: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
-                       <!--  <section>
-                            <condition>
-                                <not><if-empty field="partyId"/></not>
-                            </condition>
-                            <widgets>
-                                <container style="button-bar">
-                                    <link target="OrganizationToComplete" text="${uiLabelMap.SetupSetToComplete}" style="${styles.link_run_sys} ${styles.action_complete}">
-                                        <parameter param-name="partyId" from-field="organizationPartyId"/>
-                                        <parameter param-name="roleTypeId" value="ORGANIZATION_ROLE"/>
-                                    </link>
-                                </container>
-                            </widgets>
-                        </section> -->
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
@@ -200,6 +180,20 @@
                                         </container>
                                     </widgets>
                                 </section>
+                               <!-- SCIPIO: Commenting this out for now, I'm not sure what the effect of completing this is, but definitely that button must not be placed here -->
+                               <!-- <section>
+                                    <condition>
+                                        <not><if-empty field="partyId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="OrganizationToComplete" text="${uiLabelMap.SetupSetToComplete}" style="${styles.link_run_sys} ${styles.action_complete}">
+                                                <parameter param-name="partyId" from-field="organizationPartyId"/>
+                                                <parameter param-name="roleTypeId" value="ORGANIZATION_ROLE"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                </section>-->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -219,7 +213,6 @@
                 <set field="activeSubMenuItem" value="entityExportAll"/>
                 <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
                 <set field="results" from-field="parameters.results"/>
-                <set field="activeMainMenuItem" value="export"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">

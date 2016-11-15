@@ -70,9 +70,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://workeffort/widget/WorkEffortMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.WorkEffortManagerApplication}" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -141,10 +141,8 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#WorkEffort" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="workeffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
-                
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.workEffortId}"/>
             </actions>
             <widgets>
@@ -183,16 +181,14 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/TimesheetMenus.xml#Timesheet" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
-                
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.timesheetId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="p">${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
+                        <label>${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -203,7 +199,7 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="calendar" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="calendar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -228,9 +224,7 @@ under the License.
     <screen name="iCalendarDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="WorkEffortICalendar"/>
-                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />                
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.workEffort}"/>
             </actions>
             <widgets>
@@ -262,8 +256,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="WorkEffort"/>
             </actions>
             <widgets>

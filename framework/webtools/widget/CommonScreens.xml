@@ -120,9 +120,9 @@ under the License.
                 <set field="applicationMenuName" value="WebtoolsAppBar" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.FrameworkWebTools}" global="true"/>
 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
 
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.styleSheets[]" value="/base-theme/bower_components/rainbow/rainbow.css" global="true" />
@@ -218,9 +218,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="Webtools"/>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                
+                <set field="activeSubMenuItem" value="main"/>                
                 <set field="infoMessage" value="&lt;strong&gt;Developer Info:&lt;/strong&gt; You can use the &lt;a href='ListDemoDataGeneratorServices'&gt;demo generator&lt;/a&gt;, to generate test-data" type="PlainString" />
             </actions>
             <widgets>
@@ -353,7 +351,6 @@ under the License.
     <screen name="browsercerts">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration"/>
                 <set field="activeSubMenuItem" value="myCertificates"/>
                 <set field="titleProperty" value="WebtoolsCertsX509"/>
@@ -371,7 +368,6 @@ under the License.
     <screen name="CommonEntityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="entity"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
@@ -402,7 +398,6 @@ under the License.
     <screen name="CommonServiceDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="service"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="service" />
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
@@ -431,9 +426,7 @@ under the License.
     <screen name="CommonImportExportDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="importExport"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="importExport" />
-
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-has-permission permission="ENTITY_MAINT"/>
@@ -463,9 +456,7 @@ under the License.
     <screen name="CommonArtifactDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="artifact" />
- 
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-has-permission permission="ENTITY_MAINT"/>
@@ -495,7 +486,6 @@ under the License.
     <screen name="CommonLabelDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="labels"/>
                 <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
                     and the submenu include in WebtoolsAppSideBar.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="label" />-->
@@ -530,9 +520,7 @@ under the License.
     <screen name="CommonConfigurationDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="configuration" />
-
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-has-permission permission="ENTITY_MAINT"/>
@@ -562,9 +550,7 @@ under the License.
     <screen name="CommonGeoManagementDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="geoManagement"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="geoManagement" />
-
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
             </actions>
             <widgets>
@@ -577,9 +563,7 @@ under the License.
     <screen name="CommonDemoDataGeneratorDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="demoDataGeneratorServiceList"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Entity" />
-
                 <set field="layoutSettings.VT_HDR_JAVASCRIPT[]" value="/base-theme/bower_components/rainbow/rainbow-custom.min.js" global="true" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-has-permission permission="ENTITY_MAINT"/>
@@ -589,9 +573,8 @@ under the License.
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for WEBTOOLS, _VIEW permission -->
                             <condition>
-                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                                <if-has-permission permission="ENTITY_MAINT"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -609,8 +592,10 @@ under the License.
     <screen name="StatsDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="stats"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Stats" />
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="SERVER_STATS" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -659,12 +644,11 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: new
-        TODO?: currently skips the WEBTOOLS perm check, but not really important  -->
+    <!-- SCIPIO: new, overrides the one from component://common/widget/SecurityScreens.xml -->
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="server"/>
+                <set field="securityTargetDecoratorName" from-field="securityTargetDecoratorName" default-value="CommonWebtoolsAppDecorator"/>
             </actions>
             <widgets>
                 <decorator-screen name="SecurityDecorator" location="component://common/widget/SecurityScreens.xml">

@@ -57,9 +57,9 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.AccountingApManagerApplication}" global="true"/>
                 <set field="invoiceMenuLocation" value="component://accounting/widget/ap/ApInvoiceMenus.xml" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -120,8 +120,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
                 <set field="titleProperty" value="CommonOverview"/>
             </actions>
@@ -150,7 +149,7 @@ under the License.
     <screen name="EditVendor">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="findVendors"/>
+                <set field="activeSubMenuItem" value="findVendors"/>
                 <set field="titleProperty" value="AccountingApPageTitleEditVendor"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -169,7 +168,7 @@ under the License.
     <screen name="FindVendors">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="findVendors"/>
+                <set field="activeSubMenuItem" value="findVendors"/>
                 <set field="titleProperty" value="AccountingApPageTitleFindVendors"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -200,9 +199,7 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#Invoice" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
-                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#Invoice" />                
                 <!-- sidebar additional perm check -->
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
@@ -241,7 +238,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#Payment" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -259,7 +255,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -292,7 +287,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#Payment" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>            </actions>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
@@ -304,7 +299,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ap/ApMenus.xml#ApReport" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">

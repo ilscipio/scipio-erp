@@ -58,9 +58,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.HumanResManager}" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
                 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.HumanResCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.HumanResCompanySubtitle" global="true"/>
@@ -135,8 +135,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="HumanResManager"/>
                 <set field="employmentAppCtx" type="NewMap" />
             </actions>
@@ -207,7 +206,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmplPosition" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmplPosition"/>
                 <set field="emplPositionId" from-field="parameters.emplPositionId"/>
                 <entity-one entity-name="EmplPosition" value-field="emplPosition"/>
                 
@@ -227,7 +225,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentSideBar" />
                 -->
                 <!-- SCIPIO: WARN: this item was removed from menu...-->
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employment"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Employment"/>
                 
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -281,9 +279,8 @@ under the License.
                 <!-- SCIPIO: FIXME?: there is no EmploymentAppSideBar...
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentAppSideBar" />
                 -->
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="EmploymentApp"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${activeMainMenuItem}"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator"/>
@@ -296,7 +293,7 @@ under the License.
             <actions>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
                 <entity-one entity-name="PerfReview" value-field="perfReview"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PerfReview"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PerfReview"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -327,20 +324,16 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employees"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
-                
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
-                
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!--
-                        <section>
+                        <!--<section>
                             <condition><not><if-empty field="partyId"/></not></condition>
                             <widgets>
                                 <container style="heading">
@@ -357,7 +350,7 @@ under the License.
                                     </section>
                                 </container>
                             </widgets>
-                        </section>  -->
+                        </section>-->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -369,12 +362,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmployeeProfile" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Employees"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
-                
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.partyId}"/>
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
@@ -425,7 +416,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#GlobalHRSetting" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="GlobalHRSettings"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -437,7 +427,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#RecruitmentType" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Recruitment"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -462,8 +451,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#TrainingType" />
-                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Training"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">

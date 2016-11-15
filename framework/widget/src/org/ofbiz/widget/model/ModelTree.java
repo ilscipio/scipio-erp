@@ -285,6 +285,13 @@ public class ModelTree extends ModelWidget {
     public FlexibleStringExpander getTrailNameExdr() {
         return trailNameExdr;
     }
+    
+    /**
+     * SCIPIO: Gets root actions.
+     */
+    public List<ModelAction> getRootActions() {
+        return getNodeMap().get(getRootNodeName()).getActions();
+    }
 
     /**
      * Models the &lt;node&gt; element.

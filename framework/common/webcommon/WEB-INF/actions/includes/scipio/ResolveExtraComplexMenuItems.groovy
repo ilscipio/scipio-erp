@@ -53,15 +53,26 @@ if (true) { // used to be (!activeMainMenuItem), but always lookup anyway; the a
 
     activeSubMenu = context.activeSubMenu;
     activeSubMenuItem = context.activeSubMenuItem;
+    if (activeSubMenu && activeSubMenu.contains("#")) {
+        parts = context.activeSubMenu.split("#", 2);
+        if (parts.length >= 2) {
+            activeSubMenuLoc = parts[0];
+            activeSubMenuName = parts[1];
+        } else {
+            activeSubMenuName = parts[0];
+        }
+    } else {
+        activeSubMenuName = activeSubMenu;
+    }
     
-    if (cplxMenuModel != null && (activeSubMenu || activeSubMenuItem)) { // NOTE: don't attempt if both fields null
-        subItem = cplxMenuModel.getModelMenuItemBySubName(activeSubMenuItem, activeSubMenu);
+    if (cplxMenuModel != null && ((activeSubMenuName) || (activeSubMenuItem))) { // NOTE: don't attempt if both fields null
+        subItem = cplxMenuModel.getModelMenuItemBySubName(activeSubMenuItem, activeSubMenuName);
         if (subItem != null) {
             topItem = subItem.getTopParentMenuItem();
             activeMainMenuItem_auto = topItem.getName();
         } else {
             Debug.logWarning("Could not find sub menu item activeSubMenu/activeSubMenuItem [" +
-                activeSubMenu + "/" + activeSubMenuItem + "] in menu [" + cplxLoc + "#" +
+                activeSubMenuName + "/" + activeSubMenuItem + "] in menu [" + cplxLoc + "#" +
                 cplxName + "]; unable to determine activeMainMenuItem", module);
         }
     }

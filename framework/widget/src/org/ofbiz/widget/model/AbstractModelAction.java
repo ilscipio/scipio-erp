@@ -1103,19 +1103,15 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             map.put("include-tree-actions", "tree");
             elemTypeMap = map;
         }
-        
-        private final FlexibleStringExpander nameExdr;
-        private final FlexibleStringExpander locationExdr;
-        private final String defaultLocation; // the file where this action was originally defined
 
-        public IncludeActions(ModelWidget modelWidget, Element element) {
+        protected IncludeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
-            this.nameExdr = FlexibleStringExpander.getInstance(element.getAttribute("name"));
-            this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
-
+        }
+        
+        protected final String getDefaultLocation(Element element, String location) {
             String defaultLocation = WidgetDocumentInfo.retrieveAlways(element).getResourceLocation();
             if (defaultLocation == null || !defaultLocation.startsWith("component://")) {
-                if (UtilValidate.isEmpty(this.locationExdr.getOriginal())) {
+                if (UtilValidate.isEmpty(location)) {
                     Debug.logError("include-xxx-actions: Could not determine an original/default document location (in component:// format) " +
                             "for actions include directive (found: " + defaultLocation + "), and the location " +
                             "attribute expression is empty; the include directive will fail", module);
@@ -1128,22 +1124,16 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     defaultLocation = "";
                 }
             }
-            this.defaultLocation = defaultLocation;
+            return defaultLocation;
         }
         
         public static IncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
-            if ("screen".equals(type)) {
-                return new IncludeScreenActions(modelWidget, element);
-            } else if ("form".equals(type)) {
-                return new IncludeFormActions(modelWidget, element);
-            } else if ("form-row".equals(type)) {
-                return new IncludeFormRowActions(modelWidget, element);    
-            } else if ("menu".equals(type)) {
-                return new IncludeMenuActions(modelWidget, element);
-            } else if ("tree".equals(type)) {
-                return new IncludeTreeActions(modelWidget, element);
+            DynamicIncludeActions dynInclude = DynamicIncludeActions.newInstance(modelWidget, element, type);
+            if (dynInclude.isVariableInclude()) {
+                return dynInclude;
             } else {
-                throw new IllegalArgumentException("include-xxx-actions: Unrecognized actions include type: " + type);
+                // if static include, use optimized
+                return StaticIncludeActions.newInstance(modelWidget, element, dynInclude);
             }
         }
         
@@ -1159,11 +1149,187 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return elemTypeMap.containsKey(element.getTagName());
         }
 
+        public abstract List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException;
+        
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             // TODO
         }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static include expressions
+     * (constants, no ${}).
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class StaticIncludeActions extends IncludeActions {
 
+        protected StaticIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+        
+        public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return LazyStaticIncludeActions.newInstance(modelWidget, element);
+        }
+        
+        public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            return LazyStaticIncludeActions.newInstance(modelWidget, element, dynInclude);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            AbstractModelAction.runSubActions(getIncludedActions(context), context); // NOTE: wraps in RunTimeExceptions
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static includes
+     * with a lazy caching static implementation.
+     * <p>
+     * optimizes xml includes that have only constant location#name.
+     * Due to complications it delegates the lookup to first run and caches.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class LazyStaticIncludeActions extends StaticIncludeActions {
+        private final DynamicIncludeActions dynInclude;
+        private List<ModelAction> actions = null; // WARN: not volatile because using double-locking idiom
+        
+        protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.dynInclude = DynamicIncludeActions.newInstance(modelWidget, element);
+            if (this.dynInclude.isVariableInclude()) {
+                throw new IllegalArgumentException("static include-xxx-actions implementation can't "
+                        + "contain a dynamic location#name expression");
+            }
+        }
+        
+        protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            super(modelWidget, element);
+            this.dynInclude = dynInclude;
+            if (this.dynInclude.isVariableInclude()) {
+                throw new IllegalArgumentException("static include-xxx-actions implementation can't "
+                        + "contain a dynamic location#name expression");
+            }
+        }
+        
+        public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return new LazyStaticIncludeActions(modelWidget, element);
+        }
+        
+        public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            return new LazyStaticIncludeActions(modelWidget, element, dynInclude);
+        }
+        
+        @Override
+        public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
+            // WARN: special double-locking idiom for thread safety
+            List<ModelAction> actions = this.actions;
+            if (actions == null) {
+                synchronized (this) {
+                    actions = this.actions;
+                    if (actions == null) {
+                        // WARN: unmodifiableList is REQUIRED for thread safety, but all of the
+                        // classes already return it that way, so this could double-wrap it
+                        //actions = Collections.unmodifiableList(dynInclude.getIncludedActions(context));
+                        actions = dynInclude.getIncludedActions(context);
+                        this.actions = actions;
+                    }
+                }
+            }
+            return actions;
+        }
+        
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements supporting dynamic expressions (${}).
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class DynamicIncludeActions extends IncludeActions {
+        private final FlexibleStringExpander nameExdr;
+        private final FlexibleStringExpander locationExdr;
+        private final String defaultLocation; // the file where this action was originally defined
+
+        protected DynamicIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.nameExdr = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+            this.defaultLocation = getDefaultLocation(element, this.locationExdr.getOriginal());
+        }
+        
+        public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
+            DynamicIncludeActions includeActions;
+            if ("screen".equals(type)) {
+                includeActions = new IncludeScreenActions(modelWidget, element);
+            } else if ("form".equals(type)) {
+                includeActions = new IncludeFormActions(modelWidget, element);
+            } else if ("form-row".equals(type)) {
+                includeActions = new IncludeFormRowActions(modelWidget, element);    
+            } else if ("menu".equals(type)) {
+                includeActions = new IncludeMenuActions(modelWidget, element);
+            } else if ("tree".equals(type)) {
+                includeActions = new IncludeTreeActions(modelWidget, element);
+            } else {
+                throw new IllegalArgumentException("include-xxx-actions: Unrecognized actions include type: " + type);
+            }
+            return includeActions;
+        }
+        
+        public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return newInstance(modelWidget, element, getIncludeActionsType(element));
+        }
+        
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            List<ModelAction> actions;
+            try {
+                actions = getIncludedActions(context, getLocation(context), getName(context));
+            } catch (GeneralException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new GeneralException(e);
+            }
+            AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
+        }
+        
+        @Override
+        public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
+            try {
+                return getIncludedActions(context, getLocation(context), getName(context));
+            } catch (GeneralException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new GeneralException(e);
+            }
+        }
+        
+        protected abstract List<ModelAction> getIncludedActions(Map<String, Object> context,
+                String location, String name) throws Exception;
+        
+        /**
+         * Returns true if location#name contains ${} expression.
+         */
+        public boolean isVariableInclude() {
+            return FlexibleStringExpander.containsExpression(nameExdr) ||
+                    FlexibleStringExpander.containsExpression(locationExdr);
+        }
+        
+        /**
+         * Returns true if location#name is a constant.
+         * <p>
+         * If this returns true, then you could use a StaticIncludeActions instance instead.
+         */
+        public boolean isStaticInclude() {
+            return !isVariableInclude();
+        }
+        
         public FlexibleStringExpander getNameExdr() {
             return this.nameExdr;
         }
@@ -1187,15 +1353,6 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return location;
         }
-        
-        protected void runIncludedActions(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
-            //if (actions != null) {
-            //    for(ModelAction action: actions) {
-            //        action.runAction(context);
-            //    }
-            //}
-            AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
-        }
     }
     
     /**
@@ -1203,27 +1360,89 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeScreenActions extends IncludeActions {
-
+    public static class IncludeScreenActions extends DynamicIncludeActions {
         public IncludeScreenActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
 
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelScreen widget;
-            try {
-                widget = ScreenFactory.getScreenFromLocation(location, name);
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getSection().getActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelScreen widget = ScreenFactory.getScreenFromLocation(location, name);
+            return widget.getSection().getActions();
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-form-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeFormActions extends DynamicIncludeActions {
+        public IncludeFormActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
+                    ((Delegator) context.get("delegator")).getModelReader(), 
+                    ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
+            return widget.getActions();
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-form-row-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeFormRowActions extends DynamicIncludeActions {
+        public IncludeFormRowActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+        
+        @Override
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
+                    ((Delegator) context.get("delegator")).getModelReader(), 
+                    ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
+            return widget.getRowActions();
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-menu-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeMenuActions extends DynamicIncludeActions {
+        public IncludeMenuActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelMenu widget = MenuFactory.getMenuFromLocation(location, name);
+            return widget.getActions();
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-tree-actions&gt; element.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IncludeTreeActions extends DynamicIncludeActions {
+
+        public IncludeTreeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+
+        @Override
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelTree widget = TreeFactory.getTreeFromLocation(location, name, 
+                    (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
+            return widget.getRootActions();
         }
     }
     
@@ -1292,7 +1511,6 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return condResult ? defaultPassValueMap.get(type) : defaultFailValueMap.get(type);
         }
         
-        @SuppressWarnings("rawtypes")
         @Override
         public void runAction(Map<String, Object> context) {
             String globalStr = this.globalExdr.expandString(context);
@@ -1599,124 +1817,4 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         }
     }
     
-    /**
-     * SCIPIO: Models the &lt;include-form-actions&gt; element.
-     * 
-     * @see <code>widget-common.xsd</code>
-     */
-    public static class IncludeFormActions extends IncludeActions {
-
-        public IncludeFormActions(ModelWidget modelWidget, Element element) {
-            super(modelWidget, element);
-        }
-
-        @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelForm widget;
-            try {
-                widget = FormFactory.getFormFromLocation(location, name, 
-                        ((Delegator) context.get("delegator")).getModelReader(), 
-                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getActions(), context);
-        }
-    }
-    
-    /**
-     * SCIPIO: Models the &lt;include-form-row-actions&gt; element.
-     * 
-     * @see <code>widget-common.xsd</code>
-     */
-    public static class IncludeFormRowActions extends IncludeActions {
-
-        public IncludeFormRowActions(ModelWidget modelWidget, Element element) {
-            super(modelWidget, element);
-        }
-
-        @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelForm widget;
-            try {
-                widget = FormFactory.getFormFromLocation(location, name, 
-                        ((Delegator) context.get("delegator")).getModelReader(), 
-                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());            
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getRowActions(), context);
-        }
-    }
-    
-    /**
-     * SCIPIO: Models the &lt;include-menu-actions&gt; element.
-     * 
-     * @see <code>widget-common.xsd</code>
-     */
-    public static class IncludeMenuActions extends IncludeActions {
-
-        public IncludeMenuActions(ModelWidget modelWidget, Element element) {
-            super(modelWidget, element);
-        }
-
-        @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelMenu widget;
-            try {
-                widget = MenuFactory.getMenuFromLocation(location, name);
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getActions(), context);
-        }
-    }
-    
-    /**
-     * SCIPIO: Models the &lt;include-tree-actions&gt; element.
-     * 
-     * @see <code>widget-common.xsd</code>
-     */
-    public static class IncludeTreeActions extends IncludeActions {
-
-        public IncludeTreeActions(ModelWidget modelWidget, Element element) {
-            super(modelWidget, element);
-        }
-
-        @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelTree widget;
-            try {
-                widget = TreeFactory.getTreeFromLocation(location, name, 
-                        (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getNodeMap().get(widget.getRootNodeName()).getActions(), context);
-        }
-    }
 }

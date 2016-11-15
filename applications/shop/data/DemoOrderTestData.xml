@@ -234,7 +234,7 @@ under the License.
     <OrderAdjustmentBilling orderAdjustmentId="8003" invoiceId="8009" invoiceItemSeqId="00009" amount="-0.01"/>
     <OrderAdjustmentBilling orderAdjustmentId="8004" invoiceId="8009" invoiceItemSeqId="00002" amount="0.12"/>
     <OrderAdjustmentBilling orderAdjustmentId="8005" invoiceId="8009" invoiceItemSeqId="00003" amount="5.69"/>
-    <OrderAdjustmentBilling orderAdjustmentId="8006" invoiceId="8009" invoiceItemSeqId="00004" amount="1.20"/>
+    <!-- <OrderAdjustmentBilling orderAdjustmentId="8006" invoiceId="8009" invoiceItemSeqId="00004" amount="1.20"/>-->
     <ShipmentItemBilling shipmentId="9996" shipmentItemSeqId="00001" invoiceId="8009" invoiceItemSeqId="00001"/>
     <OrderItemBilling orderId="Demo1002" orderItemSeqId="00001" invoiceId="8009" invoiceItemSeqId="00001" itemIssuanceId="9001" quantity="2.000000" amount="59.99"/>
     <OrderItemBilling orderId="Demo1002" orderItemSeqId="00004" invoiceId="8009" invoiceItemSeqId="00005" itemIssuanceId="9002" quantity="1.000000" amount="59.99"/>

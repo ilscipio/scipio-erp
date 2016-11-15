@@ -1298,8 +1298,9 @@ under the License.
         The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
         * activeSubMenu (direct argument)
         * activeSubMenuItem (direct argument)
-        * activeMainMenuItem (fallback argument)
-        (NOTE: These are the default input field names, but they may be changed per-menu using further configuration below)
+        The following can influence selection but are usually do not need to be specified manually in screens:
+        * activeMainMenuItem (fallback argument) (2016-11-15: now auto-resolved by ResolveExtraComplexMenuItems.groovy, if called from main-decorator of app)
+        (NOTE: Above are the default input field names, but they may be changed per-menu using further configuration below)
         
         Details:
         * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by menuCfg.location/name.
@@ -1326,11 +1327,15 @@ under the License.
           NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
-          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
+          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default).
+          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by ResolveExtraComplexMenuItems.groovy when called from main-decorator and usually 
+              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing the ResolveExtraComplexMenuItems.groovy call.
+              To exploit this, your app simply needs to call ResolveExtraComplexMenuItems.groovy in its main-decorator.
+              Changed for 1.14.3.
         
         Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
         activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
-        still necessary to designate items in other unrelated menus.
+        still necessary to designate items in other unrelated menus (if the app/theme has any that depend on it).
         
         The default behavior is based on the usual usage in the standard Scipio screens (based on the Ofbiz pattern).
         In these screens, the fields activeSubMenu and activeSubMenuItem are used to highlight items in the

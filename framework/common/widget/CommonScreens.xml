@@ -1299,7 +1299,7 @@ under the License.
         * activeSubMenu (direct argument)
         * activeSubMenuItem (direct argument)
         The following can influence selection but are usually do not need to be specified manually in screens:
-        * activeMainMenuItem (fallback argument) (2016-11-15: now auto-resolved by ResolveExtraComplexMenuItems.groovy, if called from main-decorator of app)
+        * activeMainMenuItem (fallback argument) (2016-11-15: now auto-resolved by ResolveComplex(SideBar)MenuExtraItems below, if called from main-decorator of app)
         (NOTE: Above are the default input field names, but they may be changed per-menu using further configuration below)
         
         Details:
@@ -1328,9 +1328,9 @@ under the License.
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
           specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default).
-          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by ResolveExtraComplexMenuItems.groovy when called from main-decorator and usually 
-              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing the ResolveExtraComplexMenuItems.groovy call.
-              To exploit this, your app simply needs to call ResolveExtraComplexMenuItems.groovy in its main-decorator.
+          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by ResolveComplex(SideBar)MenuExtraItems when called from main-decorator and usually 
+              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing the ResolveComplex(SideBar)MenuExtraItems call.
+              To exploit this, your app simply needs to call ResolveComplex(SideBar)MenuExtraItems in its main-decorator.
               Changed for 1.14.3.
         
         Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
@@ -1357,9 +1357,9 @@ under the License.
             location specified as prefix in activeSubMenu.
         Complex menu name suffix control:
         * nameSuffix (default: "Menu") - Complex menu name suffix
-        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenuItem field, for menu lookup
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
             (only appends if not already ends with)
-        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenuItem field, for menu lookup
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
             Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
               <sub-menu name="Server" include="ServerSideBar"/>
             In this case it's best to leave cplxStripSuffix true for compatibility.
@@ -1401,6 +1401,33 @@ under the License.
         </section>
     </screen>
     
+    <!-- Complex Menu automatic extra item resolution script
+        Automatically resolves activeMainMenuItem from activeSubMenu/activeSubMenuItem, mainly
+        for use in extra menus. Include using include-screen-actions directive.
+        
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+     -->
+    <screen name="DeriveComplexMenuItems">
+        <actions>
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+
     <!-- Complex SideBar Menu Wrapper - based on ComplexMenu (see ComplexMenu above for available arguments and details)
         Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
     <screen name="ComplexSideBarMenu">
@@ -1425,6 +1452,16 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- Complex SideBar Menu automatic extra item resolution script - based on DeriveComplexMenuItems above
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
+    <screen name="DeriveComplexSideBarMenuItems">
+        <actions>
+            <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+    
     
     <!-- Common SideBar Menu inclusion logic, adequate as a default in common decorators in most apps.
         In most apps this will be invoked from CommonXxxAppSideBarMenu wrappers, which implement application-specific logic,

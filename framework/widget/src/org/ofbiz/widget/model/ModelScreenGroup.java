@@ -318,10 +318,28 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
          * Generates delegating placeholder screens, with no parent.
          */
         public List<Element> generateDelegatingScreens(Document document) {
+            // Lookup the final models
+            ModelScreens screens;
+            try {
+                screens = ScreenFactory.getScreensFromLocation(location);
+            } catch (Exception e) {
+                throw new IllegalStateException("include-screens: trying to generate delegate screens, "
+                        + "but failed to read target screens fully-built models", e);
+            }
             List<Element> delegScreens = new ArrayList<>();
             for(String screenName : getScreenNameList()) {
-                // TODO: optimize with a model element?
-                Element screenElement = createDelegatingScreenElement(document, screenName, screenName, location);
+                ModelScreen screen = screens.getScreen(screenName);
+                if (screen == null) {
+                    throw new IllegalStateException("include-screens: trying to generate delegate screens with name [" + screenName + "]"
+                            + "but it somehow does not seem to exist in the target location [" + location + "] which should have been read immediately before");
+                }
+                // TODO: optimize with model elements?
+                Element screenElement;
+                if (screen.isActionsOnly()) {
+                    screenElement = createDelegatingActionsScreenElement(document, screenName, screenName, location);
+                } else {
+                    screenElement = createDelegatingWidgetsScreenElement(document, screenName, screenName, location);
+                }
                 delegScreens.add(screenElement);
             }
             return delegScreens;
@@ -336,7 +354,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             }
         }
 
-        public static Element createDelegatingScreenElement(Document document, String localName, String targetName, String targetLocation) {
+        public static Element createDelegatingWidgetsScreenElement(Document document, String localName, String targetName, String targetLocation) {
             Element screenElement = document.createElement("screen");
             screenElement.setAttribute("name", localName);
             Element sectionElement = document.createElement("section");
@@ -347,6 +365,18 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             widgetElement.appendChild(includeScreenElement);
             includeScreenElement.setAttribute("name", targetName);
             includeScreenElement.setAttribute("location", targetLocation);
+            return screenElement;
+        }
+        
+        public static Element createDelegatingActionsScreenElement(Document document, String localName, String targetName, String targetLocation) {
+            Element screenElement = document.createElement("screen");
+            screenElement.setAttribute("name", localName);
+            Element actionsElement = document.createElement("actions");
+            screenElement.appendChild(actionsElement);
+            Element includeScreenActionsElement = document.createElement("include-screen-actions");
+            actionsElement.appendChild(includeScreenActionsElement);
+            includeScreenActionsElement.setAttribute("name", targetName);
+            includeScreenActionsElement.setAttribute("location", targetLocation);
             return screenElement;
         }
         
@@ -365,6 +395,5 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         public boolean isRecursive() {
             return recursive;
         }
-
     }
 }

@@ -322,7 +322,7 @@ under the License.
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->

@@ -66,9 +66,9 @@ under the License.
                 <set field="applicationMenuName" value="MarketingAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://marketing/widget/MarketingMenus.xml" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -131,7 +131,6 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/ContactListMenus.xml#ContactList" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ContactList"/>
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ContactList"/>
                 <set field="contactListId" from-field="parameters.contactListId"/>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
@@ -156,8 +155,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="title" value="${uiLabelMap.MarketingManagerApplication}"/>
                 <set field="titleProperty" value="Marketing"/>
             </actions>

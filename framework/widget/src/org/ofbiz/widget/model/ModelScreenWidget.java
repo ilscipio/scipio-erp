@@ -31,11 +31,8 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -64,9 +61,6 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 
 /**
@@ -339,6 +333,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
             super(modelScreen, sectionElement);
 
             boolean hasActionsElement = false;
+            boolean hasWidgetsElement = false;
+            boolean hasFailWidgetsElement = false;
             
             // SCIPIO: SHORTHANDS: this code now support having an actions or widgets element in place of section.
             // this is remarkable easy!
@@ -354,6 +350,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 List<? extends Element> subElementList = UtilXml.childElementList(sectionElement);
                 this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
                 this.failWidgets = Collections.emptyList();
+                hasWidgetsElement = true;
             } else { // SCIPIO: default/stock case: ("section".equals(sectionElement.getTagName()))
                 // read condition under the "condition" element
                 Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
@@ -378,6 +375,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 if (widgetsElement != null) {
                     List<? extends Element> subElementList = UtilXml.childElementList(widgetsElement);
                     this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+                    hasWidgetsElement = true;
                 } else {
                     this.subWidgets = Collections.emptyList();
                 }
@@ -387,14 +385,26 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 if (failWidgetsElement != null) {
                     List<? extends Element> failElementList = UtilXml.childElementList(failWidgetsElement);
                     this.failWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), failElementList);
+                    hasFailWidgetsElement = true;
                 } else {
                     this.failWidgets = Collections.emptyList();
                 }
             }
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
-            this.actionsOnly = hasActionsElement && (condition == null && UtilValidate.isEmpty(subWidgets) &&
-                    UtilValidate.isEmpty(failWidgets));
+            
+            // SCIPIO: warn about this case, in effect error, it won't work the way caller thinks
+            if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
+                Debug.logError("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
+                        "contains a section condition, with actions but without widgets or fail-widgets element; actions-only " +
+                        "screens do not support the section condition element and it will be bypassed by directives such as " +
+                        "include-screen-actions - use the actions master if directive instead (see widget-common.xsd)", module);
+            }
+
+            // SCIPIO: determine if actions-only
+            this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement && 
+                    UtilValidate.isEmpty(subWidgets) && UtilValidate.isEmpty(failWidgets) &&
+                    !(UtilValidate.isEmpty(this.actions) && hasWidgetsElement); // NOTE: the last is special case, ambiguous, but bias toward widgets
         }
 
         /**

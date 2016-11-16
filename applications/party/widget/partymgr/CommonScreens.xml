@@ -76,9 +76,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://party/widget/partymgr/PartyMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.Party}" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -146,15 +146,13 @@ under the License.
     <screen name="CommonPartyDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="find" />
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="${groovy: (parameters.partyId || context.activeSubMenuItem) ? 'component://party/widget/partymgr/PartyMenus.xml#Profile' : ''}" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#Profile" />
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
                 <set field="lookupGroup" from-field="lookupGroup" global="true"/>
                 <set field="lookupPerson" from-field="lookupPerson" global="true"/>
-
                 <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
                     <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
@@ -194,9 +192,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#CommEvent" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="comm"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
-                
                 <condition-to-field field="commonPartyAppBasePermCond" type="Boolean" only-if-field="empty">
                     <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
@@ -243,7 +239,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#PartyClassification" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="classification"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -256,7 +251,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://party/widget/partymgr/PartyMenus.xml#PartyInvitation" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="partyinv"/>
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
                 
@@ -303,12 +297,24 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: new, overrides the one from component://common/widget/SecurityScreens.xml -->
+    <screen name="SecurityDecorator">
+        <section>
+            <actions>
+                <set field="securityTargetDecoratorName" from-field="securityTargetDecoratorName" default-value="CommonPartyAppDecorator"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SecurityDecorator" location="component://common/widget/SecurityScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="main">
         <section>
             <actions>
                 <!--<set field="titleProperty" value="PageTitleFindParty"/> -->
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="PartyUserManagement"/>
             </actions>
             <widgets>

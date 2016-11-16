@@ -59,9 +59,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://accounting/widget/ar/ArMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/> 
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>             
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>             
             </actions>
            <widgets>
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -121,8 +121,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="invoiceTypeId" value="SALES_INVOICE"/>
                 <set field="titleProperty" value="CommonOverview"/>
             </actions>
@@ -147,7 +146,6 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
@@ -165,7 +163,6 @@ under the License.
     <screen name="CommonArPaymentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
@@ -179,7 +176,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="paymentGroups"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -222,8 +218,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Invoice" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
-                
                 <!-- sidebar additional perm check -->
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>

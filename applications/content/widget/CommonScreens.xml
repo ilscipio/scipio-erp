@@ -63,9 +63,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://content/widget/content/ContentMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.ContentContentManagerApplication}"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -129,7 +129,6 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/cms/CMSMenus.xml#Cms" />
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CMS"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -142,7 +141,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -175,7 +173,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#ContentTop" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Content"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -189,7 +186,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/DataResourceMenus.xml#DataResource" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataResource"/>
                 <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
@@ -214,7 +210,7 @@ under the License.
     <screen name="CommonCompDocDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="CompDoc"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="CompDoc"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -235,7 +231,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/contentsetup/ContentSetupMenus.xml#ContentSetup" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
             </actions>
             <widgets>
@@ -250,7 +245,6 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/datasetup/DataResourceSetupMenus.xml#DataResourceSetup" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataResourceSetupMenu"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -263,9 +257,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
  
                 <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
                 <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
@@ -300,7 +292,6 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/layout/LayoutMenus.xml#Layout" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" from-scope="user"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Layout"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonContentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -312,8 +303,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="main"/>
                 <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>
@@ -388,7 +378,6 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="websites"/>
 
                 <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
                 <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
@@ -418,7 +407,7 @@ under the License.
     <screen name="CommonForumDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Forum"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Forum"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="pageTitle" value="${uiLabelMap.${titleProperty}}"/>
             </actions>

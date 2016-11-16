@@ -75,9 +75,9 @@ under the License.
                 <!-- globally parameterize the link to a customer's detail information, to help with cases when such details are accessed via external application. -->
                 <set field="customerDetailLink" value="/partymgr/control/viewprofile?partyId=" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <!--<decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>-->
@@ -142,7 +142,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="quote"/>
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.quoteId}"/>
             </actions>
@@ -169,7 +168,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Order" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="findorders"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.orderId}"/>
             </actions>
             <widgets>
@@ -183,7 +181,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="orderentry"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.orderId}"/>
@@ -205,7 +203,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value=""/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -241,7 +239,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reports"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -254,7 +252,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Request" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="request"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.custRequest}"/>
@@ -284,9 +281,7 @@ under the License.
     <screen name="CommonRequirementDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Requirement" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="requirement"/>
-                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Requirement" />                
                 <!-- TODO?: this is actually confusing in some of the sub-screens currently
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.requirement ? (' ' + context.requirementId) : ''}"/> -->
             </actions>
@@ -333,7 +328,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Requirements" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="requirement"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -352,7 +346,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Return" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="return"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.returnId}"/>
             </actions>
             <widgets>

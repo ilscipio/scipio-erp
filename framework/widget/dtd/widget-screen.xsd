@@ -121,10 +121,13 @@ under the License.
                     <xs:documentation>
                         Manner in which the include is implemented.
                         * delegate: dynamically creates placeholder screens that delegate to the screens of 
-                          same names in the target location; produces a trivial screen
-                          definition consisting of screen/section/widgets/include-screen elements.
+                          same names in the target location; produces a trivial screen definition consisting of 
+                          screen/section/widgets/include-screen elements OR (2016-11-15) - if the target screen
+                          is an actions-only screen - an include definition consisting of screen/actions/include-screen-actions elements.
+                          (see screen element for definition of actions-only screen)
                         Default: delegate
                         TODO?: textual mode (usefulness unclear)
+                        2016-11-15: Updated for 1.14.3.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -140,21 +143,26 @@ under the License.
             <xs:annotation>
                 <xs:documentation>
                     Screen element.
-                    SCIPIO: 2016-11-11: This element is enhanced to allow an actions element as direct child instead of
-                    forcing a section element declaration. It is ENCOURAGED to OMIT the section element if you
-                    are defining an actions-only containing screen definition, so the intention is more
-                    clear and it discourages the addition of widgets elements;
-                    in turn this allows the include-screen-actions directive to work properly 
-                    (include-screen-actions only includes the actions from the top section actions in a screen,
-                    and it bypasses the condition element).
-                    NOTE: As a result of such construct, such widget cannot have condition elements;
-                        instead you may now use the master "if" actions directive also added for 1.14.3 
-                        in widget-common.xsd (which then works with include-screen-actions).
+                    
+                    SCIPIO: 2016-11-11: This element is enhanced so promote clearer definitions of actions-only
+                    screens. To this end it now allows an actions element as direct child of screen element, instead of
+                    forcing a section element declaration. The section element itself also no longer forces the widgets element.
+                    
+                    An actions-only screen is one that contains an actions element, but no section condition nor fail-widgets elements, 
+                    and it cannot have more than one widgets element which must be empty if present (this is merely to support old-style actions-only screens).
+                    (Special case: if has empty widgets element and empty actions, it will be considered a widgets screen placeholder, not actions-only)
+                    New code should omit the widgets element. Note that the section condition is considered part of widgets, because
+                    it is implemented outside the actions and complicates their reuse - in its place the actions now supports their own master if condition
+                    (see widget-common.xsd if element, added for 1.14.3). It is an error to use section condition with actions-only screen.
+                    
+                    It is highly ENCOURAGED to OMIT the section element if you are defining an actions-only screen definition, 
+                    so the intent is clear and discourages the erroneous addition of widgets elements to it;
+                    in turn this allows the include-screen-actions directive to work properly (include-screen-actions only includes the actions 
+                    from the top section actions in a screen, and it bypasses the condition element, only supporting the master if directive instead).
                     2016-11-11: Enhanced for 1.14.3.
                 </xs:documentation>
             </xs:annotation>
             <xs:sequence>
-                <!-- SCIPIO: 2016-11-11: It is now possible - and encouraged - to define actions-only screens without the  -->
                 <xs:choice>
                     <xs:element ref="section" />
                     <xs:element ref="actions" />
@@ -210,9 +218,22 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="section" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>Screen section element.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="condition" type="ScreenConditionRootType" minOccurs="0" />
+                <xs:element name="condition" type="ScreenConditionRootType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Widgets condition element. If evaluates to true, the widgets element children are
+                            rendered; if false, fail-widgets elements are rendered.
+                            
+                            SCIPIO: NOTE: When used in top section of screen, the condition element is ONLY supported
+                            for widgets-containing screen, and NOT for actions-only screens. Using this section condition
+                            on an actions-only screen is considered an error in Scipio. Use the actions master if
+                            directive for actions conditions instead. See screen element for details.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" ref="widgets" />
                 <xs:element minOccurs="0" ref="fail-widgets" />
@@ -264,6 +285,12 @@ under the License.
     <!-- ================ ACTIONS ================ -->
 
     <xs:element name="actions">
+        <xs:annotation>
+            <xs:documentation>Screen actions.
+                SCIPIO: Scipio modifies and adds a number of screen actions.
+                In particular, the master if element (from simple-method-v2) is supported, and should always
+                be used instead of the section condition element for actions-only sections.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions" />

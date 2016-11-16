@@ -27,7 +27,7 @@ under the License.
     <screen name="UserJobs">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="userJobs"/>
+                <set field="activeSubMenuItem" value="userJobs"/>
                 <set field="titleProperty" value="WorkEffortJobList"/>
                 <set field="filterByStatusId" from-field="parameters.statusId" default-value="SERVICE_RUNNING"/>
                 <entity-condition entity-name="JobSandbox" list="userJobs">
@@ -52,7 +52,7 @@ under the License.
     <screen name="mytasks">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="task"/>
+                <set field="activeSubMenuItem" value="task"/>
                 <set field="titleProperty" value="PageTitleViewActivityAndTaskList"/>
 
                 <service service-name="getWorkEffortAssignedActivities"/>
@@ -120,7 +120,7 @@ under the License.
     <screen name="FindWorkEffort">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="workeffort"/>
+                <set field="activeSubMenuItem" value="workeffort"/>
                 <set field="titleProperty" value="PageTitleFindWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
             </actions>
@@ -757,7 +757,7 @@ under the License.
     <screen name="FindICalendars">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="WorkEffortICalendar"/>
+                <set field="activeSubMenuItem" value="WorkEffortICalendar"/>
                 <set field="titleProperty" value="WorkEffortICalendarFind"/>
             </actions>
             <widgets>

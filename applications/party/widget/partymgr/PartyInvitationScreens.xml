@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyFindPartyInvitations"/>
-                <set field="activeMainMenuItem" value="partyinv"/>
+                <set field="activeSubMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -63,7 +63,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyInvitation"/>
-                <set field="activeMainMenuItem" value="partyinv"/>
+                <set field="activeSubMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">

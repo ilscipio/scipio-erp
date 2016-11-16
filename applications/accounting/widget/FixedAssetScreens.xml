@@ -29,7 +29,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindFixedAssets"/>
-                <set field="activeMainMenuItem" value="ListFixedAssets"/>
                 <set field="activeSubMenuItem" value="ListFixedAssets"/>
             </actions>
             <widgets>

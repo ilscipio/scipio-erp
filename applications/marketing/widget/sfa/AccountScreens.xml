@@ -27,7 +27,7 @@ under the License.
                 <set field="currentUrl" value="FindAccounts"/>
                 <set field="activeSubMenuItem" value="Accounts"/>
                 
-                <set field="setAccountDescription" value="${groovy:session.setAttribute('accountDescription', context.activeMainMenuItem)}"/>
+                <set field="setAccountDescription" value="${groovy:session.setAttribute('accountDescription', context.activeSubMenuItem)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
                 

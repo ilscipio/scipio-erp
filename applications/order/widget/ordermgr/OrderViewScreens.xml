@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderManager"/>
-                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeSubMenuItem" value="main"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -255,7 +255,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderLookupOrder"/>
-                <set field="activeMainMenuItem" value="orderlist"/>
+                <set field="activeSubMenuItem" value="orderlist"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.filterDate"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderList.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FilterOrderList.groovy"/>
@@ -390,7 +390,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderStatisticsPage"/>
-                <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeSubMenuItem" value="stats"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderStats.groovy"/>
             </actions>
             <widgets>

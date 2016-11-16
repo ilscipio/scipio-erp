@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindForumGroup"/>
-                <set field="activeMainMenuItem" value="ForumGroups"/>
+                <set field="activeSubMenuItem" value="ForumGroups"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumGroup"/>
                 <entity-and entity-name="Content" list="forumGroups">
                     <field-map field-name="contentTypeId" value="FORUM_ROOT"/>
@@ -136,7 +136,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
-                <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="activeSubMenuItem" value="messageList"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>
@@ -181,7 +180,6 @@ under the License.
                 <set field="webPutPt" from-field="parameters.forumGroupId"/>
                 <set field="rsp.contentName" value="${content.contentName}"/>
                 <set field="titleProperty" value="PageTitleFindForumMessages"/>
-                <set field="activeMainMenuItem" value="ForumMessages"/>
                 <set field="tabBar" value="ForumMessagesSideBar"/>
                 <set field="activeSubMenuItem" value="messageThread"/>
                 <set field="labelTitleProperty" value="PageTitleFindForumMessages"/>

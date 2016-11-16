@@ -5,8 +5,7 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="activeSubMenu" value="TOP"/>
             </actions>
             <widgets>

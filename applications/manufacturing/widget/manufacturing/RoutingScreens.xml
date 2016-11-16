@@ -23,7 +23,6 @@ under the License.
     <screen name="CommonRoutingDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routing"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Routing"/>
                 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -56,7 +55,6 @@ under the License.
     <screen name="CommonRoutingTaskDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routingTask"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="RoutingTask"/>
             
                 <set field="workEffortId" from-field="parameters.workEffortId"/>

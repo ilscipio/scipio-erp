@@ -304,16 +304,17 @@ under the License.
     <screen name="SecurityDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="security"/><!-- server -->
+                <set field="securityTargetDecoratorName" from-field="securityTargetDecoratorName" default-value="main-decorator"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://common/widget/SecurityMenus.xml#SecurityGroup"/>
-
                 <condition-to-field field="commonSecurityBasePermCond" type="Boolean" only-if-field="empty">
                     <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
+                <!-- this will only be picked up if securityTargetDecoratorName != 'main-decorator' (but is CommonXxxAppDecorator) -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" from-field="commonSecurityBasePermCond"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true)}" override-by-auto-include="true"><!--  and (context.commonSecurityBasePermCond == true) -->
+                <decorator-screen name="${securityTargetDecoratorName}" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) &amp;&amp; (context.securityTargetDecoratorName == 'main-decorator')}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <if-true field="commonSecurityBasePermCond"/>

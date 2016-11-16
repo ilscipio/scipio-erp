@@ -687,7 +687,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateNewPartyDetail"/>
-                <set field="activeMainMenuItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -859,7 +859,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatchMap"/>
-                <set field="activeMainMenuItem" value="addrmap"/>
+                <set field="activeSubMenuItem" value="addrmap"/>
                 <entity-condition entity-name="AddressMatchMap" list="addressMatchMaps">
                     <order-by field-name="sequenceNum"/>
                 </entity-condition>
@@ -880,7 +880,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatches"/>
-                <set field="activeMainMenuItem" value="addrmap"/>
+                <set field="activeSubMenuItem" value="addrmap"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindMatches.groovy"/>
             </actions>
             <widgets>
@@ -1312,9 +1312,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
-                <!-- SCIPIO: ???
-                <set field="activeMainMenuItem" value="store"/>
-                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>-->
                 <set field="activeSubMenuItem" value="productStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
@@ -1377,7 +1374,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CommonImportExport"/>
-                <set field="activeMainMenuItem" value="importexport"/>
+                <set field="activeSubMenuItem" value="importexport"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">

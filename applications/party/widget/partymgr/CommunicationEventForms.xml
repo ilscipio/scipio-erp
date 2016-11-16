@@ -411,8 +411,7 @@ under the License.
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
-                <!-- SCIPIO: TODO: REVIEW
-                <parameter param-name="activeMainMenuItem" from-field="parameters.activeMainMenuItem"/>-->
+                <parameter param-name="activeSubMenuItem" from-field="parameters.activeSubMenuItem"/><!-- SCIPIO: TODO: REVIEW -->
             </hyperlink>
         </field>
         <field name="communicationEventTypeId" title="${uiLabelMap.CommonType}" sort-field="true"><display-entity description="${description}" entity-name="CommunicationEventType" key-field-name="communicationEventTypeId"/></field>

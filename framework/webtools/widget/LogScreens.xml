@@ -23,7 +23,6 @@ under the License.
     <screen name="log-decorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
             </actions>
             <widgets>

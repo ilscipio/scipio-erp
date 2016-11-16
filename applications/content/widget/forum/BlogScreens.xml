@@ -25,7 +25,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Blog" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Blog"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -97,7 +96,6 @@ under the License.
     <screen name="BlogMain">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Blog"/>
                 <set field="activeSubMenuItem" value="ListBlog"/>
                 <set field="titleProperty" value="ContentBlogList"/>
                 <entity-condition entity-name="ContentAssocViewTo" list="blogs" use-cache="true">

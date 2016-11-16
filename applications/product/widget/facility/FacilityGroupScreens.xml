@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFacilityGroup"/>
-                <set field="activeMainMenuItem" value="facilityGroup"/>
+                <set field="activeSubMenuItem" value="facilityGroup"/>
                 <entity-condition entity-name="FacilityGroup" list="facilityGroups"/>
             </actions>
             <widgets>
@@ -47,7 +47,6 @@ under the License.
     <screen name="CommonFacilityGroupDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facilityGroup" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityGroup" />
                 <set field="facilityGroupId" from-field="parameters.facilityGroupId"/>
                 <entity-one entity-name="FacilityGroup" value-field="facilityGroup"/>

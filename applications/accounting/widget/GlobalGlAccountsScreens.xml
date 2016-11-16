@@ -24,7 +24,7 @@ under the License.
     <screen name="GenericDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="chartofaccounts"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="chartofaccounts"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -156,7 +156,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewAccountingTransaction"/>
-                <set field="activeMainMenuItem" value="chartofaccounts"/>
+                <set field="activeSubMenuItem" value="chartofaccounts"/>
                 <set field="acctgTransId" from-field="requestParameters.acctgTransId"/>
                 <entity-and entity-name="AcctgTransEntry" list="entries">
                     <field-map field-name="acctgTransId"/>

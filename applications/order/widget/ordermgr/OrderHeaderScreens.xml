@@ -23,7 +23,6 @@ under the License.
     <screen name="CommonOrderHeaderDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="OrderHeader"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="findorders"/>
             </actions>
             <widgets>

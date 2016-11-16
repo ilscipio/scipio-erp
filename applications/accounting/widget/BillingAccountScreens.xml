@@ -28,7 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindBillingAccount"/>
-                <set field="activeMainMenuItem" value="billingaccount"/>
+                <set field="activeSubMenuItem" value="billingaccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

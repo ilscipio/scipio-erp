@@ -23,7 +23,6 @@ under the License.
     <screen name="CommonBomDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="bom"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Bom"/>
             </actions>
             <widgets>

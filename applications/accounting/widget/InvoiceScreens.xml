@@ -27,8 +27,7 @@ under the License.
     <screen name="FindInvoices">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="invoices"/>
-                <!--<set field="activeSubMenuItem" value="find"/>-->
+                <set field="activeSubMenuItem" value="invoices"/>
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>

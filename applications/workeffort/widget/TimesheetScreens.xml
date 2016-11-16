@@ -23,7 +23,7 @@ under the License.
     <screen name="MyTimesheets">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="mytime"/>
+                <set field="activeSubMenuItem" value="mytime"/>
                 <set field="titleProperty" value="WorkEffortMyTimesheets"/>
 
                 <set field="queryString" from-field="result.queryString"/>

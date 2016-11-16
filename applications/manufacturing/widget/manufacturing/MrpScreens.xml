@@ -23,7 +23,6 @@ under the License.
     <screen name="CommonMrpDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="mrp"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Mrp"/>
             </actions>
             <widgets>

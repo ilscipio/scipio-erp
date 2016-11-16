@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFindShipment"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <set field="activeSubMenuItem" value="shipment"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/FindShipment.groovy"/>
             </actions>
             <widgets>
@@ -48,7 +48,6 @@ under the License.
     <screen name="CommonShipmentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="shipment" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Shipment" />
                 <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <entity-one entity-name="Shipment" value-field="shipment"/>
@@ -338,7 +337,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductQuickShipOrder"/>
-                <set field="activeMainMenuItem" value="shipment"/>
+                <set field="activeSubMenuItem" value="shipment"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/QuickShipOrder.groovy"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentItems.groovy"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/EditShipmentPackages.groovy"/>
@@ -404,7 +403,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ProductWeighPackageOnly"/>
                 <!-- let fall under Facility...
-                <set field="activeMainMenuItem" value="shipment"/>  -->
+                <set field="activeSubMenuItem" value="shipment"/>  -->
                 <set field="activeSubMenuItem" value="PackOrder"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/shipment/WeightPackage.groovy"/>
             </actions>

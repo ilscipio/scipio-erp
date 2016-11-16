@@ -34,7 +34,7 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="MarketingCampaign"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="MarketingCampaign"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.marketingCampaignId}"/>
             </actions>

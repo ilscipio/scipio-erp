@@ -28,7 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductFindFacilities"/>
-                <set field="activeMainMenuItem" value="facility"/>
+                <set field="activeSubMenuItem" value="facility"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">

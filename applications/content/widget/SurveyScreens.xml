@@ -54,7 +54,6 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/SurveyMenus.xml#Survey" />
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="survey"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.surveyId}"/>
             </actions>
             <widgets>

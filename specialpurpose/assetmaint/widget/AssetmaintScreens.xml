@@ -24,8 +24,7 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="viewSize" value="10" />
                 <set field="createdPeriod" value="month"/>
             </actions>
@@ -73,7 +72,7 @@
     <screen name="FindFixedAssetMaints">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="fixedAssetMaints"/>
+                <set field="activeSubMenuItem" value="fixedAssetMaints"/>
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>

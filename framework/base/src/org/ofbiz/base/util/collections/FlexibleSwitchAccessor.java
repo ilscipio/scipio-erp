@@ -46,6 +46,10 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
     
     public abstract Object getValue(Map<String, Object> context);
     
+    public abstract FlexibleMapAccessor<Object> getFieldAscr();
+    
+    public abstract FlexibleStringExpander getValueExdr();
+    
     public static class FieldAccessor extends FlexibleSwitchAccessor {
         
         protected final FlexibleMapAccessor<Object> fieldAcsr;
@@ -56,6 +60,16 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
 
         public Object getValue(Map<String, Object> context) {
             return fieldAcsr.get(context);
+        }
+
+        @Override
+        public FlexibleMapAccessor<Object> getFieldAscr() {
+            return fieldAcsr;
+        }
+
+        @Override
+        public FlexibleStringExpander getValueExdr() {
+            return null;
         }
     }
     
@@ -68,6 +82,16 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
 
         public Object getValue(Map<String, Object> context) {
             return valueExdr.expandString(context);
+        }
+
+        @Override
+        public FlexibleMapAccessor<Object> getFieldAscr() {
+            return null;
+        }
+
+        @Override
+        public FlexibleStringExpander getValueExdr() {
+            return valueExdr;
         }
     }
 }

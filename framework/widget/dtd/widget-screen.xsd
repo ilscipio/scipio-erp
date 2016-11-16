@@ -218,9 +218,22 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="section" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>Screen section element.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="condition" type="ScreenConditionRootType" minOccurs="0" />
+                <xs:element name="condition" type="ScreenConditionRootType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Widgets condition element. If evaluates to true, the widgets element children are
+                            rendered; if false, fail-widgets elements are rendered.
+                            
+                            SCIPIO: NOTE: When used in top section of screen, the condition element is ONLY supported
+                            for widgets-containing screen, and NOT for actions-only screens. Using this section condition
+                            on an actions-only screen is considered an error in Scipio. Use the actions master if
+                            directive for actions conditions instead. See screen element for details.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" ref="widgets" />
                 <xs:element minOccurs="0" ref="fail-widgets" />
@@ -272,6 +285,12 @@ under the License.
     <!-- ================ ACTIONS ================ -->
 
     <xs:element name="actions">
+        <xs:annotation>
+            <xs:documentation>Screen actions.
+                SCIPIO: Scipio modifies and adds a number of screen actions.
+                In particular, the master if element (from simple-method-v2) is supported, and should always
+                be used instead of the section condition element for actions-only sections.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions" />

@@ -1317,20 +1317,20 @@ under the License.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
           SPECIAL VALUES:
-          * "PARENT" - can be used to explicitly request that the selected item be the parent item of the sub-menu (same effect as empty item when menu has no default).
+          * "PARENT-WITHSUB" or "PARENT" - can be used to explicitly request that the selected item be the parent item of the sub-menu (same effect as empty item when menu has no default).
             Does not affect which sub-menu is considered selected, so it will (usually, by default) still show the sub-menu (unless something else blocks it).
             Here, the sub-menu remains the deepest selected target (deeper than the selected parent item!).
           * "PARENT-NOSUB" - similar to "PARENT" except the sub-menu will not be considered selected and will (usually) be hidden.
             In other words, internally, the selected sub menu (activeSubMenu) is switched to the parent menu.
             Here, the parent item becomes the deepest selected target.
-          * "NONE" - same as empty.
+          * "NONE" - same as empty, except explicit NONE bypasses the default-menu-item-name on menu (rarely used)
           NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
           specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default).
-          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by ResolveComplex(SideBar)MenuExtraItems when called from main-decorator and usually 
-              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing the ResolveComplex(SideBar)MenuExtraItems call.
-              To exploit this, your app simply needs to call ResolveComplex(SideBar)MenuExtraItems in its main-decorator.
+          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by DeriveComplex(SideBar)MenuItems when called from main-decorator and usually 
+              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing 
+              the DeriveComplex(SideBar)MenuItems call. To exploit this, your app simply needs to call DeriveComplex(SideBar)MenuItems in its main-decorator.
               Changed for 1.14.3.
         
         Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.

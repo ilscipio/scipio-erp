@@ -11,11 +11,11 @@ import org.w3c.dom.Element;
  * FLexibleStringExpander.
  */
 @SuppressWarnings("serial")
-public abstract class FlexibleSwitchAccessor implements Serializable {
+public abstract class FlexibleSwitchedAccessor implements Serializable {
     
-    public static final String module = FlexibleSwitchAccessor.class.getName();
+    public static final String module = FlexibleSwitchedAccessor.class.getName();
 
-    public static FlexibleSwitchAccessor getInstance(Element element, String fieldAttrName, String valueAttrName) {
+    public static FlexibleSwitchedAccessor getInstance(Element element, String fieldAttrName, String valueAttrName) {
         FlexibleMapAccessor<Object> fieldAccessor = null;
         FlexibleStringExpander valueExpander = null;
         
@@ -30,7 +30,7 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
         return getInstance(fieldAccessor, valueExpander);
     }
     
-    public static FlexibleSwitchAccessor getInstance(FlexibleMapAccessor<Object> fieldAccessor, 
+    public static FlexibleSwitchedAccessor getInstance(FlexibleMapAccessor<Object> fieldAccessor, 
             FlexibleStringExpander valueExpander) {
         if (fieldAccessor != null && valueExpander != null) {
             throw new IllegalArgumentException("both field and value accessors cannot be specified at once");
@@ -50,7 +50,9 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
     
     public abstract FlexibleStringExpander getValueExdr();
     
-    public static class FieldAccessor extends FlexibleSwitchAccessor {
+    public abstract String getLogDesc();
+    
+    public static class FieldAccessor extends FlexibleSwitchedAccessor {
         
         protected final FlexibleMapAccessor<Object> fieldAcsr;
 
@@ -71,9 +73,14 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
         public FlexibleStringExpander getValueExdr() {
             return null;
         }
+
+        @Override
+        public String getLogDesc() {
+            return "conext field '" + fieldAcsr.getOriginalName() + "'";
+        }
     }
     
-    public static class ExpanderAccessor extends FlexibleSwitchAccessor {
+    public static class ExpanderAccessor extends FlexibleSwitchedAccessor {
         protected final FlexibleStringExpander valueExdr;
         
         public ExpanderAccessor(FlexibleStringExpander valueExdr) {
@@ -92,6 +99,11 @@ public abstract class FlexibleSwitchAccessor implements Serializable {
         @Override
         public FlexibleStringExpander getValueExdr() {
             return valueExdr;
+        }
+
+        @Override
+        public String getLogDesc() {
+            return "value expression '" + valueExdr.getOriginal() + "'";
         }
     }
 }

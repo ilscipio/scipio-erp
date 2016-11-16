@@ -170,4 +170,38 @@ public abstract class ModelWidget implements Serializable {
         }
         return result;
     }
+    
+    /**
+     * SCIPIO: Returns the location of container of the widget.
+     * May be a file location only, or a combination of location#name if it is a sub-widget contained in another.
+     * <p>
+     * NOTE: This is not guaranteed to be accurate for all widget types due to many merging
+     * and reuse operations and memory instances. It is to help track down the sources of errors.
+     */
+    public abstract String getContainerLocation();
+    
+    /**
+     * SCIPIO: Returns widget type, usually same as tag name (for post-construction logging).
+     */
+    public abstract String getWidgetType();
+    
+    /**
+     * SCIPIO: Returns location#name widget string.
+     * May contain two sets of names to produce an absolute location, such as 
+     * location#containername#name.
+     * <p>
+     * NOTE: This is not guaranteed to be accurate for all widget types due to many merging
+     * and reuse operations and memory instances. It is to help track down the sources of errors.
+     */
+    public String getFullLocationAndName() {
+        return getContainerLocation() + "#" + getName();
+    }
+    
+    /**
+     * SCIPIO: Returns suffix log message with location/id of widget (best-effort).
+     */
+    public String getLogWidgetLocationString() {
+        return " (" + getWidgetType() +" widget: " + getFullLocationAndName() + ")";
+    }
+    
 }

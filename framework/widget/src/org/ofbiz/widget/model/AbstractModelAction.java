@@ -48,6 +48,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilXml.ElementHelper;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -186,6 +187,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      */
     public ModelWidget getModelWidget() {
         return modelWidget;
+    }
+    
+    /**
+     * SCIPIO: Returns suffix log message with location/id of directive (best-effort).
+     */
+    public String getLogDirectiveLocationString() {
+        return modelWidget != null ? modelWidget.getLogWidgetLocationString() : " (untracked widget)";
     }
 
     @Override
@@ -1687,6 +1695,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * @see <code>widget-common.xsd</code>
      */
     public static class MasterIf extends AbstractModelAction {
+        public static final String TAG_NAME = "if";
+        public static final String THEN_TAG_NAME = "then";
+        public static final String ELSE_IF_TAG_NAME = "else-if";
+        public static final String ELSE_TAG_NAME = "else";
+
         private final ModelCondition condition;
         private final List<ElseIf> elseIfs;
         private final List<ModelAction> elseSubOps;
@@ -1694,12 +1707,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         public MasterIf(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
-            Element conditionElement = UtilXml.firstChildElement(element, "condition");
-            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
-            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
-            Element thenElement = UtilXml.firstChildElement(element, "then");
+            ElementHelper elem = UtilXml.getElementHelper(element);
+            this.condition = readCondition(modelWidget, elem, TAG_NAME);
+            Element thenElement = elem.firstChildElement(THEN_TAG_NAME);
             this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
-            List<? extends Element> elseIfElements = UtilXml.childElementList(element, "else-if");
+            List<? extends Element> elseIfElements = elem.childElementList(ELSE_IF_TAG_NAME);
             if (elseIfElements.isEmpty()) {
                 this.elseIfs = Collections.emptyList();
             } else {
@@ -1709,14 +1721,41 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 }
                 this.elseIfs = Collections.unmodifiableList(elseIfs);
             }
-            Element elseElement = UtilXml.firstChildElement(element, "else");
+            Element elseElement = elem.firstChildElement(ELSE_TAG_NAME);
             if (elseElement == null) {
                 this.elseSubOps = Collections.emptyList();
             } else {
                 this.elseSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, elseElement));
             }
         }
-
+        
+        /**
+         * SCIPIO: read the condition element, then tries the condition attribute.
+         */
+        ModelCondition readCondition(ModelWidget modelWidget, ElementHelper elem, String directiveName) {
+            Element conditionElement = elem.firstChildElement("condition");
+            ModelCondition condition = null;
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            if (conditionChildElement != null) {
+                condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            }
+            String conditionExdrStr = elem.attr("condition");
+            if (!conditionExdrStr.isEmpty()) {
+                if (condition == null) {
+                    condition = ModelScreenCondition.makeBooleanExprCondition(modelWidget, 
+                            FlexibleStringExpander.getInstance(conditionExdrStr));
+                } else {
+                    Debug.logError("Scipio: " + directiveName + " directive cannot have both condition element and condition attribute, will use only condition element" +
+                            getLogDirectiveLocationString(), module);
+                }
+            }
+            if (condition == null) {
+                condition = AbstractModelCondition.FALSE_CONDITION;
+                Debug.logError("Scipio: " + directiveName + " directive is missing condition in widget - will always evaluate to false" + getLogDirectiveLocationString(), module);
+            }
+            return condition;
+        }
+        
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
             // if conditions fails, always return true; if a sub-op returns false
@@ -1764,57 +1803,54 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         public List<ModelAction> getThenSubOps() {
             return thenSubOps;
         }
-    }
-    
-    /**
-     * Models the &lt;else-if&gt; element.
-     * <p>
-     * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
-     * 
-     * @see <code>widget-common.xsd</code>
-     */
-    public static class ElseIf extends AbstractModelAction implements ModelCondition {
         
-        private final ModelCondition condition;
-        private final List<ModelAction> thenSubOps;
-        
-        public ElseIf(ModelWidget modelWidget, Element element) {
-            super(modelWidget, element);
-            Element conditionElement = UtilXml.firstChildElement(element, "condition");
-            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
-            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
-            Element thenElement = UtilXml.firstChildElement(element, "then");
-            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
-        }
-
-        @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            AbstractModelAction.runSubActions(this.thenSubOps, context);
-        }
-        
-        @Override
-        public boolean eval(Map<String, Object> context) {
-            return condition.eval(context);
-        }
-        
-        @Override
-        public void accept(ModelActionVisitor visitor) throws Exception {
-            // TODO
-        }
-
-        public ModelCondition getCondition() {
-            return condition;
-        }
-
-        public List<ModelAction> getThenSubOps() {
-            return thenSubOps;
-        }
-
-        @Override
-        public void accept(ModelConditionVisitor visitor) throws Exception {
-            // TODO Auto-generated method stub
+        /**
+         * Models the &lt;else-if&gt; element.
+         * <p>
+         * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
+         * 
+         * @see <code>widget-common.xsd</code>
+         */
+        public class ElseIf extends AbstractModelAction implements ModelCondition {
+            private final ModelCondition condition;
+            private final List<ModelAction> thenSubOps;
             
+            public ElseIf(ModelWidget modelWidget, Element element) {
+                super(modelWidget, element);
+                ElementHelper elem = UtilXml.getElementHelper(element);
+                this.condition = readCondition(modelWidget, elem, ELSE_IF_TAG_NAME);
+                Element thenElement = elem.firstChildElement("then");
+                this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+            }
+
+            @Override
+            public void runAction(Map<String, Object> context) throws GeneralException {
+                AbstractModelAction.runSubActions(this.thenSubOps, context);
+            }
+            
+            @Override
+            public boolean eval(Map<String, Object> context) {
+                return condition.eval(context);
+            }
+            
+            @Override
+            public void accept(ModelActionVisitor visitor) throws Exception {
+                // TODO
+            }
+
+            public ModelCondition getCondition() {
+                return condition;
+            }
+
+            public List<ModelAction> getThenSubOps() {
+                return thenSubOps;
+            }
+
+            @Override
+            public void accept(ModelConditionVisitor visitor) throws Exception {
+                // TODO Auto-generated method stub
+            }
         }
     }
-    
+  
 }

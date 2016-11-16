@@ -39,7 +39,9 @@ import org.ofbiz.base.util.PatternFactory;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilXml.ElementHelper;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entityext.permission.EntityPermissionChecker;
@@ -75,6 +77,16 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
     public static final String module = AbstractModelCondition.class.getName();
     public static final ModelConditionFactory DEFAULT_CONDITION_FACTORY = new DefaultConditionFactory();
 
+    /**
+     * SCIPIO: ModelCondition that always evaluates to false.
+     */
+    public static final ModelCondition FALSE_CONDITION = new FalseCondition();
+    
+    /**
+     * SCIPIO: ModelCondition that always evaluates to true.
+     */
+    public static final ModelCondition TRUE_CONDITION = new TrueCondition();
+    
     public static List<ModelCondition> readSubConditions(ModelConditionFactory factory, ModelWidget modelWidget,
             Element conditionElement) {
         List<? extends Element> subElementList = UtilXml.childElementList(conditionElement);
@@ -90,9 +102,30 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
     protected AbstractModelCondition(ModelConditionFactory factory, ModelWidget modelWidget, Element conditionElement) {
         this.modelWidget = modelWidget;
     }
+    
+    /**
+     * SCIPIO: Non-XML constructor.
+     */
+    protected AbstractModelCondition(ModelConditionFactory factory, ModelWidget modelWidget) {
+        this.modelWidget = modelWidget;
+    }
+    
+    /**
+     * SCIPIO: Non-XML constructor.
+     */
+    protected AbstractModelCondition(ModelWidget modelWidget) {
+        this.modelWidget = modelWidget;
+    }
 
     public ModelWidget getModelWidget() {
         return modelWidget;
+    }
+    
+    /**
+     * SCIPIO: Returns suffix log message with location/id of directive (best-effort).
+     */
+    public String getLogDirectiveLocationString() {
+        return modelWidget != null ? modelWidget.getLogWidgetLocationString() : " (untracked widget)";
     }
 
     @Override
@@ -102,7 +135,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         try {
             accept(visitor);
         } catch (Exception e) {
-            Debug.logWarning(e, "Exception thrown in XmlWidgetConditionVisitor: ", module);
+            Debug.logWarning(e, "Exception thrown in XmlWidgetConditionVisitor", module);
         }
         return sb.toString();
     }
@@ -264,6 +297,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 for (Object item : messages) {
                     fullString.append(item.toString());
                 }
+                fullString.append(getLogDirectiveLocationString()); // SCIPIO: new
                 Debug.logWarning(fullString.toString(), module);
                 throw new IllegalArgumentException(fullString.toString());
             }
@@ -344,6 +378,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 for (Object item : messages) {
                     fullString.append(item.toString());
                 }
+                fullString.append(getLogDirectiveLocationString()); // SCIPIO: new
                 Debug.logWarning(fullString.toString(), module);
                 throw new IllegalArgumentException(fullString.toString());
             }
@@ -403,6 +438,66 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         }
 
     }
+       
+    /**
+     * SCIPIO: Models the &lt;if-true&gt; and &lt;if-false&gt; elements. 
+     * 2016-11-09: New element, added for 1.14.3.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class IfTrueFalse extends AbstractModelCondition {
+        protected final ValueAccessor accessor;
+        protected final boolean verify;
+        protected final boolean allowEmpty;
+        
+        protected IfTrueFalse(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            ValueAccessor accessor;
+            try {
+                accessor = ValueAccessor.getFieldOrExpanderAccessor(condElement, "field", "value");
+            } catch(Exception e) {
+                Debug.logError("if-true/if-false condition: error in specified field or value: " + 
+                        e.getMessage() + getLogDirectiveLocationString(), module);
+                accessor = ValueAccessor.NULL_ACCESSOR;
+            }
+            this.accessor = accessor;
+            this.verify = !"false".equals(condElement.getAttribute("verify"));
+            this.allowEmpty = !"false".equals(condElement.getAttribute("allow-empty"));
+        }
+        
+        protected IfTrueFalse(ModelConditionFactory factory, ModelWidget modelWidget, 
+                ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(factory, modelWidget);
+            this.accessor = accessor;
+            this.verify = verify;
+            this.allowEmpty = allowEmpty;
+        }
+        
+        protected IfTrueFalse(ModelWidget modelWidget, 
+                ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(modelWidget);
+            this.accessor = accessor;
+            this.verify = verify;
+            this.allowEmpty = allowEmpty;
+        }
+
+        public ValueAccessor getAccessor() {
+            return accessor;
+        }
+
+        public boolean isVerify() {
+            return verify;
+        }
+
+        public boolean isAllowEmpty() {
+            return allowEmpty;
+        }
+        
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO
+        }
+    }
     
     /**
      * SCIPIO: Models the &lt;if-true&gt; element. 
@@ -410,32 +505,37 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IfTrue extends AbstractModelCondition {
-        private final FlexibleMapAccessor<Object> fieldAcsr;
-
+    public static class IfTrue extends IfTrueFalse {
         private IfTrue(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
-            String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
-                fieldAcsr = condElement.getAttribute("field-name");
-            this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
         }
-
-        @Override
-        public void accept(ModelConditionVisitor visitor) throws Exception {
-            // TODO
+        
+        public IfTrue(ModelConditionFactory factory, ModelWidget modelWidget, 
+                ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(factory, modelWidget, accessor, verify, allowEmpty);
+        }
+        
+        public IfTrue(ModelWidget modelWidget, ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(modelWidget, accessor, verify, allowEmpty);
         }
 
         @Override
         public boolean eval(Map<String, Object> context) {
-            Object fieldVal = this.fieldAcsr.get(context);
-            return (Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal));
+            Object fieldVal = this.accessor.getValue(context);
+            if (Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal)) {
+                return true;
+            } else {
+                if (verify) {
+                    if (!((Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal)) 
+                            || (allowEmpty && fieldVal == null || "".equals(fieldVal)))) {
+                        Debug.logError("if-true: " + accessor.getLogRepr() + 
+                                " produced invalid boolean value: [" + fieldVal + 
+                                "]" + getLogDirectiveLocationString(), module);
+                    }
+                }
+                return false;
+            }
         }
-
-        public FlexibleMapAccessor<Object> getFieldAcsr() {
-            return fieldAcsr;
-        }
-
     }
     
     /**
@@ -444,34 +544,39 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IfFalse extends AbstractModelCondition {
-        private final FlexibleMapAccessor<Object> fieldAcsr;
-
+    public static class IfFalse extends IfTrueFalse {
         private IfFalse(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
             super(factory, modelWidget, condElement);
-            String fieldAcsr = condElement.getAttribute("field");
-            if (fieldAcsr.isEmpty())
-                fieldAcsr = condElement.getAttribute("field-name");
-            this.fieldAcsr = FlexibleMapAccessor.getInstance(fieldAcsr);
         }
 
-        @Override
-        public void accept(ModelConditionVisitor visitor) throws Exception {
-            // TODO
+        public IfFalse(ModelConditionFactory factory, ModelWidget modelWidget, 
+                ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(factory, modelWidget, accessor, verify, allowEmpty);
+        }
+        
+        public IfFalse(ModelWidget modelWidget, ValueAccessor accessor, boolean verify, boolean allowEmpty) {
+            super(modelWidget, accessor, verify, allowEmpty);
         }
 
         @Override
         public boolean eval(Map<String, Object> context) {
-            Object fieldVal = this.fieldAcsr.get(context);
-            return (Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal));
+            Object fieldVal = this.accessor.getValue(context);
+            if (Boolean.FALSE.equals(fieldVal) || "false".equals(fieldVal)) {
+                return true;
+            } else {
+                if (verify) {
+                    if (!((Boolean.TRUE.equals(fieldVal) || "true".equals(fieldVal)) 
+                            || (allowEmpty && fieldVal == null || "".equals(fieldVal)))) {
+                        Debug.logError("if-false: " + accessor.getLogRepr() + 
+                                " produced invalid boolean value: [" + fieldVal + 
+                                "]" + getLogDirectiveLocationString(), module);
+                    }
+                }
+                return false;
+            }
         }
-
-        public FlexibleMapAccessor<Object> getFieldAcsr() {
-            return fieldAcsr;
-        }
-
     }
-
+    
     /**
      * Models the &lt;if-entity-permission&gt; element.
      * 
@@ -583,7 +688,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             try {
                 pattern = PatternFactory.createOrGetPerl5CompiledPattern(expr, true);
             } catch (MalformedPatternException e) {
-                String errMsg = "Error in evaluation in if-regexp in screen: " + e.toString();
+                String errMsg = "Error in evaluation in if-regexp in screen: " + e.toString() + getLogDirectiveLocationString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
@@ -592,7 +697,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null, (TimeZone) context.get("timeZone"),
                         (Locale) context.get("locale"), true);
             } catch (GeneralException e) {
-                Debug.logError(e, "Could not convert object to String, using empty String", module);
+                Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module);
             }
             // always use an empty string by default
             if (fieldString == null)
@@ -647,7 +752,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     resource = serviceName;
                 }
                 if (UtilValidate.isEmpty(serviceName)) {
-                    Debug.logWarning("No permission service-name specified!", module);
+                    Debug.logWarning("No permission service-name specified!" + getLogDirectiveLocationString(), module);
                     return false;
                 }
                 // SCIPIO: refactored the main code
@@ -765,7 +870,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                     fieldString = (String) ObjectType.simpleTypeConvert(fieldVal, "String", null,
                             (TimeZone) context.get("timeZone"), (Locale) context.get("locale"), true);
                 } catch (GeneralException e) {
-                    Debug.logError(e, "Could not convert object to String, using empty String", module);
+                    Debug.logError(e, "Could not convert object to String, using empty String" + getLogDirectiveLocationString(), module);
                 }
             }
             // always use an empty string by default
@@ -777,14 +882,14 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             try {
                 valClass = ObjectType.loadClass(className);
             } catch (ClassNotFoundException cnfe) {
-                Debug.logError("Could not find validation class: " + className, module);
+                Debug.logError("Could not find validation class: " + className + getLogDirectiveLocationString(), module);
                 return false;
             }
             Method valMethod;
             try {
                 valMethod = valClass.getMethod(methodName, paramTypes);
             } catch (NoSuchMethodException cnfe) {
-                Debug.logError("Could not find validation method: " + methodName + " of class " + className, module);
+                Debug.logError("Could not find validation method: " + methodName + " of class " + className + getLogDirectiveLocationString(), module);
                 return false;
             }
             Boolean resultBool = Boolean.FALSE;
@@ -792,7 +897,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 resultBool = (Boolean) valMethod.invoke(null, params);
             } catch (Exception e) {
                 Debug.logError(e, "Error in IfValidationMethod " + methodName + " of class " + className
-                        + ", defaulting to false ", module);
+                        + ", defaulting to false " + getLogDirectiveLocationString(), module);
             }
             return resultBool.booleanValue();
         }
@@ -963,4 +1068,40 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
             return location;
         }
     }
+    
+    
+    /**
+     * SCIPIO: always false condition.
+     */
+    public static final class FalseCondition implements ModelCondition {
+        private FalseCondition() {}
+        
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            return false;
+        }
+        
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO Auto-generated method stub
+        }
+    }
+    
+    /**
+     * SCIPIO: always true condition.
+     */
+    public static final class TrueCondition implements ModelCondition {
+        private TrueCondition() {}
+        
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            return true;
+        }
+        
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            // TODO Auto-generated method stub
+        }
+    }
+    
 }

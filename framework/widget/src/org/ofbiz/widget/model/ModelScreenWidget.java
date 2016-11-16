@@ -512,6 +512,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
             // defaults to true, so anything but false is true
             return !"false".equals(shareScopeString);
         }
+
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class ColumnContainer extends ModelScreenWidget {
@@ -567,12 +572,20 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class Column extends ModelWidget {
+        public static final String TAG_NAME = "column"; // SCIPIO: added for consistency, but NOTE: not in xsd
+        
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander styleExdr;
         private final List<ModelScreenWidget> subWidgets;
+        private final ModelScreen modelScreen;
 
         public Column(ModelScreen modelScreen, Element columnElement) {
             super(columnElement);
@@ -580,8 +593,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.styleExdr = FlexibleStringExpander.getInstance(columnElement.getAttribute("style"));
             List<? extends Element> subElementList = UtilXml.childElementList(columnElement);
             this.subWidgets = Collections.unmodifiableList(readSubWidgets(modelScreen, subElementList));
+            this.modelScreen = modelScreen;
         }
-
+        
         public List<ModelScreenWidget> getSubWidgets() {
             return this.subWidgets;
         }
@@ -605,6 +619,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return TAG_NAME;
+        }
+        
+        @Override
+        public String getContainerLocation() { // SCIPIO: new
+            return modelScreen != null ? modelScreen.getFullLocationAndName() : null;
         }
     }
 
@@ -686,6 +710,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getAutoUpdateInterval() {
             return autoUpdateInterval;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -877,6 +906,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public boolean getPadded() {
             return padded;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class HorizontalSeparator extends ModelScreenWidget {
@@ -914,6 +948,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1001,6 +1040,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1174,6 +1218,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
             DecoratorScreen.overridingDefaultFallbackSettings.set(defaultFallbackSettings);
         }
 
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class DecoratorSection extends ModelScreenWidget {
@@ -1270,6 +1318,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class DecoratorSectionInclude extends ModelScreenWidget {
@@ -1313,6 +1366,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1378,6 +1436,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1464,6 +1527,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1557,6 +1625,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class Tree extends ModelScreenWidget {
@@ -1638,6 +1711,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class PlatformSpecific extends ModelScreenWidget {
@@ -1685,6 +1763,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public Map<String, ModelScreenWidget> getSubWidgets() {
             return subWidgets;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1849,6 +1932,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getEnableEditName() {
             return enableEditName;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class SubContent extends ModelScreenWidget {
@@ -1914,7 +2002,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             // TODO Auto-generated method stub
-            
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -2051,6 +2143,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         
         public String getSubMenuFilter(Map<String, Object> context) {
             return this.subMenuFilterExdr.expandString(context);
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -2197,6 +2294,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public Link getLink() {
             return link;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class ScreenImage extends ModelScreenWidget {
@@ -2290,6 +2392,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public Image getImage() {
             return image;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -2491,6 +2598,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getConfModeExdr() {
             return confModeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return getModelScreen() != null ? getModelScreen().getFullLocationAndName() : null;
+    }
 }

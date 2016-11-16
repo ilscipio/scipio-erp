@@ -1398,4 +1398,15 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         return null;
     }
 
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        // NOTE: this may not give the orig code location due to extends/merging... but can track down
+        return getModelMenu().getFullLocationAndName(); 
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "menu-item";
+    }
+
 }

@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.AbstractModelCondition;
 import org.ofbiz.widget.model.AbstractModelCondition.DefaultConditionFactory;
@@ -93,5 +94,14 @@ public final class ModelScreenCondition implements Serializable {
                 return super.newInstance(this, modelWidget,conditionElement);
             }
         }
+    }
+    
+    /**
+     * SCIPIO: Quick method to make an if-true value="" -like condition dynamically which only passes
+     * if result is explicit true boolean or string.
+     */
+    public static ModelCondition makeBooleanExprCondition(ModelWidget modelWidget, FlexibleStringExpander expr) {
+        return new AbstractModelCondition.IfTrue(SCREEN_CONDITION_FACTORY, modelWidget, 
+                new ValueAccessor.ExpanderAccessor(expr), true, true);
     }
 }

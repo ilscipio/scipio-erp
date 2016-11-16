@@ -30,9 +30,11 @@ public class ModelScreenSettings extends ModelWidget {
     protected final AutoIncludeSettings autoIncludeSettings;
     protected final DecoratorScreenSettings decoratorScreenSettings;
     protected final RenderInitSettings renderInitSettings;
+    protected final String location;
     
-    public ModelScreenSettings(String name, Boolean active) {
+    public ModelScreenSettings(String name, Boolean active, String sourceLocation) {
         super(name);
+        this.location = sourceLocation;
         this.active = active;
         this.autoIncludeSettings = null;
         this.decoratorScreenSettings = defaultDecoratorScreenSettings;
@@ -41,6 +43,7 @@ public class ModelScreenSettings extends ModelWidget {
     
     public ModelScreenSettings(Element settingsElement, String sourceLocation) {
         super(settingsElement);
+        this.location = sourceLocation;
         List<? extends Element> childElementList;
         
         childElementList = UtilXml.childElementList(settingsElement, "auto-include-settings");
@@ -69,6 +72,7 @@ public class ModelScreenSettings extends ModelWidget {
     // Copy constructor with overrides
     public ModelScreenSettings(ModelScreenSettings existing, String name, Boolean active) {
         super(UtilValidate.isNotEmpty(name) ? name : existing.getName());
+        this.location = existing.location;
         if (active != null) {
             this.active = active;
         } else {
@@ -82,6 +86,7 @@ public class ModelScreenSettings extends ModelWidget {
     // Merge constructor
     public ModelScreenSettings(ModelScreenSettings existing, ModelScreenSettings override) {
         super(override.getName());
+        this.location = override.location;
         if (override.active != null) {
             this.active = override.active;
         } else {
@@ -117,6 +122,10 @@ public class ModelScreenSettings extends ModelWidget {
                 this.renderInitSettings = null;
             }
         }
+    }
+    
+    public String getLocation() {
+        return location;
     }
     
     public Boolean getActive() {
@@ -431,6 +440,16 @@ public class ModelScreenSettings extends ModelWidget {
                 return actions;
             }
         }
+    }
+
+    @Override
+    public String getContainerLocation() {
+        return location;
+    }
+    
+    @Override
+    public String getWidgetType() {
+        return "screen-settings";
     }
     
 }

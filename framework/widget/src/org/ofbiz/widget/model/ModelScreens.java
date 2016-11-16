@@ -36,6 +36,7 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     protected final Map<String, ModelScreen> screenMap;
     protected final Map<String, ModelScreenGroup> screenGroupMap; // TODO: list of this
     protected final ModelScreenGroup rootGroup;
+    protected final String location;
     
     // duplicated from rootGroups, for faster access
     protected final ModelScreenSettings effectiveSettings;
@@ -45,6 +46,7 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     }
     
     public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings) {
+        this.location = sourceLocation;
         Map<String, ModelScreen> screenMap = new HashMap<String, ModelScreen>();
         Map<String, ModelScreenGroup> screenGroupMap = new HashMap<String, ModelScreenGroup>();
         
@@ -83,10 +85,16 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     }
     
     public ModelScreens() {
+        this.location = null;
         this.screenMap = new HashMap<>();
         this.screenGroupMap = new HashMap<>();
-        this.rootGroup = new ModelScreenGroup(null, true, this);
+        this.rootGroup = new ModelScreenGroup((String) null, true, this, this.location);
         this.effectiveSettings = rootGroup.getEffectiveSettings();
+    }
+    
+    //@Override
+    public String getLocation() { // SCIPIO: new
+        return location;
     }
     
     public Map<String, ModelScreen> getScreenMap() {

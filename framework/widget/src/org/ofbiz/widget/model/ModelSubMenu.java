@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -71,8 +72,8 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
     private final FlexibleStringExpander selected; // 2016-11-11: selected override
     private final FlexibleStringExpander disabled; // 2016-11-11: disabled override
 
-    private final String menuItemNameAsParent; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
-    private final String menuItemNameAsParentNoSub; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
+    private final Set<String> menuItemNamesAsParent; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
+    private final Set<String> menuItemNamesAsParentNoSub; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
     private final Map<String, String> specialMenuItemNameMap;
     
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
@@ -211,17 +212,17 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.selected = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("selected"));
         this.disabled = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("disabled"));
         
-        String menuItemNameAsParent = subMenuElement.getAttribute("menu-item-name-as-parent");
-        if (menuItemNameAsParent.isEmpty() && hasImmediateFuncModelMenu()) {
-            menuItemNameAsParent = getImmediateFuncModelMenu().getMenuItemNameAsParent();
+        Set<String> menuItemNamesAsParent = Collections.unmodifiableSet(ModelMenu.readMenuItemNamesSet(subMenuElement.getAttribute("menu-item-names-as-parent")));
+        if (menuItemNamesAsParent.isEmpty() && hasImmediateFuncModelMenu()) {
+            menuItemNamesAsParent = getImmediateFuncModelMenu().getMenuItemNamesAsParent();
         }
-        this.menuItemNameAsParent = menuItemNameAsParent;
-        String menuItemNameAsParentNoSub = subMenuElement.getAttribute("menu-item-name-as-parent-nosub");
-        if (menuItemNameAsParentNoSub.isEmpty() && hasImmediateFuncModelMenu()) {
-            menuItemNameAsParentNoSub = getImmediateFuncModelMenu().getMenuItemNameAsParentNoSub();
+        this.menuItemNamesAsParent = menuItemNamesAsParent;
+        Set<String> menuItemNamesAsParentNoSub = Collections.unmodifiableSet(ModelMenu.readMenuItemNamesSet(subMenuElement.getAttribute("menu-item-names-as-parent-nosub")));
+        if (menuItemNamesAsParentNoSub.isEmpty() && hasImmediateFuncModelMenu()) {
+            menuItemNamesAsParentNoSub = getImmediateFuncModelMenu().getMenuItemNamesAsParentNoSub();
         }
-        this.menuItemNameAsParentNoSub = menuItemNameAsParentNoSub;
-        this.specialMenuItemNameMap = makeSpecialMenuItemNameMap(menuItemNameAsParent, menuItemNameAsParentNoSub);
+        this.menuItemNamesAsParentNoSub = menuItemNamesAsParentNoSub;
+        this.specialMenuItemNameMap = makeSpecialMenuItemNameMap(menuItemNamesAsParent, menuItemNamesAsParentNoSub);
     }
 
     // SCIPIO: copy constructor
@@ -268,18 +269,22 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.selected = existingSubMenu.selected;
         this.disabled = existingSubMenu.disabled;
         
-        this.menuItemNameAsParent = existingSubMenu.menuItemNameAsParent;
-        this.menuItemNameAsParentNoSub = existingSubMenu.menuItemNameAsParentNoSub;
+        this.menuItemNamesAsParent = existingSubMenu.menuItemNamesAsParent;
+        this.menuItemNamesAsParentNoSub = existingSubMenu.menuItemNamesAsParentNoSub;
         this.specialMenuItemNameMap = existingSubMenu.specialMenuItemNameMap;
     }
     
-    public static Map<String, String> makeSpecialMenuItemNameMap(String menuItemNameAsParent, String menuItemNameAsParentNoSub) {
+    public static Map<String, String> makeSpecialMenuItemNameMap(Set<String> menuItemNamesAsParent, Set<String> menuItemNamesAsParentNoSub) {
         Map<String, String> map = new HashMap<>();
-        if (UtilValidate.isNotEmpty(menuItemNameAsParent)) {
-            map.put(menuItemNameAsParent, "PARENT");
+        if (UtilValidate.isNotEmpty(menuItemNamesAsParent)) {
+            for(String name : menuItemNamesAsParent) {
+                map.put(name, "PARENT");
+            }
         }
-        if (UtilValidate.isNotEmpty(menuItemNameAsParentNoSub)) {
-            map.put(menuItemNameAsParentNoSub, "PARENT-NOSUB");
+        if (UtilValidate.isNotEmpty(menuItemNamesAsParentNoSub)) {
+            for(String name : menuItemNamesAsParentNoSub) {
+                map.put(name, "PARENT-NOSUB");
+            }
         }
         return map;
     }
@@ -563,20 +568,20 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         }
     }
     
-    public String getMenuItemNameAsParent() {
-        return menuItemNameAsParent;
+    public Set<String> getMenuItemNamesAsParent() {
+        return menuItemNamesAsParent;
     }
 
-    public String getMenuItemNameAsParentNoSub() {
-        return menuItemNameAsParentNoSub;
+    public Set<String> getMenuItemNamesAsParentNoSub() {
+        return menuItemNamesAsParentNoSub;
     }
     
     /**
-     * If name matches menuItemNameAsParent or menuItemNameAsParentNoSub, returns
+     * If name matches menuItemNamesAsParent or menuItemNamesAsParentNoSub, returns
      * PARENT or PARENT-NOSUB, otherwise returns passed.
      */
     public String getTranslatedMenuItemName(String menuItemName) {
-        String res = this.specialMenuItemNameMap.get(menuItemMap);
+        String res = this.specialMenuItemNameMap.get(menuItemName);
         return res != null ? res : menuItemName;
     }
     
@@ -658,6 +663,17 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
     @Override
     public FlexibleStringExpander getExpanded() {
         return expanded;
+    }
+
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        // NOTE: this can be slightly indirecting, but it will allow user to find anything required
+        return getTopModelMenu().getFullLocationAndName();
+    }
+    
+    @Override
+    public String getWidgetType() {
+        return "sub-menu";
     }
 
 }

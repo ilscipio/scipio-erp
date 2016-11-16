@@ -150,8 +150,8 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
     private final List<ModelMenuNode> manualSelectedNodes; // SCIPIO: new: cache of potentially manual selected items
     private final List<ModelMenuNode> manualExpandedNodes; // SCIPIO: new: cache of potentially manual expanded items
 
-    private final String menuItemNameAsParent; // SCIPIO: new
-    private final String menuItemNameAsParentNoSub; // SCIPIO: new
+    private final Set<String> menuItemNamesAsParent; // SCIPIO: new
+    private final Set<String> menuItemNamesAsParentNoSub; // SCIPIO: new
 
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
@@ -202,8 +202,8 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         String forceExtendsSubMenuModelScope = "";
         String forceAllSubMenuModelScope = "";
         boolean alwaysExpandSelectedOrAncestor = false;
-        String menuItemNameAsParent = "";
-        String menuItemNameAsParentNoSub = "";
+        Set<String> menuItemNamesAsParent = new HashSet<>();
+        Set<String> menuItemNamesAsParentNoSub = new HashSet<>();
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -252,8 +252,8 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
                 selectedMenuContextFieldName = parent.selectedMenuContextFieldName;
                 menuContainerStyleExdr = parent.menuContainerStyleExdr;
                 alwaysExpandSelectedOrAncestor = parent.alwaysExpandSelectedOrAncestor;
-                menuItemNameAsParent = parent.menuItemNameAsParent;
-                menuItemNameAsParentNoSub = parent.menuItemNameAsParentNoSub;
+                menuItemNamesAsParent = parent.menuItemNamesAsParent;
+                menuItemNamesAsParentNoSub = parent.menuItemNamesAsParentNoSub;
             }
         }
         if (!menuElement.getAttribute("type").isEmpty())
@@ -336,10 +336,10 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         
         if (!menuElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
             alwaysExpandSelectedOrAncestor = "true".equals(menuElement.getAttribute("always-expand-selected-or-ancestor"));
-        if (!menuElement.getAttribute("menu-item-name-as-parent").isEmpty()) 
-            menuItemNameAsParent = menuElement.getAttribute("menu-item-name-as-parent");
-        if (!menuElement.getAttribute("menu-item-name-as-parent-nosub").isEmpty()) 
-            menuItemNameAsParentNoSub = menuElement.getAttribute("menu-item-name-as-parent-nosub");
+        if (!menuElement.getAttribute("menu-item-names-as-parent").isEmpty()) 
+            menuItemNamesAsParent = Collections.unmodifiableSet(ModelMenu.readMenuItemNamesSet(menuElement.getAttribute("menu-item-names-as-parent")));
+        if (!menuElement.getAttribute("menu-item-names-as-parent-nosub").isEmpty()) 
+            menuItemNamesAsParentNoSub = Collections.unmodifiableSet(ModelMenu.readMenuItemNamesSet(menuElement.getAttribute("menu-item-names-as-parent-nosub")));
         
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
@@ -381,8 +381,8 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         this.type = type;
         this.itemsSortMode = itemsSortMode;
         this.alwaysExpandSelectedOrAncestor = alwaysExpandSelectedOrAncestor;
-        this.menuItemNameAsParent = menuItemNameAsParent;
-        this.menuItemNameAsParentNoSub = menuItemNameAsParentNoSub;
+        this.menuItemNamesAsParent = menuItemNamesAsParent;
+        this.menuItemNamesAsParentNoSub = menuItemNamesAsParentNoSub;
         
         CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
 
@@ -1444,12 +1444,19 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         return isMenuNameTopMenu(menuName) || isMenuNameSubMenu(menuName);
     }
     
+    /**
+     * Gets menu item for sub-menu (or its parent if PARENT applies), applying all the name translations as needed.
+     * <p>
+     * NOTE: Performs the item name translations (from menu-item-names-as-parent(-nosub) to appropriate PARENT(-nosub)).
+     */
     public ModelMenuItem getModelMenuItemBySubName(String menuItemName, String subMenuName) {
         if (isMenuNameTopMenu(subMenuName)) {
+            menuItemName = this.getTranslatedMenuItemName(menuItemName); // perform name translation
             return getModelMenuItemByName(menuItemName);
         } else {
             ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
             if (subMenu != null) {
+                menuItemName = subMenu.getTranslatedMenuItemName(menuItemName); // perform name translation
                 if (ModelMenuItem.parentMenuItemNames.contains(menuItemName)) {
                     return subMenu.getParentMenuItem();
                 } else {
@@ -1461,10 +1468,17 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         }
     }
     
+    /**
+     * Gets menu item for sub-menu (or its parent if PARENT applies), applying all the name translations as needed.
+     * <p>
+     * NOTE: Performs the item name translations (from menu-item-names-as-parent(-nosub) to appropriate PARENT(-nosub)).
+     */
     public ModelMenuItem getModelMenuItemForSubMenu(String menuItemName, ModelSubMenu subMenu) {
         if (subMenu == null) { // top
+            menuItemName = this.getTranslatedMenuItemName(menuItemName); // perform name translation
             return getModelMenuItemByName(menuItemName);
         } else {
+            menuItemName = subMenu.getTranslatedMenuItemName(menuItemName); // perform name translation
             if (ModelMenuItem.parentMenuItemNames.contains(menuItemName)) {
                 return subMenu.getParentMenuItem();
             } else {
@@ -1587,7 +1601,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
      * <p>
      * The (sub-)menu name supports special value "TOP". The item name supports
      * special values "NONE" (same as null), "PARENT", and "PARENT-NOSUB".
-     * ALSO instead of these values the menu-item-name-as-parent(-nosub) attributes
+     * ALSO instead of these values the menu-item-names-as-parent(-nosub) attributes
      * can be set on the sub-menu.
      */
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context, boolean logWarnings) {
@@ -1625,10 +1639,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         
         if (UtilValidate.isNotEmpty(selItemName)) {
             if (subMenu != null || menuNameTopMenu) {
-                // menu item name translation
-                selItemName = (subMenu != null) ? subMenu.getTranslatedMenuItemName(selItemName) : this.getTranslatedMenuItemName(selItemName);
-
-                // menu item lookup (NOTE: this auto handles PARENT(-NOSUB) for item
+                // menu item lookup (NOTE: this auto handles PARENT(-NOSUB) for item including the menu-item-names-as-parent(-nosub) translations)
                 menuItem = getModelMenuItemForSubMenu(selItemName, subMenu);
                 
                 // final fixups and error checks
@@ -1675,12 +1686,28 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         return getSelectedMenuAndItem(context, true);
     }
     
-    public String getMenuItemNameAsParent() { // SCIPIO: new
-        return menuItemNameAsParent;
+    public Set<String> getMenuItemNamesAsParent() { // SCIPIO: new
+        return menuItemNamesAsParent;
     }
 
-    public String getMenuItemNameAsParentNoSub() { // SCIPIO: new
-        return menuItemNameAsParentNoSub;
+    public Set<String> getMenuItemNamesAsParentNoSub() { // SCIPIO: new
+        return menuItemNamesAsParentNoSub;
+    }
+    
+    public static List<String> readMenuItemNamesList(String namesStr) {
+        if (UtilValidate.isEmpty(namesStr)) {
+            return new ArrayList<>();
+        }
+        String[] namesArr = namesStr.split(",");
+        ArrayList<String> namesList = new ArrayList<>(namesArr.length);
+        for(String name : namesArr) {
+            namesList.add(name.trim());
+        }
+        return namesList;
+    }
+    
+    public static Set<String> readMenuItemNamesSet(String namesStr) {
+        return new HashSet<>(readMenuItemNamesList(namesStr));
     }
     
     /**
@@ -2051,6 +2078,16 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         public Set<ModelMenuNode> getExpanded() {
             return expanded;
         }
+    }
+
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return menuLocation;
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "menu";
     }
     
 }

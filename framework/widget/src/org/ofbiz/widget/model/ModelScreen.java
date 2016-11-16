@@ -252,6 +252,16 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     public List<ModelScreen> getScreenList() { // SCIPIO: new
         return UtilMisc.toList(this);
     }
+ 
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return sourceLocation;
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "screen";
+    }
 
 }
 

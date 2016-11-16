@@ -245,7 +245,11 @@ public class HtmlWidget extends ModelScreenWidget {
         public static Set<String> getSupportedTypes() {
             return supportedTypes;
         }
-        
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template";
+        }
     }
     
     /**
@@ -384,6 +388,11 @@ public class HtmlWidget extends ModelScreenWidget {
         public Map<String, ModelScreenWidget> getSectionMap() {
             return sectionMap;
         }
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template-decorator";
+        }
     }
 
     public static class HtmlTemplateDecoratorSection extends ModelScreenWidget {
@@ -409,10 +418,20 @@ public class HtmlWidget extends ModelScreenWidget {
         public List<ModelScreenWidget> getSubWidgets() {
             return subWidgets;
         }
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template-decorator-section";
+        }
     }
 
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
+    }
+
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "html";
     }
 }

@@ -76,7 +76,7 @@ public abstract class FlexibleSwitchedAccessor implements Serializable {
 
         @Override
         public String getLogDesc() {
-            return "conext field '" + fieldAcsr.getOriginalName() + "'";
+            return "context field '" + fieldAcsr.getOriginalName() + "'";
         }
     }
     

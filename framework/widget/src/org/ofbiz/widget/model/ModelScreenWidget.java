@@ -393,10 +393,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
             
-            // SCIPIO: warn about this case, in effect error, it won't work the way caller thinks
+            // SCIPIO: warn about this case, which should basically be considered an error
             if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
-                Debug.logError("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
-                        "contains a section condition, with actions but without widgets or fail-widgets element; actions-only " +
+                Debug.logWarning("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
+                        "contains a section condition, with actions, but without widgets or fail-widgets element; actions-only " +
                         "screens do not support the section condition element and it will be bypassed by directives such as " +
                         "include-screen-actions - use the actions master if directive instead (see widget-common.xsd)", module);
             }

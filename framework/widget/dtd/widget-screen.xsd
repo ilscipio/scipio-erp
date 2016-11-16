@@ -153,7 +153,8 @@ under the License.
                     (Special case: if has empty widgets element and empty actions, it will be considered a widgets screen placeholder, not actions-only)
                     New code should omit the widgets element. Note that the section condition is considered part of widgets, because
                     it is implemented outside the actions and complicates their reuse - in its place the actions now supports their own master if condition
-                    (see widget-common.xsd if element, added for 1.14.3). It is an error to use section condition with actions-only screen.
+                    (see widget-common.xsd if element, added for 1.14.3). It should generally be considered an error to use section condition with 
+                    actions-only screen.
                     
                     It is highly ENCOURAGED to OMIT the section element if you are defining an actions-only screen definition, 
                     so the intent is clear and discourages the erroneous addition of widgets elements to it;

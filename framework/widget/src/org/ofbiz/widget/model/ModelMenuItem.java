@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -72,6 +73,13 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
      */
 
     public static final String module = ModelMenuItem.class.getName();
+    
+    // SCIPIO: special/keyword menu and item names
+    public static final String PARENT_MENU_ITEM_NAME = "PARENT";
+    public static final String PARENT_NOSUB_MENU_ITEM_NAME = "PARENT-NOSUB";
+    public static final String NONE_MENU_ITEM_NAME = "NONE";
+    static final Set<String> specialMenuItemNames = UtilMisc.toHashSet(NONE_MENU_ITEM_NAME, PARENT_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
+    static final Set<String> parentMenuItemNames = UtilMisc.toHashSet(PARENT_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
     
     private final List<ModelAction> actions;
     private final String align;

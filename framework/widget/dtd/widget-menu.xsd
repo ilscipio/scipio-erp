@@ -166,6 +166,28 @@ under the License.
                         or the special reserved value 'TOP', this designates/implies the top level of the menu and will highlight (within) the top menu level.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="menu-item-name-as-parent">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: When the selected menu item matches this name,
+                        it will consider the the parent menu-item of this menu as the selected
+                        item, with the menu itself still considered selected and thus expanded. 
+                        This is the same as passing the special value PARENT in the field
+                        denoted by selected-menuitem-context-field-name (e.g., activeSubMenuItem).
+                        NOTE: This is only valid to use on the menu definitions of sub-menus.
+                        2016-11-15: Added for 1.14.3.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="menu-item-name-as-parent-nosub">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: When the selected menu item matches this name,
+                        it will consider the the parent menu-item of this menu as the selected
+                        item, with the menu itself NOT considered selected and thus not expanded. 
+                        This is the same as passing the special value PARENT-NOSUB in the field
+                        denoted by selected-menuitem-context-field-name (e.g., activeSubMenuItem).
+                        NOTE: This is only valid to use on the menu definitions of sub-menus.
+                        2016-11-15: Added for 1.14.3.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="menu-container-style">
                 <xs:annotation>
                     <xs:documentation>The style of the container that encloses the menu items.</xs:documentation>
@@ -975,6 +997,18 @@ under the License.
                 </xs:annotation>
             </xs:attribute>
             -->
+            <xs:attribute type="xs:string" name="menu-item-name-as-parent">
+                <xs:annotation>
+                    <xs:documentation>Overrides the setting with same name from the sub-menu's functional model (menu element).
+                        2016-11-15: Added for 1.14.3.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="menu-item-name-as-parent-nosub">
+                <xs:annotation>
+                    <xs:documentation>Overrides the setting with same name from the sub-menu's functional model (menu element).
+                        2016-11-15: Added for 1.14.3.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

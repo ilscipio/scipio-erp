@@ -71,6 +71,10 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
     private final FlexibleStringExpander selected; // 2016-11-11: selected override
     private final FlexibleStringExpander disabled; // 2016-11-11: disabled override
 
+    private final String menuItemNameAsParent; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
+    private final String menuItemNameAsParentNoSub; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
+    private final Map<String, String> specialMenuItemNameMap;
+    
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
         buildArgs.genBuildArgs.totalSubMenuCount++;
@@ -206,6 +210,18 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.expanded = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("expanded"));
         this.selected = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("selected"));
         this.disabled = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("disabled"));
+        
+        String menuItemNameAsParent = subMenuElement.getAttribute("menu-item-name-as-parent");
+        if (menuItemNameAsParent.isEmpty() && hasImmediateFuncModelMenu()) {
+            menuItemNameAsParent = getImmediateFuncModelMenu().getMenuItemNameAsParent();
+        }
+        this.menuItemNameAsParent = menuItemNameAsParent;
+        String menuItemNameAsParentNoSub = subMenuElement.getAttribute("menu-item-name-as-parent-nosub");
+        if (menuItemNameAsParentNoSub.isEmpty() && hasImmediateFuncModelMenu()) {
+            menuItemNameAsParentNoSub = getImmediateFuncModelMenu().getMenuItemNameAsParentNoSub();
+        }
+        this.menuItemNameAsParentNoSub = menuItemNameAsParentNoSub;
+        this.specialMenuItemNameMap = makeSpecialMenuItemNameMap(menuItemNameAsParent, menuItemNameAsParentNoSub);
     }
 
     // SCIPIO: copy constructor
@@ -251,6 +267,21 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.expanded = existingSubMenu.expanded;
         this.selected = existingSubMenu.selected;
         this.disabled = existingSubMenu.disabled;
+        
+        this.menuItemNameAsParent = existingSubMenu.menuItemNameAsParent;
+        this.menuItemNameAsParentNoSub = existingSubMenu.menuItemNameAsParentNoSub;
+        this.specialMenuItemNameMap = existingSubMenu.specialMenuItemNameMap;
+    }
+    
+    public static Map<String, String> makeSpecialMenuItemNameMap(String menuItemNameAsParent, String menuItemNameAsParentNoSub) {
+        Map<String, String> map = new HashMap<>();
+        if (UtilValidate.isNotEmpty(menuItemNameAsParent)) {
+            map.put(menuItemNameAsParent, "PARENT");
+        }
+        if (UtilValidate.isNotEmpty(menuItemNameAsParentNoSub)) {
+            map.put(menuItemNameAsParentNoSub, "PARENT-NOSUB");
+        }
+        return map;
     }
     
     String makeAnonName(BuildArgs buildArgs) {
@@ -403,6 +434,14 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         return result;
     }
     
+    public ModelMenu getImmediateStyleModelMenu() {
+        return isModelStyleScope() ? this.model : null;
+    }
+    
+    public boolean hasImmediateStyleModelMenu() {
+        return getImmediateStyleModelMenu() != null;
+    }
+    
     /**
      * SCIPIO: Returns THIS item's alt model menu for functional/logic fields.
      * <p>
@@ -420,6 +459,14 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
             this.funcModelMenu = result;
         }
         return result;
+    }
+    
+    public ModelMenu getImmediateFuncModelMenu() {
+        return isModelFuncScope() ? this.model : null;
+    }
+    
+    public boolean hasImmediateFuncModelMenu() {
+        return getImmediateFuncModelMenu() != null;
     }
     
     public String getItemsSortMode() {
@@ -514,6 +561,23 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         } else {
             return isSameOrAncestorOf(subMenu.getParentMenuItem().getParentSubMenu());
         }
+    }
+    
+    public String getMenuItemNameAsParent() {
+        return menuItemNameAsParent;
+    }
+
+    public String getMenuItemNameAsParentNoSub() {
+        return menuItemNameAsParentNoSub;
+    }
+    
+    /**
+     * If name matches menuItemNameAsParent or menuItemNameAsParentNoSub, returns
+     * PARENT or PARENT-NOSUB, otherwise returns passed.
+     */
+    public String getTranslatedMenuItemName(String menuItemName) {
+        String res = this.specialMenuItemNameMap.get(menuItemMap);
+        return res != null ? res : menuItemName;
     }
     
     void addAllSubMenus(Map<String, ModelSubMenu> subMenuMap) {

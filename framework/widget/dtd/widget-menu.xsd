@@ -76,12 +76,13 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-menu-items" type="menu-items-include" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
-            <xs:attribute type="xs:string" name="name" use="required" />
-            <xs:attribute name="type" default="simple">
+            <xs:attribute type="xs:string" name="name" use="required">
                 <xs:annotation>
                     <xs:documentation>Menu name.
                         SCIPIO: NOTE: Must contain simple characters only: [a-zA-Z0-9].</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="type" default="simple">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="simple" />
@@ -164,28 +165,6 @@ under the License.
                         identifies the menu item to select, because the (sub-)menu name is expected to be unique across the whole menu.
                         SPECIAL VALUES: If this is attribute is omitted, or its field in context evaluates to null/empty, the name of the top menu
                         or the special reserved value 'TOP', this designates/implies the top level of the menu and will highlight (within) the top menu level.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="menu-item-name-as-parent">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: When the selected menu item matches this name,
-                        it will consider the the parent menu-item of this menu as the selected
-                        item, with the menu itself still considered selected and thus expanded. 
-                        This is the same as passing the special value PARENT in the field
-                        denoted by selected-menuitem-context-field-name (e.g., activeSubMenuItem).
-                        NOTE: This is only valid to use on the menu definitions of sub-menus.
-                        2016-11-15: Added for 1.14.3.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="menu-item-name-as-parent-nosub">
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: When the selected menu item matches this name,
-                        it will consider the the parent menu-item of this menu as the selected
-                        item, with the menu itself NOT considered selected and thus not expanded. 
-                        This is the same as passing the special value PARENT-NOSUB in the field
-                        denoted by selected-menuitem-context-field-name (e.g., activeSubMenuItem).
-                        NOTE: This is only valid to use on the menu definitions of sub-menus.
-                        2016-11-15: Added for 1.14.3.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="menu-container-style">
@@ -997,18 +976,6 @@ under the License.
                 </xs:annotation>
             </xs:attribute>
             -->
-            <xs:attribute type="xs:string" name="menu-item-name-as-parent">
-                <xs:annotation>
-                    <xs:documentation>Overrides the setting with same name from the sub-menu's functional model (menu element).
-                        2016-11-15: Added for 1.14.3.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="menu-item-name-as-parent-nosub">
-                <xs:annotation>
-                    <xs:documentation>Overrides the setting with same name from the sub-menu's functional model (menu element).
-                        2016-11-15: Added for 1.14.3.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

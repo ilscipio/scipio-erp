@@ -1159,7 +1159,7 @@ public class UtilXml {
      * SCIPIO: Returns the element wrapped in a helper that even implements the Element
      * interface for convenience.
      */
-    public static ElementHelper getHelper(Element element) {
+    public static ElementHelper getElementHelper(Element element) {
         return new ElementHelper(element);
     }
     

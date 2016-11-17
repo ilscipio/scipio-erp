@@ -180,6 +180,12 @@ under the License.
     
     <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindOrder" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderNewNote" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReceivePayment" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderConfirmation" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderCompletion" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="ListOrderTerms" for="PARENT-WITHSUB"/>
     </menu>
     
     <!-- SCIPIO: replaced by orderactions
@@ -680,6 +686,9 @@ under the License.
     
     <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindReturn" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderQuickReturn" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReturnList" for="PARENT-WITHSUB"/>
     </menu>
     
     <menu name="editrequestitemmenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

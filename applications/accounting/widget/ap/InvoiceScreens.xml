@@ -63,7 +63,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindApInvoices"/>
-                <set field="activeSubMenuItem" value="PARENT"/><!-- viewInvoices -->
+                <set field="activeSubMenuItem" value="viewInvoices"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>

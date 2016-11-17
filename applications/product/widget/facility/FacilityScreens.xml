@@ -91,7 +91,7 @@ under the License.
                 <set field="titleProperty" value="${groovy: context.facility ? 'ProductEditFacility' : 'ProductNewFacility'}" />
                 <set field="titleFormat" value="\${finalTitle} ${parameters.facilityId}" />
                 
-                <set field="activeSubMenuItem" value="${groovy: context.facility ? 'EditFacility' : 'PARENT-NOSUB'}" />
+                <set field="activeSubMenuItem" value="${groovy: context.facility ? 'EditFacility' : 'NewFacility'}" />
                 
                 <!-- to workaround decorator -->
                 <set field="displayWithNoFacility" value="${groovy: context.facility ? '' : 'Y'}" />
@@ -1060,8 +1060,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePickListOptions"/>
-                <!--<set field="activeSubMenuItem" value="PicklistOptions"/>-->
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="PicklistOptions"/>
 
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="groupByShippingMethod" from-field="parameters.groupByShippingMethod"/>

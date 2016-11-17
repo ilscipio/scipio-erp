@@ -26,8 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindParty"/>
-                <!--<set field="activeSubMenuItem" value="findparty"/>-->
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="findparty"/>
                 <service service-name="findParty" auto-field-map="parameters"/>
                 
                 <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
@@ -501,7 +500,7 @@ under the License.
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndPerson" value-field="personInfo"/>
-                <set field="activeSubMenuItem" value="${groovy: context.personInfo ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.personInfo ? 'viewprofile' : 'newperson'}"/>
                 <set field="titleProperty" value="${groovy: context.personInfo ? 'PageTitleEditPersonalInformation' : 'PartyCreateNewPerson'}"/>
             </actions>
             <widgets>
@@ -524,7 +523,7 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
                 
-                <set field="activeSubMenuItem" value="${groovy: context.partyGroup ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.partyGroup ? 'viewprofile' : 'newpartygroup'}"/>
                 <set field="titleProperty" value="${groovy: context.partyGroup ? 'PageTitleEditGroupInformation' : 'PartyCreateNewPartyGroup'}"/>
             </actions>
             <widgets>
@@ -726,7 +725,7 @@ under the License.
                 <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newcustomer"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -772,7 +771,7 @@ under the License.
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newprospect"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -814,7 +813,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newemployee"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>

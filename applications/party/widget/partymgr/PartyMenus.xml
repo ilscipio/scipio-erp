@@ -234,6 +234,12 @@
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewprofile">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
+        <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newprospect" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newemployee" for="PARENT-NOSUB"/>
     </menu>
     
     <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -387,6 +393,7 @@
     </menu>
     <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
+        <menu-item-alias name="NewPartyInvitation" for="PARENT-NOSUB"/>
     </menu>
     
     <!-- SCIPIO: new (combined links) -->

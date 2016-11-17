@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindApPayments"/>
+                <set field="activeSubMenuItem" value="findApPayments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -51,7 +52,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingNewPaymentOutgoing"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="newApPayment"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonApPaymentDecorator" location="${parameters.mainDecoratorLocation}">

@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="FindEmplPositions"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">

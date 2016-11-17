@@ -74,6 +74,7 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-actions" type="menu-actions-include" />
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-menu-items" type="menu-items-include" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item-alias" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required">
@@ -151,6 +152,14 @@ under the License.
                         With a single field name or expression, the behavior is unchanged from the STOCK implementation.
                         With multiple semicolon-separated names, in the order given, if the first field's value in context is empty OR does not
                         match any menu item name in this menu, it will check the next, and so on.
+                        SPECIAL VALUES: The field referenced may contain special values other than strict menu item names:
+                        * "NONE" - causes no item in the sub-menu to be selected. currently this is handled similar to PARENT.
+                        * "PARENT-WITHSUB" OR "PARENT" - this sub-menu's parent menu item will be considered selected, 
+                          though this sub-menu will still be considered selected and expanded.
+                        * "PARENT-NOSUB" - this sub-menu's parent menu item will be considered selected, but this sub-menu will 
+                          not be considered selected and will not be expanded.
+                        * "DEFAULT" - same as empty value; will use the item named by default-menu-name-item attribute, or
+                          highlight the parent item if not set or invalid.
                         NOTE: default-menu-item-name is explicitly excluded from the "does this field exist in menu?" logic - 
                             default-menu-item-name is only used when all of the listed fields were empty (legacy stock behavior).
                         NOTE: Advanced usage: If the target field's value contains a colon ':', it acts as a separator between (sub-)menu name and menu item name,
@@ -408,6 +417,18 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="include-menu-item-aliases" default="true">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Whether to include menu-item aliases as well.
+                    Default: true</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="menu-actions-include"><!-- SCIPIO: Element name: "include-actions" -->
         <xs:annotation>
@@ -521,6 +542,18 @@ under the License.
                     <xs:enumeration value="func" />
                     <xs:enumeration value="full" />
                     <xs:enumeration value="none" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="include-menu-item-aliases" default="true">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Whether to include menu-item aliases as well.
+                    Default: true</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
@@ -828,6 +861,7 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-actions" type="menu-actions-include" />
                 <xs:element minOccurs="0" ref="actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-menu-items" type="menu-items-include" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item-alias" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu-item" />
             </xs:sequence>
             <xs:attribute type="xs:string" name="name">
@@ -978,5 +1012,43 @@ under the License.
             -->
         </xs:complexType>
     </xs:element>
-
+    <xs:element name="menu-item-alias">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: New element. Creates a name alias from one name for another.
+                NOTE: with default type these do not appear as separate menu-items but cause lookups on one name to map
+                    to another. 
+                Currently (2016-11-16) these are only used for mapping </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required">
+                <xs:annotation>
+                    <xs:documentation>Name for the alias.
+                        NOTE: Must contain simple characters only: [a-zA-Z0-9].</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="type" default="simple-hidden">
+                <xs:annotation>
+                    <xs:documentation>Currently only support simple hidden alias, mainly used
+                        for mapping selected "abstract/item-less" names to PARENT/PARENT-WITHSUB/PARENT-NOSUB.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="simple-hidden" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="for" use="required">
+                <xs:annotation>
+                    <xs:documentation>The target name to alias to. 
+                        Special values: 
+                        * PARENT-WITHSUB or PARENT - the parent of this menu. this is useful during item selection to select the parent menu item
+                          of this sub-menu, without hiding this sub-menu.
+                        * PARENT-NOSUB - the parent of this menu, 'disowned' from this sub-menu, such that during item
+                          selection only the parent would be selected but not the sub-menu which would not be expanded (normally).
+                        See menu-item selected-menuitem-context-field-name attribute and 
+                        component://common/widget/CommonScreens.xml#ComplexMenu widget for details.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

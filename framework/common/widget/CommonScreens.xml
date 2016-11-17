@@ -1323,7 +1323,9 @@ under the License.
           * "PARENT-NOSUB" - similar to "PARENT" except the sub-menu will not be considered selected and will (usually) be hidden.
             In other words, internally, the selected sub menu (activeSubMenu) is switched to the parent menu.
             Here, the parent item becomes the deepest selected target.
+          * "DEFAULT" - same as empty, shows default-menu-item-name if one is defined
           * "NONE" - same as empty, except explicit NONE bypasses the default-menu-item-name on menu (rarely used)
+            the behavior in this case is to select the sub-menu (if any) and its parent item, effectively like "PARENT".
           NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not

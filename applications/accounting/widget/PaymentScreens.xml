@@ -28,8 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <!--<set field="activeSubMenuItem" value="findPayment"/>-->
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="findPayment"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -69,7 +68,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingNewPayment"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newPayment"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>

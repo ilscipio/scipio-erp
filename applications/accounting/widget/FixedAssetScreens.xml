@@ -283,7 +283,8 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                <!-- SCIPIO: changed this from CommonFixedAssetDecorator to CommonFixedAssetMaintDecorator so menu opens... -->
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
@@ -310,7 +311,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
                 
-                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint':'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint':'NewFixedAssetMaint'}"/>
             </actions>
             <widgets>
                 <section>

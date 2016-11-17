@@ -335,7 +335,13 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAssetMaint" />              
                 <!-- sidebar additional condition -->
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.maintHistSeqId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                        <!-- SCIPIO: don't do this for now... prevents browsing some fixed asset maint screens... TODO: REVIEW
+                        <not><if-empty field="maintHistSeqId"/></not> -->
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">

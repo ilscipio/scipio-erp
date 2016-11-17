@@ -242,7 +242,8 @@ under the License.
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <and>
                         <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
-                        <not><if-empty field="maintHistSeqId"/></not>
+                        <!-- SCIPIO: don't do this for now... prevents browsing some fixed asset maint screens... TODO: REVIEW
+                        <not><if-empty field="maintHistSeqId"/></not> -->
                     </and>
                 </condition-to-field>
             </actions>

@@ -1326,6 +1326,18 @@ under the License.
           * "DEFAULT" - same as empty, shows default-menu-item-name if one is defined
           * "NONE" - same as empty, except explicit NONE bypasses the default-menu-item-name on menu (rarely used)
             the behavior in this case is to select the sub-menu (if any) and its parent item, effectively like "PARENT".
+          SPECIAL VALUE ALIASES: 
+          2016-11-16: The PARENT special values can now be handled more cleanly and centralized by setting them in 
+          menu-item-alias definitions (added for 1.14.3) in menu definitions.
+          For example if a new-record screen identifies itself with "NewRecord" set in activeSubMenuItem, the corresponding
+          sub-menu's definition can be augmented with an alias to make it behave like PARENT(-NOSUB):
+            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/ContentMenus.xml">
+                [...]
+                <menu-item-alias name="NewRecord" for="PARENT-NOSUB"/>
+                [...]
+            </menu>
+          The effect will be the same as if PARENT-NOSUB had been set in activeSubMenuItem by the screen, but 
+          the definition is centralized with all the other items and better abstracted.
           NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not

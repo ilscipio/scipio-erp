@@ -97,4 +97,9 @@ public class ModelGrid extends ModelForm {
         }
         return parentModel;
     }
+
+    @Override
+    public String getWidgetType() {
+        return "grid";
+    }
 }

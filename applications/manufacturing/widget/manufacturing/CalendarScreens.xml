@@ -23,12 +23,8 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="calendar"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Calendar"/>
-                <script lang="groovy"><![CDATA[
-                    context.activeSubMenuItem = (context.activeSubMenu == 'Calendar' && 
-                        context.activeSubMenuItem == 'Calendar') ? 'PARENT' : context.activeSubMenuItem;
-                ]]></script>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml#Calendar"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Calendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">

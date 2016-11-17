@@ -24,8 +24,7 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="viewSize" value="10" />
                 <set field="createdPeriod" value="month"/>
             </actions>
@@ -73,11 +72,13 @@
     <screen name="FindFixedAssetMaints">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="fixedAssetMaints"/>
+                <!-- SCIPIO: special case: use the FixedAssetMaint decorator, but force the menu because the way this is spread across the menu -->
+                <set field="activeSubMenu" value="TOP"/>
+                <set field="activeSubMenuItem" value="fixedAssetMaints"/>
                 <set field="titleProperty" value="PageTitleFindFixedAssetMaints"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -118,7 +119,6 @@
     <screen name="EditFixedAssetMaint">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/EditMaint.groovy"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
@@ -135,13 +135,30 @@
                 </entity-and>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
                 <set field="title" value="${uiLabelMap.AccountingFixedAssetMaint}: ${fixedAsset.fixedAssetName}"/>
-                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint' : 'PARENT-NOSUB'}"/>
+                
+                <!-- SCIPIO: refactored all these actions, out of the widgets part, this a lot cleaner 
+                    NOTE: maintenances is arranged strangely such that it's split over two top menu entries.
+                        All the ones with a fixedAssetMaint non-empty go under "Fixed Assets" while the Find & New
+                        go under "Maintenances", which is just a shortcut of sorts. -->
+                <if>
+                    <condition>
+                        <!--<not><if-empty field="fixedAssetMaint"/></not>-->
+                        <not><if-empty field="fixedAsset"/></not>
+                    </condition>
+                    <then>
+                        <set field="activeSubMenuItem" value="EditFixedAssetMaint"/>
+                        <set field="activeSubMenu" value=""/><!-- from decorator -->
+                        <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
+                    </then>
+                    <else>
+                        <!-- SCIPIO: special case: use the FixedAssetMaint decorator, but force the menu because the way this is spread across the menu -->
+                        <set field="activeSubMenu" value="TOP"/>
+                        <set field="activeSubMenuItem" value="fixedAssetMaints"/>
+                        <set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/>
+                    </else>
+                </if>
             </actions>
             <widgets>
-                <section>
-                    <condition><if-empty field="maintHistSeqId"/></condition>
-                    <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
-                </section>
                 <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>

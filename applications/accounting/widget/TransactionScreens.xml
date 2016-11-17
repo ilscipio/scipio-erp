@@ -26,13 +26,9 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Transactions" />
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="transaction"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
                         <decorator-section-include name="body"/>

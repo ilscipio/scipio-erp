@@ -115,14 +115,24 @@ if (cplxAddSuffix) {
 }
 
 if (cplxMenuModel != null && ((activeSubMenuName) || (activeSubMenuItem))) { // NOTE: don't attempt if both fields null
-    subItem = cplxMenuModel.getModelMenuItemBySubName(activeSubMenuItem, activeSubMenuName);
-    if (subItem != null) {
-        topItem = subItem.getTopParentMenuItem();
+    // Perform the main lookup. This is effectively a preview of the resolution that happens when 
+    // menu is actually rendered. 
+    // for this reason we pass logWarnings=false here because they will (almost surely) be printed in double
+    // when the actual menu render happens. only need the one below.
+    // NOTE: this lookup takes into account errors, such that our activeMainMenuItem will be based
+    // on the _result_ of failed lookups. that is generally what is wanted although it won't make a difference
+    // in properly written screens.
+    menuAndItem = cplxMenuModel.getSelectedMenuAndItem(activeSubMenuItem, activeSubMenuName, false);
+    if (menuAndItem.getMenuItem() != null) {
+        topItem = menuAndItem.getMenuItem().getTopAncestorMenuItem();
+        activeMainMenuItem_auto = topItem.getName();
+    } else if (menuAndItem.getSubMenu() != null) {
+        topItem = menuAndItem.getSubMenu().getTopAncestorMenuItem();
         activeMainMenuItem_auto = topItem.getName();
     } else {
-        Debug.logWarning("Could not find sub menu item activeSubMenu(Name)/activeSubMenuItem [" +
-            activeSubMenuName + "/" + activeSubMenuItem + "] in menu [" + cplxLoc + "#" +
-            cplxName + "]; unable to determine activeMainMenuItem", module);
+        Debug.logWarning("Unable to determine activeMainMenuItem: could not find sufficient sub menu item [" + activeSubMenuName + "/" + activeSubMenuItem + 
+            "] from activeSubMenu(Name)/activeSubMenuItem in menu [" + cplxMenuModel.getFullLocationAndName() 
+            + "]", module);
     }
 }
 

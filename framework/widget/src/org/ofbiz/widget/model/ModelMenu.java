@@ -20,10 +20,8 @@ package org.ofbiz.widget.model;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -45,12 +41,11 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenuItem.MenuLink;
-import org.ofbiz.widget.model.ModelMenuNode.ModelMenuItemGroupNode;
+import org.ofbiz.widget.model.ModelMenuItem.ModelMenuItemAlias;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.SAXException;
 
 /**
  * Models the &lt;menu&gt; element.
@@ -58,7 +53,7 @@ import org.xml.sax.SAXException;
  * @see <code>widget-menu.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
+public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with sub-menu
 
     /*
      * ----------------------------------------------------------------------- *
@@ -150,9 +145,9 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
     private final List<ModelMenuNode> manualSelectedNodes; // SCIPIO: new: cache of potentially manual selected items
     private final List<ModelMenuNode> manualExpandedNodes; // SCIPIO: new: cache of potentially manual expanded items
 
-    private final String menuItemNameAsParent; // SCIPIO: new
-    private final String menuItemNameAsParentNoSub; // SCIPIO: new
-
+    private final Map<String, ModelMenuItemAlias> menuItemAliasMap; // SCIPIO: new
+    private final Map<String, String> menuItemNameAliasMap;
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -202,8 +197,6 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         String forceExtendsSubMenuModelScope = "";
         String forceAllSubMenuModelScope = "";
         boolean alwaysExpandSelectedOrAncestor = false;
-        String menuItemNameAsParent = "";
-        String menuItemNameAsParentNoSub = "";
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -252,8 +245,6 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
                 selectedMenuContextFieldName = parent.selectedMenuContextFieldName;
                 menuContainerStyleExdr = parent.menuContainerStyleExdr;
                 alwaysExpandSelectedOrAncestor = parent.alwaysExpandSelectedOrAncestor;
-                menuItemNameAsParent = parent.menuItemNameAsParent;
-                menuItemNameAsParentNoSub = parent.menuItemNameAsParentNoSub;
             }
         }
         if (!menuElement.getAttribute("type").isEmpty())
@@ -336,10 +327,6 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         
         if (!menuElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
             alwaysExpandSelectedOrAncestor = "true".equals(menuElement.getAttribute("always-expand-selected-or-ancestor"));
-        if (!menuElement.getAttribute("menu-item-name-as-parent").isEmpty()) 
-            menuItemNameAsParent = menuElement.getAttribute("menu-item-name-as-parent");
-        if (!menuElement.getAttribute("menu-item-name-as-parent-nosub").isEmpty()) 
-            menuItemNameAsParentNoSub = menuElement.getAttribute("menu-item-name-as-parent-nosub");
         
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
@@ -381,15 +368,17 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         this.type = type;
         this.itemsSortMode = itemsSortMode;
         this.alwaysExpandSelectedOrAncestor = alwaysExpandSelectedOrAncestor;
-        this.menuItemNameAsParent = menuItemNameAsParent;
-        this.menuItemNameAsParentNoSub = menuItemNameAsParentNoSub;
         
         CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
+        Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
 
         // SCIPIO: this is delayed so the cloning can read some fields from this model instance
         if (parent != null) {
             if (parent.actions != null) {
                 actions.addAll(parent.actions);
+            }
+            if (parent.menuItemAliasMap != null) {
+                menuItemAliasMap.putAll(parent.menuItemAliasMap);
             }
             
             // SCIPIO: we must CLONE the parent's items with updated backreferences
@@ -415,7 +404,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         this.actions = Collections.unmodifiableList(actions);
         
         // SCIPIO: include-menu-items and menu-item
-        processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, 
+        processIncludeMenuItems(menuElement, null, null, menuItemList, menuItemMap, menuItemAliasMap, true,
                 menuLocation, true, null, null, this.forceAllSubMenuModelScope, null,
                 currentMenuDefBuildArgs, genBuildArgs);
         
@@ -429,6 +418,9 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         Map<String, ModelSubMenu> subMenuMap = new HashMap<>();
         addAllSubMenus(subMenuMap, menuItemList);
         this.subMenuMap = Collections.unmodifiableMap(subMenuMap);
+        
+        this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
+        this.menuItemNameAliasMap = makeMenuItemNameAliasMap(menuItemAliasMap);
         
         // SCIPIO: cache refs to all the manually-flagged items so don't have to at runtime
         ArrayList<ModelMenuNode> manualSelectedItems = new ArrayList<>();
@@ -605,7 +597,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
      * FIXME: this method interface and its arguments are a mess.
      */
     void processIncludeMenuItems(Element parentElement, List<? extends Element> preInclElements, List<? extends Element> postInclElements, List<ModelMenuItem> menuItemList,
-            Map<String, ModelMenuItem> menuItemMap, String currResource, 
+            Map<String, ModelMenuItem> menuItemMap, Map<String, ModelMenuItemAlias> menuItemAliasMap, boolean includeMenuItemAliases, String currResource, 
             boolean processIncludes, Set<String> excludeItems, String subMenusFilter, String forceSubMenuModelScope, 
             ModelSubMenu parentSubMenu, CurrentMenuDefBuildArgs currentMenuDefBuildArgs, GeneralBuildArgs genBuildArgs) {
         // WARN: even local cache not fully used (cacheConsume=true so only uses cached from prev actions includes) 
@@ -645,6 +637,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
                 } else {
                     nextSubMenusFilter = inclSubMenus;
                 }
+                boolean nextIncludeMenuItemAliases = UtilMisc.booleanValue(itemInclElement.getAttribute("include-menu-item-aliases"), true);
                 
                 // NOTE: this method implements the force-xxx-sub-menu-model-scope
                 // propagation logic in general
@@ -703,7 +696,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
                                 }
                                 
                                 if (extendedMenuElem != null) {
-                                    processIncludeMenuItems(extendedMenuElem, null, null, menuItemList, menuItemMap, 
+                                    processIncludeMenuItems(extendedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                             extendedNextResource, true, inclExcludeItems, nextSubMenusFilter, extendedForceSubMenuModelScope, parentSubMenu,
                                             extendedNextCurrentMenuDefBuildArgs, genBuildArgs);
                                 }
@@ -716,12 +709,12 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
 
                         
                         if ("includes-only".equals(inclRecursive) || "full".equals(inclRecursive)) {
-                            processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, 
+                            processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                     nextResource, true, inclExcludeItems, nextSubMenusFilter, includedForceSubMenuModelScope, parentSubMenu,
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
                         else {
-                            processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, 
+                            processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                     nextResource, false, inclExcludeItems, nextSubMenusFilter, includedForceSubMenuModelScope, parentSubMenu,
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
@@ -736,8 +729,6 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
             } 
         }
         
-        List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
-        
         // SCIPIO: NOTE: the first (non-recursive) call to this method actually sets omitSubMenus=false for itemBuildArgs.
         // that's why we can set overrideItemBuildArgs = itemBuildArgs.
         // addUpdateMenuItem is called with omitSubMenus=false, but there will be no submenus on existingMenuItem anyway
@@ -747,6 +738,16 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         itemBuildArgs.omitSubMenus = ("none".equals(subMenusFilter));
         ModelMenuItem.BuildArgs overrideItemBuildArgs = itemBuildArgs;
         
+        if (includeMenuItemAliases) {
+            List<? extends Element> aliasElements = UtilXml.childElementList(parentElement, "menu-item-alias");
+            for(Element aliasElement : aliasElements) {
+                // TODO: review: can't remember if this should be itemBuildArgs or something else... makes no difference yet
+                ModelMenuItemAlias aliasModel = new ModelMenuItemAlias(aliasElement, this, parentSubMenu, itemBuildArgs); 
+                menuItemAliasMap.put(aliasModel.getName(), aliasModel);
+            }
+        }
+        
+        List<? extends Element> itemElements = UtilXml.childElementList(parentElement, "menu-item");
         for (Element itemElement : itemElements) {
             String itemName = itemElement.getAttribute("name");
             if (!excludeItems.contains(itemName)) {
@@ -1047,6 +1048,18 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
 
     public String getDefaultMenuItemName() {
         return this.defaultMenuItemName;
+    }
+    
+    /**
+     * SCIPIO: Returns default item name from submenu or from this menu if submenu is null,
+     * or null if not set anywhere.
+     */
+    public String getDefaultMenuItemName(ModelSubMenu subMenu) {
+        if (UtilValidate.isNotEmpty(subMenu.getDefaultMenuItemName())) {
+            return subMenu.getDefaultMenuItemName();
+        } else {
+            return this.getDefaultMenuItemName();
+        }
     }
 
     public String getDefaultPermissionEntityAction() {
@@ -1382,12 +1395,32 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         return this.menuWidth;
     }
 
+    /**
+     * Gets menu item by name.
+     * @deprecated SCIPIO: use {@link #getMenuItemByName}
+     */
+    @Deprecated
     public ModelMenuItem getModelMenuItemByName(String name) {
+        return getMenuItemByName(name);
+    }
+    
+    /**
+     * Gets menu item by name.
+     * <p>
+     * SCIPIO: NOTE: does NOT translate menu items. you might have to call
+     * {@link #getMappedMenuItemName} or {@link #getMenuItemByNameMapped}.
+     */
+    public ModelMenuItem getMenuItemByName(String name) {
         return this.menuItemMap.get(name);
+    }
+    
+    public ModelMenuItem getMenuItemByNameMapped(String name) {
+        return this.menuItemMap.get(getMappedMenuItemName(name));
     }
     
     /**
      * SCIPIO: Gets a menu item by name, with extended lookup support.
+     * @deprecated INCOMPLETE, do not use until reviewed in future, misses mapping logic
      * <p>
      * SCIPIO: 2016-08-30: this method is enhanced so that it can lookup menu items
      * in sub-menus, using a dot syntax:
@@ -1396,24 +1429,27 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
      * intermediate sub-menu name prefixed with ":":
      * topMenuItemName.subMenu1:subMenuItemName.subSubMenu2:subSubMenuItemName
      */
-    public ModelMenuItem getModelMenuItemByTrail(String nameExpr) {
-        return getModelMenuItemByTrail(splitMenuItemTrailExpr(nameExpr));
+    @Deprecated
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String nameExpr) {
+        return resolveMenuAndItemByTrail(splitMenuItemTrailExpr(nameExpr));
     }
     
     public static String[] splitMenuItemTrailExpr(String nameExpr) {
         return nameExpr.split("\\.");
     }
     
-    public ModelMenuItem getModelMenuItemByTrail(String[] nameList) {
-        return getModelMenuItemByTrail(nameList[0], nameList, 1);
+    @Deprecated
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String[] nameList) {
+        return resolveMenuAndItemByTrail(nameList[0], nameList, 1);
     }
     
-    public ModelMenuItem getModelMenuItemByTrail(String name, String[] nameList, int nextNameIndex) {
+    @Deprecated
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String name, String[] nameList, int nextNameIndex) {
         ModelMenuItem currLevelItem = this.menuItemMap.get(name);
         if (nextNameIndex >= nameList.length) {
-            return currLevelItem;
+            return new MenuAndItemLookup(currLevelItem);
         } else if (currLevelItem != null) {
-            return currLevelItem.getModelMenuItemByTrail(nameList[nextNameIndex], nameList, nextNameIndex + 1);
+            return currLevelItem.resolveMenuAndItemByTrail(nameList[nextNameIndex], nameList, nextNameIndex + 1);
         } else {
             return null;
         }
@@ -1423,12 +1459,12 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
      * SCIPIO: Finds nested menu item using format:
      * subMenuName:menuItemName.
      */
-    public ModelMenuItem getModelMenuItemBySubName(String nameExpr) {
+    public MenuAndItemLookup resolveMenuAndItem(String nameExpr) {
         String[] parts = nameExpr.split(":");
         if (parts.length >= 2) {
-            return getModelMenuItemBySubName(parts[1], parts[0]);
+            return resolveMenuAndItem(parts[1], parts[0]);
         } else {
-            return getModelMenuItemBySubName(parts[0], null);
+            return resolveMenuAndItem(parts[0], (String) null);
         }
     }
     
@@ -1437,49 +1473,102 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
     }
     
     public boolean isMenuNameSubMenu(String menuName) {
-        return getModelSubMenuByName(menuName) != null;
+        return getSubMenuByName(menuName) != null;
     }
     
     public boolean isMenuNameWithinMenu(String menuName) {
         return isMenuNameTopMenu(menuName) || isMenuNameSubMenu(menuName);
     }
     
-    public ModelMenuItem getModelMenuItemBySubName(String menuItemName, String subMenuName) {
+    /**
+     * Gets menu item for sub-menu (or its parent if PARENT applies), applying all the name translations as needed.
+     * <p>
+     * @see #resolveMenuItem(String, ModelSubMenu, boolean, boolean)
+     */
+    public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName, boolean mapNames) {
         if (isMenuNameTopMenu(subMenuName)) {
-            return getModelMenuItemByName(menuItemName);
+            return resolveMenuAndItem(menuItemName, subMenuName, (ModelSubMenu) null, mapNames);
         } else {
-            ModelSubMenu subMenu = getModelSubMenuByName(subMenuName);
-            if (subMenu != null) {
-                if (ModelMenuItem.parentMenuItemNames.contains(menuItemName)) {
-                    return subMenu.getParentMenuItem();
+            ModelSubMenu subMenu = getSubMenuByName(subMenuName);
+            return (subMenu != null) ? resolveMenuAndItem(menuItemName, subMenuName, subMenu, mapNames) : MenuAndItemLookup.EMPTY;
+        }
+    }
+    public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName) {
+        return resolveMenuAndItem(menuItemName, subMenuName, true);
+    }
+
+    public MenuAndItemLookup resolveMenuAndItem(String menuItemName, ModelSubMenu subMenu, boolean mapNames) {
+        return resolveMenuAndItem(menuItemName, subMenu != null ? subMenu.getName() : null, subMenu, mapNames);
+    }
+        
+    /**
+     * SCIPIO: Gets menu item for sub-menu (or its parent if PARENT applies).
+     * If subMenu is null, assumes the item is meant for lookup in the top menu (this method should only
+     * be called after the sub menu name was validated).
+     * <p>
+     * NOTE: This handles the special PARENT/PARENT-WITHSUB/PARENT-NOSUB values, and mapping for
+     * DEFAULT/NONE. Handles the explicit DEFAULT lookup and empty item name lookup.
+     * <p>
+     * DOES NOT HANDLE the non-error fallbacks for DEFAULT/NONE special values 
+     * NOR the error fallbacks for failed lookups. the MenuAndItemLookup.getLookupMenuItemName() should
+     * be checked for these cases.
+     * <p>
+     * NOTE: this overload assumes subMenu was already looked up and merely stores subMenuName in the lookup result.
+     */
+    public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName, ModelSubMenu subMenu, boolean mapNames) {
+        if (subMenu == null) { // top menu
+            String mappedMenuItemName = mapNames ? this.getMappedMenuItemName(menuItemName) : menuItemName;
+            if (UtilValidate.isEmpty(menuItemName) || ModelMenuItem.DEFAULT_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                mappedMenuItemName = this.getDefaultMenuItemName();
+            }
+            return new MenuAndItemLookup(null, getMenuItemByName(mappedMenuItemName), subMenuName, mappedMenuItemName);
+        } else {
+            String mappedMenuItemName = mapNames ? subMenu.getMappedMenuItemName(menuItemName) : menuItemName;
+            if (ModelMenuItem.parentMenuItemNames.contains(mappedMenuItemName)) {
+                if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                    // here we ditch our sub-menu
+                    return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
                 } else {
-                    return subMenu.getModelMenuItemByName(menuItemName);
+                    return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
                 }
             } else {
-                return null;
+                if (UtilValidate.isEmpty(menuItemName) || ModelMenuItem.DEFAULT_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                    mappedMenuItemName = subMenu.getDefaultMenuItemName();
+                }
+                return new MenuAndItemLookup(subMenu, subMenu.getMenuItemByName(mappedMenuItemName), subMenuName, mappedMenuItemName);
             }
         }
     }
     
-    public ModelMenuItem getModelMenuItemForSubMenu(String menuItemName, ModelSubMenu subMenu) {
-        if (subMenu == null) { // top
-            return getModelMenuItemByName(menuItemName);
-        } else {
-            if (ModelMenuItem.parentMenuItemNames.contains(menuItemName)) {
-                return subMenu.getParentMenuItem();
-            } else {
-                return subMenu.getModelMenuItemByName(menuItemName);
-            }
-        }
+    public MenuAndItemLookup resolveMenuAndItem(String menuItemName, ModelSubMenu subMenu) {
+        return resolveMenuAndItem(menuItemName, subMenu, true);
     }
 
     /**
+     * SCIPIO: If menuItemName is NONE or equivalent and subMenu is non-null, returns the parent item of the sub-menu,
+     * as default selection handling for null; else returns the passed defaultMenuItem.
+     * <p>
+     * NOTE: Performs no name translations on its own.
+     * <code></code>
+     */
+    public ModelMenuItem getMenuItemIfNone(String menuItemName, ModelSubMenu subMenu, ModelMenuItem defaultMenuItem) {
+        if (ModelMenuItem.isNoneMenuItemName(menuItemName) && subMenu != null) {
+            return subMenu.getParentMenuItem();
+        } else {
+            return defaultMenuItem;
+        }
+    }
+    
+    /**
      * SCIPIO: get the sub-menu by unique name.
      * <p>
-     * NOTE: this method is only valid for use post-construction of ModelMenu.
+     * DEV NOTE: this method is only valid for use post-construction of ModelMenu.
      */
-    public ModelSubMenu getModelSubMenuByName(String name) {
-        // NOTE: "TOP" returns null here
+    public ModelSubMenu getSubMenuByName(String name) {
+        // OPTIMIZATION: check not needed because "TOP", null and empty return null here
+        //if (isMenuNameTopMenu(name)) {
+        //    return null;
+        //}
         return this.subMenuMap.get(name);
     }
     
@@ -1582,13 +1671,7 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
     }
     
     /**
-     * SCIPIO: returns selected menu and item. The item will be either a child of
-     * the (sub-)menu, the parent item of the sub-menu, or null.
-     * <p>
-     * The (sub-)menu name supports special value "TOP". The item name supports
-     * special values "NONE" (same as null), "PARENT", and "PARENT-NOSUB".
-     * ALSO instead of these values the menu-item-name-as-parent(-nosub) attributes
-     * can be set on the sub-menu.
+     * SCIPIO: Returns selected menu and item.
      */
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context, boolean logWarnings) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
@@ -1608,89 +1691,127 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
             selMenuName = getSelectedMenuContextFieldName(context);
             selItemName = null;
         }
-        
-        boolean menuNameTopMenu = isMenuNameTopMenu(selMenuName); 
-        if (ModelMenuItem.NONE_MENU_ITEM_NAME.equals(selItemName)) {
-            selItemName = null; // NONE is same as unspecified
-        }
-        
-        ModelSubMenu subMenu = null;
-        ModelMenuItem menuItem = null;
-
-        // perform sub-menu lookup
-        subMenu = getModelSubMenuByName(selMenuName);
-        if (subMenu == null && !menuNameTopMenu && logWarnings) {
-            Debug.logWarning("Sub-menu name [" + selMenuName + "] was not found under top complex menu [" + this.getMenuLocation() + "#" + this.getName() + "]", module);
-        }
-        
-        if (UtilValidate.isNotEmpty(selItemName)) {
-            if (subMenu != null || menuNameTopMenu) {
-                // menu item name translation
-                selItemName = (subMenu != null) ? subMenu.getTranslatedMenuItemName(selItemName) : this.getTranslatedMenuItemName(selItemName);
-
-                // menu item lookup (NOTE: this auto handles PARENT(-NOSUB) for item
-                menuItem = getModelMenuItemForSubMenu(selItemName, subMenu);
-                
-                // final fixups and error checks
-                if (menuItem != null) {
-                    // SPECIAL CASE: PARENT-NOSUB: here switch the final sub-menu to the parent sub-menu of ours
-                    if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(selItemName)) {
-                        subMenu = menuItem.getParentSubMenu(); // NOTE: may return null (top)
-                    }
-                } else {
-                    if (logWarnings) {
-                        if (menuNameTopMenu) {
-                            Debug.logWarning("Menu-item name [" + selItemName + "] was not found under top level of complex menu [" + this.getMenuLocation() + "#" + this.getName() + "]", module);
-                        } else {
-                            Debug.logWarning("Menu-item name [" + selItemName + "] was not found within sub-menu [" + selMenuName + "] under complex menu [" + 
-                                    this.getMenuLocation() + "#" + this.getName() + "]", module);
-                        }
-                    }
-                }
-            }
-        } else {
-            // default menu item handling
-            // 2016-09-28: ONLY use default if no explicit specified - NOT if lookup of another failed (such is a coding error)
-            // The default menu item is probably not useful anymore for most of Scipio
-            if (subMenu != null) {
-                // ok, have a sub-menu
-                String defaultMenuItemName = subMenu.getDefaultMenuItemName();
-                if (UtilValidate.isNotEmpty(defaultMenuItemName)) {
-                    menuItem = subMenu.getModelMenuItemByName(defaultMenuItemName);
-                } else {
-                    // 2016-09-28: EXTRA FALLBACK: here we will return the parent item of the
-                    // sub-menu as target (same as "PARENT")
-                    menuItem = subMenu.getParentMenuItem();
-                }
-            } else if (menuNameTopMenu) {
-                if (UtilValidate.isNotEmpty(this.defaultMenuItemName)) {
-                    menuItem = getModelMenuItemByName(this.defaultMenuItemName);
-                }
-            }
-        }
-        return new MenuAndItem(subMenu, menuItem);
+        return getSelectedMenuAndItem(selItemName, selMenuName, logWarnings);
     }
     
     public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         return getSelectedMenuAndItem(context, true);
     }
     
-    public String getMenuItemNameAsParent() { // SCIPIO: new
-        return menuItemNameAsParent;
+    /**
+     * SCIPIO: Returns selected menu and item. The item will be either a child of
+     * the (sub-)menu, the parent item of the sub-menu, or null, but the calling code should guard
+     * against strange cases.
+     * <p>
+     * The (sub-)menu name supports special value "TOP". The item name supports
+     * special values "NONE" (same as null except prevent default-menu-item-name fallback), 
+     * "PARENT-WITHSUB"/"PARENT", and "PARENT-NOSUB".
+     * <p>
+     * Note the default menu item fallback (default-menu-item-name) is ONLY used if the queried selItemName
+     * is empty, but NOT if it's the value NONE nor if the lookup fails. NONE bypasses it, while
+     * failed lookups are handled by displaying the menu or sub-menu as selected but without any item selected,
+     * as visual debugging help.
+     */
+    public MenuAndItemLookup getSelectedMenuAndItem(String selItemName, String selMenuName, boolean logWarnings) {
+        boolean menuNameTopMenu = isMenuNameTopMenu(selMenuName);
+        // perform sub-menu lookup
+        ModelSubMenu subMenu = getSubMenuByName(selMenuName);
+        if (subMenu != null || menuNameTopMenu) {
+            // menu item lookup. performs all the mappings but NOT the fallbacks, which handle below.
+            MenuAndItemLookup lookup = resolveMenuAndItem(selItemName, selMenuName, subMenu, true);
+            if (lookup.hasMenuItem()) {
+                return lookup;
+            } else {
+                // NOTE: here, NONE is not a failure.
+                // TODO: REVIEW: we will not print warnings for now if the menu item name was simply empty
+                // and it's the top level of the menu; otherwise there will simply be too many warnings all the time
+                if (UtilValidate.isNotEmpty(selItemName) || subMenu != null) {
+                    if (!ModelMenuItem.NONE_MENU_ITEM_NAME.equals(lookup.getLookupMenuItemName()) && logWarnings) {
+                        if (menuNameTopMenu) {
+                            Debug.logWarning("Menu-item name [" + lookup.getLookupMenuItemName() + "] (mapped from [" + selItemName + 
+                                    "]) was not found under top level of complex menu [" + this.getFullLocationAndName() + "]", module);
+                        } else {
+                            Debug.logWarning("Menu-item name [" + lookup.getLookupMenuItemName() + "] (mapped from [" + selItemName + 
+                                    "]) was not found within sub-menu [" + selMenuName + "] under complex menu [" + this.getFullLocationAndName() + "]", module);
+                        }
+                    }
+                }
+                ModelMenuItem menuItem = null;
+                if (subMenu != null) {
+                    // 2016-09-28: EXTRA FALLBACK: here we will return the parent item of the sub-menu as target (same as "PARENT")
+                    // this is the correct behavior for NONE and helps debug visually the other error cases.
+                    menuItem = subMenu.getParentMenuItem();
+                }
+                return new MenuAndItemLookup(subMenu, menuItem);
+            }
+        } else {
+            if (logWarnings) {
+                Debug.logWarning("Sub-menu name [" + selMenuName + "] was not found under top complex menu [" + this.getFullLocationAndName() + "]", module);
+            }
+            return MenuAndItemLookup.EMPTY;
+        }
     }
-
-    public String getMenuItemNameAsParentNoSub() { // SCIPIO: new
-        return menuItemNameAsParentNoSub;
+    
+    public MenuAndItemLookup getSelectedMenuAndItem(String selItemName, String selMenuName) {
+        return getSelectedMenuAndItem(selItemName, selMenuName, true);
+    }
+    
+    public Map<String, ModelMenuItemAlias> getMenuItemAliasMap() { // SCIPIO: new
+        return menuItemAliasMap;
+    }
+    
+    public static List<String> readMenuItemNamesList(String namesStr) {
+        if (UtilValidate.isEmpty(namesStr)) {
+            return new ArrayList<>();
+        }
+        String[] namesArr = namesStr.split(",");
+        ArrayList<String> namesList = new ArrayList<>(namesArr.length);
+        for(String name : namesArr) {
+            namesList.add(name.trim());
+        }
+        return namesList;
+    }
+    
+    public static Set<String> readMenuItemNamesSet(String namesStr) {
+        return new HashSet<>(readMenuItemNamesList(namesStr));
     }
     
     /**
      * Translates menu item for top menu.
-     * Unlike ModelSubMenu this currently has nothing to translate.
+     * NOTE: for top menu there shouldn't be any PARENT or PARENT-NOSUB entries, so we simply
+     * return the original for those (which will result in a further warning in most, but that's better).
+     * For null/empty/NONE, returns NONE.
      */
-    public String getTranslatedMenuItemName(String menuItemName) {
-        return menuItemName;
+    public String getMappedMenuItemName(String menuItemName) {
+        // translate null to NONE as first thing so it can be recognized in mappings (in theory; might not be used/usable or redundant)
+        menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
+        String res = this.menuItemNameAliasMap.get(menuItemName);
+        if (res != null) {
+            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-X in top menu
+                return menuItemName;
+            } else {
+                return res;
+            }
+        } else {
+            return menuItemName;
+        }
+    }
+    
+    /**
+     * Translates for sub-menu or, if null, this instance.
+     */
+    public String getMappedMenuItemName(String menuItemName, ModelSubMenu subMenu) {
+        return subMenu != null ? subMenu.getMappedMenuItemName(menuItemName) : this.getMappedMenuItemName(menuItemName);
     }
 
+    protected static Map<String, String> makeMenuItemNameAliasMap(Map<String, ModelMenuItemAlias> aliasMap) {
+        Map<String, String> nameMap = new HashMap<>();
+        for(ModelMenuItemAlias aliasModel : aliasMap.values()) {
+            nameMap.put(aliasModel.getName(), aliasModel.getForName());
+        }
+        return nameMap;
+    }
+    
     public boolean isParentOf(ModelMenuItem menuItem) { // SCIPIO: new
         if (menuItem == null) {
             return false;
@@ -1903,17 +2024,35 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
     }
     
     /**
-     * SCIPIO: sub-menu and item pair. One or both may be null.
-     * Usually when sub-menu is null it means the item is top level.
+     * SCIPIO: Simple sub-menu and menu-item pair. One or both may be null.
+     * Usually when subMenu is null (while menuItem is non-null) it means the item is top level.
      */
     public static class MenuAndItem implements Serializable {
-        private final ModelSubMenu subMenu;
-        private final ModelMenuItem menuItem;
+        public static final MenuAndItemLookup EMPTY = new MenuAndItemLookup();
+        
+        protected final ModelSubMenu subMenu;
+        protected final ModelMenuItem menuItem;
         
         public MenuAndItem(ModelSubMenu subMenu, ModelMenuItem menuItem) {
-            super();
             this.subMenu = subMenu;
             this.menuItem = menuItem;
+        }
+        
+        /**
+         * Makes pair from the passed menuItem and its parent sub-menu (if any).
+         */
+        public MenuAndItem(ModelMenuItem menuItem) {
+            this.subMenu = (menuItem != null) ? menuItem.getParentSubMenu() : null;
+            this.menuItem = menuItem;
+        }
+        
+        public MenuAndItem() {
+            this.subMenu = null;
+            this.menuItem = null;
+        }
+        
+        public boolean isEmpty() {
+            return this.subMenu == null && this.menuItem == null;
         }
         
         public ModelSubMenu getSubMenu() {
@@ -1937,6 +2076,53 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         }
     }
 
+    /**
+     * (Sub)Menu and item lookup result, including the lookup names used to query them.
+     * The lookup names may differ from the effective names of the instances.
+     */
+    public static class MenuAndItemLookup extends MenuAndItem {
+        public static final MenuAndItemLookup EMPTY = new MenuAndItemLookup();
+        
+        protected final String lookupSubMenuName;
+        protected final String lookupMenuItemName;
+
+        public MenuAndItemLookup(ModelSubMenu subMenu, ModelMenuItem menuItem, String lookupSubMenuName, String lookupMenuItemName) {
+            super(subMenu, menuItem);
+            this.lookupSubMenuName = lookupSubMenuName;
+            this.lookupMenuItemName = lookupMenuItemName;
+        }
+        
+        public MenuAndItemLookup(ModelSubMenu subMenu, ModelMenuItem menuItem) {
+            super(subMenu, menuItem);
+            this.lookupSubMenuName = null;
+            this.lookupMenuItemName = null;
+        }
+
+        public MenuAndItemLookup(ModelMenuItem menuItem) {
+            super(menuItem);
+            this.lookupSubMenuName = null;
+            this.lookupMenuItemName = null;
+        }
+        
+        public MenuAndItemLookup() {
+            super();
+            this.lookupSubMenuName = null;
+            this.lookupMenuItemName = null;
+        }
+        
+        public MenuAndItem toMenuAndItem() {
+            return new MenuAndItem(this.subMenu, this.menuItem);
+        }
+
+        public String getLookupSubMenuName() {
+            return lookupSubMenuName;
+        }
+
+        public String getLookupMenuItemName() {
+            return lookupMenuItemName;
+        }
+    }
+    
     // SCIPIO: ModelMenuNode methods
     
     @Override
@@ -2051,6 +2237,16 @@ public class ModelMenu extends ModelWidget implements ModelMenuItemGroupNode {
         public Set<ModelMenuNode> getExpanded() {
             return expanded;
         }
+    }
+
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return menuLocation;
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "menu";
     }
     
 }

@@ -382,6 +382,11 @@ public class IterateSectionWidget extends ModelScreenWidget {
         return paginate;
     }
 
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "iterate-section";
+    }
+
 }
 
 

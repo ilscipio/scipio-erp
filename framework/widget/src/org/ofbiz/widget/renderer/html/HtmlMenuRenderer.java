@@ -401,7 +401,7 @@ public class HtmlMenuRenderer extends HtmlWidgetRenderer implements MenuStringRe
             HttpServletRequest request = (HttpServletRequest) context.get("request");
 
             String targetWindow = link.getTargetWindow(context);
-            String uniqueItemName = menuItem.getModelMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE);
+            String uniqueItemName = menuItem.getTopMenu().getName() + "_" + menuItem.getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE);
 
             String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
             if ("hidden-form".equals(linkType)) {

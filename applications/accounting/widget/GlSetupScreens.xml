@@ -28,7 +28,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
-                <!-- <set field="activeMainMenuItem" value="settings"/> -->
                 <set field="activeSubMenuItem" value="settings"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingAvailableInternalOrganizations}"/>
                 <entity-condition entity-name="PartyAcctgPreference" list="parties"/>

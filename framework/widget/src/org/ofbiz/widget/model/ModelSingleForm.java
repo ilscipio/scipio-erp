@@ -96,4 +96,9 @@ public class ModelSingleForm extends ModelForm {
         }
         return parent;
     }
+
+    @Override
+    public String getWidgetType() {
+        return "form";
+    }
 }

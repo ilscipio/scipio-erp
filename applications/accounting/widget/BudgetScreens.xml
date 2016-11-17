@@ -28,7 +28,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindBudgets"/>
-                <set field="activeMainMenuItem" value="ListBudgets"/>
                 <set field="activeSubMenuItem" value="ListBudgets"/>
             </actions>
             <widgets>

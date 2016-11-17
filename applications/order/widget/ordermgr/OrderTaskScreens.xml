@@ -69,7 +69,7 @@ Also add this back to appheader.ftl:
     <screen name="CommonOrderTaskDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="tasklist"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="tasklist"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">

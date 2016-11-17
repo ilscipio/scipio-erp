@@ -23,10 +23,8 @@ under the License.
     <screen name="CommonJobshopDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="jobshop"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="ProductionRun"/>
                 <set field="titleFormat" value="\${finalTitle} ${context.productionRunId}"/>
-                
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.productionRun}"/>
             </actions>
             <widgets>
@@ -57,7 +55,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingCreateProductionRun"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
+                <set field="activeSubMenuItem" value="jobshop"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -523,7 +521,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingFindProductionRun"/>
-                <set field="activeMainMenuItem" value="jobshop"/>
+                <set field="activeSubMenuItem" value="jobshop"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -554,7 +552,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingWorkWithShipmentPlans"/>
-                <set field="activeMainMenuItem" value="ShipmentPlans"/>
+                <set field="activeSubMenuItem" value="ShipmentPlans"/>
                 <set field="shipmentId" from-field="parameters.shipmentId"/>
                 <set field="sortField" from-field="parameters.sortField" default-value="estimatedShipDate"/>
                 <entity-one entity-name="Shipment" value-field="shipment"/>

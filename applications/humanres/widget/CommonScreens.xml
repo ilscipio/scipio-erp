@@ -280,7 +280,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmploymentAppSideBar" />
                 -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EmploymentApp"/>
+                <!-- FIXME?: we have to force/override this for now
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EmploymentApp"/>-->
+                <set field="activeSubMenuItem" value="EmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentDecorator"/>

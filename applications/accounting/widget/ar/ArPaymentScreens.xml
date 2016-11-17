@@ -85,7 +85,7 @@ under the License.
        <section>
             <actions>
                 <set field="titleProperty" value="AccountingNewPaymentIncoming"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="newPayment"/>
             </actions>
             <widgets>
                <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">
@@ -102,7 +102,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArPaymentGroups"/>
-                <set field="activeMainMenuItem" value="paymentGroups"/>
+                <set field="activeSubMenuItem" value="paymentGroups"/>
                 <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
                     <condition-list combine="and">
                         <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>

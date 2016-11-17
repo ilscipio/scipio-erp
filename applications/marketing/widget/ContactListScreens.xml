@@ -25,7 +25,6 @@ under the License.
        <section>
            <actions>
                <set field="titleProperty" value="MarketingContactListFindContactLists"/>
-               <set field="activeMainMenuItem" value="ContactList"/>
                <set field="activeSubMenuItem" value="ContactList"/>               
                <set field="activeContactListSubMenuItem" value="ContactList"/>
                <set field="labelTitleProperty" value="PageTitleFindContactLists"/>

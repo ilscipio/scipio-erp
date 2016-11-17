@@ -26,8 +26,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindRequirements"/>
                 <set field="activeSubMenuItem" value="FindRequirements"/>
-                <!-- still need the sub-item 
-                <set field="activeSubMenuItem" value="PARENT"/>-->
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>

@@ -27,7 +27,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePendingCommunications"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="pending"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -744,10 +743,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="activeMainMenuItem" value="mycomm"/>
+                <set field="activeSubMenuItem" value="mycomm"/>
                 <set field="my" value="My" global="true"/>
-                
-                <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
+                <!--<set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" />-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">

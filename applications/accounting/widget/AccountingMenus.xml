@@ -746,6 +746,9 @@
     <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         ><!-- selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint" -->
         <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
+        <menu-item-alias name="NewFixedAssetMaint" for="PARENT-NOSUB"/>
+        <!-- SCIPIO: I *think* this needs to show the sub-menu... not 100% sure -->
+        <menu-item-alias name="ListFixedAssetMaints" for="PARENT-WITHSUB"/>
     </menu>
 
     <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1644,6 +1647,8 @@
 
     <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
+        <menu-item-alias name="findPayment" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newPayment" for="PARENT-NOSUB"/>
     </menu>
 
     <menu name="PaymentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

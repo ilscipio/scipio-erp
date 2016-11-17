@@ -220,7 +220,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
-                <!--<set field="activeMainMenuItem" value="Advanced Search"/>  -->
+                <!--<set field="activeSubMenuItem" value="Advanced Search"/>  -->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
 
                 <entity-condition entity-name="PartyRoleAndPartyDetail" list="supplerPartyRoleAndPartyDetails">

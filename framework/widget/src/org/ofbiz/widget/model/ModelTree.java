@@ -1093,7 +1093,7 @@ public class ModelTree extends ModelWidget {
                 this.iteratorKey = this.rootNode.getName().concat(".").concat(this.nodeNameExdr.getOriginal())
                         .concat(".ITERATOR");
             }
-
+            
             @Override
             public void accept(ModelWidgetVisitor visitor) throws Exception {
                 visitor.visit(this);
@@ -1123,6 +1123,37 @@ public class ModelTree extends ModelWidget {
             public void setListIterator(ListIterator<? extends Map<String, ? extends Object>> iter, Map<String, Object> context) {
                 context.put(this.iteratorKey, iter);
             }
+
+            @Override
+            public String getContainerLocation() { // SCIPIO: new
+                return rootNode != null ? rootNode.getFullLocationAndName() : null;
+            }
+            
+            @Override
+            public String getWidgetType() { // SCIPIO: new
+                return "sub-node";
+            }
+        }
+
+        @Override
+        public String getContainerLocation() { // SCIPIO: new
+            return modelTree != null ? modelTree.getFullLocationAndName() : null;
+        }
+        
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "node";
         }
     }
+
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return location;
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "tree";
+    }
+    
 }

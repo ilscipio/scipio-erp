@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyFindPartyInvitations"/>
-                <set field="activeMainMenuItem" value="partyinv"/>
+                <set field="activeSubMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -63,7 +63,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePartyInvitation"/>
-                <set field="activeMainMenuItem" value="partyinv"/>
+                <set field="activeSubMenuItem" value="partyinv"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -94,7 +94,7 @@ under the License.
                 <set field="partyInvitationId" from-field="parameters.partyInvitationId"/>
                 <entity-one entity-name="PartyInvitation" value-field="partyInvitation"/>
                 <set field="titleProperty" value="${groovy: context.partyInvitation ? 'PageTitlePartyInvitation' : 'PartyInvitationNewPartyInvitation'}"/>
-                <set field="activeSubMenuItem" value="${groovy: context.partyInvitation ? 'EditPartyInvitation' : 'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.partyInvitation ? 'EditPartyInvitation' : 'NewPartyInvitation'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyInvitationDecorator" location="${parameters.mainDecoratorLocation}">

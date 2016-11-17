@@ -23,7 +23,6 @@ under the License.
     <screen name="CommonRoutingDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routing"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Routing"/>
                 
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -56,7 +55,6 @@ under the License.
     <screen name="CommonRoutingTaskDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="routingTask"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="RoutingTask"/>
             
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
@@ -90,8 +88,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRouting"/>
-                <!--<set field="activeSubMenuItem" value="findRouting"/>-->
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="findRouting"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -155,8 +152,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindRoutingTask"/>
-                <!--<set field="activeSubMenuItem" value="routingTask"/>  -->
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="routingTask"/>
 
                 <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="ROU_TASK"/>
                 <set field="requestParameters.currentStatusId" to-scope="screen" default-value="ROU_ACTIVE"/>

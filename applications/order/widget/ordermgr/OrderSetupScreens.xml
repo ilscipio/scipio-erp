@@ -21,7 +21,7 @@ under the License.
     <screen name="CommonOrderSetupDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="setup"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="setup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">

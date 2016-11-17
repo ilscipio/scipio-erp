@@ -144,6 +144,9 @@ under the License.
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility">
         <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
+        <!-- SCIPIO: NewFacility is a "virtual" item set active by EditFacility screen when in "new" mode.
+            here we tell it to highlight the parent item and hide the sub-menu. -->
+        <menu-item-alias name="NewFacility" for="PARENT-NOSUB"/>
         <menu-item name="settings">
             <sub-menu name="FacilitySettings" include="FacilitySettingsSideBar"/>
         </menu-item>
@@ -465,6 +468,7 @@ under the License.
     
     
     <menu name="FacilityPickingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item-alias name="PicklistOptions" for="PARENT-WITHSUB"/>
         <!-- SCIPIO: redundant
         <menu-item name="PicklistOptions" title="${uiLabelMap.ProductPicking}">
             <link target="PicklistOptions">

@@ -5,9 +5,8 @@
     <screen name="main">
         <section>
             <actions>
-                <set field="activeSubMenu" value="TOP"/><!-- this selects a sub-menu in the main menu(s) (or TOP special value for the top level) -->
-                <set field="activeSubMenuItem" value="main"/><!-- this selects a menu-item in the (sub-)menu designated by activeSubMenu in the main menu(s) -->
-                <set field="activeMainMenuItem" value="main"/><!-- this selects a top-level menu-item in the main menu(s), when sub-menu is not applicable or available -->
+                <set field="activeSubMenu" value="TOP"/><!-- selects a sub-menu in the main complex/sidebar menu(s) (or TOP special value for the top level) -->
+                <set field="activeSubMenuItem" value="main"/><!-- selects a menu-item in the (sub-)menu designated by activeSubMenu, within the main complex/sidebar menu(s) -->
             </actions>
             <widgets>
                 <!-- SCIPIO: NOTE: The Common@component-resource-name@AppDecorator decorator is meant to be included using hardcoded location -->

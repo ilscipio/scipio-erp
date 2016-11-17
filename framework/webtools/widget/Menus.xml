@@ -472,6 +472,7 @@ under the License.
         <actions>
             <set field="basePageInterWebappUri" value="${groovy: request.getContextPath() + '/docs/templating/ftl/lib'}"/>
         </actions>
+        <menu-item-alias name="DeveloperDocIndex" for="PARENT-WITHSUB"/>
         <menu-item name="TemplateApiDoc" title="${uiLabelMap.WebtoolsTemplateApiDocsTitle}">
             <link target="${basePageInterWebappUri}/standard/htmlTemplate#extLoginKey=OFF" url-mode="inter-app"/>
             <sub-menu name="TemplateApiDoc" include="TemplateApiDocSideBar"/>

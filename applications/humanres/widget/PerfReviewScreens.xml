@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPerfReview"/>
-                <set field="activeMainMenuItem" value="PerfReview"/>
+                <set field="activeSubMenuItem" value="PerfReview"/>
                 <set field="employeePartyId" from-field="parameters.partyId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"  default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

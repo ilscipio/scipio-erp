@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -32,7 +33,8 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
-import org.ofbiz.widget.model.ModelMenuNode.ModelMenuItemGroupNode;
+import org.ofbiz.widget.model.ModelMenu.MenuAndItemLookup;
+import org.ofbiz.widget.model.ModelMenuItem.ModelMenuItemAlias;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
 
@@ -42,7 +44,7 @@ import org.w3c.dom.Element;
  * TODO: Merge constructor
  */
 @SuppressWarnings("serial")
-public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode {
+public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with top menu
 
     public static final String module = ModelSubMenu.class.getName();
     
@@ -58,7 +60,7 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
     private final FlexibleStringExpander id;
     private final FlexibleStringExpander style;
     private final FlexibleStringExpander title;
-    private final ModelMenu model;
+    private final ModelMenu model; // SCIPIO: NOTE: this is the logical "model" for this sub-menu, different from the Top model menu reference! (getTopMenu)
     private final String modelScope;
     private transient ModelMenu styleModelMenu = null; // SCIPIO: records which model menu should be used for style fields (NOTE: doesn't need synchronizing)
     private transient ModelMenu funcModelMenu = null; // SCIPIO: records which model menu should be used for functional fields
@@ -71,18 +73,15 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
     private final FlexibleStringExpander selected; // 2016-11-11: selected override
     private final FlexibleStringExpander disabled; // 2016-11-11: disabled override
 
-    private final String menuItemNameAsParent; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
-    private final String menuItemNameAsParentNoSub; // set either direct on sub-menu element or (usually) gotten from immediate func menu model
-    private final Map<String, String> specialMenuItemNameMap;
+    private final Map<String, ModelMenuItemAlias> menuItemAliasMap;
+    private final Map<String, String> menuItemNameAliasMap; // for optimized simple-hidden item alias lookups
     
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
         buildArgs.genBuildArgs.totalSubMenuCount++;
-        ModelMenu topModelMenu = parentMenuItem.getModelMenu();
+        ModelMenu topMenu = parentMenuItem.getTopMenu();
         List<? extends Element> extraMenuItems = buildArgs.extraMenuItems;
         this.parentMenuItem = parentMenuItem;
-        
-        ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
         
         String modelAddress = subMenuElement.getAttribute("model");
         String modelScope = subMenuElement.getAttribute("model-scope");
@@ -164,16 +163,19 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         }
         
         // include actions
-        topModelMenu.processIncludeActions(subMenuElement, preInclElements, null, actions, 
+        ArrayList<ModelAction> actions = new ArrayList<ModelAction>();
+        topMenu.processIncludeActions(subMenuElement, preInclElements, null, actions, 
                 currResource, true, 
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
 
         // include items
-        ArrayList<ModelMenuItem> menuItemList = new ArrayList<ModelMenuItem>();
-        Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
-        topModelMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
+        ArrayList<ModelMenuItem> menuItemList = new ArrayList<>();
+        Map<String, ModelMenuItem> menuItemMap = new HashMap<>();
+        Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
+        topMenu.processIncludeMenuItems(subMenuElement, preInclElements, null, menuItemList, menuItemMap, 
+                menuItemAliasMap, true,
                 currResource, true, null, null, buildArgs.forceSubMenuModelScope, this,
                 buildArgs.currentMenuDefBuildArgs, buildArgs.genBuildArgs);
         
@@ -187,8 +189,8 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
             
             for (Element itemElement : extraMenuItems) {
                 ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this, itemBuildArgs);
-                topModelMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, itemBuildArgs);
-                topModelMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap, itemBuildArgs);
+                topMenu.addUpdateMenuItem(modelMenuItem, menuItemList, menuItemMap, itemBuildArgs);
+                topMenu.addUpdateMenuItem(modelMenuItem, extraMenuItemList, extraMenuItemMap, itemBuildArgs);
             }
             
             extraMenuItemList.trimToSize();
@@ -201,6 +203,9 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
         
+        this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
+        this.menuItemNameAliasMap = ModelMenu.makeMenuItemNameAliasMap(menuItemAliasMap);
+        
         this.id = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("id"));
         this.style = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("style"));
         this.title = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("title"));
@@ -210,76 +215,70 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         this.expanded = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("expanded"));
         this.selected = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("selected"));
         this.disabled = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("disabled"));
-        
-        String menuItemNameAsParent = subMenuElement.getAttribute("menu-item-name-as-parent");
-        if (menuItemNameAsParent.isEmpty() && hasImmediateFuncModelMenu()) {
-            menuItemNameAsParent = getImmediateFuncModelMenu().getMenuItemNameAsParent();
-        }
-        this.menuItemNameAsParent = menuItemNameAsParent;
-        String menuItemNameAsParentNoSub = subMenuElement.getAttribute("menu-item-name-as-parent-nosub");
-        if (menuItemNameAsParentNoSub.isEmpty() && hasImmediateFuncModelMenu()) {
-            menuItemNameAsParentNoSub = getImmediateFuncModelMenu().getMenuItemNameAsParentNoSub();
-        }
-        this.menuItemNameAsParentNoSub = menuItemNameAsParentNoSub;
-        this.specialMenuItemNameMap = makeSpecialMenuItemNameMap(menuItemNameAsParent, menuItemNameAsParentNoSub);
     }
 
     // SCIPIO: copy constructor
-    private ModelSubMenu(ModelSubMenu existingSubMenu, 
+    private ModelSubMenu(ModelSubMenu existing, 
             ModelMenu modelMenu, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
-        super(existingSubMenu.getName());
+        super(existing.getName());
         buildArgs.genBuildArgs.totalSubMenuCount++;
-        this.anonName = existingSubMenu.anonName;
+        this.anonName = existing.anonName;
         if (this.anonName) {
             this.effectiveName = makeAnonName(buildArgs);
         } else {
-            this.effectiveName = existingSubMenu.effectiveName;
+            this.effectiveName = existing.effectiveName;
         }
-        this.parentMenuItem = parentMenuItem != null ? parentMenuItem : existingSubMenu.parentMenuItem;
+        this.parentMenuItem = parentMenuItem != null ? parentMenuItem : existing.parentMenuItem;
         
-        ArrayList<ModelAction> actions = new ArrayList<>(existingSubMenu.actions);
+        ArrayList<ModelAction> actions = new ArrayList<>(existing.actions);
         actions.trimToSize();
         this.actions = Collections.unmodifiableList(actions);
         ArrayList<ModelMenuItem> menuItemList = new ArrayList<>();
         Map<String, ModelMenuItem> menuItemMap = new HashMap<>();
-        ModelMenuItem.cloneModelMenuItems(existingSubMenu.getMenuItemList(), 
-                menuItemList, menuItemMap, getTopModelMenu(), this,
+        ModelMenuItem.cloneModelMenuItems(existing.getMenuItemList(), 
+                menuItemList, menuItemMap, getTopMenu(), this,
                 new ModelMenuItem.BuildArgs(buildArgs));
         menuItemList.trimToSize();
         this.menuItemList = Collections.unmodifiableList(menuItemList);
         this.menuItemMap = Collections.unmodifiableMap(menuItemMap);
         
         ArrayList<ModelMenuItem> extraMenuItemList = new ArrayList<>();
-        for(ModelMenuItem menuItem : existingSubMenu.extraMenuItemList) {
+        for(ModelMenuItem menuItem : existing.extraMenuItemList) {
             extraMenuItemList.add(menuItemMap.get(menuItem.getName()));
         }
         extraMenuItemList.trimToSize();
         this.extraMenuItemList = Collections.unmodifiableList(extraMenuItemList);
         
-        this.id = existingSubMenu.id;
-        this.style = existingSubMenu.style;
-        this.title = existingSubMenu.title;
-        this.model = existingSubMenu.model;
-        this.modelScope = UtilValidate.isNotEmpty(buildArgs.forceSubMenuModelScope) ? buildArgs.forceSubMenuModelScope : existingSubMenu.modelScope;
+        this.id = existing.id;
+        this.style = existing.style;
+        this.title = existing.title;
+        this.model = existing.model;
+        this.modelScope = UtilValidate.isNotEmpty(buildArgs.forceSubMenuModelScope) ? buildArgs.forceSubMenuModelScope : existing.modelScope;
         
-        this.itemsSortMode = existingSubMenu.itemsSortMode;
-        this.shareScope = existingSubMenu.shareScope;
-        this.expanded = existingSubMenu.expanded;
-        this.selected = existingSubMenu.selected;
-        this.disabled = existingSubMenu.disabled;
+        this.itemsSortMode = existing.itemsSortMode;
+        this.shareScope = existing.shareScope;
+        this.expanded = existing.expanded;
+        this.selected = existing.selected;
+        this.disabled = existing.disabled;
         
-        this.menuItemNameAsParent = existingSubMenu.menuItemNameAsParent;
-        this.menuItemNameAsParentNoSub = existingSubMenu.menuItemNameAsParentNoSub;
-        this.specialMenuItemNameMap = existingSubMenu.specialMenuItemNameMap;
+        Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
+        ModelMenuItemAlias.cloneModelMenuItemAliases(existing.menuItemAliasMap, menuItemAliasMap, getTopMenu(), this,
+                new ModelMenuItem.BuildArgs(buildArgs));
+        this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
+        this.menuItemNameAliasMap = ModelMenu.makeMenuItemNameAliasMap(menuItemAliasMap);
     }
     
-    public static Map<String, String> makeSpecialMenuItemNameMap(String menuItemNameAsParent, String menuItemNameAsParentNoSub) {
+    public static Map<String, String> makeSpecialMenuItemNameMap(Set<String> menuItemNamesAsParent, Set<String> menuItemNamesAsParentNoSub) {
         Map<String, String> map = new HashMap<>();
-        if (UtilValidate.isNotEmpty(menuItemNameAsParent)) {
-            map.put(menuItemNameAsParent, "PARENT");
+        if (UtilValidate.isNotEmpty(menuItemNamesAsParent)) {
+            for(String name : menuItemNamesAsParent) {
+                map.put(name, "PARENT");
+            }
         }
-        if (UtilValidate.isNotEmpty(menuItemNameAsParentNoSub)) {
-            map.put(menuItemNameAsParentNoSub, "PARENT-NOSUB");
+        if (UtilValidate.isNotEmpty(menuItemNamesAsParentNoSub)) {
+            for(String name : menuItemNamesAsParentNoSub) {
+                map.put(name, "PARENT-NOSUB");
+            }
         }
         return map;
     }
@@ -369,20 +368,26 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         return this.anonName;
     }
     
-    public ModelMenuItem getModelMenuItemByName(String name) {
+    public ModelMenuItem getMenuItemByName(String name) {
         return this.menuItemMap.get(name);
     }
     
-    public ModelMenuItem getModelMenuItemByTrail(String[] nameList) {
-        return getModelMenuItemByTrail(nameList[0], nameList, 1);
+    public ModelMenuItem getMenuItemByNameMapped(String name) {
+        return this.menuItemMap.get(getMappedMenuItemName(name));
     }
     
-    public ModelMenuItem getModelMenuItemByTrail(String name, String[] nameList, int nextNameIndex) {
+    @Deprecated
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String[] nameList) {
+        return resolveMenuAndItemByTrail(nameList[0], nameList, 1);
+    }
+    
+    @Deprecated
+    public MenuAndItemLookup resolveMenuAndItemByTrail(String name, String[] nameList, int nextNameIndex) {
         ModelMenuItem currLevelItem = this.menuItemMap.get(name);
         if (nextNameIndex >= nameList.length) {
-            return currLevelItem;
+            return new MenuAndItemLookup(currLevelItem);
         } else if (currLevelItem != null) {
-            return currLevelItem.getModelMenuItemByTrail(nameList[nextNameIndex], nameList, nextNameIndex + 1);
+            return currLevelItem.resolveMenuAndItemByTrail(nameList[nextNameIndex], nameList, nextNameIndex + 1);
         } else {
             return null;
         }
@@ -405,14 +410,18 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
 
     /**
      * Returns the top-level menu model element. Not to be confused with the
-     * sub-menu model.
+     * sub-menu's logical "model".
      */
-    public ModelMenu getTopModelMenu() {
-        return getParentMenuItem().getModelMenu();
+    public ModelMenu getTopMenu() {
+        return getParentMenuItem().getTopMenu();
     }
 
     public ModelMenuItem getParentMenuItem() {
         return parentMenuItem;
+    }
+    
+    public ModelMenuItem getTopAncestorMenuItem() {
+        return getParentMenuItem().getTopAncestorMenuItem();
     }
 
     /**
@@ -563,23 +572,22 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
         }
     }
     
-    public String getMenuItemNameAsParent() {
-        return menuItemNameAsParent;
-    }
-
-    public String getMenuItemNameAsParentNoSub() {
-        return menuItemNameAsParentNoSub;
+    public Map<String, ModelMenuItemAlias> getMenuItemAliasMap() { // SCIPIO: new
+        return menuItemAliasMap;
     }
     
     /**
-     * If name matches menuItemNameAsParent or menuItemNameAsParentNoSub, returns
+     * If name matches menuItemNamesAsParent or menuItemNamesAsParentNoSub, returns
      * PARENT or PARENT-NOSUB, otherwise returns passed.
+     * For null/empty/NONE, returns NONE.
      */
-    public String getTranslatedMenuItemName(String menuItemName) {
-        String res = this.specialMenuItemNameMap.get(menuItemMap);
+    public String getMappedMenuItemName(String menuItemName) {
+        // translate null to NONE as first thing so it can be recognized in mappings (in theory; might not be used/usable or redundant)
+        menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
+        String res = this.menuItemNameAliasMap.get(menuItemName);
         return res != null ? res : menuItemName;
     }
-    
+
     void addAllSubMenus(Map<String, ModelSubMenu> subMenuMap) {
         for(ModelMenuItem menuItem : getMenuItemList()) {
             menuItem.addAllSubMenus(subMenuMap);
@@ -630,7 +638,18 @@ public class ModelSubMenu extends ModelWidget implements ModelMenuItemGroupNode 
             this.extraMenuItems = null;
         }
     }
-
+    
+    @Override
+    public String getContainerLocation() {
+        // NOTE: this can be slightly indirecting, but it will allow user to find anything required
+        return getTopMenu().getFullLocationAndName();
+    }
+    
+    @Override
+    public String getWidgetType() {
+        return "sub-menu";
+    }
+        
     // SCIPIO: ModelMenuNode methods
     
     @Override

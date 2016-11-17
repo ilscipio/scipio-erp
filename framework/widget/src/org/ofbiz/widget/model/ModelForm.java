@@ -1042,7 +1042,7 @@ public abstract class ModelForm extends ModelWidget {
             }
         }
     }
-
+    
     public List<ModelAction> getActions() {
         return actions;
     }
@@ -2310,5 +2310,15 @@ public abstract class ModelForm extends ModelWidget {
         public List<CommonWidgetModels.Parameter> getParameterList() {
             return parameterList;
         }
+    }
+    
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return formLocation;
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "form";
     }
 }

@@ -25,7 +25,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGatewayConfig" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGatewayConfig"/> 
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->

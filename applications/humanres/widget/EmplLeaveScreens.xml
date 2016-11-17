@@ -25,7 +25,6 @@
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://humanres/widget/HumanresMenus.xml#EmplLeave" />
                 <set field="titleProperty" value="HumanResFindEmplLeave"/>
-                <set field="activeMainMenuItem" value="Leave"/>
                 <set field="activeSubMenuItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
@@ -63,7 +62,6 @@
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="EmplLeave" />
                 <set field="titleProperty" value="PageTitleFindApprovals"/>
                 <set field="activeSubMenuItem" value="Approval"/>
-                <set field="activeMainMenuItem" value="Leave"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="ADMIN"/>
                 </service>
@@ -90,7 +88,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmplLeave"/>
-                <set field="activeMainMenuItem" value="Leave"/>
                 <set field="activeSubMenuItem" value="EmployeeLeave"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>

@@ -70,9 +70,9 @@ under the License.
                 <set field="applicationMenuLocation" value="component://product/widget/facility/FacilityMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.ProductFacility}" global="true"/>
                 
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem (good enough for 90% of cases) -->
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/ResolveExtraComplexMenuItems.groovy"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -133,28 +133,17 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Facility" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <or>
+                        <not><if-empty field="facility"/></not>
+                        <not><if-empty field="displayWithNoFacility"/></not>
+                    </or>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <or>
-                                    <not><if-empty field="facility"/></not>
-                                    <not><if-empty field="displayWithNoFacility"/></not>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <include-screen name="CommonFacilityAppSideBarMenu"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -250,9 +239,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenu" value="TOP"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductFacilityManager"/>
                 <set field="parameters.lookupFlag" value="Y"/>
             </actions>

@@ -273,10 +273,38 @@ under the License.
         <xs:annotation>
             <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean true
                 OR the string value "true" (case-sensitive).
+                Either field or value must be provided.
                 2016-11-09: New element, added for 1.14.3.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute type="xs:string" name="field" use="required" />
+            <xs:attribute type="xs:string" name="field" />
+            <xs:attribute type="xs:string" name="value" />
+            <xs:attribute name="verify" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, and the test does not pass, the check will additionally 
+                        verify the failing expression to make sure it is a valid negative response and
+                        print a log error upon failure.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="allow-empty" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, the verify check will accept empty or null as valid.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="if-false" substitutionGroup="AllConditionals">
@@ -286,7 +314,34 @@ under the License.
                 2016-11-09: New element, added for 1.14.3.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute type="xs:string" name="field" use="required" />
+            <xs:attribute type="xs:string" name="field" />
+            <xs:attribute type="xs:string" name="value" />
+            <xs:attribute name="verify" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, and the test does not pass, the check will additionally 
+                        verify the failing expression to make sure it is a valid negative response and
+                        print a log error upon failure.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="allow-empty" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, the verify check will accept empty or null as valid.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="if-widget" substitutionGroup="AllConditionals">
@@ -1037,11 +1092,17 @@ under the License.
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="condition" type="IfCond-Condition"/>
+                <xs:element name="condition" type="IfCond-Condition" minOccurs="0" maxOccurs="1" />
                 <xs:element name="then" type="IfCond-Then"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="else-if" type="IfCond-ElseIf"/>
                 <xs:element minOccurs="0" name="else" type="IfCond-Else"/>
             </xs:sequence>
+            <xs:attribute name="condition">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Condition boolean expression (supporting flexible expressions), alternative to
+                        condition element. Must evaluate strictly to the value "true" or "false".</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:complexType name="IfCond-Condition">
@@ -1051,7 +1112,8 @@ under the License.
                 
                 SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
                 without the heavy widget elements.
-                2016-11-11: Added for 1.14.3.
+                In addition, now supports an inline quick condition expression attribute as alternative to the condition element.
+                2016-11-15: Added for 1.14.3.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -1081,14 +1143,21 @@ under the License.
                 and if that condition evaluates to true, then the operations under the then element will be run.
                 
                 SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
-                without the heavy widget elements.
-                2016-11-11: Added for 1.14.3.
+                without the heavy widget elements. 
+                In addition, now supports an inline quick condition expression attribute as alternative to the condition element.
+                2016-11-15: Added for 1.14.3.
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="condition" type="IfCond-Condition"/>
+            <xs:element name="condition" type="IfCond-Condition" minOccurs="0" maxOccurs="1" />
             <xs:element name="then" type="IfCond-Then"/>
         </xs:sequence>
+        <xs:attribute name="condition">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Condition boolean expression (supporting flexible expressions), alternative to
+                    condition element. Must evaluate strictly to the value "true" or "false".</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     <xs:complexType name="IfCond-Else">
         <xs:annotation>

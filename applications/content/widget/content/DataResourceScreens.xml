@@ -182,7 +182,7 @@ under the License.
     <screen name="BrowseDataResource">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="DataResource"/>
+                <set field="activeSubMenuItem" value="DataResource"/>
                 <set field="currentMenuItemName" to-scope="user" value="browsedataresource"/>
             </actions>
             <widgets>

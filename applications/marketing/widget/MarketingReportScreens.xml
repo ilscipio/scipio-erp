@@ -22,7 +22,7 @@ under the License.
     <screen name="CommonMarketReportDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Reports"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">

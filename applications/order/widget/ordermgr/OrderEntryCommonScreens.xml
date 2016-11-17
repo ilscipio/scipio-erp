@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="orderentry"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="orderentry"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">

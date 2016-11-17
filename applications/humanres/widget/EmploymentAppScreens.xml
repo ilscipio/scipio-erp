@@ -28,8 +28,7 @@
             <actions>
                 <set field="titleProperty" value="HumanResFindEmploymentApp"/>
                 <set field="employmentAppCtx" from-field="parameters"/>
-                <!-- no sub-menu currently
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>-->
+                <set field="activeSubMenuItem" value="FindEmploymentApps"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -83,6 +82,7 @@
                 <set field="titleProperty" value="HumanResNewEmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="NewEmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -105,6 +105,7 @@
             <actions>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="EditEmploymentApp"/>
             </actions>
             <widgets>
                 <section>
@@ -162,6 +163,7 @@
                 <set field="titleProperty" value="HumanResEmploymentApplication"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="ViewEmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">

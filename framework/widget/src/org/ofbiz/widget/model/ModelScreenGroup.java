@@ -46,10 +46,10 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
     protected final Map<String, ModelScreen> screenMap;
     protected final List<ModelScreen> screenList;
 
-    public ModelScreenGroup(String name, boolean rootGroup, ModelScreens modelScreens) {
+    public ModelScreenGroup(String name, boolean rootGroup, ModelScreens modelScreens, String sourceLocation) {
         super(name != null ? name : (rootGroup ? ROOT_GROUP_NAME : ""));
         this.modelScreens = modelScreens;
-        this.effectiveSettings = new ModelScreenSettings(ModelScreenSettings.DEFAULT_SETTINGS_NAME, true);
+        this.effectiveSettings = new ModelScreenSettings(ModelScreenSettings.DEFAULT_SETTINGS_NAME, true, sourceLocation);
         Map<String, ModelScreenSettings> screenSettingsMap = new HashMap<String, ModelScreenSettings>();
         screenSettingsMap.put(this.effectiveSettings.getName(), this.effectiveSettings);
         this.screenSettingsMap = screenSettingsMap;
@@ -128,7 +128,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
 
         if (effectiveSettings == null) {
             String settingsName = ModelScreenSettings.DEFAULT_SETTINGS_NAME;
-            effectiveSettings = new ModelScreenSettings(settingsName, true);
+            effectiveSettings = new ModelScreenSettings(settingsName, true, sourceLocation);
             if (screenSettingsMap.containsKey(settingsName)) {
                 Debug.logWarning("Screen group already contains special [" + settingsName + "] screen-settings"
                         + " set to active=false, which we need to overwrite; the specified settings will be ignored "
@@ -395,5 +395,15 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         public boolean isRecursive() {
             return recursive;
         }
+    }
+
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return modelScreens.getLocation();
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "screen-group";
     }
 }

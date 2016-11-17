@@ -29,7 +29,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsDeveloperDocumentation"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="DeveloperDoc"/>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PARENT"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="DeveloperDocIndex"/>
                 
                 <set field="tmplApiBaseWebappUri" value="/docs/templating/ftl/lib"/>
                 <set field="tmplApiMasterWebappUri" value="${tmplApiBaseWebappUri}/standard/htmlTemplate"/>

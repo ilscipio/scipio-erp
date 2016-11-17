@@ -169,7 +169,9 @@ under the License.
                 <include-screen-actions name="WebtoolsLayoutDemoOfbizWidgetActions"/>
                 <!-- It's even possible to include actions from different widget types! -->
                 <include-form-actions name="LayoutDemoActionsIncludeTest2" location="component://webtools/widget/MiscForms.xml"/>
-                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="component://webtools/widget/MiscMenus.xml"/>
+                <!-- dynamic form -->
+                <set field="miscMenusLocation" value="component://webtools/widget/MiscMenus.xml"/>
+                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="${miscMenusLocation}"/>
             </actions>
             <widgets>
                 <!-- 
@@ -308,8 +310,38 @@ under the License.
                     </screenlet>
                     
                     <screenlet title="Screen widget include-screens directive test">
-                        <include-screen name="DemoExtraWidget1"/>
-                        <include-screen name="DemoExtraWidget2"/>
+                        <screenlet title="Regular widget screens">
+                            <label style="p">The following simply includes two local screens that were included from another file with include-screens directive.
+                                Because the target includes were regular screens containing widgets, they were created in our local file by include-screens using simple
+                                delegating directives containing the legacy include-screen directive. No surprises here.</label>
+                            <include-screen name="DemoExtraWidget1"/>
+                            <include-screen name="DemoExtraWidget2"/>
+                        </screenlet>
+                        <screenlet title="Actions-only screens">
+                            <section share-scope="false">
+                                <actions>
+                                    <!-- these succeed if the vars print out at all -->
+                                    <include-screen-actions name="DemoExtraActions1"/>
+                                    <include-screen-actions name="DemoExtraActions2"/>
+                                    <include-screen-actions name="DemoExtraActions3"/>
+                                    <include-screen-actions name="DemoExtraActions4"/>
+                                </actions>
+                                <widgets>
+                                    <label style="p">The following tests the actions includes produced by include-screens directive.
+                                        In the next, the first two should print because they contained only actions, so they were implemented by include-screens with an include-screen-actions delegate/placeholder,
+                                        and this ensures the include-screen-actions we just ran work transitively and succeed.
+                                        The two after should come up blank because they contained widgets and condition, so include-screens implemented their delegates with include-screen, and
+                                        the include-screen-actions we just ran above is not able to follow those.
+                                        This highlights the importance of creating the right kind of screens, in order for reuse to work after.</label>
+                                    <label text="demoExtraActions1Msg: ${demoExtraActions1Msg}"/>
+                                    <label text="demoExtraActions2Msg: ${demoExtraActions2Msg}"/>
+                                    <label text="demoExtraActions3Msg (should be empty, contained widgets): ${demoExtraActions3Msg}"/>
+                                    <label text="demoExtraActions4Msg (should be empty, contained condition): ${demoExtraActions4Msg}"/>
+                                    <label text="Now print the third one within its widget, and it should only show this way:"/>
+                                    <include-screen name="DemoExtraActions3"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
                     </screenlet>
                     
                     <screenlet title="New widget condition-to-field element">
@@ -495,6 +527,29 @@ under the License.
                                         <set field="resField3" value="else block"/>
                                     </else>
                                 </if>
+                                <set field="testField1" value="other"/>
+                                <if>
+                                    <condition><if-true value="${testField1 == 'other'}"/></condition>
+                                    <then><set field="resField4" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField4" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField4" value="else block"/>
+                                    </else>
+                                </if>
+                                <set field="testField1" value="other"/>
+                                <if condition="${testField1 == 'other'}">
+                                    <then><set field="resField5" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField5" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField5" value="else block"/>
+                                    </else>
+                                </if>
                                 
                                 <condition-to-field field="existsCrazyWidget1">
                                     <if-widget operator="defined" type="screen" location="${parameters.mainDecoratorLocation}" name="crazyWidget1" />
@@ -519,7 +574,9 @@ under the License.
                                 <label text="resField1: ${resField1}"/>
                                 <label text="resField2: ${resField2}"/>
                                 <label text="resField3: ${resField3}"/>
-                                
+                                <label text="resField4: ${resField4}"/>
+                                <label text="resField5: ${resField5}"/>
+
                                 <label text="existsCrazyWidget1: ${existsCrazyWidget1}"/>
                                 <label text="existsMainDecorator: ${existsMainDecorator}"/>
                                 <label text="existsFormWidgetProgramExport: ${existsFormWidgetProgramExport}"/>

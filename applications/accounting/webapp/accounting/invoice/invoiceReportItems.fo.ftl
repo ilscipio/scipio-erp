@@ -206,6 +206,21 @@ under the License.
               </fo:block>
            </fo:table-cell>
         </fo:table-row>
+        <#if vatIncludedByRate?has_content>
+        <fo:table-row height="14px">
+           <fo:table-cell number-columns-spanned="2">
+              <fo:block/>
+           </fo:table-cell>
+           <fo:table-cell number-columns-spanned="2">
+              <fo:block>Tax already included</fo:block>
+           </fo:table-cell>
+           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
+              <fo:block>
+                 ${vatIncludedByRate}
+              </fo:block>
+           </fo:table-cell>
+        </fo:table-row>
+        </#if>
     </fo:table-body>
  </fo:table>
 

@@ -17,21 +17,15 @@
  * under the License.
  */
 
-import java.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.base.util.*;
-import org.ofbiz.base.util.collections.*;
-import org.ofbiz.accounting.invoice.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import org.ofbiz.base.util.UtilNumber;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.text.DateFormat
 
+import javolution.util.FastList
+import javolution.util.FastMap
 
+import org.ofbiz.accounting.invoice.*
+import org.ofbiz.base.util.*
+import org.ofbiz.base.util.collections.*
+import org.ofbiz.entity.*
 
 invoiceId = parameters.get("invoiceId");
 
@@ -101,6 +95,31 @@ if (invoice) {
     context.vatTaxesByType = vatTaxesByType;
     context.vatTaxIds = vatTaxesByType.keySet().asList();
 
+    // Get Tx already included
+    vatIncludedByRate = FastMap.newInstance();
+    orderId = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst().orderId;
+    orderAdjustments = from("OrderAdjustment").where('orderId', orderId,"orderAdjustmentTypeId", "VAT_TAX").orderBy('orderId').queryList();
+    orderAdjustments.each { orderAdjustment ->
+        amountAlreadyIncluded = orderAdjustment.amountAlreadyIncluded
+        exemptAmount = orderAdjustment.exemptAmount
+        if (amountAlreadyIncluded == null) {
+            amountAlreadyIncluded = new BigDecimal(0);
+        }
+        if (exemptAmount == null) {
+            exemptAmount = new BigDecimal(0);
+        }
+        vatIncludedAmount = amountAlreadyIncluded - exemptAmount
+        if (vatIncludedAmount > 0) {
+            vatIncludedAmountSum = vatIncludedByRate.get(orderAdjustment.sourcePercentage)
+            if (vatIncludedAmountSum == null) {
+                vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmount)
+            } else {
+                vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmountSum + vatIncludedAmount)
+            }
+        }
+    }
+    context.vatIncludedByRate = vatIncludedByRate
+    
     context.invoiceItems = invoiceItemsConv;
 
     invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);

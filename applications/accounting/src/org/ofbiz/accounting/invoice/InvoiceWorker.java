@@ -21,6 +21,7 @@ package org.ofbiz.accounting.invoice;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -972,11 +973,13 @@ public class InvoiceWorker {
         // Vat Included
         BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
         List<GenericValue> orderAdjustmentsTaxItems ;
+        List<GenericValue> orderAdjustmentsTaxItemsToProcess ;
         try {
             String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
             orderAdjustmentsTaxItems = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
                     .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
             //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            orderAdjustmentsTaxItemsToProcess = new ArrayList(orderAdjustmentsTaxItems);
             for (GenericValue orderAdjustment : orderAdjustmentsTaxItems) {
                 String taxGlAccountId = null;
                 // TODO: getTaxGlAccountForInvoiceItem(orderAdjustment);
@@ -996,13 +999,12 @@ public class InvoiceWorker {
                     }
                 }
                 if (taxGlAccountId != null && !taxGlAccountId.equals(glAccountId)) {
-                    orderAdjustmentsTaxItems.remove(orderAdjustment);
+                    orderAdjustmentsTaxItemsToProcess.remove(orderAdjustment);
                 }
             }
-            taxAlreadyIncluded = taxAlreadyIncluded.add(getTaxAmountIncluded(orderAdjustmentsTaxItems));
+            taxAlreadyIncluded = taxAlreadyIncluded.add(getTaxAmountIncluded(orderAdjustmentsTaxItemsToProcess));
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, "Error while getting", module);
         }      
         BigDecimal taxForInvoiceItems = InvoiceWorker.getTaxTotalForInvoiceItems(invoiceTaxItems);
         BigDecimal taxTotal = taxForInvoiceItems.add(taxAlreadyIncluded);

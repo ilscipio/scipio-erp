@@ -430,8 +430,20 @@ under the License.
         </@tr>
     </#if>
     <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+        <@tr>
+          <@td colspan="3"></@td>
+          <#if maySelect>
+            <@td colspan="${numColumns - 7}"></@td>
+            <@td><hr /></@td>
+            <@td colspan="3"></@td>
+          <#else>
+            <@td colspan="${numColumns - 5}"></@td>
+            <@td><hr /></@td>
+            <@td></@td>
+          </#if>
+        </@tr>
         <@tr class="summary-row">
-          <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
+          <@td colspan="7">${uiLabelMap.OrderSalesTaxIncluded}</@td>
           <@td><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></@td>
           <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
         </@tr>

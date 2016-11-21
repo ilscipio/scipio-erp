@@ -53,6 +53,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
 
@@ -2984,6 +2986,20 @@ public class OrderReadHelper {
     
     public static Map<String, Object> getOrderItemTaxByTaxAuthGeoAndPartyForDisplay(GenericValue orderItem, List<GenericValue> orderAdjustmentsOriginal) {
         return getOrderTaxByTaxAuthGeoAndPartyForDisplay(getOrderItemAdjustmentList(orderItem, orderAdjustmentsOriginal));
+    }
+    
+    public BigDecimal getTotalTax(List<GenericValue> taxAdjustments) {
+        Map<String, Object> taxByAuthority = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(taxAdjustments);
+        BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
+        return taxTotal;
+    }
+    
+    /**SCIPIO: Added VAT Tax calculation*/
+    public BigDecimal getTotalVATTax(List<GenericValue> taxAdjustments){
+        Map<String, Object> taxByAuthority = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(taxAdjustments);
+        BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
+        return taxTotal;
+        
     }
 
     /**

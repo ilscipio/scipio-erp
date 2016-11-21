@@ -2321,7 +2321,7 @@ TODO: doesn't handle dates (ambiguous?)
     <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
     <#if wrap>"${escapeScriptString(lang, object, escape)}"<#else>${escapeScriptString(lang, object, escape)}</#if><#t>
   <#elseif object?is_number> 
-    ${object}<#t>
+    ${object?c}<#t>
   <#elseif object?is_boolean>
     ${object?c}<#t>
   <#elseif object?is_date_like>

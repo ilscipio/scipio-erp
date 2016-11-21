@@ -166,6 +166,18 @@ under the License.
                         </fo:table-cell>
                     </fo:table-row>
                 </#if>
+                <#if orderVATTaxTotal != 0>
+                    <fo:table-row>
+                        <fo:table-cell><fo:block></fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block></fo:block></fo:table-cell>
+                        <fo:table-cell number-columns-spanned="2">
+                            <fo:block font-weight="bold">${uiLabelMap.OrderSalesTaxIncluded}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell text-align="right">
+                            <fo:block><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </#if>
                 <#if grandTotal != 0>
                     <fo:table-row>
                         <fo:table-cell><fo:block></fo:block></fo:table-cell>

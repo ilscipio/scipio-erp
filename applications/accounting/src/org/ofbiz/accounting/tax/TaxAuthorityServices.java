@@ -597,9 +597,9 @@ public class TaxAuthorityServices {
 
     private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
             BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId) {
-        List<GenericValue> adjustments = new ArrayList<>();
+        List<GenericValue> adjustments = new ArrayList<GenericValue>();
         // sum each rate
-        Map<String, BigDecimal> summedRates = new HashMap<>();
+        Map<String, BigDecimal> summedRates = new HashMap<String, BigDecimal>();
         for (List<GenericValue> itemAdjustments : itemsAdjustments) {
             for (GenericValue itemAdjustment : itemAdjustments) {
                 Debug.logInfo("itemAdjustment " + itemAdjustment, module);

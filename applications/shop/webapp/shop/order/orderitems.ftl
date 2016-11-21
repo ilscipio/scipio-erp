@@ -422,11 +422,20 @@ under the License.
       <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
 
-    <@tr class="summary-row">
-      <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
-      <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
-      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
-    </@tr>
+    <#if orderTaxTotal?has_content && (orderTaxTotal > 0)>
+        <@tr class="summary-row">
+          <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
+          <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
+          <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
+        </@tr>
+    </#if>
+    <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+        <@tr class="summary-row">
+          <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
+          <@td><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></@td>
+          <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
+        </@tr>
+    </#if>
 
     <@tr>
       <@td colspan="3"></@td>

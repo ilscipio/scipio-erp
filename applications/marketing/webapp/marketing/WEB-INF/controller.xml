@@ -171,13 +171,13 @@ under the License.
     <request-map uri="createSegmentGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSegmentGroup"/>
-        <response name="success" type="view" value="FindSegmentGroup"/>
+        <response name="success" type="view" value="viewSegmentGroup"/><!-- SCIPIO: don't go back to find: FindSegmentGroup -->
         <response name="error" type="view" value="viewSegmentGroup"/>
     </request-map>
     <request-map uri="updateSegmentGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateSegmentGroup"/>
-        <response name="success" type="view" value="FindSegmentGroup"/>
+        <response name="success" type="view" value="viewSegmentGroup"/><!-- SCIPIO: don't go back to find: FindSegmentGroup -->
         <response name="error" type="view" value="viewSegmentGroup"/>
     </request-map>
    <request-map uri="deleteSegmentGroup">

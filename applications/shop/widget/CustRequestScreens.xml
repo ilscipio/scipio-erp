@@ -25,9 +25,6 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -53,7 +50,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific>
@@ -93,7 +90,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <section>

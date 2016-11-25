@@ -16,7 +16,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.doc.OfbizDebugMsgHandler;
 
 // VAR & HELPERS
 
-final module = "ftlDocTemplateOfbizGroovy";
+final module = "ftlDocTemplateOfbiz.groovy";
 final msgHandler = new OfbizDebugMsgHandler(module);
 
 def addCtxErrorMsg(errMsg) {

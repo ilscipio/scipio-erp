@@ -26,7 +26,7 @@ under the License.
     <screen name="FindPortalPage">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="portalAdmin"/>
+                <set field="activeSubMenuItem" value="portalAdmin"/>
                 <set field="titleProperty" value="PageTitleFindPortalPage"/>
             </actions>
             <widgets>
@@ -58,9 +58,10 @@ under the License.
 
     <screen name="CreatePortalPage">
         <section>
-        <actions>
-          <set field="targetPortalPage" value="createPortalPageAdm"/>
-        </actions>
+            <actions>
+                <set field="targetPortalPage" value="createPortalPageAdm"/>
+                <set field="activeSubMenuItem" value="portalAdmin"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
@@ -80,7 +81,8 @@ under the License.
     <screen name="EditPortalPage">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PortalPageAdminItem"/>
+                <!--<set field="activeSubMenuItem" value="PortalPageAdminItem"/>-->
+                <set field="activeSubMenuItem" value="portalAdmin"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/myportal.js" global="true"/> 
                 <set field="layoutSettings.styleSheets[+0]" value="/images/myportal.css" global="true"/> 
                 <entity-one entity-name="PortalPage" value-field="portalPage"/>
@@ -100,13 +102,9 @@ under the License.
                                 </screenlet>
                             </widgets>
                         </section>
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.CommonPortalEditPage}: ${portalPage.portalPageName} [${portalPage.portalPageId}]">
-                                    <include-portal-page id="${portalPage.portalPageId}" conf-mode="true" use-private="false" />
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.CommonPortalEditPage}: ${portalPage.portalPageName} [${portalPage.portalPageId}]">
+                            <include-portal-page id="${portalPage.portalPageId}" conf-mode="true" use-private="false" />
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

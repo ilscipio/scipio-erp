@@ -24,22 +24,18 @@ under the License.
     <screen name="CommonSalesForecastDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Forecast"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Forecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <section>
+                            <condition><not><if-empty field="salesForecastId"/></not></condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="salesForecastId"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="SalesForecastTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                    </widgets>
-                                </section>
+                                <include-menu name="SalesForecastTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                             </widgets>
                         </section>
-                        <container style="no-clear">
+                        <container>
                             <decorator-section-include name="body"/>
                         </container>
                     </decorator-section>
@@ -52,32 +48,24 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindSalesForecast"/>
-                <set field="activeMainMenuItem" value="Forecast"/>
+                <set field="activeSubMenuItem" value="Forecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">            
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="no-clear">
-                                    <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                        <decorator-section name="menu-bar">
-                                            <section>
-                                                <widgets>
-                                                    <container style="button-bar"><link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                                </widgets>
-                                            </section>
-                                        </decorator-section>
-                                        <decorator-section name="search-options">
-                                            <include-form name="FindSalesForecast" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
-                                        </decorator-section>
-                                        <decorator-section name="search-results">
-                                            <include-form name="SalesForecastSearchResults" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
-                                        </decorator-section>
-                                    </decorator-screen>
-                                </container>
-                            </widgets>
-                        </section>
+                        <container>
+                            <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                <decorator-section name="menu-bar">
+                                    <container style="button-bar"><link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/></container>
+                                </decorator-section>
+                                <decorator-section name="search-options">
+                                    <include-form name="FindSalesForecast" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
+                                </decorator-section>
+                                <decorator-section name="search-results">
+                                    <include-form name="SalesForecastSearchResults" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
+                                </decorator-section>
+                            </decorator-screen>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -122,16 +110,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonSalesForecastDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.SfaAddSalesForecastDetail} ${uiLabelMap.CommonFor} [${salesForecastId}]">
-                                    <include-form name="AddSalesForecastDetail" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.SfaListSalesForecastDetail}">
-                                    <include-form name="ListSalesForecastDetails" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.SfaAddSalesForecastDetail} ${uiLabelMap.CommonFor} [${salesForecastId}]">
+                            <include-form name="AddSalesForecastDetail" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.SfaListSalesForecastDetail}">
+                            <include-form name="ListSalesForecastDetails" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

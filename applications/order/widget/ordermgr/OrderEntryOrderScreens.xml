@@ -24,7 +24,7 @@ under the License.
     <screen name="quickFinalizeOrder">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="orderentry"/>
+                <set field="activeSubMenuItem" value="orderentry"/>
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutOptions.groovy"/>
@@ -331,18 +331,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="screenlet">
-                                    <platform-specific>
-                                        <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCatalogTabBar.ftl"/></html>
-                                    </platform-specific>
-                                    <container style="screenlet-body">
-                                        <include-form location="component://order/widget/ordermgr/OrderForms.xml" name="LookupBulkAddSupplierProductsInApprovedOrder"></include-form>
-                                    </container>
-                                </container>
-                            </widgets>
-                        </section>
+                        <container style="screenlet">
+                            <platform-specific>
+                                <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCatalogTabBar.ftl"/></html>
+                            </platform-specific>
+                            <container style="screenlet-body">
+                                <include-form location="component://order/widget/ordermgr/OrderForms.xml" name="LookupBulkAddSupplierProductsInApprovedOrder"></include-form>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

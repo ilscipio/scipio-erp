@@ -34,42 +34,12 @@ under the License.
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="MarketingCampaign"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="MarketingCampaign"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.marketingCampaignId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            do check for MARKETING, _VIEW permission
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                    <not><if-empty field="marketingCampaignId"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            do check for MARKETING, _VIEW permission
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -118,11 +88,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
-                                        <section>
-                                            <widgets>
-                                                <container style="button-bar"><link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                            </widgets>
-                                        </section>
+                                        <container style="button-bar"><link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_nav} ${styles.action_add}"/></container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <platform-specific><html><html-template location="component://marketing/webapp/marketing/campaign/FindMarketingCampaing.ftl"/></html></platform-specific>

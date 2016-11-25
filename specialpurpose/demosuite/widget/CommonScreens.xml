@@ -15,6 +15,17 @@
         </auto-include-settings>
     </screen-settings>
 
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+
     <screen name="main-decorator">
         <section>
             <actions>
@@ -28,6 +39,10 @@
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://demosuite/widget/DemoSuiteMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.DemoSuiteApplication}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
@@ -39,6 +54,9 @@
     <screen name="CommonDemoSuiteAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonDemoSuiteAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -48,7 +66,7 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                                <if-true field="commonDemoSuiteAppBasePermCond"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
@@ -94,8 +112,10 @@
     <screen name="CommonDemoSuiteAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="DEMOSUITE"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonDemoSuiteAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="DEMOSUITE" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonDemoSuiteAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

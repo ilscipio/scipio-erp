@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
-final module = "SideDeepCategoryGroovy";
+final module = "SideDeepCategory.groovy";
 
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
 

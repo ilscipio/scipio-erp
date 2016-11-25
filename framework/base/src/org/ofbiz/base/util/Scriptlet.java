@@ -57,4 +57,19 @@ public final class Scriptlet {
     public String toString() {
         return this.language.concat(":").concat(this.script);
     }
+
+    /**
+     * SCIPIO: Returns script language.
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * SCIPIO: Returns script code/body.
+     */
+    public String getScript() {
+        return script;
+    }
+    
 }

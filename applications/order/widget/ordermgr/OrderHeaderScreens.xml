@@ -22,22 +22,14 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="CommonOrderHeaderDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="findorders"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <label style="heading">${uiLabelMap.CommonId}:${orderHeader.orderId}</label>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <label style="heading">${orderHeader.orderId}</label>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -47,7 +39,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditOrderHeader"/>
-                <set field="activeMainMenuItem" value="OrderHeader"/>
                 <set field="activeSubMenuItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>
@@ -69,7 +60,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListOrderHeaders"/>
-                <set field="activeMainMenuItem" value="OrderHeader"/>
                 <set field="activeSubMenuItem" value="EditOrderHeader"/>
 
                 <set field="orderId" from-field="parameters.orderId"/>

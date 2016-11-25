@@ -49,6 +49,9 @@
         <!--<menu-item name="classification">
             <sub-menu name="PartyClassification" include="PartyClassificationSideBar"/>
         </menu-item>-->
+        <menu-item name="security">
+            <sub-menu name="SecurityGroup" include="component://common/widget/SecurityMenus.xml#SecurityGroupSideBar"/>
+        </menu-item>
         <menu-item name="partyinv">
             <sub-menu name="PartyInvitation" include="PartyInvitationSideBar"/>
         </menu-item>
@@ -231,6 +234,12 @@
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewprofile">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
+        <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newprospect" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newemployee" for="PARENT-NOSUB"/>
     </menu>
     
     <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -384,6 +393,19 @@
     </menu>
     <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
+        <menu-item-alias name="NewPartyInvitation" for="PARENT-NOSUB"/>
+    </menu>
+    
+    <!-- SCIPIO: new (combined links) -->
+    <menu name="PartyInvitationSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="editPartyInvitation" title="${uiLabelMap.PartyInvitationNewPartyInvitation}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="editPartyInvitation"/>
+        </menu-item>
+        <menu-item name="invitationNewOrder" title="${uiLabelMap.PartyInvitationNewOrder}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="/ordermgr/control/orderentry" url-mode="inter-app">
+                <parameter param-name="partyId" from-field="partyInvitation.partyIdFrom"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="addShipper">
@@ -631,10 +653,14 @@
         <actions>
             <!-- SCIPIO: this lookup needed so the menu is consistent on all screens -->
             <!-- FIXME?: no perm checks on this lookup, but not important like those in the target screens/decorator -->
-            <!-- NOTE: CommEventTabBar_ prefix is so this works with or without share-scope -->
-            <!-- FIXME: forced to use globalContext for this right now... nasty -->
-            <set field="dummy" value="${groovy: globalContext.CommEventTabBar_communicationEvent = context.communicationEvent ?: 
-                (parameters.communicationEventId ? delegator.findOne('CommunicationEvent', [communicationEventId: parameters.communicationEventId], false): null); return '';}"/>
+            <!-- NOTE: CommEventTabBar_ prefix is so this works with or without share-scope (TODO: find more standard pattern) -->
+            <script><![CDATA[groovy:
+                communicationEvent = context.communicationEvent;
+                if (communicationEvent == null && parameters.communicationEventId) {
+                    communicationEvent = delegator.findOne('CommunicationEvent', [communicationEventId: parameters.communicationEventId], false);
+                } 
+                context.CommEventTabBar_communicationEvent = communicationEvent;
+            ]]></script>
         </actions>
         <!-- SCIPIO: redundant
         <menu-item name="Find" title="${uiLabelMap.CommonFind}">

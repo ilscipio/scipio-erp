@@ -26,7 +26,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentType"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="type"/>
             </actions>
             <widgets>
@@ -46,7 +45,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentAttribute"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="typeAttr"/>
             </actions>
             <widgets>
@@ -66,7 +64,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentAssoc"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="assocType"/>
             </actions>
             <widgets>
@@ -86,7 +83,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentPurpose"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="purposeType"/>
             </actions>
             <widgets>
@@ -106,7 +102,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentAssocPredicate"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="assocPred"/>
             </actions>
             <widgets>
@@ -126,7 +121,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentPurposeOperation"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
             </actions>
             <widgets>
@@ -146,7 +140,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentUserPermissions"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="userpermission"/>
                 <set field="webSitePublishPoint" from-field="parameters.webSitePublishPoint" default-value="OFBIZDOCROOT"/>
                 <script location="component://content/webapp/content/WEB-INF/actions/contentsetup/UserPermPrep.groovy"/>
@@ -168,7 +161,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditContentOperation"/>
-                <set field="activeMainMenuItem" value="ContentSetupMenu"/>
                 <set field="currentMenuItemName" to-scope="user" value="contentOp"/>
             </actions>
             <widgets>

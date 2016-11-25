@@ -55,11 +55,19 @@ import org.apache.xerces.xni.XMLLocator;
 import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XMLString;
 import org.apache.xerces.xni.XNIException;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.w3c.dom.Attr;
 import org.w3c.dom.DOMConfiguration;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
@@ -1148,4 +1156,491 @@ public class UtilXml {
         }
     }
 
+    /**
+     * SCIPIO: Base class wrapping and delegating to an Element.
+     */
+    public static abstract class ElementWrapper implements Element {
+        
+        protected final Element element;
+
+        // Constructors
+        public ElementWrapper(Element element) {
+            this.element = element;
+        }
+        
+        // Element interface methods
+
+        @Override
+        public String getTagName() {
+            return element.getTagName();
+        }
+
+        @Override
+        public String getAttribute(String name) {
+            return element.getAttribute(name);
+        }
+
+        @Override
+        public void setAttribute(String name, String value) throws DOMException {
+            element.setAttribute(name, value);
+        }
+
+        @Override
+        public void removeAttribute(String name) throws DOMException {
+            element.removeAttribute(name);
+        }
+
+        @Override
+        public Attr getAttributeNode(String name) {
+            return element.getAttributeNode(name);
+        }
+
+        @Override
+        public Attr setAttributeNode(Attr newAttr) throws DOMException {
+            return element.setAttributeNode(newAttr);
+        }
+
+        @Override
+        public Attr removeAttributeNode(Attr oldAttr) throws DOMException {
+            return element.removeAttributeNode(oldAttr);
+        }
+
+        @Override
+        public String getNodeName() {
+            return element.getNodeName();
+        }
+
+        @Override
+        public String getNodeValue() throws DOMException {
+            return element.getNodeValue();
+        }
+
+        @Override
+        public NodeList getElementsByTagName(String name) {
+            return element.getElementsByTagName(name);
+        }
+
+        @Override
+        public void setNodeValue(String nodeValue) throws DOMException {
+            element.setNodeValue(nodeValue);
+        }
+
+        @Override
+        public String getAttributeNS(String namespaceURI, String localName) throws DOMException {
+            return element.getAttributeNS(namespaceURI, localName);
+        }
+
+        @Override
+        public short getNodeType() {
+            return element.getNodeType();
+        }
+
+        @Override
+        public Node getParentNode() {
+            return element.getParentNode();
+        }
+
+        @Override
+        public NodeList getChildNodes() {
+            return element.getChildNodes();
+        }
+
+        @Override
+        public void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws DOMException {
+            element.setAttributeNS(namespaceURI, qualifiedName, value);
+        }
+
+        @Override
+        public Node getFirstChild() {
+            return element.getFirstChild();
+        }
+
+        @Override
+        public Node getLastChild() {
+            return element.getLastChild();
+        }
+
+        @Override
+        public Node getPreviousSibling() {
+            return element.getPreviousSibling();
+        }
+
+        @Override
+        public Node getNextSibling() {
+            return element.getNextSibling();
+        }
+
+        @Override
+        public NamedNodeMap getAttributes() {
+            return element.getAttributes();
+        }
+
+        @Override
+        public Document getOwnerDocument() {
+            return element.getOwnerDocument();
+        }
+
+        @Override
+        public Node insertBefore(Node newChild, Node refChild) throws DOMException {
+            return element.insertBefore(newChild, refChild);
+        }
+
+        @Override
+        public void removeAttributeNS(String namespaceURI, String localName) throws DOMException {
+            element.removeAttributeNS(namespaceURI, localName);
+        }
+
+        @Override
+        public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
+            return element.replaceChild(newChild, oldChild);
+        }
+
+        @Override
+        public Attr getAttributeNodeNS(String namespaceURI, String localName) throws DOMException {
+            return element.getAttributeNodeNS(namespaceURI, localName);
+        }
+
+        @Override
+        public Node removeChild(Node oldChild) throws DOMException {
+            return element.removeChild(oldChild);
+        }
+
+        @Override
+        public Attr setAttributeNodeNS(Attr newAttr) throws DOMException {
+            return element.setAttributeNodeNS(newAttr);
+        }
+
+        @Override
+        public Node appendChild(Node newChild) throws DOMException {
+            return element.appendChild(newChild);
+        }
+
+        @Override
+        public NodeList getElementsByTagNameNS(String namespaceURI, String localName) throws DOMException {
+            return element.getElementsByTagNameNS(namespaceURI, localName);
+        }
+
+        @Override
+        public boolean hasChildNodes() {
+            return element.hasChildNodes();
+        }
+
+        @Override
+        public Node cloneNode(boolean deep) {
+            return element.cloneNode(deep);
+        }
+
+        @Override
+        public boolean hasAttribute(String name) {
+            return element.hasAttribute(name);
+        }
+
+        @Override
+        public boolean hasAttributeNS(String namespaceURI, String localName) throws DOMException {
+            return element.hasAttributeNS(namespaceURI, localName);
+        }
+
+        @Override
+        public void normalize() {
+            element.normalize();
+        }
+
+        @Override
+        public TypeInfo getSchemaTypeInfo() {
+            return element.getSchemaTypeInfo();
+        }
+
+        @Override
+        public void setIdAttribute(String name, boolean isId) throws DOMException {
+            element.setIdAttribute(name, isId);
+        }
+
+        @Override
+        public boolean isSupported(String feature, String version) {
+            return element.isSupported(feature, version);
+        }
+
+        @Override
+        public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException {
+            element.setIdAttributeNS(namespaceURI, localName, isId);
+        }
+
+        @Override
+        public String getNamespaceURI() {
+            return element.getNamespaceURI();
+        }
+
+        @Override
+        public String getPrefix() {
+            return element.getPrefix();
+        }
+
+        @Override
+        public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException {
+            element.setIdAttributeNode(idAttr, isId);
+        }
+
+        @Override
+        public void setPrefix(String prefix) throws DOMException {
+            element.setPrefix(prefix);
+        }
+
+        @Override
+        public String getLocalName() {
+            return element.getLocalName();
+        }
+
+        @Override
+        public boolean hasAttributes() {
+            return element.hasAttributes();
+        }
+
+        @Override
+        public String getBaseURI() {
+            return element.getBaseURI();
+        }
+
+        @Override
+        public short compareDocumentPosition(Node other) throws DOMException {
+            return element.compareDocumentPosition(other);
+        }
+
+        @Override
+        public String getTextContent() throws DOMException {
+            return element.getTextContent();
+        }
+
+        @Override
+        public void setTextContent(String textContent) throws DOMException {
+            element.setTextContent(textContent);
+        }
+
+        @Override
+        public boolean isSameNode(Node other) {
+            return element.isSameNode(other);
+        }
+
+        @Override
+        public String lookupPrefix(String namespaceURI) {
+            return element.lookupPrefix(namespaceURI);
+        }
+
+        @Override
+        public boolean isDefaultNamespace(String namespaceURI) {
+            return element.isDefaultNamespace(namespaceURI);
+        }
+
+        @Override
+        public String lookupNamespaceURI(String prefix) {
+            return element.lookupNamespaceURI(prefix);
+        }
+
+        @Override
+        public boolean isEqualNode(Node arg) {
+            return element.isEqualNode(arg);
+        }
+
+        @Override
+        public Object getFeature(String feature, String version) {
+            return element.getFeature(feature, version);
+        }
+
+        @Override
+        public Object setUserData(String key, Object data, UserDataHandler handler) {
+            return element.setUserData(key, data, handler);
+        }
+
+        @Override
+        public Object getUserData(String key) {
+            return element.getUserData(key);
+        }
+    }
+
+    
+    /**
+     * SCIPIO: Returns the element wrapped in a helper that even implements the Element
+     * interface for convenience.
+     */
+    public static ElementHelper getElementHelper(Element element) {
+        return new ElementHelper(element);
+    }
+    
+    /**
+     * SCIPIO: Wraps an element to provide helper methods, in addition to supporting all
+     * the regular Element methods.
+     */
+    public static class ElementHelper extends ElementWrapper {
+        
+        // Constructors
+        
+        public ElementHelper(Element element) {
+            super(element);
+        }
+        
+        // Getters
+        
+        public Element getWrappedElement() {
+            return element;
+        }
+        
+        // Attribute helper methods
+        
+        public String attr(String attrName) {
+            return element.getAttribute(attrName);
+        }
+        
+        public String attr(String attrName, String defaultValue) {
+            String attrValue = element.getAttribute(attrName);
+            return UtilValidate.isNotEmpty(attrValue) ? attrValue : defaultValue;
+        }
+        
+        public Boolean attrAsBoolean(String attrName) {
+            return UtilMisc.booleanValue(attr(attrName));
+        }
+        
+        public boolean attrAsBoolean(String attrName, boolean defaultValue) {
+            return UtilMisc.booleanValue(attr(attrName), defaultValue);
+        }
+        
+        public FlexibleStringExpander attrAsExpander(String attrName) {
+            return FlexibleStringExpander.getInstance(attr(attrName));
+        }
+        
+        public FlexibleStringExpander attrAsExpander(String attrName, String defaultValue) {
+            return FlexibleStringExpander.getInstance(attr(attrName, defaultValue));
+        }
+        
+        public <T> FlexibleMapAccessor<T> attrAsAccessor(String attrName) {
+            return FlexibleMapAccessor.getInstance(attr(attrName));
+        }
+        
+        public <T> FlexibleMapAccessor<T> attrAsAccessor(String attrName, String defaultValue) {
+            return FlexibleMapAccessor.getInstance(attr(attrName, defaultValue));
+        }
+ 
+        // UtilXml method delegates
+
+        /** Creates a child element with the given name and appends it to the element child node list. */
+        public Element addChildElement(String childElementName, Document document) {
+            return UtilXml.addChildElement(element, childElementName, document);
+        }
+
+        /** Creates a child element with the given name and appends it to the element child node list.
+         *  Also creates a Text node with the given value and appends it to the new elements child node list.
+         */
+        public Element addChildElementValue(String childElementName, String childElementValue, Document document) {
+            return UtilXml.addChildElementValue(element, childElementName, childElementValue, document);
+        }
+
+        /** Creates a child element with the given namespace supportive name and appends it to the element child node list. */
+        public Element addChildElementNSElement(String childElementName, Document document, String nameSpaceUrl) {
+            return UtilXml.addChildElementNSElement(element, childElementName, document, nameSpaceUrl);
+        }
+
+        /** Creates a child element with the given namespace supportive name and appends it to the element child node list.
+         *  Also creates a Text node with the given value and appends it to the new elements child node list.
+         */
+        public Element addChildElementNSValue(String childElementName, String childElementValue, Document document, String nameSpaceUrl) {
+            return UtilXml.addChildElementNSValue(element, childElementName, childElementValue, document, nameSpaceUrl);
+        }
+
+        /** Creates a child element with the given name and appends it to the element child node list.
+         *  Also creates a CDATASection node with the given value and appends it to the new elements child node list.
+         */
+        public Element addChildElementCDATAValue(String childElementName, String childElementValue, Document document) {
+            return UtilXml.addChildElementCDATAValue(element, childElementName, childElementValue, document);
+        }
+
+        /** Return a List of Element objects that are children of the given element */
+        public List<? extends Element> childElementList() {
+            return UtilXml.childElementList(element);
+        }
+
+        /** Return a List of Element objects that have the given name and are
+         * immediate children of the given element; if name is null, all child
+         * elements will be included. */
+        public List<? extends Element> childElementList(String childElementName) {
+            return UtilXml.childElementList(element, childElementName);
+        }
+
+        /** Return a List of Element objects that have the given name and are
+         * immediate children of the given element; if name is null, all child
+         * elements will be included. */
+        public List<? extends Element> childElementList(Set<String> childElementNames) {
+            return UtilXml.childElementList(element, childElementNames);
+        }
+
+        /** Return a List of Element objects that have the given name and are
+         * immediate children of the given element; if name is null, all child
+         * elements will be included. */
+        public List<? extends Element> childElementList(String... childElementNames) {
+            return UtilXml.childElementList(element, childElementNames);
+        }
+
+        /** Return a List of Node objects that have the given name and are immediate children of the given element;
+          * if name is null, all child elements will be included. */
+        public List<? extends Node> childNodeList() {
+            return UtilXml.childNodeList(element);
+        }
+
+        /** Return the first child Element
+         * returns the first element. */
+        public Element firstChildElement(Set<String> childElementNames) {
+            return UtilXml.firstChildElement(element, childElementNames);
+        }
+
+        /** Return the first child Element
+         * returns the first element. */
+        public Element firstChildElement(String... childElementNames) {
+            return UtilXml.firstChildElement(element, childElementNames);
+        }
+
+        /** Return the first child Element
+         * returns the first element. */
+        public Element firstChildElement() {
+            return UtilXml.firstChildElement(element);
+        }
+
+        /** Return the first child Element with the given name; if name is null
+         * returns the first element. */
+        public Element firstChildElement(String childElementName) {
+            return UtilXml.firstChildElement(element, childElementName);
+        }
+
+        /** Return the first child Element with the given name; if name is null
+         * returns the first element. */
+        public Element firstChildElement(String childElementName, String attrName, String attrValue) {
+            return UtilXml.firstChildElement(element, childElementName, attrName, attrValue);
+        }
+
+        /** Return the text (node value) contained by the named child node. */
+        public String childElementValue(String childElementName) {
+            return UtilXml.childElementValue(element, childElementName);
+        }
+
+        /** Return the text (node value) contained by the named child node or a default value if null. */
+        public String childElementValue(String childElementName, String defaultValue) {
+            return UtilXml.childElementValue(element, childElementName, defaultValue);
+        }
+
+        /** Return a named attribute of a named child node or a default if null. */
+        public String childElementAttribute(String childElementName, String attributeName, String defaultValue) {
+            return UtilXml.childElementAttribute(element, childElementName, attributeName, defaultValue);
+        }
+
+        /** Return the text (node value) of the first node under this, works best if normalized. */
+        public String elementValue() {
+            return UtilXml.elementValue(element);
+        }
+
+        /** Return the text (node value) of the first node under this */
+        public String nodeValue() {
+            return UtilXml.nodeValue(element);
+        }
+
+        public String elementAttribute(String attrName, String defaultValue) {
+            return UtilXml.elementAttribute(element, attrName, defaultValue);
+        }
+    }
+    
 }

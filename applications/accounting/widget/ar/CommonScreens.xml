@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
     
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+    
     <screen name="main-decorator">
         <section>
             <actions>
@@ -46,7 +57,11 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.AccountingCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="ArAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://accounting/widget/ar/ArMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/>                
+                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/> 
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>             
             </actions>
            <widgets>
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -75,6 +90,10 @@ under the License.
     <screen name="CommonArAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonArAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ACCOUNTING, _VIEW permission -->
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -82,7 +101,17 @@ under the License.
                         <include-screen name="CommonArAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonArAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -92,8 +121,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="invoiceTypeId" value="SALES_INVOICE"/>
                 <set field="titleProperty" value="CommonOverview"/>
             </actions>
@@ -118,26 +146,14 @@ under the License.
     <screen name="CommonPaymentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonArAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}] ${${extraFunctionName}}"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
-                            </fail-widgets>
-                        </section>
+                        <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} [${paymentId}] ${${extraFunctionName}}"/>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -147,14 +163,10 @@ under the License.
     <screen name="CommonArPaymentDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Payment" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonArAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -164,7 +176,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="paymentGroups"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
@@ -175,32 +186,28 @@ under the License.
                 <decorator-screen name="CommonArAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <not><if-empty field="paymentGroup"/></not>
+                            </condition>
                             <widgets>
+                                <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="paymentGroup"/></not>
+                                        <not><if-empty field="title"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading">${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
-                                            </fail-widgets>
-                                        </section>
+                                        <label style="heading">${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>
+                                        <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]</label>
                                     </fail-widgets>
                                 </section>
-                                <decorator-section-include name="body"/>
                             </widgets>
+                            <fail-widgets>
+                                <label style="heading">${uiLabelMap.AccountingNewPaymentGroup}</label>
+                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -211,13 +218,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/ar/ArMenus.xml#Invoice" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
-                
                 <!-- sidebar additional perm check -->
-                <set field="permServ" value=""/>
-                <set field="permServ.name" value="acctgInvoicePermissionCheck"/>
-                <set field="permServ.mainAction" value="VIEW"/>
-                <set field="commonSideBarMenu.permServList[]" from-field="permServ"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonArAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -330,8 +334,10 @@ under the License.
     <screen name="CommonArAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="acctgBasePermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+                <condition-to-field field="commonArAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonArAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

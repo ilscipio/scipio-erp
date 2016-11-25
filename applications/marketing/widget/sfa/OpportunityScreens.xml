@@ -31,19 +31,15 @@ under the License.
                 <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> --> 
                 <decorator-screen name="CommonOpportunityDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">            
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container><link target="EditSalesOpportunity" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindSalesOpportunity" location="component://marketing/widget/sfa/forms/OpportunityForms.xml"/>
-                                    </decorator-section>                                        
-                                    <decorator-section name="search-results">                                        
-                                        <include-form name="ListSalesOpportunity" location="component://marketing/widget/sfa/forms/OpportunityForms.xml"/>                                        
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <container><link target="EditSalesOpportunity" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}"/></container>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindSalesOpportunity" location="component://marketing/widget/sfa/forms/OpportunityForms.xml"/>
+                            </decorator-section>                                        
+                            <decorator-section name="search-results">                                        
+                                <include-form name="ListSalesOpportunity" location="component://marketing/widget/sfa/forms/OpportunityForms.xml"/>                                        
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

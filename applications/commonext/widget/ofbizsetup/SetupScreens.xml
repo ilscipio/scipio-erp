@@ -101,11 +101,7 @@
                                         <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
                                     </fail-widgets>
                                 </section>
-                                <section>
-                                    <widgets>
-                                        <include-form name="EditFacility" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
-                                    </widgets>
-                                </section>
+                                <include-form name="EditFacility" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
@@ -141,7 +137,7 @@
                                 <section>
                                     <condition><not><if-empty field="productStoreId"/></not></condition>
                                     <widgets>
-                                        <label style="heading" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]"/>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${productStoreId}]"/>
                                     </widgets>
                                 </section>
                                 <screenlet title="${uiLabelMap.SetupEditProductStore}">
@@ -262,7 +258,7 @@
                                 <if-compare field="showErrorMsg" operator="equals" value="N"/>
                             </condition>
                             <widgets>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${productCategoryId}]  ${${extraFunctionName}}</label>
                                 <screenlet name="CreateProductCategory" title="${uiLabelMap.PageTitleEditProductCategory}">
                                     <include-form name="EditProductCategory" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                                 </screenlet>
@@ -296,7 +292,7 @@
                             </condition>
                             <widgets>
                                 <container>
-                                    <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                    <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${productId}]  ${${extraFunctionName}}</label>
                                 </container>
                                 <include-form name="EditProduct" location="component://commonext/widget/ofbizsetup/SetupForms.xml"/>
                             </widgets>
@@ -343,7 +339,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
-                <set field="activeMainMenuItem" value="init"/>
+                <set field="activeSubMenuItem" value="init"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">

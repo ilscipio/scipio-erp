@@ -24,7 +24,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceType"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditDataResourceType"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -46,7 +45,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceCharacterSet"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditCharacterSet"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -68,7 +66,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceTypeAttr"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditDataResourceTypeAttr"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -90,7 +87,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceFileExtension"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditFileExtension"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -112,7 +108,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceMetaDataPredicate"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditMetaDataPredicate"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -134,7 +129,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceMimeType"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditMimeType"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -156,7 +150,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceMimeTypeHtmlTemplate"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditMimeTypeHtmlTemplate"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -178,7 +171,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditDataResourceCategory"/>
-                <set field="activeMainMenuItem" value="DataResourceSetupMenu"/>
                 <set field="activeSubMenuItem" to-scope="user" value="EditDataCategory"/>
                 <script location="component://content/webapp/content/WEB-INF/actions/datasetup/DataCategoryPrep.groovy"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>

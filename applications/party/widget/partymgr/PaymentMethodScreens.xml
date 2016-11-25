@@ -38,8 +38,8 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="hasViewPermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPayInfoPermission" operator="equals" value="true" type="Boolean"/>
+                                    <if-true field="hasViewPermission" />
+                                    <if-true field="hasPayInfoPermission" />
                                 </or>
                             </condition>
                             <widgets>
@@ -127,7 +127,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAvsOverride"/>
-                <set field="activeMainMenuItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
 
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
@@ -160,8 +160,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditBillingAccount"/>
-                <!-- SCIPIO: doesn't exist...?
-                <set field="activeMainMenuItem" value="billingaccount"/>-->
                 <set field="activeSubMenuItem" value="EditBillingAccount"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="billingAccountId" from-field="parameters.billingAccountId"/>

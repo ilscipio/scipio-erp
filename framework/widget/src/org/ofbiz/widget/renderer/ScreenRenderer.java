@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +64,12 @@ import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.cache.GenericWidgetOutput;
 import org.ofbiz.widget.cache.ScreenCache;
 import org.ofbiz.widget.cache.WidgetContextCacheKey;
+import org.ofbiz.widget.model.AbstractModelAction;
+import org.ofbiz.widget.model.ModelAction;
+import org.ofbiz.widget.model.ModelLocation;
 import org.ofbiz.widget.model.ModelScreen;
+import org.ofbiz.widget.model.ModelScreenSettings;
+import org.ofbiz.widget.model.ModelScreens;
 import org.ofbiz.widget.model.ScreenFactory;
 import org.xml.sax.SAXException;
 
@@ -79,6 +85,10 @@ public class ScreenRenderer {
 
     public static final String module = ScreenRenderer.class.getName();
 
+    // SCIPIO: these get set in context to indicate render init has been run for the context.
+    public static final String WEBAPP_RENDER_INIT_GUARD = "_scpRdrInitWebappRun"; // stored as Boolean
+    public static final String LOCAL_RENDER_INIT_GUARDS = "_scpRdrInitLocalRuns"; // stored as a Set
+    
     protected Appendable writer;
     protected MapStack<String> context;
     protected ScreenStringRenderer screenStringRenderer;
@@ -201,6 +211,7 @@ public class ScreenRenderer {
             ScreenCache screenCache = new ScreenCache();
             GenericWidgetOutput gwo = screenCache.get(screenCombinedName, wcck);
             if (gwo == null) {
+                checkRunRenderInit(resourceName); // SCIPIO: new hooks
                 Writer sw = new StringWriter();
                 modelScreen.renderScreenString(sw, context, screenStringRenderer);
                 gwo = new GenericWidgetOutput(sw.toString());
@@ -220,6 +231,7 @@ public class ScreenRenderer {
                 }
             }
         } else {
+            checkRunRenderInit(resourceName); // SCIPIO: new hooks
             context.put("renderFormSeqNumber", String.valueOf(renderFormSeqNumber));
             // SCIPIO: may render to string
             if (asString) {
@@ -232,6 +244,94 @@ public class ScreenRenderer {
         }
         return "";
     }
+    
+    /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and (unlike the other methods) by default protects the context by pushing it before/after the render,
+     * with optional boolean to bypass it.
+     * <p>
+     * Additionally, this method automatically handles the case where screenName is empty and included in resourceName.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        if (asString == null) {
+            asString = Boolean.FALSE;
+        }
+        if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
+            context.push();
+            try {
+                if (UtilValidate.isNotEmpty(screenName)) {
+                    return render(resourceName, screenName, asString);
+                } else {
+                    return render(resourceName, asString);
+                }
+            } finally {
+                context.pop();
+            }
+        } else { // if (shareScope == Boolean.TRUE)
+            if (UtilValidate.isNotEmpty(screenName)) {
+                return render(resourceName, screenName, asString);
+            } else {
+                return render(resourceName, asString);
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Renders the named screen using the render environment configured when this ScreenRenderer was created,
+     * and (unlike the other methods) by default protects the context by pushing it before/after the render,
+     * with optional boolean to bypass it, generic type/ftl friendly version.
+     * <p>
+     * Additionally, this method automatically handles the case where screenName is empty and included in resourceName.
+     * <p>
+     * This overload accepts Objects instead of Booleans, for FTL support.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
+    }
+    
+    /**
+     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION. 
+     * <p>
+     * Should be run at the beginning of every screen render, just at the moment the top screen
+     * render is about to start.
+     */
+    public void checkRunRenderInit(String resourceName) {
+        if (!Boolean.TRUE.equals(context.get(WEBAPP_RENDER_INIT_GUARD))) {
+            // run webapp init first (more general)
+            runWebappRenderInitActions(context, resourceName);
+            
+            context.put(WEBAPP_RENDER_INIT_GUARD, Boolean.TRUE);
+        }
+        
+        Set<String> localRunGuards = UtilGenerics.checkSet(context.get(LOCAL_RENDER_INIT_GUARDS));
+        if (localRunGuards == null || !localRunGuards.contains(resourceName)) {
+            // run local screens init last (more specific)
+            runLocalRenderInitActions(context, resourceName);
+            
+            if (localRunGuards == null) {
+                localRunGuards = new HashSet<>();
+                localRunGuards.add(resourceName);
+                context.put(LOCAL_RENDER_INIT_GUARDS, localRunGuards);
+            }
+        }
+    }
+     
 
     public void setRenderFormUniqueSeq (int renderFormSeqNumber) {
         this.renderFormSeqNumber = renderFormSeqNumber;
@@ -409,7 +509,9 @@ public class ScreenRenderer {
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         
+        // SCIPIO: General context scripts and per-webapp context scripts
         populateContextScripts(context);
+        populateWebappContextScripts(context, request, response, servletContext);
         
         // to preserve these values, push the MapStack
         context.push();
@@ -466,4 +568,124 @@ public class ScreenRenderer {
         }
     }
 
+    /**
+     * SCIPIO: Calls the script named by widgetContextScriptLocation init-parameter in web.xml.
+     * <p>
+     * Should be called after rest of context populated and scripts will fish out what they need out of the context,
+     * and after #populateContextScripts, because these are more specific.
+     */
+    public static void populateWebappContextScripts(Map<String, Object> context, 
+            HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        // first run generic groovy/minilang script
+        String fullLoc = getWebappContextScriptLocation(request, servletContext);
+        if (fullLoc != null) {
+            String location = WidgetWorker.getScriptLocation(fullLoc);
+            String method = WidgetWorker.getScriptMethodName(fullLoc);
+            ScriptUtil.executeScript(location, method, context);
+        }
+    }
+    
+    /**
+     * SCIPIO: Return webapp-specific context script location based on web.xml configuration:
+     * renderContextScriptLocation init-parameter.
+     */
+    public static String getWebappContextScriptLocation(HttpServletRequest request, ServletContext servletContext) {
+        String res = (String) servletContext.getAttribute("widgetContextScriptLocation");
+        if (res != null && !res.isEmpty()) {
+            return res;
+        }
+        return null;
+    }
+    
+    /**
+     * SCIPIO: Runs webapp-specific render init actions.
+     */
+    public static void runWebappRenderInitActions(Map<String, Object> context, String resource) {
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        ServletContext servletContext = (ServletContext) context.get("servletContext");
+        if (request == null) {
+            return;
+        }
+        if (servletContext == null) {
+            servletContext = request.getServletContext(); // NOTE: new in Servlet API 3.0
+        }
+        
+        // next run screen-based one
+        ModelLocation modelLoc = getRenderInitScriptScreenLocation(request, servletContext);        
+        if (modelLoc.hasResource()) {
+            ModelScreen scriptScreen;
+            try {
+                scriptScreen = ScreenFactory.getScreenFromLocationOrNull(modelLoc.getResource(), 
+                        modelLoc.getName());
+            } catch (Exception e) {
+                Debug.logError(e, "Could not resolve render init script screen location: " + modelLoc, module);
+                scriptScreen = null;
+            }
+            if (scriptScreen != null) {
+                try {
+                    AbstractModelAction.runSubActions(scriptScreen.getSection().getActions(), context);
+                } catch (Exception e) {
+                    Debug.logError(e, "Error running render init screen actions [" + modelLoc.toString() + "]", module);
+                }
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Return render init script screen location based on web.xml configuration:
+     * renderInitScriptScreenLocation init-parameter, with fallback on mainDecoratorLocation.
+     * The default screen name is "webapp-common-actions".
+     */
+    public static ModelLocation getRenderInitScriptScreenLocation(HttpServletRequest request, ServletContext servletContext) {
+        ModelLocation modelLoc = (ModelLocation) servletContext.getAttribute("_RIS_screenModelLoc");
+        if (modelLoc != null) { // NOTE: no need for synchronization; getAttribute is thread safe and races don't matter
+            return modelLoc;
+        }
+        
+        String strLoc = (String) servletContext.getAttribute("renderInitScriptScreenLocation");
+        if (strLoc != null && !strLoc.isEmpty()) {
+            if (!strLoc.contains("#")) { // is name only
+                String mainDec = (String) servletContext.getAttribute("mainDecoratorLocation");
+                if (mainDec != null && !mainDec.isEmpty()) {
+                    modelLoc = ModelLocation.fromResAndName(mainDec, strLoc);
+                }
+            } else {
+                modelLoc = ModelLocation.fromAddress(strLoc);
+            }
+        } else {
+            strLoc = (String) servletContext.getAttribute("mainDecoratorLocation");
+            if (strLoc != null && !strLoc.isEmpty()) {
+                modelLoc = ModelLocation.fromResAndName(strLoc, "webapp-common-actions");
+            }
+        }
+        
+        if (modelLoc == null) {
+            modelLoc = ModelLocation.EMPTY_LOCATION;
+        }
+        // cache it
+        servletContext.setAttribute("_RIS_screenModelLoc", modelLoc);
+        return modelLoc;
+    }
+    
+    /**
+     * SCIPIO: Runs local render init actions. NOTE: can be more than one of these run in a request if
+     * screens from multiple webapps are involved.
+     */
+    public static void runLocalRenderInitActions(Map<String, Object> context, String resource) {
+        List<ModelAction> actions;
+        try {
+            actions = ScreenFactory.getScreensFromLocation(resource).getEffectiveSettings().getLocalRenderInitActions();
+        } catch (Exception e) {
+            Debug.logError(e, "Could not resolve render init script screen location from "
+                    + "web.xml renderInitScriptScreenLocation/mainDecoratorLocation config: " + resource, module);
+            actions = null;
+        }
+        if (actions != null) {
+            try {
+                AbstractModelAction.runSubActions(actions, context);
+            } catch (Exception e) {
+                Debug.logError(e, "Error running local render init screen actions for [" + resource + "]", module);
+            }
+        }
+    }
 }

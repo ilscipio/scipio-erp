@@ -26,8 +26,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindParty"/>
-                <!--<set field="activeSubMenuItem" value="findparty"/>-->
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="findparty"/>
                 <service service-name="findParty" auto-field-map="parameters"/>
                 
                 <set field="searchPerformed" type="Boolean" value="${groovy: parameters.lookupFlag == 'Y'}" />
@@ -88,7 +87,6 @@ under the License.
                                 </entity-one>
                                 <set field="parameters.partyId" from-field="party.partyId"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <section>
                             <condition>
@@ -106,19 +104,17 @@ under the License.
                                 </entity-one>
                                 <set field="parameters.partyId" from-field="party.partyId"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <section>
                             <condition>
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
-                                              
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
                                 <!--
                                 <section>
                                     <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                        <if-true field="showOld"/>
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
@@ -135,42 +131,37 @@ under the License.
                                             </link>
                                         </container>
                                     </fail-widgets>
-                                </section>-->
-                                <section>
-                                    <widgets>
-
-                                         <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <!--
-                                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
-                                                    <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                -->
-                                                <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                        </container>
-                                        <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                             </container>
-                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            </container>
-                                        </container>
-                                        <container style="${styles.grid_row}">
-                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
-                                             </container>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                 </section>-->
+                                 <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <!--
+                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
+                                            <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        -->
+                                        <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                </container>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                     </container>
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    </container>
+                                </container>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
+                                     </container>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <container>
@@ -471,9 +462,9 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="hasViewPermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPcmCreatePermission" operator="equals" value="true" type="Boolean"/>
-                                    <if-compare field="hasPcmUpdatePermission" operator="equals" value="true" type="Boolean"/>
+                                    <if-true field="hasViewPermission" />
+                                    <if-true field="hasPcmCreatePermission" />
+                                    <if-true field="hasPcmUpdatePermission" />
                                     <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
                                     <not><if-empty field="mechMap.partyContactMech"/></not>
                                 </or>
@@ -509,7 +500,7 @@ under the License.
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndPerson" value-field="personInfo"/>
-                <set field="activeSubMenuItem" value="${groovy: context.personInfo ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.personInfo ? 'viewprofile' : 'newperson'}"/>
                 <set field="titleProperty" value="${groovy: context.personInfo ? 'PageTitleEditPersonalInformation' : 'PartyCreateNewPerson'}"/>
             </actions>
             <widgets>
@@ -532,7 +523,7 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
                 
-                <set field="activeSubMenuItem" value="${groovy: context.partyGroup ? 'viewprofile' : 'PARENT-NOSUB'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.partyGroup ? 'viewprofile' : 'newpartygroup'}"/>
                 <set field="titleProperty" value="${groovy: context.partyGroup ? 'PageTitleEditGroupInformation' : 'PartyCreateNewPartyGroup'}"/>
             </actions>
             <widgets>
@@ -695,7 +686,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateNewPartyDetail"/>
-                <set field="activeMainMenuItem" value="find"/>
+                <set field="activeSubMenuItem" value="find"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -734,7 +725,7 @@ under the License.
                 <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newcustomer"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -780,7 +771,7 @@ under the License.
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newprospect"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -822,7 +813,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="newemployee"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
@@ -867,7 +858,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatchMap"/>
-                <set field="activeMainMenuItem" value="addrmap"/>
+                <set field="activeSubMenuItem" value="addrmap"/>
                 <entity-condition entity-name="AddressMatchMap" list="addressMatchMaps">
                     <order-by field-name="sequenceNum"/>
                 </entity-condition>
@@ -888,7 +879,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddressMatches"/>
-                <set field="activeMainMenuItem" value="addrmap"/>
+                <set field="activeSubMenuItem" value="addrmap"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindMatches.groovy"/>
             </actions>
             <widgets>
@@ -1320,9 +1311,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindProductStoreRoles"/>
-                <!-- SCIPIO: ???
-                <set field="activeMainMenuItem" value="store"/>
-                <set field="activeSubMenuItem" value="FindProductStoreRoles"/>-->
                 <set field="activeSubMenuItem" value="productStoreRoles"/>
                 <set field="labelTitleProperty" value="ProductProductStoreRoles"/>
                 <set field="parameters.fromDate" from-field="parameters.fromDate" type="Timestamp"/>
@@ -1385,7 +1373,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="CommonImportExport"/>
-                <set field="activeMainMenuItem" value="importexport"/>
+                <set field="activeSubMenuItem" value="importexport"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">

@@ -26,7 +26,6 @@ under the License.
     <screen name="viewdatafile">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsDataFileMainTitle"/>
                 <set field="activeSubMenuItem" value="data"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/datafile/viewdatafile.groovy"/>
@@ -43,27 +42,25 @@ under the License.
         </section>
     </screen>
 
-    <screen name="WebtoolsLayoutDemoCommonActions">
-        <section>
-            <actions>
-                <!-- These are included by include-actions directive. -->
-                <set field="commonActionField1" value="This value 1 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
-                <set field="commonActionField2" value="This value 2 was set in WebtoolsLayoutDemoCommonActions screen actions included using the new include-actions screen widget directive, but should get overridden by another include. [ERROR]"/>
-                
-                <!-- SCIPIO: NEW: flexible locations for <script> location -->
-                <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
-                <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
-            </actions>
-            <widgets>
-                <section>
-                    <actions>
-                        <!-- These are NOT included by include-actions directive. -->
-                        <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoCommonActions outside its top section and should not be included by include-actions. [ERROR]"/>
-                    </actions>
-                    <widgets/>
-                </section>
-            </widgets>
-        </section>
+    <screen name="WebtoolsLayoutDemoActions">
+        <actions>
+            <set field="debugMode" from-field="parameters.debugMode" type="Boolean" default-value="false" />
+            <if>
+                <condition><if-true field="parameters.debugMode"/></condition><!-- NOTE: if-true succeeds with either proper Boolean or string of boolean, "true" -->
+                <then>
+                    <script lang="groovy"><![CDATA[
+                        import org.ofbiz.base.util.Debug;
+                        Debug.logInfo("Running layout demo in debug mode", "LayoutDemoActions.groovy");
+                    ]]></script>
+                </then>
+                <else>
+                    <script lang="groovy"><![CDATA[
+                        import org.ofbiz.base.util.Debug;
+                        Debug.logInfo("Running layout demo in regular mode", "LayoutDemoActions.groovy");
+                    ]]></script>
+                </else>
+            </if>
+        </actions>
     </screen>
 
     <screen name="WebtoolsLayoutDemo">
@@ -75,12 +72,10 @@ under the License.
         -->
         <section>
             <actions>
-                <set field="debugMode" from-field="parameters.debugMode" type="Boolean" default-value="false" />
-            
+                <include-screen-actions name="WebtoolsLayoutDemoActions"/>
                 <set field="testtest" value="test ' asdf ' &gt; asdf &lt; asdfasdf" />
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="WebtoolsLayoutDemo"/>
-                <set field="activeMainMenuItem" value="LayoutDemo"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="LayoutDemo" />
                 <set field="activeSubMenuItem" value="${groovy: (context.debugMode ? 'LayoutDemoDebug' : 'LayoutDemo')}"/>
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
@@ -135,6 +130,34 @@ under the License.
         </section>
     </screen>
 
+    <screen name="WebtoolsLayoutDemoOfbizWidgetActions">
+        <actions><!-- NOTE: In an actions-only screen, should skip the top section and all else - only have actions element. -->
+            <!-- SCIPIO: NEW: flexible locations for <script> location -->
+            <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
+            <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
+            
+            <include-screen-actions name="WebtoolsLayoutDemoExtraPoorActions"/>
+        </actions>
+    </screen>
+
+    <screen name="WebtoolsLayoutDemoExtraPoorActions">
+        <section><!-- NOTE: In a good actions-only screen def, you omit this top <section> and all <widgets/> sections... -->
+            <actions>
+                <!-- These are included by include-actions directive. -->
+                <set field="commonActionField1" value="This value 1 was set in WebtoolsLayoutDemoExtraPoorActions screen actions included using the new include-actions screen widget directive. [SUCCESS]"/>
+                <set field="commonActionField2" value="This value 2 was set in WebtoolsLayoutDemoExtraPoorActions screen actions included using the new include-actions screen widget directive, but should get overridden by another include. [ERROR]"/>
+            </actions>
+            <widgets>
+                <section>
+                    <actions>
+                        <!-- These are NOT included by include-screen-actions directive. -->
+                        <set field="nonCommonActionField4" value="This value 4 was set in WebtoolsLayoutDemoOfbizWidgetActions outside its top section and should not be included by include-actions. [ERROR]"/>
+                    </actions>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
@@ -143,10 +166,12 @@ under the License.
                 <set field="nonCommonActionField4" value="This value should keep its original value from WebtoolsLayoutDemoOfbizWidgets. [SUCCESS]"/>
                 <set field="commonActionField5" value="This value should get overridden... [ERROR]"/>
                 <!-- Scipio directive to easily reuse screen actions -->
-                <include-screen-actions name="WebtoolsLayoutDemoCommonActions"/>
+                <include-screen-actions name="WebtoolsLayoutDemoOfbizWidgetActions"/>
                 <!-- It's even possible to include actions from different widget types! -->
                 <include-form-actions name="LayoutDemoActionsIncludeTest2" location="component://webtools/widget/MiscForms.xml"/>
-                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="component://webtools/widget/Menus.xml"/>
+                <!-- dynamic form -->
+                <set field="miscMenusLocation" value="component://webtools/widget/MiscMenus.xml"/>
+                <include-menu-actions name="WebtoolsMenuActionsDemo4" location="${miscMenusLocation}"/>
             </actions>
             <widgets>
                 <!-- 
@@ -169,7 +194,6 @@ under the License.
                             <actions>
                                 <set field="tableStyle" value="${styles.table_data_list} dark-grid"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <section>
                             <actions>
@@ -177,7 +201,6 @@ under the License.
                                 <set field="headerStyle" value="header-row-2"/>
                                 <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                             </actions>
-                            <widgets/>
                         </section>
                         <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                     </widgets>
@@ -192,7 +215,6 @@ under the License.
                                     <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                                     <set field="viewSize" value="1" type="Integer"/>
                                 </actions>
-                                <widgets/>
                             </section>
                             <include-form name="LayoutDemoList" location="component://webtools/widget/MiscForms.xml"/>
                         </screenlet>
@@ -213,7 +235,7 @@ under the License.
                     </screenlet>
                 </screenlet>
                 <screenlet title="Screenlets" id="my-widget-screenlet-parent" navigation-menu-name="WebtoolsInlineSectionMenuDemo">
-                    <include-menu location="component://webtools/widget/Menus.xml" name="WebtoolsInlineSectionMenuDemo"/>
+                    <include-menu location="component://webtools/widget/MiscMenus.xml" name="WebtoolsInlineSectionMenuDemo"/>
                     <label text="This section/screenlet has a special legacy Ofbiz navigation menu, rendered as section-inline menu type by default."/>
                     <screenlet id="my-widget-screenlet-child" title="Complex title style" title-style="container:mycontainerclass;h:mytitleclass"></screenlet>
                     <screenlet title="Complex title style 2 (override title elem)" title-style="container:mycontainerclass;container:+mytitleclass"></screenlet>
@@ -265,31 +287,304 @@ under the License.
                 </screenlet>
                 <screenlet title="Widget menus">
                     <label style="heading" text="Nested button menu (markup test only)" />
-                    <include-menu name="LayoutDemoButton2" location="component://webtools/widget/Menus.xml"/>
-                    <include-menu name="LayoutDemoNestedButton" location="component://webtools/widget/Menus.xml"/>
-                    <include-menu name="LayoutDemoButtonDropdown" location="component://webtools/widget/Menus.xml"/>
+                    <include-menu name="LayoutDemoButton2" location="component://webtools/widget/MiscMenus.xml"/>
+                    <include-menu name="LayoutDemoNestedButton" location="component://webtools/widget/MiscMenus.xml"/>
+                    <include-menu name="LayoutDemoButtonDropdown" location="component://webtools/widget/MiscMenus.xml"/>
                     
                     <screenlet title="Scope sharing test">
-                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="false"/>
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/MiscMenus.xml" share-scope="false"/>
                         <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;&quot;)" />
-                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/Menus.xml" share-scope="true"/>
+                        <include-menu name="LayoutDemoTest2" location="component://webtools/widget/MiscMenus.xml" share-scope="true"/>
                         <label text="demoTestVar1 value (share-scope test): &quot;${demoTestVar1}&quot; (should be &quot;demoTestValue1&quot;)" />
                     </screenlet>
                     
                     <screenlet title="Depth limit test">
                         <label text="Full (default/-1)" style="heading"/>
-                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/MiscMenus.xml" max-depth="-1"/>
                         <label text="max-depth 2" style="heading"/>
-                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="2"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/MiscMenus.xml" max-depth="2"/>
                         <label text="max-depth 1" style="heading"/>
-                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="1"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/MiscMenus.xml" max-depth="1"/>
                         <label text="sub-menus 'none' filter (same as max-depth 1)" style="heading"/>
-                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/Menus.xml" max-depth="-1" sub-menus="none"/>
+                        <include-menu name="LayoutDemoTest3" location="component://webtools/widget/MiscMenus.xml" max-depth="-1" sub-menus="none"/>
                     </screenlet>
                     
                     <screenlet title="Screen widget include-screens directive test">
-                        <include-screen name="DemoExtraWidget1"/>
-                        <include-screen name="DemoExtraWidget2"/>
+                        <screenlet title="Regular widget screens">
+                            <label style="p">The following simply includes two local screens that were included from another file with include-screens directive.
+                                Because the target includes were regular screens containing widgets, they were created in our local file by include-screens using simple
+                                delegating directives containing the legacy include-screen directive. No surprises here.</label>
+                            <include-screen name="DemoExtraWidget1"/>
+                            <include-screen name="DemoExtraWidget2"/>
+                        </screenlet>
+                        <screenlet title="Actions-only screens">
+                            <section share-scope="false">
+                                <actions>
+                                    <!-- these succeed if the vars print out at all -->
+                                    <include-screen-actions name="DemoExtraActions1"/>
+                                    <include-screen-actions name="DemoExtraActions2"/>
+                                    <include-screen-actions name="DemoExtraActions3"/>
+                                    <include-screen-actions name="DemoExtraActions4"/>
+                                </actions>
+                                <widgets>
+                                    <label style="p">The following tests the actions includes produced by include-screens directive.
+                                        In the next, the first two should print because they contained only actions, so they were implemented by include-screens with an include-screen-actions delegate/placeholder,
+                                        and this ensures the include-screen-actions we just ran work transitively and succeed.
+                                        The two after should come up blank because they contained widgets and condition, so include-screens implemented their delegates with include-screen, and
+                                        the include-screen-actions we just ran above is not able to follow those.
+                                        This highlights the importance of creating the right kind of screens, in order for reuse to work after.</label>
+                                    <label text="demoExtraActions1Msg: ${demoExtraActions1Msg}"/>
+                                    <label text="demoExtraActions2Msg: ${demoExtraActions2Msg}"/>
+                                    <label text="demoExtraActions3Msg (should be empty, contained widgets): ${demoExtraActions3Msg}"/>
+                                    <label text="demoExtraActions4Msg (should be empty, contained condition): ${demoExtraActions4Msg}"/>
+                                    <label text="Now print the third one within its widget, and it should only show this way:"/>
+                                    <include-screen name="DemoExtraActions3"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </screenlet>
+                    
+                    <screenlet title="New widget condition-to-field element">
+                        <section share-scope="false">
+                            <actions>
+                                <set field="testField1" value="someValue"/>
+                                <set field="testField2" value="someValue2"/>
+                                
+                                <condition-to-field field="boolRes1" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <condition-to-field field="boolRes2" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="NOTsomeValue"/>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="indicatorRes1" type="Indicator">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                <condition-to-field field="indicatorRes2" type="Indicator">
+                                    <and>
+                                        <if-compare field="testField1" operator="not-equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="stringRes1" type="String">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                    </and>
+                                </condition-to-field>
+                                <condition-to-field field="stringRes2" type="PlainString" fail-value="this is fail-value with some interpolated field ${testField2}">
+                                    <and>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                        <if-compare field="testField2" operator="not-equals" value="someValue2"/>
+                                    </and>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="mapRes1" type="Map" pass-value="{hey=you, its=me}">
+                                    <or>
+                                        <if-compare field="testField1" operator="equals" value="someValue"/>
+                                    </or>
+                                </condition-to-field>
+                                <condition-to-field field="mapRes2" type="Map" pass-value="{hey=you, its=me}"><!-- tests null -->
+                                    <or>
+                                        <if-compare field="testField1" operator="not-equals" value="someValue"/>
+                                    </or>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="testMap.testBoolList[]">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <condition-to-field field="testMap.testBoolList[]" type="Boolean">
+                                    <if-compare field="testField1" operator="equals" value="NOTsomeValue"/>
+                                </condition-to-field>
+                                
+                                <set field="boolRes3" value="this is non-empty, won't be overridden"/>
+                                <condition-to-field field="boolRes3" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                <set field="boolRes4" value=""/>
+                                <condition-to-field field="boolRes4" type="Boolean" only-if-field="empty">
+                                    <if-compare field="testField1" operator="equals" value="someValue"/>
+                                </condition-to-field>
+                                
+                                <condition-to-field field="commonSideBarMenuEmu.cond" type="Boolean" only-if-field="empty">
+                                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                    </or>
+                                </condition-to-field>
+                            </actions>
+                            <widgets>
+                                <label text="boolRes1: '${boolRes1}'"/>
+                                <label text="boolRes2: '${boolRes2}'"/>
+                                <label text="indicatorRes1: '${indicatorRes1}'"/>
+                                <label text="indicatorRes2: '${indicatorRes2}'"/>
+                                <label text="stringRes1: '${stringRes1}'"/>
+                                <label text="stringRes2: '${stringRes2}'"/>
+                                <label text="mapRes1: '${mapRes1}'"/>
+                                <label text="mapRes2 (should be null/empty): '${mapRes2}'"/>
+                                <label text="testMap.testBoolList: '${testMap.testBoolList}'"/>
+                                <label text="boolRes3 (only-if-field='empty'): '${boolRes3}'"/>
+                                <label text="boolRes4 (only-if-field='empty'): '${boolRes4}'"/>
+                                <label text="commonSideBarMenuEmu.cond: '${commonSideBarMenuEmu.cond}'"/>
+                            </widgets>
+                        </section>
+                    </screenlet>
+                    
+                    <screenlet title="Screen inline FTL templates and inline groovy scripts">
+                        <section>
+                            <actions>
+                                <!-- NOTE: The script type must be specified for inline scripts, either as own attribute (new in Scipio)
+                                    or with prefix-colon syntax (stock ofbiz method): -->
+                                <script lang="groovy"><![CDATA[
+                                    import org.ofbiz.base.util.*;
+                                    Debug.logInfo("Running from inline groovy script!", "LayoutDemoInline.groovy");
+                                    context.myVarFromInlineGroovy1 = "This was assigned from within inline groovy script & it's working great!";
+                                ]]></script>
+                                <!-- NOTE: The default for trim-lines is true, meaning the left and right spaces in the xml disappear from the script
+                                    before it is passed to the interpreter/compiler.
+                                    If a script is negatively affected (rare but possible), false can be specified, in which case all the extra whitespace
+                                    in the XML then gets included in the script passed to the interpreter/compiler. -->
+                                <script trim-lines="false"><![CDATA[groovy:
+                                    import org.ofbiz.base.util.*;
+                                    Debug.logInfo("Running from inline groovy script 2!", "LayoutDemoInline.groovy");
+                                ]]></script>
+                            </actions>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template><![CDATA[
+                                        <#assign myVar = "This was assigned within inline freemarker template!">
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">${myVar}</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template lang="ftl"><![CDATA[
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">Second inline template! Explicit type (default is ftl anyway).<br/>
+                                                myVarFromInlineGroovy1: ${myVarFromInlineGroovy1}</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template trim-lines="false"><![CDATA[ftl:
+                                        <@row>
+                                          <@cell>
+                                            <@alert type="info">Third inline template, with colon-prefixed type, fully redundant.</@alert>
+                                          </@cell>
+                                        </@row>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                    </screenlet>
+                    
+                    <screenlet title="New conditional element tests (if, if-widget)">
+                        <section>
+                            <actions>
+                                <set field="testField1" value="true"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField1" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField1" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField1" value="else block"/>
+                                    </else>
+                                </if>
+                                <set field="testField1" value="false"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField2" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField2" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField2" value="else block"/>
+                                    </else>
+                                </if>
+                                <set field="testField1" value="other"/>
+                                <if>
+                                    <condition><if-true field="testField1"/></condition>
+                                    <then><set field="resField3" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField3" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField3" value="else block"/>
+                                    </else>
+                                </if>
+                                <set field="testField1" value="other"/>
+                                <if>
+                                    <condition><if-true value="${testField1 == 'other'}"/></condition>
+                                    <then><set field="resField4" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField4" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField4" value="else block"/>
+                                    </else>
+                                </if>
+                                <set field="testField1" value="other"/>
+                                <if condition="${testField1 == 'other'}">
+                                    <then><set field="resField5" value="if block"/></then>
+                                    <else-if>
+                                        <condition><if-false field="testField1"/></condition>
+                                        <then><set field="resField5" value="else-if block"/></then>
+                                    </else-if>
+                                    <else>
+                                        <set field="resField5" value="else block"/>
+                                    </else>
+                                </if>
+                                
+                                <condition-to-field field="existsCrazyWidget1">
+                                    <if-widget operator="defined" type="screen" location="${parameters.mainDecoratorLocation}" name="crazyWidget1" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMainDecorator">
+                                    <if-widget operator="defined" type="screen" location="${parameters.mainDecoratorLocation}" name="main-decorator" />
+                                </condition-to-field>
+                                <condition-to-field field="existsFormWidgetProgramExport">
+                                    <if-widget operator="defined" type="form" location="component://webtools/widget/MiscForms.xml" name="ProgramExport" />
+                                </condition-to-field>
+                                <condition-to-field field="existsFormWidgetRidiculous">
+                                    <if-widget operator="defined" type="form" location="component://webtools/widget/MiscForms.xml" name="Ridiculous" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMenuWidgetRidiculous">
+                                    <if-widget operator="defined" type="menu" location="component://webtools/widget/Menus.xml" name="Ridiculous" />
+                                </condition-to-field>
+                                <condition-to-field field="existsMenuWidgetWebtoolsAppBar">
+                                    <if-widget operator="defined" type="menu" location="component://webtools/widget/Menus.xml" name="WebtoolsAppBar" />
+                                </condition-to-field>
+                            </actions>
+                            <widgets>
+                                <label text="resField1: ${resField1}"/>
+                                <label text="resField2: ${resField2}"/>
+                                <label text="resField3: ${resField3}"/>
+                                <label text="resField4: ${resField4}"/>
+                                <label text="resField5: ${resField5}"/>
+
+                                <label text="existsCrazyWidget1: ${existsCrazyWidget1}"/>
+                                <label text="existsMainDecorator: ${existsMainDecorator}"/>
+                                <label text="existsFormWidgetProgramExport: ${existsFormWidgetProgramExport}"/>
+                                <label text="existsFormWidgetRidiculous: ${existsFormWidgetRidiculous}"/>
+                                <label text="existsMenuWidgetRidiculous: ${existsMenuWidgetRidiculous}"/>
+                                <label text="existsMenuWidgetWebtoolsAppBar: ${existsMenuWidgetWebtoolsAppBar}"/>
+                            </widgets>
+                        </section>
                     </screenlet>
                 </screenlet>
             </widgets>

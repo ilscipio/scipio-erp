@@ -27,9 +27,11 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -430,6 +432,22 @@ public class UtilMisc {
         return set;
     }
 
+    /**
+     * SCIPIO: Create a HashSet from collection
+     * @return The resulting HashSet
+     */
+    public static <T> Set<T> toHashSet(Collection<? extends T> collection) {
+        return new HashSet<T>(collection);
+    }
+    
+    /**
+     * SCIPIO: Create a HashSet from passed objX parameters
+     * @return The resulting HashSet
+     */
+    public static <T> Set<T> toHashSet(T... obj) {
+        return new HashSet<T>(Arrays.asList(obj));
+    }
+    
     /**
      * Create a list from passed objX parameters
      * @return The resulting List

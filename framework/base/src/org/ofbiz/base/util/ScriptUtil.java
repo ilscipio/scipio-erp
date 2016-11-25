@@ -103,6 +103,8 @@ public final class ScriptUtil {
                     }
                 }
             }
+            // SCIPIO: Print out all script names in succinct list to help with script maintenance
+            Debug.logInfo("All supported script names: " + writableScriptNames.toString(), module);
         }
         SCRIPT_NAMES = Collections.unmodifiableSet(writableScriptNames);
         Iterator<ScriptHelperFactory> iter = ServiceLoader.load(ScriptHelperFactory.class).iterator();
@@ -486,5 +488,30 @@ public final class ScriptUtil {
         public Collection<Object> values() {
             return bindings.values();
         }
+    }
+    
+    /**
+     * SCIPIO: Performs String.trim() on every line of script. Completely flattens the code.
+     */
+    public static String trimScriptLines(String body) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new java.io.StringReader(body));
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                sb.append(line.trim());
+                line = reader.readLine();
+                if (line != null) {
+                    sb.append("\n");
+                }
+            }
+        } catch (IOException e) {
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+            }
+        }
+        return sb.toString();
     }
 }

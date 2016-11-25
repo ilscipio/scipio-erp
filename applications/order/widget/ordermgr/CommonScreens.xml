@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -63,6 +74,10 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.Order}" global="true"/>
                 <!-- globally parameterize the link to a customer's detail information, to help with cases when such details are accessed via external application. -->
                 <set field="customerDetailLink" value="/partymgr/control/viewprofile?partyId=" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <!--<decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>-->
@@ -95,6 +110,10 @@ under the License.
     <screen name="CommonOrderAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonOrderAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ORDERMGR, _VIEW permission -->
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -102,53 +121,11 @@ under the License.
                         <include-screen name="CommonOrderAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="CommonQuoteDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="quote"/>
-                <set field="quoteId" from-field="parameters.quoteId"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
-                                <and>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                    <not><if-empty field="quoteId"/></not>
-                                </and>
+                                <if-true field="commonOrderAppBasePermCond"/>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="quoteId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="QuoteSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                                    </widgets>
-                                </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -161,41 +138,40 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonQuoteDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Quote" />
+                <set field="quoteId" from-field="parameters.quoteId"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.quoteId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="quoteId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="QuoteSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- SCIPIO: NOTE: this is now only for screens that are child of "Find Orders" (NOT orderlist, main, etc.) -->
     <screen name="CommonOrderDecorator">
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Order" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="findorders"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.orderId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="orderId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -205,28 +181,13 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="orderentry"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetCheckOutTabBar.groovy"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.orderId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                    <not><if-empty field="orderId"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCheckOutTabBar.ftl"/></html>
@@ -242,13 +203,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value=""/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -272,9 +230,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -284,13 +239,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reports"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="reports"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -300,28 +252,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Request" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="requests"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.custRequest}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                    <not><if-empty field="custRequest"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <include-menu name="RequestSubTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                         <container>
@@ -341,36 +277,33 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: NOTE: this is for a SINGLE requirement -->
+    <!-- SCIPIO: NOTE: this is for a SINGLE requirement (needs special case menu) -->
     <screen name="CommonRequirementDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Requirement" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="requirement"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Requirement" />                
+                <!-- TODO?: this is actually confusing in some of the sub-screens currently
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.requirement ? (' ' + context.requirementId) : ''}"/> -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <section>
                             <condition>
-                                <and>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                    <not><if-empty field="requirementId"/></not>
-                                </and>
+                                <not><if-empty field="requirementId"/></not>
                             </condition>
                             <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                                <include-screen name="CommonOrderAppSideBarMenu"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- special case -->
-                                <!--<include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>-->
+                                <!-- special: fall back to the previous-level menu; this just makes CommonRequirementDecorator more adaptive -->
                                 <section share-scope="false">
                                     <actions>
                                         <set field="activeSubMenu" value="component://order/widget/ordermgr/OrderMenus.xml#Requirements" />
                                         <set field="activeSubMenuItem" value="FindRequirements"/>
                                     </actions>
                                     <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
+                                        <include-screen name="CommonOrderAppSideBarMenu"/>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -378,28 +311,12 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
+                            <condition><not><if-empty field="requirement"/></not></condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="requirement"/></not></condition>
-                                    <widgets>
-                                        <label style="heading">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
-                                    </widgets>
-                                </section>
-                                <!--<section>
-                                    <condition><not><if-empty field="requirement"/></not></condition>
-                                    <widgets>
-                                        <include-menu name="RequirementTabBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                                    </widgets>
-                                </section>-->
-                                <decorator-section-include name="body"/>
+                                <label style="heading">${uiLabelMap.OrderRequirement} [${requirementId}]</label>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -411,26 +328,14 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Requirements" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="requirement"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ORDERMGR, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <container>
-                                    <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <container>
+                            <link target="EditRequirement" text="${uiLabelMap.OrderNewRequirement}" style="${styles.link_nav} ${styles.action_add}"/>
+                        </container>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -441,30 +346,14 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://order/widget/ordermgr/OrderMenus.xml#Return" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="return"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.returnId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                                    <not><if-empty field="returnId"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <!-- SCIPIO: NOTE: this is redundant, but leaving for now... -->
+                                <!-- SCIPIO: NOTE: this is redundant, but leaving for now... (TODO: REVIEW) -->
                                 <html-template location="component://order/webapp/ordermgr/return/returnLinks.ftl"/>
                             </html>
                         </platform-specific>
@@ -506,8 +395,11 @@ under the License.
     <screen name="CommonOrderAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="ORDERMGR"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonOrderAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <!-- do check for ORDERMGR, _VIEW permission -->
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonOrderAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

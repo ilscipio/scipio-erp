@@ -21,6 +21,7 @@ package org.ofbiz.widget.model;
 import java.util.Collection;
 import java.util.Map;
 
+import org.ofbiz.widget.model.HtmlWidget.FileHtmlTemplate;
 import org.ofbiz.widget.model.HtmlWidget.HtmlTemplate;
 import org.ofbiz.widget.model.HtmlWidget.HtmlTemplateDecorator;
 import org.ofbiz.widget.model.HtmlWidget.HtmlTemplateDecoratorSection;
@@ -164,8 +165,11 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
     @Override
     public void visit(HtmlTemplate htmlTemplate) throws Exception {
         writer.append("<html-template");
-        visitModelWidget(htmlTemplate);
-        visitAttribute("location", htmlTemplate.getLocationExdr());
+        // SCIPIO: new. TODO: better polymorph
+        if (htmlTemplate instanceof FileHtmlTemplate) {
+            visitModelWidget(htmlTemplate);
+            visitAttribute("location", ((FileHtmlTemplate) htmlTemplate).getLocationExdr());
+        }
         writer.append("/>");
     }
 

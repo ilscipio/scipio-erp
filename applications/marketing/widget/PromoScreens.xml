@@ -43,15 +43,10 @@ under the License.
                             </container>
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
                                 <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
-                                    <section>
-                                        <widgets>
-                                            <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
-                                        </widgets>
-                                    </section>
+                                    <include-form name="GoToProductPromoCode" location="component://product/widget/catalog/PromoForms.xml"/>
                                 </screenlet>
                             </container>
                         </container>
-                        
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -61,7 +56,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromos"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <!-- SCIPIO: if not editing existing, the find one is selected, which has same label
                 <set field="activeSubMenuItem" value="EditProductPromo"/> -->
                 <set field="labelTitleProperty" value="ProductPromotion"/>
@@ -84,7 +78,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoRules"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromoRules"/>
                 <set field="labelTitleProperty" value="ProductRules"/>
 
@@ -158,7 +151,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoStores"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromoStores"/>
                 <set field="labelTitleProperty" value="ProductStores"/>
                 
@@ -190,7 +182,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ProductPromotionCode"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="FindProductPromoCode"/>
                 <set field="productPromoId" from-field="parameters.productPromoId"/>
                 <entity-one entity-name="ProductPromo" value-field="productPromo" auto-field-map="true"/>
@@ -206,13 +197,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPromoDecorator" location="component://marketing/widget/sfa/CommonScreens.xml"><!-- SCIPIO: copied & modified: name="CommonPromoDecorator" location="component://product/widget/catalog/CommonScreens.xml" -->
                     <decorator-section name="body">  
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/promo/FindProductPromoCode.ftl"/></html>
+                        </platform-specific>
                         <section>
                             <condition>
                                 <not>
@@ -250,7 +237,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromotionCode"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="FindProductPromoCode"/>
                 <set field="labelTitleProperty" value="ProductPromotionCode"/>
 
@@ -278,7 +264,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductPromoContent"/>
-                <set field="activeMainMenuItem" value="promos"/>
                 <set field="activeSubMenuItem" value="EditProductPromoContent"/>
                 <set field="labelTitleProperty" value="ProductPromoContents"/>
                 <set field="productPromoId" from-field="parameters.productPromoId"/>

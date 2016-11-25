@@ -23,24 +23,10 @@ under the License.
     <screen name="log-decorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

@@ -1,7 +1,12 @@
 
 <#-- SCIPIO: TODO: show some cases only if debug mode is on -->
 <#if debugMode>
-<p>Debug mode: ON</p>
+  <@commonMsg type="info">
+    Debug mode: ON<br/>
+    <small>NOTE: In this mode, for testing purposes, the page intentionally contains elements and styles 
+        that may appear broken visually, and provides some examples of things <em>not</em> to do, 
+        where noted.</small>
+  </@commonMsg>
 </#if>
 
 <#--<@nav type="magellan">
@@ -1605,7 +1610,23 @@
     <#assign dummy = setGlobalContextField("paymentMethodId", "")>
     <li>getLabel (resource not present in uiLabelMap + args explicit off): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", false)}"</li>
     <li>getLabel (resource not present in uiLabelMap + explicit args): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", {"partyId":"INSERTED-PARTYID", "paymentMethodId":"INSERTED-PAYMENTMETHODID"})}"</li>
+    
+    <li>getLabel with orderId: ${getLabel('ProductErrorOrderIdNotFound', 'ProductUiLabels', {"orderId":'WS10000'})}</li>
   </ul>
+</@section>
+
+<@section title="Menu highlighting">
+  <ul>
+    <li>context.activeSubMenu: ${context.activeSubMenu!"(none)"}</li>
+    <li>context.activeSubMenuItem: ${context.activeSubMenuItem!"(none)"}</li>
+        
+    <li>context.activeMainMenuItem: ${context.activeMainMenuItem!"(none)"}</li>
+    <li>globalContext.activeMainMenuItem: ${globalContext.activeMainMenuItem!"(none)"}</li>
+
+    <li>context.activeMainMenuItem_auto: ${context.activeMainMenuItem_auto!"(none)"}</li>
+    <li>globalContext.activeMainMenuItem_auto: ${globalContext.activeMainMenuItem_auto!"(none)"}</li>
+  </ul>
+
 </@section>
 
 <@section title="Tree menu">
@@ -1699,25 +1720,25 @@
 
   <@section title="Direct inclusions">
     <p>Button Menu</p>
-    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2" />
+    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2" />
     <p>Button Menu (sub-menus filtered out)</p>
-    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoButton2NoSubMenus" />
+    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
 
     <p>Test form</p>
     <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
     <p>Max depth arg test</p>
-    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" />
-    <@render type="menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" maxDepth="1" />
-    <@render type="include-menu" resource="component://webtools/widget/Menus.xml#LayoutDemoTest3" subMenus="none" />
+    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
+    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" />
+    <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none" />
   </@section>
 
   <@section title="Admin plain site-map/tree">
   <@row>
       <@cell columns=6>
-        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo" />
+        <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#WebtoolsPlainSiteMapDemo" />
       </@cell>
       <@cell columns=6>
-        <@render type="include-menu" resource="component://webtools/widget/Menus.xml#WebtoolsPlainSiteMapDemo3" />
+        <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#WebtoolsPlainSiteMapDemo3" />
       </@cell>
     </@row>
   </@section>

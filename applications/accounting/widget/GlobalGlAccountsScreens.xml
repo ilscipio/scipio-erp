@@ -24,26 +24,16 @@ under the License.
     <screen name="GenericDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="chartofaccounts"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="chartofaccounts"/>
             </actions>
             <widgets>
-                <!-- main defines the regions of the HTML page -->
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
-                                <!-- Now call the SimpleScreen form -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <!--
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.XxxxViewPermissionError}</label>
-                            </fail-widgets>
-                            -->
-                        </section>
+                        <!-- SCIPIO: TODO?: PERMISSIONS? -->
+                        <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
+                        <!-- Now call the SimpleScreen form -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -60,13 +50,15 @@ under the License.
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <!-- SCIPIO: NOTE: the following check was already commented in stock ofbiz.
+                                TODO: review -->
                             <!-- do check for CATALOG, _VIEW permission -->
                             <!-- condition>
                                 <if-has-permission permission="CATALOG" action="_VIEW"/>
                             </condition -->
                             <widgets>
                                 <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${productId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <!--
@@ -164,7 +156,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewAccountingTransaction"/>
-                <set field="activeMainMenuItem" value="chartofaccounts"/>
+                <set field="activeSubMenuItem" value="chartofaccounts"/>
                 <set field="acctgTransId" from-field="requestParameters.acctgTransId"/>
                 <entity-and entity-name="AcctgTransEntry" list="entries">
                     <field-map field-name="acctgTransId"/>
@@ -227,12 +219,12 @@ under the License.
             <widgets>
                 <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <!-- 
                         <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <screenlet title="${uiLabelMap[labelTitleProperty]}">
-                            <container style="button-bar">
-                                <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}"/>
-                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="${styles.link_run_sys} ${styles.action_export}"/>
-                            </container>
+                        <include-menu name="GlAccountListSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        -->
+                        <include-menu name="GlAccountListCombinedTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <screenlet>
                             <include-form name="ListGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
                     </decorator-section>

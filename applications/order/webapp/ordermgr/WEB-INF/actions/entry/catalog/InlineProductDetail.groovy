@@ -52,8 +52,8 @@ if (inlineProductId) {
         context.product = inlineProduct;
         contentWrapper = new ProductContentWrapper(inlineProduct, request);
         // SCIPIO: Do NOT HTML-escape this here
-        context.put("title", contentWrapper.get("PRODUCT_NAME");
-        context.put("metaDescription", contentWrapper.get("DESCRIPTION");
+        context.put("title", contentWrapper.get("PRODUCT_NAME"));
+        context.put("metaDescription", contentWrapper.get("DESCRIPTION"));
         productTemplate = product.detailScreen;
         if (productTemplate) {
             detailScreen = productTemplate;

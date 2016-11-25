@@ -43,8 +43,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - Form factory class
+ * <p>
+ * SCIPIO: now also as instance
  */
-public class FormFactory {
+@SuppressWarnings("serial")
+public class FormFactory extends WidgetFactory {
 
     public static final String module = FormFactory.class.getName();
     private static final UtilCache<String, ModelForm> formLocationCache = UtilCache.createUtilCache("widget.form.locationResource", 0, 0, false);
@@ -61,7 +64,24 @@ public class FormFactory {
         return readFormDocument(formFileDoc, entityModelReader, dispatchContext, resourceName);
     }
 
+    /**
+     * Gets widget from location or exception. 
+     * <p>
+     * SCIPIO: now delegating.
+     */
     public static ModelForm getFormFromLocation(String resourceName, String formName, ModelReader entityModelReader, DispatchContext dispatchContext)
+            throws IOException, SAXException, ParserConfigurationException {
+        ModelForm modelForm = getFormFromLocationOrNull(resourceName, formName, entityModelReader, dispatchContext);
+        if (modelForm == null) {
+            throw new IllegalArgumentException("Could not find form with name [" + formName + "] in class resource [" + resourceName + "]");
+        }
+        return modelForm;
+    }
+    
+    /**
+     * SCIPIO: Gets widget from location or null if name not within the location.
+     */
+    public static ModelForm getFormFromLocationOrNull(String resourceName, String formName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
         StringBuilder sb = new StringBuilder(dispatchContext.getDelegator().getDelegatorName());
         sb.append(":").append(resourceName).append("#").append(formName);
@@ -79,9 +99,6 @@ public class FormFactory {
             }
             modelForm = createModelForm(formFileDoc, entityModelReader, dispatchContext, resourceName, formName);
             modelForm = formLocationCache.putIfAbsentAndGet(cacheKey, modelForm);
-        }
-        if (modelForm == null) {
-            throw new IllegalArgumentException("Could not find form with name [" + formName + "] in class resource [" + resourceName + "]");
         }
         return modelForm;
     }
@@ -142,6 +159,32 @@ public class FormFactory {
             return new ModelSingleForm(formElement, formLocation, entityModelReader, dispatchContext);
         } else {
             return new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
+        }
+    }
+
+    @Override
+    public ModelForm getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+        try {
+            DispatchContext dctx = getDefaultDispatchContext();
+            return getFormFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+                    dctx.getDelegator().getModelReader(), dctx);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    public ModelForm getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+        try {
+            DispatchContext dctx = getDefaultDispatchContext();
+            return getFormFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+                    dctx.getDelegator().getModelReader(), dctx);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
         }
     }
 }

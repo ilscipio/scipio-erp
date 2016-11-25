@@ -551,12 +551,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
-                <!-- 
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar"/>
-                    </decorator-section>
-                -->
                     <decorator-section name="body">
                         <section>
                             <condition><not><if-empty field="productStore"/></not></condition>

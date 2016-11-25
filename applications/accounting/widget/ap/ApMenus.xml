@@ -106,6 +106,8 @@ under the License.
         default-menu-item-name="viewInvoices">
         <include-elements menu-name="ApInvoiceTabBar" recursive="includes-only" />
         <include-elements menu-name="InvoiceSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <menu-item-alias name="viewInvoices" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="newInvoice" for="PARENT-WITHSUB"/>
     </menu>
     
     <menu name="ApReportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -129,9 +131,13 @@ under the License.
         <include-elements menu-name="PaymentTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
     </menu>
     
-    <menu name="ApPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ApPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="sdfsadfsdf">
         <include-elements menu-name="ApPaymentTabBar" recursive="includes-only" />
         <include-elements menu-name="PaymentSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <!-- if these item names are selected in screens, will highlight the parent item with sub-menu (this menu) not expanded -->
+        <menu-item-alias name="findApPayments" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newApPayment" for="PARENT-NOSUB"/>
     </menu>
     
 </menus>

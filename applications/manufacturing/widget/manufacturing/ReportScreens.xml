@@ -24,7 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="ManufacturingReports"/>
-                <set field="activeMainMenuItem" value="ManufacturingReports"/>
+                <set field="activeSubMenuItem" value="ManufacturingReports"/>
 
                 <set field="mrpName" from-field="parameters.mrpName"/>
             </actions>

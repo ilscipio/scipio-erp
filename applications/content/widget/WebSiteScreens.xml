@@ -28,24 +28,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet><!-- title="${uiLabelMap.PageTitleListWebSite}" -->
-                                    <!-- SCIPIO: redundant
-                                    <container style="button-bar">
-                                        <link text="${uiLabelMap.ContentNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
-                                    </container>
-                                    -->
-                                    <include-form name="ListWebSites" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet><!-- title="${uiLabelMap.PageTitleListWebSite}" -->
+                            <!-- SCIPIO: redundant
+                            <container style="button-bar">
+                                <link text="${uiLabelMap.ContentNewWebSite}" target="EditWebSite" style="${styles.link_nav} ${styles.action_add}"/>
+                            </container>
+                            -->
+                            <include-form name="ListWebSites" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -64,13 +54,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet>
-                                    <include-form name="EditWebSite" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="EditWebSite" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -92,19 +78,15 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleWebSiteContent}">
-                                    <include-form name="ListWebSiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.PageTitleCreateWebSiteContent}">
-                                    <include-form name="CreateWebSiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.PageTitleAutoCreateContentPublishPoints}">
-                                    <include-form name="AutoCreateWebsiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.PageTitleWebSiteContent}">
+                            <include-form name="ListWebSiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleCreateWebSiteContent}">
+                            <include-form name="CreateWebSiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleAutoCreateContentPublishPoints}">
+                            <include-form name="AutoCreateWebsiteContent" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -125,14 +107,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet id="AddWebSiteRolePanel" title="${uiLabelMap.PageTitleCreateWebSiteParties}" collapsible="true">
-                                    <include-form name="CreateWebSiteRole" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                                <include-form name="UpdateWebSiteRole" location="component://content/widget/website/WebSiteForms.xml"/>
-                            </widgets>
-                        </section>
+                        <screenlet id="AddWebSiteRolePanel" title="${uiLabelMap.PageTitleCreateWebSiteParties}" collapsible="true">
+                            <include-form name="CreateWebSiteRole" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
+                        <include-form name="UpdateWebSiteRole" location="component://content/widget/website/WebSiteForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

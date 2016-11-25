@@ -27,26 +27,11 @@ under the License.
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${activeDataSourceSubMenuItem}" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="DataSource"/>
                 <set field="dataSourceId" from-field="parameters.dataSourceId"/>
                 <entity-one entity-name="DataSource" value-field="dataSource"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMarketingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

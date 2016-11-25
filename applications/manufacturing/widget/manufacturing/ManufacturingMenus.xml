@@ -346,13 +346,18 @@ under the License.
     </menu>
 
     <menu name="CalendarTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- it would need a session hack for this one, not worth it
         <actions>
-            <!- SCIPIO: workaround to help smoother browsing here ->
-            <set field="dummy" value="${groovy: globalContext.CalendarTabBar_tempVal = context.techDataCalendar ?: 
-                    (parameters.calendarId ? delegator.findOne('TechDataCalendar', [calendarId:parameters.calendarId], false) : null)}"/>
-            <set field="techDataCalendar" from-field="CalendarTabBar_tempVal"/>
-        </actions>-->
+            <!-- SCIPIO: workaround to help smoother browsing here 
+                FIXME: this is only partial, may need a session hack...
+            -->
+            <script><![CDATA[groovy:
+                techDataCalendar = context.techDataCalendar;
+                if (techDataCalendar == null && parameters.calendarId) {
+                    techDataCalendar = delegator.findOne('TechDataCalendar', [calendarId:parameters.calendarId], false);
+                }
+                context.techDataCalendar = techDataCalendar;
+            ]]></script>
+        </actions>
         <!-- SCIPIO: redundant
         <menu-item name="Calendar" title="${uiLabelMap.ManufacturingCalendars}">
             <link target="FindCalendar"/>
@@ -391,6 +396,7 @@ under the License.
     
     <menu name="CalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="CalendarTabBar" recursive="includes-only" />
+        <menu-item-alias name="Calendar" for="PARENT-WITHSUB"/>
     </menu>
 
     <menu name="RoutingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -413,6 +419,7 @@ under the License.
     
     <menu name="RoutingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="RoutingTabBar" recursive="includes-only" />
+        <menu-item-alias name="findRouting" for="PARENT-NOSUB"/>
     </menu>
 
     <menu name="RoutingTaskTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -440,5 +447,6 @@ under the License.
 
     <menu name="RoutingTaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="RoutingTaskTabBar" recursive="includes-only" />
+        <menu-item-alias name="routingTask" for="PARENT-NOSUB"/>
     </menu>
 </menus>

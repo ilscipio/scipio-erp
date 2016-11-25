@@ -24,10 +24,12 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.PatternSyntaxException;
 
@@ -39,11 +41,14 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.ScriptUtil;
+import org.ofbiz.base.util.Scriptlet;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilXml.ElementHelper;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -56,8 +61,14 @@ import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.MiniLangRuntimeException;
+import org.ofbiz.minilang.MiniLangUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.ofbiz.minilang.method.conditional.Conditional;
+import org.ofbiz.minilang.method.conditional.ConditionalFactory;
+import org.ofbiz.minilang.method.conditional.ElseIf;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -116,6 +127,10 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return new GetRelatedOne(modelWidget, actionElement);
         } else if ("get-related".equals(actionElement.getNodeName())) {
             return new GetRelated(modelWidget, actionElement);
+        } else if ("condition-to-field".equals(actionElement.getNodeName())) { // SCIPIO: new
+            return new ConditionToField(modelWidget, actionElement);
+        } else if ("if".equals(actionElement.getNodeName())) { // SCIPIO: new
+            return new MasterIf(modelWidget, actionElement);
         } else if (IncludeActions.isIncludeActions(actionElement)) { // SCIPIO: new
             return IncludeActions.newInstance(modelWidget, actionElement);
         } else {
@@ -172,6 +187,13 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      */
     public ModelWidget getModelWidget() {
         return modelWidget;
+    }
+    
+    /**
+     * SCIPIO: Returns suffix log message with location/id of directive (best-effort).
+     */
+    public String getLogDirectiveLocationString() {
+        return modelWidget != null ? modelWidget.getLogWidgetLocationString() : " (untracked widget)";
     }
 
     @Override
@@ -603,14 +625,34 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
     /**
      * Models the &lt;script&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-10: Extended to support inline scripts using code from
+     * {@link org.ofbiz.minilang.method.callops.CallScript}
+     * <p>
+     * TODO: The child CDATA text should use a proper cache key instead of the
+     * script body as ofbiz(?) coded it (should use: widgetloc#widgetname@line,col).
      * 
      * @see <code>widget-common.xsd</code>
      */
     public static class Script extends AbstractModelAction {
+        
+        /**
+         * SCIPIO: available languages. NOTE: may not same as XSD; this is more permissive.
+         */
+        public static final Set<String> supportedLangs;
+        static {
+            Set<String> langSet = new HashSet<>();
+            langSet.addAll(ScriptUtil.SCRIPT_NAMES);
+            langSet.add("simple-method");
+            langSet.add("simple-map-processor");
+            supportedLangs = Collections.unmodifiableSet(langSet);
+        }
+        
         // SCIPIO: these are patched for dynamic location support
         //private final String location;
         //private final String method;
         private final FlexibleStringExpander locationExdr;
+        private final Scriptlet scriptlet; // SCIPIO: imported from CallScript
 
         public Script(ModelWidget modelWidget, Element scriptElement) {
             super(modelWidget, scriptElement);
@@ -618,8 +660,86 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             //this.location = WidgetWorker.getScriptLocation(scriptLocation);
             //this.method = WidgetWorker.getScriptMethodName(scriptLocation);
             this.locationExdr = FlexibleStringExpander.getInstance(scriptLocation);
+            
+            // SCIPIO: inline script preparation derived from (but no longer resembles):
+            //   org.ofbiz.minilang.method.callops.CallScript.CallScript(Element, SimpleMethod)
+            String lang = scriptElement.getAttribute("lang");
+            if (!lang.isEmpty() && !supportedLangs.contains(lang)) {
+                Debug.logError("script element: lang attribute unrecognized language: lang=\"" + lang + "\"", module);
+            }
+            
+            String inlineScript = scriptElement.getAttribute("script");
+            boolean hasScriptPrefix = startsWithLangPrefix(inlineScript);
+            Scriptlet scriptlet = null;
+            if (hasScriptPrefix || (!inlineScript.isEmpty() && !lang.isEmpty())) {
+                // use script attribute
+                if (!hasScriptPrefix) {
+                    inlineScript = lang + ":" + inlineScript;
+                }
+                inlineScript = StringUtil.convertOperatorSubstitutions(inlineScript);
+                scriptlet = makeScriptlet(inlineScript);
+            } else {
+                if (!inlineScript.isEmpty()) {
+                    Debug.logError("script element: script attribute contains code of unspecified"
+                            + " or unknown language: script=\"" + inlineScript + "\"", module);
+                }
+                inlineScript = UtilXml.elementValue(scriptElement);
+                if (UtilValidate.isNotEmpty(inlineScript)) {
+                    hasScriptPrefix = startsWithLangPrefix(inlineScript);
+                    if (hasScriptPrefix || (!inlineScript.isEmpty() && !lang.isEmpty())) {
+                        // use script child body
+                        if (!hasScriptPrefix) {
+                            inlineScript = lang + ":" + inlineScript;
+                        }
+                        boolean trimLines = "true".equals(scriptElement.getAttribute("trim-lines"));
+                        if (trimLines) {
+                            inlineScript = ScriptUtil.trimScriptLines(inlineScript);
+                        }
+                        // SCIPIO: NOTE: do NOT convert keyword operators when using elem body!
+                        scriptlet = makeScriptlet(inlineScript);
+                    } else {
+                        if (!inlineScript.isEmpty()) {
+                            Debug.logError("script element: script body/child contains code of unspecified"
+                                    + " or unknown language: script=\"" + inlineScript + "\"", module);
+                        }
+                    }
+                }
+            }
+            this.scriptlet = scriptlet;
         }
-
+        
+        /**
+         * SCIPIO: Returns <code>true</code> if <code>str</code> starts with a recognized lang prefix.
+         * @param str The string to test
+         * @return <code>true</code> if <code>str</code> starts with a recognized lang prefix
+         */
+        public static boolean startsWithLangPrefix(String str) {
+            if (str.length() > 0) {
+                for (String scriptPrefix : supportedLangs) {
+                    if (str.startsWith(scriptPrefix)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        /**
+         * SCIPIO: makes scriptlet.
+         */
+        private static Scriptlet makeScriptlet(String inlineScript) {
+            if (MiniLangUtil.startsWithScriptPrefix(inlineScript)) {
+                return new Scriptlet(inlineScript);
+            } else {
+                // TODO: simple-method, simple-map-processor
+                int colon = inlineScript.indexOf(':');
+                String lang;
+                lang = (colon > 0) ? inlineScript.substring(0, colon) : "unknown";
+                throw new UnsupportedOperationException("script element: does not yet "
+                        + "support inline scripts for lang [" + lang + "]");
+            }
+        }
+        
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -627,23 +747,33 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         @Override
         public void runAction(Map<String, Object> context) throws GeneralException {
-            String scriptLocation = this.locationExdr.expandString(context);
-            String location = WidgetWorker.getScriptLocation(scriptLocation);
-            String method = WidgetWorker.getScriptMethodName(scriptLocation);
-            
-            if (location.endsWith(".xml")) {
-                Map<String, Object> localContext = new HashMap<String, Object>();
-                localContext.putAll(context);
-                DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
-                MethodContext methodContext = new MethodContext(ctx, localContext, null);
-                try {
-                    SimpleMethod.runSimpleMethod(location, method, methodContext);
-                    context.putAll(methodContext.getResults());
-                } catch (MiniLangException e) {
-                    throw new GeneralException("Error running simple method at location [" + location + "]", e);
+            if (!this.locationExdr.getOriginal().isEmpty()) {
+                String scriptLocation = this.locationExdr.expandString(context);
+                String location = WidgetWorker.getScriptLocation(scriptLocation);
+                String method = WidgetWorker.getScriptMethodName(scriptLocation);
+                
+                if (location.endsWith(".xml")) {
+                    Map<String, Object> localContext = new HashMap<String, Object>();
+                    localContext.putAll(context);
+                    DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
+                    MethodContext methodContext = new MethodContext(ctx, localContext, null);
+                    try {
+                        SimpleMethod.runSimpleMethod(location, method, methodContext);
+                        context.putAll(methodContext.getResults());
+                    } catch (MiniLangException e) {
+                        throw new GeneralException("Error running simple method at location [" + location + "]", e);
+                    }
+                } else {
+                    ScriptUtil.executeScript(location, method, context);
                 }
-            } else {
-                ScriptUtil.executeScript(location, method, context);
+            }
+            
+            if (this.scriptlet != null) {
+                try {
+                    this.scriptlet.executeScript(context);
+                } catch (Exception e) {
+                    throw new GeneralException("Error running inline script", e);
+                }
             }
         }
 
@@ -981,19 +1111,15 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             map.put("include-tree-actions", "tree");
             elemTypeMap = map;
         }
-        
-        private final FlexibleStringExpander nameExdr;
-        private final FlexibleStringExpander locationExdr;
-        private final String defaultLocation; // the file where this action was originally defined
 
-        public IncludeActions(ModelWidget modelWidget, Element element) {
+        protected IncludeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
-            this.nameExdr = FlexibleStringExpander.getInstance(element.getAttribute("name"));
-            this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
-
+        }
+        
+        protected final String getDefaultLocation(Element element, String location) {
             String defaultLocation = WidgetDocumentInfo.retrieveAlways(element).getResourceLocation();
             if (defaultLocation == null || !defaultLocation.startsWith("component://")) {
-                if (UtilValidate.isEmpty(this.locationExdr.getOriginal())) {
+                if (UtilValidate.isEmpty(location)) {
                     Debug.logError("include-xxx-actions: Could not determine an original/default document location (in component:// format) " +
                             "for actions include directive (found: " + defaultLocation + "), and the location " +
                             "attribute expression is empty; the include directive will fail", module);
@@ -1006,22 +1132,16 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                     defaultLocation = "";
                 }
             }
-            this.defaultLocation = defaultLocation;
+            return defaultLocation;
         }
         
         public static IncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
-            if ("screen".equals(type)) {
-                return new IncludeScreenActions(modelWidget, element);
-            } else if ("form".equals(type)) {
-                return new IncludeFormActions(modelWidget, element);
-            } else if ("form-row".equals(type)) {
-                return new IncludeFormRowActions(modelWidget, element);    
-            } else if ("menu".equals(type)) {
-                return new IncludeMenuActions(modelWidget, element);
-            } else if ("tree".equals(type)) {
-                return new IncludeTreeActions(modelWidget, element);
+            DynamicIncludeActions dynInclude = DynamicIncludeActions.newInstance(modelWidget, element, type);
+            if (dynInclude.isVariableInclude()) {
+                return dynInclude;
             } else {
-                throw new IllegalArgumentException("include-xxx-actions: Unrecognized actions include type: " + type);
+                // if static include, use optimized
+                return StaticIncludeActions.newInstance(modelWidget, element, dynInclude);
             }
         }
         
@@ -1037,11 +1157,187 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             return elemTypeMap.containsKey(element.getTagName());
         }
 
+        public abstract List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException;
+        
         @Override
         public void accept(ModelActionVisitor visitor) throws Exception {
             // TODO
         }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static include expressions
+     * (constants, no ${}).
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class StaticIncludeActions extends IncludeActions {
 
+        protected StaticIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+        }
+        
+        public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return LazyStaticIncludeActions.newInstance(modelWidget, element);
+        }
+        
+        public static StaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            return LazyStaticIncludeActions.newInstance(modelWidget, element, dynInclude);
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            AbstractModelAction.runSubActions(getIncludedActions(context), context); // NOTE: wraps in RunTimeExceptions
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements containing only static includes
+     * with a lazy caching static implementation.
+     * <p>
+     * optimizes xml includes that have only constant location#name.
+     * Due to complications it delegates the lookup to first run and caches.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class LazyStaticIncludeActions extends StaticIncludeActions {
+        private final DynamicIncludeActions dynInclude;
+        private List<ModelAction> actions = null; // WARN: not volatile because using double-locking idiom
+        
+        protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.dynInclude = DynamicIncludeActions.newInstance(modelWidget, element);
+            if (this.dynInclude.isVariableInclude()) {
+                throw new IllegalArgumentException("static include-xxx-actions implementation can't "
+                        + "contain a dynamic location#name expression");
+            }
+        }
+        
+        protected LazyStaticIncludeActions(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            super(modelWidget, element);
+            this.dynInclude = dynInclude;
+            if (this.dynInclude.isVariableInclude()) {
+                throw new IllegalArgumentException("static include-xxx-actions implementation can't "
+                        + "contain a dynamic location#name expression");
+            }
+        }
+        
+        public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return new LazyStaticIncludeActions(modelWidget, element);
+        }
+        
+        public static LazyStaticIncludeActions newInstance(ModelWidget modelWidget, Element element, DynamicIncludeActions dynInclude) {
+            return new LazyStaticIncludeActions(modelWidget, element, dynInclude);
+        }
+        
+        @Override
+        public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
+            // WARN: special double-locking idiom for thread safety
+            List<ModelAction> actions = this.actions;
+            if (actions == null) {
+                synchronized (this) {
+                    actions = this.actions;
+                    if (actions == null) {
+                        // WARN: unmodifiableList is REQUIRED for thread safety, but all of the
+                        // classes already return it that way, so this could double-wrap it
+                        //actions = Collections.unmodifiableList(dynInclude.getIncludedActions(context));
+                        actions = dynInclude.getIncludedActions(context);
+                        this.actions = actions;
+                    }
+                }
+            }
+            return actions;
+        }
+        
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;include-xxx-actions&gt; elements supporting dynamic expressions (${}).
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static abstract class DynamicIncludeActions extends IncludeActions {
+        private final FlexibleStringExpander nameExdr;
+        private final FlexibleStringExpander locationExdr;
+        private final String defaultLocation; // the file where this action was originally defined
+
+        protected DynamicIncludeActions(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            this.nameExdr = FlexibleStringExpander.getInstance(element.getAttribute("name"));
+            this.locationExdr = FlexibleStringExpander.getInstance(element.getAttribute("location"));
+            this.defaultLocation = getDefaultLocation(element, this.locationExdr.getOriginal());
+        }
+        
+        public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element, String type) {
+            DynamicIncludeActions includeActions;
+            if ("screen".equals(type)) {
+                includeActions = new IncludeScreenActions(modelWidget, element);
+            } else if ("form".equals(type)) {
+                includeActions = new IncludeFormActions(modelWidget, element);
+            } else if ("form-row".equals(type)) {
+                includeActions = new IncludeFormRowActions(modelWidget, element);    
+            } else if ("menu".equals(type)) {
+                includeActions = new IncludeMenuActions(modelWidget, element);
+            } else if ("tree".equals(type)) {
+                includeActions = new IncludeTreeActions(modelWidget, element);
+            } else {
+                throw new IllegalArgumentException("include-xxx-actions: Unrecognized actions include type: " + type);
+            }
+            return includeActions;
+        }
+        
+        public static DynamicIncludeActions newInstance(ModelWidget modelWidget, Element element) {
+            return newInstance(modelWidget, element, getIncludeActionsType(element));
+        }
+        
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            List<ModelAction> actions;
+            try {
+                actions = getIncludedActions(context, getLocation(context), getName(context));
+            } catch (GeneralException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new GeneralException(e);
+            }
+            AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
+        }
+        
+        @Override
+        public List<ModelAction> getIncludedActions(Map<String, Object> context) throws GeneralException {
+            try {
+                return getIncludedActions(context, getLocation(context), getName(context));
+            } catch (GeneralException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new GeneralException(e);
+            }
+        }
+        
+        protected abstract List<ModelAction> getIncludedActions(Map<String, Object> context,
+                String location, String name) throws Exception;
+        
+        /**
+         * Returns true if location#name contains ${} expression.
+         */
+        public boolean isVariableInclude() {
+            return FlexibleStringExpander.containsExpression(nameExdr) ||
+                    FlexibleStringExpander.containsExpression(locationExdr);
+        }
+        
+        /**
+         * Returns true if location#name is a constant.
+         * <p>
+         * If this returns true, then you could use a StaticIncludeActions instance instead.
+         */
+        public boolean isStaticInclude() {
+            return !isVariableInclude();
+        }
+        
         public FlexibleStringExpander getNameExdr() {
             return this.nameExdr;
         }
@@ -1065,15 +1361,6 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
             return location;
         }
-        
-        protected void runIncludedActions(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
-            //if (actions != null) {
-            //    for(ModelAction action: actions) {
-            //        action.runAction(context);
-            //    }
-            //}
-            AbstractModelAction.runSubActions(actions, context); // NOTE: wraps in RunTimeExceptions
-        }
     }
     
     /**
@@ -1081,27 +1368,15 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeScreenActions extends IncludeActions {
-
+    public static class IncludeScreenActions extends DynamicIncludeActions {
         public IncludeScreenActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
 
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelScreen widget;
-            try {
-                widget = ScreenFactory.getScreenFromLocation(location, name);
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getSection().getActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelScreen widget = ScreenFactory.getScreenFromLocation(location, name);
+            return widget.getSection().getActions();
         }
     }
     
@@ -1110,29 +1385,17 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeFormActions extends IncludeActions {
-
+    public static class IncludeFormActions extends DynamicIncludeActions {
         public IncludeFormActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
 
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelForm widget;
-            try {
-                widget = FormFactory.getFormFromLocation(location, name, 
-                        ((Delegator) context.get("delegator")).getModelReader(), 
-                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
+                    ((Delegator) context.get("delegator")).getModelReader(), 
+                    ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
+            return widget.getActions();
         }
     }
     
@@ -1141,29 +1404,17 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeFormRowActions extends IncludeActions {
-
+    public static class IncludeFormRowActions extends DynamicIncludeActions {
         public IncludeFormRowActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
-
+        
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelForm widget;
-            try {
-                widget = FormFactory.getFormFromLocation(location, name, 
-                        ((Delegator) context.get("delegator")).getModelReader(), 
-                        ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());            
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getRowActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelForm widget = FormFactory.getFormFromLocation(location, name, 
+                    ((Delegator) context.get("delegator")).getModelReader(), 
+                    ((LocalDispatcher) context.get("dispatcher")).getDispatchContext());
+            return widget.getRowActions();
         }
     }
     
@@ -1172,27 +1423,15 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeMenuActions extends IncludeActions {
-
+    public static class IncludeMenuActions extends DynamicIncludeActions {
         public IncludeMenuActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
 
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelMenu widget;
-            try {
-                widget = MenuFactory.getMenuFromLocation(location, name);
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelMenu widget = MenuFactory.getMenuFromLocation(location, name);
+            return widget.getActions();
         }
     }
     
@@ -1201,28 +1440,417 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      * @see <code>widget-common.xsd</code>
      */
-    public static class IncludeTreeActions extends IncludeActions {
+    public static class IncludeTreeActions extends DynamicIncludeActions {
 
         public IncludeTreeActions(ModelWidget modelWidget, Element element) {
             super(modelWidget, element);
         }
 
         @Override
-        public void runAction(Map<String, Object> context) throws GeneralException {
-            String name = getName(context);
-            String location = getLocation(context);
-            ModelTree widget;
-            try {
-                widget = TreeFactory.getTreeFromLocation(location, name, 
-                        (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
-            } catch (IOException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            }
-            runIncludedActions(widget.getNodeMap().get(widget.getRootNodeName()).getActions(), context);
+        protected List<ModelAction> getIncludedActions(Map<String, Object> context, String location, String name) throws Exception {
+            ModelTree widget = TreeFactory.getTreeFromLocation(location, name, 
+                    (Delegator) context.get("delegator"), (LocalDispatcher) context.get("dispatcher"));
+            return widget.getRootActions();
         }
     }
+    
+    /**
+     * SCIPIO: Models the &lt;condition-to-field&gt; element.
+     * <p>
+     * NOTE: largely derived from SetField.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ConditionToField extends AbstractModelAction {
+        
+        private static final Map<String, Object> defaultPassValueMap;
+        private static final Map<String, Object> defaultFailValueMap;
+        static {
+            Map<String, Object> map = new HashMap<>();
+            map.put("Boolean", Boolean.TRUE);
+            map.put("String", "true");
+            map.put("PlainString", "true");
+            map.put("Indicator", "Y");
+            defaultPassValueMap = map;
+            map = new HashMap<>();
+            map.put("Boolean", Boolean.FALSE);
+            map.put("String", "false");
+            map.put("PlainString", "false");
+            map.put("Indicator", "N");
+            defaultFailValueMap = map;
+        }
+        
+        private final ModelCondition condition;
+        private final FlexibleMapAccessor<Object> field;
+        private final FlexibleStringExpander globalExdr;
+        private final String toScope;
+        private final String type;
+        private final FlexibleStringExpander passValueExdr;
+        private final FlexibleStringExpander failValueExdr;
+        private final FlexibleStringExpander useWhenExdr;
+        private final boolean onlyIfFieldNull;
+        private final boolean onlyIfFieldEmpty;
+
+        public ConditionToField(ModelWidget modelWidget, Element condToFieldElement) {
+            super(modelWidget, condToFieldElement);
+            this.field = FlexibleMapAccessor.getInstance(condToFieldElement.getAttribute("field"));
+            this.globalExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("global"));
+            this.type = condToFieldElement.getAttribute("type");
+            this.toScope = condToFieldElement.getAttribute("to-scope");
+            this.passValueExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("pass-value"));
+            this.failValueExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("fail-value"));
+            this.useWhenExdr = FlexibleStringExpander.getInstance(condToFieldElement.getAttribute("use-when"));
+            List<? extends Element> children = UtilXml.childElementList(condToFieldElement);
+            this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, 
+                    UtilValidate.isNotEmpty(children) ? children.get(0) : null);
+            this.onlyIfFieldNull = "null".equals(condToFieldElement.getAttribute("only-if-field"));
+            this.onlyIfFieldEmpty = "empty".equals(condToFieldElement.getAttribute("only-if-field"));
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+
+        private static Object getDefaultVal(boolean condResult, String type) {
+            if (UtilValidate.isEmpty(type)) {
+                type = "String";
+            }
+            return condResult ? defaultPassValueMap.get(type) : defaultFailValueMap.get(type);
+        }
+        
+        @Override
+        public void runAction(Map<String, Object> context) {
+            String globalStr = this.globalExdr.expandString(context);
+            // default to false
+            boolean global = "true".equals(globalStr);
+            
+            if (!this.useWhenExdr.getOriginal().isEmpty()) {
+                String setIf = this.useWhenExdr.expandString(context);
+                if ("false".equals(setIf)) {
+                    return;
+                } else if (!"true".equals(setIf)) {
+                    throw new IllegalArgumentException("use-when expression '" + 
+                            this.useWhenExdr.getOriginal() + "' in condition-to-field evaluated to non-boolean expression: " + setIf);
+                }
+            }
+            if (onlyIfFieldNull || onlyIfFieldEmpty) {
+                Object currValue;
+                if (global) {
+                    Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                    if (globalCtx != null) {
+                        currValue = this.field.get(globalCtx);
+                    } else {
+                        currValue = this.field.get(context);
+                    }
+                } else {
+                    currValue = this.field.get(context);
+                }
+                if ((onlyIfFieldNull && currValue == null) || (onlyIfFieldEmpty && ObjectType.isEmpty(currValue))) {
+                    ; // we're good
+                } else {
+                    return; // skip
+                }
+            }
+
+            boolean condResult = condition.eval(context);
+            
+            Object newValue = null;
+            boolean convertType;
+            if (condResult) {
+                if (!this.passValueExdr.getOriginal().isEmpty()) {
+                    convertType = true;
+                    newValue = this.passValueExdr.expandString(context);
+                } else {
+                    convertType = false; // optimized
+                    newValue = getDefaultVal(condResult, this.type);
+                }
+            } else {
+                if (!this.failValueExdr.getOriginal().isEmpty()) {
+                    convertType = true;
+                    newValue = this.failValueExdr.expandString(context);
+                } else {
+                    convertType = false; // optimized
+                    newValue = getDefaultVal(condResult, this.type);
+                }
+            }
+            
+            // SCIPIO: NOTE: code below is copied from SetField.runAction
+            // TODO: r
+            
+            if (convertType && UtilValidate.isNotEmpty(this.type)) {
+                try {
+                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, (TimeZone) context.get("timeZone"),
+                            (Locale) context.get("locale"), true);
+                } catch (GeneralException e) {
+                    String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName()
+                            + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
+                
+            }
+            if (this.toScope != null && this.toScope.equals("user")) {
+                String originalName = this.field.getOriginalName();
+                List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
+                String newKey = "";
+                if (currentWidgetTrail != null) {
+                    newKey = StringUtil.join(currentWidgetTrail, "|");
+                }
+                if (UtilValidate.isNotEmpty(newKey)) {
+                    newKey += "|";
+                }
+                newKey += originalName;
+                HttpSession session = (HttpSession) context.get("session");
+                session.setAttribute(newKey, newValue);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue,
+                            module);
+            } else if (this.toScope != null && this.toScope.equals("application")) {
+                String originalName = this.field.getOriginalName();
+                List<String> currentWidgetTrail = UtilGenerics.toList(context.get("_WIDGETTRAIL_"));
+                String newKey = "";
+                if (currentWidgetTrail != null) {
+                    newKey = StringUtil.join(currentWidgetTrail, "|");
+                }
+                if (UtilValidate.isNotEmpty(newKey)) {
+                    newKey += "|";
+                }
+                newKey += originalName;
+                ServletContext servletContext = (ServletContext) context.get("application");
+                servletContext.setAttribute(newKey, newValue);
+                if (Debug.verboseOn())
+                    Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: "
+                            + newValue, module);
+            } else {
+                // only do this if it is not global, if global ONLY put it in the global context
+                if (!global) {
+                    if (Debug.verboseOn())
+                        Debug.logVerbose("Setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                    this.field.put(context, newValue);
+                }
+            }
+            if (global) {
+                Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
+                if (globalCtx != null) {
+                    this.field.put(globalCtx, newValue);
+                } else {
+                    this.field.put(context, newValue);
+                }
+            }
+            // this is a hack for backward compatibility with the JPublish page object
+            Map<String, Object> page = UtilGenerics.checkMap(context.get("page"));
+            if (page != null) {
+                this.field.put(page, newValue);
+            }
+        }
+
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public FlexibleMapAccessor<Object> getField() {
+            return field;
+        }
+
+        public FlexibleStringExpander getGlobalExdr() {
+            return globalExdr;
+        }
+
+        public String getToScope() {
+            return toScope;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public FlexibleStringExpander getPassValueExdr() {
+            return passValueExdr;
+        }
+
+        public FlexibleStringExpander getFailValueExdr() {
+            return failValueExdr;
+        }
+
+        public FlexibleStringExpander getUseWhenExdr() {
+            return useWhenExdr;
+        }
+
+        public boolean isOnlyIfFieldNull() {
+            return onlyIfFieldNull;
+        }
+
+        public boolean isOnlyIfFieldEmpty() {
+            return onlyIfFieldEmpty;
+        }
+
+    }
+    
+    /**
+     * Models the &lt;if&gt; element.
+     * <p>
+     * SCIPIO: 2016-11-11: Adapted from org.ofbiz.minilang.method.conditional.MasterIf.
+     * 
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class MasterIf extends AbstractModelAction {
+        public static final String TAG_NAME = "if";
+        public static final String THEN_TAG_NAME = "then";
+        public static final String ELSE_IF_TAG_NAME = "else-if";
+        public static final String ELSE_TAG_NAME = "else";
+
+        private final ModelCondition condition;
+        private final List<ElseIf> elseIfs;
+        private final List<ModelAction> elseSubOps;
+        private final List<ModelAction> thenSubOps;
+
+        public MasterIf(ModelWidget modelWidget, Element element) {
+            super(modelWidget, element);
+            ElementHelper elem = UtilXml.getElementHelper(element);
+            this.condition = readCondition(modelWidget, elem, TAG_NAME);
+            Element thenElement = elem.firstChildElement(THEN_TAG_NAME);
+            this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+            List<? extends Element> elseIfElements = elem.childElementList(ELSE_IF_TAG_NAME);
+            if (elseIfElements.isEmpty()) {
+                this.elseIfs = Collections.emptyList();
+            } else {
+                List<ElseIf> elseIfs = new ArrayList<ElseIf>(elseIfElements.size());
+                for (Element elseIfElement : elseIfElements) {
+                    elseIfs.add(new ElseIf(modelWidget, elseIfElement));
+                }
+                this.elseIfs = Collections.unmodifiableList(elseIfs);
+            }
+            Element elseElement = elem.firstChildElement(ELSE_TAG_NAME);
+            if (elseElement == null) {
+                this.elseSubOps = Collections.emptyList();
+            } else {
+                this.elseSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, elseElement));
+            }
+        }
+        
+        /**
+         * SCIPIO: read the condition element, then tries the condition attribute.
+         */
+        ModelCondition readCondition(ModelWidget modelWidget, ElementHelper elem, String directiveName) {
+            Element conditionElement = elem.firstChildElement("condition");
+            ModelCondition condition = null;
+            Element conditionChildElement = UtilXml.firstChildElement(conditionElement);
+            if (conditionChildElement != null) {
+                condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelWidget, conditionChildElement);
+            }
+            String conditionExdrStr = elem.attr("condition");
+            if (!conditionExdrStr.isEmpty()) {
+                if (condition == null) {
+                    condition = ModelScreenCondition.makeBooleanExprCondition(modelWidget, 
+                            FlexibleStringExpander.getInstance(conditionExdrStr));
+                } else {
+                    Debug.logError("Scipio: " + directiveName + " directive cannot have both condition element and condition attribute, will use only condition element" +
+                            getLogDirectiveLocationString(), module);
+                }
+            }
+            if (condition == null) {
+                condition = AbstractModelCondition.FALSE_CONDITION;
+                Debug.logError("Scipio: " + directiveName + " directive is missing condition in widget - will always evaluate to false" + getLogDirectiveLocationString(), module);
+            }
+            return condition;
+        }
+        
+        @Override
+        public void runAction(Map<String, Object> context) throws GeneralException {
+            // if conditions fails, always return true; if a sub-op returns false
+            // return false and stop, otherwise return true
+            // return true;
+            // only run subOps if element is empty/null
+            boolean runSubOps = condition.eval(context);
+            if (runSubOps) {
+                AbstractModelAction.runSubActions(this.thenSubOps, context);
+                return;
+            } else {
+                // try the else-ifs
+                if (elseIfs != null) {
+                    for (ElseIf elseIf : elseIfs) {
+                        if (elseIf.eval(context)) {
+                            elseIf.runAction(context);
+                            return;
+                        }
+                    }
+                }
+                if (elseSubOps != null) {
+                    AbstractModelAction.runSubActions(this.elseSubOps, context);
+                    return;
+                }
+            }
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            // TODO
+        }
+        
+        public ModelCondition getCondition() {
+            return condition;
+        }
+
+        public List<ElseIf> getElseIfs() {
+            return elseIfs;
+        }
+
+        public List<ModelAction> getElseSubOps() {
+            return elseSubOps;
+        }
+
+        public List<ModelAction> getThenSubOps() {
+            return thenSubOps;
+        }
+        
+        /**
+         * Models the &lt;else-if&gt; element.
+         * <p>
+         * SCIPIO: 2016-11-11: Adapted fromorg.ofbiz.minilang.method.conditional.ElseIf.
+         * 
+         * @see <code>widget-common.xsd</code>
+         */
+        public class ElseIf extends AbstractModelAction implements ModelCondition {
+            private final ModelCondition condition;
+            private final List<ModelAction> thenSubOps;
+            
+            public ElseIf(ModelWidget modelWidget, Element element) {
+                super(modelWidget, element);
+                ElementHelper elem = UtilXml.getElementHelper(element);
+                this.condition = readCondition(modelWidget, elem, ELSE_IF_TAG_NAME);
+                Element thenElement = elem.firstChildElement("then");
+                this.thenSubOps = Collections.unmodifiableList(AbstractModelAction.readSubActions(modelWidget, thenElement));
+            }
+
+            @Override
+            public void runAction(Map<String, Object> context) throws GeneralException {
+                AbstractModelAction.runSubActions(this.thenSubOps, context);
+            }
+            
+            @Override
+            public boolean eval(Map<String, Object> context) {
+                return condition.eval(context);
+            }
+            
+            @Override
+            public void accept(ModelActionVisitor visitor) throws Exception {
+                // TODO
+            }
+
+            public ModelCondition getCondition() {
+                return condition;
+            }
+
+            public List<ModelAction> getThenSubOps() {
+                return thenSubOps;
+            }
+
+            @Override
+            public void accept(ModelConditionVisitor visitor) throws Exception {
+                // TODO Auto-generated method stub
+            }
+        }
+    }
+  
 }

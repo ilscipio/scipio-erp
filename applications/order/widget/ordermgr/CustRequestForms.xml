@@ -310,7 +310,7 @@ under the License.
         </field>
 
         <field use-when="custRequest==null" name="statusId"><hidden value="CRQ_SUBMITTED"/></field>
-        <field use-when="custRequest!=null" name="statusId">
+        <field use-when="custRequest!=null" name="statusId" position="2">
             <drop-down allow-empty="false" current="first-in-list" current-description="${currentStatus.description}">
                 <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
                     <entity-constraint name="statusId" value="${custRequest.statusId}"/>
@@ -332,7 +332,7 @@ under the License.
             </drop-down>
         </field>
         <field name="story" use-when="custRequest==null" encode-output="false"><textarea cols="60" rows="12" default-value="${communicationEvent.content}"/></field>
-        <field name="description" use-when="custRequest==null" encode-output="false"><textarea cols="60" rows="12" default-value="${communicationEvent.content}"/></field>
+        <field name="description" encode-output="false" position="2"><textarea cols="60" rows="12" default-value="${communicationEvent.content}"/></field><!-- use-when="custRequest==null"  -->
         
         <field name="salesChannelEnumId" title="${uiLabelMap.OrderSalesChannel}">
             <drop-down allow-empty="true">

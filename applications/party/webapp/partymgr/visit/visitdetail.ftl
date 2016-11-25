@@ -25,7 +25,7 @@ under the License.
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyVisitorId}</@td>
-          <@td>${visit.visitorId!(uiLabelMap.CommonNot)} ${uiLabelMap.CommonFound}")}</@td>
+          <@td>${visit.visitorId!(uiLabelMap.WebtoolsMissesNotFound)}</@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyPartyIDUserLoginID}</@td>

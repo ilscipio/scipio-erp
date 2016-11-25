@@ -49,11 +49,7 @@
                         <set field="lookupParty" from-field="lookupPerson" />
                     </actions>
                     <widgets>
-                        <section>
-                            <widgets>
-                                <include-screen name="ScipioPartyInfo"/>
-                            </widgets>
-                        </section>
+                        <include-screen name="ScipioPartyInfo"/>
                     </widgets>
                 </section>
                 <section>

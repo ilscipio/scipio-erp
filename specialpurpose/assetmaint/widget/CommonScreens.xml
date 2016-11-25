@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
 
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+
     <screen name="main-decorator">
         <section>
             <actions>
@@ -52,6 +63,10 @@ under the License.
                 <set field="applicationMenuName" value="AssetMaintAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://assetmaint/widget/AssetmaintMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.AssetMaintManager}"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -81,6 +96,9 @@ under the License.
     <screen name="CommonAssetMaintAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonAssetMaintAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -88,7 +106,18 @@ under the License.
                         <include-screen name="CommonAssetMaintAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for ASSETMAINT, _VIEW permission -->
+                            <condition>
+                                <if-true field="commonAssetMaintAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AssetMaintViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -98,16 +127,17 @@ under the License.
     <screen name="CommonFacilityDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facility"/>
+                <!-- SCIPIO: NOTE: SPECIAL SUB-MENU: TODO: REVIEW:
+                    in assetmaint must currently FORCE the sub-menu because the screens from facility
+                    are setting sub-menus not present in assetmaint...
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" /> -->
+                <set field="activeSubMenu" value="component://assetmaint/widget/AssetmaintMenus.xml#Facility" />
+                
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -143,16 +173,17 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAsset" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                        <not><if-empty field="fixedAssetId"/></not>
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAssetMaintAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- SCIPIO: quick setting lets callers override this section -->
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <!--<decorator-section-include name="pre-body"/>-->
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -207,24 +238,17 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="FixedAssetMaint" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssetMaints"/>
                 <!--<set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListFixedAssetMaints"/>-->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                        <!-- SCIPIO: don't do this for now... prevents browsing some fixed asset maint screens... TODO: REVIEW
+                        <not><if-empty field="maintHistSeqId"/></not> -->
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true"> <!-- SCIPIO: let callers override -->
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -261,8 +285,10 @@ under the License.
     <screen name="CommonAssetMaintAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="fixedAssetPermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+                <condition-to-field field="commonAssetMaintAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="ASSETMAINT" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonAssetMaintAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

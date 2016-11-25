@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderManager"/>
-                <set field="activeMainMenuItem" value="main"/>
+                <set field="activeSubMenuItem" value="main"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -255,7 +255,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderLookupOrder"/>
-                <set field="activeMainMenuItem" value="orderlist"/>
+                <set field="activeSubMenuItem" value="orderlist"/>
                 <set field="fromDate" type="Timestamp" from-field="parameters.filterDate"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderList.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/FilterOrderList.groovy"/>
@@ -284,7 +284,7 @@ under the License.
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
+                            <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
                         </container>
                         <include-screen name="orderHeader"/>
                         <container style="clear"/>
@@ -304,7 +304,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderFindOrder"/>
-                <set field="activeSubMenuItem" value="PARENT-NOSUB"/>
+                <set field="activeSubMenuItem" value="OrderFindOrder"/>
                 
                 <!-- SCIPIO: run the query from groovy -->
                 <set field="rsleArgs" type="NewMap" />
@@ -346,28 +346,18 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderAddNote"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="OrderNewNote"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/NewNote.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet>
-                                    <container>
-                                        <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
-                                    </container>
-                                    <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <container>
+                            <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_nav_cancel}"/>
+                        </container>
+                        <screenlet>
+                            <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -400,7 +390,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderStatisticsPage"/>
-                <set field="activeMainMenuItem" value="stats"/>
+                <set field="activeSubMenuItem" value="stats"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderStats.groovy"/>
             </actions>
             <widgets>
@@ -420,7 +410,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderReceiveOfflinePayments"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="OrderReceivePayment"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/ReceivePayment.groovy"/>
                 <entity-and entity-name="OrderRole" list="orderRoles">
                   <field-map field-name="orderId" value="${parameters.orderId}"/>
@@ -458,7 +448,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderSendConfirmationEmail"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="SendOrderConfirmation"/>
                 <set field="emailType" value="PRDS_ODR_CONFIRM"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
@@ -478,7 +468,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderSendConfirmationEmail"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="SendOrderCompletion"/>
                 <set field="emailType" value="PRDS_ODR_COMPLETE"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/SendConfirmationEmail.groovy"/>
             </actions>
@@ -497,7 +487,7 @@ under the License.
     <screen name="ListOrderTerms">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="ListOrderTerms"/>
                 <set field="titleProperty" value="OrderOrderTerms"/>
                 <entity-and entity-name="OrderTerm" list="orderTerms">
                     <field-map field-name="orderId" from-field="parameters.orderId"/>

@@ -27,7 +27,7 @@ under the License.
                 <set field="currentUrl" value="FindAccounts"/>
                 <set field="activeSubMenuItem" value="Accounts"/>
                 
-                <set field="setAccountDescription" value="${groovy:session.setAttribute('accountDescription', context.activeMainMenuItem)}"/>
+                <set field="setAccountDescription" value="${groovy:session.setAttribute('accountDescription', context.activeSubMenuItem)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
                 
@@ -36,42 +36,33 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAccountDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">               
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                        <include-menu name="AccountSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <!-- <include-menu name="AccountFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
                                 <section>
+                                    <condition>
+                                        <or>
+                                            <if-empty field="parameters.all"/>
+                                            <if-compare field="parameters.all" operator="equals" value="true"/>
+                                        </or>
+                                    </condition>
                                     <widgets>
-                                            <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                                <decorator-section name="search-options">
-                                                    <include-form name="FindAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                                                </decorator-section>
-                                                <decorator-section name="search-results">
-                                                    <section>
-                                                        <condition>
-                                                            <or>
-                                                                <if-empty field="parameters.all"/>
-                                                                <if-compare field="parameters.all" operator="equals" value="true"/>
-                                                            </or>
-                                                        </condition>
-                                                        <widgets>
-                                                            <!-- list all accounts -->
-                                                            <!-- <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/> -->
-                                                            <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                                                        </widgets>
-                                                        <fail-widgets>
-                                                            <!-- list my accounts -->
-                                                            <!-- <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/> -->
-                                                            <include-form name="ListMyAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
-                                                        </fail-widgets>
-                                                    </section>
-                                                </decorator-section>
-                                            </decorator-screen>
-                                        
+                                        <!-- list all accounts -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaAllAccounts}"/> -->
+                                        <include-form name="ListAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
                                     </widgets>
+                                    <fail-widgets>
+                                        <!-- list my accounts -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaMyAccounts}"/> -->
+                                        <include-form name="ListMyAccounts" location="component://marketing/widget/sfa/forms/AccountForms.xml"/>
+                                    </fail-widgets>
                                 </section>
-                            </widgets>
-                        </section>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

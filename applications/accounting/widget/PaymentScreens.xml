@@ -28,31 +28,22 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <set field="activeMainMenuItem" value="payments"/>
                 <set field="activeSubMenuItem" value="findPayment"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="newPayment" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" style="${styles.link_nav} ${styles.action_add}"/>
-                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
-                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPayments" location="component://accounting/widget/PaymentForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu name="PaymentsSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindPayments" location="component://accounting/widget/PaymentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -76,25 +67,20 @@ under the License.
     <screen name="NewPayment">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditPayment"/>
-                <set field="activeMainMenuItem" value="payments"/>
-                <set field="activeSubMenuItem" value="editPayment"/>
+                <set field="titleProperty" value="AccountingNewPayment"/>
+                <set field="activeSubMenuItem" value="newPayment"/>
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.AccountingNewPaymentIncoming}">
-                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.AccountingNewPaymentOutgoing}">
-                                    <include-form name="NewPaymentOut" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.AccountingNewPaymentIncoming}">
+                            <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingNewPaymentOutgoing}">
+                            <include-form name="NewPaymentOut" location="component://accounting/widget/PaymentForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -114,11 +100,17 @@ under the License.
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <not><if-empty field="payment"/></not>
+                            </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingInvoiceHeaderDetailedInformation}">
                                     <include-form name="EditPayment" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
                             </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.AccountingPaymentNotFound}"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -386,7 +378,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingManualTransaction"/>
-                <set field="activeMainMenuItem" value="transaction"/>
                 <set field="activeSubMenuItem" value="manualtransactiontab"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ManualTx.groovy"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -446,7 +437,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindSalesInvoicesByDueDate"/>
-                <set field="activeMainMenuItem" value="payments"/>
+                <set field="activeSubMenuItem" value="payments"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -478,7 +469,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindPurchaseInvoicesByDueDate"/>
-                <set field="activeMainMenuItem" value="payments"/>
+                <set field="activeSubMenuItem" value="payments"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -508,6 +499,7 @@ under the License.
     
     
     <!-- SCIPIO: Form migration -->
+    
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/PaymentForms.xml#paymentHeader -->
     <screen name="ScipioPaymentInfo">
         <section>

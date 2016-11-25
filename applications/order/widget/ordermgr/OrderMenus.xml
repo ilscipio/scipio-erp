@@ -180,6 +180,12 @@ under the License.
     
     <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindOrder" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderNewNote" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReceivePayment" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderConfirmation" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="SendOrderCompletion" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="ListOrderTerms" for="PARENT-WITHSUB"/>
     </menu>
     
     <!-- SCIPIO: replaced by orderactions
@@ -361,6 +367,11 @@ under the License.
     <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="ViewQuote" title="${uiLabelMap.CommonSummary}">
             <link target="ViewQuote">
+                <parameter param-name="quoteId" from-field="quote.quoteId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditQuote" title="${uiLabelMap.OrderQuote}">
+            <link target="EditQuote">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
@@ -625,9 +636,14 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+    <menu name="RequestSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="newRequest" title="${uiLabelMap.OrderNewRequest}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <not><if-empty field="custRequest"/></not>
+                    <not><if-compare field="activeSubMenuItem" operator="equals" value="editRequest"/></not>
+                </or>
+            </condition>
             <link target="EditRequest"/>
         </menu-item>
         <menu-item name="createQuoteFromRequest" title="${uiLabelMap.OrderCreateQuoteFromRequest}">
@@ -670,6 +686,9 @@ under the License.
     
     <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
+        <menu-item-alias name="OrderFindReturn" for="PARENT-NOSUB"/>
+        <menu-item-alias name="OrderQuickReturn" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="OrderReturnList" for="PARENT-WITHSUB"/>
     </menu>
     
     <menu name="editrequestitemmenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

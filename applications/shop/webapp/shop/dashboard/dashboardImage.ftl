@@ -52,7 +52,7 @@ under the License.
         float:left;
         clear: left;
     </#assign>
-    <@img src="https://unsplash.it/1400/480?random=1" width="100%" height="480px" type="bgcover">
+    <@img src="https://source.unsplash.com/random/1400x480" width="100%" height="480px" type="bgcover">
         <#-- Some advertising statement - custom format to serve as an eyecatcher -->
         <div style="${hero_content_wrap_style!}">
             <div style="${hero_content_style}">

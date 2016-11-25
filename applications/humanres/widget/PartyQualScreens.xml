@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartyQual"/>
-                <set field="activeMainMenuItem" value="PartyQual"/>
+                <set field="activeSubMenuItem" value="Employees"/><!-- PartyQual -->
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualTypeId" from-field="parameters.partyQualTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
@@ -35,13 +35,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="NewPartyQual" text="${uiLabelMap.HumanResNewPartyQual}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="NewPartyQual" text="${uiLabelMap.HumanResNewPartyQual}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                            <decorator-section name="search-options">
                                <include-form name="FindPartyQuals" location="component://humanres/widget/forms/PartyQualForms.xml"/>
@@ -59,7 +55,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditPartyQual"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditPartyQuals"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
@@ -80,18 +75,14 @@
     <screen name="NewPartyQual">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PartyQual"/>
+                <set field="activeSubMenuItem" value="Employees"/><!-- PartyQual -->
                 <entity-one entity-name="PartyQual" value-field="partyQual"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResNewPartyQual}">
-                            <section>
-                                <widgets>
-                                    <include-form name="AddPartyQual" location="component://humanres/widget/forms/PartyQualForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="AddPartyQual" location="component://humanres/widget/forms/PartyQualForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

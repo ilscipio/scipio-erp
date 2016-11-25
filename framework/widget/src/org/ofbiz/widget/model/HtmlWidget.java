@@ -25,10 +25,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -55,6 +58,11 @@ public class HtmlWidget extends ModelScreenWidget {
     private static final UtilCache<String, Template> specialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.general", 0, 0, false);
     protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
 
+    // SCIPIO: caches for inlined templates
+    private static final UtilCache<String, Template> inlineBasicTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.inline.basic", 0, 0, false);
+    private static final UtilCache<String, Template> inlineSpecialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.inline", 0, 0, false);
+
+
     // SCIPIO: NOTE: 2016-10-17: Exceptionally, the Ofbiz ExtendedWrapper that was present here
     // was so generic and needed elsewhere, that it has been MOVED to:
     // org.ofbiz.webapp.ftl.ExtendedWrapper
@@ -72,7 +80,7 @@ public class HtmlWidget extends ModelScreenWidget {
             List<ModelScreenWidget> subWidgets = new ArrayList<ModelScreenWidget>(childElementList.size());
             for (Element childElement : childElementList) {
                 if ("html-template".equals(childElement.getNodeName())) {
-                    subWidgets.add(new HtmlTemplate(modelScreen, childElement));
+                    subWidgets.add(HtmlTemplate.getInstance(modelScreen, childElement)); // SCIPIO: now uses factory
                 } else if ("html-template-decorator".equals(childElement.getNodeName())) {
                     subWidgets.add(new HtmlTemplateDecorator(modelScreen, childElement));
                 } else {
@@ -153,6 +161,49 @@ public class HtmlWidget extends ModelScreenWidget {
             throw new IllegalArgumentException("Rendering not yet supported for the template at location: " + location);
         }
     }
+    
+    /**
+     * SCIPIO: Renders an inlined template of given type.
+     */
+    public static void renderHtmlTemplate(Appendable writer, String body, String lang, String templateId, Map<String, Object> context) {
+        //Debug.logInfo("Rendering inlined template of type [" + type + "] with context: \n" + context, module);
+
+        try {
+            Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
+            boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(parameters);
+            if (insertWidgetBoundaryComments) {
+                writer.append(HtmlWidgetRenderer.formatBoundaryComment("Begin", "Inline Template", templateId));
+            }
+
+            Template template = null;
+            if ("fo-ftl".equals(lang)) { // FOP can't render correctly escaped characters
+                template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineBasicTemplateCache, FreeMarkerWorker.getDefaultOfbizConfig());
+            } else {
+                template = FreeMarkerWorker.getTemplateFromString(body, templateId, inlineSpecialTemplateCache, specialConfig);
+            }
+            FreeMarkerWorker.renderTemplate(template, context, writer);
+
+            if (insertWidgetBoundaryComments) {
+                writer.append(HtmlWidgetRenderer.formatBoundaryComment("End", "Inline Template", templateId));
+            }
+        } catch (IllegalArgumentException e) {
+            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            writeError(writer, errMsg);
+        } catch (MalformedURLException e) {
+            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            writeError(writer, errMsg);
+        } catch (TemplateException e) {
+            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            writeError(writer, errMsg);
+        } catch (IOException e) {
+            String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            writeError(writer, errMsg);
+        }
+    }
 
     // TODO: We can make this more fancy, but for now this is very functional
     public static void writeError(Appendable writer, String message) {
@@ -162,10 +213,54 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public static class HtmlTemplate extends ModelScreenWidget {
-        protected FlexibleStringExpander locationExdr;
+    /**
+     * HTML template reference.
+     * <p>
+     * SCIPIO: this is turned abstract and the implementation moved to FileHtmlTemplate.
+     */
+    public static abstract class HtmlTemplate extends ModelScreenWidget {
+        
+        private static final Set<String> supportedTypes = Collections.unmodifiableSet(UtilMisc.toSet("ftl", "fo-ftl"));
+        
+        protected HtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
+            super(modelScreen, htmlTemplateElement);
+        }
+        
+        public static HtmlTemplate getInstance(ModelScreen modelScreen, Element htmlTemplateElement) { // SCIPIO: made into factory
+            if (!htmlTemplateElement.getAttribute("location").isEmpty()) {
+                return new FileHtmlTemplate(modelScreen, htmlTemplateElement);
+            } else if (UtilValidate.isNotEmpty(htmlTemplateElement.getTextContent())) {
+                return new InlineHtmlTemplate(modelScreen, htmlTemplateElement);
+            } else {
+                throw new IllegalArgumentException("html-template element must have a non-empty location attribute or non-empty template body, in screen ["
+                        +  modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "]");
+            }
+        }
 
-        public HtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
+        @Override
+        public void accept(ModelWidgetVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        public static Set<String> getSupportedTypes() {
+            return supportedTypes;
+        }
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template";
+        }
+    }
+    
+    /**
+     * File-/Location-based HTML template.
+     * <p>
+     * SCIPIO: This is the original implementation of HtmlTemplate, now abstract.
+     */
+    public static class FileHtmlTemplate extends HtmlTemplate { // SCIPIO: the original HtmlTemplate is now transformed into this
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+
+        public FileHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
             super(modelScreen, htmlTemplateElement);
             this.locationExdr = FlexibleStringExpander.getInstance(htmlTemplateElement.getAttribute("location"));
         }
@@ -187,21 +282,74 @@ public class HtmlWidget extends ModelScreenWidget {
         public FlexibleStringExpander getLocationExdr() {
             return locationExdr;
         }
+
+    }
+    
+    /**
+     * SCIPIO: Inlined HTML template.
+     * <p>
+     * TODO: check if can handle better whitespace (huge indents in XML), but not serious for ftl.
+     */
+    public static class InlineHtmlTemplate extends HtmlTemplate {
+        protected final String templateBody;
+        protected final String lang;
+        protected final String templateId;
+        
+        public InlineHtmlTemplate(ModelScreen modelScreen, Element htmlTemplateElement) {
+            super(modelScreen, htmlTemplateElement);
+            String lang = htmlTemplateElement.getAttribute("lang");
+            this.templateId = modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "@" + this.getStartColumn() + "," + this.getStartLine();
+            String templateBody = UtilXml.elementValue(htmlTemplateElement); // htmlTemplateElement.getTextContent();
+            for(String tmplType : HtmlTemplate.getSupportedTypes()) {
+                if (templateBody.startsWith(tmplType + ":")) {
+                    templateBody = templateBody.substring(tmplType.length() + 1);
+                    lang = tmplType;
+                    break;
+                }
+            }
+            this.lang = lang;
+            boolean trimLines = "true".equals(htmlTemplateElement.getAttribute("trim-lines"));
+            this.templateBody = trimLines ? ScriptUtil.trimScriptLines(templateBody) : templateBody;
+        }
+
+        @Override
+        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+            renderHtmlTemplate(writer, this.templateBody, this.lang, this.templateId, context);
+        }
+
+        @Override
+        public void accept(ModelWidgetVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        public String getType() {
+            return lang;
+        }
+
+        public String getTemplateId() {
+            return templateId;
+        }
+
+        public String getTemplateBody() {
+            return templateBody;
+        }
     }
 
     public static class HtmlTemplateDecorator extends ModelScreenWidget {
-        protected FlexibleStringExpander locationExdr;
-        protected Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
+        protected final FlexibleStringExpander locationExdr; // SCIPIO: final added
+        protected final Map<String, ModelScreenWidget> sectionMap;
 
         public HtmlTemplateDecorator(ModelScreen modelScreen, Element htmlTemplateDecoratorElement) {
             super(modelScreen, htmlTemplateDecoratorElement);
             this.locationExdr = FlexibleStringExpander.getInstance(htmlTemplateDecoratorElement.getAttribute("location"));
 
+            Map<String, ModelScreenWidget> sectionMap = new HashMap<String, ModelScreenWidget>();
             List<? extends Element> htmlTemplateDecoratorSectionElementList = UtilXml.childElementList(htmlTemplateDecoratorElement, "html-template-decorator-section");
             for (Element htmlTemplateDecoratorSectionElement: htmlTemplateDecoratorSectionElementList) {
                 String name = htmlTemplateDecoratorSectionElement.getAttribute("name");
-                this.sectionMap.put(name, new HtmlTemplateDecoratorSection(modelScreen, htmlTemplateDecoratorSectionElement));
+                sectionMap.put(name, new HtmlTemplateDecoratorSection(modelScreen, htmlTemplateDecoratorSectionElement));
             }
+            this.sectionMap = sectionMap;
         }
 
         @Override
@@ -240,10 +388,15 @@ public class HtmlWidget extends ModelScreenWidget {
         public Map<String, ModelScreenWidget> getSectionMap() {
             return sectionMap;
         }
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template-decorator";
+        }
     }
 
     public static class HtmlTemplateDecoratorSection extends ModelScreenWidget {
-        protected List<ModelScreenWidget> subWidgets;
+        protected final List<ModelScreenWidget> subWidgets; // SCIPIO: final added
 
         public HtmlTemplateDecoratorSection(ModelScreen modelScreen, Element htmlTemplateDecoratorSectionElement) {
             super(modelScreen, htmlTemplateDecoratorSectionElement);
@@ -265,10 +418,20 @@ public class HtmlWidget extends ModelScreenWidget {
         public List<ModelScreenWidget> getSubWidgets() {
             return subWidgets;
         }
+
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return "html-template-decorator-section";
+        }
     }
 
     @Override
     public void accept(ModelWidgetVisitor visitor) throws Exception {
         visitor.visit(this);
+    }
+
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "html";
     }
 }

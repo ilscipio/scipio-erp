@@ -9506,9 +9506,9 @@
     </property>
     <property key="PartyPartiesFound">
         <value xml:lang="de">Nutzer gefunden</value>
-        <value xml:lang="en">Parties Found</value>
+        <value xml:lang="en">Users Found</value>
         <value xml:lang="es">Participantes encontrados</value>
-        <value xml:lang="fr">Acteurs trouvés</value>
+        <value xml:lang="fr">Utilisateurs trouvés</value>
         <value xml:lang="hi_IN">पार्टियाँ मिली</value>
         <value xml:lang="it">Soggetti Trovati</value>
         <value xml:lang="ja">取引先が見つかりました</value>
@@ -9526,7 +9526,7 @@
         <value xml:lang="de">Nutzer</value>
         <value xml:lang="en">User</value>
         <value xml:lang="es">Participante</value>
-        <value xml:lang="fr">Acteur</value>
+        <value xml:lang="fr">Utilisateur</value>
         <value xml:lang="hi_IN">पार्टी</value>
         <value xml:lang="it">Soggetto</value>
         <value xml:lang="ja">取引先</value>

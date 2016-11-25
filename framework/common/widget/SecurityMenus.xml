@@ -35,7 +35,7 @@
                 <parameter param-name="userLoginId"/>
             </link>
         </menu-item>
-        <menu-item name="EditSecurityGroup" title="${uiLabelMap.SecurityGroups}">
+        <menu-item name="EditSecurityGroup" title="${uiLabelMap.SecurityGroups}" always-expand-selected-or-ancestor="false">
             <condition>
                 <not><if-empty field="groupId"/></not>
             </condition>

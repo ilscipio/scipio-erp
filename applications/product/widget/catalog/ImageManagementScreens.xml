@@ -105,7 +105,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="ImageManagementDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${product.productId}]</label>
                                         <screenlet title="${uiLabelMap.ImageManagementGallery}">
                                             <platform-specific>
                                                 <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageGallery.ftl"/></html>
@@ -433,7 +433,7 @@ under the License.
                                         <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${product.productId}]</label>
                                         <screenlet title="${uiLabelMap.CommonManage}">
                                             <include-form name="ListImageManage" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                         </screenlet>
@@ -635,16 +635,12 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.ImageManagementShareImage}">
-                                    <include-form name="ImageShare" location="component://product/widget/catalog/ImageManagementForms.xml"/>
-                                    <platform-specific>
-                                        <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageShare.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.ImageManagementShareImage}">
+                            <include-form name="ImageShare" location="component://product/widget/catalog/ImageManagementForms.xml"/>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageShare.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -704,7 +700,7 @@ under the License.
                                         <not><if-empty field="product"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
+                                        <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${product.productId}]</label>
                                         <screenlet title="${uiLabelMap.ImageManagementChooseReplacementImage}">
                                             <include-form name="ListImageExist" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                         </screenlet>
@@ -886,8 +882,8 @@ under the License.
                                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
                             </condition>
                             <widgets>
-                                <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]</label>
-                                <screenlet title="${uiLabelMap.ImageManagementThumbnailSizeExistingInProduct} : ${product.internalName} [${uiLabelMap.CommonId}:${product.productId}]">
+                                <label style="heading">${uiLabelMap.Product} ${uiLabelMap.CommonFor}: ${product.internalName} [${product.productId}]</label>
+                                <screenlet title="${uiLabelMap.ImageManagementThumbnailSizeExistingInProduct} : ${product.internalName} [${product.productId}]">
                                     <include-form name="SizeListOfProduct" location="component://product/widget/catalog/ImageManagementForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.ImageManagementResize}">

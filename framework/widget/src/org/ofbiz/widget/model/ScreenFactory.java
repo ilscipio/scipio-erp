@@ -20,8 +20,6 @@ package org.ofbiz.widget.model;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -38,14 +36,16 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.widget.model.ScreenFallback.ScreenFallbackSettings;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 
 /**
  * Widget Library - Screen factory class
+ * <p>
+ * SCIPIO: now also as instance
  */
-public class ScreenFactory {
+@SuppressWarnings("serial")
+public class ScreenFactory extends WidgetFactory {
 
     public static final String module = ScreenFactory.class.getName();
 
@@ -107,6 +107,18 @@ public class ScreenFactory {
             throw new IllegalArgumentException("Could not find screen with name [" + screenName + "] in class resource [" + resourceName + "]");
         }
         return modelScreen;
+    }
+    
+    /**
+     * SCIPIO: Returns the specified screen, or null if the name does not exist in the given location.
+     * <p>
+     * NOTE: the resource must exist, however.
+     */
+    public static ModelScreen getScreenFromLocationOrNull(String combinedName)
+            throws IOException, SAXException, ParserConfigurationException {
+        String resourceName = getResourceNameFromCombined(combinedName);
+        String screenName = getScreenNameFromCombined(combinedName);
+        return getScreenFromLocationOrNull(resourceName, screenName);
     }
     
     /**
@@ -334,5 +346,27 @@ public class ScreenFactory {
      */
     public static void renderReferencedScreen(String name, String location, ModelScreenWidget parentWidget, Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         renderReferencedScreen(name, location, parentWidget, writer, context, screenStringRenderer, true, null);
+    }
+
+    @Override
+    public ModelScreen getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+        try {
+            return getScreenFromLocation(modelLoc.getResource(), modelLoc.getName());
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    public ModelScreen getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+        try {
+            return getScreenFromLocationOrNull(modelLoc.getResource(), modelLoc.getName());
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
     }
 }

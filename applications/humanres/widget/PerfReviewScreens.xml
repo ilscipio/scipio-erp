@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPerfReview"/>
-                <set field="activeMainMenuItem" value="PerfReview"/>
+                <set field="activeSubMenuItem" value="PerfReview"/>
                 <set field="employeePartyId" from-field="parameters.partyId"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"  default-value="0"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -54,7 +54,6 @@
     <screen name="EditPerfReviews">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="activeSubMenuItem" value="EditPerfReview"/>
                 <set field="titleProperty" value="PageTitleListPartyReview"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>
@@ -66,11 +65,7 @@
                 <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonEdit} ${uiLabelMap.HumanResPerfReview}">
-                            <section>
-                                <widgets>
-                                    <include-form name="EditPerfReview" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="EditPerfReview" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -80,7 +75,6 @@
     <screen name="EditPerfReviewItems">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PerfReview"/>
                 <set field="titleProperty" value="PageTitleEditPartyReviewItem"/>
                 <set field="activeSubMenuItem" value="EditPerfReviewItems"/>
                 <set field="perfReviewId" from-field="parameters.perfReviewId"/>

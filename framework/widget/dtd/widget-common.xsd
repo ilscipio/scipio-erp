@@ -18,7 +18,34 @@ specific language governing permissions and limitations
 under the License.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            Common Widget Definitions
+        
+            SCIPIO: In Scipio, the common widget language is modified from stock Ofbiz with new elements and
+            modifications to existing elements. The renderer is modified accordingly, and it may have yet
+            additional changes not visible through the language elements alone (may be noted here).
+            Changes are prefixed with the string "SCIPIO:" in annotations and comments.
+            
+            Features and Modifications (including but not limited to):
+            * link element boolean attributes full-path/secure/encode no longer hardcode defaults (instead centralized in java),
+              and the meaning, behavior and default behavior of those parameters is ratified for safer and more intuitive use.
+              Reflects @ofbizUrl changes in Freemarker templates and java RequestHandler.makeLink changes.
+              (see @ofbizUrl entry in utilities.ftl - component://common/webcommon/includes/scipio/lib/utilities.ftl;
+              see makeLink and makeLinkAuto methods in RequestHandler.java - org.ofbiz.webapp.control.RequestHandler)
+            * script element is enhanced for full inline script body support (based on simple-methods-v2)
+            * New dedicated actions include directives - include-xxx-actions - notably include-screen-actions,
+              which is shorter and more appropriate way to include actions defined in separate screens.
+            * New master "if" actions directive available (based on simple-methods-v2), which is
+              easier and more appropriate for actions-only conditions than the section conditions element
+            * if-true/if-false conditional shorthand for booleans and string repr. of booleans
+            * if-widget conditional for testing presence of widget definitions
+            
+            To use this and other widget XML schema definition files (*.xsd) in your development environment for autocompletion and validation,
+            import the file named ".xmlcatalog.xml" from the Scipio project root as XML Catalog file/project type using import dialog.
+            Note this also includes the definition files for all other Scipio/ofbiz XML resources such as entity models, service defs, etc.
+        ]]></xs:documentation>
+    </xs:annotation>
     <xs:complexType name="ConditionRootType">
         <xs:choice>
             <xs:element ref="and" />
@@ -33,6 +60,9 @@ under the License.
             <xs:element ref="if-compare-field" />
             <xs:element ref="if-regexp" />
             <xs:element ref="if-empty" />
+            <xs:element ref="if-true" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-false" /><!-- SCIPIO: 2016-11-09: new -->
+            <xs:element ref="if-widget" /><!-- SCIPIO: 2016-11-11: new -->
         </xs:choice>
     </xs:complexType>
     <xs:element name="AllConditionals" abstract="true" />
@@ -239,6 +269,110 @@ under the License.
             <xs:attribute type="xs:string" name="field" use="required" />
         </xs:complexType>
     </xs:element>
+    <xs:element name="if-true" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean true
+                OR the string value "true" (case-sensitive).
+                Either field or value must be provided.
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" />
+            <xs:attribute type="xs:string" name="value" />
+            <xs:attribute name="verify" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, and the test does not pass, the check will additionally 
+                        verify the failing expression to make sure it is a valid negative response and
+                        print a log error upon failure.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="allow-empty" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, the verify check will accept empty or null as valid.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if-false" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates to true if and only if the field is Boolean false
+                OR the string value "false" (case-sensitive).
+                2016-11-09: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" />
+            <xs:attribute type="xs:string" name="value" />
+            <xs:attribute name="verify" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, and the test does not pass, the check will additionally 
+                        verify the failing expression to make sure it is a valid negative response and
+                        print a log error upon failure.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="allow-empty" default="true">
+                <xs:annotation>
+                    <xs:documentation>If true, the verify check will accept empty or null as valid.
+                        Default: true</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if-widget" substitutionGroup="AllConditionals">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Verifies a screen/form/menu widget.
+                For example, "defined" operation checks if exists at the given location.
+                Name/location support flexible expressions.
+                2016-11-11: New element, added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:attribute type="xs:string" name="location" use="required"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="screen" />
+                        <xs:enumeration value="form" />
+                        <xs:enumeration value="menu" />
+                        <xs:enumeration value="tree" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="operator" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="defined" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="AllActions" abstract="true" />
     <xs:element name="set" substitutionGroup="AllActions">
@@ -328,12 +462,99 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="script" substitutionGroup="AllActions">
-        <xs:complexType>
-            <xs:attribute type="xs:string" name="location" use="required">
+        <xs:annotation>
+            <xs:documentation>Runs an external script and/or a short inline script (scriptlet). The scriptlet can be
+                included in the script attribute or in the element body.
+                
+                SCIPIO: This element's functionality has been extended using the simple-methods-v2 minilang implementation of
+                the element of the same name, to provide inline script functionality, as either child CDATA text or via "script" attribute.
+                For inline scripts, a script language (groovy, etc.) must be specified, either using the explicit lang attribute (new in Scipio)
+                or by prefixing to the script body followed by colon (no leading spaces; stock ofbiz syntax).
+                
+                PARSING BEHAVIOR: The child CDATA text of this element is NOT parsed for special operators, 
+                    UNLIKE the simple-methods-v2 version and unlike the further "script" attribute described below.
+                    The intent of this difference is to avoid adulterating larger scripts in any way whatsoever.
+                    The simple-methods-v2 version of this element pre-parses the child text of its script element and
+                    this prevents inline scripts from perfectly emulating separate files.
+                    
+                2016-11-11: Enhanced for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute name="lang">
                 <xs:annotation>
-                    <xs:documentation>Script location.
-                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, evaluated at runtime.</xs:documentation>
+                    <xs:documentation>SCIPIO: Script language, explicit.
+                        Optional for scripts specified by location (extension is used instead; NOTE: 2016-11-11: lang attribute may be ignored for location).
+                        Required for scripts inlined as child CDATA text script body or script attribute, if the
+                        language name is not otherwise prefixed to the script body followed by colon (with no leading space).
+                        Unless succinctness has priority, it is preferable to specify this attribute rather than prefix 
+                        as it is less error-prone (prefix is space-sensitive) and supports xml editor completion.
+                        Default: (none)
+                        RECOMMENDED: groovy</xs:documentation>
                 </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="groovy" />
+                        <xs:enumeration value="simple-method" />
+                        <xs:enumeration value="simple-map-processor" />
+                        <xs:enumeration value="bsh" />
+                        <xs:enumeration value="java" />
+                        <xs:enumeration value="javascript" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="location"><!-- SCIPIO: no longer strictly required: use="required" -->
+                <xs:annotation>
+                    <xs:documentation>The script location. The location attribute accepts the component:// file location
+                        protocol. Script functions/methods can be invoked by appending a hash (#) and the
+                        function/method name.
+                        
+                        Required if the script attribute and script element body (child CDATA text) are empty.
+                        
+                        SCIPIO: This is a STOCK attribute, but it has been enhanced to support flexible expressions, 
+                        evaluated at runtime.
+                        WARN: The screens that parametrize script locations and/or names are responsible for using
+                            only safe variables (DO NOT use the parameters map).
+                        Enhanced for 1.14.2.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="script">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        A short script (scriptlet). Can be used instead of a file.
+                        The script must be prefixed with the script language followed by a colon (":"), with no leading spaces,
+                        OR (new in Scipio) the language may be specified in the explicit lang attribute.
+                        
+                        Required if the location attribute is empty and there is no script body as child CDATA text. Attribute type: script.
+                        
+                        SCIPIO: This attribute and script inlining is borrowed from minilang simple-methods-v2 for use in screens directives.
+                        In Scipio, the main draw is inlining script body as child CDATA text and this attribute is the alternative.
+                        NOTE: This script attribute - but NOT the script body if specified as child CDATA text - is subject to
+                            pre-parsing for special keyword operator substitutions (as done by simple-methods-v2 in stock ofbiz): 
+                              @and, @or, @lteq, @gteq, @lt, @gt 
+                            These are translated to, respectively:
+                              &&, ||, <=, >=, <, >
+                            See org.ofbiz.base.util.StringUtil.convertOperatorSubstitutions for detailed behavior.
+                        NOTE: The context preparation and behavior of this scriptlet behaves slightly differently than that of scripts
+                            inlined into flexible expressions (FlexibleStringExpander) in other attributes.
+                            This one behaves analogous to the dedicated script files when specified by location, unlike the inline
+                            scripts in those flexible expressions (this is part reason for the enhancement of the script element in Scipio).
+                        2016-11-11: Added for 1.14.3.
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="trim-lines" default="true">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If true, perform trim on every line of child CDATA text to remove excess whitespace from XML.
+                        NOTE: This gets rid of indents, but flattens code.
+                        NOTE: If set to false, may affect performance due to the script caching mechanism (keyed on script body).
+                        Default: true (to optimize caching speed)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -384,8 +605,13 @@ under the License.
     <xs:element name="include-screen-actions" substitutionGroup="AllActions">
         <xs:annotation>
             <xs:documentation>SCIPIO: Includes a screen's top section actions in this widget's actions where the directive appears.
-                NOTE: This directive includes the actions from the fully-built target widget model (not textually), with full recursion implied.
-                    name and location support flexible expressions and are resolved at runtime.</xs:documentation>
+                Name and location support flexible expressions and are resolved at runtime.
+                NOTE: This ignores and bypasses the named screen's condition element.
+                NOTE: This directive includes the actions from the fully-built target widget model (rather than textually), with full recursion implied
+                    but ONLY with respect to other include-screen-actions directives;
+                    this will NOT include actions that would be run as a result of the widgets-element-based include-screen directive.
+                    In other words, the screens referenced with this directive should strive to use solely directives under the
+                    actions element, and even omit the other top directives entirely for clarity.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="name" use="required"/>
@@ -765,5 +991,186 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+    </xs:complexType>
+    <xs:element name="condition-to-field" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Evaluates children condition elements and sets a field based on the boolean result. 
+                By default, and for String/PlainString types, this returns a string having the value "true"/"false" (String type is for consistency with set operation); 
+                if Boolean type explicitly specified, returns proper Boolean true/false; 
+                special "Indicator" type returns "Y"/"N" as string;
+                all others return null by default and values can be specified through pass-value/fail-value attributes.
+                2016-11-09: New in Scipio; added for 1.14.3.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="AllConditionals" />
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="field" use="required" />
+            <xs:attribute name="type" default="String">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="PlainString" />
+                        <xs:enumeration value="String" />
+                        <xs:enumeration value="BigDecimal" />
+                        <xs:enumeration value="Double" />
+                        <xs:enumeration value="Float" />
+                        <xs:enumeration value="List" />
+                        <xs:enumeration value="Long" />
+                        <xs:enumeration value="Integer" />
+                        <xs:enumeration value="Date" />
+                        <xs:enumeration value="Time" />
+                        <xs:enumeration value="Timestamp" />
+                        <xs:enumeration value="Boolean" />
+                        <xs:enumeration value="Object" />
+                        <xs:enumeration value="Map" />
+                        <xs:enumeration value="Indicator" /><!-- SCIPIO: special type; returns "Y" or "N" string instead of true/false -->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="global" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="to-scope" default="screen">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="screen" />
+                        <xs:enumeration value="user" />
+                        <xs:enumeration value="application" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="pass-value">
+                <xs:annotation>
+                    <xs:documentation>Value when condition evaluates to true.
+                        Default: true for Boolean, "true" for String/PlainString, "Y" for Indicator, null for others</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="fail-value">
+                <xs:annotation>
+                    <xs:documentation>Value when condition evaluates to true.
+                        Default: false for Boolean, "false" for String/PlainString, "N" for Indicator, null for others</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="use-when">
+                <xs:annotation>
+                    <xs:documentation>A boolean expression which controls whether the command actually takes place. 
+                        Supports flexible expressions (EL, groovy:), only.
+                        Must resolve to either "true" or "false", as string representation of boolean.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="only-if-field">
+                <xs:annotation>
+                    <xs:documentation>Sets only if the target field is empty or null (empty includes null).
+                        NOTE: 2016-11-09: this respects the global flag if globalContext is present, 
+                            but currently does not respect the to-scope (FIXME?).</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="null" />
+                        <xs:enumeration value="empty" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="if" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>
+                Performs conditional processing on blocks of code.
+                This operation specifies combinations of conditions, alternate conditions,
+                and operations to run based on the evaluation of condition expressions.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="condition" type="IfCond-Condition" minOccurs="0" maxOccurs="1" />
+                <xs:element name="then" type="IfCond-Then"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="else-if" type="IfCond-ElseIf"/>
+                <xs:element minOccurs="0" name="else" type="IfCond-Else"/>
+            </xs:sequence>
+            <xs:attribute name="condition">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Condition boolean expression (supporting flexible expressions), alternative to
+                        condition element. Must evaluate strictly to the value "true" or "false".</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="IfCond-Condition">
+        <xs:annotation>
+            <xs:documentation>
+                Combines a group of conditional elements into a single logical (true/false) expression.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                In addition, now supports an inline quick condition expression attribute as alternative to the condition element.
+                2016-11-15: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="AllConditionals"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Then">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition element evaluates to true.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="IfCond-ElseIf">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a condition and a block of code to be evaluated/executed when a parent condition evaluates to false.
+                This element must contain two sub-elements: condition and then.
+                If the condition of the parent element evaluates to false, then this element's condition will be evaluated,
+                and if that condition evaluates to true, then the operations under the then element will be run.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements. 
+                In addition, now supports an inline quick condition expression attribute as alternative to the condition element.
+                2016-11-15: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="condition" type="IfCond-Condition" minOccurs="0" maxOccurs="1" />
+            <xs:element name="then" type="IfCond-Then"/>
+        </xs:sequence>
+        <xs:attribute name="condition">
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Condition boolean expression (supporting flexible expressions), alternative to
+                    condition element. Must evaluate strictly to the value "true" or "false".</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="IfCond-Else">
+        <xs:annotation>
+            <xs:documentation>
+                Contains a block of code to be executed when a condition evaluates to false.
+                
+                SCIPIO: Adapted from simple-methods-v2 to provide basic way to conditionals
+                without the heavy widget elements.
+                2016-11-11: Added for 1.14.3.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+        </xs:sequence>
     </xs:complexType>
 </xs:schema>

@@ -20,7 +20,7 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="SegmentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Segment" selected-menuitem-context-field-name="activeSegmentSubMenuItem">
+          default-menu-item-name="SegmentGroup">
         <menu-item name="SegmentGroup" title="${uiLabelMap.MarketingSegmentGroupSegmentGroup}">
             <link target="viewSegmentGroup">
                 <parameter param-name="segmentGroupId"/>
@@ -44,7 +44,7 @@ under the License.
     </menu>
     
     <menu name="SegmentGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="Segment" selected-menuitem-context-field-name="activeSegmentSubMenuItem">
+        default-menu-item-name="PARENT-NOSUB">
         <include-elements menu-name="SegmentGroupTabBar" recursive="includes-only" />
     </menu>
     

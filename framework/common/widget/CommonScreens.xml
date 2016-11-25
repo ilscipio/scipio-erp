@@ -65,135 +65,129 @@ under the License.
     
     <!-- Global screen rendering context initialization, intended to be included in screen decorators. Devs - please keep this simple and generic. -->
     <screen name="GlobalActions">
-        <section>
-            <actions>
-                <!-- traditionally layoutSettings.VT_*_JAVASCRIPT[] are only for theme resources (styling-related);
-                     app logic (e.g. ajax date retrieval; heavy app interaction?) should use layoutSettings.javaScripts[];
-                     when overlap and both depends, on a file, should go in layoutSettings.javaScripts[];
-                     same for styles -->            
-                                           
-                <!-- Application-provided styles (common to all themes) - keep to minimum so themes can switch
+        <actions>
+            <!-- traditionally layoutSettings.VT_*_JAVASCRIPT[] are only for theme resources (styling-related);
+                 app logic (e.g. ajax date retrieval; heavy app interaction?) should use layoutSettings.javaScripts[];
+                 when overlap and both depends, on a file, should go in layoutSettings.javaScripts[];
+                 same for styles -->            
+                                       
+            <!-- Application-provided styles (common to all themes) - keep to minimum so themes can switch
+            
+            <set field="layoutSettings.styleSheets[]" value="" global="true"/>  
+                          
+            -->
+
+                               
+            <!-- Application scripts (common to all apps; may be shared by themes) - needed for app function (ajax, basic function, etc.)
+                 Can be forced to put some theme scripts here if apps depend heavily on them -->
+            
+            <!-- Legacy jQuery; TODO: Remove once possible -->
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
+            
+            <!--  Foundation jQuery + extras > Moved to themes
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/modernizr/modernizr.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
+            <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery/dist/jquery.min.js" global="true" />
+            -->
+            <!-- Legacy JS; TODO: Remove once possible -->
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectall.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/fieldlookup.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/miscAjaxFunctions.js" global="true" />               
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+            <set field="layoutSettings.javaScriptsFooter[]" value="/images/util.js" global="true" />
+              
+            <!-- Can now be set in footer
+            <set field="layoutSettings.javaScriptsFooter[]" value="" global="true" />
+            -->
+
+            <!-- Load available JS Language Files -->
+            <!-- DISABLED FOR CLEAN-UP
+            <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
+            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true" />
+            -->
                 
-                <set field="layoutSettings.styleSheets[]" value="" global="true"/>  
+            <!-- jQuery CSSs -->
+            <!-- DISABLED FOR CLEAN-UP
+            <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/date.format-1.2.3-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/date.timezone-min.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/miscAjaxFunctions.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/selectMultipleRelatedValues.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
+            <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
+            -->     
                               
-                -->
+            <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->
+            <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
+                looked up into rendererVisualThemeResources, which uses more complex lookup logic.
+            <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
+            <service service-name="getVisualThemeResources">
+                <field-map field-name="visualThemeId" />
+                <field-map field-name="themeResources" from-field="layoutSettings" />
+            </service>
+            <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
+            -->
+            <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
 
-                                   
-                <!-- Application scripts (common to all apps; may be shared by themes) - needed for app function (ajax, basic function, etc.)
-                     Can be forced to put some theme scripts here if apps depend heavily on them -->
-                
-                <!-- Legacy jQuery; TODO: Remove once possible -->
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
-                
-                <!--  Foundation jQuery + extras > Moved to themes
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/modernizr/modernizr.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery/dist/jquery.min.js" global="true" />
-                -->
-                <!-- Legacy JS; TODO: Remove once possible -->
-                <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectall.js" global="true" />
-                <set field="layoutSettings.javaScriptsFooter[]" value="/images/fieldlookup.js" global="true" />
-                <set field="layoutSettings.javaScriptsFooter[]" value="/images/miscAjaxFunctions.js" global="true" />               
-                <set field="layoutSettings.javaScriptsFooter[]" value="/images/selectMultipleRelatedValues.js" global="true" />
-                <set field="layoutSettings.javaScriptsFooter[]" value="/images/util.js" global="true" />
-                  
-                <!-- Can now be set in footer
-                <set field="layoutSettings.javaScriptsFooter[]" value="" global="true" />
-                -->
-
-                <!-- Load available JS Language Files -->
-                <!-- DISABLED FOR CLEAN-UP
-                <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
-                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
-                    <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
-                    <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true" />
-                -->
-                    
-                <!-- jQuery CSSs -->
-                <!-- DISABLED FOR CLEAN-UP
-                <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/date/date.format-1.2.3-min.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/date/date.timezone-min.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/miscAjaxFunctions.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/selectMultipleRelatedValues.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/util.js" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/images/date/FromThruDateCheck.js" global="true"/>                
-                -->     
-                                  
-                <!-- Note: Must be run last after all layoutSettings assignments due to a Ofbiz widget vars bug -->
-                <!-- SCIPIO: 2016-08-09: this is no longer appropriate as default behavior. the theme should have been already
-                    looked up into rendererVisualThemeResources, which uses more complex lookup logic.
-                <set field="visualThemeId" from-field="userPreferences.VISUAL_THEME" global="true" />
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId" />
-                    <field-map field-name="themeResources" from-field="layoutSettings" />
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
-                -->
-                <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
-
-                <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
-            </actions>
-            <widgets />
-        </section>
+            <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
+        </actions>
     </screen>
     
     <screen name="GlobalTemplateActions">
-        <section>
-            <actions>
-                <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
-                <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
-                <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
-                <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
-                <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
-                <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
-                <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
-                <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
-                <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
-                <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
-                <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
+        <actions>
+            <set field="layoutSettings.commonHeaderImageLinkUrl" from-field="layoutSettings.commonHeaderImageLinkUrl" default-value="main" global="true" />
+            <!--<set field="iconsLocation" from-field="layoutSettings.VT_ICONS_LOC[0]" default-value="/images/icons/famfamfam" global="true" /> -->
+            <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" />
+            <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" />
+            <set field="appbarTemplateLocation" from-field="layoutSettings.VT_NAV_TMPLT_LOC[0]" />
+            <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
+            <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
+            <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
+            <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
+            <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
+            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
 
-                <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
-                <set field="origTitle" from-field="title" />
-                <set field="origTitleProperty" from-field="titleProperty" />
+            <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
+            <set field="origTitle" from-field="title" />
+            <set field="origTitleProperty" from-field="titleProperty" />
 
-                <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
-                <!-- 2016-10-26: support titleFormatString to simplify screens 
-                    use backslash to delay the evaluation of expression to here -->
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
+            <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
+            <!-- 2016-10-26: support titleFormatString to simplify screens 
+                use backslash to delay the evaluation of expression to here -->
+            <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
 
-                <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
+            <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
 
-                <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
-                <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
-                <set field="title" from-field="resolvedTitle"/>
+            <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
+            <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
+            <set field="title" from-field="resolvedTitle"/>
 
-                <!-- GLOBAL version of the title so top-level templates can also access it
-                    (NOTE: due to language issues, must be a different field name) -->
-                <set field="globalTitle" from-field="resolvedTitle" global="true"/>
+            <!-- GLOBAL version of the title so top-level templates can also access it
+                (NOTE: due to language issues, must be a different field name) -->
+            <set field="globalTitle" from-field="resolvedTitle" global="true"/>
 
-                <set field="headerTitle" from-field="resolvedTitle"/>
+            <set field="headerTitle" from-field="resolvedTitle"/>
 
-                <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
-            </actions>
-            <widgets />
-        </section>
+            <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
+        </actions>
     </screen>
 
     <!-- Global decorator for General Screens/Pages
@@ -249,7 +243,7 @@ under the License.
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
-                            <not><if-compare operator="equals" field="customSideBar" value="true" type="Boolean"/></not>
+                            <not><if-true field="customSideBar"/></not>
                         </and>
                     </condition>
                     <widgets>
@@ -347,7 +341,7 @@ under the License.
                             <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
                             <section>
                                 <condition>
-                                    <if-compare operator="equals" field="customSideBar" value="true" type="Boolean"/>
+                                    <if-true field="customSideBar" />
                                 </condition>
                                 <widgets>
                                     <!-- Theme styling  -->
@@ -404,11 +398,11 @@ under the License.
                                                     <and>
                                                         <or>
                                                             <if-empty-section section-name="left-column" />
-                                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showLeftColumn" />
                                                         </or>
                                                         <or>
                                                             <if-empty-section section-name="right-column" />
-                                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showRightColumn" />
                                                         </or>
                                                     </and>
                                                 </condition>
@@ -427,12 +421,12 @@ under the License.
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="left-column" />
-                                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showLeftColumn" />
                                                             </or>
                                                         </not>
                                                         <or>
                                                             <if-empty-section section-name="right-column" />
-                                                            <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showRightColumn" />
                                                         </or>
                                                     </and>
                                                 </condition>
@@ -450,12 +444,12 @@ under the License.
                                                     <and>
                                                         <or>
                                                             <if-empty-section section-name="left-column" />
-                                                            <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                            <if-false field="showLeftColumn" />
                                                         </or>
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="right-column" />
-                                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showRightColumn" />
                                                             </or>
                                                         </not>
                                                     </and>
@@ -475,13 +469,13 @@ under the License.
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="left-column" />
-                                                                <if-compare field="showLeftColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showLeftColumn" />
                                                             </or>
                                                         </not>
                                                         <not>
                                                             <or>
                                                                 <if-empty-section section-name="right-column" />
-                                                                <if-compare field="showRightColumn" operator="equals" type="Boolean" value="false"/>
+                                                                <if-false field="showRightColumn" />
                                                             </or>
                                                         </not>
                                                     </and>
@@ -1063,9 +1057,9 @@ under the License.
                 <section>
                     <condition>
                         <or>
-                            <if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="true" />
+                            <if-true field="findScreenShowResults" />
                             <and>
-                                <not><if-compare field="findScreenShowResults" operator="equals" type="Boolean" value="false" /></not>
+                                <not><if-false field="findScreenShowResults" /></not>
                                 <or>
                                     <if-compare field="httpMethod" operator="equals" value="post" />
                                     <if-compare field="parameters.find" operator="equals" value="true" />
@@ -1268,7 +1262,7 @@ under the License.
     <screen name="scipioMenuWidgetWrapper">
         <section>
             <widgets>
-                <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}"
+                <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"
                     max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}"/>
             </widgets>
         </section>
@@ -1276,21 +1270,21 @@ under the License.
     <screen name="scipioFormWidgetWrapper">
         <section>
             <widgets>
-                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" />
+                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
             </widgets>
         </section>
     </screen>
     <screen name="scipioTreeWidgetWrapper">
         <section>
             <widgets>
-                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" />
+                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
             </widgets>
         </section>
     </screen>
     <screen name="scipioScreenWidgetWrapper">
         <section>
             <widgets>
-                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}"/>
+                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"/>
             </widgets>
         </section>
     </screen>
@@ -1304,39 +1298,53 @@ under the License.
         The individual screens or decorators then simply need to set the following fields in their actions (with global="false", implied):
         * activeSubMenu (direct argument)
         * activeSubMenuItem (direct argument)
-        * activeMainMenuItem (fallback argument)
-        (NOTE: These are the default input field names, but they may be changed per-menu using further configuration below)
+        The following can influence selection but are usually do not need to be specified manually in screens:
+        * activeMainMenuItem (fallback argument) (2016-11-15: now auto-resolved by ResolveComplex(SideBar)MenuExtraItems below, if called from main-decorator of app)
+        (NOTE: Above are the default input field names, but they may be changed per-menu using further configuration below)
         
         Details:
         * activeSubMenu - Name of a sub-menu that is part of the complex menu designated by menuCfg.location/name.
           The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
           This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
           but this location is not used in the complex menu lookup.
-          If the field is empty, the special value "TOP", or the name of the top-level menu, it designates the top level (no sub-menu).
-          (Empty may be treated specially in some cases, such as if activeSubMenuItem is missing or if the menu wrapper behavior is changed via menuCfg.allowSubItemTop)
           If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
           In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
+          SPECIAL VALUES:
+          * For supported special values, see description of menu selected-menu-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
+          * In addition, in some cases, empty/missing value may be treated specially, for example due to the menuCfg.allowSubItemTop config parameter.
         * activeSubMenuItem - Name of a menu item that is child (or parent) of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
           SPECIAL VALUES:
-          * "PARENT" - can be used to explicitly request that the selected item be the parent item of the sub-menu (same effect as empty item when menu has no default).
-            Does not affect which sub-menu is considered selected, so it will (usually, by default) still show the sub-menu (unless something else blocks it).
-            Here, the sub-menu remains the deepest selected target (deeper than the selected parent item!).
-          * "PARENT-NOSUB" - similar to "PARENT" except the sub-menu will not be considered selected and will (usually) be hidden.
-            In other words, internally, the selected sub menu (activeSubMenu) is switched to the parent menu.
-            Here, the parent item becomes the deepest selected target.
-          * "NONE" - same as empty.
+          * For supported special values, see description of menu selected-menuitem-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
+          SPECIAL VALUE ALIASES: 
+          2016-11-16: The PARENT special values can now be handled more cleanly and centralized by setting them in 
+          menu-item-alias definitions (added for 1.14.3) in menu definitions.
+          For example if a new-record screen identifies itself with "NewRecord" set in activeSubMenuItem, the corresponding
+          sub-menu's definition can be augmented with an alias to make it behave like PARENT(-NOSUB):
+            <menu name="RecordSideBar" extends="CommonSideBarMenu" location="component://common/widget/ContentMenus.xml">
+                [...]
+                <menu-item-alias name="NewRecord" for="PARENT-NOSUB"/>
+                [...]
+            </menu>
+          The effect will be the same as if PARENT-NOSUB had been set in activeSubMenuItem by the screen, but 
+          the definition is centralized with all the other items and better abstracted.
           NOTE: if the name is not found within the (sub-)menu, a warning (error) will be printed to log. The sub-menu will still be expanded to help
               pinpoint the error, but the active item selection may not be correct until the error is fixed.
         * activeMainMenuItem - Name of a menu item used in case both activeSubMenu and activeSubMenuItem are not
-          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default). 
+          specified, as default behavior or fallback (this fallback behavior itself may be tweaked, but this is the default).
+          NOTE: 2016-11-15: activeMainMenuItem is now auto-determined by DeriveComplex(SideBar)MenuItems when called from main-decorator and usually 
+              does not need to be set anymore, as long as activeSubMenu/activeSubMenuItem are assigned before the main-decorator invocation containing 
+              the DeriveComplex(SideBar)MenuItems call. To exploit this, your app simply needs to call DeriveComplex(SideBar)MenuItems in its main-decorator.
+              Changed for 1.14.3.
         
         Together, activeSubMenu and activeSubMenuItem uniquely identify a menu item in an complex menu.
         activeMainMenuItem is used to handle some default cases only; however, note that activeMainMenuItem is
-        still necessary to designate items in other unrelated menus.
+        still necessary to designate items in other unrelated menus (if the app/theme has any that depend on it).
         
         The default behavior is based on the usual usage in the standard Scipio screens (based on the Ofbiz pattern).
         In these screens, the fields activeSubMenu and activeSubMenuItem are used to highlight items in the
@@ -1358,9 +1366,9 @@ under the License.
             location specified as prefix in activeSubMenu.
         Complex menu name suffix control:
         * nameSuffix (default: "Menu") - Complex menu name suffix
-        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenuItem field, for menu lookup
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
             (only appends if not already ends with)
-        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenuItem field, for menu lookup
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
             Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
               <sub-menu name="Server" include="ServerSideBar"/>
             In this case it's best to leave cplxStripSuffix true for compatibility.
@@ -1389,7 +1397,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                        <if-true field="useCplxMenu" />
                     </condition>
                     <widgets>
                         <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
@@ -1402,6 +1410,33 @@ under the License.
         </section>
     </screen>
     
+    <!-- Complex Menu automatic extra item resolution script
+        Automatically resolves activeMainMenuItem from activeSubMenu/activeSubMenuItem, mainly
+        for use in extra menus. Include using include-screen-actions directive.
+        
+        menuCfg configurable fields, as members of menuCfg map (<set field="menuCfg.name" value="..."/>):
+        
+        Complex menu location:
+        * location (required) - Complex menu location
+        * name (required) - Complex menu name
+        Complex menu name suffix control:
+        * nameSuffix (default: "Menu") - Complex menu name suffix
+        * addNameSuffix (default: Boolean false) - Whether to append the nameSuffix to the incoming value in activeSubMenu field, for menu lookup
+            (only appends if not already ends with)
+        * stripNameSuffix (default: Boolean true) - Whether to strip any nameSuffix from the incoming value in activeSubMenu field, for menu lookup
+            Set cplxAddSuffix to false (default) if you used explicit names in menu defs, such as: 
+              <sub-menu name="Server" include="ServerSideBar"/>
+            In this case it's best to leave cplxStripSuffix true for compatibility.
+            Set cplxStripSuffix to true (default) if you used implicit or reused full names, such as: 
+                <sub-menu include="ServerSideBar"/> or <sub-menu name="ServerSideBar" include="ServerSideBar"/>
+            In this case cplxStripSuffix is ignored (inapplicable).
+     -->
+    <screen name="DeriveComplexMenuItems">
+        <actions>
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+
     <!-- Complex SideBar Menu Wrapper - based on ComplexMenu (see ComplexMenu above for available arguments and details)
         Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
     <screen name="ComplexSideBarMenu">
@@ -1414,7 +1449,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="useCplxMenu" operator="equals" type="Boolean" value="true" />
+                        <if-true field="useCplxMenu" />
                     </condition>
                     <widgets>
                         <include-menu location="${cplxLoc}" name="${cplxName}" sub-menus="${cplxSubFilter}" max-depth="${cplxMaxDepth}"/>
@@ -1427,6 +1462,16 @@ under the License.
         </section>
     </screen>
     
+    <!-- Complex SideBar Menu automatic extra item resolution script - based on DeriveComplexMenuItems above
+        Currently same as ComplexMenu except sets the activeSubMenu name suffix to "SideBar". -->
+    <screen name="DeriveComplexSideBarMenuItems">
+        <actions>
+            <set field="menuCfg.nameSuffix" from-field="menuCfg.nameSuffix" default-value="SideBar" /> 
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/DeriveComplexMenuItems.groovy"/>
+        </actions>
+    </screen>
+    
+    
     <!-- Common SideBar Menu inclusion logic, adequate as a default in common decorators in most apps.
         In most apps this will be invoked from CommonXxxAppSideBarMenu wrappers, which implement application-specific logic,
         notably permission checks (this is in contrast to the MainAppSideBarMenu/DefMainAppSideBarMenu wrappers, which
@@ -1434,11 +1479,20 @@ under the License.
     
         Accepts context fields:
         
+        Conditions (Booleans):
+        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
+        * commonSideBarMenu.condList - list of extra booleans to check (logically ANDed)
+        
         Permissions:
+        NOTE: 2016-09-11: The perm fields below are limited to simple checks; it is now possible and frequently easier to use
+            cond/condList boolean above in conjunction with the new condition-to-field element instead (see widget-common.xsd), such as:
+            <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                <if-has-permission permission="CATALOG" action="_VIEW"/>
+            </condition-fo-field>
         * commonSideBarMenu.perm - name of single permission to check to allow showing MainSideBarMenu (default: none)
         * commonSideBarMenu.permAction - single permission action to check to allow showing MainSideBarMenu (default: none, optional for perm)
-        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (default: none)
-          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs
+        * commonSideBarMenu.permList - list of additional permission names to check to allow showing MainSideBarMenu (logically ANDed) (default: none)
+          entries may be either single strings, {"perm":...,"action":..."} maps, or sub-lists of [perm, action] pairs 
         * commonSideBarMenu.permServ - single map of arguments for a permission service
           * name - service name
           * mainAction - main action
@@ -1447,10 +1501,6 @@ under the License.
           * resource - the resourceDescription arg of permission service interface
         * commonSideBarMenu.permServList - list of maps for permission service calls
           each map supports the same members as permServ
- 
-        Conditions (Booleans):
-        * commonSideBarMenu.cond - boolean to check to allow showing MainSideBarMenu (default: true)
-        * commonSideBarMenu.condList - list of extra booleans to check
 
         Menu config:
         * commonSideBarMenu.targetMenuName - name of menu shown if all permissions and conditions pass (default: "MainSideBarMenu") 
@@ -1467,7 +1517,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <if-compare field="hasTargetMenu" operator="equals" type="Boolean" value="true"/>
+                        <if-true field="hasTargetMenu" />
                     </condition>
                     <widgets>
                         <include-screen name="${targetMenuName}" location="${targetMenuLoc}"/>

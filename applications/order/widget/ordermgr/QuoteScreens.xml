@@ -25,7 +25,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="OrderFindQuote"/>
-                <set field="activeMainMenuItem" value="quote"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -33,10 +32,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <container>
+                            <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="${styles.link_nav} ${styles.action_add}"/>
+                        </container>
                         <screenlet>
-                            <container>
-                                <link target="EditQuote" text="${uiLabelMap.OrderCreateOrderQuote}" style="${styles.link_nav} ${styles.action_add}"/>
-                            </container>
                             <include-form name="FindQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                             <include-form name="ListQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                         </screenlet>
@@ -69,6 +68,9 @@ under the License.
                 <get-related value-name="quote" relation-name="QuoteAttribute" list-name="quoteAttributes"/>
                 <get-related value-name="quote" relation-name="QuoteCoefficient" list-name="quoteCoefficients"/>
                 -->
+                
+                <set field="titleProperty" value="OrderQuote"/>
+                <set field="titleFormat" value="\${finalTitle}: ${quoteId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
@@ -148,35 +150,23 @@ under the License.
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <section>
-                            <widgets>
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                            </widgets>
-                        </section>
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->
                     <decorator-section name="topRight">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportHeaderInfo.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportContactMechs.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- quote items and totals -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportBody.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportContactMechs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                        <!-- quote items and totals -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/quote/quoteReportBody.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -186,20 +176,19 @@ under the License.
     <screen name="EditQuote">
         <section>
             <actions>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditQuote"/>
-
                 <set field="quoteId" from-field="parameters.quoteId"/>
                 <entity-one entity-name="Quote" value-field="quote"/>
                 
-                <set field="title" value="${uiLabelMap.OrderOrderQuote}: ${quote.quoteId} - ${quote.quoteName}"/>
+                <set field="titleProperty" value="${groovy: context.quoteId ? 'OrderOrderQuote' : 'OrderNewQuote'}"/>
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.quoteId ? (': ' + context.quoteId) : ''}${groovy: context.quote?.quoteName ? (' - ' + context.quote.quoteName ) : ''}"/>
                 
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.OrderOrderQuoteEdit}">
+                        <screenlet><!-- title="${uiLabelMap.OrderOrderQuoteEdit}" -->
                             <include-form name="EditQuote" location="component://order/widget/ordermgr/QuoteForms.xml"/>
                         </screenlet>
                     </decorator-section>

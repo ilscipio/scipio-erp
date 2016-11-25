@@ -23,7 +23,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindReturn"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="OrderFindReturn"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
@@ -47,7 +47,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindQuickReturn"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="OrderQuickReturn"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/QuickReturn.groovy"/>
             </actions>
             <widgets>
@@ -83,7 +83,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleReturnList"/>
-                <set field="activeSubMenuItem" value="PARENT"/>
+                <set field="activeSubMenuItem" value="OrderReturnList"/>
                 <entity-condition list="returnList" entity-name="ReturnHeader"/>
             </actions>
             <widgets>
@@ -109,15 +109,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReturnDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="component://order/webapp/ordermgr/return/returnItems.ftl"/>
-                                    </html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://order/webapp/ordermgr/return/returnItems.ftl"/>
+                            </html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

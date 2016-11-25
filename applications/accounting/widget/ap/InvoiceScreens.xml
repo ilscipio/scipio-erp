@@ -63,16 +63,22 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindApInvoices"/>
-                <set field="activeSubMenuItem" value="PARENT"/><!-- viewInvoices -->
+                <set field="activeSubMenuItem" value="viewInvoices"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                 </service>
-                <!-- SCIPIO: DON'T DO THIS; causes exceptions. ugly workaround below...
+                <!-- SCIPIO: DON'T DO THIS; causes exceptions due to ftl iteration. get rid of the EntityListIterator.
                 <set field="invoices" from-field="result.listIt"/> -->
-                <set field="dummy" value="${groovy: globalContext.tempVal = (context.result?.listIt != null) ? context.result.listIt.getCompleteList() : []; context.result.listIt.close(); return '';}"/>
-                <set field="invoices" from-field="tempVal"/>
+                <script lang="groovy"><![CDATA[
+                    if (context.result?.listIt != null) {
+                        context.invoices = result.listIt.getCompleteList();
+                        result.listIt.close();
+                    } else {
+                        context.invoices = [];
+                    }
+                ]]></script>
                 
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
                 <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${parameters.organizationPartyId}"/>
@@ -80,25 +86,21 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="NewPurchaseInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindApInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/PurchaseInvoices.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="NewPurchaseInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindApInvoices" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/PurchaseInvoices.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -109,11 +111,11 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCreateNewPurchaseInvoice"/>
-                <set field="activeMainMenuItem" value="invoices"/>
+                <set field="activeSubMenuItem" value="newInvoice"/><!-- "invoices" -->
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
@@ -145,20 +147,16 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body"> 
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="CommissionRun" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/CommissionRun.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionRun" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionRun.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -175,20 +173,16 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonApReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="CommissionReport" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ap/invoices/CommissionReport.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionReport" location="component://accounting/widget/ap/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionReport.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

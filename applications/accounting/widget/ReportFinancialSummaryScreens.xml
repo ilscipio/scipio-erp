@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFinancialSummaryReportOptions"/>
-                <set field="activeMainMenuItem" value="FinancialSummryReports"/>
+                <set field="activeSubMenuItem" value="FindFinAccount"/>
 
                 <set field="month" from-field="parameters.month" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
                 <set field="year" from-field="parameters.year" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
@@ -56,24 +56,19 @@ under the License.
     </screen>
 
     <screen name="FinancialSummaryDataPrep">
-        <section>
-            <actions>
-                <set field="activeMainMenuItem" value="FinancialSummryReports"/>
+        <actions>
+            <set field="month" from-field="parameters.month" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
+            <set field="year" from-field="parameters.year" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+            <set field="currencyUomId" from-field="parameters.currencyUomId"/>
 
-                <set field="month" from-field="parameters.month" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;MM&quot;)}"/>
-                <set field="year" from-field="parameters.year" type="Integer" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-                <set field="currencyUomId" from-field="parameters.currencyUomId"/>
-
-                <entity-one entity-name="PartyNameView" value-field="organizationPartyName" auto-field-map="false" use-cache="true">
-                    <field-map field-name="partyId" from-field="organizationPartyId"/>
-                </entity-one>
-                <entity-one entity-name="Uom" value-field="currencyUom" auto-field-map="false" use-cache="true">
-                    <field-map field-name="uomId" from-field="currencyUomId"/>
-                </entity-one>
-            </actions>
-            <widgets></widgets>
-        </section>
+            <entity-one entity-name="PartyNameView" value-field="organizationPartyName" auto-field-map="false" use-cache="true">
+                <field-map field-name="partyId" from-field="organizationPartyId"/>
+            </entity-one>
+            <entity-one entity-name="Uom" value-field="currencyUom" auto-field-map="false" use-cache="true">
+                <field-map field-name="uomId" from-field="currencyUomId"/>
+            </entity-one>
+        </actions>
     </screen>
 
     <screen name="SalesInvoiceByProductCategorySummary">
@@ -250,10 +245,10 @@ under the License.
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
                                     <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                                    <container >
+                                    <container>
                                         <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
                                     </container>
-                                    <container >
+                                    <container>
                                         <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
                                     </container>
                                 </screenlet>
@@ -312,20 +307,12 @@ under the License.
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <container >
-                            <label text="${uiLabelMap.AccountingTrialBalance}"/>
-                        </container>
-                        <container >
-                            <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
-                        </container>
+                        <container><label text="${uiLabelMap.AccountingTrialBalance}"/></container>
+                        <container><label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/></container>
                         <include-form name="TrialBalanceFinancialTimePeriodSelection" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
-                        <container >
-                            <label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/>
-                        </container>
-                        <container >
-                            <label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/>
-                        </container>
+                        <container><label text="${uiLabelMap.AccountingDebitFlag}: ${postedDebitsTotal}"/></container>
+                        <container><label text="${uiLabelMap.AccountingCreditFlag}: ${postedCreditsTotal}"/></container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

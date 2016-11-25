@@ -26485,7 +26485,7 @@
         <value xml:lang="zh_TW">產品${productId}的數量${newQuantity}超過要接收的可用數量</value>
     </property>
     <property key="ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder">
-        <value xml:lang="de">Menge ${quantityToBackOrder$ von ${quantityToReceive} für Produkt ${productId} wird für Auftragsrückstand verwendet</value>
+        <value xml:lang="de">Menge ${quantityToBackOrder} von ${quantityToReceive} für Produkt ${productId} wird für Auftragsrückstand verwendet</value>
         <value xml:lang="en">Quantity ${quantityToBackOrder} of ${quantityToReceive} for product ${productId} will go to a back order</value>
         <value xml:lang="es">Cantidad ${quantityToBackOrder} de ${quantityToReceive} para producto ${productId} irá en nuevo pedido</value>
         <value xml:lang="fr">Quantité ${quantityToBackOrder} de ${quantityToReceive} pour le produit ${productId} ira à une commande en attente</value>

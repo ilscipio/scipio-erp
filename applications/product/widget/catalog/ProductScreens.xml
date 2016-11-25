@@ -577,13 +577,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://product/webapp/catalog/product/EditProductQuickAdmin.ftl" /></html>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/product/EditProductQuickAdmin.ftl" /></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -857,13 +853,9 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <section>
-                                <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://product/webapp/catalog/product/EditProductFeatures.ftl"/></html>
-                                    </platform-specific>
-                                </widgets>
-                            </section>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/product/EditProductFeatures.ftl"/></html>
+                            </platform-specific>
                         </container>
                         <screenlet title="${uiLabelMap.ProductListFeatureInteractions}">
                             <include-form name="ListFeatureInteractions" location="component://product/widget/catalog/ProductForms.xml"/>
@@ -1037,40 +1029,35 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
+                            <!--
+                            <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
+                                <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocs"/>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
+                                <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocsTo"/>
+                            </screenlet>
+                             -->
                             <section>
+                                <condition>
+                                    <if-empty field="productAssoc"/>
+                                </condition>
                                 <widgets>
-                                    <!--
-                                    
-                                    <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
-                                        <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocs"/>
-                                    </screenlet>
-                                    <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
-                                        <include-form location="component://product/widget/catalog/ProductForms.xml" name="ListProductAssocsTo"/>
-                                    </screenlet>
-                                     -->
-                                     <section>
-                                        <condition>
-                                            <if-empty field="productAssoc"/>
-                                        </condition>
-                                        <widgets>
-                                            <include-form location="component://product/widget/catalog/ProductForms.xml" name="AddProductAssoc"/>
-                                        </widgets>
-                                        <fail-widgets>
-                                            <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProductAssoc"/>
-                                        </fail-widgets>
-                                     </section>
-                                     <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/product/ProductFromAssocs.ftl"/></html>
-                                        </platform-specific>
-                                     </screenlet>
-                                     <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/product/ProductToAssocs.ftl"/></html>
-                                        </platform-specific>
-                                     </screenlet>
+                                    <include-form location="component://product/widget/catalog/ProductForms.xml" name="AddProductAssoc"/>
                                 </widgets>
+                                <fail-widgets>
+                                    <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProductAssoc"/>
+                                </fail-widgets>
                             </section>
+                            <screenlet title="${uiLabelMap.ProductAssociationsFromProduct}">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/ProductFromAssocs.ftl"/></html>
+                                </platform-specific>
+                            </screenlet>
+                            <screenlet title="${uiLabelMap.ProductAssociationsToProduct}">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/ProductToAssocs.ftl"/></html>
+                                </platform-specific>
+                            </screenlet>
                         </container>
                     </decorator-section>
                 </decorator-screen>
@@ -1538,15 +1525,11 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/ScipioEditProduct.groovy"/>
             </actions>
             <widgets>
-                <section>
-                     <widgets>
-                       <screenlet>
-                            <platform-specific>
-                                <html><html-template location="component://product/webapp/catalog/product/ScipioEditProduct.ftl"/></html>
-                            </platform-specific>
-                       </screenlet>
-                   </widgets>
-                </section>
+               <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://product/webapp/catalog/product/ScipioEditProduct.ftl"/></html>
+                    </platform-specific>
+               </screenlet>
             </widgets>
         </section>
     </screen>

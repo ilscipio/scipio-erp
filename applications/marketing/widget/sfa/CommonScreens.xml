@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -58,6 +69,10 @@ under the License.
                 <set field="applicationTitle" value="${uiLabelMap.SfaManagerApplication}" global="true"/>
                 <set field="parameters.parentPortalPageId" from-field="parameters.parentPortalPageId" default-value="SFA" global="true"/>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/GetParentPortalPageId.groovy"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -86,6 +101,9 @@ under the License.
     <screen name="CommonSfaAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonSfaAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -93,7 +111,18 @@ under the License.
                         <include-screen name="CommonSfaAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for MARKETING, _VIEW permission -->
+                            <condition>
+                                <if-true field="commonSfaAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -105,26 +134,11 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/TrackingCodeMenus.xml#TrackingCode" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Tracking"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -136,25 +150,10 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="marketingCampaignId" from-field="parameters.marketingCampaignId"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="MarketingCampaign"/>
                 <entity-one entity-name="MarketingCampaign" value-field="marketingCampaign"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -165,25 +164,10 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Promotions"/>                
                 <set field="showMainExtendedBar" type="Boolean" value="true" />                
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">             
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -195,7 +179,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Promotions" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
@@ -234,30 +217,12 @@ under the License.
     <screen name="CommonSegmentGroupDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Segment"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Segment"/>
-
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SegmentMenus.xml#SegmentGroup" />
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.segmentGroupId}" override-by-auto-include="true"> -->
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for MARKETING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -269,7 +234,8 @@ under the License.
             <actions>
             </actions>
             <widgets>
-                <decorator-screen name="CommonContactListDecorator" location="component://marketing/widget/CommonScreens.xml" />
+                <decorator-screen name="CommonContactListDecorator" location="component://marketing/widget/CommonScreens.xml">
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -277,8 +243,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="parameters.activeMainMenuItem" default-value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="main"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute('accountDescription')}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
@@ -317,13 +282,9 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
                 <!-- Do action here -->
                 <set field="salesOpportunityId" from-field="parameters.salesOpportunityId"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -339,50 +300,46 @@ under the License.
                 <set field="accountDescription" value="${groovy:session.getAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="contactDescription" value="${groovy:session.getAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="leadDescription" value="${groovy:session.getAttribute(&quot;leadDescription&quot;)}"/>
-            </actions>
-            <widgets>
-                <section>
+                <if>
                     <condition>
                         <or>
                             <not><if-empty field="leadDescription"/></not>
                             <not><if-empty field="accountLeadDescription"/></not>
                         </or>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
-                    </actions>
-                    <widgets/>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <not><if-empty field="contactDescription"/></not>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" value="Contacts"/>
                         <set field="currentCommonDecorator" value="CommonContactDecorator"/>
-                    </actions>
-                    <widgets/>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <not><if-empty field="accountDescription"/></not>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" value="Accounts"/>
                         <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
-                    </actions>
-                    <widgets/>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <if-empty field="currentCommonDecorator"/>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="currentCommonDecorator" value="CommonSfaAppDecorator"/>
-                    </actions>
-                    <widgets/>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <decorator-screen name="${currentCommonDecorator}"><!-- location="${parameters.mainDecoratorLocation}" -->
                     <decorator-section name="body">
                         <section>
@@ -440,7 +397,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
+                                        <if-true field="showOld" />
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
@@ -571,19 +528,19 @@ under the License.
     <screen name="CommonCommunicationEventDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="parameters.activeMainMenuItem"/>
+                <!-- TODO: REVIEW activeSubMenuItem here -->
+                <set field="activeSubMenuItem" from-field="parameters.activeSubMenuItem"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
-            </actions>
-            <widgets>
-                <section>
+                <if>
                     <condition>
                         <if-empty field="parameters.partyId"/>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="parameters.partyId" from-field="parameters.partyIdFrom"/>
-                    </actions>
-                    <widgets/>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <section>
                     <condition>
                         <not><if-empty field="parameters.partyId"/></not>
@@ -621,7 +578,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">            
@@ -637,7 +593,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Sales"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -653,7 +608,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/ServicesMenus.xml#Services" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Services"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -672,9 +626,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">                        
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -705,7 +656,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Event" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Events"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -721,9 +671,6 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="CommonEventDecorator">
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -732,27 +679,21 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Calendar"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Calendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <if-has-permission permission="MARKETING" action="_VIEW" />
-                            </condition>
                             <actions>
                                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy" />
                             </actions>
                             <widgets>
-                               <!--  <screenlet id="calendarOptions" name="calendarOptionsScreenlet" collapsible="true" title="${uiLabelMap.WorkEffortCalendarFindEntries}">
+                               <!--<screenlet id="calendarOptions" name="calendarOptionsScreenlet" collapsible="true" title="${uiLabelMap.WorkEffortCalendarFindEntries}">
                                     <include-form name="FilterCalendarEvents" location="component://workeffort/widget/CalendarForms.xml" />
-                                </screenlet> -->
+                                </screenlet>-->
                                 <decorator-section-include name="body" />
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -791,8 +732,10 @@ under the License.
     <screen name="CommonSfaAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="MARKETING"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonSfaAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-has-permission permission="MARKETING" action="_VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonSfaAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

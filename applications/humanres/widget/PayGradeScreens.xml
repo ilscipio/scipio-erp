@@ -24,7 +24,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPayGrade"/>
-                <set field="activeMainMenuItem" value="GlobalHRSettingMenus"/>
                 <set field="activeSubMenuItem" value="PayGrade"/>
                 <set field="payGradeId" from-field="parameters.payGradeId"/>
                 <set field="payGradeCtx" from-field="parameters"/>
@@ -34,13 +33,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditPayGrade" text="${uiLabelMap.HumanResNewPayGrade}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="EditPayGrade" text="${uiLabelMap.HumanResNewPayGrade}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindPayGrades" location="component://humanres/widget/forms/PayGradeForms.xml"/>
@@ -76,11 +71,7 @@
                             </widgets>
                         </section>
                         <screenlet>
-                            <section>
-                                <widgets>
-                                    <include-form name="EditPayGrade" location="component://humanres/widget/forms/PayGradeForms.xml"/>
-                                </widgets>
-                            </section>
+                            <include-form name="EditPayGrade" location="component://humanres/widget/forms/PayGradeForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -91,7 +82,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditSalaryStep"/>
-                <!--<set field="activeMainMenuItem" value="PayGrade"/>  -->
                 <!-- 
                 <set field="activeSubMenuItem" value="EditSalaryStep"/> -->
                 <set field="activeSubMenuItem" value="PayGrade"/> 

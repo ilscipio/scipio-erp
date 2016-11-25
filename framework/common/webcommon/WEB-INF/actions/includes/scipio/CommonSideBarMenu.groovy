@@ -5,7 +5,7 @@
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.widget.model.AbstractModelCondition.IfServicePermission;
 
-final module = "CommonSideBarMenuGroovy";
+final module = "CommonSideBarMenu.groovy";
  
 csbmArgs = context.commonSideBarMenu ?: [:];
  

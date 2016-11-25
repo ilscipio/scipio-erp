@@ -124,15 +124,15 @@ under the License.
                 <section>
                     <condition>
                         <or>
-                            <if-compare field="checkoutAllowAnonUnknown" type="Boolean" operator="equals" value="true"/>
-                            <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                            <if-true field="checkoutAllowAnonUnknown" />
+                            <if-true field="userIsKnown" />
                         </or>
                     </condition>
                     <widgets>
                         <section>
                             <condition>
                                 <or>
-                                    <if-compare field="checkoutAllowEmptyCart" type="Boolean" operator="equals" value="true"/>
+                                    <if-true field="checkoutAllowEmptyCart" />
                                     <if-compare field="cartSize" type="Integer" operator="greater" value="0"/>
                                 </or>
                             </condition>
@@ -517,7 +517,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
@@ -546,7 +546,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderhistory.ftl"/></html></platform-specific>
@@ -578,7 +578,7 @@ under the License.
                                 <!-- SCIPIO: NOTE: this should probably really be userHasAccount, but leaving for now,
                                     because otherwise anon user can't download anything (even though maybe login should
                                     be required for those kinds of products) -->
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <screenlet>
@@ -617,7 +617,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/orderstatus.ftl"/></html></platform-specific>
@@ -657,7 +657,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userIsKnown" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/ordercomplete.ftl"/></html></platform-specific>
@@ -687,7 +687,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="userHasAccount" type="Boolean" operator="equals" value="true"/>
+                                <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/order/requestreturn.ftl"/></html></platform-specific>

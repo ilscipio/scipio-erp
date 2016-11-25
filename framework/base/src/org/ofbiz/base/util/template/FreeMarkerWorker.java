@@ -299,8 +299,11 @@ public class FreeMarkerWorker {
         Template template = cachedTemplates.get(templateLocation);
         if (template == null) {
             Reader templateReader = new StringReader(templateString);
-            template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-            templateReader.close();
+            try {
+                template = new Template(templateLocation, templateReader, defaultOfbizConfig);
+            } finally { // SCIPIO: added finally
+                templateReader.close();
+            }
             template = cachedTemplates.putIfAbsentAndGet(templateLocation, template);
         }
         return renderTemplate(template, context, outWriter);
@@ -312,14 +315,20 @@ public class FreeMarkerWorker {
             template = cachedTemplates.get(templateLocation);
             if (template == null) {
                 Reader templateReader = new StringReader(templateString);
-                template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-                templateReader.close();
+                try {
+                    template = new Template(templateLocation, templateReader, defaultOfbizConfig);
+                } finally { // SCIPIO: added finally
+                    templateReader.close();
+                }
                 template = cachedTemplates.putIfAbsentAndGet(templateLocation, template);
             }
         } else {
             Reader templateReader = new StringReader(templateString);
-            template = new Template(templateLocation, templateReader, defaultOfbizConfig);
-            templateReader.close();
+            try {
+                template = new Template(templateLocation, templateReader, defaultOfbizConfig);
+            } finally { // SCIPIO: added finally
+                templateReader.close();
+            }
         }
         return renderTemplate(template, context, outWriter);
     }
@@ -439,8 +448,28 @@ public class FreeMarkerWorker {
         if (template == null) {
             // only make the reader if we need it, and then close it right after!
             Reader templateReader = makeReader(templateLocation);
-            template = new Template(templateLocation, templateReader, config);
-            templateReader.close();
+            try {
+                template = new Template(templateLocation, templateReader, config);
+            } finally { // SCIPIO: added finally
+                templateReader.close();
+            }
+            template = cache.putIfAbsentAndGet(templateLocation, template);
+        }
+        return template;
+    }
+    
+    /**
+     * SCIPIO: Gets template from string out of custom cache (new).
+     */
+    public static Template getTemplateFromString(String templateString, String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        Template template = cache.get(templateLocation);
+        if (template == null) {
+            Reader templateReader = new StringReader(templateString);
+            try {
+                template = new Template(templateLocation, templateReader, config);
+            } finally {
+                templateReader.close();
+            }
             template = cache.putIfAbsentAndGet(templateLocation, template);
         }
         return template;

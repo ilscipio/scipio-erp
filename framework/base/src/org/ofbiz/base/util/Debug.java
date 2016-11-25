@@ -95,6 +95,12 @@ public final class Debug {
 
     public static void log(int level, Throwable t, String msg, String module, String callingClass, Object... params) {
         if (isOn(level)) {
+            // SCIPIO: 2016-11-11: this is a workaround for .groovy module names not showing
+            // FIXME?: This should maybe solved another way as this might impact performance?
+            if (module != null && module.endsWith(".groovy")) {
+                module = module.substring(0, module.length() - 7) + "Groovy";
+            }
+            
             if (msg != null && params.length > 0) {
                 StringBuilder sb = new StringBuilder();
                 Formatter formatter = new Formatter(sb);

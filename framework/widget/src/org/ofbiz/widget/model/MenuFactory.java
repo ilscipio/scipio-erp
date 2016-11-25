@@ -39,8 +39,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - Menu factory class
+ * <p>
+ * SCIPIO: now also as instance
  */
-public class MenuFactory {
+@SuppressWarnings("serial")
+public class MenuFactory extends WidgetFactory {
 
     public static final String module = MenuFactory.class.getName();
 
@@ -95,7 +98,23 @@ public class MenuFactory {
         return modelMenuMap;
     }
 
+    /**
+     * Gets widget from location or exception. 
+     * <p>
+     * SCIPIO: now delegating.
+     */
     public static ModelMenu getMenuFromLocation(String resourceName, String menuName) throws IOException, SAXException, ParserConfigurationException {
+        ModelMenu modelMenu = getMenuFromLocationOrNull(resourceName, menuName);
+        if (modelMenu == null) {
+            throw new IllegalArgumentException("Could not find menu with name [" + menuName + "] in location [" + resourceName + "]");
+        }
+        return modelMenu;
+    }
+    
+    /**
+     * SCIPIO: Gets widget from location or null if name not within the location.
+     */
+    public static ModelMenu getMenuFromLocationOrNull(String resourceName, String menuName) throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelMenu> modelMenuMap = menuLocationCache.get(resourceName);
         if (modelMenuMap == null) {
             synchronized (MenuFactory.class) {
@@ -118,9 +137,28 @@ public class MenuFactory {
         }
 
         ModelMenu modelMenu = modelMenuMap.get(menuName);
-        if (modelMenu == null) {
-            throw new IllegalArgumentException("Could not find menu with name [" + menuName + "] in location [" + resourceName + "]");
-        }
         return modelMenu;
+    }
+
+    @Override
+    public ModelMenu getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+        try {
+            return getMenuFromLocation(modelLoc.getResource(), modelLoc.getName());
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    public ModelMenu getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+        try {
+            return getMenuFromLocationOrNull(modelLoc.getResource(), modelLoc.getName());
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
     }
 }

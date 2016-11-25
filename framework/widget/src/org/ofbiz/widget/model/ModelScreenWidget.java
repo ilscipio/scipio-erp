@@ -31,11 +31,8 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -64,9 +61,6 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 
 /**
@@ -178,29 +172,76 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.prevSections = prevSections;
         }
 
-        /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
-        public String render(String sectionName) throws GeneralException, IOException {
+        /** 
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+         * <p>
+         * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
+         * */
+        public String render(String sectionName, boolean asString) throws GeneralException, IOException {
             if (includePrevSections) {
                 // SCIPIO: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                    Appendable writer = asString ? new java.io.StringWriter() : this.writer;
+                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
+                    return asString ? writer.toString() : "";
                 }
                 else if (prevSections != null && prevSectionMap != null && prevSectionMap.get(sectionName) != null) {
                     // render previous sections with previous renderer so that it uses the right context
-                    prevSections.render(sectionName);
+                    return prevSections.render(sectionName, asString);
                 }
                 return "";
             }
             else {
                 ModelScreenWidget section = sectionMap.get(sectionName);
+                Appendable writer = asString ? new java.io.StringWriter() : this.writer;
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
+                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
                 }
-                return "";
+                return asString ? writer.toString() : "";
             }
+        }
+        
+        /** 
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+         */
+        public String render(String sectionName) throws GeneralException, IOException {
+            return render(sectionName, false);
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
+         */
+        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
+            if (asString == null) {
+                asString = Boolean.FALSE;
+            }
+            if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
+                MapStack<String> context;
+                if (!(this.context instanceof MapStack<?>)) {
+                    context = MapStack.create(this.context);
+                } else {
+                    context = UtilGenerics.<MapStack<String>>cast(this.context);
+                }
+                context.push();
+                try {
+                    return render(sectionName, asString);
+                } finally {
+                    context.pop();
+                }
+            } else {
+                return render(sectionName, asString);
+            }
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+         * generic object/ftl-friendly version.
+         */
+        public String renderScopedGen(String sectionName, Object asString, Object shareScope) throws GeneralException, IOException {
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
         }
 
         @Override
@@ -282,52 +323,97 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final List<ModelScreenWidget> failWidgets;
         private final boolean isMainSection;
         private final FlexibleStringExpander shareScopeExdr;
+        private final boolean actionsOnly; // SCIPIO: extra flag hint
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
         }
-
+        
         public Section(ModelScreen modelScreen, Element sectionElement, boolean isMainSection) {
             super(modelScreen, sectionElement);
 
-            // read condition under the "condition" element
-            Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
-            if (conditionElement != null) {
-                conditionElement = UtilXml.firstChildElement(conditionElement);
-                this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelScreen, conditionElement);
-            } else {
+            boolean hasActionsElement = false;
+            boolean hasWidgetsElement = false;
+            boolean hasFailWidgetsElement = false;
+            
+            // SCIPIO: SHORTHANDS: this code now support having an actions or widgets element in place of section.
+            // this is remarkable easy!
+            if ("actions".equals(sectionElement.getTagName())) {
                 this.condition = null;
-            }
-
-            // read all actions under the "actions" element
-            Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
-            if (actionsElement != null) {
-                this.actions = AbstractModelAction.readSubActions(modelScreen, actionsElement);
-            } else {
-                this.actions = Collections.emptyList();
-            }
-
-            // read sub-widgets
-            Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
-            if (widgetsElement != null) {
-                List<? extends Element> subElementList = UtilXml.childElementList(widgetsElement);
-                this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
-            } else {
+                this.actions = AbstractModelAction.readSubActions(modelScreen, sectionElement);
                 this.subWidgets = Collections.emptyList();
-            }
-
-            // read fail-widgets
-            Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
-            if (failWidgetsElement != null) {
-                List<? extends Element> failElementList = UtilXml.childElementList(failWidgetsElement);
-                this.failWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), failElementList);
-            } else {
                 this.failWidgets = Collections.emptyList();
+                hasActionsElement = true;
+            } else if ("widgets".equals(sectionElement.getTagName())) {
+                this.condition = null;
+                this.actions = Collections.emptyList();
+                List<? extends Element> subElementList = UtilXml.childElementList(sectionElement);
+                this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+                this.failWidgets = Collections.emptyList();
+                hasWidgetsElement = true;
+            } else { // SCIPIO: default/stock case: ("section".equals(sectionElement.getTagName()))
+                // read condition under the "condition" element
+                Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
+                if (conditionElement != null) {
+                    conditionElement = UtilXml.firstChildElement(conditionElement);
+                    this.condition = ModelScreenCondition.SCREEN_CONDITION_FACTORY.newInstance(modelScreen, conditionElement);
+                } else {
+                    this.condition = null;
+                }
+    
+                // read all actions under the "actions" element
+                Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
+                if (actionsElement != null) {
+                    this.actions = AbstractModelAction.readSubActions(modelScreen, actionsElement);
+                    hasActionsElement = true;
+                } else {
+                    this.actions = Collections.emptyList();
+                }
+    
+                // read sub-widgets
+                Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
+                if (widgetsElement != null) {
+                    List<? extends Element> subElementList = UtilXml.childElementList(widgetsElement);
+                    this.subWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), subElementList);
+                    hasWidgetsElement = true;
+                } else {
+                    this.subWidgets = Collections.emptyList();
+                }
+    
+                // read fail-widgets
+                Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
+                if (failWidgetsElement != null) {
+                    List<? extends Element> failElementList = UtilXml.childElementList(failWidgetsElement);
+                    this.failWidgets = ModelScreenWidget.readSubWidgets(getModelScreen(), failElementList);
+                    hasFailWidgetsElement = true;
+                } else {
+                    this.failWidgets = Collections.emptyList();
+                }
             }
             this.isMainSection = isMainSection;
             this.shareScopeExdr = FlexibleStringExpander.getInstance(sectionElement.getAttribute("share-scope"));
+            
+            // SCIPIO: warn about this case, which should basically be considered an error
+            if (condition != null && hasActionsElement && !hasWidgetsElement && !hasFailWidgetsElement) {
+                Debug.logWarning("screen [" + modelScreen.getSourceLocation() + "#" + modelScreen.getName() + "] " +
+                        "contains a section condition, with actions, but without widgets or fail-widgets element; actions-only " +
+                        "screens do not support the section condition element and it will be bypassed by directives such as " +
+                        "include-screen-actions - use the actions master if directive instead (see widget-common.xsd)", module);
+            }
+
+            // SCIPIO: determine if actions-only
+            this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement && 
+                    UtilValidate.isEmpty(subWidgets) && UtilValidate.isEmpty(failWidgets) &&
+                    !(UtilValidate.isEmpty(this.actions) && hasWidgetsElement); // NOTE: the last is special case, ambiguous, but bias toward widgets
         }
 
+        /**
+         * SCIPIO: Returns true if this section only contains actions directives.
+         */
+        public boolean isActionsOnly() {
+            return actionsOnly;
+        }
+        
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
@@ -426,6 +512,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
             // defaults to true, so anything but false is true
             return !"false".equals(shareScopeString);
         }
+
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class ColumnContainer extends ModelScreenWidget {
@@ -481,12 +572,20 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class Column extends ModelWidget {
+        public static final String TAG_NAME = "column"; // SCIPIO: added for consistency, but NOTE: not in xsd
+        
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander styleExdr;
         private final List<ModelScreenWidget> subWidgets;
+        private final ModelScreen modelScreen;
 
         public Column(ModelScreen modelScreen, Element columnElement) {
             super(columnElement);
@@ -494,8 +593,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.styleExdr = FlexibleStringExpander.getInstance(columnElement.getAttribute("style"));
             List<? extends Element> subElementList = UtilXml.childElementList(columnElement);
             this.subWidgets = Collections.unmodifiableList(readSubWidgets(modelScreen, subElementList));
+            this.modelScreen = modelScreen;
         }
-
+        
         public List<ModelScreenWidget> getSubWidgets() {
             return this.subWidgets;
         }
@@ -519,6 +619,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() { // SCIPIO: new
+            return TAG_NAME;
+        }
+        
+        @Override
+        public String getContainerLocation() { // SCIPIO: new
+            return modelScreen != null ? modelScreen.getFullLocationAndName() : null;
         }
     }
 
@@ -600,6 +710,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getAutoUpdateInterval() {
             return autoUpdateInterval;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -791,6 +906,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public boolean getPadded() {
             return padded;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class HorizontalSeparator extends ModelScreenWidget {
@@ -828,6 +948,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -915,6 +1040,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1088,6 +1218,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
             DecoratorScreen.overridingDefaultFallbackSettings.set(defaultFallbackSettings);
         }
 
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class DecoratorSection extends ModelScreenWidget {
@@ -1184,6 +1318,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class DecoratorSectionInclude extends ModelScreenWidget {
@@ -1221,11 +1360,17 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     sections.render(getName());
                 }
             }
+            UtilGenerics.<MapStack<String>>cast(context).pop();
         }
 
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             visitor.visit(this);
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1291,6 +1436,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getStyleExdr() {
             return styleExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1377,6 +1527,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1470,6 +1625,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class Tree extends ModelScreenWidget {
@@ -1551,6 +1711,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getShareScopeExdr() {
             return shareScopeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class PlatformSpecific extends ModelScreenWidget {
@@ -1598,6 +1763,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public Map<String, ModelScreenWidget> getSubWidgets() {
             return subWidgets;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1762,6 +1932,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getEnableEditName() {
             return enableEditName;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class SubContent extends ModelScreenWidget {
@@ -1827,7 +2002,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         @Override
         public void accept(ModelWidgetVisitor visitor) throws Exception {
             // TODO Auto-generated method stub
-            
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -1964,6 +2143,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         
         public String getSubMenuFilter(Map<String, Object> context) {
             return this.subMenuFilterExdr.expandString(context);
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -2110,6 +2294,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public Link getLink() {
             return link;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
     public static final class ScreenImage extends ModelScreenWidget {
@@ -2203,6 +2392,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         public Image getImage() {
             return image;
+        }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
         }
     }
 
@@ -2404,6 +2598,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public FlexibleStringExpander getConfModeExdr() {
             return confModeExdr;
         }
+        
+        @Override
+        public String getWidgetType() {
+            return TAG_NAME;
+        }
     }
 
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return getModelScreen() != null ? getModelScreen().getFullLocationAndName() : null;
+    }
 }

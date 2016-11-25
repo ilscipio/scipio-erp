@@ -24,7 +24,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmployment"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
@@ -37,13 +36,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindEmployments" location="component://humanres/widget/forms/EmploymentForms.xml"/>
@@ -61,7 +56,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmployment"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditEmployment"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="Employment" value-field="employment"/>
@@ -99,7 +93,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPayHistories"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditPayHistory"/>
             </actions>
             <widgets>
@@ -117,7 +110,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPartyBenefits"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditPartyBenefit"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -141,7 +133,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResListPayrollPreferences"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditPayrollPreference"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
@@ -169,7 +160,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResAddUnemploymentClaim"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditUnemploymentClaims"/>
                 <set field="unemploymentClaimId" from-field="parameters.unemploymentClaimId"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
@@ -195,7 +185,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResPerfNote"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditPerformanceNotes"/>
                 <set field="partyId" from-field="parameters.partyId"/>
             </actions>
@@ -215,7 +204,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditAgreementEmploymentAppl"/>
-                <set field="activeMainMenuItem" value="Employment"/>
                 <set field="activeSubMenuItem" value="EditAgreementEmploymentAppls"/>
                 <set field="agreementId" from-field="parameters.agreementId"/>
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId"/>

@@ -26,45 +26,41 @@ under the License.
                 <set field="titleProperty" value="MarketingFindLeads"/>
                 <set field="currentUrl" value="FindLeads"/>
                 <set field="activeSubMenuItem" value="Leads"/>
-                <set field="setLeadtDescription" value="${groovy:session.setAttribute('leadDescription', context.activeMainMenuItem)}"/>
+                <set field="setLeadtDescription" value="${groovy:session.setAttribute('leadDescription', context.activeSubMenuItem)}"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute('accountDescription')}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
             </actions>
             <widgets>
-                <!-- <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}"> -->
+                <!--<decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">-->
                 <decorator-screen name="CommonLeadDecorator" location="component://marketing/widget/sfa/CommonScreens.xml">              
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <!-- <include-menu name="LeadFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
-                                        <include-form name="FindLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <section>
-                                            <condition>
-                                                <or>
-                                                    <if-empty field="parameters.all"/>
-                                                    <if-compare field="parameters.all" operator="equals" value="true"/>
-                                                </or>
-                                            </condition>
-                                            <widgets>
-                                                <!-- list all leads -->
-                                                <!-- <label style="heading" text="${uiLabelMap.SfaAllLeads}"/> -->
-                                                <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <!-- list my leads -->
-                                                <!-- <label style="heading" text="${uiLabelMap.SfaMyLeads}"/> -->
-                                                <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
-                                            </fail-widgets>
-                                        </section>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <include-menu name="LeadSubTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <!-- <include-menu name="LeadFindTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/> -->
+                                <include-form name="FindLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <section>
+                                    <condition>
+                                        <or>
+                                            <if-empty field="parameters.all"/>
+                                            <if-compare field="parameters.all" operator="equals" value="true"/>
+                                        </or>
+                                    </condition>
+                                    <widgets>
+                                        <!-- list all leads -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaAllLeads}"/> -->
+                                        <include-form name="ListLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <!-- list my leads -->
+                                        <!-- <label style="heading" text="${uiLabelMap.SfaMyLeads}"/> -->
+                                        <include-form name="ListMyLeads" location="component://marketing/widget/sfa/forms/LeadForms.xml"/>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -75,7 +71,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLead"/>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
@@ -93,7 +88,6 @@ under the License.
     <screen name="ConvertLead">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="ConvertLead"/>
             </actions>
             <widgets>
@@ -124,7 +118,6 @@ under the License.
     <screen name="CloneLead">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="CloneLead"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/actions/CloneLead.groovy"/>
             </actions>
@@ -143,7 +136,6 @@ under the License.
     <screen name="MergeLeads">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
                 <set field="activeSubMenuItem" value="MergeLeads"/>
                 <script location="component://marketing/webapp/sfa/WEB-INF/action/MergeContacts.groovy"/>
             </actions>
@@ -176,7 +168,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCreateLeadFromVCard"/>
-                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">
@@ -211,7 +202,6 @@ under the License.
     <screen name="AddRelatedCompany">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="Leads"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonLeadDecorator" location="${parameters.mainDecoratorLocation}">

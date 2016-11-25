@@ -36,36 +36,18 @@ under the License.
 
 <#if shipment??>
     <#if !isPurchaseShipment>
-        <div class="errorMessage">
-            <#assign uiLabelWithVar=uiLabelMap.ProductErrorShipmentNotPurchaseShipment?interpret><@uiLabelWithVar/>
-        </div>
+        <@commonMsg type="error">${getLabel('ProductErrorShipmentNotPurchaseShipment', '', {'shipmentId':shipmentId!''})}</@commonMsg>
     <#elseif orderId?has_content && !orderHeader??>
-        <div class="errorMessage">
-            <#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>
-        </div>
+        <@commonMsg type="error">${getLabel('ProductErrorOrderIdNotFound', '', {'orderId':orderId!''})}</@commonMsg>
     <#elseif orderHeader?? && orderHeader.orderTypeId != "PURCHASE_ORDER">
-        <div class="errorMessage">
-            <#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderNotPurchaseOrder?interpret><@uiLabelWithVar/>
-        </div>
+        <@commonMsg type="error">${getLabel('ProductErrorOrderNotPurchaseOrder', '', {'orderId':orderId!''})}</@commonMsg>
     <#elseif ProductReceiveInventoryAgainstPurchaseOrderProductNotFound??>
-        <div class="errorMessage">
-            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
-            <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderProductNotFound?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
-        </div>
+        <@commonMsg type="error">${getLabel('ProductReceiveInventoryAgainstPurchaseOrderProductNotFound', '', {'productId':productId!'', 'orderId':orderId!''})}</@commonMsg>
     <#elseif ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive??>
-        <div class="errorMessage">
-            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
-            <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
-        </div>
+        <@commonMsg type="error">${getLabel('ProductReceiveInventoryAgainstPurchaseOrderQuantityExceedsAvailableToReceive', '', {'newQuantity':newQuantity!'', 'productId':productId!''})}</@commonMsg>
     </#if>
     <#if ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder??>
-        <div class="errorMessage" class="${styles.text_color_success!}">
-            <#-- SCIPIO: TODO: review the JS escaping for <@uiLabelWithVar/> -->
-            <#assign uiLabelWithVar=uiLabelMap.ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder?interpret><@uiLabelWithVar/>
-            <@script>window.onload=function(){showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","<@uiLabelWithVar/>");};</@script>
-        </div>
+        <@commonMsg type="info">${getLabel('ProductReceiveInventoryAgainstPurchaseOrderQuantityGoesToBackOrder', '', {'quantityToBackOrder':quantityToBackOrder!'', 'quantityToReceive':quantityToReceive!'', 'productId':productId!''})}</@commonMsg>
     </#if>
 </#if>
 
@@ -133,12 +115,14 @@ under the License.
                             <@td>${orderItem.quantity}</@td>
                             <@td>${orderItem.cancelQuantity!0}</@td>
                             <@td>
-                                <div ${(backOrderedQuantity > 0)?string(" errorMessage","")}">
+                                <#if (backOrderedQuantity > 0)>
+                                    <@alert type="info">${backOrderedQuantity}</@alert>
+                                <#else>
                                     ${backOrderedQuantity}
-                                </div>
+                                </#if>
                             </@td>
                             <@td>${totalQuantityReceived}</@td>
-                            <@td>${orderItem.quantity - orderItem.cancelQuantity?default(0) - totalQuantityReceived}</@td>
+                            <@td>${orderItem.quantity - (orderItem.cancelQuantity!0) - totalQuantityReceived}</@td>
                             <@td>
                                 <#if fulfilledReservations?has_content>
                                     <#list fulfilledReservations?sort_by("orderId") as fulfilledReservation>

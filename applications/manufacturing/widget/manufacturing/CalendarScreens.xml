@@ -23,25 +23,14 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="calendar"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Calendar"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml#Calendar"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Calendar"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonManufacturingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for MANUFACTURING, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <!--<include-menu name="CalendarTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>-->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ManufacturingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <!--<include-menu name="CalendarTabBar" location="component://manufacturing/widget/manufacturing/ManufacturingMenus.xml"/>-->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

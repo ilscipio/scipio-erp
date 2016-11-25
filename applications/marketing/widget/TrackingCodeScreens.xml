@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-               
+                <set field="activeSubMenuItem" value="TrackingCode"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCode"/>
                 <set field="trackingCodeId" from-field="parameters.trackingCodeId"/>
                 <entity-one entity-name="TrackingCode" value-field="trackingCode"/>
@@ -297,7 +297,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-
+                <set field="activeSubMenuItem" value="TrackingCodeType"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/marketing/control/ListTrackingCodeType"/>
                 <set field="trackingCodeTypeId" from-field="parameters.trackingCodeTypeId"/>
                 <entity-one entity-name="TrackingCodeType" value-field="trackingCodeType"/>

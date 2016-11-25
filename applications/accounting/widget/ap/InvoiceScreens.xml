@@ -111,11 +111,11 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingCreateNewPurchaseInvoice"/>
-                <set field="activeSubMenuItem" value="invoices"/>
+                <set field="activeSubMenuItem" value="newInvoice"/><!-- "invoices" -->
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonApAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>

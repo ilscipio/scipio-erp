@@ -213,7 +213,16 @@ under the License.
         </menu-item>
     </menu>
     
+    <menu name="ShipmentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditShipment" selected-menuitem-context-field-name="activeSubMenu2Item">
+        <menu-item name="EditShipment" title="${uiLabelMap.ProductNewShipment}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditShipment"/>
+        </menu-item>
+    </menu>
+    
     <menu name="ShipmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item-alias name="FindShipment" for="PARENT-NOSUB"/>
+        <menu-item-alias name="NewShipment" for="PARENT-NOSUB"/>
         <menu-item name="facility" title="${uiLabelMap.ProductFacilities}">
             <condition><if-empty field="shipment" /></condition>
             <link target="FindFacility">
@@ -306,14 +315,7 @@ under the License.
             </link>
        </menu-item> 
     </menu>
-    
-    <menu name="ShipmentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditShipment" selected-menuitem-context-field-name="activeSubMenu2Item">
-        <menu-item name="EditShipment" title="${uiLabelMap.ProductNewShipment}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <link target="EditShipment"/>
-        </menu-item>
-    </menu>
-    
+
     <menu name="ShipmentGatewayConfigTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: redundant
         <menu-item name="shipmentGatewayConfigTab" title="${uiLabelMap.FacilityShipmentGatewayConfig}">

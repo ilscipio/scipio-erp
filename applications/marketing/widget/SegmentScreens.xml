@@ -26,6 +26,7 @@ under the License.
         <section>            
             <actions>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeSubMenuItem" value="FindSegmentGroup"/>
                 <set field="title" value="${uiLabelMap.MarketingSegments}"/>
             </actions>
             <widgets>
@@ -61,16 +62,14 @@ under the License.
         </section>
     </screen>
     
-
     <screen name="EditSegmentGroup">
         <section>
             <actions>
-                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
-                
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>                
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
-                
+                <set field="activeSubMenuItem" value="${groovy: context.segmentGroup ? 'SegmentGroup' : 'NewSegmentGroup'}"/>
                 <set field="title" value="${uiLabelMap.MarketingSegment} ${segmentGroupId}"/>
             </actions>
             <widgets>
@@ -92,7 +91,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleFindSegmentGroup"/>
-                <set field="activeSegmentSubMenuItem" value="SegmentGroupClassification"/>
+                <set field="activeSubMenuItem" value="SegmentGroupClassification"/>
 
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
@@ -120,7 +119,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleListSegmentGroupGeo"/>
-                <set field="activeSegmentSubMenuItem" value="SegmentGroupGeo"/>
+                <set field="activeSubMenuItem" value="SegmentGroupGeo"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
@@ -147,7 +146,7 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="titleProperty" value="PageTitleListSegmentGroupRole"/>
-                <set field="activeSegmentSubMenuItem" value="SegmentGroupRole"/>
+                <set field="activeSubMenuItem" value="SegmentGroupRole"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>

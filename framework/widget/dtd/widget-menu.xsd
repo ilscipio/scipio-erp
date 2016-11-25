@@ -108,8 +108,7 @@ under the License.
             <xs:attribute type="xs:string" name="default-link-style">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Default link style for the links in the menu items of this menu.
-                        Each menu item can override with either "link-style" on menu-item element (preferred) or "style" on link element (discouraged).
-                        NOTE: This is currently the only </xs:documentation>
+                        Each menu item can override with either "link-style" on menu-item element (preferred) or "style" on link element (discouraged).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="default-tooltip-style" />
@@ -131,7 +130,14 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="extends" />
             <xs:attribute type="xs:string" name="extends-resource" />
-            <xs:attribute type="xs:string" name="default-menu-item-name" />
+            <xs:attribute type="xs:string" name="default-menu-item-name">
+                <xs:annotation>
+                    <xs:documentation>Default menu item name.
+                        SCIPIO: In Scipio (2016-11-25), this is now used when either: the selected item name from context
+                        is not found in the menu OR it was empty OR it is the special value "DEFAULT".
+                        However, this is bypassed when the selected is the explicit special value "NONE".</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="default-associated-content-id" />
             <xs:attribute name="default-hide-if-selected" default="false">
                 <xs:simpleType>
@@ -160,8 +166,6 @@ under the License.
                           not be considered selected and will not be expanded.
                         * "DEFAULT" - same as empty value; will use the item named by default-menu-name-item attribute, or
                           highlight the parent item if not set or invalid.
-                        NOTE: default-menu-item-name is explicitly excluded from the "does this field exist in menu?" logic - 
-                            default-menu-item-name is only used when all of the listed fields were empty (legacy stock behavior).
                         NOTE: Advanced usage: If the target field's value contains a colon ':', it acts as a separator between (sub-)menu name and menu item name,
                             such that selected-menu-context-field-name is ignored.</xs:documentation>
                 </xs:annotation>

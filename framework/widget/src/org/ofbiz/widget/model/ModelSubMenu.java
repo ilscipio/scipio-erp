@@ -576,16 +576,15 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         return menuItemAliasMap;
     }
     
-    /**
-     * If name matches menuItemNamesAsParent or menuItemNamesAsParentNoSub, returns
-     * PARENT or PARENT-NOSUB, otherwise returns passed.
-     * For null/empty/NONE, returns NONE.
-     */
-    public String getMappedMenuItemName(String menuItemName) {
+    public String getMappedMenuItemName(String origMenuItemName) {
         // translate null to NONE as first thing so it can be recognized in mappings (in theory; might not be used/usable or redundant)
-        menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
+        String menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(origMenuItemName);
         String res = this.menuItemNameAliasMap.get(menuItemName);
-        return res != null ? res : menuItemName;
+        if (UtilValidate.isNotEmpty(res)) {
+            return res;
+        } else {
+            return origMenuItemName;
+        }
     }
 
     void addAllSubMenus(Map<String, ModelSubMenu> subMenuMap) {

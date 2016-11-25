@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 /**
  * SCIPIO: Model for new "screen-group" element, child of top "screens" element, and
- * containing screens ("screen" element).
+ * containing screens ("screen" element or substitute).
  */
 @SuppressWarnings("serial")
 public class ModelScreenGroup extends ModelWidget implements ModelScreens.ScreenEntry {
@@ -46,10 +46,10 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
     protected final Map<String, ModelScreen> screenMap;
     protected final List<ModelScreen> screenList;
 
-    public ModelScreenGroup(String name, boolean rootGroup, ModelScreens modelScreens) {
+    public ModelScreenGroup(String name, boolean rootGroup, ModelScreens modelScreens, String sourceLocation) {
         super(name != null ? name : (rootGroup ? ROOT_GROUP_NAME : ""));
         this.modelScreens = modelScreens;
-        this.effectiveSettings = new ModelScreenSettings(ModelScreenSettings.DEFAULT_SETTINGS_NAME, true);
+        this.effectiveSettings = new ModelScreenSettings(ModelScreenSettings.DEFAULT_SETTINGS_NAME, true, sourceLocation);
         Map<String, ModelScreenSettings> screenSettingsMap = new HashMap<String, ModelScreenSettings>();
         screenSettingsMap.put(this.effectiveSettings.getName(), this.effectiveSettings);
         this.screenSettingsMap = screenSettingsMap;
@@ -128,7 +128,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
 
         if (effectiveSettings == null) {
             String settingsName = ModelScreenSettings.DEFAULT_SETTINGS_NAME;
-            effectiveSettings = new ModelScreenSettings(settingsName, true);
+            effectiveSettings = new ModelScreenSettings(settingsName, true, sourceLocation);
             if (screenSettingsMap.containsKey(settingsName)) {
                 Debug.logWarning("Screen group already contains special [" + settingsName + "] screen-settings"
                         + " set to active=false, which we need to overwrite; the specified settings will be ignored "
@@ -143,20 +143,22 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             IncludeScreens includeScreens = new IncludeScreens(childElement, sourceLocation);
             includeScreens.generateDelegatingScreensAsChildren(groupingElement);
         }
-        screenElements.addAll(UtilXml.childElementList(groupingElement, "screen"));
+        screenElements.addAll(UtilXml.childElementList(groupingElement));
         for (Element childElement: screenElements) {
-            // FIXME: Terrible ThreadLocal-based hack for setting default fallback settings
-            FlexibleScreenFallbackSettings prevFallbackSettings = DecoratorScreen.getOverridingDefaultFallbackSettings();
-            try {
-                FlexibleScreenFallbackSettings newSettings = effectiveSettings.getDecoratorScreenSettings().getDefaultDecoratorFallbackSettings();
-                DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ? 
-                                new SimpleFlexibleScreenFallbackSettings(prevFallbackSettings, newSettings) : newSettings);
-                
-                ModelScreen modelScreen = new ModelScreen(childElement, this, sourceLocation);
-                //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
-                screenMap.put(modelScreen.getName(), modelScreen);
-            } finally {
-                DecoratorScreen.setOverridingDefaultFallbackSettings(prevFallbackSettings);
+            if (ModelScreen.isScreenElement(childElement)) {
+                // FIXME: Terrible ThreadLocal-based hack for setting default fallback settings
+                FlexibleScreenFallbackSettings prevFallbackSettings = DecoratorScreen.getOverridingDefaultFallbackSettings();
+                try {
+                    FlexibleScreenFallbackSettings newSettings = effectiveSettings.getDecoratorScreenSettings().getDefaultDecoratorFallbackSettings();
+                    DecoratorScreen.setOverridingDefaultFallbackSettings((prevFallbackSettings != null) ? 
+                                    new SimpleFlexibleScreenFallbackSettings(prevFallbackSettings, newSettings) : newSettings);
+                    
+                    ModelScreen modelScreen = new ModelScreen(childElement, this, sourceLocation);
+                    //Debug.logInfo("Read Screen with name: " + modelScreen.getName(), module);
+                    screenMap.put(modelScreen.getName(), modelScreen);
+                } finally {
+                    DecoratorScreen.setOverridingDefaultFallbackSettings(prevFallbackSettings);
+                }
             }
         }
 
@@ -285,9 +287,11 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                         }
                     }
                     
-                    childElements = UtilXml.childElementList(groupElement, "screen");
+                    childElements = UtilXml.childElementList(groupElement);
                     for(Element screenElement : childElements) {
-                        resolvedScreenNames.add(screenElement.getAttribute("name"));
+                        if (ModelScreen.isScreenElement(screenElement)) {
+                            resolvedScreenNames.add(screenElement.getAttribute("name"));
+                        }
                     }
                 }
                 
@@ -314,10 +318,28 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
          * Generates delegating placeholder screens, with no parent.
          */
         public List<Element> generateDelegatingScreens(Document document) {
+            // Lookup the final models
+            ModelScreens screens;
+            try {
+                screens = ScreenFactory.getScreensFromLocation(location);
+            } catch (Exception e) {
+                throw new IllegalStateException("include-screens: trying to generate delegate screens, "
+                        + "but failed to read target screens fully-built models", e);
+            }
             List<Element> delegScreens = new ArrayList<>();
             for(String screenName : getScreenNameList()) {
-                // TODO: optimize with a model element?
-                Element screenElement = createDelegatingScreenElement(document, screenName, screenName, location);
+                ModelScreen screen = screens.getScreen(screenName);
+                if (screen == null) {
+                    throw new IllegalStateException("include-screens: trying to generate delegate screens with name [" + screenName + "]"
+                            + "but it somehow does not seem to exist in the target location [" + location + "] which should have been read immediately before");
+                }
+                // TODO: optimize with model elements?
+                Element screenElement;
+                if (screen.isActionsOnly()) {
+                    screenElement = createDelegatingActionsScreenElement(document, screenName, screenName, location);
+                } else {
+                    screenElement = createDelegatingWidgetsScreenElement(document, screenName, screenName, location);
+                }
                 delegScreens.add(screenElement);
             }
             return delegScreens;
@@ -332,7 +354,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             }
         }
 
-        public static Element createDelegatingScreenElement(Document document, String localName, String targetName, String targetLocation) {
+        public static Element createDelegatingWidgetsScreenElement(Document document, String localName, String targetName, String targetLocation) {
             Element screenElement = document.createElement("screen");
             screenElement.setAttribute("name", localName);
             Element sectionElement = document.createElement("section");
@@ -343,6 +365,18 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
             widgetElement.appendChild(includeScreenElement);
             includeScreenElement.setAttribute("name", targetName);
             includeScreenElement.setAttribute("location", targetLocation);
+            return screenElement;
+        }
+        
+        public static Element createDelegatingActionsScreenElement(Document document, String localName, String targetName, String targetLocation) {
+            Element screenElement = document.createElement("screen");
+            screenElement.setAttribute("name", localName);
+            Element actionsElement = document.createElement("actions");
+            screenElement.appendChild(actionsElement);
+            Element includeScreenActionsElement = document.createElement("include-screen-actions");
+            actionsElement.appendChild(includeScreenActionsElement);
+            includeScreenActionsElement.setAttribute("name", targetName);
+            includeScreenActionsElement.setAttribute("location", targetLocation);
             return screenElement;
         }
         
@@ -361,6 +395,15 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         public boolean isRecursive() {
             return recursive;
         }
+    }
 
+    @Override
+    public String getContainerLocation() { // SCIPIO: new
+        return modelScreens.getLocation();
+    }
+    
+    @Override
+    public String getWidgetType() { // SCIPIO: new
+        return "screen-group";
     }
 }

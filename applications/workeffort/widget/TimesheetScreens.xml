@@ -23,7 +23,7 @@ under the License.
     <screen name="MyTimesheets">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="mytime"/>
+                <set field="activeSubMenuItem" value="mytime"/>
                 <set field="titleProperty" value="WorkEffortMyTimesheets"/>
 
                 <set field="queryString" from-field="result.queryString"/>
@@ -138,25 +138,15 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleFindTimesheet}">
-                                    <container style="button-bar">
-                                        <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/>
-                                    </container>
-                                    <include-form name="FindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
-                                </screenlet>
-                                <screenlet title="${uiLabelMap.PageTitleFindTimesheet}">
-                                    <include-form name="ListFindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.PageTitleFindTimesheet}">
+                            <container style="button-bar">
+                                <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}"/>
+                            </container>
+                            <include-form name="FindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleFindTimesheet}">
+                            <include-form name="ListFindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

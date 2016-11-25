@@ -80,7 +80,6 @@ under the License.
                 <section>
                     <condition><if-empty field="subscriptionId"/></condition>
                     <actions><set field="titleProperty" value="ProductNewSubscription"/></actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
@@ -160,7 +159,6 @@ under the License.
                 <section>
                     <condition><if-empty field="subscriptionResourceId"/></condition>
                     <actions><set field="titleProperty" value="ProductNewSubscriptionResource"/></actions>
-                    <widgets/>
                 </section>
                 <decorator-screen name="CommonSubscriptionResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

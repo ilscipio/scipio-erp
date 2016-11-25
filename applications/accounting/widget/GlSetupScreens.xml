@@ -28,7 +28,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
-                <!-- <set field="activeMainMenuItem" value="settings"/> -->
                 <set field="activeSubMenuItem" value="settings"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingAvailableInternalOrganizations}"/>
                 <entity-condition entity-name="PartyAcctgPreference" list="parties"/>
@@ -614,12 +613,12 @@ under the License.
     <screen name="EditGlAccountCategory">
         <section>
             <actions>
-                <set field="titleProperty" value="FormFieldTitle_glAccountCategory"/>
                 <set field="activeSubMenuItem" value="FindGlAccountCategory"/>
                 <set field="activeSubMenuItem2" value="EditGlAccountCategory"/>
                 <set field="glAccountCategoryId" from-field="parameters.glAccountCategoryId"/>
                 <set field="glAccountCategoryTypeId" from-field="parameters.glAccountCategoryTypeId"/>
                 <entity-one entity-name="GlAccountCategory" value-field="glAccountCategory" auto-field-map="true"/>
+                <set field="titleProperty" value="${groovy: context.glAccountCategory ? 'FormFieldTitle_editGlAccountCategory' : 'FormFieldTitle_newGlAccountCategory'}"/><!-- FormFieldTitle_glAccountCategory -->
             </actions>
             <widgets>
                 <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -629,11 +628,11 @@ under the License.
                                 <not><if-empty field="glAccountCategory"/></not>
                             </condition>
                             <widgets>
-                                <label style="heading">${uiLabelMap.FormFieldTitle_editGlAccountCategory}</label>
+                                <!--<label style="heading">${uiLabelMap.FormFieldTitle_editGlAccountCategory}</label>-->
                                 <include-menu name="GlAccountCategoryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="heading">${uiLabelMap.FormFieldTitle_newGlAccountCategory}</label>
+                                <!--<label style="heading">${uiLabelMap.FormFieldTitle_newGlAccountCategory}</label>-->
                             </fail-widgets>
                         </section>
                         <include-form name="EditGlAccountCategory" location="component://accounting/widget/GlSetupForms.xml"/>
@@ -654,7 +653,7 @@ under the License.
                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <label style="heading">${uiLabelMap.FormFieldTitle_editGlAccountCategoryMember}</label>
+                            <!--<label style="heading">${uiLabelMap.FormFieldTitle_editGlAccountCategoryMember}</label>-->
                             <include-menu name="GlAccountCategoryTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             <include-form  name="ListGlAccountCategoryMember" location="component://accounting/widget/GlSetupForms.xml"/>
                             <include-form name="AddGlAccountCategoryMember" location="component://accounting/widget/GlSetupForms.xml"/>

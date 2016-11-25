@@ -67,6 +67,7 @@ if (userLogin && parameters.portalPageId) {
     }
 }
 // Debug.log('======parent portalPageId: ' + parameters.parentPortalPageId);
-if (!context.activeMainMenuItem && parameters.portalPageId) {
-    context.activeMainMenuItem = parameters.portalPageId; // and the menu item is highlighted
+// SCIPIO: TODO: review
+if (!context.activeSubMenuItem && parameters.portalPageId) {
+    context.activeSubMenuItem = parameters.portalPageId; // and the menu item is highlighted
 }

@@ -20,31 +20,19 @@
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgAgreementPermissionCheck"
-                                    main-action="VIEW" />
-                            </condition>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}" style="${styles.link_nav} ${styles.action_add}" />
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindAgreements" location="component://accounting/widget/AgreementForms.xml" />
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListAgreements" location="component://accounting/widget/AgreementForms.xml" />
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
-                                </label>
-                            </fail-widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}" style="${styles.link_nav} ${styles.action_add}" />
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindAgreements" location="component://accounting/widget/AgreementForms.xml" />
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListAgreements" location="component://accounting/widget/AgreementForms.xml" />
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -54,10 +42,10 @@
     <screen name="EditAgreement">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditAgreement" />
                 <set field="activeSubMenuItem" value="AgreementMain" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
+                <set field="titleProperty" value="${groovy: context.agreement ? 'PageTitleEditAgreement' : 'AccountingNewAgreement'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
@@ -69,7 +57,7 @@
                                 </not>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditAgreement}">
+                                <screenlet>
                                     <include-form name="EditAgreement" location="component://accounting/widget/AgreementForms.xml" />
                                 </screenlet>
                                 <platform-specific>
@@ -78,6 +66,11 @@
                                     </html>
                                 </platform-specific>
                             </widgets>
+                            <fail-widgets>
+                                <screenlet>
+                                    <include-form name="EditAgreement" location="component://accounting/widget/AgreementForms.xml" />
+                                </screenlet>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -670,11 +663,7 @@
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-agreement-roles" title="${uiLabelMap.PageTitleAddAgreementRoles}" collapsible="true">
-                            <section>
-                                <widgets>
-                                    <include-form name="AddAgreementRole" location="component://accounting/widget/AgreementForms.xml" />
-                                </widgets>
-                            </section>
+                            <include-form name="AddAgreementRole" location="component://accounting/widget/AgreementForms.xml" />
                         </screenlet>
                         <include-form name="ListAgreementRoles" location="component://accounting/widget/AgreementForms.xml" />
                     </decorator-section>

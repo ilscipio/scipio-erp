@@ -68,15 +68,11 @@ Also add this back to appheader.ftl:
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="CommonOrderTaskDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="tasklist"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -85,7 +81,6 @@ Also add this back to appheader.ftl:
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderTasks"/>
-                <set field="activeMainMenuItem" value="tasklist"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/task/OrderTaskList.groovy"/>
             </actions>
             <widgets>

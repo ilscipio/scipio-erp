@@ -110,7 +110,7 @@ under the License.
 
     <!--Team Members -->
     <Party partyId="Developer1" partyTypeId="PERSON"/>
-    <Person partyId="Developer1" firstName="Developer1"/>
+    <Person partyId="Developer1" firstName="John" lastName="Developer1"/><!-- SCIPIO: added lastName -->
     <PartyRole partyId="Developer1" roleTypeId="_NA_"/>
     <PartyRole partyId="Developer1" roleTypeId="EMPLOYEE"/>
     <PartyRole partyId="Developer1" roleTypeId="MANAGER"/>
@@ -122,7 +122,7 @@ under the License.
         fromDate="2001-05-02 00:00:00.000"/>
 
     <Party partyId="Developer2" partyTypeId="PERSON"/>
-    <Person partyId="Developer2" firstName="Developer2"/>
+    <Person partyId="Developer2" firstName="Bob" lastName="Developer2"/>
     <PartyRole partyId="Developer2" roleTypeId="_NA_"/>
     <PartyRole partyId="Developer2" roleTypeId="EMPLOYEE"/>
     <PartyRelationship partyIdFrom="Company" partyIdTo="Developer2" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="EMPLOYEE"
@@ -131,7 +131,7 @@ under the License.
         fromDate="2001-05-02 00:00:00.000"/>
 
     <Party partyId="Developer3" partyTypeId="PERSON"/>
-    <Person partyId="Developer3" firstName="Developer3"/>
+    <Person partyId="Developer3" firstName="Jill" lastName="Developer3"/>
     <PartyRole partyId="Developer3" roleTypeId="_NA_"/>
     <PartyRole partyId="Developer3" roleTypeId="EMPLOYEE"/>
     <PartyRelationship partyIdFrom="Company" partyIdTo="Developer3" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="EMPLOYEE"
@@ -140,7 +140,7 @@ under the License.
         fromDate="2001-05-02 00:00:00.000"/>
 
     <Party partyId="TestingTeamMember1" partyTypeId="PERSON"/>
-    <Person partyId="TestingTeamMember1" firstName="TestingTeamMember1"/>
+    <Person partyId="TestingTeamMember1" firstName="Patrick" lastName="TestingTeamMember1"/>
     <PartyRole partyId="TestingTeamMember1" roleTypeId="_NA_"/>
     <PartyRole partyId="TestingTeamMember1" roleTypeId="EMPLOYEE"/>
     <PartyRole partyId="TestingTeamMember1" roleTypeId="MANAGER"/>
@@ -152,7 +152,7 @@ under the License.
         fromDate="2001-05-02 00:00:00.000"/>
 
     <Party partyId="TestingTeamMember2" partyTypeId="PERSON"/>
-    <Person partyId="TestingTeamMember2" firstName="TestingTeamMember2"/>
+    <Person partyId="TestingTeamMember2" firstName="Paul" lastName="TestingTeamMember2"/>
     <PartyRole partyId="TestingTeamMember2" roleTypeId="_NA_"/>
     <PartyRole partyId="TestingTeamMember2" roleTypeId="EMPLOYEE"/>
     <PartyRelationship partyIdFrom="Company" partyIdTo="TestingTeamMember2" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="EMPLOYEE"
@@ -161,7 +161,7 @@ under the License.
         fromDate="2001-05-02 00:00:00.000"/>
 
     <Party partyId="TestingTeamMember3" partyTypeId="PERSON"/>
-    <Person partyId="TestingTeamMember3" firstName="TestingTeamMember3"/>
+    <Person partyId="TestingTeamMember3" firstName="Carla" lastName="TestingTeamMember3"/>
     <PartyRole partyId="TestingTeamMember3" roleTypeId="_NA_"/>
     <PartyRole partyId="TestingTeamMember3" roleTypeId="EMPLOYEE"/>
     <PartyRelationship partyIdFrom="Company" partyIdTo="TestingTeamMember3" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdFrom="INTERNAL_ORGANIZATIO" roleTypeIdTo="EMPLOYEE"

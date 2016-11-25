@@ -43,8 +43,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Widget Library - Grid factory class
+ * <p>
+ * SCIPIO: now also as instance
  */
-public class GridFactory {
+@SuppressWarnings("serial")
+public class GridFactory extends WidgetFactory {
 
     public static final String module = GridFactory.class.getName();
     private static final UtilCache<String, ModelGrid> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
@@ -61,7 +64,24 @@ public class GridFactory {
         return readGridDocument(gridFileDoc, entityModelReader, dispatchContext, resourceName);
     }
 
+    /**
+     * Gets widget from location or exception. 
+     * <p>
+     * SCIPIO: now delegating.
+     */
     public static ModelGrid getGridFromLocation(String resourceName, String gridName, ModelReader entityModelReader, DispatchContext dispatchContext)
+            throws IOException, SAXException, ParserConfigurationException {
+        ModelGrid modelGrid = getGridFromLocationOrNull(resourceName, gridName, entityModelReader, dispatchContext);
+        if (modelGrid == null) {
+            throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + resourceName + "]");
+        }
+        return modelGrid;
+    }
+    
+    /**
+     * SCIPIO: Gets widget from location or null if name not within the location.
+     */
+    public static ModelGrid getGridFromLocationOrNull(String resourceName, String gridName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
         StringBuilder sb = new StringBuilder(dispatchContext.getDelegator().getDelegatorName());
         sb.append(":").append(resourceName).append("#").append(gridName);
@@ -79,9 +99,6 @@ public class GridFactory {
             }
             modelGrid = createModelGrid(gridFileDoc, entityModelReader, dispatchContext, resourceName, gridName);
             modelGrid = gridLocationCache.putIfAbsentAndGet(cacheKey, modelGrid);
-        }
-        if (modelGrid == null) {
-            throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + resourceName + "]");
         }
         return modelGrid;
     }
@@ -142,5 +159,31 @@ public class GridFactory {
 
     public static ModelGrid createModelGrid(Element gridElement, ModelReader entityModelReader, DispatchContext dispatchContext, String gridLocation, String gridName) {
         return new ModelGrid(gridElement, gridLocation, entityModelReader, dispatchContext);
+    }
+
+    @Override
+    public ModelGrid getWidgetFromLocation(ModelLocation modelLoc) throws IOException, IllegalArgumentException {
+        try {
+            DispatchContext dctx = getDefaultDispatchContext();
+            return getGridFromLocation(modelLoc.getResource(), modelLoc.getName(), 
+                    dctx.getDelegator().getModelReader(), dctx);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
+    public ModelGrid getWidgetFromLocationOrNull(ModelLocation modelLoc) throws IOException {
+        try {
+            DispatchContext dctx = getDefaultDispatchContext();
+            return getGridFromLocationOrNull(modelLoc.getResource(), modelLoc.getName(), 
+                    dctx.getDelegator().getModelReader(), dctx);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (ParserConfigurationException e) {
+            throw new IOException(e);
+        }
     }
 }

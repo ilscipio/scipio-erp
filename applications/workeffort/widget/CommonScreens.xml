@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -58,6 +69,10 @@ under the License.
                 <set field="applicationMenuName" value="WorkEffortAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://workeffort/widget/WorkEffortMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.WorkEffortManagerApplication}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -87,6 +102,9 @@ under the License.
     <screen name="CommonWorkEffortAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonWorkEffortAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -94,7 +112,17 @@ under the License.
                         <include-screen name="CommonWorkEffortAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonWorkEffortAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -113,58 +141,36 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#WorkEffort" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="workeffort"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.workEffortId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffortId}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
+                                <not>
+                                    <if-empty field="workEffortId"/>
+                                </not>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not>
-                                            <if-empty field="workEffortId"/>
-                                        </not>
-                                    </condition>
-                                    <widgets>
-                                        <container style="h2">
-                                            <section>
-                                                <condition>
-                                                    <not><if-empty field="title"/></not>
-                                                </condition>
-                                                <widgets>
-                                                    <label>${title} - ${workEffort.workEffortName} [${workEffortId}]</label>
-                                                </widgets>
-                                                <fail-widgets>
-                                                    <label>${uiLabelMap[titleProperty]} - ${workEffort.workEffortName} [${workEffortId}]</label>
-                                                </fail-widgets>
-                                            </section>
-                                        </container>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <container style="h2">
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="title"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <label>${title} - ${workEffort.workEffortName} [${workEffortId}]</label>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <label>${uiLabelMap[titleProperty]} - ${workEffort.workEffortName} [${workEffortId}]</label>
+                                        </fail-widgets>
+                                    </section>
+                                </container>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -175,43 +181,15 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/TimesheetMenus.xml#Timesheet" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.timesheetId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field="timesheetId"/></not></condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <label style="p">${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <label>${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -221,15 +199,12 @@ under the License.
     <screen name="CommonCalendarDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="calendar" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="calendar" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <if-has-permission permission="WORKEFFORTMGR" action="_VIEW" />
-                            </condition>
                             <actions>
                                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/Days.groovy" />
                             </actions>
@@ -239,9 +214,6 @@ under the License.
                                 </screenlet> -->
                                 <decorator-section-include name="body" />
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.WorkEffortViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -252,14 +224,11 @@ under the License.
     <screen name="iCalendarDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="WorkEffortICalendar"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/WorkEffortMenus.xml#ICalendar" />                
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.workEffort}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -287,8 +256,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="WorkEffort"/>
             </actions>
             <widgets>
@@ -334,8 +302,10 @@ under the License.
     <screen name="CommonWorkEffortAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="WORKEFFORTMGR"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonWorkEffortAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonWorkEffortAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

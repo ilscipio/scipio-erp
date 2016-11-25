@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -58,6 +69,10 @@ under the License.
                 <set field="applicationMenuName" value="FacilityAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://product/widget/facility/FacilityMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.ProductFacility}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -87,6 +102,9 @@ under the License.
     <screen name="CommonFacilityAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonFacilityAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -94,7 +112,17 @@ under the License.
                         <include-screen name="CommonFacilityAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonFacilityAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -105,61 +133,30 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#Facility" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="facility"/>
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <entity-one entity-name="Facility" value-field="facility"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <or>
+                        <not><if-empty field="facility"/></not>
+                        <not><if-empty field="displayWithNoFacility"/></not>
+                    </or>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFacilityAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <or>
-                                            <not><if-empty field="facility"/></not>
-                                            <not><if-empty field="displayWithNoFacility"/></not>
-                                        </or>
-                                    </condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                <or>
+                                    <not><if-empty field="facility"/></not>
+                                    <not><if-empty field="displayWithNoFacility"/></not>
+                                </or>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <or>
-                                            <not><if-empty field="facility"/></not>
-                                            <not><if-empty field="displayWithNoFacility"/></not>
-                                        </or>
-                                    </condition>
-                                    <widgets>
-                                        <decorator-section-include name="body"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <label style="common-msg-error">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
-                                    </fail-widgets>
-                                </section>
+                                <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="common-msg-error">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -187,11 +184,62 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilitySettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilitySettings"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityInventoryDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityInventory"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityPickingDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityPicking"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: new, child of Facility, originally added to help factoring menus -->
+    <screen name="CommonFacilityPackOrderDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/facility/FacilityMenus.xml#FacilityPackOrder"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductFacilityManager"/>
                 <set field="parameters.lookupFlag" value="Y"/>
             </actions>
@@ -213,8 +261,8 @@ under the License.
                                                     <platform-specific><html><html-template location="component://product/webapp/facility/dashboard/FacilityShipments.ftl"/></html></platform-specific>
                                                 </container>
                                             </widgets>
-                                    </section>
-                                    <section>
+                                        </section>
+                                        <section>
                                             <actions>
                                                 <set field="parameters.shipmentTypeId" value="SALES_SHIPMENT"/>
                                                 <set field="sectionTitle" value="${uiLabelMap.ProductOutgoingShipments}"/>
@@ -230,6 +278,7 @@ under the License.
                                 </screenlet>
                             </container>
                         </container>
+                        <!-- TODO?
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                                                 
@@ -237,7 +286,7 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 
                             </container>
-                        </container>
+                        </container> -->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -274,9 +323,11 @@ under the License.
         (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="CommonFacilityAppSideBarMenu">
         <section>
-            <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="FACILITY"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+            <actions>   
+                <condition-to-field field="commonFacilityAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonFacilityAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

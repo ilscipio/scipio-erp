@@ -27,7 +27,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitlePendingCommunications"/>
-                <set field="activeMainMenuItem" value="comm"/>
                 <set field="activeSubMenuItem" value="pending"/>
                 <set field="partyId" value="${parameters.partyId}"/>
                 <set default-value="${userLogin.partyId}" field="partyIdFrom" value="${parameters.partyIdFrom}"/>
@@ -171,11 +170,7 @@ under the License.
                                                 <label style="heading" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
                                                 <label style="heading+1" text="${partyIdFrom}"/>  
                                                 <iterate-section entry="account" list="accounts">
-                                                    <section>
-                                                        <widgets>
-                                                            <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
-                                                        </widgets>
-                                                    </section>
+                                                    <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
                                                 </iterate-section>
                                                 <iterate-section entry="contact" list="contacts">
                                                     <section>
@@ -323,15 +318,11 @@ under the License.
                 <!--<set field="widePage" type="Boolean" value="true" />-->
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <include-screen name="commOverview"/>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <decorator-screen name="CommonCommunicationEventDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="commOverview"/>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -340,12 +331,8 @@ under the License.
             <widgets>
                 <container style="${styles.grid_row}">
                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                        <section>
-                            <widgets>
-                                <label text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
-                                <include-screen name="commEvent" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
-                            </widgets>
-                        </section>
+                        <label text="${uiLabelMap.FormFieldTitle_communicationEventId} ${parameters.communicationEventId}"/>
+                        <include-screen name="commEvent" location="component://party/widget/partymgr/CommunicationEventScreens.xml"/>
                     </container>
                     <container style="${styles.grid_large}6 ${styles.grid_cell}">
                         <label style="heading" text="${uiLabelMap.CommonRelatedInformation}"/>
@@ -756,10 +743,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleCommEvents"/>
-                <set field="activeMainMenuItem" value="mycomm"/>
+                <set field="activeSubMenuItem" value="mycomm"/>
                 <set field="my" value="My" global="true"/>
-                
-                <!-- <set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" /> -->
+                <!--<set field="widePage" type="Boolean" value="${groovy: (parameters.form=='view')}" />-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyAppDecorator" location="${parameters.mainDecoratorLocation}">

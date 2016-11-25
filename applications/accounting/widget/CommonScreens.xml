@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -54,6 +65,10 @@ under the License.
                 <set field="applicationMenuName" value="AccountingAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://accounting/widget/AccountingMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.AccountingManagerApplication}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml">
@@ -83,6 +98,9 @@ under the License.
     <screen name="CommonAccountingAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonAccountingAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -90,7 +108,18 @@ under the License.
                         <include-screen name="CommonAccountingAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-true field="commonAccountingAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -101,36 +130,23 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Agreement" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="agreements" />
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
+                
+                <!-- sidebar additional condition -->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW" />
+                        <not><if-empty field="agreement"/></not>
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgAgreementPermissionCheck"
-                                        main-action="VIEW" />
-                                    <not>
-                                        <if-empty field="agreement" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="acctgAgreementPermissionCheck"
-                                    main-action="VIEW" />
+                                <if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW" />
                             </condition>
                             <widgets>
                                 <section>
@@ -185,27 +201,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#BillingAccount" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="billingaccount"/>
                 
                 <!-- sidebar additional condition -->
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.billingAccountId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -215,7 +216,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Budget" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListBudgets"/>
                 <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
                 <entity-one entity-name="Budget" value-field="budget"/>
                 <entity-and list="budgetStatus" entity-name="BudgetStatus">
@@ -223,27 +223,21 @@ under the License.
                     <order-by field-name="-statusDate"/>
                 </entity-and>
                 <set field="statusId" from-field="budgetStatus[0].statusId"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.budgetId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.budgetId}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <not><if-empty field="budgetId"/></not>
+                            </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="budgetId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="heading" text="Budget : [${budgetId}]"/>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <label style="heading" text="Budget : [${budgetId}]"/>
                             </widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -254,39 +248,28 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="FindFinAccount"/>
                 <entity-one value-field="finAccount" entity-name="FinAccount"/>
+                
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.finAccountId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition><not><if-empty field="finAccountId"/></not></condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </fail-widgets>
-                                </section>
+                                <decorator-section-include name="body"/>
                             </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <not><if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/></not>
-                            </condition>
-                            <widgets>
+                            <fail-widgets>
                                 <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
-                            </widgets>
+                            </fail-widgets>
                         </section>
-                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -297,12 +280,16 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAsset" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssets"/>
                 <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.fixedAsset ? (': ' + context.fixedAsset.fixedAssetName + ' [' + context.fixedAssetId + ']') : ''}"/>
+                
                 <!-- sidebar additional condition -->
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.fixedAssetId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -312,7 +299,7 @@ under the License.
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <section>
+                                <!--<section>
                                     <condition>
                                         <not><if-empty field="fixedAssetId"/></not>
                                     </condition>
@@ -329,22 +316,7 @@ under the License.
                                             </fail-widgets>
                                         </section>
                                     </widgets>
-                                    <!-- SCIPIO: redundant
-                                    <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title}"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]}"/>
-                                            </fail-widgets>
-                                        </section>
-                                    </fail-widgets>
-                                     -->
-                                </section>
+                                </section>-->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -361,24 +333,18 @@ under the License.
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAssetMaint" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="ListFixedAssetMaints"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FixedAssetMaint" />              
+                <!-- sidebar additional condition -->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                        <!-- SCIPIO: don't do this for now... prevents browsing some fixed asset maint screens... TODO: REVIEW
+                        <not><if-empty field="maintHistSeqId"/></not> -->
+                    </and>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.maintHistSeqId}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -388,37 +354,15 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
-                            <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <!-- <container style="leftclear">
-                                    <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonId}:[${paymentId}]  ${${extraFunctionName}}"/>
-                                </container> -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
-                            </fail-widgets>
-                        </section>
+                        <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <!-- <container style="leftclear">
+                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} [${paymentId}]  ${${extraFunctionName}}"/>
+                        </container> -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -429,65 +373,38 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGroup"/>
                 <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
                 <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
                     <field-map field-name="paymentGroupId"/>
                 </entity-and>
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.paymentGroup}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-                                    <not><if-empty field="paymentGroup"/></not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>                            
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                        <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <!-- TODO: Scipio - I don't think this is needed -->
+                        <!-- <section>
                             <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                                <not><if-empty field="paymentGroupId"/></not>
                             </condition>
-                            <widgets>
-                                <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <!-- TODO: Scipio - I don't think this is needed -->
-                                <!-- <section>
+                            <widgets>     
+                                <section>
                                     <condition>
-                                        <not><if-empty field="paymentGroupId"/></not>
+                                        <not><if-empty field="title"/></not>
                                     </condition>
-                                    <widgets>     
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
-                                            </fail-widgets>
-                                        </section>                                   
-                                    </widgets>                                  
-                                </section> -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                                    <widgets>
+                                        <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                    </fail-widgets>
+                                </section>                                   
+                            </widgets>                                  
+                        </section> -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -498,14 +415,12 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Organization" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="companies"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.organizationPartyId}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -514,6 +429,9 @@ under the License.
                             <widgets>
                                 <decorator-section-include name="body"/>
                             </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.AccountingUserOrgNotSpecified}"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -528,28 +446,17 @@ under the License.
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>
                 </entity-one>
+                <!-- WARN/FIXME: do these screens ever show? if so this sub-menu may have no entry -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Organization"/>
+                
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.acctgTrans}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgPrefPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgPrefPermissionCheck"
-                                        main-action="VIEW" />
-                                    <not>
-                                        <if-empty field="acctgTrans" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" />
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <!-- <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" /> -->
                         <!-- <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label> -->
@@ -635,31 +542,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Settings" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="settings" />                
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>                            
-                            <widgets>
-                                <section>                                   
-                                    <widgets>
-                                        <label style="heading"></label>
-                                        <section>                                           
-                                        </section>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body" />
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
-                                </label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -669,8 +554,6 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="TaxAuthorities"/>
-
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
@@ -678,50 +561,24 @@ under the License.
                     <field-map field-name="partyId" from-field="taxAuthority.taxAuthPartyId"/>
                 </entity-one>
                 <get-related-one value-field="taxAuthority" relation-name="TaxAuthGeo" to-value-field="taxAuthGeo" use-cache="true"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.taxAuthority}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW" />
-                                    <not>
-                                        <if-empty field="taxAuthority" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
-                            <!-- do check for ACCOUNTING, _VIEW permission -->
                             <condition>
-                                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                                <!-- SCIPIO: use physical
+                                <and>
+                                    <not><if-empty field="taxAuthPartyId"/></not>
+                                    <not><if-empty field="taxAuthGeoId"/></not>
+                                </and> -->
+                                <not><if-empty field="taxAuthority"/></not>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <not><if-empty field="taxAuthPartyId"/></not>
-                                            <not><if-empty field="taxAuthGeoId"/></not>
-                                        </and>
-                                    </condition>
-                                    <widgets>
-                                        <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/></container>
-                                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${uiLabelMap.CommonId}:${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${uiLabelMap.CommonId}:${taxAuthGeoId}] ${${extraFunctionName}}"/>
-                                    </widgets>
-                                </section>
+                                <container><link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/></container>
+                                <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${uiLabelMap.AccountingTaxAuthorityParty} &quot;${taxAuthPartyName.firstName} ${taxAuthPartyName.lastName} ${taxAuthPartyName.groupName}&quot; [${taxAuthPartyId}], ${uiLabelMap.CommonGeo} &quot;${taxAuthGeo.geoName}&quot; [${taxAuthGeoId}] ${${extraFunctionName}}"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -733,8 +590,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                
                 <set field="viewSize" value="10" />
                 <set field="titleProperty" value="Accounting"/>
@@ -774,8 +630,7 @@ under the License.
      <screen name="settings">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="companies"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="companies"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
             </actions>
             <widgets>
@@ -803,17 +658,10 @@ under the License.
     <screen name="GlobalGLSettingsDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="GlobalGLSettings"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#GlobalGLSettingsSideBar"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -822,21 +670,13 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Invoice" />                
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="invoices"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Invoice" /> 
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>              
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -934,8 +774,10 @@ under the License.
     <screen name="CommonAccountingAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.permServ.name" from-field="commonSideBarMenu.permServ.name" default-value="acctgBasePermissionCheck"/>
-                <set field="commonSideBarMenu.permServ.mainAction" from-field="commonSideBarMenu.permServ.mainAction" default-value="VIEW"/>
+                <condition-to-field field="commonAccountingAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonAccountingAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

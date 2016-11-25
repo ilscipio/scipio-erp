@@ -20,28 +20,24 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="CommonOrderSetupDecorator">
         <section>
+            <actions>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="setup"/>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
     <screen name="OrderPaymentSetup">
         <section>
             <actions>
                 <set field="titleProperty" value="OrderOrderEntryPaymentSettings"/>
-                <set field="activeMainMenuItem" value="setup"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/setup/PaymentSetup.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderTaskDecorator">
+                <decorator-screen name="CommonOrderSetupDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/setup/paymentsetup.ftl"/></html>

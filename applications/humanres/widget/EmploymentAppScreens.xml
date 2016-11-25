@@ -27,22 +27,18 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmploymentApp"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="employmentAppCtx" from-field="parameters"/>
+                <set field="activeSubMenuItem" value="FindEmploymentApps"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <!-- SCIPIO: link to our new screen instead: NewEmploymentApp -->
-                                            <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <!-- SCIPIO: link to our new screen instead: NewEmploymentApp -->
+                                    <link target="EditEmploymentApp" text="${uiLabelMap.HumanResNewEmploymentApp}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
@@ -61,7 +57,6 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
-                <set field="activeMainMenuItem" value="Employee"/>
                 <set field="activeSubMenuItem" value="EditEmploymentApps"/>
                 <set field="referredByPartyId" from-field="parameters.partyId"/>
                 <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
@@ -85,9 +80,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResNewEmploymentApp"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="NewEmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -108,9 +103,9 @@
     <screen name="EditEmploymentApp">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="EditEmploymentApp"/>
             </actions>
             <widgets>
                 <section>
@@ -166,9 +161,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEmploymentApplication"/>
-                <set field="activeMainMenuItem" value="EmploymentApp"/>
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
+                <set field="activeSubMenuItem" value="ViewEmploymentApp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">

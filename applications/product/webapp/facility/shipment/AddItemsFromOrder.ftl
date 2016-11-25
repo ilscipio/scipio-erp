@@ -29,7 +29,7 @@ under the License.
 -->
 <@section>
     <#if orderId?has_content && !orderHeader??>
-        <@commonMsg type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@commonMsg>
+        <@commonMsg type="error">${getLabel('ProductErrorOrderIdNotFound', '', {"orderId":orderId!''})}</@commonMsg>
     </#if>
     <#-- <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && (shipment.shipmentTypeId!) != "SALES_SHIPMENT">

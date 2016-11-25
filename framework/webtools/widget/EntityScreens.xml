@@ -193,18 +193,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                        <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="${styles.link_nav_cancel}"/>
-                                        <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="${styles.link_nav} ${styles.action_view}">
-                                            <parameter param-name="entityName" from-field="entityName"/>
-                                        </link>
-                                        <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
-                                            <parameter param-name="entityName" from-field="entityName"/>
-                                            <parameter param-name="enableEdit" value="true"/>
-                                        </link>
-                                    </container>
-                                </container>
+                                <include-menu name="EntitySubTabBar" location="component://webtools/widget/Menus.xml"/><!-- SCIPIO: links merged into a sub tab bar -->
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <platform-specific>
@@ -286,15 +275,11 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityRef.groovy"/>
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://webtools/webapp/webtools/entity/EntityRef.ftl"/>
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://webtools/webapp/webtools/entity/EntityRef.ftl"/>
+                    </html>
+                </platform-specific>
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
@@ -314,15 +299,11 @@ under the License.
                 <set field="packagesList" from-field="result.packagesList"/>
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://webtools/webapp/webtools/entity/EntityRefMain.ftl"/>
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://webtools/webapp/webtools/entity/EntityRefMain.ftl"/>
+                    </html>
+                </platform-specific>
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
@@ -340,15 +321,11 @@ under the License.
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityRefList.groovy"/>
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <platform-specific>
-                            <html>
-                                <html-template location="component://webtools/webapp/webtools/entity/EntityRefList.ftl"/>
-                            </html>
-                        </platform-specific>
-                    </widgets>
-                </section>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://webtools/webapp/webtools/entity/EntityRefList.ftl"/>
+                    </html>
+                </platform-specific>
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
@@ -420,7 +397,6 @@ under the License.
                 <if-has-permission permission="ENTITY_MAINT"/>
             </condition>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
                 <set field="titleProperty" value="WebtoolsPerformanceTests"/>
                 <set field="activeSubMenuItem" value="entityPerformanceTest"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntityPerformanceTest.groovy"/>

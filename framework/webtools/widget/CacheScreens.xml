@@ -23,7 +23,6 @@ under the License.
     <screen name="FindUtilCache">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="server"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCache"/>
@@ -60,7 +59,7 @@ under the License.
     <screen name="FindUtilCacheElements">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="cache"/>
+                <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCacheElements"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCacheElements.groovy"/>
             </actions>
@@ -93,7 +92,7 @@ under the License.
     <screen name="EditUtilCache">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="cache"/>
+                <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleEditUtilCache"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/EditUtilCache.groovy"/>
             </actions>

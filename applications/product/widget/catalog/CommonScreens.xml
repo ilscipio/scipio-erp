@@ -34,6 +34,17 @@ under the License.
         </auto-include-settings>
     </screen-settings>
         
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+            <!-- Make the main side bar name/location available to all (without need for globals) -->
+            <include-screen-actions name="MainSideBarMenu"/>
+            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
+            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
+            <set field="menuCfg" value=""/>
+        </actions>
+    </screen>
+        
     <screen name="main-decorator">
         <section>
             <actions>
@@ -56,6 +67,10 @@ under the License.
                 <set field="applicationMenuName" value="CatalogAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://product/widget/catalog/CatalogMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.ProductCatalog}" global="true"/>
+                
+                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
+                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
+                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
                 
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
@@ -83,7 +98,7 @@ under the License.
                         </section>
                         <section>
                             <condition>
-                                <if-compare field="showMainExtendedBar" operator="equals" type="Boolean" value="true"/>
+                                <if-true field="showMainExtendedBar" />
                             </condition>
                             <widgets>
                                 <include-screen name="leftbar" />
@@ -102,6 +117,14 @@ under the License.
     <screen name="CommonCatalogAppDecorator">
         <section>
             <actions>
+                <condition-to-field field="commonCatalogAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                    </or>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -109,7 +132,17 @@ under the License.
                         <include-screen name="CommonCatalogAppSideBarMenu"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <if-true field="commonCatalogAppBasePermCond"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -120,10 +153,25 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Catalog" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="catalogs"/>
-                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
-                <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
+                <if>
+                    <condition><if-empty field="prodCatalog"/></condition>
+                    <then>
+                        <!-- FIXME? globals not good... -->
+                        <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                        <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
+                    </then>
+                </if>
+                <if>
+                    <condition><not><if-empty field="prodCatalog"/></not></condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Catalog" />
+                    </then>
+                    <else>
+                        <!-- forced -->
+                        <set field="activeSubMenu" value="TOP"/>
+                        <set field="activeSubMenuItem" value="catalogs"/>
+                    </else>
+                </if>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
@@ -131,67 +179,20 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <not><if-empty field="prodCatalog"/></not>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <section share-scope="false">
-                                    <actions>
-                                        <set field="activeSubMenu" value="TOP"/>
-                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                    <not><if-empty field="prodCatalog"/></not>
+                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="ProductCatalog"/>
                                 </or>
                             </condition>
-                            <actions>
-                                <!-- <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                                <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/> -->
-                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="prodCatalog"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <!-- <label style="heading">${uiLabelMap.PageTitleEditProductCatalog} [${prodCatalogId}]</label> -->
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <if-compare operator="not-equals" value="ProductCatalog" field="activeSubMenuItem"/>
-                                            </condition>
-                                            <widgets>
-                                                <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                <!--<label style="heading">${uiLabelMap.PageTitleEditProductCatalog} [${prodCatalogId}]</label>-->
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -202,10 +203,24 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Category" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="categories"/>
-                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                <if>
+                    <condition><if-empty field="productCategory"/></condition>
+                    <then>
+                        <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                        <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                    </then>
+                </if>
+                <if>
+                    <condition><not><if-empty field="productCategory"/></not></condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Category" />
+                    </then>
+                    <else>
+                        <!-- forced -->
+                        <set field="activeSubMenu" value="TOP"/>
+                        <set field="activeSubMenuItem" value="categories"/>
+                    </else>
+                </if>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
@@ -213,66 +228,22 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <not><if-empty field="productCategory"/></not>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <section share-scope="false">
-                                    <actions>
-                                        <set field="activeSubMenu" value="TOP"/>
-                                        <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
+                                <and>
+                                    <not><if-empty field="productCategory"/></not>
+                                    <not><if-empty field="TabBarName"/></not>                                            
+                                </and>                                        
                             </condition>
-                            <actions>
-                                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                                <entity-one entity-name="ProductCategory" value-field="productCategory"/>
-                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <and>
-                                            <not><if-empty field="productCategory"/></not>
-                                            <not><if-empty field="TabBarName"/></not>                                            
-                                        </and>                                        
-                                    </condition>
-                                    <widgets>
-                                        <include-menu name="${TabBarName}" location="component://product/widget/catalog/CatalogMenus.xml"/>                                        
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <widgets>
-                                                <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <include-menu name="${TabBarName}" location="component://product/widget/catalog/CatalogMenus.xml"/>                                        
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -282,15 +253,26 @@ under the License.
     <screen name="CommonProductDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <!-- SCIPIO: FIXME: these global="true" will create problems, should be removed -->
+                
+                <!-- SCIPIO: FIXME: these global="true" will create problems... -->
                 <set field="productId" from-field="parameters.productId" global="true"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="product" from-field="product" global="true"/>
+                <if>
+                    <condition>
+                        <not><if-empty field="product"/></not>
+                    </condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Product" />
+                    </then>
+                    <else>
+                        <set field="activeSubMenu" value="TOP"/>
+                        <set field="activeSubMenuItem" value="products"/>
+                    </else>
+                </if>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- FIXME: Special lookup for labels currently missing "Product " prefix. this does not work properly in many languages. -->
@@ -305,95 +287,21 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <actions>
-                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
-                                <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/> -->
-                            </actions>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="product"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                        <!--<include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>-->
-                                        <!--<include-menu name="ProductSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>-->
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section share-scope="false">
-                                            <actions>
-                                                <set field="activeSubMenu" value="TOP"/>
-                                                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
-                                            </actions>
-                                            <widgets>
-                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
+                                <or><!-- TODO: review this condition -->
+                                    <not><if-empty field="product"/></not>
+                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditProduct"/>
                                 </or>
                             </condition>
-                            <actions>
-                                <!-- SCIPIO: this seems duplicate from above and will clashes with global...
-                                <set field="productId" from-field="parameters.productId"/>
-                                <entity-one entity-name="Product" value-field="product"/>-->
-                            </actions>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="product"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <platform-specific>
-                                            <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
-                                        </platform-specific>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <or>
-                                                    <if-compare operator="not-equals" value="EditProduct" field="activeSubMenuItem"/>
-                                                </or>
-                                            </condition>
-                                            <widgets>
-                                                <platform-specific>
-                                                    <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
-                                                </platform-specific>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                                <decorator-section-include name="body"/>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/menu/ProductSubTabBar.ftl"/></html>
+                                </platform-specific>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -403,9 +311,17 @@ under the License.
     <screen name="CommonConfigDecorator">
         <section>
             <actions>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ConfigItem" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
+                <if>
+                    <condition><not><if-empty field="configItem"/></not></condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ConfigItem" />
+                    </then>
+                    <else>
+                        <!-- forced... -->
+                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#Product" />
+                        <set field="activeSubMenuItem" value="EditProductConfigs"/> 
+                    </else>
+                </if>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
@@ -418,56 +334,18 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <not><if-empty field="configItem"/></not>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <section share-scope="false">
-                                    <actions>
-                                        <!-- SCIPIO: FIXME?: this is hard to say what should show here, so we fall back on showing
-                                            product side bar -->
-                                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#Product" />
-                                        <set field="activeSubMenuItem" value="EditProductConfigs"/>                                        
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
+                        <!--<section>
+                            <condition><not><if-empty field="configItemId"/></not></condition>
                             <widgets>
-                                <!--
-                                <section>
-                                    <condition><not><if-empty field="configItemId"/></not></condition>
-                                    <widgets>
-                                     
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${configItem.configItemName} [${uiLabelMap.CommonId}:${configItemId}]  ${${extraFunctionName}}</label>
-                                        <container style="button-bar">
-                                            <link target="EditProductConfigItem" text="${uiLabelMap.CommonNew} ${uiLabelMap.ProductConfigItem}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                          
-                                    </widgets>
-                                </section>
-                                -->
-                                <include-menu name="ConfigItemSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                <decorator-section-include name="body"/>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${configItem.configItemName} [${configItemId}]  ${${extraFunctionName}}</label>
+                                <container style="button-bar">
+                                    <link target="EditProductConfigItem" text="${uiLabelMap.CommonNew} ${uiLabelMap.ProductConfigItem}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        </section>-->
+                        <include-menu name="ConfigItemSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -479,8 +357,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="products"/>
-
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: session-based browsing aid -->
@@ -490,43 +366,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>             
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -559,7 +398,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
@@ -568,30 +406,19 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">                
                     <decorator-section name="body">
+                        <!--
                         <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
+                            <condition><not><if-empty field="productPromoId"/></not></condition>
                             <widgets>
-                                <!--
-                                <section>
-                                    <condition><not><if-empty field="productPromoId"/></not></condition>
-                                    <widgets>
-                                        
-                                        <container style="button-bar">
-                                            <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>                                    
-                                        </widgets>
-                                </section>
-                                -->
-                                <include-menu name="PromoSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml" />
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
+                                
+                                <container style="button-bar">
+                                    <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>                                    
+                                </widgets>
                         </section>
+                        -->
+                        <include-menu name="PromoSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml" />
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -604,7 +431,6 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Promo" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="FindProductPromoCode"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="promos" />
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- ONLY the edit screen should do this -->
@@ -630,15 +456,29 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-            
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
-                <set field="showMainExtendedBar" type="Boolean" value="true" />
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                
+
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
-                    Do NOT set this global. -->
-                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                    Do NOT set these global. -->
+                <if>
+                    <condition><if-empty field="productStore"/></condition>
+                    <then>
+                        <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                        <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
+                            <field-map field-name="productStoreId" from-field="productStoreId"/>
+                        </entity-one>
+                    </then>
+                </if>
+                <if>
+                    <condition><not><if-empty field="productStore"/></not></condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                    </then>
+                    <else>
+                        <set field="activeSubMenu" value="TOP"/>
+                        <set field="activeSubMenuItem" value="store"/>
+                    </else>
+                </if>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
@@ -649,61 +489,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <actions>          
-                                <!-- SCIPIO: this guarantees lookup for the following check. many screens already did this, but not all.
-                                    Do NOT set this global. -->
-                                <set field="lookupProductStoreId" from-field="productStoreId" />
-                                <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
-                                    <field-map field-name="productStoreId" from-field="lookupProductStoreId"/>
-                                </entity-one>  
-                            </actions>
-                            <widgets>
-                                <section>
-                                    <condition><not><if-empty field="productStore"/></not></condition>
-                                    <widgets>
-                                        <container>
-                                            <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                        </container>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section share-scope="false">
-                                            <actions>
-                                                <set field="activeSubMenu" value="TOP"/>
-                                                <set field="activeSubMenuItem" value="store"/>
-                                            </actions>
-                                            <widgets>
-                                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
-                                </section>
-                            </widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <actions>
-                                <set field="productStoreId" from-field="parameters.productStoreId"/>
-                                <entity-one entity-name="ProductStore" value-field="productStore"/>
-                            </actions>
-                            <widgets>
-                                <include-menu name="ProductStoreSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
+                        <include-menu name="ProductStoreSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -714,9 +502,18 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EditProductStoreGroups"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
+                <if>
+                    <condition><not><if-empty field="parameters.productStoreGroupId"/></not></condition>
+                    <then>
+                        <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                        <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="EditProductStoreGroups"/>
+                    </then>
+                    <else>
+                        <!-- forced... -->
+                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
+                        <set field="activeSubMenuItem" value="EditProductStoreGroups"/>
+                    </else>
+                </if>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
@@ -733,46 +530,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <!--<include-screen name="ProductStoreGroupTree"/>-->
-                        <section>
-                            <condition><not><if-empty field="parameters.productStoreGroupId"/></not></condition>
-                            <widgets>
-                                <container>
-                                    <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                </container>
-                            </widgets>
-                            <fail-widgets>
-                                <section share-scope="false">
-                                    <actions>
-                                        <set field="activeSubMenu" value="component://product/widget/catalog/CatalogMenus.xml#ProductStore" />
-                                        <set field="activeSubMenuItem" value="EditProductStoreGroups"/>
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                                    </widgets>
-                                </section>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -783,7 +540,6 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Shipping" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
@@ -800,34 +556,6 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <!--<label style="heading">${uiLabelMap[labelTitleProperty]}</label>-->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -840,48 +568,13 @@ under the License.
                 <!-- SCIPIO: NOTE: there is no pricerules sub-menu. -->
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP"/>
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="pricerules"/>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="pricerules"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productPriceRuleId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->    
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                      <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>                
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">            
                 </decorator-screen>
             </widgets>
         </section>
@@ -893,18 +586,18 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
-
-                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
-                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
-                <entity-one entity-name="WebSite" value-field="webSite"/>
-                
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-
+                <if>
+                    <condition><if-empty field="webSite"/></condition>
+                    <then>
+                        <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                        <entity-one entity-name="WebSite" value-field="webSite"/>
+                    </then>
+                </if>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
+                
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
 
@@ -912,24 +605,13 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
+                
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -964,17 +646,17 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="store"/>
-
-                <!-- SCIPIO: this should already be done by screen but sometimes it's not. Do NOT make global (local use here only) -->
-                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
-                <entity-one entity-name="WebSite" value-field="webSite"/>
-                
                 <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                <if>
+                    <condition><if-empty field="webSite"/></condition>
+                    <then>
+                        <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                        <entity-one entity-name="WebSite" value-field="webSite"/>
+                    </then>
+                </if>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
@@ -983,26 +665,18 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
+                
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                     <decorator-section name="body">
                         <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                            </condition>
                             <widgets>
                                 <container style="button-bar">
                                     <include-menu name="WebAnalyticsConfigButtonBar" location="component://content/widget/content/ContentMenus.xml"/>
@@ -1029,24 +703,14 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#Content" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value=""/><!-- SCIPIO: NOTE: nothing for now, this is too generic... -->
+                
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <!-- NOTE: for now this SHOULD delegate to content because many webapps may use this pattern; whereas WebSite is only accessible from catalog -->
                 <decorator-screen name="CommonContentDecorator" location="component://content/widget/CommonScreens.xml">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CONTENTMGR" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </widgets>
-                            <fail-widgets>
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -1190,8 +854,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="main"/>
-                <set field="activeSubMenuItem" from-field="activeMainMenuItem"/>
+                <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductCatalogManager"/>
             </actions>
             <widgets>            
@@ -1238,27 +901,9 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#ImageManagement" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Imagemanagement"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -1269,30 +914,10 @@ under the License.
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
-                
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="reviews"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="reviews"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                   
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -1302,29 +927,11 @@ under the License.
         <section>
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="thesaurus"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="thesaurus"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -1333,21 +940,24 @@ under the License.
     <screen name="CommonSubscriptionDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Subscription"/>
-                <set field="subscriptionId" from-field="parameters.subscriptionId"/>
-                <entity-one entity-name="Subscription" value-field="subscription"/>
+                <if>
+                    <condition><if-empty field="subscription"/></condition>
+                    <then>
+                        <set field="subscriptionId" from-field="parameters.subscriptionId"/>
+                        <entity-one entity-name="Subscription" value-field="subscription"/>
+                    </then>
+                </if>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscription"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionId} ${${extraFunctionName}}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="subscriptionPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -1402,21 +1012,24 @@ under the License.
     <screen name="CommonSubscriptionResourceDecorator">
         <section>
             <actions>
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="Subscription"/>
-                <set field="subscriptionResourceId" from-field="parameters.subscriptionResourceId"/>
-                <entity-one entity-name="SubscriptionResource" value-field="subscriptionResource"/>
+                <if>
+                    <condition><if-empty field="subscriptionResource"/></condition>
+                    <then>
+                        <set field="subscriptionResourceId" from-field="parameters.subscriptionResourceId"/>
+                        <entity-one entity-name="SubscriptionResource" value-field="subscriptionResource"/>
+                    </then>
+                </if>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscription"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionResourceId} ${${extraFunctionName}}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="subscriptionPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -1449,19 +1062,6 @@ under the License.
                                         </section>
                                         -->
                                     </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <condition>
-                                                <not><if-empty field="title"/></not>
-                                            </condition>
-                                            <widgets>
-                                                <label style="heading">${title}</label>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <label style="heading">${uiLabelMap[titleProperty]}</label>
-                                            </fail-widgets>
-                                        </section>
-                                    </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
@@ -1481,26 +1081,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <!-- SCIPIO: delegate to common decorator
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
-                    </decorator-section>-->                    
-                    <decorator-section name="body">
-                        <section>
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
+                <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                 </decorator-screen>
             </widgets>
         </section>
@@ -1517,7 +1098,7 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/find/miniproductlist.groovy"/>
             </actions>
             <widgets>
-                    <platform-specific><html><html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -1626,8 +1207,15 @@ under the License.
     <screen name="CommonCatalogAppSideBarMenu">
         <section>
             <actions>
-                <set field="commonSideBarMenu.perm" from-field="commonSideBarMenu.perm" default-value="CATALOG"/>
-                <set field="commonSideBarMenu.permAction" from-field="commonSideBarMenu.permAction" default-value="_VIEW"/>
+                <condition-to-field field="commonCatalogAppBasePermCond" type="Boolean" only-if-field="empty">
+                    <or><!-- SPECIAL: Catalog allows Create and Update to stand in for View -->
+                        <if-has-permission permission="CATALOG" action="_ADMIN"/>
+                        <if-has-permission permission="CATALOG" action="_CREATE"/>
+                        <if-has-permission permission="CATALOG" action="_UPDATE"/>
+                        <if-has-permission permission="CATALOG" action="_VIEW"/>
+                    </or>
+                </condition-to-field>
+                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonCatalogAppBasePermCond}"/>
             </actions>
             <widgets>
                 <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>

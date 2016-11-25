@@ -30,18 +30,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListCategory" location="component://product/widget/catalog/CategoryForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -108,14 +104,6 @@ under the License.
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <or>
-                                    <if-has-permission permission="CATALOG" action="_ADMIN"/>
-                                    <if-has-permission permission="CATALOG" action="_CREATE"/>
-                                    <if-has-permission permission="CATALOG" action="_UPDATE"/>
-                                    <if-has-permission permission="CATALOG" action="_VIEW"/>
-                                </or>
-                            </condition>
                             <actions>
                                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -128,7 +116,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="CategoryTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <include-menu name="CategorySubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${uiLabelMap.CommonId}:${productCategoryId}]  ${${extraFunctionName}}</label>
+                                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.categoryName} [${productCategoryId}]  ${${extraFunctionName}}</label>
                                     </widgets>
                                     <fail-widgets>
                                         <section>
@@ -143,9 +131,6 @@ under the License.
                                 </section>
                                 <decorator-section-include name="body"/>
                             </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
-                            </fail-widgets>
                         </section>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategory.ftl"/></html>

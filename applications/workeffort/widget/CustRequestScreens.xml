@@ -24,8 +24,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
-                <set field="activeSubMenuItem" value="requestlist"/>
-                <set field="activeMainMenuItem" value="request"/>
+                <!-- TODO: needs decorator and submenu
+                <set field="activeSubMenuItem" value="requestlist"/>-->
+                <set field="activeSubMenuItem" value="request"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>

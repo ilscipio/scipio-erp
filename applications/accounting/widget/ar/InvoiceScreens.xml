@@ -24,7 +24,7 @@ under the License.
     <screen name="ListReports">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="reports"/>
+                <set field="activeSubMenuItem" value="reports"/>
                 <set field="titleProperty" value="AccountingArPageTitleListReports"/>
                 <set field="invoiceTypeId" value="SALES_INVOICE"/>
                 <set field="organizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" default-value="${defaultOrganizationPartyId}"/>
@@ -73,25 +73,21 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <link target="newInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </decorator-section>
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindArInvoices" location="component://accounting/widget/ar/forms/InvoiceForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <platform-specific>
-                                            <html><html-template location="component://accounting/webapp/ar/invoice/ListInvoices.ftl"/></html>
-                                        </platform-specific>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="newInvoice" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonInvoice}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindArInvoices" location="component://accounting/widget/ar/forms/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ar/invoice/ListInvoices.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

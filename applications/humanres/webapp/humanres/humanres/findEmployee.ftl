@@ -17,28 +17,32 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign extInfo = parameters.extInfo?default("N")>
+<#assign extInfo = parameters.extInfo!"N">
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
 <#-- SCIPIO: show at bottom 
-  <#if parameters.hideFields?default("N") == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
-  <#else>
-    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
-    <#-<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
-  </#if>
+    <@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
 -->
+    <@menuitem type="link" href=makeOfbizUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployee class="+${styles.action_nav!} ${styles.action_add!}"/>
+    <#if findEmplQueryRan>
+       <#if (parameters.hideFields!"N") == "Y">
+         <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
+       <#else>
+         <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/>
+       </#if>
+    </#if>
   </@menu>
 </#macro>
-<@section id="findEmployee"><#-- SCIPIO: no entries:  menuContent=menuContent -->
-    <#if parameters.hideFields?default("N") != "Y">
+<@section id="findEmployee" menuContent=menuContent>
+    <#if (parameters.hideFields!"N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
 
            onsubmit="javascript:lookupparty('<@ofbizUrl>viewprofile</@ofbizUrl>');"
        -->
         <form method="post" name="lookupparty" action="<@ofbizUrl>findEmployees</@ofbizUrl>" class="basic-form">
+            <input type="hidden" name="doFindQuery" value="Y"/><#-- SCIPIO: extra control in addition to POST -->
             <input type="hidden" name="lookupFlag" value="Y"/>
             <input type="hidden" name="hideFields" value="Y"/>
                 <@field type="generic" label=uiLabelMap.PartyContactInformation>
@@ -82,29 +86,13 @@ under the License.
                 <#--<hr />-->
                 <@field type="submitarea">
                     <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
-
-                  <#if parameters.hideFields?default("N") == "Y">
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=N${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.link_run_sys!} ${styles.action_show!}"/>
-                  <#else>
-                    <#if partyList??><@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?hideFields=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.link_run_sys!} ${styles.action_hide!}"/></#if>
-                  </#if>
-
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y&doFindQuery=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
                 </@field>
         </form>
-    <#else>
-      <@menu type="button">
-      <#if parameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
-      <#else>
-        <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
-        <#-<@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
-      </#if>
-      </@menu>
     </#if>
 </@section>
 
-  <#if parameters.hideFields?default("N") != "Y">
+  <#if (parameters.hideFields!"N") != "Y">
     <@script>
       jQuery(document).ready(function() {
         document.lookupparty.partyId.focus();
@@ -112,7 +100,7 @@ under the License.
     </@script>
   </#if>
     
-  <#if partyList??>
+  <#if findEmplQueryRan>
     <@section id="findEmployeeResults" title=uiLabelMap.PartyPartiesFound>
     <#if lookupErrorMessage??>
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
@@ -171,4 +159,3 @@ under the License.
     </#if>
     </@section>
   </#if>
-<!-- end findEmployees.ftl -->

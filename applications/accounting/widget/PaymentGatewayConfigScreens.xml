@@ -25,23 +25,14 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGatewayConfig" />
-                <set field="activeMainMenuItem" from-field="activeMainMenuItem" default-value="PaymentGatewayConfig"/> 
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="MainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                    </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
-                                
-                                <!-- Now call the SimpleScreen form -->
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                        </section>
+                        <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
+                        <!-- Now call the SimpleScreen form -->
+                        <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -60,18 +51,14 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericPaymentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPaymentGatewayConfig" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListPaymentGatewayConfig" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPaymentGatewayConfig" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPaymentGatewayConfig" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -130,16 +117,12 @@ under the License.
                             <widgets>
                                 <container style="screenlet">
                                     <container style="screenlet-title-bar">
-                                        <container >
+                                        <container>
                                             <label text="${uiLabelMap.PageTitleUpdatePaymentGatewayConfigSagePay}"/>
                                         </container>
                                     </container>
                                     <container style="screenlet-body">
-                                        <section>
-                                            <widgets>
-                                                <include-form name="EditPaymentGatewayConfigSagePay" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
-                                            </widgets>
-                                        </section>
+                                        <include-form name="EditPaymentGatewayConfigSagePay" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
                                     </container>
                                 </container>
                             </widgets>
@@ -252,18 +235,14 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericPaymentGatewayConfigDecorator">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindPaymentGatewayConfigTypes" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListPaymentGatewayConfigTypes" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPaymentGatewayConfigTypes" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPaymentGatewayConfigTypes" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

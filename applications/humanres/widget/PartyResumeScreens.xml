@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindPartyResume"/>
-                <set field="activeMainMenuItem" value="PartyResume"/>
+                <set field="activeSubMenuItem" value="Employees"/><!-- PartyResume -->
                 <set field="partyResumeCtx" from-field="parameters"/>
                 <set field="insideParty.partyResume" value="true"/>
             </actions>
@@ -33,13 +33,9 @@
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <section>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditPartyResume" text="${uiLabelMap.HumanResNewPartyResume}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
-                                    </widgets>
-                                </section>
+                                <container style="button-bar">
+                                    <link target="EditPartyResume" text="${uiLabelMap.HumanResNewPartyResume}" style="${styles.link_nav} ${styles.action_add}"/>
+                                </container>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindPartyResumes" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
@@ -56,8 +52,8 @@
     <screen name="EditPartyResume">
         <section>
             <actions>
-                <set field="activeMainMenuItem" value="PartyResume"></set>
-                <set field="activeSubMenuItem" value="EditPartySkill"/>
+                <set field="activeSubMenuItem" value="Employees"/><!-- PartyResume -->
+                <!--<set field="activeSubMenuItem" value="EditPartySkill"/>-->
                 <set field="resumeId" from-field="parameters.resumeId"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="PartyResume" value-field="partyResume"/>
@@ -66,11 +62,7 @@
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResEditPartyResume}">
-                             <section>
-                                  <widgets>
-                                       <include-form name="EditPartyResume" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
-                                  </widgets>
-                             </section>
+                            <include-form name="EditPartyResume" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

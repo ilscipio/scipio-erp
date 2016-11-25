@@ -1506,10 +1506,9 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
      * If subMenu is null, assumes the item is meant for lookup in the top menu (this method should only
      * be called after the sub menu name was validated).
      * <p>
-     * NOTE: This handles the special PARENT/PARENT-WITHSUB/PARENT-NOSUB values, and mapping for
-     * DEFAULT/NONE. Handles the explicit DEFAULT lookup and empty item name lookup.
+     * NOTE: This handles the special PARENT/PARENT-WITHSUB/PARENT-NOSUB values, and NONE handling.
      * <p>
-     * DOES NOT HANDLE the non-error fallbacks for DEFAULT/NONE special values 
+     * DOES NOT HANDLE the non-error fallbacks for NONE special values 
      * NOR the error fallbacks for failed lookups. the MenuAndItemLookup.getLookupMenuItemName() should
      * be checked for these cases.
      * <p>
@@ -1518,10 +1517,14 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
     public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName, ModelSubMenu subMenu, boolean mapNames) {
         if (subMenu == null) { // top menu
             String mappedMenuItemName = mapNames ? this.getMappedMenuItemName(menuItemName) : menuItemName;
-            if (UtilValidate.isEmpty(menuItemName) || ModelMenuItem.DEFAULT_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
-                mappedMenuItemName = this.getDefaultMenuItemName();
+            
+            ModelMenuItem menuItem = getMenuItemByName(mappedMenuItemName);
+            if (menuItem == null && UtilValidate.isNotEmpty(getDefaultMenuItemName())) {
+                mappedMenuItemName = getDefaultMenuItemName();
+                menuItem = getMenuItemByName(mappedMenuItemName);
             }
-            return new MenuAndItemLookup(null, getMenuItemByName(mappedMenuItemName), subMenuName, mappedMenuItemName);
+            
+            return new MenuAndItemLookup(null, menuItem, subMenuName, mappedMenuItemName);
         } else {
             String mappedMenuItemName = mapNames ? subMenu.getMappedMenuItemName(menuItemName) : menuItemName;
             if (ModelMenuItem.parentMenuItemNames.contains(mappedMenuItemName)) {
@@ -1532,10 +1535,22 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                     return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
                 }
             } else {
-                if (UtilValidate.isEmpty(menuItemName) || ModelMenuItem.DEFAULT_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                ModelMenuItem menuItem = subMenu.getMenuItemByName(mappedMenuItemName);
+                
+                if (menuItem == null && UtilValidate.isNotEmpty(subMenu.getDefaultMenuItemName())) {
                     mappedMenuItemName = subMenu.getDefaultMenuItemName();
+                    if (ModelMenuItem.parentMenuItemNames.contains(mappedMenuItemName)) {
+                        if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                            // here we ditch our sub-menu
+                            return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                        } else {
+                            return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                        }
+                    } else {
+                        menuItem = subMenu.getMenuItemByName(mappedMenuItemName);
+                    }
                 }
-                return new MenuAndItemLookup(subMenu, subMenu.getMenuItemByName(mappedMenuItemName), subMenuName, mappedMenuItemName);
+                return new MenuAndItemLookup(subMenu, menuItem, subMenuName, mappedMenuItemName);
             }
         }
     }
@@ -1724,7 +1739,8 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
             } else {
                 // NOTE: here, NONE is not a failure.
                 // TODO: REVIEW: we will not print warnings for now if the menu item name was simply empty
-                // and it's the top level of the menu; otherwise there will simply be too many warnings all the time
+                // and it's the top level of the menu; otherwise there will simply be too many warnings all the time,
+                // coming from non-complex menus like tab bars
                 if (UtilValidate.isNotEmpty(selItemName) || subMenu != null) {
                     if (!ModelMenuItem.NONE_MENU_ITEM_NAME.equals(lookup.getLookupMenuItemName()) && logWarnings) {
                         if (menuNameTopMenu) {
@@ -1786,8 +1802,8 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         // translate null to NONE as first thing so it can be recognized in mappings (in theory; might not be used/usable or redundant)
         menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
         String res = this.menuItemNameAliasMap.get(menuItemName);
-        if (res != null) {
-            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-X in top menu
+        if (UtilValidate.isNotEmpty(res)) {
+            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-XXX in top menu
                 return menuItemName;
             } else {
                 return res;

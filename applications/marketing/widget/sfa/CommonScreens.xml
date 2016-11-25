@@ -217,13 +217,9 @@ under the License.
     <screen name="CommonSegmentGroupDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/MarketingMenus.xml#Marketing" />
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Segment"/>
-
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SegmentMenus.xml#SegmentGroup" />
                 <set field="segmentGroupId" from-field="parameters.segmentGroupId"/>
                 <entity-one entity-name="SegmentGroup" value-field="segmentGroup"/>
-                
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.segmentGroupId}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -304,46 +300,46 @@ under the License.
                 <set field="accountDescription" value="${groovy:session.getAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="contactDescription" value="${groovy:session.getAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="leadDescription" value="${groovy:session.getAttribute(&quot;leadDescription&quot;)}"/>
-            </actions>
-            <widgets>
-                <section>
+                <if>
                     <condition>
                         <or>
                             <not><if-empty field="leadDescription"/></not>
                             <not><if-empty field="accountLeadDescription"/></not>
                         </or>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
-                    </actions>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <not><if-empty field="contactDescription"/></not>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" value="Contacts"/>
                         <set field="currentCommonDecorator" value="CommonContactDecorator"/>
-                    </actions>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <not><if-empty field="accountDescription"/></not>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="activeSubMenuItem" value="Accounts"/>
                         <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
-                    </actions>
-                </section>
-                <section>
+                    </then>
+                </if>
+                <if>
                     <condition>
                         <if-empty field="currentCommonDecorator"/>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="currentCommonDecorator" value="CommonSfaAppDecorator"/>
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <decorator-screen name="${currentCommonDecorator}"><!-- location="${parameters.mainDecoratorLocation}" -->
                     <decorator-section name="body">
                         <section>
@@ -535,16 +531,16 @@ under the License.
                 <!-- TODO: REVIEW activeSubMenuItem here -->
                 <set field="activeSubMenuItem" from-field="parameters.activeSubMenuItem"/>
                 <entity-one entity-name="CommunicationEvent" value-field="communicationEvent"/>
-            </actions>
-            <widgets>
-                <section>
+                <if>
                     <condition>
                         <if-empty field="parameters.partyId"/>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="parameters.partyId" from-field="parameters.partyIdFrom"/>
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <section>
                     <condition>
                         <not><if-empty field="parameters.partyId"/></not>

@@ -1307,25 +1307,20 @@ under the License.
           The name corresponds to the name attribute in the <sub-menu name="..."/> menu definitions, and is unique within a whole menu.
           This name may be prefixed with a location, in the usual "component://[location]#[menu-name]" format; 
           but this location is not used in the complex menu lookup.
-          If the field is empty, the special value "TOP", or the name of the top-level menu, it designates the top level (no sub-menu).
-          (Empty may be treated specially in some cases, such as if activeSubMenuItem is missing or if the menu wrapper behavior is changed via menuCfg.allowSubItemTop)
           If the name is not found within the complex menu as sub-menu, the name and location is instead used to lookup a 
           simple/legacy menu as a fallback and compatibility mode. In this case, the prefixed location becomes meaningful,
           but is only necessary if the menu location differs from the default location as specified to this widget in menuCfg.defLocation.
           In fallback mode, a suffix (by default "Menu", or "SideBar" if you use ComplexSideBarMenu) is added to the activeSubMenu value before performing the lookup.
+          SPECIAL VALUES:
+          * For supported special values, see description of menu selected-menu-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
+          * In addition, in some cases, empty/missing value may be treated specially, for example due to the menuCfg.allowSubItemTop config parameter.
         * activeSubMenuItem - Name of a menu item that is child (or parent) of the menu/sub-menu designated/implied by activeSubMenu.
           If activeSubMenuItem is empty, depending on the menu definition, it may trigger a default selection of a default menu item on
           on the menu/sub-menu designated/implied by activeSubMenu, or otherwise will consider the parent item of the sub-menu as the target.
           SPECIAL VALUES:
-          * "PARENT-WITHSUB" or "PARENT" - can be used to explicitly request that the selected item be the parent item of the sub-menu (same effect as empty item when menu has no default).
-            Does not affect which sub-menu is considered selected, so it will (usually, by default) still show the sub-menu (unless something else blocks it).
-            Here, the sub-menu remains the deepest selected target (deeper than the selected parent item!).
-          * "PARENT-NOSUB" - similar to "PARENT" except the sub-menu will not be considered selected and will (usually) be hidden.
-            In other words, internally, the selected sub menu (activeSubMenu) is switched to the parent menu.
-            Here, the parent item becomes the deepest selected target.
-          * "DEFAULT" - same as empty, shows default-menu-item-name if one is defined
-          * "NONE" - same as empty, except explicit NONE bypasses the default-menu-item-name on menu (rarely used)
-            the behavior in this case is to select the sub-menu (if any) and its parent item, effectively like "PARENT".
+          * For supported special values, see description of menu selected-menuitem-context-field-name attribute
+            in component://widget/dtd/widget-menu.xsd.
           SPECIAL VALUE ALIASES: 
           2016-11-16: The PARENT special values can now be handled more cleanly and centralized by setting them in 
           menu-item-alias definitions (added for 1.14.3) in menu definitions.

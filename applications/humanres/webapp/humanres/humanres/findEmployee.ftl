@@ -86,7 +86,7 @@ under the License.
                 <#--<hr />-->
                 <@field type="submitarea">
                     <@field type="submit" text=uiLabelMap.PartyLookupParty onClick="javascript:document.lookupparty.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&hideFields=Y&lookupFlag=Y&doFindQuery=Y") class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonShowAllRecords />
                 </@field>
         </form>
     </#if>
@@ -159,4 +159,3 @@ under the License.
     </#if>
     </@section>
   </#if>
-<!-- end findEmployees.ftl -->

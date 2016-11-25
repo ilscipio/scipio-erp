@@ -77,18 +77,12 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     
     // SCIPIO: special/keyword menu and item names
     public static final String NONE_MENU_ITEM_NAME = "NONE";
-    public static final String DEFAULT_MENU_ITEM_NAME = "DEFAULT";
     public static final String PARENT_MENU_ITEM_NAME = "PARENT";
     public static final String PARENT_WITHSUB_MENU_ITEM_NAME = "PARENT-WITHSUB";
     public static final String PARENT_NOSUB_MENU_ITEM_NAME = "PARENT-NOSUB";
-    static final Set<String> noneDefaultMenuItemNames = UtilMisc.toHashSet(
-            NONE_MENU_ITEM_NAME, DEFAULT_MENU_ITEM_NAME);
     static final Set<String> parentMenuItemNames = UtilMisc.toHashSet(
             PARENT_MENU_ITEM_NAME, PARENT_WITHSUB_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
-    static final Set<String> specialMenuItemNames = UtilMisc.toHashSet(
-            NONE_MENU_ITEM_NAME, DEFAULT_MENU_ITEM_NAME,
-            PARENT_MENU_ITEM_NAME, PARENT_WITHSUB_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
-    
+
     private final List<ModelAction> actions;
     private final String align;
     private final String alignStyle;

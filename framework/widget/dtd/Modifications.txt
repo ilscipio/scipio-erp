@@ -1,1 +1,0 @@
-The widget-menu.xsd has been modfied to enable default link styles.

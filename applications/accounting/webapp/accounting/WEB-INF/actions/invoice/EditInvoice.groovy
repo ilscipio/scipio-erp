@@ -97,24 +97,27 @@ if (invoice) {
 
     // Get Tx already included
     vatIncludedByRate = FastMap.newInstance();
-    orderId = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst().orderId;
-    orderAdjustments = from("OrderAdjustment").where('orderId', orderId,"orderAdjustmentTypeId", "VAT_TAX").orderBy('orderId').queryList();
-    orderAdjustments.each { orderAdjustment ->
-        amountAlreadyIncluded = orderAdjustment.amountAlreadyIncluded
-        exemptAmount = orderAdjustment.exemptAmount
-        if (amountAlreadyIncluded == null) {
-            amountAlreadyIncluded = new BigDecimal(0);
-        }
-        if (exemptAmount == null) {
-            exemptAmount = new BigDecimal(0);
-        }
-        vatIncludedAmount = amountAlreadyIncluded - exemptAmount
-        if (vatIncludedAmount > 0) {
-            vatIncludedAmountSum = vatIncludedByRate.get(orderAdjustment.sourcePercentage)
-            if (vatIncludedAmountSum == null) {
-                vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmount)
-            } else {
-                vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmountSum + vatIncludedAmount)
+    GenericValue myOrder = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst();
+        if(myOrder!=null){
+        orderId = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst().orderId;
+        orderAdjustments = from("OrderAdjustment").where('orderId', orderId,"orderAdjustmentTypeId", "VAT_TAX").orderBy('orderId').queryList();
+        orderAdjustments.each { orderAdjustment ->
+            amountAlreadyIncluded = orderAdjustment.amountAlreadyIncluded
+            exemptAmount = orderAdjustment.exemptAmount
+            if (amountAlreadyIncluded == null) {
+                amountAlreadyIncluded = new BigDecimal(0);
+            }
+            if (exemptAmount == null) {
+                exemptAmount = new BigDecimal(0);
+            }
+            vatIncludedAmount = amountAlreadyIncluded - exemptAmount
+            if (vatIncludedAmount > 0) {
+                vatIncludedAmountSum = vatIncludedByRate.get(orderAdjustment.sourcePercentage)
+                if (vatIncludedAmountSum == null) {
+                    vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmount)
+                } else {
+                    vatIncludedByRate.put(orderAdjustment.sourcePercentage, vatIncludedAmountSum + vatIncludedAmount)
+                }
             }
         }
     }

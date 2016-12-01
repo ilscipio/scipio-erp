@@ -1,4 +1,3 @@
-<#-- SCIPIO: Marked for removal -->
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -50,14 +49,23 @@ under the License.
 </#if>
 
 
-<fo:block space-after="40pt"/>
+<#if orderTerms?has_content && orderTerms.size() gt 0>
+     <#-- a block with the invoice message-->
+    <fo:block font-weight="bold">${uiLabelMap.OrderOrderTerms}:</fo:block>
+    <#list orderTerms as orderTerm>
+        <fo:block font-size="7pt">
+            ${orderTerm.getRelatedOne("TermType", false).get("description",locale)} ${orderTerm.termValue!""} ${orderTerm.termDays!""} ${orderTerm.textValue!""}
+        </fo:block>
+    </#list>
+</#if>
+
+
 <#if orderHeader.getString("orderTypeId") == "SALES_ORDER">
-  <fo:block font-size="14pt" font-weight="bold" text-align="center">THANK YOU FOR YOUR PATRONAGE!</fo:block>
-  <fo:block font-size="8pt">
+  <fo:block font-size="7pt">
     <#--    Here is a good place to put policies and return information. -->
   </fo:block>
 <#elseif orderHeader.getString("orderTypeId") == "PURCHASE_ORDER">
-  <fo:block font-size="8pt">
+  <fo:block font-size="7pt">
     <#-- Here is a good place to put boilerplate terms and conditions for a purchase order. -->
   </fo:block>
 </#if>

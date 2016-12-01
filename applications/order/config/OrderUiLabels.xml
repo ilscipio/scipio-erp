@@ -12761,7 +12761,7 @@
         <value xml:lang="zh_TW">送貨經由</value>
     </property>
     <property key="OrderShipmentInformation">
-        <value xml:lang="de">Versandinformation</value>
+        <value xml:lang="de">Versandinfo</value>
         <value xml:lang="en">Shipment Information</value>
         <value xml:lang="es">Información del envío</value>
         <value xml:lang="fr">Informations sur le contenu de l'expédition</value>
@@ -12856,7 +12856,7 @@
     </property>
     <property key="OrderShippingInformation">
         <value xml:lang="cs">Informace o expedici</value>
-        <value xml:lang="de">Versandinformation</value>
+        <value xml:lang="de">Versandinfo</value>
         <value xml:lang="en">Shipping Information</value>
         <value xml:lang="en_GB">Delivery Information</value>
         <value xml:lang="es">Información de envío</value>

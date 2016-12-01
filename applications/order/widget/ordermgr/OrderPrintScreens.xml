@@ -42,27 +42,32 @@ under the License.
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderReportContactMechs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->
                     <decorator-section name="topRight">
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
                         <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderReportHeaderInfo.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                     <decorator-section name="body">
-                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                        <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
-                        </platform-specific>
                         <!-- order items and totals -->
                         <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderReportBody.fo.ftl"/></xsl-fo>
                         </platform-specific>
                         <!-- return policies and notes are shown in the last page -->
                         <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderReportConditions.fo.ftl"/></xsl-fo>
                         </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="footer">
+                       <platform-specific>
+                           <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderFooter.fo.ftl"/></xsl-fo>
+                       </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -71,7 +76,7 @@ under the License.
     <screen name="CompanyLogo">
         <section>
             <widgets>
-                <platform-specific><xsl-fo><html-template location="component://order/webapp/ordermgr/order/companyHeader.fo.ftl"/></xsl-fo></platform-specific>
+                <platform-specific><xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioCompanyHeader.fo.ftl"/></xsl-fo></platform-specific>
             </widgets>
         </section>
     </screen>

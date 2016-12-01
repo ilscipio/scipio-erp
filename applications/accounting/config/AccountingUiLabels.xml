@@ -11561,7 +11561,7 @@
     <property key="AccountingPaymentInformation">
         <value xml:lang="ar">معلومات التسديد</value>
         <value xml:lang="cs">Informace o platbě</value>
-        <value xml:lang="de">Zahlungsinformation</value>
+        <value xml:lang="de">Zahlungsinfo</value>
         <value xml:lang="en">Payment Information</value>
         <value xml:lang="es">Información de pago</value>
         <value xml:lang="fr">Information sur le paiement</value>

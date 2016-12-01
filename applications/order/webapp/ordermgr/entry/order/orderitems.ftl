@@ -155,7 +155,7 @@ under the License.
           <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
             <@tr><@td colspan=2></@td><@td colspan="8"><hr /></@td></@tr>
             <@tr>
-                <@td colspan="4"><b>${uiLabelMap.OrderSalesTaxIncluded}</b></@td>
+                <@td colspan="4"><b>${uiLabelMap.AccountingSalesTaxIncluded}</b></@td>
                 <@td class="${styles.text_right!}"><#if orderVATTaxTotal??><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></#if></@td>
                 <#if (maySelectItems!false)>
                   <@td>&nbsp;</@td>

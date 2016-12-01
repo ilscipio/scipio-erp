@@ -8276,6 +8276,18 @@
         <value xml:lang="zh">销售发票</value>
         <value xml:lang="zh_TW">銷售發票</value>
     </property>
+    <property key="AccountingSalesTaxIncluded">
+        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
+        <value xml:lang="en">All prices include Sales Tax</value>
+        <value xml:lang="en_GB">All prices include VAT</value>
+        <value xml:lang="fr">Dont TVA incluse </value>
+        <value xml:lang="it">Tasse di vendita incluse</value>
+        <value xml:lang="ja">消費税込</value>
+        <value xml:lang="pt_BR">Impostos de venda inclusos</value>
+        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
+        <value xml:lang="zh">已含营业税</value>
+        <value xml:lang="zh_TW">已包含營業稅</value>
+    </property>
     <property key="AccountingInvoiceSaveAsTemplate">
         <value xml:lang="cs">Uložit jako šablonu</value>
         <value xml:lang="en">Save Invoice As Template</value>
@@ -14563,6 +14575,7 @@
     </property>
     <property key="AccountingTotalCapital">
         <value xml:lang="ar">المجموع</value>
+        <value xml:lang="de">SUMME</value>
         <value xml:lang="en">TOTAL</value>
         <value xml:lang="es">TOTAL</value>
         <value xml:lang="fr">TOTAL</value>

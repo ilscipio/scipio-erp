@@ -126,7 +126,7 @@ under the License.
                 -->
                 <fo:table-row height="10mm" line-height="10mm">
                    <fo:table-cell number-columns-spanned="5" padding-before="3pt" padding-after="3pt" display-align="after" border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="#666">
-                        <fo:block font-weight="bold" color="#666"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId}<#if issuedDateTime??> ${uiLabelMap.CommonDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(issuedDateTime)}</#if></fo:block>
+                        <fo:block font-weight="bold" color="#666"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId}<#if issuedDateTime??> ${uiLabelMap.CommonDate}: ${issuedDateTime?date}</#if></fo:block>
                    </fo:table-cell>
                 </fo:table-row>
                 <#assign currentShipmentId = newShipmentId>

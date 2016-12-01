@@ -183,9 +183,9 @@ if (invoice) {
 
     // format the date
     if (invoice.invoiceDate) {
-        invoiceDate = DateFormat.getDateInstance(DateFormat.LONG).format(invoice.invoiceDate);
-        context.invoiceDate = invoiceDate;
+        //invoiceDate = DateFormat.getDateInstance(DateFormat.LONG).format(invoice.invoiceDate);
+        context.invoiceDate = invoice.invoiceDate;
     } else {
-        context.invoiceDate = "N/A";
+        context.invoiceDate = "";
     }
 }

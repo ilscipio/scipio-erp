@@ -14679,6 +14679,7 @@
         <value xml:lang="zh_TW">期末現金餘額合計</value>
     </property>
     <property key="AccountingTotalExclTax">
+        <value xml:lang="de">Summe netto</value>
         <value xml:lang="en">Total excl. tax</value>
         <value xml:lang="fr">Total HT</value>
         <value xml:lang="hi_IN">टैक्स छोड़कर कुल</value>

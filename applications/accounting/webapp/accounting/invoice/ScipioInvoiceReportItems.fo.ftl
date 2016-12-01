@@ -176,15 +176,44 @@ under the License.
             <fo:table-cell number-columns-spanned="5"><fo:block><#-- blank line --></fo:block></fo:table-cell>
         </fo:table-row>
 
+        <fo:table-row height="8mm" line-height="8mm">
+           <fo:table-cell number-columns-spanned="2">
+              <fo:block/>
+           </fo:table-cell>
+           <fo:table-cell number-columns-spanned="2" text-align="right" padding-before="3pt" padding-after="3pt">
+              <fo:block>${uiLabelMap.AccountingTotalExclTax}</fo:block>
+           </fo:table-cell>
+           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
+              <fo:block>
+                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=(invoice.currencyUomId!)/>
+              </fo:block>
+           </fo:table-cell>
+        </fo:table-row>
+        
+        <#if vatIncludedByRate?has_content>
+            <#list vatIncludedByRate.entrySet() as vatInc>  
+                <fo:table-row height="8mm" line-height="8mm">
+                   <fo:table-cell number-columns-spanned="4" text-align="right" padding-before="3pt" padding-after="3pt">
+                      <fo:block>${uiLabelMap.AccountingSalesTaxIncluded} (${(vatInc.key/100)?string.percent})</fo:block>
+                   </fo:table-cell>
+                   <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
+                      <fo:block>
+                         <@ofbizCurrency amount=vatInc.value isoCode=(invoice.currencyUomId!)/>
+                      </fo:block>
+                   </fo:table-cell>
+                </fo:table-row>
+            </#list>
+        </#if>
+
         <#-- the grand total -->
         <fo:table-row>
            <fo:table-cell number-columns-spanned="2">
               <fo:block/>
            </fo:table-cell>
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCapital}</fo:block>
+           <fo:table-cell number-columns-spanned="2" padding-before="5pt" padding-after="5pt" font-size="13pt">
+              <fo:block font-weight="bold">${uiLabelMap.FormFieldTitle_invoiceAmount}</fo:block>
            </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="double" border-top-width="thin" border-top-color="black">
+           <fo:table-cell text-align="right" border-top-style="double" border-top-width="thick" border-top-color="black" padding-before="5pt" padding-after="5pt" font-size="13pt">
               <fo:block><@ofbizCurrency amount=invoiceTotal isoCode=(invoice.currencyUomId!)/></fo:block>
            </fo:table-cell>
         </fo:table-row>
@@ -194,39 +223,6 @@ under the License.
            </fo:table-cell>
         </fo:table-row>
         
-        <#-- blank line -->
-        <fo:table-row height="7px">
-            <fo:table-cell number-columns-spanned="5"><fo:block><#-- blank line --></fo:block></fo:table-cell>
-        </fo:table-row>
-        
-        <#if !vatIncludedByRate?has_content>
-        <fo:table-row height="8mm" line-height="8mm">
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block/>
-           </fo:table-cell>
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block>${uiLabelMap.AccountingTotalExclTax}</fo:block>
-           </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
-              <fo:block>
-                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=(invoice.currencyUomId!)/>
-              </fo:block>
-           </fo:table-cell>
-        </fo:table-row>
-        <#else>
-        <#list vatIncludedByRate.entrySet() as vatInc>  
-            <fo:table-row height="8mm" line-height="8mm">
-               <fo:table-cell number-columns-spanned="4" text-align="right">
-                  <fo:block>${uiLabelMap.AccountingSalesTaxIncluded} (${(vatInc.key/100)?string.percent})</fo:block>
-               </fo:table-cell>
-               <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
-                  <fo:block>
-                     <@ofbizCurrency amount=vatInc.value isoCode=(invoice.currencyUomId!)/>
-                  </fo:block>
-               </fo:table-cell>
-            </fo:table-row>
-        </#list>
-        </#if>
     </fo:table-body>
  </fo:table>
 
@@ -241,10 +237,10 @@ under the License.
         <fo:table-cell>
           <fo:block/>
         </fo:table-cell>
-        <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black">
+        <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
           <fo:block font-weight="bold">${uiLabelMap.AccountingVat}</fo:block>
         </fo:table-cell>
-        <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
+        <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
           <fo:block font-weight="bold">${uiLabelMap.AccountingAmount}</fo:block>
         </fo:table-cell>
       </fo:table-row>
@@ -258,10 +254,10 @@ under the License.
         <fo:table-cell>
           <fo:block/>
         </fo:table-cell>
-        <fo:table-cell number-columns-spanned="1">
+        <fo:table-cell number-columns-spanned="1" padding-before="3pt" padding-after="3pt">
             <fo:block>${taxRate.description!}</fo:block>
         </fo:table-cell>
-        <fo:table-cell number-columns-spanned="1" text-align="right">
+        <fo:table-cell number-columns-spanned="1" text-align="right" padding-before="3pt" padding-after="3pt">
             <fo:block font-weight="bold"><@ofbizCurrency amount=vatTaxesByType[vatTaxId] isoCode=(invoice.currencyUomId!)/></fo:block>
         </fo:table-cell>
     </fo:table-row>

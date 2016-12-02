@@ -201,7 +201,7 @@ under the License.
                 <fo:table-cell number-columns-spanned="2">
                     <fo:block text-align="right" font-weight="bold">${uiLabelMap.OrderSalesTaxIncluded}:</fo:block>
                 </fo:table-cell>
-                <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thick" border-top-color="black">
+                <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
                     <fo:block><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></fo:block>
                 </fo:table-cell>
             </fo:table-row>

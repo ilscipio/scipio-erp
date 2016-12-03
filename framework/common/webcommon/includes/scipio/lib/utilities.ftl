@@ -2001,6 +2001,11 @@ a bean-wrapped context var (.ketSet()).
 
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
 
+WARN (2016-12-02): Do not rely on this for keying back the values out of the original
+    map; you should still call #toSimpleMap on the original map
+    before getting the values out of it. This is because BeansWrapper-mapped maps
+    treat some key values such as the "class" key as special.
+
 WARN: The resulting keys are unescaped, not passed through auto-escaping, so that 
     the map values can be keyed back without having to call #rawString.
 
@@ -2343,11 +2348,15 @@ TODO: doesn't handle dates (ambiguous?)
   <#elseif object?is_hash_ex && isObjectType("map", object)>
     <#if (maxDepth < 0) || (currDepth <= maxDepth)>
       <#if wrap>{</#if><#lt>
-      <#list mapKeys(object) as key>
-          <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! -->
-          "${escapeScriptString(lang, key, escape)}" : <#if object[rawString(key)]??><#rt/>
-            <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[rawString(key)]!false><#else><#local rawValNext = false></#if>
-            <#t/><@objectAsScript lang=lang object=object[rawString(key)] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/>
+      <#-- NOTE: 2016-12-02: can't rely on mapKeys, because special keys like "class" will fail; must use toSimpleMap
+      <#list mapKeys(object) as key>--><#t>
+      <#local object = toSimpleMap(object)><#t>
+      <#list object?keys as key>
+        <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! --><#t>
+        <#local rawKey = rawString(key)><#t>
+          "${escapeScriptString(lang, key, escape)}" : <#if object[rawKey]??><#rt/>
+            <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[rawKey]!false><#else><#local rawValNext = false></#if>
+            <#t/><@objectAsScript lang=lang object=object[rawKey] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/>
             <#lt/><#else>null</#if><#if key_has_next || hasMore>,</#if>
       </#list>
       <#if wrap>}</#if><#rt>

@@ -21,7 +21,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.template.standard.FieldValueMap.FullPar
  * TODO: NOT IMPLEMENTED - THIS IS A SKELETON AND BRAINSTORM ONLY UNTIL
  * FURTHER NOTICE.
  */
-public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implements Map<String, Object> {
+public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo, S extends FieldValueMap.FieldSources> implements Map<String, Object> {
 
     /**
      * Resolved, cached field values.
@@ -51,7 +51,7 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
      * * {{{standard}}}: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.
      * </pre>
      */
-    public static FieldValueMap<?> getAutoValueMap(String type, SubmitConfig submitConfig, 
+    public static FieldValueMap<?, ?> getAutoValueMap(String type, SubmitConfig submitConfig, 
             FieldSources fieldSources, Map<String, ?> fieldInfoMap) {
         Map<String, FullParamsFieldInfo> targetFieldInfoMap = new HashMap<>();
         for(Map.Entry<String, ?> entry : fieldInfoMap.entrySet()) {
@@ -67,7 +67,7 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
         return new FullParamsFieldValueMap(submitConfig, (FullParamsFieldSources) fieldSources, targetFieldInfoMap);
     }
     
-    public static FieldValueMap<?> getAutoValueMap(Map<String, ?> args) {
+    public static FieldValueMap<?, ?> getAutoValueMap(Map<String, ?> args) {
         String type = (String) args.get("type");
         // FIXME: FieldSources subclass depends on type
         return getAutoValueMap(type, new SubmitConfig(args), new FullParamsFieldSources(args), 
@@ -79,7 +79,9 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
      * Determines the initial value that the field with the given name should
      * have in a form.
      */
-    public abstract Object getAutoValue(String name);
+    public Object getAutoValue(String name) {
+        return getAutoValue(name, getFieldInfoMap().get(name));
+    }
     
     /**
      * Determines the initial value that the field with the given name should
@@ -88,6 +90,21 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
      */
     public abstract Object getAutoValue(String name, F fieldInfo);
     
+    /**
+     * Determines the initial value that the field with the given name should
+     * have in a form, with fieldInfo
+     * specified at time of fetch instead of initialization.
+     */
+    public Object getAutoValue(String name, Map<String, ?> fieldInfo) {
+        return getAutoValue(name, getFieldInfo(fieldInfo));
+    }
+    
+    protected abstract F getFieldInfo(Map<String, ?> fields);
+    
+    protected abstract Map<String, F> getFieldInfoMap();
+
+    
+    protected abstract S getFieldSources();
     
     /**
      * Resolves all initial values for all fields names in form.
@@ -197,6 +214,15 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
         return (key != null) ? getAutoValue(key.toString(), fieldInfo) : null;
     }
 
+    /**
+     * Gets the resolved value for the given field name, with fieldInfo
+     * specified at time of fetch instead of initialization.
+     * The value is cached and retrieved from cache when possible.
+     */
+    public Object get(Object key, Map<String, ?> fieldInfo) {
+        return (key != null) ? getAutoValue(key.toString(), fieldInfo) : null;
+    }
+    
     /**
      * Overrides the resolved value for a field name with a custom value.
      * <p>
@@ -337,7 +363,7 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
     }
     
 
-    public static class FullParamsFieldValueMap extends FieldValueMap<FullParamsFieldInfo> {
+    public static class FullParamsFieldValueMap extends FieldValueMap<FullParamsFieldValueMap.FullParamsFieldInfo, FullParamsFieldValueMap.FullParamsFieldSources> {
 
         protected final SubmitConfig submitConfig;
         protected final FullParamsFieldSources fieldSources;
@@ -349,20 +375,29 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implemen
             this.fieldInfoMap = fieldInfoMap != null ? fieldInfoMap : Collections.<String, FullParamsFieldInfo> emptyMap();
             this.fieldSources = fieldSources;
         }
-
-        @Override
-        public Object getAutoValue(String name) {
-            // TODO
-            return null;
-        }
         
         @Override
         public Object getAutoValue(String name, FullParamsFieldInfo fieldInfo) {
             // TODO Auto-generated method stub
-            // this is version where FieldInfo is passed at the get call instead of at initialization.
-            // init is better but client code can do lazy if needed.
+
             return null;
         }
+        
+        @Override
+        protected Map<String, FullParamsFieldInfo> getFieldInfoMap() {
+            return fieldInfoMap;
+        }
+
+        @Override
+        protected FullParamsFieldSources getFieldSources() {
+            return fieldSources;
+        }
+        
+        @Override
+        protected FullParamsFieldInfo getFieldInfo(Map<String, ?> fields) {
+            return new FullParamsFieldInfo(fields);
+        }
+        
 
         @Override
         public Set<String> getAllFieldNames() {

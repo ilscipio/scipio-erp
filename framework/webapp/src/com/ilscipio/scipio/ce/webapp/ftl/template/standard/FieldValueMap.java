@@ -378,7 +378,48 @@ public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo, S extend
         
         @Override
         public Object getAutoValue(String name, FullParamsFieldInfo fieldInfo) {
-            // TODO Auto-generated method stub
+            // TODO: IMPLEMENTATION
+            // TODO: MISSING way to specify overrideValue, paramValue, defaultValue
+            /*
+             *     type                    = (standard|..., default: -from globals-, fallback default: standard) The value scheme type
+                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
+                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{defaults-only}}}: looks for value in overrides map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then parameters map, then record, then defaults map.
+                                This may be
+                              * {{{params-or-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+                                At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
+                                error occurred ({{{isError}}} boolean context field).
+                              * {{{standard}}}: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.
+    name                    = Main field name, used for all maps that does not have more specific names (overrideName, paramName, etc.)
+                              NOTE: As a convenience, name can be passed as single parameter instead of the {{{args}}} map.
+    overrideName            = Field name for overrides map
+    paramName               = Field name for parameters map
+    recordName              = Field name for record map
+    defaultName             = Field name for defaults map
+    suffix                  = Optional suffix added to each of the name parameters
+    overrideValue           = An override values, which takes priority over all
+    paramValue              = A param value, which takes immediate priority over the params map
+    value                   = A value, which takes immediate priority over the record values
+                              It is ignored in all cases where the record map is also ignored (such as {{{type="params"}}}).
+    defaultValue            = A default value, which takes immediate priority over the default map values
+    submitDetectMethod      = (default|flag|post|none, default: default) Submit detection method
+                              * {{{default}}}: use {{{flag}}} if {{{submitFlagParam}}}, otherwise use {{{post}}}
+                              * {{{flag}}}: use {{{submitFlagParam}}}
+                              * {{{post}}}: use POST request check
+                              * {{{none}}}: none
+    submitFlagParam         = Optional name of a parameter from params map whose presence determines if a form was submitted or not.
+                              Automatically implies {{{submitDetectMethod="flag"}}}.
+                              This parameter is checked using {{{??}}} operator, by simple presence.
+                              This is needed for parameters whose HTML inputs don't always submit a value.
+                              If a submit happened and the field is missing, then the field is given the value specified in {{{submitDefaultParamValue}}}.
+                              By default, submission is detected using presence of POST request, but in most cases,
+                              it is better to have submitFlagParam specified, easiest using @fields.
+    submitDefaultParamValue = ((string), default: ""/[]/{}) Default param value to use if submitFlagParam checks out
+    submitError             = ((boolean)|"", default: "") Explicit success/error flag
+                              If not specified as boolean (empty string), uses isError context variable.
+                          
+             */
 
             return null;
         }

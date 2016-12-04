@@ -21,7 +21,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.template.standard.FieldValueMap.FullPar
  * TODO: NOT IMPLEMENTED - THIS IS A SKELETON AND BRAINSTORM ONLY UNTIL
  * FURTHER NOTICE.
  */
-public abstract class FieldValueMap implements Map<String, Object> {
+public abstract class FieldValueMap <F extends FieldValueMap.FieldInfo> implements Map<String, Object> {
 
     /**
      * Resolved, cached field values.
@@ -35,10 +35,7 @@ public abstract class FieldValueMap implements Map<String, Object> {
         this.resolved = new HashMap<>();
     }
 
-    
-    
-    
-    
+
     /**
      * Gets an auto-value map of given type (full specification). 
      * <p>
@@ -54,7 +51,7 @@ public abstract class FieldValueMap implements Map<String, Object> {
      * * {{{standard}}}: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.
      * </pre>
      */
-    public static FieldValueMap getAutoValueMap(String type, SubmitConfig submitConfig, 
+    public static FieldValueMap<?> getAutoValueMap(String type, SubmitConfig submitConfig, 
             FieldSources fieldSources, Map<String, ?> fieldInfoMap) {
         Map<String, FullParamsFieldInfo> targetFieldInfoMap = new HashMap<>();
         for(Map.Entry<String, ?> entry : fieldInfoMap.entrySet()) {
@@ -70,7 +67,7 @@ public abstract class FieldValueMap implements Map<String, Object> {
         return new FullParamsFieldValueMap(submitConfig, (FullParamsFieldSources) fieldSources, targetFieldInfoMap);
     }
     
-    public static FieldValueMap getAutoValueMap(Map<String, ?> args) {
+    public static FieldValueMap<?> getAutoValueMap(Map<String, ?> args) {
         String type = (String) args.get("type");
         // FIXME: FieldSources subclass depends on type
         return getAutoValueMap(type, new SubmitConfig(args), new FullParamsFieldSources(args), 
@@ -83,6 +80,14 @@ public abstract class FieldValueMap implements Map<String, Object> {
      * have in a form.
      */
     public abstract Object getAutoValue(String name);
+    
+    /**
+     * Determines the initial value that the field with the given name should
+     * have in a form, with fieldInfo
+     * specified at time of fetch instead of initialization.
+     */
+    public abstract Object getAutoValue(String name, F fieldInfo);
+    
     
     /**
      * Resolves all initial values for all fields names in form.
@@ -181,6 +186,15 @@ public abstract class FieldValueMap implements Map<String, Object> {
             resolved.put(name, value);
             return value;
         }
+    }
+    
+    /**
+     * Gets the resolved value for the given field name, with fieldInfo
+     * specified at time of fetch instead of initialization.
+     * The value is cached and retrieved from cache when possible.
+     */
+    public Object get(Object key, F fieldInfo) {
+        return (key != null) ? getAutoValue(key.toString(), fieldInfo) : null;
     }
 
     /**
@@ -323,7 +337,7 @@ public abstract class FieldValueMap implements Map<String, Object> {
     }
     
 
-    public static class FullParamsFieldValueMap extends FieldValueMap {
+    public static class FullParamsFieldValueMap extends FieldValueMap<FullParamsFieldInfo> {
 
         protected final SubmitConfig submitConfig;
         protected final FullParamsFieldSources fieldSources;
@@ -339,6 +353,14 @@ public abstract class FieldValueMap implements Map<String, Object> {
         @Override
         public Object getAutoValue(String name) {
             // TODO
+            return null;
+        }
+        
+        @Override
+        public Object getAutoValue(String name, FullParamsFieldInfo fieldInfo) {
+            // TODO Auto-generated method stub
+            // this is version where FieldInfo is passed at the get call instead of at initialization.
+            // init is better but client code can do lazy if needed.
             return null;
         }
 
@@ -447,6 +469,7 @@ public abstract class FieldValueMap implements Map<String, Object> {
                 return defaultsMap;
             }
         }
+
     }
     
 }

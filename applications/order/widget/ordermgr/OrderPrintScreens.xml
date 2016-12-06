@@ -42,7 +42,7 @@ under the License.
                     <decorator-section name="topLeft">
                         <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
                         <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/oderReportContactMechs.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->

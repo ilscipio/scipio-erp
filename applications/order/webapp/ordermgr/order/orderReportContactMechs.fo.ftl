@@ -55,9 +55,9 @@ under the License.
                 </fo:block>
             </#if>
         </#if>
-        
         <#-- list all postal addresses of the order.  there should be just a billing and a shipping here. -->
         <#list orderContactMechValueMaps as orderContactMechValueMap>
+            <fo:block>
             <#assign contactMech = orderContactMechValueMap.contactMech>
             <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
             <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
@@ -80,8 +80,8 @@ under the License.
                     </#if>
                 </fo:block>
             </#if>
+            </fo:block>
         </#list>
-        
     </fo:block>
 </fo:block>
 </#escape>

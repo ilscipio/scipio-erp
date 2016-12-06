@@ -168,14 +168,14 @@ under the License.
                 <parameter param-name="orderId"/>
             </link>
         </menu-item>
-        <menu-item name="PDF" title="PDF" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+        <!--<menu-item name="PDF" title="PDF" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <not><if-empty field="orderId"/></not>
             </condition>
             <link target="order.pdf" target-window="_blank">
                 <parameter param-name="orderId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
     </menu>
     
     <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

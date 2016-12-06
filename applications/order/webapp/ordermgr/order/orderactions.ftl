@@ -207,9 +207,8 @@
                     </@menuitem>
             </#if>
         </#if>
-        <#-- Export >> moved to OrderSideBar
+        <#-- Export -->
             <@menuitem type="link" href=makeOfbizUrl("order.pdf?orderId=${orderId}") text="PDF" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
-        -->
       </@menu>
        
   </@section>

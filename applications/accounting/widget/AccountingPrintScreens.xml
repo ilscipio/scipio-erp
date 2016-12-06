@@ -53,18 +53,18 @@ under the License.
                         <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="topLeft">
                                 <platform-specific>
-                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/pdf/ScipioInvoiceReportContactMechs.fo.ftl"/></xsl-fo>
+                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportContactMechs.fo.ftl"/></xsl-fo>
                                 </platform-specific>
                             </decorator-section>
                             <decorator-section name="topRight">
                                <include-screen name="CompanyLogo" location="component://accounting/widget/AccountingPrintScreens.xml"/>
                                <platform-specific>
-                                    <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/pdf/ScipioInvoiceReportHeaderInfo.fo.ftl"/></xsl-fo>
+                                    <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportHeaderInfo.fo.ftl"/></xsl-fo>
                                 </platform-specific>
                             </decorator-section>
                             <decorator-section name="body">
                                <platform-specific>
-                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/pdf/ScipioInvoiceReportItems.fo.ftl"/></xsl-fo>
+                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportItems.fo.ftl"/></xsl-fo>
                                </platform-specific>
                             </decorator-section>
                             <decorator-section name="footer">

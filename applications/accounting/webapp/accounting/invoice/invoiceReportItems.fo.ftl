@@ -1,5 +1,3 @@
-<#-- SCIPIO: Marked for removal -->
-
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -19,11 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
+    <#if invoice?has_content><fo:block font-size="16pt" font-weight="bold" margin-bottom="5mm">${invoice.getRelatedOne("InvoiceType", false).get("description",locale)}</fo:block></#if>
+
     <#-- list of orders -->
     <#if orders?has_content>
     <fo:table table-layout="fixed" width="100%">
-        <fo:table-column column-width="1in"/>
-        <fo:table-column column-width="5.5in"/>
+        <fo:table-column column-width="30mm"/>
+        <fo:table-column/>
 
         <fo:table-body>
           <fo:table-row>
@@ -31,7 +31,7 @@ under the License.
               <fo:block font-weight="bold">${uiLabelMap.AccountingOrderNr}:</fo:block>
             </fo:table-cell>
             <fo:table-cell>
-              <fo:block font-size="10pt" font-weight="bold"><#list orders as order>${order} </#list></fo:block>
+              <fo:block><#list orders as order>${order} </#list></fo:block>
             </fo:table-cell>
           </fo:table-row>
         </fo:table-body>
@@ -40,10 +40,10 @@ under the License.
 
     <#-- list of terms -->
     <#if terms?has_content>
-    <fo:table table-layout="fixed" width="100%" space-before="0.1in">
-        <fo:table-column column-width="6.5in"/>
+    <fo:table table-layout="fixed" width="100%" inline-progression-dimension="auto">
+        <fo:table-column/>
 
-        <fo:table-header height="14px">
+        <fo:table-header height="10mm">
           <fo:table-row>
             <fo:table-cell>
               <fo:block font-weight="bold">${uiLabelMap.AccountingAgreementItemTerms}</fo:block>
@@ -56,7 +56,7 @@ under the License.
           <#assign termType = term.getRelatedOne("TermType", false)/>
           <fo:table-row>
             <fo:table-cell>
-              <fo:block font-size="10pt" font-weight="bold">${termType.description!} ${term.description!} ${term.termDays!} ${term.textValue!}</fo:block>
+              <fo:block font-size="10pt">${termType.description!} ${term.description!} ${term.termDays!} ${term.textValue!}</fo:block>
             </fo:table-cell>
           </fo:table-row>
           </#list>
@@ -64,14 +64,14 @@ under the License.
     </fo:table>
     </#if>
 
-    <fo:table table-layout="fixed" width="100%" space-before="0.2in">
+    <fo:table table-layout="fixed" width="100%" space-before="20mm">
     <fo:table-column column-width="20mm"/>
     <fo:table-column column-width="85mm"/>
     <fo:table-column column-width="15mm"/>
     <fo:table-column column-width="25mm"/>
     <fo:table-column column-width="25mm"/>
 
-    <fo:table-header height="14px">
+    <fo:table-header height="10mm" font-size="12pt">
       <fo:table-row border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
         <fo:table-cell>
           <fo:block font-weight="bold">${uiLabelMap.AccountingProduct}</fo:block>
@@ -92,7 +92,7 @@ under the License.
     </fo:table-header>
 
 
-    <fo:table-body font-size="10pt">
+    <fo:table-body font-size="10pt" table-layout="fixed" width="100%">
         <#assign currentShipmentId = "">
         <#assign newShipmentId = "">
         <#-- if the item has a description, then use its description.  Otherwise, use the description of the invoiceItemType -->
@@ -124,24 +124,19 @@ under the License.
                 <#-- the shipment id is printed at the beginning for each
                      group of invoice items created for the same shipment
                 -->
-                <fo:table-row height="14px">
-                    <fo:table-cell number-columns-spanned="5">
-                            <fo:block></fo:block>
-                       </fo:table-cell>
-                </fo:table-row>
-                <fo:table-row height="14px">
-                   <fo:table-cell number-columns-spanned="5">
-                        <fo:block font-weight="bold"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId}<#if issuedDateTime??> ${uiLabelMap.CommonDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(issuedDateTime)}</#if></fo:block>
+                <fo:table-row height="10mm" line-height="10mm">
+                   <fo:table-cell number-columns-spanned="5" padding-before="3pt" padding-after="3pt" display-align="after" border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="#666">
+                        <fo:block font-weight="bold" color="#666"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId}<#if issuedDateTime??> ${uiLabelMap.CommonDate}: ${issuedDateTime?date}</#if></fo:block>
                    </fo:table-cell>
                 </fo:table-row>
                 <#assign currentShipmentId = newShipmentId>
             </#if>
             <#if !isItemAdjustment>
-                <fo:table-row height="14px" space-start=".15in">
+                <fo:table-row height="8mm" line-height="8mm">
                     <fo:table-cell>
                         <fo:block text-align="left">${invoiceItem.productId!} </fo:block>
                     </fo:table-cell>
-                    <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black">
+                    <fo:table-cell>
                         <fo:block text-align="left">${description!}</fo:block>
                     </fo:table-cell>
                       <fo:table-cell>
@@ -158,13 +153,16 @@ under the License.
                 <#if !(invoiceItem.parentInvoiceId?? && invoiceItem.parentInvoiceItemSeqId??)>
                     <fo:table-row>
                         <fo:table-cell><fo:block/></fo:table-cell>
-                        <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black"><fo:block/></fo:table-cell>
+                        <fo:table-cell><fo:block/></fo:table-cell>
                         <fo:table-cell number-columns-spanned="3"><fo:block/></fo:table-cell>
                     </fo:table-row>
                 </#if>
-                <fo:table-row height="14px" space-start=".15in">
-                    <fo:table-cell number-columns-spanned="2">
-                        <fo:block text-align="right">${description!}</fo:block>
+                <fo:table-row height="8mm" line-height="8mm">
+                     <fo:table-cell>
+                        <fo:block text-align="left">${invoiceItem.productId!} </fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell>
+                        <fo:block>${description!}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right" number-columns-spanned="3">
                         <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=(invoice.currencyUomId!)/> </fo:block>
@@ -178,15 +176,44 @@ under the License.
             <fo:table-cell number-columns-spanned="5"><fo:block><#-- blank line --></fo:block></fo:table-cell>
         </fo:table-row>
 
+        <fo:table-row height="8mm" line-height="8mm">
+           <fo:table-cell number-columns-spanned="2">
+              <fo:block/>
+           </fo:table-cell>
+           <fo:table-cell number-columns-spanned="2" text-align="right" padding-before="3pt" padding-after="3pt">
+              <fo:block>${uiLabelMap.AccountingTotalExclTax}</fo:block>
+           </fo:table-cell>
+           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
+              <fo:block>
+                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=(invoice.currencyUomId!)/>
+              </fo:block>
+           </fo:table-cell>
+        </fo:table-row>
+        
+        <#if vatIncludedByRate?has_content>
+            <#list vatIncludedByRate.entrySet() as vatInc>  
+                <fo:table-row height="8mm" line-height="8mm">
+                   <fo:table-cell number-columns-spanned="4" text-align="right" padding-before="3pt" padding-after="3pt">
+                      <fo:block>${uiLabelMap.AccountingSalesTaxIncluded} (${(vatInc.key/100)?string.percent})</fo:block>
+                   </fo:table-cell>
+                   <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
+                      <fo:block>
+                         <@ofbizCurrency amount=vatInc.value isoCode=(invoice.currencyUomId!)/>
+                      </fo:block>
+                   </fo:table-cell>
+                </fo:table-row>
+            </#list>
+        </#if>
+
         <#-- the grand total -->
         <fo:table-row>
            <fo:table-cell number-columns-spanned="2">
               <fo:block/>
            </fo:table-cell>
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block font-weight="bold">${uiLabelMap.AccountingTotalCapital}</fo:block>
+           <fo:table-cell number-columns-spanned="2" padding-before="5pt" padding-after="5pt" font-size="13pt">
+              <fo:block font-weight="bold">${uiLabelMap.FormFieldTitle_invoiceAmount}</fo:block>
            </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
+           <fo:table-cell text-align="right" border-top-style="double" border-top-width="thick" border-top-color="black" padding-before="5pt" padding-after="5pt" font-size="13pt">
               <fo:block><@ofbizCurrency amount=invoiceTotal isoCode=(invoice.currencyUomId!)/></fo:block>
            </fo:table-cell>
         </fo:table-row>
@@ -195,52 +222,25 @@ under the License.
               <fo:block/>
            </fo:table-cell>
         </fo:table-row>
-        <fo:table-row height="14px">
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block/>
-           </fo:table-cell>
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block>${uiLabelMap.AccountingTotalExclTax}</fo:block>
-           </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
-              <fo:block>
-                 <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=(invoice.currencyUomId!)/>
-              </fo:block>
-           </fo:table-cell>
-        </fo:table-row>
-        <#if vatIncludedByRate?has_content>
-        <fo:table-row height="14px">
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block/>
-           </fo:table-cell>
-           <fo:table-cell number-columns-spanned="2">
-              <fo:block>Tax already included</fo:block>
-           </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">
-              <fo:block>
-                 ${vatIncludedByRate}
-              </fo:block>
-           </fo:table-cell>
-        </fo:table-row>
-        </#if>
+        
     </fo:table-body>
  </fo:table>
 
 <#if vatTaxIds?has_content>
- <fo:table>
+ <fo:table table-layout="fixed" width="100%">
     <fo:table-column column-width="105mm"/>
     <fo:table-column column-width="40mm"/>
-    <fo:table-column column-width="25mm"/>
+    <fo:table-column/>
 
     <fo:table-header>
       <fo:table-row>
         <fo:table-cell>
           <fo:block/>
         </fo:table-cell>
-        <fo:table-cell border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
+        <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
           <fo:block font-weight="bold">${uiLabelMap.AccountingVat}</fo:block>
         </fo:table-cell>
-        <fo:table-cell text-align="right" border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
+        <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
           <fo:block font-weight="bold">${uiLabelMap.AccountingAmount}</fo:block>
         </fo:table-cell>
       </fo:table-row>
@@ -254,10 +254,10 @@ under the License.
         <fo:table-cell>
           <fo:block/>
         </fo:table-cell>
-        <fo:table-cell number-columns-spanned="1">
+        <fo:table-cell number-columns-spanned="1" padding-before="3pt" padding-after="3pt">
             <fo:block>${taxRate.description!}</fo:block>
         </fo:table-cell>
-        <fo:table-cell number-columns-spanned="1" text-align="right">
+        <fo:table-cell number-columns-spanned="1" text-align="right" padding-before="3pt" padding-after="3pt">
             <fo:block font-weight="bold"><@ofbizCurrency amount=vatTaxesByType[vatTaxId] isoCode=(invoice.currencyUomId!)/></fo:block>
         </fo:table-cell>
     </fo:table-row>

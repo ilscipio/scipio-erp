@@ -269,6 +269,8 @@ under the License.
                                         </platform-specific>
                                     </widgets>
                                     <fail-widgets>
+                                        <!-- FIXME: conflict/inconsistency between context.applicationTitle 
+                                            and parameters.applicationTitle (the latter risks allowing user input as title!) -->
                                         <section>
                                             <condition>
                                                 <not>

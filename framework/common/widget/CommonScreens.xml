@@ -148,6 +148,23 @@ under the License.
 
             <set field="setContextScipioTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
             <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/SetContextScipioTmplGlobalVars.groovy" />
+            
+            <!-- 2016-12-19: read applicationMenuLocation/Name from application parameters 
+                (WARN: do NOT use combined parameters map for this!) -->
+            <script lang="groovy"><![CDATA[
+                if (!context.applicationMenuLocation) { // automatically checks globalContext
+                    applicationMenuLocation = application?.getAttribute("applicationMenuLocation");
+                    if (applicationMenuLocation) {
+                        globalContext.applicationMenuLocation = applicationMenuLocation;
+                    }
+                }
+                if (!context.applicationMenuName) {
+                    applicationMenuName = application?.getAttribute("applicationMenuName");
+                    if (applicationMenuName) {
+                        globalContext.applicationMenuName = applicationMenuName;
+                    }
+                }
+            ]]></script>
         </actions>
     </screen>
     

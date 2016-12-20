@@ -17,36 +17,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-<fo:table table-layout="fixed" width="100%" space-after="0.3in">
-   <fo:table-column column-width="3.5in"/>
-    <fo:table-body>
-      <fo:table-row >
-        <fo:table-cell>
-          <fo:block>_______________________________</fo:block>
-      </fo:table-cell>
-    </fo:table-row>
-      <fo:table-row >
-        <fo:table-cell>
-          <fo:block>${uiLabelMap.CommonTo}: </fo:block>
-            <#if billingAddress?has_content>
-                <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
-                <fo:block>${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
-                <#if billingAddress.attnName??>
-                    <fo:block>${billingAddress.attnName}</fo:block>
-                </#if>
-                    <fo:block>${billingAddress.address1!}</fo:block>
-                <#if billingAddress.address2??>
-                    <fo:block>${billingAddress.address2}</fo:block>
-                </#if>
-                <fo:block>${billingAddress.city!} ${billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
-                <#if billToPartyTaxId?has_content>
-                    <fo:block>${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
-                </#if>
-            <#else>
-                <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound}${billToParty.partyId}</fo:block>
-            </#if>
-       </fo:table-cell>
-    </fo:table-row>
-  </fo:table-body>
-</fo:table>
+<fo:block content-width="85mm" font-size="10pt" margin-top="45mm">
+    <fo:block-container height="5mm" font-size="6pt">
+        <fo:block>
+            <#-- Return Address -->
+            ${companyName}
+        </fo:block>
+    </fo:block-container>
+    <fo:block>
+    <#if billingAddress?has_content>
+        <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
+        <fo:block>${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
+        <#if billingAddress.attnName??>
+            <fo:block>${billingAddress.attnName}</fo:block>
+        </#if>
+            <fo:block>${billingAddress.address1!}</fo:block>
+        <#if billingAddress.address2??>
+            <fo:block>${billingAddress.address2}</fo:block>
+        </#if>
+        <fo:block>${billingAddress.city!} ${billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
+        <#if billToPartyTaxId?has_content>
+            <fo:block>${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
+        </#if>
+    <#else>
+        <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound}${billToParty.partyId}</fo:block>
+    </#if>
+    </fo:block>
+</fo:block>
 </#escape>

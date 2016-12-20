@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -148,6 +149,44 @@ public final class WebAppUtil {
             if (!controlPath.endsWith("/")) {
                 controlPath += "/"; // Important
             }
+        }
+        return controlPath;
+    }
+
+    /**
+     * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
+     * webapp context root. There is never a terminating slash, except if root,
+     * where it will be "/".
+     */
+    public static String getControlServletOnlyPath(WebappInfo webAppInfo) throws IOException, SAXException {
+        String controlPath = WebAppUtil.getControlServletPath(webAppInfo);
+        if (controlPath != null) {
+            if (webAppInfo.contextRoot != null && !webAppInfo.contextRoot.isEmpty() && !"/".equals(webAppInfo.contextRoot)) {
+                controlPath = controlPath.substring(webAppInfo.contextRoot.length());
+            }
+            if (controlPath.length() > 1 && controlPath.endsWith("/")) {
+                controlPath = controlPath.substring(0, controlPath.length() - 1);
+            }
+            if (controlPath.length() == 0) {
+                controlPath = "/";
+            }
+            return controlPath;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
+     * webapp context root, throwing no exceptions. There is never a terminating slash, 
+     * except if root, where it will be "/".
+     */
+    public static String getControlServletOnlyPathSafe(WebappInfo webAppInfo) {
+        String controlPath = null;
+        try {
+            controlPath = WebAppUtil.getControlServletOnlyPath(webAppInfo);
+        } catch (Exception e) {
+            ; // Control servlet may not exist; don't treat as error
         }
         return controlPath;
     }
@@ -336,5 +375,57 @@ public final class WebAppUtil {
         return result;
     }
 
+    /**
+     * SCIPIO: Returns the web.xml context-params for webappInfo.
+     */
+    public static Map<String, String> getWebappContextParams(WebappInfo webappInfo) {
+        WebXml webXml;
+        try {
+            webXml = WebAppUtil.getWebXml(webappInfo);
+            Map<String, String> contextParams = webXml.getContextParams();
+            return contextParams != null ? contextParams : Collections.<String, String> emptyMap();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Web app xml definition for webapp with context root '" + webappInfo.contextRoot + "' not found.", e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns the web.xml context-params for webappInfo, with no exceptions thrown if anything missing.
+     */
+    public static Map<String, String> getWebappContextParamsSafe(WebappInfo webappInfo) {
+        try {
+            return getWebappContextParams(webappInfo);
+        } catch (Exception e) {
+            return Collections.<String, String> emptyMap();
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns the web.xml context-params for webSiteId.
+     */
+    public static Map<String, String> getWebappContextParams(String webSiteId) {
+        WebappInfo webappInfo;
+        WebXml webXml;
+        try {
+            webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            webXml = WebAppUtil.getWebXml(webappInfo);
+            Map<String, String> contextParams = webXml.getContextParams();
+            return contextParams != null ? contextParams : Collections.<String, String> emptyMap();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns the web.xml context-params for webSiteId, with no exceptions thrown if anything missing.
+     */
+    public static Map<String, String> getWebappContextParamsSafe(String webSiteId) {
+        try {
+            return getWebappContextParams(webSiteId);
+        } catch (Exception e) {
+            return Collections.<String, String> emptyMap();
+        }
+    }
+    
     private WebAppUtil() {}
 }

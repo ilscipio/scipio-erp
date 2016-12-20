@@ -310,6 +310,13 @@ under the License.
                 <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
               </@tr>
             </#if>
+            <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+              <@tr type="util"><@td colspan="8"><hr /></@td></@tr>
+              <@tr>
+                <@td align="right" colspan="4">${uiLabelMap.OrderSalesTaxIncluded}</@td>
+                <@td align="right" nowrap="nowrap"><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></@td>
+              </@tr>
+            </#if>
         </#if>
 
         <@tr>

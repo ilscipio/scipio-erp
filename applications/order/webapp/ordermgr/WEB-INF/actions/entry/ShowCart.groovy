@@ -72,6 +72,9 @@ context.orderShippingTotal = shippingAmount;
 taxAmount = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
 context.orderTaxTotal = taxAmount;
 
+orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
+context.orderVATTaxTotal = orderVATTaxTotal;
+
 // get all the possible gift wrap options
 allgiftWraps = from("ProductFeature").where("productFeatureTypeId", "GIFT_WRAP").orderBy("defaultSequenceNum").queryList();
 context.allgiftWraps = allgiftWraps;

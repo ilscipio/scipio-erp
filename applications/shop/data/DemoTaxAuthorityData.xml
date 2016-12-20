@@ -21,10 +21,13 @@ under the License.
 <entity-engine-xml>
     <!-- SCIPIO: NOTE: All tax authority rates here have been changed to taxPromotions="Y" by default (in contrast to taxPromotions="N" in stock ofbiz) -->
 
-    <TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
+    <!-- SCIPIO: The 1% fallback is more of an example that one could define a general Sales Tax that applies automatically, when no other is applied. 
+                 As this is not really a desired behavior in the real world, we are disabling it here.
+    -->
+    <!--<TaxAuthorityRateProduct taxAuthorityRateSeqId="9000" taxAuthGeoId="_NA_" taxAuthPartyId="_NA_" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
         productCategoryId="" titleTransferEnumId="" minItemPrice="25.00" minPurchase="0.00" taxShipping="N" taxPercentage="1" taxPromotions="Y"
-        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax"/>
-    
+        fromDate="2001-05-13 00:00:00.001" thruDate="" description="1% OFB _NA_ Tax"/>-->
+
     <TaxAuthorityRateProduct taxAuthorityRateSeqId="9001" taxAuthGeoId="CA" taxAuthPartyId="CA_BOE" taxAuthorityRateTypeId="SALES_TAX" productStoreId=""
         productCategoryId="" titleTransferEnumId="" minItemPrice="0.00" minPurchase="0.00" taxShipping="N" taxPercentage="6.25" taxPromotions="Y"
         fromDate="2001-05-13 00:00:00.001" thruDate="" description="California State Sales Tax"/>

@@ -72,6 +72,9 @@ public class MakeAttribMapFromArgMapMethod implements TemplateMethodModelEx {
         // put attribs from explicit attribs map first, if any
         TemplateModel attribsModel = argsMap.get("attribs");
         if (attribsModel != null && OfbizFtlObjectType.isObjectType(OfbizFtlObjectType.MAP, attribsModel)) {
+            if (OfbizFtlObjectType.isObjectType(OfbizFtlObjectType.COMPLEXMAP, attribsModel)) {
+                attribsModel = LangFtlUtil.toSimpleMap(attribsModel, false, objectWrapper);
+            }
             res = LangFtlUtil.copyMapToSimple((TemplateHashModel) attribsModel, excludes, useExclude, objectWrapper);
         }
 

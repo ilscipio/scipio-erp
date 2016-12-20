@@ -739,14 +739,31 @@ under the License.
                     </@td>
                 </@tr>
                 <#-- tax adjustments -->
-                <@tr>
-                    <@td colspan="5" class="${styles.text_right!}">
-                         ${uiLabelMap.OrderTotalSalesTax}
-                    </@td>
-                    <@td nowrap="nowrap" class="${styles.text_right!}">
-                        <@ofbizCurrency amount=taxAmount isoCode=currencyUomId/>
-                    </@td>
-                </@tr>
+                <#if taxAmount?has_content && (taxAmount > 0)>
+                    <@tr>
+                        <@td colspan="5" class="${styles.text_right!}">
+                             ${uiLabelMap.OrderTotalSalesTax}
+                        </@td>
+                        <@td nowrap="nowrap" class="${styles.text_right!}">
+                            <@ofbizCurrency amount=taxAmount isoCode=currencyUomId/>
+                        </@td>
+                    </@tr>
+                </#if>
+                <#-- VAT adjustments -->
+                <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+                    <@tr>
+                        <@td colspan="5"></@td>
+                        <@td colspan="1"><hr /></@td>
+                    </@tr>
+                    <@tr>
+                        <@td colspan="5" class="${styles.text_right!}">
+                             ${uiLabelMap.OrderSalesTaxIncluded}
+                        </@td>
+                        <@td nowrap="nowrap" class="${styles.text_right!}">
+                            <@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/>
+                        </@td>
+                    </@tr>
+                </#if>
                 <#-- grand total -->
                 <@tr>
                     <@td colspan="5"></@td>

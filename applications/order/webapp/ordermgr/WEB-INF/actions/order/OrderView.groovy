@@ -118,6 +118,9 @@ if (orderHeader) {
     taxAmount = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
     context.taxAmount = taxAmount;
 
+    orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
+    context.orderVATTaxTotal = orderVATTaxTotal;
+    
     grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     context.grandTotal = grandTotal;
 

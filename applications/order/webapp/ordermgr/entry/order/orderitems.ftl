@@ -143,13 +143,25 @@ under the License.
               <@td>&nbsp;</@td>
             </#if>
           </@tr>
-          <@tr>
-            <@td colspan="4"><b>${uiLabelMap.OrderSalesTax}</b></@td>
-            <@td class="${styles.text_right!}"><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></@td>
-            <#if (maySelectItems!false)>
-              <@td>&nbsp;</@td>
-            </#if>
-          </@tr>
+          <#if orderTaxTotal?has_content && (orderTaxTotal > 0)>
+              <@tr>
+                <@td colspan="4"><b>${uiLabelMap.OrderSalesTax}</b></@td>
+                <@td class="${styles.text_right!}"><#if orderTaxTotal??><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></#if></@td>
+                <#if (maySelectItems!false)>
+                  <@td>&nbsp;</@td>
+                </#if>
+              </@tr>
+          </#if>
+          <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+            <@tr><@td colspan=2></@td><@td colspan="8"><hr /></@td></@tr>
+            <@tr>
+                <@td colspan="4"><b>${uiLabelMap.AccountingSalesTaxIncluded}</b></@td>
+                <@td class="${styles.text_right!}"><#if orderVATTaxTotal??><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></#if></@td>
+                <#if (maySelectItems!false)>
+                  <@td>&nbsp;</@td>
+                </#if>
+              </@tr>
+          </#if>
 
           <@tr><@td colspan=2></@td><@td colspan="8"><hr /></@td></@tr>
           <@tr>

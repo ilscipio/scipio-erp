@@ -53,6 +53,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
 
@@ -2899,70 +2901,15 @@ public class OrderReadHelper {
         }
         return attributeValue;
     }
-
-    public static Map<String, Object> getOrderTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustments) {
-        BigDecimal taxGrandTotal = BigDecimal.ZERO;
-        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = FastList.newInstance();
-        if (UtilValidate.isNotEmpty(orderAdjustments)) {
-            // get orderAdjustment where orderAdjustmentTypeId is SALES_TAX.
-            orderAdjustments = EntityUtil.filterByAnd(orderAdjustments, UtilMisc.toMap("orderAdjustmentTypeId", "SALES_TAX"));
-            orderAdjustments = EntityUtil.orderBy(orderAdjustments, UtilMisc.toList("taxAuthGeoId", "taxAuthPartyId"));
-
-            // get the list of all distinct taxAuthGeoId and taxAuthPartyId. It is for getting the number of taxAuthGeo and taxAuthPartyId in adjustments.
-            List<String> distinctTaxAuthGeoIdList = EntityUtil.getFieldListFromEntityList(orderAdjustments, "taxAuthGeoId", true);
-            List<String> distinctTaxAuthPartyIdList = EntityUtil.getFieldListFromEntityList(orderAdjustments, "taxAuthPartyId", true);
-
-            // Keep a list of amount that have been added to make sure none are missed (if taxAuth* information is missing)
-            List<GenericValue> processedAdjustments = FastList.newInstance();
-            // For each taxAuthGeoId get and add amount from orderAdjustment
-            for (String taxAuthGeoId : distinctTaxAuthGeoIdList) {
-                for (String taxAuthPartyId : distinctTaxAuthPartyIdList) {
-                    //get all records for orderAdjustments filtered by taxAuthGeoId and taxAurhPartyId
-                    List<GenericValue> orderAdjByTaxAuthGeoAndPartyIds = EntityUtil.filterByAnd(orderAdjustments, UtilMisc.toMap("taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
-                    if (UtilValidate.isNotEmpty(orderAdjByTaxAuthGeoAndPartyIds)) {
-                        BigDecimal totalAmount = BigDecimal.ZERO;
-                        //Now for each orderAdjustment record get and add amount.
-                        for (GenericValue orderAdjustment : orderAdjByTaxAuthGeoAndPartyIds) {
-                            BigDecimal amount = orderAdjustment.getBigDecimal("amount");
-                            if (amount == null) {
-                                amount = ZERO;
-                            }
-                            totalAmount = totalAmount.add(amount).setScale(taxCalcScale, taxRounding);
-                            processedAdjustments.add(orderAdjustment);
-                        }
-                        totalAmount = totalAmount.setScale(taxFinalScale, taxRounding);
-                        taxByTaxAuthGeoAndPartyList.add(UtilMisc.<String, Object>toMap("taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId, "totalAmount", totalAmount));
-                        taxGrandTotal = taxGrandTotal.add(totalAmount);
-                    }
-                }
-            }
-            // Process any adjustments that got missed
-            List<GenericValue> missedAdjustments = FastList.newInstance();
-            missedAdjustments.addAll(orderAdjustments);
-            missedAdjustments.removeAll(processedAdjustments);
-            for (GenericValue orderAdjustment : missedAdjustments) {
-                taxGrandTotal = taxGrandTotal.add(orderAdjustment.getBigDecimal("amount").setScale(taxCalcScale, taxRounding));
-            }
-            taxGrandTotal = taxGrandTotal.setScale(taxFinalScale, taxRounding);
-        }
-        Map<String, Object> result = FastMap.newInstance();
-        result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
-        result.put("taxGrandTotal", taxGrandTotal);
-        return result;
-    }
-
-    public static Map<String, Object> getOrderItemTaxByTaxAuthGeoAndPartyForDisplay(GenericValue orderItem, List<GenericValue> orderAdjustmentsOriginal) {
-        return getOrderTaxByTaxAuthGeoAndPartyForDisplay(getOrderItemAdjustmentList(orderItem, orderAdjustmentsOriginal));
-    }
-
-    public static Map<String, Object> getOrderTaxByTaxAuthGeoAndPartyForDisplay(List<GenericValue> orderAdjustmentsOriginal) {
+    
+    /**SCIPIO: generalized the tax calculation*/
+    public static Map<String, Object> getCommonOrderTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustmentsOriginal) {
         BigDecimal taxGrandTotal = BigDecimal.ZERO;
         List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = FastList.newInstance();
         List<GenericValue> orderAdjustmentsToUse = FastList.newInstance();
         if (UtilValidate.isNotEmpty(orderAdjustmentsOriginal)) {
+            orderAdjustmentsToUse.addAll(orderAdjustmentsOriginal);
             // get orderAdjustment where orderAdjustmentTypeId is SALES_TAX.
-            orderAdjustmentsToUse.addAll(EntityUtil.filterByAnd(orderAdjustmentsOriginal, UtilMisc.toMap("orderAdjustmentTypeId", "SALES_TAX")));
-            orderAdjustmentsToUse.addAll(EntityUtil.filterByAnd(orderAdjustmentsOriginal, UtilMisc.toMap("orderAdjustmentTypeId", "VAT_TAX")));
             orderAdjustmentsToUse = EntityUtil.orderBy(orderAdjustmentsToUse, UtilMisc.toList("taxAuthGeoId", "taxAuthPartyId"));
 
             // get the list of all distinct taxAuthGeoId and taxAuthPartyId. It is for getting the number of taxAuthGeo and taxAuthPartyId in adjustments.
@@ -3011,6 +2958,48 @@ public class OrderReadHelper {
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
+        
+        
+    }
+    
+    public static Map<String, Object> getOrderSalesTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustments) {
+        orderAdjustments = EntityUtil.filterByAnd(orderAdjustments, UtilMisc.toMap("orderAdjustmentTypeId", "SALES_TAX"));
+        return getCommonOrderTaxByTaxAuthGeoAndParty(orderAdjustments);
+    }
+
+    /**SCIPIO: Added VAT calculation*/
+    public static Map<String, Object> getOrderVATTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustments) {
+        orderAdjustments = EntityUtil.filterByAnd(orderAdjustments, UtilMisc.toMap("orderAdjustmentTypeId", "VAT_TAX"));
+        return getCommonOrderTaxByTaxAuthGeoAndParty(orderAdjustments);
+    }
+    
+    public static Map<String, Object> getOrderTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustments) {
+        orderAdjustments = EntityUtil.filterByAnd(orderAdjustments, UtilMisc.toMap("orderAdjustmentTypeId", "SALES_TAX"));
+        return getCommonOrderTaxByTaxAuthGeoAndParty(orderAdjustments);
+    }
+
+    public static Map<String, Object> getOrderTaxByTaxAuthGeoAndPartyForDisplay(List<GenericValue> orderAdjustmentsOriginal) {
+        orderAdjustmentsOriginal.addAll(EntityUtil.filterByAnd(orderAdjustmentsOriginal, UtilMisc.toMap("orderAdjustmentTypeId", "SALES_TAX")));
+        orderAdjustmentsOriginal.addAll(EntityUtil.filterByAnd(orderAdjustmentsOriginal, UtilMisc.toMap("orderAdjustmentTypeId", "VAT_TAX")));
+        return getCommonOrderTaxByTaxAuthGeoAndParty(orderAdjustmentsOriginal);
+    }
+    
+    public static Map<String, Object> getOrderItemTaxByTaxAuthGeoAndPartyForDisplay(GenericValue orderItem, List<GenericValue> orderAdjustmentsOriginal) {
+        return getOrderTaxByTaxAuthGeoAndPartyForDisplay(getOrderItemAdjustmentList(orderItem, orderAdjustmentsOriginal));
+    }
+    
+    public BigDecimal getTotalTax(List<GenericValue> taxAdjustments) {
+        Map<String, Object> taxByAuthority = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(taxAdjustments);
+        BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
+        return taxTotal;
+    }
+    
+    /**SCIPIO: Added VAT Tax calculation*/
+    public BigDecimal getTotalVATTax(List<GenericValue> taxAdjustments){
+        Map<String, Object> taxByAuthority = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(taxAdjustments);
+        BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
+        return taxTotal;
+        
     }
 
     /**

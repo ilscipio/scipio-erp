@@ -17,9 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
 <!-- These forms are for generating printed documents, such as invoices, bills, statements, etc. -->
-
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
@@ -36,24 +34,25 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->
                     <decorator-section name="topRight">
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
                         <platform-specific>
                             <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                     <decorator-section name="body">
-                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                        <platform-specific>
-                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
-                        </platform-specific>
                         <!-- order items and totals -->
                         <platform-specific>
                             <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
@@ -63,15 +62,17 @@ under the License.
                             <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
+                    <decorator-section name="footer">
+                       <platform-specific>
+                           <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderFooter.fo.ftl"/></xsl-fo>
+                       </platform-specific>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="CompanyLogo">
         <section>
-            <actions>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
-            </actions>
             <widgets>
                 <platform-specific><xsl-fo><html-template location="component://order/webapp/ordermgr/order/companyHeader.fo.ftl"/></xsl-fo></platform-specific>
             </widgets>

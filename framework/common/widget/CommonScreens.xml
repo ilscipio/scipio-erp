@@ -773,7 +773,7 @@ under the License.
                 <property-to-field resource="fop.properties" field="defaultFontFamily" property="fop.font.family" default="Arial"/>
             </actions>
             <widgets>
-                <platform-specific><xsl-fo><html-template location="component://common/webcommon/includes/reportTemplate.fo.ftl"/></xsl-fo></platform-specific>
+                <platform-specific><xsl-fo><html-template location="component://common/webcommon/includes/fo/ScipioPdfTemplateDinA4.fo.ftl"/></xsl-fo></platform-specific>
             </widgets>
         </section>
     </screen>

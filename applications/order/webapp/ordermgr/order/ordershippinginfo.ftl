@@ -565,7 +565,7 @@ under the License.
             </@td>
          </@tr>
 
-       <#-- ToDo: These shipment options are somewhat useful, but we should consider adding them to the action menu instead
+       <#-- ToDo: These shipment options are somewhat useful, but we should consider adding them to the action menu instead-->
        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && ((orderHeader.statusId == "ORDER_CREATED") || (orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
          <@tr>
             <@td colspan="4" valign="top" align="center">
@@ -624,7 +624,7 @@ under the License.
             </@td>
          </@tr>
        </#if>
-        -->
+        
       </@table>
     </@fields>
     </@section>

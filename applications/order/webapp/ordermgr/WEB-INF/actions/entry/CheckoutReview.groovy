@@ -132,6 +132,9 @@ context.orderShippingTotal = shippingAmount;
 
 taxAmount = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
 context.orderTaxTotal = taxAmount;
+orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
+context.orderVATTaxTotal = orderVATTaxTotal;
+
 context.orderGrandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
 
 orderName = cart.getOrderName();

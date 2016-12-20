@@ -85,7 +85,7 @@ under the License.
               <@td></@td>
               <@td></@td>
               <@td>
-                ${orderItem.amount?string("##0.00")}
+                <#if orderItem.amountAlreadyIncluded?has_content>${orderItem.amountAlreadyIncluded?string("##0.00")}<#else>${orderItem.amount?string("##0.00")}</#if>
                 <#--<input type="text" size="8" name="amount_o_${rowCount}" <#if orderItem.amount?has_content>value="${orderItem.amount?string("##0.00")}"</#if>/>-->
               </@td>
               <@td></@td>
@@ -212,7 +212,7 @@ under the License.
                 </div>
               </@td>
               <@td>
-                <input type="text" size="8" name="amount_o_${rowCount}" <#if adj.amount?has_content>value="${adj.amount?string("##0.00")}"</#if>/>
+                <input type="text" size="8" name="amount_o_${rowCount}" <#if adj.amountAlreadyIncluded?has_content>value="${adj.amountAlreadyIncluded?string("##0.00")}"<#else>value="${adj.amount?string("##0.00")}"</#if>/>
               </@td>
               <@td>
                 <select name="returnTypeId_o_${rowCount}">

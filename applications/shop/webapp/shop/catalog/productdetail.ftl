@@ -295,6 +295,11 @@
                     </span>
                 </#if>
                 -->
+                
+                <#-- European VAT support (VAT included) -->
+                <#if productStore?has_content && productStore.showPricesWithVatTax =="Y">
+                    <p><small>* ${getLabel("OrderSalesTaxIncluded")}</small></p>
+                </#if>
 
                 <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
                 <#if (showPriceDetails?? && (showPriceDetails!"N") == "Y")>

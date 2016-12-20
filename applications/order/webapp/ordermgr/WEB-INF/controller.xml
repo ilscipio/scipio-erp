@@ -1656,7 +1656,7 @@ under the License.
     <request-map uri="createOrderItemShipGroup">
         <security https="true" auth="true"/>
         <event type="service" invoke="createOrderItemShipGroup"/>
-        <response name="success" type="view" value="orderview"/>
+        <response name="success" type="view" value="orderShipping"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
     <request-map uri="updateOrderItemShipGroup">

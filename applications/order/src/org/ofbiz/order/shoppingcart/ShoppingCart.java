@@ -2784,6 +2784,16 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return totalTax.setScale(taxFinalScale, taxRounding);
     }
 
+    /** Returns the tax amount from the cart object. */
+    public BigDecimal getTotalVATTax() {
+        BigDecimal totalTax = ZERO;
+        for (int i = 0; i < shipInfo.size(); i++) {
+            CartShipInfo csi = this.getShipInfo(i);
+            totalTax = totalTax.add(csi.getTotalVATTax(this)).setScale(taxCalcScale, taxRounding);
+        }
+        return totalTax.setScale(taxFinalScale, taxRounding);
+    }
+    
     /** Returns the shipping amount from the cart object. */
     public BigDecimal getTotalShipping() {
         BigDecimal tempShipping = BigDecimal.ZERO;
@@ -4866,6 +4876,19 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             Map<String, Object> taxByAuthority = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(taxAdjustments);
             BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
             return taxTotal;
+        }
+        
+        /**SCIPIO: Added VAT Tax calculation*/
+        public BigDecimal getTotalVATTax(ShoppingCart cart){
+            List<GenericValue> taxAdjustments = FastList.newInstance();
+            taxAdjustments.addAll(shipTaxAdj);
+            for (CartShipItemInfo info : shipItemInfo.values()) {
+                taxAdjustments.addAll(info.itemTaxAdj);
+            }
+            Map<String, Object> taxByAuthority = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(taxAdjustments);
+            BigDecimal taxTotal = (BigDecimal) taxByAuthority.get("taxGrandTotal");
+            return taxTotal;
+            
         }
 
         public BigDecimal getTotal() {

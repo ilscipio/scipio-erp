@@ -51,9 +51,9 @@
             <link target="FinAccountMain" />
         </menu-item>
         <!-- TODO: Should be moved to a Settings Bar -->
-      <!--   <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
+        <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
             <link target="FindTaxAuthority" />
-        </menu-item> -->
+        </menu-item>
         <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
             <link target="FindAgreement" />
         </menu-item>
@@ -102,9 +102,9 @@
             <sub-menu name="FinAccount" include="FinAccountSideBar"/>
         </menu-item>
         <!-- TODO: Should be moved to a Settings Bar -->
-      <!--   <menu-item name="TaxAuthorities">
-            <sub-menu name="TaxAuthority" include="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthority"/>
-        </menu-item> -->
+        <menu-item name="TaxAuthorities">
+            <sub-menu name="TaxAuthority" include="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthoritySideBar"/>
+        </menu-item>
         <menu-item name="agreements">
             <sub-menu name="Agreement" include="AgreementSideBar"/>
         </menu-item>

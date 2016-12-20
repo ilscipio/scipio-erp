@@ -2794,3 +2794,30 @@ Returns the current global auto value configuration (settings and maps).
   <#return params>
 </#function>
 
+<#-- 
+*************
+* getAutoValueMap
+************
+Returns a field value autodetermining helper map.
+
+TODO: NOT IMPLEMENTED
+
+  * Parameters *
+    type                    = (standard|..., default: -from globals-, fallback default: standard) The value scheme type
+                              * {{{params}}}: looks for value in overrides map, then parameters map, then defaults map
+                              * {{{record}}}: looks for value in overrides map, then record map, then defaults map
+                              * {{{defaults-only}}}: looks for value in overrides map, then defaults map
+                              * {{{params-record}}}: looks for value in overrides map, then parameters map, then record, then defaults map.
+                                This may be
+                              * {{{params-or-record}}}: looks for value in overrides map, then EITHER parameters map OR record map, then defaults map
+                                At current time (2016-07-08), the selection of parameters or record map default behavior is based on whether an event
+                                error occurred ({{{isError}}} boolean context field).
+                              * {{{standard}}}: In scipio standard API, currently (2016-07-08), this is the same params-or-record, currently considered the standard behavior.
+   
+-->
+<#assign getAutoValueMap_defaultArgs = {
+  "type":""
+}>
+<#function getAutoValueMap args={}>
+  <#-- TODO: NOT IMPLEMENTED. through: com.ilscipio.scipio.ce.webapp.ftl.template.standard.FieldValueMap -->
+</#function>

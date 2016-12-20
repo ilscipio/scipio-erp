@@ -8276,6 +8276,18 @@
         <value xml:lang="zh">销售发票</value>
         <value xml:lang="zh_TW">銷售發票</value>
     </property>
+    <property key="AccountingSalesTaxIncluded">
+        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
+        <value xml:lang="en">All prices include Sales Tax</value>
+        <value xml:lang="en_GB">All prices include VAT</value>
+        <value xml:lang="fr">Dont TVA incluse </value>
+        <value xml:lang="it">Tasse di vendita incluse</value>
+        <value xml:lang="ja">消費税込</value>
+        <value xml:lang="pt_BR">Impostos de venda inclusos</value>
+        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
+        <value xml:lang="zh">已含营业税</value>
+        <value xml:lang="zh_TW">已包含營業稅</value>
+    </property>
     <property key="AccountingInvoiceSaveAsTemplate">
         <value xml:lang="cs">Uložit jako šablonu</value>
         <value xml:lang="en">Save Invoice As Template</value>
@@ -11549,7 +11561,7 @@
     <property key="AccountingPaymentInformation">
         <value xml:lang="ar">معلومات التسديد</value>
         <value xml:lang="cs">Informace o platbě</value>
-        <value xml:lang="de">Zahlungsinformation</value>
+        <value xml:lang="de">Zahlungsinfo</value>
         <value xml:lang="en">Payment Information</value>
         <value xml:lang="es">Información de pago</value>
         <value xml:lang="fr">Information sur le paiement</value>
@@ -14563,6 +14575,7 @@
     </property>
     <property key="AccountingTotalCapital">
         <value xml:lang="ar">المجموع</value>
+        <value xml:lang="de">SUMME</value>
         <value xml:lang="en">TOTAL</value>
         <value xml:lang="es">TOTAL</value>
         <value xml:lang="fr">TOTAL</value>
@@ -14666,6 +14679,7 @@
         <value xml:lang="zh_TW">期末現金餘額合計</value>
     </property>
     <property key="AccountingTotalExclTax">
+        <value xml:lang="de">Summe netto</value>
         <value xml:lang="en">Total excl. tax</value>
         <value xml:lang="fr">Total HT</value>
         <value xml:lang="hi_IN">टैक्स छोड़कर कुल</value>

@@ -347,7 +347,7 @@ under the License.
               <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
             </#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
-                <#if orderItemAdjustment.amountAlreadyIncluded?has_content><#-- TODO: Check for missing label. -->
+                <#if orderItemAdjustment.amountAlreadyIncluded?has_content && !orderItemAdjustment.exemptAmount?has_content><#-- TODO: Check for missing label. -->
                   : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded isoCode=currencyUomId/>
                 </#if>
             </#if>
@@ -422,11 +422,32 @@ under the License.
       <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
     </@tr>
 
-    <@tr class="summary-row">
-      <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
-      <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
-      <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
-    </@tr>
+    <#if orderTaxTotal?has_content && (orderTaxTotal > 0)>
+        <@tr class="summary-row">
+          <@td colspan="7">${uiLabelMap.OrderSalesTax}</@td>
+          <@td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></@td>
+          <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
+        </@tr>
+    </#if>
+    <#if orderVATTaxTotal?has_content && (orderVATTaxTotal > 0)>
+        <@tr>
+          <@td colspan="3"></@td>
+          <#if maySelect>
+            <@td colspan="${numColumns - 7}"></@td>
+            <@td><hr /></@td>
+            <@td colspan="3"></@td>
+          <#else>
+            <@td colspan="${numColumns - 5}"></@td>
+            <@td><hr /></@td>
+            <@td></@td>
+          </#if>
+        </@tr>
+        <@tr class="summary-row">
+          <@td colspan="7">${uiLabelMap.OrderSalesTaxIncluded}</@td>
+          <@td><@ofbizCurrency amount=orderVATTaxTotal isoCode=currencyUomId/></@td>
+          <#if maySelect><@td colspan="3"></@td><#else><@td></@td></#if>
+        </@tr>
+    </#if>
 
     <@tr>
       <@td colspan="3"></@td>

@@ -21,6 +21,7 @@ package org.ofbiz.accounting.invoice;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -678,6 +679,29 @@ public class InvoiceWorker {
                 }
             }
         }
+        // Add Vat included
+        try {
+            String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
+            List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
+                    .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
+            for (GenericValue orderAdjustment : orderAdjustments) {
+                String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
+                String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
+                if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
+                    if (!result.containsKey(taxAuthPartyId)) {
+                        Set<String> taxAuthGeos = FastSet.newInstance();
+                        taxAuthGeos.add(taxAuthGeoId);
+                        result.put(taxAuthPartyId, taxAuthGeos);
+                    } else {
+                        Set<String> taxAuthGeos = result.get(taxAuthPartyId);
+                        taxAuthGeos.add(taxAuthGeoId);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -701,6 +725,20 @@ public class InvoiceWorker {
             Debug.logError(e, "Trouble getting InvoiceItem list", module);
             return null;
         }
+        // Vat Included
+        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        try {
+            String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
+            List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
+                    .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX"
+                            , "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId)).queryList();
+            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);          
+        } catch (GenericEntityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+       //return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
        return getTaxTotalForInvoiceItems(invoiceTaxItems);
     }
 
@@ -747,5 +785,271 @@ public class InvoiceWorker {
             taxTotal = taxTotal.add(amount);
         }
         return taxTotal.setScale(decimals, rounding);
+    }
+    
+    /**
+     * Get the order id for a specific invoice
+     *
+     * @param delegator
+     * @param invoiceId
+     * @return
+     * @throws GenericEntityException
+     */
+    public static String getOrderIdByInvoiceId(Delegator delegator, String invoiceId) throws GenericEntityException {
+
+        GenericValue orderItemBilling = EntityQuery.use(delegator)
+            .from("OrderItemBilling")
+            .where("invoiceId", invoiceId)
+            .queryFirst();
+
+        if (UtilValidate.isEmpty(orderItemBilling)) {
+            Debug.logInfo("No OrderItemBilling for invoice [" + invoiceId + "]", module);
+
+            return null;
+        }
+
+        return orderItemBilling.getString("orderId");
+    }
+    /**
+     * Gets included tax amount out of Order Adjustments (either from TaxAuthority Services or OrderAdjustment)
+     *
+     * @param adjustments
+     * @return Tax Amount, Zero if there are no adjustments
+     * @throws GenericEntityException
+     */
+    public static BigDecimal getTaxAmountIncluded(List<GenericValue> adjustments) throws GenericEntityException {
+        BigDecimal taxAmountIncluded = BigDecimal.ZERO;
+        for (GenericValue adjustment : adjustments) {
+            BigDecimal amountAlreadyIncluded = adjustment.getBigDecimal("amountAlreadyIncluded");
+            taxAmountIncluded = taxAmountIncluded.add(amountAlreadyIncluded);
+            BigDecimal exemptAmount = adjustment.getBigDecimal("exemptAmount");
+            if (exemptAmount != null) {
+                taxAmountIncluded = taxAmountIncluded.subtract(exemptAmount);
+            }
+        }
+        return taxAmountIncluded.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+    /**
+     * Returns a List of the TaxAuthority RateProducts for the given Invoice.
+     * @param invoice GenericValue object representing the Invoice
+     * @return A Map containing the each taxAuthRateProduct as a key and a Set of ... (was: taxAuthGeoIds for that taxAuthPartyId as the values.  Note this method
+     *         will not account for tax lines that do not contain a taxAuthPartyId)
+     */
+    public static Map<String, String> getInvoiceTaxRateProducts(GenericValue invoice) {
+        Map<String, String> result = FastMap.newInstance();
+
+        if (invoice == null)
+            throw new IllegalArgumentException("Invoice cannot be null.");
+        Delegator delegator = invoice.getDelegator();
+        List<GenericValue> invoiceTaxItems = null;
+        try {
+            EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(
+                    UtilMisc.toList(
+                            EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                            EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,
+                                    InvoiceWorker.getTaxableInvoiceItemTypeIds(delegator))), EntityOperator.AND);
+            invoiceTaxItems = delegator.findList("InvoiceItem", condition, null, null, null, false);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting InvoiceItem list", module);
+            return null;
+        }
+        try {
+            if (invoiceTaxItems != null) {
+                for (GenericValue invoiceItem : invoiceTaxItems) {
+                    String taxAuthorityRateSeqId = invoiceItem.getString("taxAuthorityRateSeqId");
+                    if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
+                        if (!result.containsKey(taxAuthorityRateSeqId)) {
+                            String taxGlAccountId = null;
+                            GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
+                            if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                                taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
+                            }
+                            if (taxGlAccountId == null) {
+                                // if there is no TaxAuthorityRateProduct then try with TaxAuthorityGlAccount
+                                String organizationPartyId = invoice.getString("partyId");
+                                String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
+                                String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
+                                GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                        "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                                if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
+                                    taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
+                                }
+                                // } else {
+                                // taxAuthGeos.add(taxAuthGeoId);
+                            }
+                            if (taxGlAccountId != null) {
+                                result.put(taxAuthorityRateSeqId, taxGlAccountId);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Trouble getting TaxAuthorityRateProduct/TaxAuthorityGlAccount for InvoiceItem: " + e, module);
+            return null;
+        }
+        // Vat Included
+        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        try {
+            String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
+            List<GenericValue> orderAdjustments = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
+                    .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
+            taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            for (GenericValue orderAdjustment : orderAdjustments) {
+                String taxAuthorityRateSeqId = orderAdjustment.getString("taxAuthorityRateSeqId");
+                if (UtilValidate.isNotEmpty(taxAuthorityRateSeqId)) {
+                    if (!result.containsKey(taxAuthorityRateSeqId)) {
+                        String taxGlAccountId = null;
+                        GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
+                        if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                            taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
+                        }
+                        if (taxGlAccountId == null) {
+                            // if there is no TaxAuthorityRateProduct then try with TaxAuthorityGlAccount
+                            String organizationPartyId = invoice.getString("partyId");
+                            String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
+                            String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
+                            GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                    "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                            if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
+                                taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
+                            }
+                        }
+                        if (taxGlAccountId != null) {
+                            result.put(taxAuthorityRateSeqId, taxGlAccountId);
+                        }
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
+        return result;
+    }
+
+    /**
+     * @param invoice GenericValue object representing the invoice
+     * @param taxAuthPartyId
+     * @param taxAuthGeoId
+     * @return The invoice tax total for a given tax authority and geo location
+     */
+    public static BigDecimal getInvoiceTaxTotalForTaxGlAccount(GenericValue invoice, String glAccountId) {
+        List<GenericValue> invoiceTaxItems = null;
+        try {
+            Delegator delegator = invoice.getDelegator();
+            EntityConditionList<EntityExpr> condition = EntityCondition.makeCondition(
+                    UtilMisc.toList(
+                        EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId")),
+                        EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,
+                                InvoiceWorker.getTaxableInvoiceItemTypeIds(delegator))), EntityOperator.AND);
+            invoiceTaxItems = delegator.findList("InvoiceItem", condition, null, null, null, false);
+            for (GenericValue invoiceItem : invoiceTaxItems) {
+                String taxGlAccountId = null;
+                // TODO: getTaxGlAccountForInvoiceItem(invoiceTaxItem);
+                GenericValue taxAuthorityRateProduct = invoiceItem.getRelatedOneCache("TaxAuthorityRateProduct");
+                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                    taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
+                }
+                if (taxGlAccountId == null) {
+                    // if there is no TaxAuthorityRateProduct then try with TaxAuthorityGlAccount
+                    String organizationPartyId = invoice.getString("partyId");
+                    String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
+                    String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
+                    GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
+                        taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
+                    }
+                }
+                if (taxGlAccountId != null && !taxGlAccountId.equals(glAccountId)) {
+                    invoiceTaxItems.remove(invoiceItem);
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting InvoiceItem list", module);
+            return null;
+        }
+        // Vat Included
+        BigDecimal taxAlreadyIncluded = BigDecimal.ZERO;
+        List<GenericValue> orderAdjustmentsTaxItems ;
+        List<GenericValue> orderAdjustmentsTaxItemsToProcess ;
+        try {
+            String orderId = getOrderIdByInvoiceId(invoice.getDelegator(), invoice.getString("invoiceId"));
+            orderAdjustmentsTaxItems = EntityQuery.use(invoice.getDelegator()).from("OrderAdjustment")
+                    .where(UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "VAT_TAX")).queryList();
+            //taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);
+            orderAdjustmentsTaxItemsToProcess = new ArrayList(orderAdjustmentsTaxItems);
+            for (GenericValue orderAdjustment : orderAdjustmentsTaxItems) {
+                String taxGlAccountId = null;
+                // TODO: getTaxGlAccountForInvoiceItem(orderAdjustment);
+                GenericValue taxAuthorityRateProduct = orderAdjustment.getRelatedOneCache("TaxAuthorityRateProduct");
+                if (UtilValidate.isNotEmpty(taxAuthorityRateProduct)) {
+                    taxGlAccountId = taxAuthorityRateProduct.getString("taxGlAccountId");
+                }
+                if (taxGlAccountId == null) {
+                    // if there is no TaxAuthorityRateProduct then try with TaxAuthorityGlAccount
+                    String organizationPartyId = invoice.getString("partyId");
+                    String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
+                    String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
+                    GenericValue taxAuthorityGlAccount = invoice.getDelegator().findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
+                        taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
+                    }
+                }
+                if (taxGlAccountId != null && !taxGlAccountId.equals(glAccountId)) {
+                    orderAdjustmentsTaxItemsToProcess.remove(orderAdjustment);
+                }
+            }
+            taxAlreadyIncluded = taxAlreadyIncluded.add(getTaxAmountIncluded(orderAdjustmentsTaxItemsToProcess));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error while getting", module);
+        }      
+        BigDecimal taxForInvoiceItems = InvoiceWorker.getTaxTotalForInvoiceItems(invoiceTaxItems);
+        BigDecimal taxTotal = taxForInvoiceItems.add(taxAlreadyIncluded);
+       return taxTotal;
+    }
+
+    /**
+     * Method to return the amount of tax included of an invoiceItem
+     *
+     * @param invoiceItem GenericValue object of the invoice item
+     * @return tax amount included as BigDecimal
+     * @throws GenericEntityException
+     */
+    public static BigDecimal getInvoiceItemTaxIncluded(GenericValue invoiceItem) throws GenericEntityException {
+        BigDecimal taxIncluded = null;
+        if (UtilValidate.isNotEmpty(invoiceItem)) {
+            taxIncluded = BigDecimal.ZERO;
+            List<GenericValue> orderItemBillings = invoiceItem.getRelated("OrderItemBilling", null, null, false);
+            for (GenericValue orderItemBilling : orderItemBillings) {
+                GenericValue orderItem = orderItemBilling.getRelatedOne("OrderItem", true);
+                taxIncluded = getOrderItemTaxIncluded(orderItem);
+            }
+        }
+        return taxIncluded;
+    }
+
+    /**
+     * Method to return the amount of tax included of an orderItem
+     * 
+     * @param orderItem
+     *            GenericValue object of the order item
+     * @return tax amount included as BigDecimal
+     * @throws GenericEntityException
+     */
+    public static BigDecimal getOrderItemTaxIncluded(GenericValue orderItem)
+            throws GenericEntityException {
+        BigDecimal taxIncluded = null;
+        if (UtilValidate.isNotEmpty(orderItem)) {
+            taxIncluded = BigDecimal.ZERO;
+            List<GenericValue> orderAdjustments = orderItem.getRelated(
+                    "OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "VAT_TAX"), null,
+                    true);
+            taxIncluded = getTaxAmountIncluded(orderAdjustments);
+        }
+        return taxIncluded;
     }
 }

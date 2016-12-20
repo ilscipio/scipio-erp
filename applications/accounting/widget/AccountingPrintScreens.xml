@@ -34,6 +34,7 @@ under the License.
                 <set field="titleProperty" value="AccountingInvoice"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/EditInvoice.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetMyCompany.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/order/CompanyHeader.groovy"/>
             </actions>
             <widgets>
                 <section>
@@ -51,19 +52,24 @@ under the License.
                     <widgets>
                         <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="topLeft">
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                                <platform-specific>
+                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportContactMechs.fo.ftl"/></xsl-fo>
+                                </platform-specific>
                             </decorator-section>
                             <decorator-section name="topRight">
+                               <include-screen name="CompanyLogo" location="component://accounting/widget/AccountingPrintScreens.xml"/>
                                <platform-specific>
                                     <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportHeaderInfo.fo.ftl"/></xsl-fo>
                                 </platform-specific>
                             </decorator-section>
                             <decorator-section name="body">
                                <platform-specific>
-                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportContactMechs.fo.ftl"/></xsl-fo>
-                              </platform-specific>
-                               <platform-specific>
                                    <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceReportItems.fo.ftl"/></xsl-fo>
+                               </platform-specific>
+                            </decorator-section>
+                            <decorator-section name="footer">
+                               <platform-specific>
+                                   <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/pdf/ScipioInvoiceFooter.fo.ftl"/></xsl-fo>
                                </platform-specific>
                             </decorator-section>
                         </decorator-screen>
@@ -114,6 +120,15 @@ under the License.
                <platform-specific>
                     <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PrintInvoices.fo.ftl"/></xsl-fo>
                 </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Moved from OrderPrintScreens.xml -->
+    <screen name="CompanyLogo">
+        <section>
+            <widgets>
+                <platform-specific><xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/pdf/ScipioCompanyHeader.fo.ftl"/></xsl-fo></platform-specific>
             </widgets>
         </section>
     </screen>

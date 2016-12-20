@@ -199,6 +199,10 @@ if (orderHeader) {
 
     context.orderShippingTotal = orderShippingTotal;
     context.orderTaxTotal = orderTaxTotal;
+    
+    orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
+    context.orderVATTaxTotal = orderVATTaxTotal;
+    
     context.orderGrandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     context.placingCustomerPerson = placingCustomerPerson;
 

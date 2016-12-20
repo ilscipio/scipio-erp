@@ -82,8 +82,8 @@ under the License.
         <@field type="select" label="${rawLabel('PartyPublic')}?" name="isPublic" disabled=isAutoSave>
               <option>${shoppingList.isPublic}</option>
               <option value="${shoppingList.isPublic}">--</option>
-              <option>${uiLabelMap.CommonYes}</option>
-              <option>${uiLabelMap.CommonNo}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
         </@field>
         <@field type="generic" label=uiLabelMap.PartyParentList>
             <@field type="select" name="parentShoppingListId" disabled=isAutoSave>

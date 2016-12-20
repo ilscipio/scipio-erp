@@ -112,6 +112,7 @@ orh = new OrderReadHelper(orderAdjustments, orderItems);
 context.localOrderReadHelper = orh;
 context.orderShippingTotal = cart.getTotalShipping();
 context.orderTaxTotal = cart.getTotalSalesTax();
+context.orderVATTaxTotal = cart.getTotalVATTax();
 context.orderGrandTotal = cart.getGrandTotal();
 
 // nuke the event messages

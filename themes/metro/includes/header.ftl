@@ -143,7 +143,9 @@ under the License.
     <#--<#if applicationMenuLocation?has_content && applicationMenuName?has_content>
         <@render type="menu" name=applicationMenuName resource=applicationMenuLocation />
     </#if>-->
+  <#if sections??>
     ${sections.render("left-column")}
+  </#if>
 </#macro>
 
 <#-- Macro for rendering your company logo. Uses a smaller version of your logo if isSmall=true. -->

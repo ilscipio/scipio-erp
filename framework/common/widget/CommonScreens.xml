@@ -82,7 +82,6 @@ under the License.
                  Can be forced to put some theme scripts here if apps depend heavily on them -->
             
             <!-- Legacy jQuery; TODO: Remove once possible -->
-            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
             

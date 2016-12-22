@@ -1057,6 +1057,7 @@ context.styles = [
     "field_textarea_default" : "",
     "field_datetime_default" : "",
     "field_datefind_default" : "",
+    "field_datefind_select_default" : "",
     "field_select_default" : "",
     "field_lookup_default" : "",
     "field_file_default" : "",
@@ -1064,7 +1065,9 @@ context.styles = [
     "field_reset_default" : "",
     "field_submit_default" : "",
     "field_textfind_default" : "",
+    "field_textfind_select_default" : "",
     "field_rangefind_default" : "",
+    "field_rangefind_select_default" : "",
     "field_display_default" : "",
     "field_generic_default" : "",
     

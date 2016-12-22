@@ -331,7 +331,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </div>
   <#if postfix>
     <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
-      <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
+      <span class="${styles.postfix!}"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
     </div>
   </#if>
   </div>
@@ -468,6 +468,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
     title="" tooltip="" inlineLabel=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_datefind_default!"")>
+  <#local selectClass = styles.field_datefind_select_default!"">
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
@@ -494,10 +495,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
-      <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
+      <span class="${styles.postfix!}"><i class="${styles.icon} !${styles.icon_calendar}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-      <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#-- class="selectBox"-->>
+      <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#if selectClass?has_content> class="${selectClass}"</#if><#-- class="selectBox"-->>
         <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
         <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapeVal(opSameDay, 'htmlmarkup')}</option>
         <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${escapeVal(opGreaterThanFromDayStart, 'htmlmarkup')}</option>
@@ -1515,6 +1516,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#local class = addClassArg(class, styles.field_textfind_default!"")>
+  <#local selectClass = styles.field_textfind_select_default!"">
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textfind_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1560,7 +1562,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if !hideOptions>
           <#local newName = name/>
           <@cell class=class1>
-            <select<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if><#-- class="selectBox"-->>
+            <select<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->>
               <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
               <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${escapeVal(opContains, 'htmlmarkup')}</option>
               <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${escapeVal(opIsEmpty, 'htmlmarkup')}</option>
@@ -1641,6 +1643,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#local class = addClassArg(class, styles.field_rangefind_default!"")>
+  <#local selectClass = styles.field_rangefind_select_default!"">
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_rangefind_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1660,7 +1663,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#if titleClass?has_content>
         <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld0_op"</#if>><#-- class="selectBox"-->
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld0_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->
         <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
         <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${escapeVal(opGreaterThan, 'htmlmarkup')}</option>
         <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${escapeVal(opGreaterThanEquals, 'htmlmarkup')}</option>
@@ -1682,7 +1685,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#if titleClass?has_content>
         <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld1_op"</#if>><#-- class="selectBox"-->
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld1_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->
         <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${escapeVal(opLessThan, 'htmlmarkup')}</option>
         <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${escapeVal(opLessThanEquals, 'htmlmarkup')}</option>
       </select>

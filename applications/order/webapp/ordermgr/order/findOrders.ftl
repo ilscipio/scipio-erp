@@ -390,8 +390,8 @@ document.lookuporder.orderId.focus();
       <#macro massOrderChangeButton id="1">  
           <@row>
             <@cell>
-                <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.button_color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
-                <ul id="drop${id!"1"}" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+                <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" data-toggle="dropdown" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.button_color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
+                <ul id="drop${id!"1"}" data-dropdown-content class="${styles.menu_button_dropdown!}" aria-hidden="true" tabindex="-1">
                    <li><a href="javascript:submitFindForm('<@ofbizUrl>massApproveOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderApproveOrder}</a></li>
                    <li><a href="javascript:submitFindForm('<@ofbizUrl>massHoldOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderHold}</a></li>
                    <li><a href="javascript:submitFindForm('<@ofbizUrl>massProcessOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderProcessOrder}</a></li>

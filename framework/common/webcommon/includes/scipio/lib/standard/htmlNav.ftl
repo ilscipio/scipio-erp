@@ -564,7 +564,7 @@ The submenu's main class may be set as altnested in global styles.
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
         <#if navigation?has_content><h2>${escapeVal(navigation, 'htmlmarkup')}</h2></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
+      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown"aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>

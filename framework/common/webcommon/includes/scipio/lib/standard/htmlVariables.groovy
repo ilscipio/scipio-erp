@@ -1052,6 +1052,22 @@ context.styles = [
     "fields_wrap" : "collapse",
     "fields_label" : "prefix",
     
+    /* generic field styles*/
+    "field_input_default" : "",
+    "field_textarea_default" : "",
+    "field_datetime_default" : "",
+    "field_datefind_default" : "",
+    "field_select_default" : "",
+    "field_lookup_default" : "",
+    "field_file_default" : "",
+    "field_password_default" : "",
+    "field_reset_default" : "",
+    "field_submit_default" : "",
+    "field_textfind_default" : "",
+    "field_rangeind_default" : "",
+    "field_display_default" : "",
+    "field_generic_default" : "",
+    
     /* checkbox type styles */
     "field_checkbox_default" : "switch small checkbox-type-switch",         /* default checkbox styles */
     "field_checkbox_default_type" : "checkbox-type-switch",                 /* normally already included in previous, but can reference individually with this */

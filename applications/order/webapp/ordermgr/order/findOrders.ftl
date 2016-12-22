@@ -390,19 +390,19 @@ document.lookuporder.orderId.focus();
       <#macro massOrderChangeButton id="1">  
           <@row>
             <@cell>
-                <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.button_color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
-                <ul id="drop${id!"1"}" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massApproveOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderApproveOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massHoldOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderHold}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massProcessOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderProcessOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderCancelOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderCancelRemainingPOItems}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massRejectOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderRejectOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPickOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderPickOrders}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massQuickShipOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.OrderQuickShipEntireOrder}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massPrintOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.CommonPrint}</a></li>
-                   <li><a href="javascript:submitFindForm('<@ofbizUrl>massCreateFileForOrders?${massParamListJsHtml}</@ofbizUrl>')">${uiLabelMap.ContentCreateFile}</a></li>
-                </ul>
+                <@menu type="button-dropdown" title=uiLabelMap.OrderRunAction!"">
+                  <@menuitem type="link" text=uiLabelMap.OrderApproveOrder onClick="submitFindForm('"+makeOfbizUrl('massApproveOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderHold onClick="submitFindForm('"+makeOfbizUrl('massHoldOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderProcessOrder onClick="submitFindForm('"+makeOfbizUrl('massProcessOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderCancelOrder onClick="submitFindForm('"+makeOfbizUrl('massCancelOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderCancelRemainingPOItems onClick="submitFindForm('"+makeOfbizUrl('massCancelRemainingPurchaseOrderItems?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderRejectOrder onClick="submitFindForm('"+makeOfbizUrl('massRejectOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderPickOrders onClick="submitFindForm('"+makeOfbizUrl('massPickOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.OrderQuickShipEntireOrder onClick="submitFindForm('"+makeOfbizUrl('massQuickShipOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.CommonPrint onClick="submitFindForm('"+makeOfbizUrl('massPrintOrders?${massParamListJsHtml}')+"')"/>
+                  <@menuitem type="link" text=uiLabelMap.ContentCreateFile onClick="submitFindForm('"+makeOfbizUrl('massCreateFileForOrders?${massParamListJsHtml}')+"')"/>
+                </@menu>
+
             </@cell>  
           </@row>
       </#macro>

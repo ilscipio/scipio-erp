@@ -86,6 +86,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     mask=false clientAutocomplete=true placeholder="" tooltip="" title="" collapse=false readonly=false required=false fieldTitleBlank=false inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_input_default!"")>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -147,6 +148,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" maxlength="" 
     required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_textarea_default!"")>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textarea_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -230,6 +232,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
+    <#local class = addClassArg(class, styles.field_datetime_default!"")>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
@@ -328,7 +331,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </div>
   <#if postfix>
     <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
-      <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
+      <span class="${styles.postfix!}"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
     </div>
   </#if>
   </div>
@@ -464,6 +467,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
     title="" tooltip="" inlineLabel=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.field_datefind_default!"")>
+  <#local selectClass = styles.field_datefind_select_default!"">
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
   <#local displayInputId = "">
@@ -490,10 +495,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
-      <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
+      <span class="${styles.postfix!}"><i class="${styles.icon} ${styles.icon_calendar}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-      <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#-- class="selectBox"-->>
+      <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#if selectClass?has_content> class="${selectClass}"</#if><#-- class="selectBox"-->>
         <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
         <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapeVal(opSameDay, 'htmlmarkup')}</option>
         <option value="greaterThanFromDayStart"<#if defaultOptionFrom == "greaterThanFromDayStart"> selected="selected"</#if>>${escapeVal(opGreaterThanFromDayStart, 'htmlmarkup')}</option>
@@ -580,6 +585,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false inlineSelected=true disabled=false asmSelectArgs={} inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_select_default!"")>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_select_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -712,6 +718,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#--<#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>-->
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_lookup_default!"")>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1225,6 +1232,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- field markup - theme override -->
 <#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.field_file_default!"")>
   <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#rt/>
     <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#t/>
     <#if required> required="required"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#t/>
@@ -1247,6 +1255,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#macro field_password_markup_widget class="" alert="" style="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false 
     tooltip="" inlineLabel=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_password_default!"")>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_password_tooltip!styles.field_default_tooltip!"")>
     <#local attribs = attribs + styles.field_password_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
@@ -1276,6 +1285,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- field markup - theme override -->
 <#macro field_reset_markup_widget class="" alert="" name="" id="" style="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.field_reset_default!"")>
   <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${escapeVal(name, 'html')}"<#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>/>
 </#macro>
 
@@ -1327,7 +1337,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" events={} imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false 
     progressArgs={} id="" inlineLabel=false style="" noButtonMarkup=false origArgs={} passArgs={} catchArgs...>
-
+  <#local class = addClassArg(class, styles.field_submit_default!"")>
   <#if noButtonMarkup>
     <#local buttonMarkup = "">
   <#else>
@@ -1505,6 +1515,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     hideIgnoreCase="" ignoreCase=false ignoreCaseMsg="" title="" tooltip="" fieldTitleBlank=false hideOptions=false inlineLabel=false 
     origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_textfind_default!"")>
+  <#local selectClass = styles.field_textfind_select_default!"">
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_textfind_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1550,7 +1562,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if !hideOptions>
           <#local newName = name/>
           <@cell class=class1>
-            <select<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if><#-- class="selectBox"-->>
+            <select<#if name?has_content> name="${escapeVal(name, 'html')}_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->>
               <option value="equals"<#if defaultOption == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
               <option value="contains"<#if defaultOption == "contains"> selected="selected"</#if>>${escapeVal(opContains, 'htmlmarkup')}</option>
               <option value="empty"<#if defaultOption == "empty"> selected="selected"</#if>>${escapeVal(opIsEmpty, 'htmlmarkup')}</option>
@@ -1630,6 +1642,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" opIsEmpty="" value2="" 
     defaultOptionThru="" title="" tooltip="" inlineLabel=false origLabel="" collapse=false required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_rangefind_default!"")>
+  <#local selectClass = styles.field_rangefind_select_default!"">
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_rangefind_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1649,7 +1663,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#if titleClass?has_content>
         <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld0_op"</#if>><#-- class="selectBox"-->
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld0_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->
         <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
         <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${escapeVal(opGreaterThan, 'htmlmarkup')}</option>
         <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${escapeVal(opGreaterThanEquals, 'htmlmarkup')}</option>
@@ -1671,7 +1685,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#if titleClass?has_content>
         <span class="${escapeVal(titleClass, 'html')}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld1_op"</#if>><#-- class="selectBox"-->
+      <select<#if name?has_content> name="${escapeVal(name, 'html')}_fld1_op"</#if><#if selectClass?has_content> class="${selectClass}"</#if>><#-- class="selectBox"-->
         <option value="lessThan"<#if defaultOptionThru == "lessThan"> selected="selected"</#if>>${escapeVal(opLessThan, 'htmlmarkup')}</option>
         <option value="lessThanEqualTo"<#if defaultOptionThru == "lessThanEqualTo"> selected="selected"</#if>>${escapeVal(opLessThanEquals, 'htmlmarkup')}</option>
       </select>
@@ -1752,6 +1766,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#macro field_display_markup_widget type="" imageLocation="" idName="" id="" description="" value="" nestedContent="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false formatText=true required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_display_default!"")>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_display_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
@@ -1818,6 +1833,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_generic_default!"")>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>

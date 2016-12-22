@@ -2185,7 +2185,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     preWidgetContent=false postWidgetContent=false preLabelContent=false postLabelContent=false prePostfixContent=false postPostfixContent=false
     labelAreaContentArgs={} postfixContentArgs={} prePostContentArgs={}
     widgetAreaClass="" labelAreaClass="" postfixAreaClass="" widgetPostfixAreaClass="" inverted=false labelSmallDiffColumns=""
-    origArgs={} passArgs={} required=false catchArgs...>
+    origArgs={} passArgs={} required=false noLabelCell=false noInputCell=false catchArgs...>
   <#local rowClass = containerClass>
 
   <#local labelInRow = (labelType != "vertical")>
@@ -2220,7 +2220,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <@row class=compileClassArg(rowClass) collapse=collapse!false norows=(norows || !container) id=containerId style=containerStyle>
     <#if labelType == "vertical">
       <@cell>
-        <#if labelArea && labelPosition == "top">
+        <#if labelArea && labelPosition == "top" || labelArea && labelPosition == "left">
           <@row collapse=collapse norows=(norows || !container)>
             <#if inverted>
               <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-top")>
@@ -2241,49 +2241,60 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           </@row>
         </#if>
           <@row collapse=(collapse || (postfix && collapsePostfix)) norows=(norows || !container)>
-            <@cell class=compileClassArg(inverted?string(labelAreaClass, widgetAreaClass), defaultGridStyles.widgetArea) nocells=(nocells || !container)>
-              <#if inverted>
-                <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-                <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
-                <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
-              <#else>
-                <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
-                <#nested>
-                <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
-              </#if>
-            </@cell>
-            <#if postfix && !nocells && container>
+            <#if inverted>
+                <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noLabelCell)>
+                    <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+                    <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+                    <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+                </@cell>
+            <#else>
+                <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noInputCell)>                
+                    <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+                    <#nested>
+                    <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+                </@cell>
+            </#if>
+            <#if postfix>
+              <#if !nocells && container>
               <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
                 <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
                 <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
-                  <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                  <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
                 <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
                   <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
                 </#if>
                 <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
               </@cell>
+              <#else>
+                <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
+                <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
+                  <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
+                  <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
+                </#if>
+                <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
+              </#if>
             </#if>
           </@row>
       </@cell>
     <#else> <#-- elseif labelType == "horizontal" -->
       <#-- TODO: support more label configurations (besides horizontal left) -->
-      <#if labelArea && labelPosition == "left">
+      <#if labelArea && labelPosition == "left" || labelArea && labelPosition == "top">
         <#if inverted>
           <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-left")>
-        <#else>
-          <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
-        </#if>
-        <@cell class=compileClassArg(inverted?string(widgetAreaClass, labelAreaClass), defaultGridStyles.labelArea) nocells=(nocells || !container)>
-          <#if inverted>
+          <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noInputCell)>
             <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
             <#nested>
             <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
-          <#else>
+          </@cell>
+        <#else>
+          <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
+          <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container || noLabelCell)>
             <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
             <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
             <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
-          </#if>
-        </@cell>
+          </@cell>
+        </#if>
       </#if>
 
       <#-- need this surrounding cell/row for collapsePostfix (only if true and collapse false) -->
@@ -2292,27 +2303,39 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#-- NOTE: here this is the same as doing 
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->
-          <@cell class=compileClassArg(inverted?string(labelAreaClass, widgetAreaClass), defaultGridStyles.widgetArea) nocells=(nocells || !container)>
             <#if inverted>
-              <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
-              <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
-              <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+              <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container || noLabelCell)>
+                <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
+                <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
+                <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>
+              </@cell>
             <#else>
-              <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
-              <#nested>
-              <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+              <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noInputCell)>          
+                <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
+                <#nested>
+                <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
+              </@cell>
             </#if>
-          </@cell>
-          <#if postfix && !nocells && container>
-            <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
+          <#if postfix>
+            <#if !nocells && container>
+              <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
+                <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
+                <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
+                  <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
+                  <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
+                </#if>
+                <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
+              </@cell>
+            <#else>
               <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
               <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
-                <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
               <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
                 <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
               </#if>
               <#if !postPostfixContent?is_boolean><@contentArgRender content=postPostfixContent args=prePostContentArgs /></#if>
-            </@cell>
+            </#if>
           </#if>
         </@row>
       </@cell>

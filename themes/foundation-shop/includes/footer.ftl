@@ -71,7 +71,7 @@ under the License.
     <@row>
         <@cell columns=12>
          <small>
-         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="https://www.scipio-erp.com" target="_blank">SCIPIO ERP</a> &amp; <a href="http://ofbiz.apache.org/" target=_blank>OFBiz</a>.
+         ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.scipioerp.com" target="_blank">SCIPIO ERP</a>.
          View <a href="<@ofbizUrl>license</@ofbizUrl>">LICENSE</a>.
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>

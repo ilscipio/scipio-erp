@@ -495,7 +495,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
     </div>
     <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
-      <span class="${styles.postfix!}"><i class="${styles.icon} !${styles.icon_calendar}"></i></span>
+      <span class="${styles.postfix!}"><i class="${styles.icon} ${styles.icon_calendar}"></i></span>
     </div>
     <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
       <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#if selectClass?has_content> class="${selectClass}"</#if><#-- class="selectBox"-->>

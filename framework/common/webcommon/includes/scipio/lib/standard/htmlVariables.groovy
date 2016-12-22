@@ -1053,6 +1053,7 @@ context.styles = [
     "fields_label" : "prefix",
     
     /* generic field styles*/
+    "field_input_container_default" : "", 
     "field_input_default" : "",
     "field_textarea_default" : "",
     "field_datetime_default" : "",

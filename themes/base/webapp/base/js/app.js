@@ -38,15 +38,16 @@ function collapseFieldset(){
 
 
 $(function(){
-    $(document).foundation();
-    scipioObjectFit();
-    collapseFieldset();
-    $('.ui-autocomplete').addClass('f-dropdown');
-    
-    if (typeof Pizza !== 'undefined') {
-        Pizza.init(); // Create charts
-    }
-    
+	if (typeof $(document).foundation() !== 'undefined'){
+	    $(document).foundation();
+	    scipioObjectFit();
+	    collapseFieldset();
+	    $('.ui-autocomplete').addClass('f-dropdown');
+	    
+	    if (typeof Pizza !== 'undefined') {
+	        Pizza.init(); // Create charts
+	    }
+	}
 
     //jQuery validate specific options
     $.validator.setDefaults({

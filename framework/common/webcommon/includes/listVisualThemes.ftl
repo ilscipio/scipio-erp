@@ -51,7 +51,14 @@ margin: 1em;
   
   <#if visualThemes?has_content>
     <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("visualThemeId")/>
-    <table cellspacing="0" class="basic-table">
+    <table cellspacing="0" class="basic-table" width="100%">
+      <thead>
+        <@tr>
+            <@th></@th>
+            <@th ></@th>
+            <@th width="150px"></@th>
+        </@tr>
+      </thead>
       <#list visualThemes as visualTheme>
         <#assign screenshots = delegator.findByAnd("VisualThemeResource", {"visualThemeId":"${visualTheme.visualThemeId}", "resourceTypeEnumId":"VT_SCREENSHOT"}, orderByList, false)>
         <tr<#if visualTheme.visualThemeId == visualThemeId> class="${styles.selected!}"</#if>>

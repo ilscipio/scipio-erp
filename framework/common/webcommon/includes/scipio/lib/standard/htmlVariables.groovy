@@ -729,6 +729,7 @@ context.styles = [
     "elem_color_error" : "colored-elem alert",
     
   /* Grid */
+    "grid_section" : "",
     "grid_row" : "row",
     "grid_cell" : "columns",
     "grid_cell_default" : "large-12",

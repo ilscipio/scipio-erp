@@ -385,7 +385,7 @@ Only those not marked DEPRECATED should still be used.
     <#elseif styleSet.contains("menu-button-dropdown")>
       <#local remStyle = removeStyleNames(style, "menu-button-dropdown")>
       <#local classes = joinStyleNames(styles.menu_button_dropdown!, remStyle)>
-      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" data-toggle="dropdown" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
       <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     <#elseif styleSet.contains("menu-tab")>    
       <#local remStyle = removeStyleNames(style, "menu-tab")>

@@ -1239,6 +1239,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     origArgs={} passArgs={} catchArgs...>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "section-screenlet")>
+    <#local containerClass = addClassArg(containerClass, styles.grid_section!"")>
     <#local containerClass = addClassArg(containerClass, contentFlagClasses)>
     <#if collapsed>
       <#local containerClass = addClassArg(containerClass, "toggleField")>

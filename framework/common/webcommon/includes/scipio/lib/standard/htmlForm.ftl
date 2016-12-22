@@ -2220,7 +2220,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <@row class=compileClassArg(rowClass) collapse=collapse!false norows=(norows || !container) id=containerId style=containerStyle>
     <#if labelType == "vertical">
       <@cell>
-        <#if labelArea && labelPosition == "top">
+        <#if labelArea && labelPosition == "top" || labelArea && labelPosition == "left">
           <@row collapse=collapse norows=(norows || !container)>
             <#if inverted>
               <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-top")>
@@ -2279,7 +2279,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       </@cell>
     <#else> <#-- elseif labelType == "horizontal" -->
       <#-- TODO: support more label configurations (besides horizontal left) -->
-      <#if labelArea && labelPosition == "left">
+      <#if labelArea && labelPosition == "left" || labelArea && labelPosition == "top">
         <#if inverted>
           <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-left")>
           <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noInputCell)>

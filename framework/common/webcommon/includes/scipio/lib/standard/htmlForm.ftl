@@ -2258,7 +2258,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
               <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
                 <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
                 <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
-                  <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                  <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
                 <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
                   <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
                 </#if>
@@ -2312,7 +2312,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
             <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
               <#if !prePostfixContent?is_boolean><@contentArgRender content=prePostfixContent args=prePostContentArgs /></#if>
               <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
-                <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                <span class="${styles.postfix!}"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
               <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
                 <#if !postfixContent?is_boolean><@contentArgRender content=postfixContent args=postfixContentArgs /></#if>
               </#if>

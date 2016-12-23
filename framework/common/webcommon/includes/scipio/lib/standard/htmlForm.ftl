@@ -2049,15 +2049,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#if description?is_boolean>
             <#local description = "">
           </#if>
-          <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
+          <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly, "disabled":disabled}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
-                readonly=readonly required=required passArgs=passArgs/>
+                readonly=readonly disabled=disabled required=required passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
             value=value altValue=altValue useHidden=useHidden
-            readonly=readonly required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
@@ -2081,15 +2081,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#if description?is_boolean>
             <#local description = "">
           </#if>
-          <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly}]/>
+          <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly, "disabled":disabled}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">

@@ -29,7 +29,7 @@ under the License.
         </@section>
         <@script>
             jQuery(document).ready(function() {
-                $('body').on('click','#inventoryItemDetail input[type=submit].${styles.icon_button}', function(e) {
+                $('body').on('click','#inventoryItemDetail input[type=submit].fi-widget', function(e) {
                     e.preventDefault();
                     submitInventoryItemId();
                 });                    

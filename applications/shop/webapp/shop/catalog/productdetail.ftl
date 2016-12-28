@@ -297,7 +297,7 @@
                 -->
                 
                 <#-- European VAT support (VAT included) -->
-                <#if productStore?has_content && productStore.showPricesWithVatTax?has_content && productStore.showPricesWithVatTax =="Y">
+                <#if productStore?has_content && productStore.showPricesWithVatTax =="Y">
                     <p><small>* ${getLabel("OrderSalesTaxIncluded")}</small></p>
                 </#if>
 

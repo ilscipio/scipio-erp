@@ -207,14 +207,23 @@ under the License.
         </actions>
     </screen>
 
+    <screen name="AllGlobalActions">
+        <actions>
+            <include-screen-actions name="GlobalActions" />
+            <include-screen-actions name="GlobalTemplateActions" />
+        </actions>
+    </screen>
+
     <!-- Global decorator for General Screens/Pages
          Supported sections: body, pre-body, menu-bar, left-column, right-column
          Supported section flags (boolean, true default): showLeftColumn, showRightColumn, showPreBody -->
     <screen name="GlobalDecorator">
         <section>
+            <actions>
+                <include-screen-actions name="GlobalActions" />
+                <include-screen-actions name="GlobalTemplateActions" />
+            </actions>
             <widgets>
-                <include-screen name="GlobalActions" share-scope="true"/>
-                <include-screen name="GlobalTemplateActions" share-scope="true"/>
                 <section>
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />

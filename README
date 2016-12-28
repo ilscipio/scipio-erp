@@ -31,7 +31,7 @@ Recommended Development Tools
 * Eclipse Java IDE
  * m2eclipse
  * Groovy-eclipse
- * Freemarker IDE editor (select from JBools tools plugin)
+ * Freemarker IDE editor (select from JBooss tools plugin)
 
 Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:

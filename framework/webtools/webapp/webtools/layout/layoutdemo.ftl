@@ -626,6 +626,7 @@
       <@field type="rangefind" label="Range Find 3" name="rangefind3" id="myrangefind3" value="test" />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
+      <@field type="radio" name="radio1disabled" label="Radio 1 (disabled)" value="Y" disabled=true/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [
         {"value":"val1", "description":"Option 1"}
@@ -639,6 +640,7 @@
       <@field type="radio" name="radio6" label="Radio 6" value="Y" defaultValue="Y" />
       <@field type="radio" name="radio7" label="Radio 7" value="Y" defaultValue="N" />
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <@field type="checkbox" name="checkbox1disabled" label="Checkbox 1 (disabled)" value="Y" disabled=true/>
       <@field type="checkbox" name="checkboxInd1b" label="Indicator checkbox (full Y/N value support)" value="Y" altValue="N" />
       <@field type="checkbox" name="checkboxInd1c" label="Indicator checkbox 2 (full Y/N value support)" valueType="indicator" />
       <@field type="checkbox" name="checkbox2" label="Checkbox 2" value="Y" checked=true/>

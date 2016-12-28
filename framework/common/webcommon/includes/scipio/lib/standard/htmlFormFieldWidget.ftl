@@ -849,7 +849,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
   "value":"", "altValue":"", "useHidden":"", "required":false, 
-  "readonly":"", "passArgs":{}
+  "readonly":"", "disabled":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -903,7 +903,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_checkbox_markup_widget items=items id=id class=class style=style alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
-    labelType=labelType labelPosition=labelPosition readonly=readonly 
+    labelType=labelType labelPosition=labelPosition readonly=readonly disabled=disabled
     value=value altValue=altValue required=required origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
@@ -913,7 +913,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
      NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" disabled="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -935,6 +935,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#if !readonly?is_boolean>
     <#local readonly = false>
   </#if>
+  <#if !disabled?is_boolean>
+    <#local disabled = false>
+  </#if>  
 
   <#-- SCIPIO: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
@@ -962,6 +965,10 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local itemReadonly = readonly>
     <#if item.readonly?? && item.readonly?is_boolean>
       <#local itemReadonly = item.readonly>
+    </#if>
+    <#local itemDisabled = disabled>
+    <#if item.disabled?? && item.disabled?is_boolean>
+      <#local itemDisabled = item.disabled>
     </#if>
 
     <#local labelClass = "">
@@ -1025,7 +1032,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#local inputChecked = true>
       </#if>
       <#if itemUseHidden>
+        <#if !itemDisabled>
         <input type="hidden" name="${escapeVal(name, 'html')}" value="<#if inputChecked>${escapeVal(itemValue, 'html')}<#else>${escapeVal(itemAltValue, 'html')}</#if>"<#if currentId?has_content> id="${escapeVal(currentId, 'html')}_hidden"</#if> />
+        </#if>
       <#else>
         <#-- 2016-07-13: IMPORTANT ADDITION: 
             Even if hidden input is technically disabled and not handled by a page,
@@ -1045,6 +1054,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if inputTitle?has_content> title="${escapeVal(inputTitle, 'html')}"</#if><#t/>
         <#if currentId?has_content> id="${escapeVal(currentId, 'html')}"</#if><#t/>
         <#if itemReadonly> readonly="readonly"</#if><#t/>
+        <#if itemDisabled> disabled="disabled"</#if><#t/>
         <#if inputChecked> checked="checked"</#if><#t/>
         <#if name?has_content> name="${escapeVal(name, 'html')}<#if itemUseHidden>_visible</#if>"</#if><#t/>
         <#t/> value="${escapeVal(itemValue, 'html')}"
@@ -1086,7 +1096,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "style":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", "title":"",
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "required":false, "type":"", "readonly":"", "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "required":false, "type":"", "readonly":"", "disabled":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_radio_widget_defaultArgs)>
@@ -1111,7 +1121,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class style=style alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip title=title multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
-    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly
+    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition readonly=readonly disabled=disabled
     required=required origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
@@ -1119,13 +1129,16 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     FIXME: this markup macro is too overloaded with logic -->
 <#macro field_radio_markup_widget items="" id="" class="" style="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" title="" multiMode=true inlineItems="" 
     type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
-    labelType="standard" labelPosition="after" readonly="" required=false origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" disabled="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
 
   <#if !readonly?is_boolean>
     <#local readonly = false>
+  </#if>
+  <#if !disabled?is_boolean>
+    <#local disabled = false>
   </#if>
 
   <#if multiMode>
@@ -1147,10 +1160,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local itemClass = class>
     <#local itemAlert = alert>
     <#local itemStyle = style>
-    <#local itemReadonly = readonly>
     <#local specEvents = {}>
+    <#local itemReadonly = readonly>
     <#if item.readonly?? && item.readonly?is_boolean>
       <#local itemReadonly = item.readonly>
+    </#if>
+    <#local itemDisabled = disabled>
+    <#if item.disabled?? && item.disabled?is_boolean>
+      <#local itemDisabled = item.disabled>
     </#if>
     
     <#local inputClass = "">
@@ -1195,7 +1212,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <@fieldElemAttribStr attribs=attribs+inputAttribs /><#t/>
         <#if inputTitle?has_content> title="${escapeVal(inputTitle, 'html')}"</#if><#t/>
         <#if currentId?has_content> id="${escapeVal(currentId, 'html')}"</#if><#t/>
-        <#if inputChecked> checked="checked"</#if> <#t/>
+        <#if inputChecked> checked="checked"</#if><#t/>
+        <#if itemDisabled> disabled="disabled"</#if><#t/>
         <#t/> name="${escapeVal(name, 'html')}"
         <#t/> value="${escapeVal(itemValue!"", 'html')}"
         <@commonElemEventAttribStr events=(specEvents + (events!{}) + (item.events!{})) /><#t/>

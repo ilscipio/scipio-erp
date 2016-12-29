@@ -49,12 +49,14 @@ under the License.
     <!-- Styles -->
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/app.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/foundation-datepicker/stylesheets/foundation-datepicker.css" sequenceId="02"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/foundation-icons/foundation-icons.css" sequenceId="03"/>
+    <!-- Foundation icon font support (disabled for now) 
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/stylesheets/foundation-icons/foundation-icons.css" sequenceId="03"/>-->
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="03"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/gridster/dist/jquery.gridster.min.css" sequenceId="04"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/datatables/datatables.min.css" sequenceId="05"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/foundation-shop-theme/css/shop.css" sequenceId="06"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:400,600,300" sequenceId="07"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/foundation-shop-theme/js/shariff/shariff.complete.css" sequenceId="08"/> <!-- Heise Shariff: Social Media Icons, includes font-awesome -->
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/foundation-shop-theme/js/shariff/shariff.min.css" sequenceId="08"/> <!-- Heise Shariff: Social Media Icons based on font-awesome -->
     
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
@@ -71,7 +73,7 @@ under the License.
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="16"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/foundation-shop-theme/js/shariff/shariff.complete.js" sequenceId="17"/> <!-- Heise Shariff: Social Media Icons, includes font-awesome -->
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/foundation-shop-theme/js/shariff/shariff.min.js" sequenceId="17"/> <!-- Heise Shariff-->
 
 
     <!-- ADD-ONS -->

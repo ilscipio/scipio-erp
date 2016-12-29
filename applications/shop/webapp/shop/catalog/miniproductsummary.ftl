@@ -56,7 +56,7 @@ under the License.
                 <@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/>
             </#if>
           </#if>
-          <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass"></i></a>
+          <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass ${styles.icon_prefix!}search"></i></a>
         </@pli>
         </@pul>
 

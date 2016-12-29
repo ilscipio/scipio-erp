@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 module.exports = function(Chart) {
 
@@ -6,22 +6,27 @@ module.exports = function(Chart) {
 
 	Chart.defaults.line = {
 		showLines: true,
+		spanGaps: false,
 
 		hover: {
-			mode: "label"
+			mode: 'label'
 		},
 
 		scales: {
 			xAxes: [{
-				type: "category",
+				type: 'category',
 				id: 'x-axis-0'
 			}],
 			yAxes: [{
-				type: "linear",
+				type: 'linear',
 				id: 'y-axis-0'
 			}]
 		}
 	};
+
+	function lineEnabled(dataset, options) {
+		return helpers.getValueOrDefault(dataset.showLine, options.showLines);
+	}
 
 	Chart.controllers.line = Chart.DatasetController.extend({
 
@@ -29,19 +34,7 @@ module.exports = function(Chart) {
 
 		dataElementType: Chart.elements.Point,
 
-		addElementAndReset: function(index) {
-			var me = this;
-			var options = me.chart.options;
-
-			Chart.DatasetController.prototype.addElementAndReset.call(me, index);
-
-			// Make sure bezier control points are updated
-			if (options.showLines && options.elements.line.tension !== 0) {
-				me.updateBezierControlPoints();
-			}
-		},
-
-		update: function update(reset) {
+		update: function(reset) {
 			var me = this;
 			var meta = me.getMeta();
 			var line = meta.dataset;
@@ -49,11 +42,12 @@ module.exports = function(Chart) {
 			var options = me.chart.options;
 			var lineElementOptions = options.elements.line;
 			var scale = me.getScaleForId(meta.yAxisID);
-			var i, ilen, dataset, custom;
+			var i, ilen, custom;
+			var dataset = me.getDataset();
+			var showLine = lineEnabled(dataset, options);
 
 			// Update Line
-			if (options.showLines) {
-				dataset = me.getDataset();
+			if (showLine) {
 				custom = line.custom || {};
 
 				// Compatibility: If the properties are defined with only the old name, use those values
@@ -69,6 +63,10 @@ module.exports = function(Chart) {
 				// Model
 				line._model = {
 					// Appearance
+					// The default behavior of lines is to break at null values, according
+					// to https://github.com/chartjs/Chart.js/issues/2435#issuecomment-216718158
+					// This option gives lines the ability to span gaps
+					spanGaps: dataset.spanGaps ? dataset.spanGaps : options.spanGaps,
 					tension: custom.tension ? custom.tension : helpers.getValueOrDefault(dataset.lineTension, lineElementOptions.tension),
 					backgroundColor: custom.backgroundColor ? custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
 					borderWidth: custom.borderWidth ? custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
@@ -78,6 +76,8 @@ module.exports = function(Chart) {
 					borderDashOffset: custom.borderDashOffset ? custom.borderDashOffset : (dataset.borderDashOffset || lineElementOptions.borderDashOffset),
 					borderJoinStyle: custom.borderJoinStyle ? custom.borderJoinStyle : (dataset.borderJoinStyle || lineElementOptions.borderJoinStyle),
 					fill: custom.fill ? custom.fill : (dataset.fill !== undefined ? dataset.fill : lineElementOptions.fill),
+					steppedLine: custom.steppedLine ? custom.steppedLine : helpers.getValueOrDefault(dataset.steppedLine, lineElementOptions.stepped),
+					cubicInterpolationMode: custom.cubicInterpolationMode ? custom.cubicInterpolationMode : helpers.getValueOrDefault(dataset.cubicInterpolationMode, lineElementOptions.cubicInterpolationMode),
 					// Scale
 					scaleTop: scale.top,
 					scaleBottom: scale.bottom,
@@ -92,8 +92,13 @@ module.exports = function(Chart) {
 				me.updateElement(points[i], i, reset);
 			}
 
-			if (options.showLines && lineElementOptions.tension !== 0) {
+			if (showLine && line._model.tension !== 0) {
 				me.updateBezierControlPoints();
+			}
+
+			// Now pivot the point for animation
+			for (i=0, ilen=points.length; i<ilen; ++i) {
+				points[i].pivot();
 			}
 		},
 
@@ -156,6 +161,8 @@ module.exports = function(Chart) {
 			var xScale = me.getScaleForId(meta.xAxisID);
 			var pointOptions = me.chart.options.elements.point;
 			var x, y;
+			var labels = me.chart.data.labels || [];
+			var includeOffset = (labels.length === 1 || dataset.data.length === 1) || me.chart.isCombo;
 
 			// Compatibility: If the properties are defined with only the old name, use those values
 			if ((dataset.radius !== undefined) && (dataset.pointRadius === undefined)) {
@@ -165,8 +172,8 @@ module.exports = function(Chart) {
 				dataset.pointHitRadius = dataset.hitRadius;
 			}
 
-			x = xScale.getPixelForValue(value, index, datasetIndex, me.chart.isCombo);
-			y = reset ? yScale.getBasePixel() : me.calculatePointY(value, index, datasetIndex, me.chart.isCombo);
+			x = xScale.getPixelForValue(typeof value === 'object' ? value : NaN, index, datasetIndex, includeOffset);
+			y = reset ? yScale.getBasePixel() : me.calculatePointY(value, index, datasetIndex);
 
 			// Utility
 			point._xScale = xScale;
@@ -186,12 +193,13 @@ module.exports = function(Chart) {
 				borderColor: me.getPointBorderColor(point, index),
 				borderWidth: me.getPointBorderWidth(point, index),
 				tension: meta.dataset._model ? meta.dataset._model.tension : 0,
+				steppedLine: meta.dataset._model ? meta.dataset._model.steppedLine : false,
 				// Tooltip
 				hitRadius: custom.hitRadius || helpers.getValueAtIndexOrDefault(dataset.pointHitRadius, index, pointOptions.hitRadius)
 			};
 		},
 
-		calculatePointY: function(value, index, datasetIndex, isCombo) {
+		calculatePointY: function(value, index, datasetIndex) {
 			var me = this;
 			var chart = me.chart;
 			var meta = me.getMeta();
@@ -204,54 +212,77 @@ module.exports = function(Chart) {
 				for (i = 0; i < datasetIndex; i++) {
 					ds = chart.data.datasets[i];
 					dsMeta = chart.getDatasetMeta(i);
-					if (dsMeta.type === 'line' && chart.isDatasetVisible(i)) {
-						if (ds.data[index] < 0) {
-							sumNeg += ds.data[index] || 0;
+					if (dsMeta.type === 'line' && dsMeta.yAxisID === yScale.id && chart.isDatasetVisible(i)) {
+						var stackedRightValue = Number(yScale.getRightValue(ds.data[index]));
+						if (stackedRightValue < 0) {
+							sumNeg += stackedRightValue || 0;
 						} else {
-							sumPos += ds.data[index] || 0;
+							sumPos += stackedRightValue || 0;
 						}
 					}
 				}
 
-				if (value < 0) {
-					return yScale.getPixelForValue(sumNeg + value);
-				} else {
-					return yScale.getPixelForValue(sumPos + value);
+				var rightValue = Number(yScale.getRightValue(value));
+				if (rightValue < 0) {
+					return yScale.getPixelForValue(sumNeg + rightValue);
 				}
+				return yScale.getPixelForValue(sumPos + rightValue);
 			}
 
 			return yScale.getPixelForValue(value);
 		},
 
 		updateBezierControlPoints: function() {
-			var meta = this.getMeta();
-			var area = this.chart.chartArea;
-			var points = meta.data || [];
+			var me = this;
+			var meta = me.getMeta();
+			var area = me.chart.chartArea;
+			var points = (meta.data || []);
 			var i, ilen, point, model, controlPoints;
 
-			for (i=0, ilen=points.length; i<ilen; ++i) {
-				point = points[i];
-				model = point._model;
-				controlPoints = helpers.splineCurve(
-					helpers.previousItem(points, i)._model,
-					model,
-					helpers.nextItem(points, i)._model,
-					meta.dataset._model.tension
-				);
+			// Only consider points that are drawn in case the spanGaps option is used
+			if (meta.dataset._model.spanGaps) {
+				points = points.filter(function(pt) {
+					return !pt._model.skip;
+				});
+			}
 
-				// Prevent the bezier going outside of the bounds of the graph
-				model.controlPointPreviousX = Math.max(Math.min(controlPoints.previous.x, area.right), area.left);
-				model.controlPointPreviousY = Math.max(Math.min(controlPoints.previous.y, area.bottom), area.top);
-				model.controlPointNextX = Math.max(Math.min(controlPoints.next.x, area.right), area.left);
-				model.controlPointNextY = Math.max(Math.min(controlPoints.next.y, area.bottom), area.top);
+			function capControlPoint(pt, min, max) {
+				return Math.max(Math.min(pt, max), min);
+			}
 
-				// Now pivot the point for animation
-				point.pivot();
+			if (meta.dataset._model.cubicInterpolationMode === 'monotone') {
+				helpers.splineCurveMonotone(points);
+			} else {
+				for (i = 0, ilen = points.length; i < ilen; ++i) {
+					point = points[i];
+					model = point._model;
+					controlPoints = helpers.splineCurve(
+						helpers.previousItem(points, i)._model,
+						model,
+						helpers.nextItem(points, i)._model,
+						meta.dataset._model.tension
+					);
+					model.controlPointPreviousX = controlPoints.previous.x;
+					model.controlPointPreviousY = controlPoints.previous.y;
+					model.controlPointNextX = controlPoints.next.x;
+					model.controlPointNextY = controlPoints.next.y;
+				}
+			}
+
+			if (me.chart.options.elements.line.capBezierPoints) {
+				for (i = 0, ilen = points.length; i < ilen; ++i) {
+					model = points[i]._model;
+					model.controlPointPreviousX = capControlPoint(model.controlPointPreviousX, area.left, area.right);
+					model.controlPointPreviousY = capControlPoint(model.controlPointPreviousY, area.top, area.bottom);
+					model.controlPointNextX = capControlPoint(model.controlPointNextX, area.left, area.right);
+					model.controlPointNextY = capControlPoint(model.controlPointNextY, area.top, area.bottom);
+				}
 			}
 		},
 
 		draw: function(ease) {
-			var meta = this.getMeta();
+			var me = this;
+			var meta = me.getMeta();
 			var points = meta.data || [];
 			var easingDecimal = ease || 1;
 			var i, ilen;
@@ -262,7 +293,7 @@ module.exports = function(Chart) {
 			}
 
 			// Transition and Draw the line
-			if (this.chart.options.showLines) {
+			if (lineEnabled(me.getDataset(), me.chart.options)) {
 				meta.dataset.transition(easingDecimal).draw();
 			}
 

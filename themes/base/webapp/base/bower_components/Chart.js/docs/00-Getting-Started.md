@@ -5,18 +5,21 @@ anchor: getting-started
 
 ### Download Chart.js
 
-To download a zip, go to [Chart.js on Github](https://github.com/chartjs/Chart.js) and choose the version that is right for your application.
-* [Standard build](https://raw.githubusercontent.com/chartjs/Chart.js/master/dist/Chart.js) (~31kB gzipped)
-* [Bundled with Moment.js](https://raw.githubusercontent.com/chartjs/Chart.js/master/dist/Chart.bundle.js) (~45kB gzipped)
-* [CDN Versions](https://cdnjs.com/libraries/Chart.js)
+You can download the latest version of [Chart.js on GitHub](https://github.com/chartjs/Chart.js/releases/latest) or just use these [Chart.js CDN](https://cdnjs.com/libraries/Chart.js) links.
+If you download or clone the repository, you must run `gulp build` to generate the dist files. Chart.js no longer comes with prebuilt release versions, so an alternative option to downloading the repo is **strongly** advised.
 
-To install via npm / bower:
+### Installation
+
+#### npm
 
 ```bash
 npm install chart.js --save
 ```
+
+#### bower
+
 ```bash
-bower install Chart.js --save
+bower install chart.js --save
 ```
 
 ### Selecting the Correct Build
@@ -25,7 +28,7 @@ Chart.js provides two different builds that are available for your use. The `Cha
 
 The `Chart.bundle.js` and `Chart.bundle.min.js` builds include Moment.js in a single file. This version should be used if you require time axes and want a single file to include, select this version. Do not use this build if your application already includes Moment.js. If you do, Moment.js will be included twice, increasing the page load time and potentially introducing version issues.
 
-### Installation
+### Usage
 
 To import Chart.js using an old-school script tag:
 
@@ -68,6 +71,7 @@ To create a chart, we need to instantiate the `Chart` class. To do this, we need
 var ctx = document.getElementById("myChart");
 var ctx = document.getElementById("myChart").getContext("2d");
 var ctx = $("#myChart");
+var ctx = "myChart";
 ```
 
 Once you have the element or context, you're ready to instantiate a pre-defined chart-type or create your own!
@@ -118,3 +122,5 @@ var myChart = new Chart(ctx, {
 ```
 
 It's that easy to get started using Chart.js! From here you can explore the many options that can help you customise your charts with scales, tooltips, labels, colors, custom actions, and much more.
+
+There are many examples of Chart.js that are available in the `/samples` folder of `Chart.js.zip` that is attatched to every [release](https://github.com/chartjs/Chart.js/releases).

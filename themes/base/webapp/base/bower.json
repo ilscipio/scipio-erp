@@ -9,6 +9,10 @@
     "moment": "~2.11.1",
     "jquery": "~2.1",
     "slick-carousel": "^1.5.9",
-	"foundation-datepicker": "~1.2"
+	"foundation-datepicker": "~1.2",
+	"trumbowyg ": "~2.4",
+	"codemirror":"~5",
+	"codemirror-mode-freemarker":"liuxiaole/codemirror-mode-freemarker",
+	"font-awesome":"~4.7"
   }
 }

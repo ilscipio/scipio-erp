@@ -1,0 +1,115 @@
+<!doctype html>
+
+<title>CodeMirror: Freemarker mode</title>
+<meta charset="utf-8"/>
+<link rel=stylesheet href="../../doc/docs.css">
+<link rel="stylesheet" href="../../lib/codemirror.css">
+<link rel="stylesheet" href="../../addon/fold/foldgutter.css">
+<script src="../../lib/codemirror.js"></script>
+<script src="../../addon/edit/matchbrackets.js"></script>
+<script src="../../addon/edit/matchtags.js"></script>
+<script src="../../addon/edit/closetag.js"></script>
+<script src="../../addon/fold/foldcode.js"></script>
+<script src="../../addon/fold/foldgutter.js"></script>
+<script src="../../addon/fold/brace-fold.js"></script>
+<script src="../../addon/fold/xml-fold.js"></script>
+<script src="../../addon/fold/comment-fold.js"></script>
+<script src="../css/css.js"></script>
+<script src="../javascript/javascript.js"></script>
+<script src="../xml/xml.js"></script>
+<script src="../vbscript/vbscript.js"></script>
+<script src="../htmlmixed/htmlmixed.js"></script>
+<script src="freemarker.js"></script>
+<style>.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+<div id="nav">
+  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id="logo" src="../../doc/logo.png"></a>
+
+  <ul>
+    <li><a href="../../index.html">Home</a>
+    <li><a href="../../doc/manual.html">Manual</a>
+    <li><a href="https://github.com/codemirror/codemirror">Code</a>
+  </ul>
+  <ul>
+    <li><a href="../index.html">Language modes</a>
+    <li><a class=active href="#">Freemarker</a>
+  </ul>
+</div>
+
+<article>
+<h2>Freemarker</h2>
+<form><textarea id="code" name="code">
+<#-- freemarker mode -->
+<#if ENV?? && ENV == 'local_dev'><#include '../../inc/core.ftl'/></#if>
+
+
+<#macro articleBlock articleList=[] test={}>
+  <#if articleList?len == 0> <#return /></#if>
+  <#list articleList as article>
+    <article>
+      <h1>${article.title}</h1>
+      <div>
+        <div class="summary">${article.summary}</div>
+        <a href="${article.link}" class="readmore">read more</a>
+      </div>
+      <#nested>
+      <#nested article />
+    </article>
+  </#list>
+</#macro>
+
+<#assign a = 1, b = 'test' />
+<#assign c = {
+  "a": 1,
+  "b": 2,
+  "c": 3
+} />
+
+<#if true>
+  aaa
+<#elseif false>
+  bbb
+</#if>
+
+<#list (c!{})?keys as k>
+  <@articleBlock test=c[k]; article>
+    <div>${article.comment}</div>
+    <#-- test --->
+  </@articleBlock>
+</#list>
+
+<#function getChineseNum num=1>
+  <#switch num>
+    <#case 1>
+      <#assign ret = '一' />
+      <#break>
+    <#case 2>
+      <#assign ret = '二' />
+      <#break/>
+    <#default>
+      <#assign ret = '其他' />
+      <#break>
+  </#switch>
+
+  <#return ret />
+
+</#function>
+
+</textarea></form>
+    <script>
+
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "freemarker",
+        indentUnit: 4,
+        indentWithTabs: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+      });
+    </script>
+    </script>
+
+    <p>Freemarker syntax highlighting for CodeMirror.</p>
+
+    <p><strong>MIME types defined:</strong> <code>text/x-freemarker</code></p>
+</article>

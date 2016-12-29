@@ -3,7 +3,7 @@
  * Used to add classes to elements, so that they can be styled as boxes.
  * */
 var elSelector = 'pre.scrollable,.section-screenlet-content';
-var notSubSelector = 'pre.scrollable,.section-screenlet-content, table,.orbit-container, .steps, .tile-container, .signup-panel,.button-group';
+var notSubSelector = 'pre.scrollable,.section-screenlet-content, table,.orbit-container, .steps, .tile-container, .signup-panel,.button-group,.trumbowyg-box';
 var scipioBoxClass = 'box';
 
 

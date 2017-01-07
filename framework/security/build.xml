@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Security" default="jar" basedir=".">
+<project name="OFBiz - Security" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -37,4 +37,7 @@ under the License.
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
     </path>
+    <target name="init-jar-download" description="download initial jars">
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="application"/>
+    </target>
 </project>

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - WebTools Component" default="jar" basedir=".">
+<project name="OFBiz - WebTools Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -47,4 +47,8 @@ under the License.
         <fileset dir="../widget/build/lib" includes="*.jar"/>
         <fileset dir="../testtools/build/lib" includes="*.jar"/>
     </path>
+
+    <target name="init-jar-download" description="download initial jars">
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="application"/>
+    </target>
 </project>

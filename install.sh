@@ -54,6 +54,7 @@ do
             exit 1
             ;;
         "Recompile")
+            sh ant init-jars-download
             sh ant build
             exit 1
             ;;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SCIPIO ERP - DemoSuite Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - DemoSuite Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -118,5 +118,9 @@
         </fail>
         <antcall target="revert-ofbiz-patches"/>
         <antcall target="apply-ofbiz-patches"/>
+    </target>
+
+    <target name="init-jar-download" description="download initial jars">
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="application"/>
     </target>
 </project>

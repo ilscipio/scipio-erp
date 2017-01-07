@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <!-- SCIPIO: don't include this; invalid: default="build" -->
-<project name="OFBiz Framework Build" basedir=".">
+<project name="OFBiz Framework Build" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <filelist id="framework-builds" dir="framework"
         files="start/build.xml,base/build.xml,
                entity/build.xml,geronimo/build.xml,

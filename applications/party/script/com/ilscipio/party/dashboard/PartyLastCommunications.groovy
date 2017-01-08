@@ -34,12 +34,14 @@ for (communication in communicationEventList) {
     if (UtilValidate.isNotEmpty(communication.partyIdTo))
         toPersonFullName = PartyHelper.getPartyName(communication.getRelatedOne("ToParty", false));
     commEventType = communication.getRelatedOne("CommunicationEventType", true);
-    if(communication.subject!=null){
+    if(communication.subject==null){
+			subject = "n/a";
+			} else{
 			subject = (communication.subject.length() > 25) ? communication.subject.substring(0, 25) + "..." : communication.subject;
-			lastCommunications.add(UtilMisc.toMap("commEventId", communication.communicationEventId, "partyIdFrom", communication.partyIdFrom, "fromPersonFullName", fromPersonFullName, "partyIdTo", communication.partyIdTo, 
+		}
+		lastCommunications.add(UtilMisc.toMap("commEventId", communication.communicationEventId, "partyIdFrom", communication.partyIdFrom, "fromPersonFullName", fromPersonFullName, "partyIdTo", communication.partyIdTo, 
 					"toPersonFullName", toPersonFullName, "subject", subject, "commEventType", commEventType.description, "date", communication.entryDate
 			));
-		}
 }
 
 // pagination for last communications list

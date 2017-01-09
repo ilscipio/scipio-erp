@@ -1,7 +1,6 @@
 <#if listMarketingCampaign?has_content>
-    <@section>
-        <form action="<@ofbizUrl>UpdateInventoryTransfer</@ofbizUrl>" method="post">
-        <input type="hidden" name="facilityId" value="${facilityId!}" />        
+    <@section> 
+        <form action="<@ofbizUrl>updateMarketingCampaign</@ofbizUrl>" method="post">
         
             <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
                 <#-- Header Begins -->
@@ -32,8 +31,8 @@
             </@table>    
         </form>
         <#list listMarketingCampaign as marketingCampaign>
-            <form name="deleteMarketingCampaign_${marketingCampaign_index}" action="<@ofbizUrl>removeMarketingCampaign</@ofbizUrl>" method="POST">
-                <@field name="marketingCampaignId=" type="hidden" value=marketingCampaign.marketingCampaignId />
+            <form name="deleteMarketingCampaign_${marketingCampaign_index}" action="<@ofbizUrl>removeMarketingCampaign</@ofbizUrl>" method="post">
+                <@field name="marketingCampaignId" type="hidden" value=marketingCampaign.marketingCampaignId />
             </form>
         </#list>
     </@section>

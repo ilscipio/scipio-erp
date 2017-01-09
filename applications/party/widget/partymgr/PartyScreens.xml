@@ -74,100 +74,106 @@ under the License.
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-                            <condition>
-                                <and>
-                                    <if-empty field="partyId"/>
-                                    <not><if-empty field="parameters.telno"/></not>
-                                </and>
-                            </condition>
                             <actions>
-                                <service service-name="findPartyFromTelephone" auto-field-map="true" result-map="telnoMap"/>
-                                <entity-one entity-name="Party" value-field="party">
-                                    <field-map field-name="partyId" from-field="telnoMap.partyId"/>
-                                </entity-one>
-                                <set field="parameters.partyId" from-field="party.partyId"/>
+                                <if>
+                                    <condition>
+                                        <and>
+                                            <if-empty field="partyId"/>
+                                            <not><if-empty field="parameters.telno"/></not>
+                                        </and>
+                                    </condition>
+                                    <then>
+                                        <service service-name="findPartyFromTelephone" auto-field-map="true" result-map="telnoMap"/>
+                                        <entity-one entity-name="Party" value-field="party">
+                                            <field-map field-name="partyId" from-field="telnoMap.partyId"/>
+                                        </entity-one>
+                                        <set field="parameters.partyId" from-field="party.partyId"/>
+                                    </then>
+                                </if>
+                                <if>
+                                    <condition>
+                                        <and>
+                                            <if-empty field="partyId"/>
+                                            <not><if-empty field="parameters.email"/></not>
+                                        </and>
+                                    </condition>
+                                    <then>
+                                        <service service-name="findPartyFromEmailAddress" result-map="emailMap">
+                                            <field-map field-name="address" from-field="parameters.email"/>
+                                        </service>
+                                        <entity-one entity-name="Party" value-field="party">
+                                            <field-map field-name="partyId" from-field="emailMap.partyId"/>
+                                        </entity-one>
+                                        <set field="parameters.partyId" from-field="party.partyId"/>
+                                    </then>
+                                </if>
                             </actions>
-                        </section>
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-empty field="partyId"/>
-                                    <not><if-empty field="parameters.email"/></not>
-                                </and>
-                            </condition>
-                            <actions>
-                                <service service-name="findPartyFromEmailAddress" result-map="emailMap">
-                                    <field-map field-name="address" from-field="parameters.email"/>
-                                </service>
-                                <entity-one entity-name="Party" value-field="party">
-                                    <field-map field-name="partyId" from-field="emailMap.partyId"/>
-                                </entity-one>
-                                <set field="parameters.partyId" from-field="party.partyId"/>
-                            </actions>
-                        </section>
-                        <section>
-                            <condition>
-                                <not><if-empty field="party"/></not>
-                            </condition>
                             <widgets>
-                                <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
-                                <!--
                                 <section>
                                     <condition>
-                                        <if-true field="showOld"/>
+                                        <not><if-empty field="party"/></not>
                                     </condition>
                                     <widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                            </link>
+                                        <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSubTabBar"/>
+                                        <!--
+                                        <section>
+                                            <condition>
+                                                <if-true field="showOld"/>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar button-style-2">
+                                                    <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
+                                                        <parameter param-name="partyId" from-field="party.partyId"/>
+                                                    </link>
+                                                </container>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <container style="button-bar button-style-2">
+                                                    <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
+                                                        <parameter param-name="partyId" from-field="party.partyId"/>
+                                                        <parameter param-name="SHOW_OLD" value="true"/>
+                                                    </link>
+                                                </container>
+                                            </fail-widgets>
+                                         </section>-->
+                                         <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <!--
+                                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
+                                                    <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                -->
+                                                <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                        </container>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                             </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                        </container>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}12 ${styles.grid_cell}">
+                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
+                                             </container>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                                <parameter param-name="SHOW_OLD" value="true"/>
-                                            </link>
+                                        <container>
+                                            <label style="common-msg-error">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                         </container>
                                     </fail-widgets>
-                                 </section>-->
-                                 <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        <!--
-                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/> 
-                                            <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        -->
-                                        <include-screen name="LoyaltyPoints" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    </container>
-                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    </container>
-                                </container>
-                                <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                     </container>
-                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                        <include-screen name="PartyIdentifications" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    </container>
-                                </container>
-                                <container style="${styles.grid_row}">
-                                    <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>                                                                                    
-                                     </container>
-                                </container>
+                                </section>
                             </widgets>
-                            <fail-widgets>
-                                <container>
-                                    <label style="common-msg-error">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
-                                </container>
-                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>

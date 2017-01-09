@@ -18,7 +18,9 @@ under the License.
 -->
 
 <#-- SCIPIO: prefix to prevent duplicate IDs -->
-<#assign accountIdPrefix = accountIdPrefix!ownedFinAccount.finAccountId!"">
+<#if !accountIdPrefix??>
+  <#assign accountIdPrefix = ownedFinAccount.finAccountId!"">
+</#if>
 
 <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
     <p>

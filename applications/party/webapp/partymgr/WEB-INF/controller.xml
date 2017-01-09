@@ -871,7 +871,12 @@ under the License.
         <response name="error" type="view" value="ListCommWorkEfforts"/>
     </request-map>
 
-    <!-- address match map requests -->
+    <!-- address match map requests 
+    
+    SCIPIO: ToDo: Remove
+    Has never been implemented as discussed here 
+    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+    
     <request-map uri="addressMatchMap">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AddressMatchMap"/>
@@ -904,6 +909,8 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAddressMatch"/>
     </request-map>
+    
+    -->
 
     <!-- Import export -->
     <request-map uri="ImportExport">
@@ -1369,7 +1376,12 @@ under the License.
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
 
-    <view-map name="AddressMatchMap" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddressMatchMap"/>
+    <!-- 
+    SCIPIO: ToDo: Remove
+    Has never been implemented as discussed here 
+    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+    
+    <view-map name="AddressMatchMap" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#AddressMatchMap"/>-->
     <view-map name="FindAddressMatch" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#FindAddressMatch"/>
 
     <view-map name="ImportExport" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#ImportExport"/>

@@ -853,7 +853,7 @@ under the License.
         </section>
     </screen>
 
-    <!-- Address Match Map Screen -->
+    <!-- Address Match Map Screen 
     <screen name="AddressMatchMap">
         <section>
             <actions>
@@ -893,7 +893,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    -->
     <!-- Party Content Screen -->
     <screen name="EditPartyContents">
         <section>

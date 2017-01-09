@@ -18,9 +18,7 @@ under the License.
 -->
 
 <#-- SCIPIO: prefix to prevent duplicate IDs -->
-<#if !accountIdPrefix??>
-  <#assign accountIdPrefix = ownedFinAccount.finAccountId!"">
-</#if>
+<#assign accountBaseId = accountBaseId!ownedFinAccount.finAccountId!"">
 
 <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
     <p>
@@ -38,7 +36,7 @@ under the License.
         </#if>
     </p>
 
-    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountIdPrefix+"-fa-transactions")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountBaseId+"-fa-transactions")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
         <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.FormFieldTitle_transactionDate}</@th>
@@ -78,7 +76,7 @@ under the License.
 
 <#if ownedFinAccountAuthList?has_content>
     <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
-        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountIdPrefix+"-fa-authorizations")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountBaseId+"-fa-authorizations")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
             <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.FormFieldTitle_authorizationDate}</@th>

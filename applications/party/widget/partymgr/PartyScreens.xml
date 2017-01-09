@@ -854,6 +854,11 @@ under the License.
     </screen>
 
     <!-- Address Match Map Screen 
+    
+    ToDo: Remove
+    Has never been implemented as discussed here 
+    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+
     <screen name="AddressMatchMap">
         <section>
             <actions>

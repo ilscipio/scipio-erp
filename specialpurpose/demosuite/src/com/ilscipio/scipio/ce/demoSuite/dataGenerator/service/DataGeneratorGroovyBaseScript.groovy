@@ -107,7 +107,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
             }
             result.put("generatedDataStats", dataGeneratorStats);
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), "");
+            Debug.logError(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;

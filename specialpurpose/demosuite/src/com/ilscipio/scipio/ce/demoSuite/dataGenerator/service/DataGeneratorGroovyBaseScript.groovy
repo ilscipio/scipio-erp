@@ -22,6 +22,8 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     public static final String module = DataGeneratorGroovyBaseScript.class.getName();
     
     private List<Map<String, DataGeneratorStat>> dataGeneratorStats;
+    private int totalFailed = 0;
+    private int totalStored = 0;
 
     DataGeneratorGroovyBaseScript() {
         dataGeneratorStats = FastList.newInstance();
@@ -52,11 +54,13 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                         throw new Exception("createdValue is null");
                     int stored = stat.getStored();                   
                     stat.setStored(stored + 1);
+                    totalStored++;
                     stat.getGeneratedValues().add(createdValue);                            
                 } catch (Exception e) {
                     TransactionUtil.rollback();                    
                     int failed = stat.getFailed();                    
-                    stat.setFailed(failed + 1);                    
+                    stat.setFailed(failed + 1);       
+                    totalFailed++;
                 }                
                 result.put(entityName, stat);                
             }
@@ -95,7 +99,6 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * Generates and stores demo data.
      */
     def Map run() {
-        Map result = ServiceUtil.returnSuccess();
         try {
             sanitizeDates();
             init();
@@ -105,11 +108,15 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                 if (toBeStored)
                     storeData(toBeStored);
             }
-            result.put("generatedDataStats", dataGeneratorStats);
         } catch (Exception e) {
             Debug.logError(e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            // TODO: localize (but exception message cannot be localized)
+            return ServiceUtil.returnError("Fatal error while generating data (aborted): " + e.getMessage());
         }
+        // TODO: localize 
+        Map result = (totalFailed > 0) ? ServiceUtil.returnFailure("Failed to store " + totalFailed 
+            + " records (" + totalStored + " stored successfully)") : ServiceUtil.returnSuccess();
+        result.put("generatedDataStats", dataGeneratorStats);
         return result;
     }
     

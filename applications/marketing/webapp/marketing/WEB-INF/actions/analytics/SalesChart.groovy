@@ -21,9 +21,13 @@ Map processResult() {
         fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);    
     if (thruDate)
         thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);           
-    if (fromDateTimestamp && !fromDateTimestamp.before(thruDateTimestamp)) {
-        fromDateTimestamp = null;
-        thruDateTimestamp = null;
+    if (fromDateTimestamp && thruDateTimestamp && fromDateTimestamp.after(thruDateTimestamp)) {
+        // switch these automatically for the user... saves him time this way
+        oldThruDateTimestamp = thruDateTimestamp
+        thruDateTimestamp = fromDateTimestamp;
+        fromDateTimestamp = oldThruDateTimestamp;
+        parameters.fromDate = thruDate;
+        parameters.thruDate = fromDate;
     }  
     if (!fromDateTimestamp) {
         iCount = UtilDateTime.getIntervalDefaultCount(iScope);        

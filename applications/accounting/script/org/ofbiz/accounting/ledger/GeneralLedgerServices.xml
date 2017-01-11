@@ -2218,7 +2218,7 @@ under the License.
 
     <simple-method method-name="createAcctgTransForSalesInvoice" short-description="Create an accounting transaction for a sales invoice">
         <!-- retrieve ledger rounding properties -->
-        <call-simple-method method-name="getGlArithmeticSettingsInline"/>
+        <call-simple-method method-name="getGlArithmeticSettingsInline"  xml-resource="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml"/>
         <set field="totalOrigAmount" type="BigDecimal" value="0"/>
 
         <entity-one entity-name="Invoice" value-field="invoice"/>
@@ -2232,31 +2232,61 @@ under the License.
             </entity-condition>
             <iterate list="invoiceItems" entry="invoiceItem">
                 <!-- TODO: handle serialized inventory -->
-                <set field="quantity" type="BigDecimal" value="1"/>
-                <if-not-empty field="invoiceItem.quantity">
-                    <set field="quantity" from-field="invoiceItem.quantity"/>
-                </if-not-empty>
+                <if-empty field="invoiceItem.quantity">
+                    <set field="invoiceItem.quantity" type="BigDecimal" value="1"/>
+                </if-empty>
                 <calculate field="origAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                     <calcop operator="multiply">
-                        <calcop operator="get" field="quantity"/>
+                        <calcop operator="get" field="invoiceItem.quantity"/>
                         <calcop operator="get" field="invoiceItem.amount"/>
                     </calcop>
                 </calculate>
+                <log level="info" message="** origAmount ${origAmount}"/>
+                <!-- subtract taxAlreadyIncluded -->
+                <call-class-method method-name="getInvoiceItemTaxIncluded" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
+                        ret-field="InvoiceItemTaxAlreadyIncluded">
+                    <field field="invoiceItem" type="GenericValue"/>
+                </call-class-method>
+                <calculate field="origAmountWithoutTax" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
+                    <calcop operator="subtract">
+                        <calcop operator="get" field="origAmount"/>
+                        <calcop operator="get" field="InvoiceItemTaxAlreadyIncluded"/>
+                    </calcop>
+                </calculate>
+                <log level="info" message="** origAmountWithoutTax ${origAmountWithoutTax}"/>
                 <calculate field="totalOrigAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                     <calcop operator="add">
                         <calcop operator="get" field="totalOrigAmount"/>
                         <calcop operator="get" field="origAmount"/>
                     </calcop>
                 </calculate>
+                <log level="info" message="** totalOrigAmount ${totalOrigAmount}"/>
                 <!-- Credit -->
                 <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                 <set field="creditEntry.debitCreditFlag" value="C"/>
-                <set field="creditEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>
+                <!-- Bug??<set field="creditEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>-->
+                <set field="creditEntry.glAccountTypeId" value="SALES_ACCOUNT"/>
                 <set field="creditEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
                 <set field="creditEntry.productId" from-field="invoiceItem.productId"/>
-                <set field="creditEntry.origAmount" from-field="origAmount"/>
+                <set field="creditEntry.origAmount" from-field="origAmountWithoutTax"/>
                 <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                 <set field="creditEntry.glAccountId" from-field="invoiceItem.overrideGlAccountId"/>
+                <!-- Get Gl Account from TaxAuthorityRateProduct ... -->
+                <log level="info" message="*** creditEntry.glAccountId: ${creditEntry.glAccountId}"/>
+                <if-empty field="creditEntry.glAccountId">
+                    <!-- Look for ITM_SALES_TAX  invoice item-->
+                    <log level="info" message="*** parentInvoiceId=${invoiceItem.invoiceId}, parentInvoiceItemSeqId=${invoiceItem.invoiceItemSeqId}"/>
+                    <entity-and entity-name="InvoiceItem" list="taxInvoiceItems">
+                        <field-map field-name="parentInvoiceId" from-field="invoiceItem.invoiceId"/>
+                        <field-map field-name="parentInvoiceItemSeqId" from-field="invoiceItem.invoiceItemSeqId"/>
+                    </entity-and>
+                    <log level="info" message="*** taxInvoiceItems: ${taxInvoiceItems}"/>
+                    <if-not-empty field="taxInvoiceItems">
+                        <first-from-list list="taxInvoiceItems" entry="taxInvoiceItem"/>
+                        <get-related-one relation-name="TaxAuthorityRateProduct" value-field="taxInvoiceItem" to-value-field="taxRateProduct"/>
+                        <set field="creditEntry.glAccountId" from-field="taxRateProduct.revenueGlAccountId"/>
+                    </if-not-empty>
+                </if-empty>
                 <if-not-empty field="invoiceItem.taxAuthPartyId">
                     <set field="creditEntry.partyId" from-field="invoiceItem.taxAuthPartyId"/>
                     <set field="creditEntry.roleTypeId" value="TAX_AUTHORITY"/>
@@ -2265,40 +2295,54 @@ under the License.
             </iterate>
 
             <!-- credit entry for SALES_TAX-->
-            <call-class-method method-name="getInvoiceTaxAuthPartyAndGeos" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
-                  ret-field="taxAuthPartyAndGeos">
+            <!-- <call-class-method method-name="getInvoiceTaxAuthPartyAndGeos" class-name="org.ofbiz.accounting.invoice.InvoiceWorker" -->
+            <call-class-method method-name="getInvoiceTaxRateProducts" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
+                  ret-field="taxRateProducts">
                 <field field="invoice" type="org.ofbiz.entity.GenericValue"/>
             </call-class-method>
-            <iterate-map key="taxAuthPartyId" value="taxAuthGeoIds" map="taxAuthPartyAndGeos">
-                <iterate entry="taxAuthGeoId" list="taxAuthGeoIds">
+            <log level="info" message="** taxRateProducts ${taxRateProducts}"/>
+            <!-- <iterate-map key="taxAuthPartyId" value="taxAuthGeoIds" map="taxAuthPartyAndGeos"> -->
+            <iterate-map key="taxAuthorityRateSeqId" value="glAccountId" map="taxRateProducts">
+            <!-- <iterate entry="taxRateProduct" list="taxRateProducts">-->
                     <clear-field field="creditEntry"/>
                     <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                     <set field="creditEntry.debitCreditFlag" value="C"/>
                     <set field="creditEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
-                    <call-class-method method-name="getInvoiceTaxTotalForTaxAuthPartyAndGeo" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
+                    <!-- <call-class-method method-name="getInvoiceTaxTotalForTaxAuthPartyAndGeo" class-name="org.ofbiz.accounting.invoice.InvoiceWorker" -->
+                    <call-class-method method-name="getInvoiceTaxTotalForTaxGlAccount" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
                             ret-field="taxAmount">
                         <field field="invoice" type="GenericValue"/>
-                        <field field="taxAuthPartyId" type="String"/>
-                        <field field="taxAuthGeoId" type="String"/>
+                        <field field="glAccountId" type="String"/>
                     </call-class-method>
+                    <log level="info" message="** taxAmount for ${glAccountId}: ${taxAmount}"/>
+                    <clear-field field="taxRateProduct"/>
+                    <entity-one entity-name="TaxAuthorityRateProduct" value-field="taxRateProduct">
+                        <field-map field-name="taxAuthorityRateSeqId" from-field="taxAuthorityRateSeqId"/>
+                    </entity-one>
                     <set field="creditEntry.origAmount" from-field="taxAmount"/>
                     <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
-                    <set field="creditEntry.partyId" from-field="taxAuthPartyId"/>
+                    <set field="creditEntry.partyId" from-field="taxRateProduct.taxAuthPartyId"/>
                     <set field="creditEntry.roleTypeId" value="TAX_AUTHORITY"/>
+                    <!-- 
                     <clear-field field="taxAuthorityGlAccount"/>
                     <entity-one entity-name="TaxAuthorityGlAccount" value-field="taxAuthorityGlAccount">
                         <field-map field-name="organizationPartyId" from-field="creditEntry.organizationPartyId"/>
                         <field-map field-name="taxAuthGeoId" from-field="taxAuthGeoId"/>
                         <field-map field-name="taxAuthPartyId" from-field="taxAuthPartyId"/>
                     </entity-one>
+                     -->
+                     <!-- 
                     <if-not-empty field="taxAuthorityGlAccount">
-                        <set field="creditEntry.glAccountId" from-field="taxAuthorityGlAccount.glAccountId"/>
+                     -->
+                        <set field="creditEntry.glAccountId" from-field="taxRateProduct.taxGlAccountId"/>
+                    <!-- 
                         <else>
                             <set field="creditEntry.glAccountTypeId" value="TAX_ACCOUNT"/>
                         </else>
                     </if-not-empty>
+                     -->
                     <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
-                </iterate>
+            <!-- </iterate> -->
             </iterate-map>
             <!-- Another entry for tax not attributed to a taxAuthPartyId -->
             <call-class-method method-name="getInvoiceUnattributedTaxTotal" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
@@ -2325,12 +2369,14 @@ under the License.
                     ret-field="invoiceTaxTotal">
                 <field field="invoice" type="GenericValue"/>
             </call-class-method>
+            <log level="info" message="** getInvoiceTaxTotal ${invoiceTaxTotal}"/>
             <calculate field="totalOrigAmount" type="BigDecimal" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                 <calcop operator="add">
                     <calcop operator="get" field="totalOrigAmount"/>
                     <calcop operator="get" field="invoiceTaxTotal"/>
                 </calcop>
             </calculate>
+            <log level="info" message="** totalOrigAmount ${totalOrigAmount}"/>
             <set field="debitEntry.origAmount" from-field="totalOrigAmount"/>
             <set field="debitEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
             <set field="debitEntry.partyId" from-field="invoice.partyId"/>
@@ -2349,6 +2395,7 @@ under the License.
             <field-to-result field="acctgTransId" result-name="acctgTransId"/>
         </if-compare>
     </simple-method>
+    
     <!--automatic GL posting service triggered payment is created or when set payment status -->
     <simple-method method-name="createAcctgTransAndEntriesForOutgoingPayment" short-description="create accounting transactions and accounting transaction entries for outgoing payment">
         <call-simple-method method-name="getGlArithmeticSettingsInline"/>

@@ -94,6 +94,7 @@ under the License.
               </@tbody>
             </@table>
           </@field>
+          <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonSubmit/>
         </form>
     </@section>
 </@section>

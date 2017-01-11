@@ -13,7 +13,7 @@ describe('Category scale tests', function() {
 			display: true,
 
 			gridLines: {
-				color: "rgba(0, 0, 0, 0.1)",
+				color: 'rgba(0, 0, 0, 0.1)',
 				drawBorder: true,
 				drawOnChartArea: true,
 				drawTicks: true, // draw ticks extending towards the label
@@ -21,10 +21,12 @@ describe('Category scale tests', function() {
 				lineWidth: 1,
 				offsetGridLines: false,
 				display: true,
-				zeroLineColor: "rgba(0,0,0,0.25)",
-				zeroLineWidth: 1
+				zeroLineColor: 'rgba(0,0,0,0.25)',
+				zeroLineWidth: 1,
+				borderDash: [],
+				borderDashOffset: 0.0
 			},
-			position: "bottom",
+			position: 'bottom',
 			scaleLabel: {
 				labelString: '',
 				display: false
@@ -48,7 +50,7 @@ describe('Category scale tests', function() {
 		expect(defaultConfig.ticks.callback).toEqual(jasmine.any(Function));
 	});
 
-	it('Should generate ticks from the data labales', function() {
+	it('Should generate ticks from the data labels', function() {
 		var scaleID = 'myScale';
 
 		var mockData = {
@@ -73,6 +75,61 @@ describe('Category scale tests', function() {
 		scale.determineDataLimits();
 		scale.buildTicks();
 		expect(scale.ticks).toEqual(mockData.labels);
+	});
+
+	it('Should generate ticks from the data xLabels', function() {
+		var scaleID = 'myScale';
+
+		var mockData = {
+			datasets: [{
+				yAxisID: scaleID,
+				data: [10, 5, 0, 25, 78]
+			}],
+			xLabels: ['tick1', 'tick2', 'tick3', 'tick4', 'tick5']
+		};
+
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
+		var Constructor = Chart.scaleService.getScaleConstructor('category');
+		var scale = new Constructor({
+			ctx: {},
+			options: config,
+			chart: {
+				data: mockData
+			},
+			id: scaleID
+		});
+
+		scale.determineDataLimits();
+		scale.buildTicks();
+		expect(scale.ticks).toEqual(mockData.xLabels);
+	});
+
+	it('Should generate ticks from the data xLabels', function() {
+		var scaleID = 'myScale';
+
+		var mockData = {
+			datasets: [{
+				yAxisID: scaleID,
+				data: [10, 5, 0, 25, 78]
+			}],
+			yLabels: ['tick1', 'tick2', 'tick3', 'tick4', 'tick5']
+		};
+
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
+		config.position = 'left'; // y axis
+		var Constructor = Chart.scaleService.getScaleConstructor('category');
+		var scale = new Constructor({
+			ctx: {},
+			options: config,
+			chart: {
+				data: mockData
+			},
+			id: scaleID
+		});
+
+		scale.determineDataLimits();
+		scale.buildTicks();
+		expect(scale.ticks).toEqual(mockData.yLabels);
 	});
 
 	it ('should get the correct label for the index', function() {
@@ -154,7 +211,7 @@ describe('Category scale tests', function() {
 
 		expect(scale.getPixelForValue(0, 4, 0, false)).toBe(452);
 		expect(scale.getPixelForValue(0, 4, 0, true)).toBe(505);
-		expect(scale.getValueForPixel(452)).toBe(4);
+		expect(scale.getValueForPixel(453)).toBe(4);
 		expect(scale.getValueForPixel(505)).toBe(4);
 
 		config.gridLines.offsetGridLines = false;
@@ -166,6 +223,54 @@ describe('Category scale tests', function() {
 		expect(scale.getPixelForValue(0, 4, 0, false)).toBe(557);
 		expect(scale.getPixelForValue(0, 4, 0, true)).toBe(557);
 		expect(scale.getValueForPixel(557)).toBe(4);
+	});
+
+	it ('Should get the correct pixel for a value when there are repeated labels', function() {
+		var scaleID = 'myScale';
+
+		var mockData = {
+			datasets: [{
+				yAxisID: scaleID,
+				data: [10, 5, 0, 25, 78]
+			}],
+			labels: ['tick1', 'tick1', 'tick3', 'tick3', 'tick_last']
+		};
+
+		var mockContext = window.createMockContext();
+		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
+		config.gridLines.offsetGridLines = true;
+		var Constructor = Chart.scaleService.getScaleConstructor('category');
+		var scale = new Constructor({
+			ctx: mockContext,
+			options: config,
+			chart: {
+				data: mockData
+			},
+			id: scaleID
+		});
+
+		var minSize = scale.update(600, 100);
+
+		expect(scale.width).toBe(600);
+		expect(scale.height).toBe(28);
+		expect(scale.paddingTop).toBe(0);
+		expect(scale.paddingBottom).toBe(0);
+		expect(scale.paddingLeft).toBe(28);
+		expect(scale.paddingRight).toBe(48);
+		expect(scale.labelRotation).toBe(0);
+
+		expect(minSize).toEqual({
+			width: 600,
+			height: 28,
+		});
+
+		scale.left = 5;
+		scale.top = 5;
+		scale.right = 605;
+		scale.bottom = 33;
+
+		expect(scale.getPixelForValue('tick_1', 1, 0, false)).toBe(138);
+		expect(scale.getPixelForValue('tick_1', 1, 0, true)).toBe(190);
 	});
 
 	it ('Should get the correct pixel for a value when horizontal and zoomed', function() {
@@ -182,8 +287,8 @@ describe('Category scale tests', function() {
 		var mockContext = window.createMockContext();
 		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
 		config.gridLines.offsetGridLines = true;
-		config.ticks.min = "tick2";
-		config.ticks.max = "tick4";
+		config.ticks.min = 'tick2';
+		config.ticks.max = 'tick4';
 
 		var Constructor = Chart.scaleService.getScaleConstructor('category');
 		var scale = new Constructor({
@@ -244,7 +349,7 @@ describe('Category scale tests', function() {
 		var mockContext = window.createMockContext();
 		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
 		config.gridLines.offsetGridLines = true;
-		config.position = "left";
+		config.position = 'left';
 		var Constructor = Chart.scaleService.getScaleConstructor('category');
 		var scale = new Constructor({
 			ctx: mockContext,
@@ -282,7 +387,7 @@ describe('Category scale tests', function() {
 
 		expect(scale.getPixelForValue(0, 4, 0, false)).toBe(161);
 		expect(scale.getPixelForValue(0, 4, 0, true)).toBe(180);
-		expect(scale.getValueForPixel(161)).toBe(4);
+		expect(scale.getValueForPixel(162)).toBe(4);
 
 		config.gridLines.offsetGridLines = false;
 
@@ -309,9 +414,9 @@ describe('Category scale tests', function() {
 		var mockContext = window.createMockContext();
 		var config = Chart.helpers.clone(Chart.scaleService.getScaleDefaults('category'));
 		config.gridLines.offsetGridLines = true;
-		config.ticks.min = "tick2";
-		config.ticks.max = "tick4";
-		config.position = "left";
+		config.ticks.min = 'tick2';
+		config.ticks.max = 'tick4';
+		config.position = 'left';
 
 		var Constructor = Chart.scaleService.getScaleConstructor('category');
 		var scale = new Constructor({

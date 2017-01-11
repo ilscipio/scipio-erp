@@ -26,7 +26,7 @@ under the License.
   <@fields fieldArgs={"labelColumns":4}>
     <#list serviceParameters as serviceParameter>
       <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->
-      <#assign defaultValStr = serviceParameter.defaultValue!>
+      <#assign defaultValStr = serviceParameter.defaultValue!?string>
       <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#assign>
       <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
     </#list>

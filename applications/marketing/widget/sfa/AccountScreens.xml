@@ -26,11 +26,11 @@ under the License.
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="currentUrl" value="FindAccounts"/>
                 <set field="activeSubMenuItem" value="Accounts"/>
-                
-                <set field="setAccountDescription" value="${groovy:session.setAttribute('accountDescription', context.activeSubMenuItem)}"/>
-                <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
-                <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
-                
+                <script lang="groovy"><![CDATA[
+                    session.setAttribute('accountDescription', context.activeSubMenuItem)
+                    session.removeAttribute('contactDescription')
+                    session.removeAttribute('leadDescription')
+                ]]></script>
                 <set field="title" value="${uiLabelMap.SfaAcccounts}" />
             </actions>
             <widgets>

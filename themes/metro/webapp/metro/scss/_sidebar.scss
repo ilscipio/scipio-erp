@@ -301,7 +301,13 @@ $sidebar-width: 200px;
         /* extras for metro */
         padding-top: 0;
         padding-bottom: 0;
-        
+        /*
+        li {
+            &.active {
+                background: inherit;
+            }
+        }
+        */
     }
 }
 

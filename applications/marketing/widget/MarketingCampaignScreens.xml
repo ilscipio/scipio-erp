@@ -91,7 +91,7 @@ under the License.
                 <script location="component://marketing/webapp/marketing/WEB-INF/actions/campaign/FindMarketingCampaign.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://marketing/webapp/sfa/campaign/MarketingCampaingList.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://marketing/webapp/sfa/campaign/MarketingCampaignList.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

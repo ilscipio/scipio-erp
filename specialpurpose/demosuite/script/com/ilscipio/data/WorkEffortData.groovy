@@ -135,6 +135,16 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
     List prepareData(int index) throws Exception {
         List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         List<GenericValue> workEffortEntrys = new ArrayList<GenericValue>();
+        Map fields;
+        
+        if (Boolean.TRUE.equals(context.autoCreatePartyRoles)) {
+            fields = ["partyId": context.partyId, "roleTypeId" : "INTERNAL_ORGANIZATIO"];
+            GenericValue partyRole = delegator.findOne("PartyRole", fields, false);
+            if (partyRole == null) {
+                partyRole = delegator.makeValue("PartyRole", fields);
+                toBeStored.add(partyRole);
+            }
+        }
 
         String workEffortId = "GEN_" + delegator.getNextSeqId("demo-workEffortId");
         index = UtilRandom.random(context.workEffortTypeIdsAndStatusKeys);
@@ -147,7 +157,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
             minDate = new Date(context.minDate.getTime());
 
         Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
-        Map fields = UtilMisc.toMap("workEffortId", workEffortId, "workEffortTypeId", workEffortTypeId, "currentStatusId", currentStatusId, "workEffortName", workEffortName, "description", workEffortName + " description", "createdDate", createdDate);
+        fields = UtilMisc.toMap("workEffortId", workEffortId, "workEffortTypeId", workEffortTypeId, "currentStatusId", currentStatusId, "workEffortName", workEffortName, "description", workEffortName + " description", "createdDate", createdDate);
         GenericValue workEffort = delegator.makeValue("WorkEffort", fields);
         toBeStored.add(workEffort);
 

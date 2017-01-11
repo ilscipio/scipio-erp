@@ -28,10 +28,18 @@ myLineChart.destroy();
 Triggers an update of the chart. This can be safely called after replacing the entire data object. This will update all scales, legends, and then re-render the chart.
 
 ```javascript
-// duration is the time for the animation of the redraw in miliseconds
-// lazy is a boolean. if true, the animation can be interupted by other animations
+// duration is the time for the animation of the redraw in milliseconds
+// lazy is a boolean. if true, the animation can be interrupted by other animations
 myLineChart.data.datasets[0].data[2] = 50; // Would update the first dataset's value of 'March' to be 50
 myLineChart.update(); // Calling update now animates the position of March from 90 to 50.
+```
+
+#### .reset()
+
+Reset the chart to it's state before the initial animation. A new animation can then be triggered using `update`.
+
+```javascript
+myLineChart.reset();
 ```
 
 #### .render(duration, lazy)
@@ -39,8 +47,8 @@ myLineChart.update(); // Calling update now animates the position of March from 
 Triggers a redraw of all chart elements. Note, this does not update elements for new data. Use `.update()` in that case.
 
 ```javascript
-// duration is the time for the animation of the redraw in miliseconds
-// lazy is a boolean. if true, the animation can be interupted by other animations
+// duration is the time for the animation of the redraw in milliseconds
+// lazy is a boolean. if true, the animation can be interrupted by other animations
 myLineChart.render(duration, lazy);
 ```
 
@@ -125,6 +133,19 @@ myLineChart.getDatasetAtEvent(e);
 // => returns an array of elements
 ```
 
+#### .getDatasetMeta(index)
+
+Looks for the dataset that matches the current index and returns that metadata. This returned data has all of the metadata that is used to construct the chart.
+
+The `data` property of the metadata will contain information about each point, rectangle, etc. depending on the chart type.
+
+Extensive examples of usage are available in the [Chart.js tests](https://github.com/chartjs/Chart.js/tree/master/test).
+
+```javascript
+var meta = myChart.getDatasetMeta(0);
+var x = meta.data[0]._model.x
+```
+
 ### External Tooltips
 
 You can enable custom tooltips in the global or chart configuration like so:
@@ -152,6 +173,8 @@ var myPieChart = new Chart(ctx, {
 				// tooltip.text
 				// tooltip.x
 				// tooltip.y
+				// tooltip.caretX
+				// tooltip.caretY
 				// etc...
 			}
 		}
@@ -203,12 +226,12 @@ Scale instances are given the following properties during the fitting process.
 {
 	left: Number, // left edge of the scale bounding box
 	right: Number, // right edge of the bounding box'
-	top: Number, 
+	top: Number,
 	bottom: Number,
 	width: Number, // the same as right - left
 	height: Number, // the same as bottom - top
 
-	// Margin on each side. Like css, this is outside the bounding box. 
+	// Margin on each side. Like css, this is outside the bounding box.
 	margins: {
 		left: Number,
 		right: Number,
@@ -225,7 +248,7 @@ Scale instances are given the following properties during the fitting process.
 ```
 
 #### Scale Interface
-To work with Chart.js, custom scale types must implement the following interface. 
+To work with Chart.js, custom scale types must implement the following interface.
 
 ```javascript
 {
@@ -260,10 +283,10 @@ To work with Chart.js, custom scale types must implement the following interface
 Optionally, the following methods may also be overwritten, but an implementation is already provided by the `Chart.Scale` base class.
 
 ```javascript
-	// Transform the ticks array of the scale instance into strings. The default implementation simply calls this.options.ticks.callback(numericalTick, index, ticks); 
+	// Transform the ticks array of the scale instance into strings. The default implementation simply calls this.options.ticks.callback(numericalTick, index, ticks);
 	convertTicksToLabels: function() {},
 
-	// Determine how much the labels will rotate by. The default implementation will only rotate labels if the scale is horizontal. 
+	// Determine how much the labels will rotate by. The default implementation will only rotate labels if the scale is horizontal.
 	calculateTickRotation: function() {},
 
 	// Fits the scale into the canvas.
@@ -280,7 +303,7 @@ Optionally, the following methods may also be overwritten, but an implementation
 
 The Core.Scale base class also has some utility functions that you may find useful.
 ```javascript
-{	
+{
 	// Returns true if the scale instance is horizontal
 	isHorizontal: function() {},
 
@@ -350,7 +373,7 @@ The following methods may optionally be overridden by derived dataset controller
 	// chart types using a single scale
 	linkScales: function() {},
 
-	// Called by the main chart controller when an update is triggered. The default implementation handles the number of data points changing and creating elements appropriately. 
+	// Called by the main chart controller when an update is triggered. The default implementation handles the number of data points changing and creating elements appropriately.
 	buildOrUpdateElements: function() {}
 }
 ```
@@ -372,15 +395,20 @@ The bar controller has a special property that you should be aware of. To correc
 
 ### Creating Plugins
 
-Starting with v2.1.0, you can create plugins for chart.js. To register your plugin, simply call `Chart.pluginService.register` and pass your plugin in.
+Starting with v2.1.0, you can create plugins for chart.js. To register your plugin, simply call `Chart.plugins.register` and pass your plugin in.
 Plugins will be called at the following times
 * Start of initialization
 * End of initialization
 * Start of update
 * After the chart scales have calculated
+* Start of datasets update
+* End of datasets update
 * End of update (before render occurs)
 * Start of draw
 * End of draw
+* Before datasets draw
+* After datasets draw
+* Resize
 * Before an animation is started
 
 Plugins should derive from Chart.PluginBase and implement the following interface
@@ -389,17 +417,24 @@ Plugins should derive from Chart.PluginBase and implement the following interfac
 	beforeInit: function(chartInstance) { },
 	afterInit: function(chartInstance) { },
 
+	resize: function(chartInstance, newChartSize) { },
+
 	beforeUpdate: function(chartInstance) { },
 	afterScaleUpdate: function(chartInstance) { }
+	beforeDatasetsUpdate: function(chartInstance) { }
+	afterDatasetsUpdate: function(chartInstance) { }
 	afterUpdate: function(chartInstance) { },
 
-	// This is called at the start of a render. It is only called once, even if the animation will run for a number of frames. Use beforeDraw or afterDraw 
+	// This is called at the start of a render. It is only called once, even if the animation will run for a number of frames. Use beforeDraw or afterDraw
 	// to do something on each animation frame
 	beforeRender: function(chartInstance) { },
 
 	// Easing is for animation
 	beforeDraw: function(chartInstance, easing) { },
-	afterDraw: function(chartInstance, easing) { }
+	afterDraw: function(chartInstance, easing) { },
+	// Before the datasets are drawn but after scales are drawn
+	beforeDatasetsDraw: function(chartInstance, easing) { },
+	afterDatasetsDraw: function(chartInstance, easing) { },
 
 	destroy: function(chartInstance) { }
 }
@@ -407,7 +442,7 @@ Plugins should derive from Chart.PluginBase and implement the following interfac
 
 ### Building Chart.js
 
-Chart.js uses <a href="http://gulpjs.com/" target="_blank">gulp</a> to build the library into a single JavaScript file. 
+Chart.js uses <a href="http://gulpjs.com/" target="_blank">gulp</a> to build the library into a single JavaScript file.
 
 Firstly, we need to ensure development dependencies are installed. With node and npm installed, after cloning the Chart.js repo to a local directory, and navigating to that directory in the command line, we can run the following:
 

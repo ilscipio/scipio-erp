@@ -83,6 +83,7 @@ under the License.
                               </#if>
                           </#if>
                         <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                        <input type="submit" style="display: none;"/>
                     </form>
                          <@row>
                              <@cell class="+${styles.text_left!}" columns=9>

@@ -146,6 +146,7 @@
 abs-linkmap text
 abs-menulinks text
 ant text eol=lf
+AUTHORS text
 Changelog text
 ChangeLog text
 CHANGELOG text

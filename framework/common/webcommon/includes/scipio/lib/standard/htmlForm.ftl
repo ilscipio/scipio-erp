@@ -2281,8 +2281,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#-- TODO: support more label configurations (besides horizontal left) -->
       <#if labelArea && labelPosition == "left" || labelArea && labelPosition == "top">
         <#if inverted>
+          <#-- NOTE: (per comment above) when inverted, we use user's widgetAreaClass BUT we use the calculated grid
+              class for label area (defaultGridStyles.labelArea) -->
           <#local widgetAreaClass = addClassArg(widgetAreaClass, "field-entry-widget-left")>
-          <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noInputCell)>
+          <@cell class=compileClassArg(widgetAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container || noInputCell)>
             <#if !preWidgetContent?is_boolean><@contentArgRender content=preWidgetContent args=prePostContentArgs /></#if>
             <#nested>
             <#if !postWidgetContent?is_boolean><@contentArgRender content=postWidgetContent args=prePostContentArgs /></#if>
@@ -2304,7 +2306,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->
             <#if inverted>
-              <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container || noLabelCell)>
+              <#-- NOTE: (per comment above) when inverted, we use user's labelAreaClass BUT we use the calculated grid
+                class for widget area (defaultGridStyles.widgetArea) -->
+              <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.widgetArea) nocells=(nocells || !container || noLabelCell)>
                 <#if !preLabelContent?is_boolean><@contentArgRender content=preLabelContent args=prePostContentArgs /></#if>
                 <#if !labelAreaContent?is_boolean><@contentArgRender content=labelAreaContent args=labelAreaContentArgs /></#if>
                 <#if !postLabelContent?is_boolean><@contentArgRender content=postLabelContent args=prePostContentArgs /></#if>

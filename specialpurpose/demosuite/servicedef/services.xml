@@ -11,18 +11,18 @@
         <implements service="demoDataGenerator"/>
     </service>
     
-     <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 
+    <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of Acctg Transaction demo data</description>
         <implements service="demoDataGenerator"/>       
     </service>
-    
-    
+
     <service name="createWorkEffortData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/WorkEffortData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of WorkEffort demo data</description>
         <implements service="demoDataGenerator"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="autoCreatePartyRoles" type="Boolean" mode="IN" optional="true" default-value="true"/>
     </service>
     
     <service name="createProductData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/ProductData.groovy" 
@@ -45,12 +45,12 @@
         <attribute name="generatePassword" type="Boolean" mode="IN" optional="false" default-value="true"/>        
     </service>
     
-    
     <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeVisitData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeVisit demo data</description>
         <implements service="demoDataGenerator"/>
     </service>
+    
     <service name="createTrackingCodeOrderData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeOrderData.groovy" 
         invoke="" transaction-timeout="7200">
         <description>Creates a number of TrackingCodeOrder demo data</description>

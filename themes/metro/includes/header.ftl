@@ -303,13 +303,13 @@ under the License.
                             <#if userLogin??>
                             <ul class="left">
                                 <li class="has-dropdown">
-                                    <a class="" href="#"><i class="fi-home text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
+                                    <a class="" href="#"><i class="${styles.icon_home} text-blue"></i> ${uiLabelMap["CommonPrimaryApps"]}</a>
                                      <ul class="dropdown">
                                         <@primaryAppsMenu/>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown">
-                                    <a class="" href="#"><i class="fi-widget text-green"></i> ${uiLabelMap["CommonSecondaryApps"]}</a>
+                                    <a class="" href="#"><i class="${styles.icon_button} text-green"></i> ${uiLabelMap["CommonSecondaryApps"]}</a>
                                     <ul class="dropdown">
                                         <@secondaryAppsMenu/>
                                     </ul>
@@ -333,7 +333,7 @@ under the License.
 
                             <ul class="right">
                                 <li class="has-dropdown">
-                                   <#if userLogin??><a class="" href="#"><i class="fi-torso"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a><#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
+                                   <#if userLogin??><a class="" href="#"><i class="${styles.icon_user}"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a><#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
                                     <ul class="dropdown">
                                         <@generalMenu />
                                     </ul>

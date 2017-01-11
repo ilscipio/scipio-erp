@@ -25,11 +25,13 @@
                             ${commEvent.partyIdFrom!uiLabelMap.PartyUnknown}
                         </@td>
                         <@td>
-                            <#assign subject = commEvent.subject />
-                            <#if commEvent.subject?length &gt; 25>
-                                <#assign subject = commEvent.subject[0..<25] + "..." />
-                            </#if>
-                            <a href="<@ofbizInterWebappUrl>/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}&partyId=${commEvent.partyId}</@ofbizInterWebappUrl>">${subject}</a>
+														<#if commEvent.subject?has_content>
+															<#assign subject = commEvent.subject />
+															<#if commEvent.subject?length &gt; 25>
+																	<#assign subject = commEvent.subject[0..<25] + "..." />
+															</#if>
+															<a href="<@ofbizInterWebappUrl>/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}&partyId=${commEvent.partyId}</@ofbizInterWebappUrl>">${subject}</a>
+														</#if>
                         </@td>
                         <@td>${commEventStatus.description}</@td>
                         <@td>${commEventType.description}</@td>

@@ -14,6 +14,7 @@
 @import "shared/chartsjs";
 @import "shared/steps";
 @import "shared/calendar";
+@import "shared/editor";
 
 // METRO Theme Imports
 //@import "style";
@@ -25,6 +26,7 @@
 /*Theme specific fixes*/
 th a { color: #fff;}
 
+.postfix input { padding:0px;}
 
 .datepicker {
     td, th {

@@ -102,7 +102,9 @@ under the License.
     </form>
     <form name="ListGlAccountPdf" extends="ListGlAccount">
         <actions>
-            <entity-condition entity-name="GlAccount" list="listIt"/>
+            <entity-condition entity-name="GlAccount" list="listIt">
+                <order-by field-name="glAccountId"/>
+            </entity-condition> 
         </actions>
         <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="buttontext"><display/></field>
     </form>

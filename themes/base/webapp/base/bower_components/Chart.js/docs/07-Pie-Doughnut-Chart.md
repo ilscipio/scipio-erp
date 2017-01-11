@@ -3,7 +3,7 @@ title: Pie & Doughnut Charts
 anchor: doughnut-pie-chart
 ---
 ### Introduction
-Pie and doughnut charts are probably the most commonly used chart there are. They are divided into segments, the arc of each segment shows the proportional value of each piece of data.
+Pie and doughnut charts are probably the most commonly used charts there are. They are divided into segments, the arc of each segment shows the proportional value of each piece of data.
 
 They are excellent at showing the relational proportions between data.
 
@@ -40,13 +40,13 @@ var myDoughnutChart = new Chart(ctx, {
 });
 ```
 
-### Data Structure
+### Dataset Structure
 
 Property | Type | Usage
 --- | --- | ---
-data | `Array<Number>` | The data to plot as bars
+data | `Array<Number>` | The data to plot as arcs
 label | `String` | The label for the dataset which appears in the legend and tooltips
-backgroundColor | `Array<Color>` | The fill color of the arcs. See [Colors](#getting-started-colors)
+backgroundColor | `Array<Color>` | The fill color of the arcs. See [Colors](#chart-configuration-colors)
 borderColor | `Array<Color>` | Arc border color
 borderWidth | `Array<Number>` | Border width of arcs in pixels
 hoverBackgroundColor | `Array<Color>` | Arc background color when hovered

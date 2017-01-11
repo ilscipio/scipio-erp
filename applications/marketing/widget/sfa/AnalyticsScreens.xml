@@ -44,9 +44,6 @@ under the License.
                                 <include-screen name="AnalyticsSalesStats"/>
                             </container>
                         </container>
-                        <container style="${styles.grid_row}">
-
-                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -88,7 +85,7 @@ under the License.
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}4 ${styles.grid_cell}">
-                                    <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsTracking.ftl"/></html></platform-specific>
+                                <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/FindAnalyticsTracking.ftl"/></html></platform-specific>
                             </container>
                             <container style="${styles.grid_large}8 ${styles.grid_cell}">
                                 <include-screen name="AnalyticsTrackingStats"/>

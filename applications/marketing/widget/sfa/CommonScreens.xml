@@ -243,17 +243,21 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="main"/>
-                <set field="removeAccountDescription" value="${groovy:session.removeAttribute('accountDescription')}"/>
-                <set field="removeContactDescription" value="${groovy:session.removeAttribute('contactDescription')}"/>
-                <set field="removeLeadDescription" value="${groovy:session.removeAttribute('leadDescription')}"/>
+                <!--<set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="main"/>-->
+                <script lang="groovy"><![CDATA[
+                    session.removeAttribute('accountDescription')
+                    session.removeAttribute('contactDescription')
+                    session.removeAttribute('leadDescription')
+                ]]></script>
             </actions>
             <widgets>
+                <include-screen name="main" location="component://marketing/widget/CommonScreens.xml" />
+                <!--
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <include-portal-page id="${parameters.portalPageId}"/>
                     </decorator-section>
-                </decorator-screen>
+                </decorator-screen>-->
             </widgets>
         </section>
     </screen>
@@ -297,9 +301,16 @@ under the License.
                 <entity-one entity-name="Party" value-field="party"/>
                 <entity-one entity-name="Person" value-field="lookupPerson"/>
                 <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>
-                <set field="accountDescription" value="${groovy:session.getAttribute(&quot;accountDescription&quot;)}"/>
-                <set field="contactDescription" value="${groovy:session.getAttribute(&quot;contactDescription&quot;)}"/>
-                <set field="leadDescription" value="${groovy:session.getAttribute(&quot;leadDescription&quot;)}"/>
+
+                <set field="accountDescription" value="${groovy: session.getAttribute('accountDescription')}"/>
+                <set field="contactDescription" value="${groovy: session.getAttribute('contactDescription')}"/>
+                <set field="leadDescription" value="${groovy: session.getAttribute('leadDescription')}"/>
+                <script lang="groovy"><![CDATA[
+                    org.ofbiz.base.util.Debug.logInfo("accountDescription: " + accountDescription, "test.groovy")
+                    org.ofbiz.base.util.Debug.logInfo("contactDescription: " + contactDescription, "test.groovy")
+                    org.ofbiz.base.util.Debug.logInfo("leadDescription: " + leadDescription, "test.groovy")
+
+                ]]></script>
                 <if>
                     <condition>
                         <or>
@@ -311,24 +322,34 @@ under the License.
                         <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Leads"/>
                         <set field="currentCommonDecorator" value="CommonLeadDecorator"/>
                     </then>
-                </if>
-                <if>
-                    <condition>
-                        <not><if-empty field="contactDescription"/></not>
-                    </condition>
-                    <then>
-                        <set field="activeSubMenuItem" value="Contacts"/>
-                        <set field="currentCommonDecorator" value="CommonContactDecorator"/>
-                    </then>
-                </if>
-                <if>
-                    <condition>
-                        <not><if-empty field="accountDescription"/></not>
-                    </condition>
-                    <then>
-                        <set field="activeSubMenuItem" value="Accounts"/>
-                        <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
-                    </then>
+                    <else-if>
+                        <condition>
+                            <not><if-empty field="contactDescription"/></not>
+                        </condition>
+                        <then>
+                            <set field="activeSubMenuItem" value="Contacts"/>
+                            <set field="currentCommonDecorator" value="CommonContactDecorator"/>
+                        </then>
+                    </else-if>
+                    <else-if>
+                        <condition>
+                            <not><if-empty field="accountDescription"/></not>
+                        </condition>
+                        <then>
+                            <set field="activeSubMenuItem" value="Accounts"/>
+                            <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
+                        </then>
+                    </else-if>
+                    <else-if>
+                        <condition>
+                            <if-empty field="currentCommonDecorator"/>
+                        </condition>
+                        <then>
+                            <!-- 2017-01-09: default to Accounts (for direct link with no prior session) -->
+                            <set field="activeSubMenuItem" value="Accounts"/>
+                            <set field="currentCommonDecorator" value="CommonAccountDecorator"/>
+                        </then>
+                    </else-if>
                 </if>
                 <if>
                     <condition>
@@ -377,7 +398,8 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleViewPartyProfile"/>
-                <set field="activeSubMenuItem" value="profile"/>
+                <!-- SCIPIO: FIXME?: we have no entry for this anymore...
+                <set field="activeSubMenuItem" value="profile"/>-->
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
 
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>

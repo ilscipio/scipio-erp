@@ -67,7 +67,8 @@ if (userLogin && parameters.portalPageId) {
     }
 }
 // Debug.log('======parent portalPageId: ' + parameters.parentPortalPageId);
-// SCIPIO: TODO: review
-if (!context.activeSubMenuItem && parameters.portalPageId) {
-    context.activeSubMenuItem = parameters.portalPageId; // and the menu item is highlighted
-}
+// SCIPIO: TODO: REVIEW
+// 2017-01-09: REMOVED: I don't think this ever works out properly in current state. needs an extra parameter or something.
+//if (!context.activeSubMenuItem && parameters.portalPageId) {
+//    context.activeSubMenuItem = parameters.portalPageId; // and the menu item is highlighted
+//}

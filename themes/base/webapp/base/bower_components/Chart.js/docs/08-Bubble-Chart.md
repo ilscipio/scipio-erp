@@ -21,13 +21,13 @@ var myBubbleChart = new Chart(ctx,{
 });
 ```
 
-### Data Structure
+### Dataset Structure
 
 Property | Type | Usage
 --- | --- | ---
 data | `Array<BubbleDataObject>` | The data to plot as bubbles. See [Data format](#bubble-chart-data-format)
 label | `String` | The label for the dataset which appears in the legend and tooltips
-backgroundColor | `Color Array<Color>` | The fill color of the bubbles.
+backgroundColor | `Color Array<Color>` | The fill color of the bubbles. See [Colors](#chart-configuration-colors)
 borderColor | `Color or Array<Color>` | The stroke color of the bubbles.
 borderWidth | `Number or Array<Number>` | The stroke width of bubble in pixels.
 hoverBackgroundColor | `Color or Array<Color>` | The fill color of the bubbles when hovered.

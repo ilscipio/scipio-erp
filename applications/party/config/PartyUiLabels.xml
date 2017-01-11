@@ -13205,4 +13205,9 @@
         <value xml:lang="de">Wählen Sie den zu erstellenden Benutzertyp aus</value>
         <value xml:lang="en">Please select the type of user to create</value>
     </property>
+    <property key="PartyPartyNotFoundPartyId">
+        <value xml:lang="de">Nutzer nicht gefunden: ${partyId}</value>
+        <value xml:lang="en">User not found: ${partyId}</value>
+        <value xml:lang="fr">Acteur non trouvé: ${partyId}</value>
+    </property>
 </resource>

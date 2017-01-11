@@ -1,14 +1,5 @@
 // Test the rectangle element
 describe('Legend block tests', function() {
-
-	beforeEach(function() {
-		window.addDefaultMatchers(jasmine);
-	});
-
-	afterEach(function() {
-		window.releaseAllCharts();
-	});
-
 	it('Should be constructed', function() {
 		var legend = new Chart.Legend({});
 		expect(legend).not.toBe(undefined);
@@ -23,6 +14,7 @@ describe('Legend block tests', function() {
 
 			// a callback that will handle
 			onClick: jasmine.any(Function),
+			onHover: null,
 
 			labels: {
 				boxWidth: 40,
@@ -52,6 +44,7 @@ describe('Legend block tests', function() {
 					label: 'dataset3',
 					borderWidth: 10,
 					borderColor: 'green',
+					pointStyle: 'crossRot',
 					data: []
 				}],
 				labels: []
@@ -68,6 +61,7 @@ describe('Legend block tests', function() {
 			lineJoin: undefined,
 			lineWidth: undefined,
 			strokeStyle: undefined,
+			pointStyle: undefined,
 			datasetIndex: 0
 		}, {
 			text: 'dataset2',
@@ -79,6 +73,7 @@ describe('Legend block tests', function() {
 			lineJoin: 'miter',
 			lineWidth: undefined,
 			strokeStyle: undefined,
+			pointStyle: undefined,
 			datasetIndex: 1
 		}, {
 			text: 'dataset3',
@@ -90,6 +85,7 @@ describe('Legend block tests', function() {
 			lineJoin: undefined,
 			lineWidth: 10,
 			strokeStyle: 'green',
+			pointStyle: 'crossRot',
 			datasetIndex: 2
 		}]);
 	});
@@ -122,20 +118,21 @@ describe('Legend block tests', function() {
 
 		expect(chart.legend.legendHitBoxes.length).toBe(3);
 
-		[	{ h: 12, l: 101, t: 10, w: 93 },
-			{ h: 12, l: 205, t: 10, w: 93 },
-			{ h: 12, l: 308, t: 10, w: 93 }
+		[
+			{h: 12, l: 101, t: 10, w: 93},
+			{h: 12, l: 205, t: 10, w: 93},
+			{h: 12, l: 308, t: 10, w: 93}
 		].forEach(function(expected, i) {
 			expect(chart.legend.legendHitBoxes[i].height).toBeCloseToPixel(expected.h);
 			expect(chart.legend.legendHitBoxes[i].left).toBeCloseToPixel(expected.l);
 			expect(chart.legend.legendHitBoxes[i].top).toBeCloseToPixel(expected.t);
 			expect(chart.legend.legendHitBoxes[i].width).toBeCloseToPixel(expected.w);
-		})
+		});
 
 		// NOTE(SB) We should get ride of the following tests and use image diff instead.
 		// For now, as discussed with Evert Timberg, simply comment out.
 		// See http://humblesoftware.github.io/js-imagediff/test.html
-		/*chart.legend.ctx = window.createMockContext();
+		/* chart.legend.ctx = window.createMockContext();
 		chart.update();
 
 		expect(chart.legend.ctx .getCalls()).toEqual([{

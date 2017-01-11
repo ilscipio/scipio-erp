@@ -17,6 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- SCIPIO: prefix to prevent duplicate IDs -->
+<#assign accountBaseId = accountBaseId!ownedFinAccount.finAccountId!"">
+
 <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
     <p>
         <b>${uiLabelMap.AccountingAccountNumber}:</b> <a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${ownedFinAccount.finAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"
@@ -33,7 +36,7 @@ under the License.
         </#if>
     </p>
 
-    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id="fa-transactions"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountBaseId+"-fa-transactions")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
         <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.FormFieldTitle_transactionDate}</@th>
@@ -62,7 +65,7 @@ under the License.
             </#list>
         </@tbody>
         <@tfoot>
-            <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
+            <#--<@tr type="util"><@td colspan="6"><hr /></@td></@tr>-->
             <@tr>
                 <@td colspan="5"><b>${uiLabelMap.FormFieldTitle_actualBalance}</b></@td>
                 <@td><b><@ofbizCurrency amount=ownedFinAccount.actualBalance isoCode=ownedFinAccount.currencyUomId/></b></@td>
@@ -73,7 +76,7 @@ under the License.
 
 <#if ownedFinAccountAuthList?has_content>
     <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
-        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id="fa-authorizations"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id=(accountBaseId+"-fa-authorizations")> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
             <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.FormFieldTitle_authorizationDate}</@th>
@@ -93,7 +96,7 @@ under the License.
                 </#list>
             </@tbody>
             <@tfoot>
-                <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
+                <#--<@tr type="util"><@td colspan="4"><hr /></@td></@tr>-->
                 <@tr>
                     <@td colspan="3"><b>${uiLabelMap.FormFieldTitle_actualBalance}</b></@td>
                     <@td><b><@ofbizCurrency amount=ownedFinAccount.actualBalance isoCode=ownedFinAccount.currencyUomId/></b></@td>

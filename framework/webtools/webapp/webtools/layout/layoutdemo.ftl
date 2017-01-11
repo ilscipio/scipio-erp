@@ -66,21 +66,21 @@
   <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
   <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
     <@grid type="tiles">  <#-- tilesType="default" -->
-        <@tile size="large" color=3 icon="${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
+        <@tile size="large" color=3 icon="${styles.icon!} ${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
         <@tile size="normal" color=7 title="Test" image="https://placehold.it/150x150"></@tile>
-        <@tile size="small" color=6 title="" icon="${styles.icon_prefix!}flag"></@tile>
+        <@tile size="small" color=6 title="" icon="${styles.icon!} ${styles.icon_prefix!}flag"></@tile>
         <@tile size="small" color=3 title="Test" image="https://placehold.it/70x70"></@tile>
         <@tile size="wide" color=0 title="dasdsadsas dasdas" image="https://placehold.it/310x150"></@tile>
         <@tile size="large" color=6 title="Test" image="https://placehold.it/310x310"></@tile>
-        <@tile size="wide" color=2 title="Test 3" icon="${styles.icon_prefix!}heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>    
-        <@tile size="normal" color=2 icon="${styles.icon_prefix!}layout">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
-        <@tile size="normal" color=5 title="2" icon="${styles.icon_prefix!}music"></@tile>
+        <@tile size="wide" color=2 title="Test 3" icon="${styles.icon!} ${styles.icon_prefix!}heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>    
+        <@tile size="normal" color=2 icon="${styles.icon!} ${styles.icon_prefix!}layout ${styles.icon_prefix!}th-large">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
+        <@tile size="normal" color=5 title="2" icon="${styles.icon!} ${styles.icon_prefix!}music"></@tile>
         <@tile size="small" color=4 title="Test"></@tile>
         <@tile size="small" color=6 title="Test"></@tile>
         <@tile size="small" color=4 title="Test"></@tile>
         <@tile size="small" color=5 title="Test"></@tile>
         <@tile size="normal" color=0 image="https://placehold.it/150x150"></@tile>
-        <@tile size="normal" color=1 title="2" icon="${styles.icon_prefix!}like"></@tile>
+        <@tile size="normal" color=1 title="2" icon="${styles.icon!} ${styles.icon_prefix!}like ${styles.icon_prefix!}thumbs-up"></@tile>
     </@grid>
   </@section>
   <@section title="Simple thumbnail image gallery with fixed-size tiles" relHeadingLevel=+1>
@@ -189,10 +189,10 @@
 
 <@section title="Step navigation">
     <@nav type="steps">
-        <@step completed=true icon="${styles.icon_prefix!}cart">Cart</@step>
-        <@step active=true icon="${styles.icon_prefix!}info">Shipping</@step>
-        <@step disabled=true icon="${styles.icon_prefix!}heart">Billing</@step>
-        <@step disabled=true icon="${styles.icon_prefix!}info">Confirm Order</@step>
+        <@step completed=true icon="${styles.icon!} ${styles.icon_prefix!}cart">Cart</@step>
+        <@step active=true icon="${styles.icon!} ${styles.icon_prefix!}info">Shipping</@step>
+        <@step disabled=true icon="${styles.icon!} ${styles.icon_prefix!}heart">Billing</@step>
+        <@step disabled=true icon="${styles.icon!} ${styles.icon_prefix!}info">Confirm Order</@step>
     </@nav>
 </@section>
 

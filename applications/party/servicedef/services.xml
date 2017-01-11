@@ -24,7 +24,12 @@ under the License.
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- AddressMatchMap services -->
+    <!-- AddressMatchMap services 
+    
+    SCIPIO: ToDo: Remove
+    Has never been implemented as discussed here 
+    http://ofbiz.135035.n4.nabble.com/Address-match-map-is-used-for-td157597.html
+    
     <service name="createAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
             location="component://party/script/org/ofbiz/party/party/PartyServices.xml" invoke="createAddressMatchMap">
         <description>Create an AddressMatchMap record</description>
@@ -52,6 +57,7 @@ under the License.
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
     </service>
 
+    -->
     <!-- Party services -->
     <service name="deleteParty" engine="java"
             location="org.ofbiz.party.party.PartyServices" invoke="deleteParty" auth="true">

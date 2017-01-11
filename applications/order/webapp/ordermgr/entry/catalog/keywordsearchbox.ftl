@@ -23,11 +23,11 @@ under the License.
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) widgetOnly=true/>
             </@cell>
             <@cell small=3>
-              <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a>
+              <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass ${styles.icon_prefix!}search"></i></a>
             </@cell>
         </@row>
         <#-- ALTERNATIVE (example):
-        <#assign postfixContent><a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass"></i></a></#assign>
+        <#assign postfixContent><a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-search ${styles.icon_prefix!}magnify"></i></a></#assign>
         <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) collapse=true labelArea=false postfixColumns=3 postfix=true postfixContent=postfixContent/>
         -->
     </form>

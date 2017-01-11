@@ -18,12 +18,12 @@ Map processResult() {
     Timestamp fromDateTimestamp = null;
     Timestamp thruDateTimestamp = null;
     if (fromDate)
-        fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);    
+        fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);    
     if (thruDate)
-        thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);           
-    if (fromDateTimestamp && fromDateTimestamp < thruDateTimestamp) {
-        fromDate = null;
-        thruDate = null;
+        thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);           
+    if (fromDateTimestamp && !fromDateTimestamp.before(thruDateTimestamp)) {
+        fromDateTimestamp = null;
+        thruDateTimestamp = null;
     }  
     if (!fromDateTimestamp) {
         iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
@@ -34,11 +34,11 @@ Map processResult() {
    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
     dateEnd = dateIntervals.getDateEnd();
-    if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
+    if (thruDateTimestamp && dateEnd.before(thruDateTimestamp))
         dateEnd = thruDateTimestamp;
 
     fromDateText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
-    thruDateText = UtilDateTime.timeStampToString(dateIntervals.getDateEnd(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
+    thruDateText = UtilDateTime.timeStampToString(dateEnd, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         
     Map resultMap = new TreeMap<String, Object>();
     for (int i = 0; i < iCount; i++) {
@@ -68,7 +68,7 @@ Map processResult() {
         
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateBegin(), context.locale, context.timeZone);
         dateEnd = dateIntervals.getDateEnd();
-        if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
+        if (thruDateTimestamp && dateEnd.before(thruDateTimestamp))
             dateEnd = thruDateTimestamp;
         fromDateText = UtilDateTime.timeStampToString(dateIntervals.getDateBegin(), "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);
         thruDateText = UtilDateTime.timeStampToString(dateEnd, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);

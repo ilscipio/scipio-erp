@@ -21,7 +21,7 @@ under the License.
     <fo:block-container height="5mm" font-size="6pt">
         <fo:block>
             <#-- Return Address -->
-            ${companyName}
+            ${companyName!""}
         </fo:block>
     </fo:block-container>
     <fo:block>

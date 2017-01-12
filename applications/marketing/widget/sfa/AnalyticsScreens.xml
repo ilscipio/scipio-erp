@@ -28,6 +28,8 @@ under the License.
                 <set field="titleProperty" value="MarketingAnalyticsSales"/>
                 <set field="activeSubMenuItem" value="AnalyticsSales"/>
                 
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
+                
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
                 </entity-condition>

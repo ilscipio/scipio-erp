@@ -21,6 +21,6 @@
     <#else>
         <@commonMsg type="error">${uiLabelMap.CommonUnsupported}</@commonMsg>
     </#if>
-<#else>
+<#elseif result??>
     <@commonMsg type="result-norecord"/>            
 </#if>

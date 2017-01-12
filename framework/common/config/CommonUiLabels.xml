@@ -16325,4 +16325,12 @@
         <value xml:lang="de">Zusätzliche Felder</value>
         <value xml:lang="en">Extra Fields</value>
     </property>
+    <property key="CommonLeaveEmptyForNowDate">
+        <value xml:lang="de">Leer lassen, um das aktuelle Datum (jetzt)</value>
+        <value xml:lang="en">Leave empty to use current date (now)</value>
+    </property>
+    <property key="CommonLeaveEmptyForNowTime">
+        <value xml:lang="de">Leer lassen, um das aktuelle Zeit (jetzt)</value>
+        <value xml:lang="en">Leave empty to use current time (now)</value>
+    </property>
 </resource>

@@ -16333,4 +16333,16 @@
         <value xml:lang="de">Leer lassen, um das aktuelle Zeit (jetzt)</value>
         <value xml:lang="en">Leave empty to use current time (now)</value>
     </property>
+    <property key="CommonDefault">
+        <value xml:lang="de">Voreinstellung</value>
+        <value xml:lang="en">Default</value>
+        <value xml:lang="fr">Défaut</value>
+        <value xml:lang="it">Default</value>
+        <value xml:lang="ja">デフォルト</value>
+        <value xml:lang="pt">PadrÃ£o</value>
+        <value xml:lang="th">ค่าที่เลือก</value>
+        <value xml:lang="vi">Mặc định</value>
+        <value xml:lang="zh">缺省</value>
+        <value xml:lang="zh_TW">預設</value>
+    </property>
 </resource>

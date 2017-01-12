@@ -1401,7 +1401,7 @@ public class UtilDateTime {
         case "semester":
             month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
             int semester = 1;
-            if (month >= 5)
+            if (month >= 6)
                 semester = 2;
             timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + semester + "S'"));
             break;
@@ -1443,9 +1443,15 @@ public class UtilDateTime {
         } else if (iScope.equals("week")) {
             calendar.set(Calendar.DAY_OF_WEEK, 1);
             calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - iCount);
-        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {
+        } else if (iScope.equals("month")) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);
+        } else if (iScope.equals("quarter")) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 3));
+        } else if (iScope.equals("semester")) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 6));  
         } else if (iScope.equals("year")) {
             calendar.set(Calendar.DAY_OF_YEAR, 1);
             calendar.set(Calendar.MONTH, 1);

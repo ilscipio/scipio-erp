@@ -3669,4 +3669,8 @@
         <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
         <value xml:lang="en">Only convertible currencies are listed.</value>
     </property>
+    <property key="SfaCurrencyConvertedUsingLastKnownRates">
+        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
+        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
+    </property>
 </resource>

@@ -4,7 +4,7 @@
 
 <#if sales?has_content> 
     <#if chartType == "line" || chartType == "bar">        
-        <@chart type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
+        <@chart type=chartType title=chartTitle library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
             <#list mapKeys(sales) as key>
                 <#assign currData = sales[key] />
                 <#if currData?has_content>                          

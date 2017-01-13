@@ -27,7 +27,7 @@
             </#list>
         </@field>
         
-        <@field type="select" label=uiLabelMap.CommonCurrency name="currencyUomId" tooltip="${rawLabel('SfaOnlyConvertibleCurrenciesListed')} - ${rawLabel('SfaCurrencyConvertedUsingLastKnownRates')}">
+        <@field type="select" label=uiLabelMap.CommonCurrency name="currencyUomId" tooltip="${rawLabel('SfaOnlyConvertibleCurrenciesListed')} ${rawLabel('SfaCurrencyConvertedUsingLastKnownRates')}">
             <option value=""<#if !parameters.currencyUomId?has_content> selected="selected"</#if>>${uiLabelMap.CommonDefault}</option>
             <#list currencies as currency>
                 <option value="${currency.uomId}"<#if (parameters.currencyUomId!'') == currency.uomId> selected="selected"</#if>>${currency.uomId}</option>

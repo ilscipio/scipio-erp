@@ -5521,9 +5521,6 @@
         <value xml:lang="zh_CN">在</value>
         <value xml:lang="zh_TW">在</value>
     </property>
-    <property key="CommonIntervalScope">
-        <value xml:lang="en">Interval Scope</value>        
-    </property>
     <property key="CommonInclude">
         <value xml:lang="ar">يحتوي</value>
         <value xml:lang="cs">Zahrnout</value>
@@ -16344,5 +16341,9 @@
         <value xml:lang="vi">Mặc định</value>
         <value xml:lang="zh">缺省</value>
         <value xml:lang="zh_TW">預設</value>
+    </property>
+    <property key="CommonTimeInterval">
+        <value xml:lang="de">Zeitintervall</value>
+        <value xml:lang="en">Time Interval</value>        
     </property>
 </resource>

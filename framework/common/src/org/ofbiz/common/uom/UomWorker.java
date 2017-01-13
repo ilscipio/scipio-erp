@@ -137,7 +137,7 @@ public class UomWorker {
     }
     
     /**
-     * Convenience method to call the convertUom service, which is always safe to call
+     * SCIPIO: Convenience method to call the convertUom service, which is always safe to call
      * from screens and will not throw exceptions or trigger transaction failures.
      */
     public static BigDecimal convertUomSafe(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {

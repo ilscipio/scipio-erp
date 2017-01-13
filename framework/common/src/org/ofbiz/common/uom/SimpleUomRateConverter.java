@@ -62,6 +62,7 @@ public class SimpleUomRateConverter {
     
     public BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo) {
         if (originalValue == null) return null;
+        if (uomId != null && uomId.equals(uomIdTo)) return originalValue;
         BigDecimal rate = getConvertRate(uomId, uomIdTo);
         if (rate == null) return null;
         return originalValue.multiply(rate);

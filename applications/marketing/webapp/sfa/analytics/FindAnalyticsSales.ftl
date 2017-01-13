@@ -11,7 +11,7 @@
         
         <@field name="fromDate" type="datetime" value=(parameters.fromDate!) label=uiLabelMap.CommonFrom />
         <@field name="thruDate" type="datetime" value=(parameters.thruDate!) label=uiLabelMap.CommonThru tooltip=uiLabelMap.CommonLeaveEmptyForNowDate/>
-        <@field type="select" name="intervalScope" label=uiLabelMap.CommonTimeInterval><#-- uiLabelMap.CommonIntervalScope -->
+        <@field type="select" name="intervalScope" label=uiLabelMap.CommonTimeInterval required=true><#-- uiLabelMap.CommonIntervalScope -->
             <#assign intervals = Static["org.ofbiz.base.util.UtilDateTime"].TIME_INTERVALS />
             <#assign currInterval = chartIntervalScope!parameters.intervalScope!"">
             <#-- This contradicted the groovy which required an interval scope
@@ -27,7 +27,7 @@
             </#list>
         </@field>
         
-        <@field type="select" label=uiLabelMap.CommonCurrency name="currencyUomId">
+        <@field type="select" label=uiLabelMap.CommonCurrency name="currencyUomId" tooltip=uiLabelMap.SfaOnlyConvertibleCurrenciesListed>
             <option value=""<#if !parameters.currencyUomId?has_content> selected="selected"</#if>>${uiLabelMap.CommonDefault}</option>
             <#list currencies as currency>
                 <option value="${currency.uomId}"<#if (parameters.currencyUomId!'') == currency.uomId> selected="selected"</#if>>${currency.uomId}</option>

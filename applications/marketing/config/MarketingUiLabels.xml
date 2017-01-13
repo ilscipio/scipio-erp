@@ -3665,4 +3665,8 @@
         <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
         <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
     </property>
+    <property key="SfaOnlyConvertibleCurrenciesListed">
+        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
+        <value xml:lang="en">Only convertible currencies are listed.</value>
+    </property>
 </resource>

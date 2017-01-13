@@ -38,7 +38,10 @@ under the License.
                     productStores = delegator.findByAnd("ProductStore", null, ["productStoreId", "storeName"], true);
                     context.productStores = productStores;
                     
-                    context.currencies = delegator.findByAnd("Uom", ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true);
+                    // Instead of listing all, we will list only those that can actually be converted...
+                    //context.currencies = delegator.findByAnd("Uom", ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true);
+                    context.currencies = org.ofbiz.common.uom.UomWorker.getConvertibleUoms(delegator, dispatcher, 
+                        Boolean.TRUE, ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true, null, true);
                 ]]></script>
                 
                 <!-- <script location="component://marketing/webapp/sfa/WEB-INF/actions/analytics/FindMyCommunication.groovy"/> -->

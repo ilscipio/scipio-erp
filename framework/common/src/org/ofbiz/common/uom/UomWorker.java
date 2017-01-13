@@ -92,21 +92,28 @@ public class UomWorker {
         return addUomTime(null, startTime, uomId, value);
     }
 
-    /*
+    /**
      * Convenience method to call the convertUom service
+     * <p>
+     * SCIPIO: modified to support safe call
      */
-    public static BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {
+    private static BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher, boolean safe) {
         if (originalValue == null || uomId == null || uomIdTo == null) return null;
         if (uomId.equals(uomIdTo)) return originalValue;
 
-        Map<String, Object> svcInMap =  new LinkedHashMap<String, Object>();
+        Map<String, Object> svcInMap = new LinkedHashMap<String, Object>();
         svcInMap.put("originalValue", originalValue);
         svcInMap.put("uomId", uomId);
         svcInMap.put("uomIdTo", uomIdTo);
 
-        Map<String, Object> svcOutMap =  new LinkedHashMap<String, Object>();
+        Map<String, Object> svcOutMap = new LinkedHashMap<String, Object>();
         try {
-            svcOutMap = dispatcher.runSync("convertUom", svcInMap);
+            // SCIPIO: support safe mode: create a new transaction to prevent screen crashes
+            if (safe) {
+                svcOutMap = dispatcher.runSync("convertUom", svcInMap, -1, true);
+            } else {
+                svcOutMap = dispatcher.runSync("convertUom", svcInMap);
+            }
         } catch (GenericServiceException ex) {
             Debug.logError(ex, module);
             return null;
@@ -118,4 +125,23 @@ public class UomWorker {
         Debug.logError("Failed to perform conversion for value [" + originalValue.toPlainString() + "] from Uom [" + uomId + "] to Uom [" + uomIdTo + "]",module);
         return null;
     }
+    
+
+    /**
+     * Convenience method to call the convertUom service
+     * <p>
+     * SCIPIO: This is the original Ofbiz overload.
+     */
+    public static BigDecimal convertUom(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {
+        return convertUom(originalValue, uomId, uomIdTo, dispatcher, false);
+    }
+    
+    /**
+     * Convenience method to call the convertUom service, which is always safe to call
+     * from screens and will not throw exceptions or trigger transaction failures.
+     */
+    public static BigDecimal convertUomSafe(BigDecimal originalValue, String uomId, String uomIdTo, LocalDispatcher dispatcher) {
+        return convertUom(originalValue, uomId, uomIdTo, dispatcher, true);
+    }
+
 }

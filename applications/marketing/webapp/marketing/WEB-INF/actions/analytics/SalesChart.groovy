@@ -170,6 +170,8 @@ Map processResult() {
     dateFormatter = dateIntervals.getDateFormatter();
     try {
         def ZERO = BigDecimal.ZERO;
+        def scale = OrderReadHelper.scale;
+        def rounding = OrderReadHelper.rounding;
         
         // Create zero-value data points (if requested) 
         // NOTE: this also establishes the LinkedHashMap order for unordered query
@@ -246,7 +248,11 @@ Map processResult() {
                     Map newMap = resultMap.get(date);
                     BigDecimal total = newMap.get("total");
                     if (header.grandTotal != null) {
-                        BigDecimal orderTotal = getOrderTotal(header);
+                        // TODO: REVIEW: it is unclear where the setScale call is really supposed to be done...
+                        // here (while summing), or at the very end after all totals were summed?
+                        // mostly it is the currency conversions that are affected.
+                        // for now, doing it here (while summing) instead of at the end...
+                        BigDecimal orderTotal = getOrderTotal(header).setScale(scale, rounding);
                         total = total.plus(orderTotal);
                         orderStats.totalGrandTotal = orderStats.totalGrandTotal.plus(orderTotal);
                         newMap.put("total", total);
@@ -259,7 +265,7 @@ Map processResult() {
                     Map newMap = [:];
                     BigDecimal total = ZERO;
                     if (header.grandTotal != null) {
-                        BigDecimal orderTotal = getOrderTotal(header);
+                        BigDecimal orderTotal = getOrderTotal(header).setScale(scale, rounding);
                         total = total.plus(orderTotal);
                         orderStats.totalGrandTotal = orderStats.totalGrandTotal.plus(orderTotal);
                     }
@@ -273,6 +279,9 @@ Map processResult() {
             }
         }
         context.orderStats = orderStats;
+        
+        // TODO: REVIEW: do we need to do a .setScale(scale, rounding) call on each of the totals
+        // at the end of summing?? (and also whether to do it during summing, above)
         
         Debug.logInfo("SalesChart stats: " + orderStats, module);
         

@@ -590,7 +590,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#-- SCIPIO: only render empty space if not running within title open section 
     2017-01-13: New role parameter (possible values: "", "field-title", ...) (DEV NOTE: acts as a surrogate to having to create a new macro for every purpose, like "renderEmptyFieldTitle") -->
-<#assign rfes_roleOutMap = {}><#-- "field-title-single":"&nbsp;", "field-title-list":"&nbsp;", "field-title":"&nbsp;", ... -->
+<#assign rfes_roleOutMap = {"field-title-single":""}><#-- "field-title-single":"&nbsp;", "field-title-list":"&nbsp;", "field-title":"&nbsp;", ... -->
 <#macro renderFormatEmptySpace role="" formType="" extraArgs...><#rt>
     <#local outStr = rfes_roleOutMap[role+"-"+formType]!rfes_roleOutMap[role]!"&nbsp;"><#t>
     <#if (renderFormatFieldRowTitleCellOpened!false) != true>${outStr}<#else><#global renderFieldTitleCurrentTitle = outStr></#if><#t>

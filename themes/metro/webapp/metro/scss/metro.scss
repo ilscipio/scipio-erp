@@ -36,6 +36,10 @@ th a { color: #fff;}
     .date-switch, .next,.prev {
         color:$smoke;
     }
+    td.active {
+        color:black;
+        background-color:$aluminum!important;
+    }
 }
 
 .breadcrumbs {background:$white;}

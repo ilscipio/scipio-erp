@@ -88,7 +88,11 @@ under the License.
         <section>
             <actions>
                 <include-screen-actions name="AnalyticsSalesStatsActions" />
-                <set field="totalsDesc" value="${orderStats.totalOrderCount} ${uiLabelMap.OrderOrders}, ${orderStats.totalGrandTotal} ${currencyUomId}" />
+                <!-- 
+                <set field="totalsDesc" value="${orderStats.totalOrderCount} ${uiLabelMap.OrderOrders}; ${orderStats.totalGrandTotal} ${currencyUomId}" />-->
+                <set field="totalGrandTotalFmtd" value="${groovy: org.ofbiz.base.util.UtilFormatOut.formatCurrency(orderStats.totalGrandTotal, context.currencyUomId, context.locale)}"/>
+                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrderCount}; ${uiLabelMap.OrderTotal}: ${totalGrandTotalFmtd}" />
+                
                 <if>
                     <condition>
                         <if-empty field="productStoreId"/>
@@ -97,7 +101,7 @@ under the License.
                         <set field="chartTitle" value="${totalsDesc}"/>
                     </then>
                     <else>
-                        <set field="chartTitle" value="${productStoreId} - ${totalsDesc}"/>
+                        <set field="chartTitle" value="${productStoreId} ${totalsDesc}"/>
                     </else>
                 </if>
                 <set field="xlabel" value="${uiLabelMap.OrderGrandTotal} (${currencyUomId})"/><!-- ${uiLabelMap.ProductSales} -->

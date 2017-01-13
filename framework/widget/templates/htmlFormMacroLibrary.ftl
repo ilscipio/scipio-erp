@@ -588,8 +588,13 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
-<#-- SCIPIO: only render empty space if not running within title open section -->
-<#macro renderFormatEmptySpace extraArgs...><#if (renderFormatFieldRowTitleCellOpened!false) != true>&nbsp;<#else><#global renderFieldTitleCurrentTitle = "&nbsp;"></#if></#macro>
+<#-- SCIPIO: only render empty space if not running within title open section 
+    2017-01-13: New role parameter (possible values: "", "field-title", ...) (DEV NOTE: acts as a surrogate to having to create a new macro for every purpose, like "renderEmptyFieldTitle") -->
+<#assign rfes_roleOutMap = {}><#-- "field-title-single":"&nbsp;", "field-title-list":"&nbsp;", "field-title":"&nbsp;", ... -->
+<#macro renderFormatEmptySpace role="" formType="" extraArgs...><#rt>
+    <#local outStr = rfes_roleOutMap[role+"-"+formType]!rfes_roleOutMap[role]!"&nbsp;"><#t>
+    <#if (renderFormatFieldRowTitleCellOpened!false) != true>${outStr}<#else><#global renderFieldTitleCurrentTitle = outStr></#if><#t>
+</#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->

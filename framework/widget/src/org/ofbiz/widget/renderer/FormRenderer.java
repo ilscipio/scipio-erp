@@ -1678,7 +1678,10 @@ public class FormRenderer {
                         && fieldInfo.getFieldType() != FieldInfo.RESET) {
                     formStringRenderer.renderFieldTitle(writer, context, formField);
                 } else {
+                    // SCIPIO: 2017-01-13: new role parameter
+                    context.put("renderFormatEmptySpace_role", "field-title");
                     formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
+                    context.remove("renderFormatEmptySpace_role");
                 }
     
                 // render title formatting close

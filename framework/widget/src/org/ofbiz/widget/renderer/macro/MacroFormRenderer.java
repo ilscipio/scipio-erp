@@ -1292,7 +1292,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringBuilder sb = new StringBuilder();
         if (UtilValidate.isNotEmpty(titleText)) {
             if (" ".equals(titleText)) {
-                executeMacro(writer, "<@renderFormatEmptySpace />");
+                // SCIPIO: 2017-01-13: delegate
+                //executeMacro(writer, "<@renderFormatEmptySpace />");
+                renderFormatEmptySpace(writer, context, modelFormField.getModelForm(), "field-title");
             } else {
                 titleText = UtilHttp.encodeAmpersands(titleText);
                 titleText = encode(titleText, modelFormField, context);
@@ -1806,7 +1808,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" lastPositionInRow=" + (lastPositionInRow != null ? lastPositionInRow.toString() : "\"\""));
     }
 
-    private void appendFieldInfo(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+    // SCIPIO: new
+    private void appendFieldType(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String fieldType = null;
         if (modelFormField.getFieldInfo() != null) {
             fieldType = modelFormField.getFieldInfo().getFieldTypeName();
@@ -1815,7 +1818,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             fieldType = "";
         }
         sr.append(" fieldType=" + ftlFmt.makeStringLiteral(fieldType) + " ");
-        
+    }
+    
+    // SCIPIO: new
+    private void appendFieldInfo(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+        appendFieldType(sr, context, modelFormField);
         boolean fieldTitleBlank = modelFormField.isBlankTitle(context);
         sr.append(" fieldTitleBlank=" + fieldTitleBlank + " ");
     }
@@ -1882,8 +1889,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        renderFormatEmptySpace(writer, context, modelForm, (String) context.get("renderFormatEmptySpace_role"));
+    }
+    
+    // SCIPIO: 2017-01-13: new overloads for new role parameter
+    public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm, String role) throws IOException {
         StringWriter sr = new StringWriter();
-        sr.append("<@renderFormatEmptySpace />");
+
+        sr.append("<@renderFormatEmptySpace");
+        sr.append(" role=");
+        sr.append(ftlFmt.makeStringLiteral(role != null ? role : ""));
+        sr.append(" formType=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
+        sr.append("/>");
+        
         executeMacro(writer, sr.toString());
     }
 

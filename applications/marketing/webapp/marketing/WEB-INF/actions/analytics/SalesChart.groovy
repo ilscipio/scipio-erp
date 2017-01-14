@@ -10,6 +10,16 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.common.uom.UomWorker;
 import org.ofbiz.common.uom.SimpleUomRateConverter;
 
+def getIntervalDefaultCount(iScope) {
+    def iCount = UtilDateTime.getIntervalDefaultCount(iScope);
+    if (iCount >= 0) {
+        // FIXME?: why isn't this taken into account by values in UtilDateTime?
+        if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
+        if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
+    }
+    return iCount;
+};
+
 Map processResult() {
     final def module = "SalesChart.groovy";
     def debugMode = Debug.verboseOn();
@@ -84,28 +94,19 @@ Map processResult() {
         thruDateTimestamp = fromDateTimestamp;
         fromDateTimestamp = oldThruDateTimestamp;
     }
+    
     // Make sure we have a fromDateTimestamp, and either iCount or thruDateTimestamp (otherwise endless loop!)
     if (!fromDateTimestamp) {
         // Determine an appropriate fromDateTimestamp and iCount (if not set)
         if (iCount < 0) {
-            iCount = UtilDateTime.getIntervalDefaultCount(iScope);
-            if (iCount >= 0) {
-                // FIXME?: why isn't this taken into account by values in UtilDateTime?
-                if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-                if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-            }
+            iCount = getIntervalDefaultCount(iScope);
         }      
         fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
     } else if (!thruDateTimestamp && iCount < 0) {
         if (fromDateTimestamp.after(nowTimestamp)) {
             // fallback: If fromDate in the future, select an appropriate default iCount...
             // but having fromDate in future doesn't make much sense anyway
-            iCount = UtilDateTime.getIntervalDefaultCount(iScope);
-            if (iCount >= 0) {
-                // FIXME?: why isn't this taken into account by values in UtilDateTime?
-                if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-                if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-            }
+            iCount = getIntervalDefaultCount(iScope);
         } else {
             // If fromDate in the past, user probably wanted all orders up until today
             // (we must have a cutoff point, due to way loop is written)
@@ -180,7 +181,7 @@ Map processResult() {
             // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
             while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntervals.getDateBegin().after(thruDateTimestamp))) {
                 String date = dateFormatter.format(dateIntervals.getDateBegin());
-                //Debug.logInfo("Interval date: " + date, module);
+                Debug.logInfo("Interval date: " + date + " (" + dateIntervals.getDateBegin() + " - " + dateIntervals.getDateEnd() + ")", module);
                 resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
         
                 // Get next date interval; NOTE: duplicated above

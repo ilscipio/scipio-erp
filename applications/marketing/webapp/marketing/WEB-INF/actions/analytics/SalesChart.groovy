@@ -181,7 +181,7 @@ Map processResult() {
             // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
             while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntervals.getDateBegin().after(thruDateTimestamp))) {
                 String date = dateFormatter.format(dateIntervals.getDateBegin());
-                Debug.logInfo("Interval date: " + date + " (" + dateIntervals.getDateBegin() + " - " + dateIntervals.getDateEnd() + ")", module);
+                //Debug.logInfo("Interval date: " + date + " (" + dateIntervals.getDateBegin() + " - " + dateIntervals.getDateEnd() + ")", module);
                 resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
         
                 // Get next date interval; NOTE: duplicated above

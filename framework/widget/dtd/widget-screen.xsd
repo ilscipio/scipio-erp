@@ -954,12 +954,21 @@ under the License.
                 <xs:element minOccurs="0" ref="swing" />
                 <xs:element minOccurs="0" ref="xsl-fo" />
                 <xs:element minOccurs="0" ref="xml" />
+                <xs:element minOccurs="0" ref="email" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <!-- ============== HTML Specific Elements =============== -->
     <xs:element name="HtmlWidgets" abstract="true" />
     <xs:element name="html">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- Scipio: Email Widget support -->
+    <xs:element name="email">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="HtmlWidgets" />

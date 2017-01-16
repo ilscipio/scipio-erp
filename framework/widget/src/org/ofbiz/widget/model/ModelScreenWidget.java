@@ -1734,6 +1734,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                         subWidgets.put("xsl-fo", new HtmlWidget(modelScreen, childElement));
                     } else if ("xml".equals(childElement.getNodeName())) {
                         subWidgets.put("xml", new HtmlWidget(modelScreen, childElement));
+                    }  else if ("email".equals(childElement.getNodeName())) { 
+                        // SCIPIO Email template renderer
+                        subWidgets.put("email", new HtmlWidget(modelScreen, childElement));
                     } else {
                         throw new IllegalArgumentException("Tag not supported under the platform-specific tag with name: " + childElement.getNodeName());
                     }

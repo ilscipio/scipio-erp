@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "htmlCommonMacroLibrary.ftl">
+<#include "htmlScreenMacroLibrary.ftl"> <#-- Defaults back to htmlScreenMacroLibrary -->
 <#-- 
 SCIPIO: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.

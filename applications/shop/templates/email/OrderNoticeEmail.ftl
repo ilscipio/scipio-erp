@@ -1419,13 +1419,13 @@ body.outlook p {
                                 
                                     <#-- custom logo or text can be inserted here -->
                                     
-                                    <h1>${title!}</h1>
+                                    <h1>${title!}</h1> ${getRenderContextType()} / ${getRenderPlatformType()}
                                     <#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
                                     <#if note??><p>${note}</p></#if>
                                     <#if orderHeader??>
-                                    <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
-                                    <br />
-                                    <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
+                                    <@render resource="component://shop/widget/EmailOrderScreens.xml#orderheader" />
+                                    <br /><@printVars var=screens />
+                                    <@render resource="component://shop/widget/EmailOrderScreens.xml#orderitems" />
                                     <#else>
                                     <h1>Order not found with ID [${orderId!}], or not allowed to view.</h1>
                                     </#if>

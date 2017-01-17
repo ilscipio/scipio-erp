@@ -86,7 +86,7 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+                <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -171,6 +171,27 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://shop/templates/email/ShipmentNotificationEmail.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- SCIPIO -->
+    <screen name="orderheader">
+        <section>
+            <widgets>
+                <platform-specific><email><html-template location="component://shop/webapp/shop/order/orderheader.ftl"/></email></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="orderitems">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderItems.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><email><html-template location="component://shop/webapp/shop/order/orderitems.ftl"/></email></platform-specific>
             </widgets>
         </section>
     </screen>

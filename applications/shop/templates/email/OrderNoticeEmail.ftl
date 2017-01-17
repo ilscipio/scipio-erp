@@ -1418,8 +1418,7 @@ body.outlook p {
                                 <th>
                                 
                                     <#-- custom logo or text can be inserted here -->
-                                    
-                                    <h1>${title!}</h1> ${getRenderContextType()} / ${getRenderPlatformType()}
+                                    <h1>${title!}</h1>
                                     <#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
                                     <#if note??><p>${note}</p></#if>
                                     <#if orderHeader??>

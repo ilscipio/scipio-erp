@@ -878,19 +878,19 @@ h6 {
   Margin-bottom: 10px; }
 
 h1 {
-  font-size: 20px; }
+  font-size: 24px; }
 
 h2 {
-  font-size: 16px; }
+  font-size: 18px; }
 
 h3 {
-  font-size: 14px; }
+  font-size: 16px; }
 
 h4 {
-  font-size: 13px; }
+  font-size: 14px; }
 
 h5 {
-  font-size: 12px; }
+  font-size: 13px; }
 
 h6 {
   font-size: 12px; }
@@ -1429,6 +1429,8 @@ table.basic-table {
     background: #f3f3f3; }
   table.basic-table input {
     margin: 0px; }
+
+
 
 
     </style>  

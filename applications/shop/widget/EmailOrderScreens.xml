@@ -34,44 +34,38 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop"/>
                 <set field="title" value="Order"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <section>
-                            <widgets>
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                            </widgets>
-                        </section>
+                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->
                     <decorator-section name="topRight">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- order items and totals -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- return policies and notes are shown in the last page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <!-- order items and totals -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                        <!-- return policies and notes are shown in the last page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="footer">
+                       <platform-specific>
+                           <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderFooter.fo.ftl"/></xsl-fo>
+                       </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

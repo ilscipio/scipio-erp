@@ -1,12 +1,9 @@
 package org.ofbiz.base.util.collections;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.ofbiz.base.util.Debug;
 
 /**
  * SCIPIO: Represents a graph of dependencies, support algorithm(s) to resolve them.
@@ -16,8 +13,6 @@ import org.ofbiz.base.util.Debug;
  */
 public class DependencyGraph<T> {
 
-    public static final String module = DependencyGraph.class.getName();
-    
     // external representation
     private final List<T> elements; // nodes
     //private final Map<T, List<T>> dependencies;
@@ -126,69 +121,6 @@ public class DependencyGraph<T> {
     
     private T getElemByIndex(int index) {
         return elements.get(index);
-    }
-    
-    /**
-     * TODO: Proper test case
-     */
-    public static void runGraphTest() {
-        try {
-            Map<String, List<String>> in;
-            DependencyGraph<String> depGraph;
-            List<String> resolved;
-            
-            in = new java.util.LinkedHashMap<>();
-            in.put("testcomp1", Arrays.asList("testcomp8"));
-            in.put("testcomp2", Arrays.asList("testcomp1"));
-            in.put("testcomp3", Arrays.asList("testcomp6", "testcomp2"));
-            in.put("testcomp4", Arrays.asList("testcomp3", "testcomp2"));
-            in.put("testcomp5", Arrays.asList("testcomp4"));
-            in.put("testcomp6", new ArrayList<String>());
-            in.put("testcomp7", Arrays.asList("testcomp6", "testcomp8"));
-            in.put("testcomp8", Arrays.asList("testcomp6"));
-            depGraph = new DependencyGraph<>(in);
-            resolved = depGraph.getResolvedDependenciesDfs();
-            Debug.logInfo("SCIPIO: Dependency graph test 1:"
-                    + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
-                    + "\nResolved order: " + resolved.toString(), module);
-            
-            in = new java.util.LinkedHashMap<>();
-            in.put("testcomp1", new ArrayList<String>());
-            in.put("testcomp2", Arrays.asList("testcomp1"));
-            in.put("testcomp3", Arrays.asList("testcomp2"));
-            in.put("testcomp4", Arrays.asList("testcomp3", "testcomp2"));
-            in.put("testcomp5", Arrays.asList("testcomp4"));
-            in.put("testcomp6", new ArrayList<String>());
-            in.put("testcomp7", Arrays.asList("testcomp6", "testcomp1"));
-            in.put("testcomp8", Arrays.asList("testcomp6", "testcomp4"));
-            depGraph = new DependencyGraph<>(in);
-            resolved = depGraph.getResolvedDependenciesDfs();
-            Debug.logInfo("SCIPIO: Dependency graph test 2: order should be unchanged: "
-                    + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
-                    + "\nResolved order: " + resolved.toString(), module);
-            
-            in = new java.util.LinkedHashMap<>();
-            in.put("testcomp1", Arrays.asList("testcomp8"));
-            in.put("testcomp2", Arrays.asList("testcomp1"));
-            in.put("testcomp3", Arrays.asList("testcomp6", "testcomp2"));
-            in.put("testcomp4", Arrays.asList("testcomp3", "testcomp2"));
-            in.put("testcomp5", Arrays.asList("testcomp4"));
-            in.put("testcomp6", Arrays.asList("testcomp1"));
-            in.put("testcomp7", Arrays.asList("testcomp6", "testcomp8"));
-            in.put("testcomp8", Arrays.asList("testcomp6"));
-            depGraph = new DependencyGraph<>(in);
-            try {
-                resolved = depGraph.getResolvedDependenciesDfs();
-                Debug.logError("SCIPIO: Dependency graph test 3: ERROR: failed to detect circular dependency: "
-                    + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
-                    + "\nResolved order: " + resolved.toString(), module);
-            } catch(IllegalStateException e) {
-                Debug.logInfo("SCIPIO: Dependency graph test 3: the following error message should be a circular"
-                        + " dependency error: " + e.getMessage(), module);
-            }
-        } catch (Exception e) {
-            Debug.logError(e, "SCIPIO: Unexpected dependency graph test error: " + e.getMessage(), module);
-        }
     }
 
 }

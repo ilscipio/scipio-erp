@@ -538,23 +538,27 @@ public class EmailServices {
                 // start processing fo pdf attachment
                 try {
                     Writer writer = new StringWriter();
-                    MapStack<String> screenContextAtt = MapStack.create();
+                    MapStack<String> screenContextAtt = screenContext;
                     // substitute the freemarker variables...
                     // get the screen renderer; or create a new one
                     ScreenStringRenderer fopStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", delegator));
                     ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContextAtt, fopStringRenderer);
                     screensAtt.getContext().put("screens", screensAtt);
-
+                    
                     // render the screen
                     screensAtt.populateContextForService(dctx, bodyParameters);
                     screenContextAtt.putAll(bodyParameters);
-
                     screensAtt.render(xslfoAttachScreenLocation);
                     
-                    String buf = writer.toString();
-                    java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/file1.xml"));
-                    fw.write(buf.toString());
-                    fw.close();
+                    /*
+                    try { // save generated fo file for debugging
+                        String buf = writer.toString();
+                        java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/file1.xml"));
+                        fw.write(buf.toString());
+                        fw.close();
+                    } catch (IOException e) {
+                        Debug.logError(e, "Couldn't save xsl-fo xml debug file: " + e.toString(), module);
+                    }*/
                     
 
                     // create the input stream for the generation

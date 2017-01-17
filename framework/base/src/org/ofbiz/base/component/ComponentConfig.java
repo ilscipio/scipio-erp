@@ -28,8 +28,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.ofbiz.base.container.ContainerConfig;
@@ -264,6 +266,14 @@ public final class ComponentConfig {
             throw new ComponentException("No component found named : " + globalName);
         }
     }
+    
+    /**
+     * SCIPIO: Special method for initialization only to set the global component order.
+     * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
+     */
+    public static void clearStoreComponents(List<ComponentConfig> componentList) {
+        componentConfigCache.clearAndPutAll(componentList);
+    }
 
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName, null);
@@ -347,7 +357,14 @@ public final class ComponentConfig {
     private final List<KeystoreInfo> keystoreInfos;
     private final List<WebappInfo> webappInfos;
     private final List<ContainerConfig.Container> containers;
-
+    
+    /**
+     * SCIPIO: The components this one depends on.
+     * This is the implementation of the "depends-on" element (existed in stock ofbiz xsd, but not implemented).
+     * Does not contain duplicates.
+     */
+    private final List<String> componentDependencies;
+    
     private ComponentConfig(String globalName, String rootLocation) throws ComponentException {
         if (!rootLocation.endsWith("/")) {
             rootLocation = rootLocation + "/";
@@ -474,6 +491,18 @@ public final class ComponentConfig {
         } catch (ContainerException ce) {
             throw new ComponentException("Error reading containers for component: " + this.globalName, ce);
         }
+        // SCIPIO: component dependencies
+        childElements = UtilXml.childElementList(ofbizComponentElement, "depends-on");
+        if (!childElements.isEmpty()) {
+            Set<String> componentDependencies = new LinkedHashSet<>(childElements.size());
+            for (Element curElement : childElements) {
+                String componentName = curElement.getAttribute("component-name");
+                componentDependencies.add(componentName);
+            }
+            this.componentDependencies = Collections.unmodifiableList(new ArrayList<String>(componentDependencies));
+        } else {
+            this.componentDependencies = Collections.emptyList();
+        }
         if (Debug.verboseOn())
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
     }
@@ -598,6 +627,13 @@ public final class ComponentConfig {
         return this.webappInfos;
     }
 
+    /**
+     * SCIPIO: Returns the names of components this component depends on.
+     */
+    public List<String> getComponentDependencies() {
+        return componentDependencies;
+    }
+    
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
         return isFileResourceLoader(resourceInfo.loader);
     }
@@ -610,6 +646,28 @@ public final class ComponentConfig {
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }
 
+    /**
+     * SCIPIO: Returns the component names for a list of configs.
+     */
+    public static List<String> getComponentNames(Collection<ComponentConfig> componentList) {
+        List<String> names = new ArrayList<>(componentList.size());
+        for(ComponentConfig config : componentList) {
+            names.add(config.getComponentName());
+        }
+        return names;
+    }
+    
+    /**
+     * SCIPIO: Creates a (order-preserving) map of component names to configs from a list of configs.
+     */
+    public static Map<String, ComponentConfig> makeComponentNameMap(Collection<ComponentConfig> componentList) {
+        Map<String, ComponentConfig> map = new LinkedHashMap<>();
+        for(ComponentConfig config : componentList) {
+            map.put(config.getComponentName(), config);
+        }
+        return map;
+    }
+    
     /**
      * An object that models the <code>&lt;classpath&gt;</code> element.
      * 
@@ -657,6 +715,31 @@ public final class ComponentConfig {
 
         private synchronized Collection<ComponentConfig> values() {
             return Collections.unmodifiableList(new ArrayList<ComponentConfig>(componentConfigs.values()));
+        }
+        
+        /**
+         * SCIPIO: Clears all (for reordering).
+         */
+        private synchronized void clear() {
+            componentConfigs.clear();
+            componentLocations.clear();
+        }
+        
+        /**
+         * SCIPIO: putAll.
+         */
+        private synchronized void putAll(Collection<? extends ComponentConfig> configList) {
+            for(ComponentConfig config : configList) {
+                put(config);
+            }
+        }
+        
+        /**
+         * SCIPIO: Atomic clear + putAll method.
+         */
+        private synchronized void clearAndPutAll(Collection<? extends ComponentConfig> configList) {
+            clear();
+            putAll(configList);
         }
     }
 

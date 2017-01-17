@@ -94,6 +94,7 @@
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
+    <table class="spacer"><tbody><tr><td height="16px" style="font-size:16px;line-height:16px;">&nbsp;</td></tr></tbody></table>
     <table<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
         <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
         <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>

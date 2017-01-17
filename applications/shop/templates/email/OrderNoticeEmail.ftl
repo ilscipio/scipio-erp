@@ -24,8 +24,10 @@ under the License.
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Title</title>
+
+
     <style>
-      .wrapper {
+.wrapper {
   width: 100%; }
 
 #outlook a {
@@ -876,16 +878,16 @@ h6 {
   Margin-bottom: 10px; }
 
 h1 {
-  font-size: 24px; }
+  font-size: 20px; }
 
 h2 {
-  font-size: 18px; }
-
-h3 {
   font-size: 16px; }
 
+h3 {
+  font-size: 14px; }
+
 h4 {
-  font-size: 24px; }
+  font-size: 13px; }
 
 h5 {
   font-size: 12px; }
@@ -898,14 +900,14 @@ table.body,
 p,
 td,
 th {
-  font-size: 16px;
+  font-size: 12px;
   line-height: 1.3; }
 
 p {
   margin-bottom: 10px;
   Margin-bottom: 10px; }
   p.lead {
-    font-size: 20px;
+    font-size: 15px;
     line-height: 1.6; }
   p.subheader {
     margin-top: 4px;
@@ -1373,15 +1375,62 @@ body.outlook p {
     table.button.small-expand center,
     table.button.small-expanded center {
       min-width: 0; } }
-    
-    </style>  
 
-    <style>
-      body,
-      html,
-      .body {
-        background: #f3f3f3 !important;
-      }
+body,
+html,
+.body {
+  background: #f3f3f3 !important; }
+
+.container.header {
+  background: #f3f3f3; }
+
+.body-drip {
+  border-top: 8px solid #663399; }
+
+.header {
+  background: #8a8a8a; }
+
+.header .columns {
+  padding-bottom: 0; }
+
+.header p {
+  color: #fff;
+  padding-top: 15px; }
+
+.header .wrapper-inner {
+  padding: 20px; }
+
+.header .container {
+  background: transparent; }
+
+table.button.facebook table td {
+  background: #3B5998 !important;
+  border-color: #3B5998; }
+
+table.button.twitter table td {
+  background: #1daced !important;
+  border-color: #1daced; }
+
+table.button.google table td {
+  background: #DB4A39 !important;
+  border-color: #DB4A39; }
+
+.wrapper.secondary {
+  background: #f3f3f3; }
+
+table.basic-table {
+  width: 100%; }
+  table.basic-table tr {
+    background: none; }
+    table.basic-table tr td {
+      height: auto;
+      vertical-align: top; }
+  table.basic-table tr.odd {
+    background: #f3f3f3; }
+  table.basic-table input {
+    margin: 0px; }
+
+
     </style>  
   </head>
 

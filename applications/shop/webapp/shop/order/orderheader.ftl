@@ -71,7 +71,7 @@ under the License.
     <#-- orderinfo -->
     <@row>
         <@cell columns=4>
-            <@section title=uiLabelMap.CommonOverview>
+            <@section title=uiLabelMap.CommonOverview containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                 <@table type="fields">
                   <#if placingParty?has_content && orderDate?has_content>
                     <#-- SCIPIO: screen finds it -->
@@ -145,7 +145,7 @@ under the License.
         <#-- payment info -->
         <@cell columns=4>
             <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-                <@section title=uiLabelMap.AccountingPaymentInformation>
+                <@section title=uiLabelMap.AccountingPaymentInformation containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                     <@table type="fields">
                         <#macro paymentMethodAmount paymentMethodId>
                           <#if (paymentMethodAmountMap[paymentMethodId])?has_content>
@@ -291,7 +291,7 @@ under the License.
         <#-- shipping info -->
         <@cell columns=4>
             <#if orderItemShipGroups?has_content>
-                <@section title=uiLabelMap.OrderShippingInformation>
+                <@section title=uiLabelMap.OrderShippingInformation containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                     <#-- shipping address -->
 
                     <#if orderItemShipGroups?has_content>

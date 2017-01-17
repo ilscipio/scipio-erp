@@ -251,7 +251,7 @@ public class ComponentContainer implements Container {
                     }
                     if (!nameMap.containsKey(depName) && !alreadyLoadedNameMap.containsKey(depName)) {
                         Debug.logError("SCIPIO: component '" + name + "' depends on component '" + depName 
-                                + "', which does not exist or cannot be loaded before this component; dependency ignored", module);
+                                + "', which is either missing or cannot be loaded before this component; dependency ignored", module);
                         continue;
                     }
                     // Only consider the dependencies that aren't already set in stone

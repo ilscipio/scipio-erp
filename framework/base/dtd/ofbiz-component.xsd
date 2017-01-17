@@ -43,10 +43,12 @@ under the License.
             <xs:attributeGroup ref="attlist.depends-on">
                 <xs:annotation>
                     <xs:documentation>
-                        This is yet unimplemented. It's not a trivial implementation because at the moment components are loaded
-                        in the order they are found (i.e. alphabetic or creation date).
-                        While this feature would require them all to be located first and then reordered and loaded.
-                        So, for now, simply follow the README file in hot-deploy root folder.
+                        SCIPIO: This is a STOCK element, but newly-implemented for Scipio (2017-01-16).
+                        It is currently implemented using a limited per-directory dependency resolution, which is
+                        automatically disabled if an explicit component-load.xml file exists in the directory.
+                        Thus, currently, the automatic ordering will only allow ordering within the directory,
+                        and not globally; in other words it is forbidden for a framework component to depend
+                        on an applications or hot-deploy component using depends-on.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attributeGroup>

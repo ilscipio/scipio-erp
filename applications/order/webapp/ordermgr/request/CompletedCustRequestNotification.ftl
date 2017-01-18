@@ -16,21 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>${title}</title>
-        <link rel="stylesheet" href="${rawString(baseUrl!)}/images/maincss.css" type="text/css"/>
-    </head>
-    <body>
-        <h1>${title}</h1>
-        <p>Hello ${person.firstName!} ${person.lastName!},</p>
-        <p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has been completed.
-        <br /><br />
-        The status and used hours can always be checked at the url: <br />
-        <a href="${rawString(baseUrl!)}/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">${baseUrl!}/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</a>
-        <br /><br />
-        Regards.<br /><br />
-        Thank you for your business.
-    </body>
-</html>
+
+<h1>${title}</h1>
+<p>Hello ${person.firstName!} ${person.lastName!},</p>
+<p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has been completed.
+<br /><br />
+The status and used hours can always be checked at the url: <br />
+<a href="${rawString(baseUrl!)}/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">${baseUrl!}/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</a>
+<br /><br />
+Regards.<br /><br />
+Thank you for your business.

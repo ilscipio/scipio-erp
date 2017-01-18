@@ -206,7 +206,7 @@ under the License.
     <macrodef name="depressubant">
       <attribute name="dir" default=""/>
       <attribute name="target" default=""/>
-      <attribute name="auto-build-tools" default="false"/>
+      <attribute name="auto-build-tools" default="true"/>
       <sequential>
         <!-- Old stock code (arbitrary build order)
         <externalsubant target="@{target}">
@@ -230,11 +230,11 @@ under the License.
           <equals arg1="@{auto-build-tools}" arg2="true"/>
           <then>
             <var name="scipio.buildtools.present" unset="true"/>
-            <available file="tools/misc/scipio-build-tools.jar" property="scipio.buildtools.present" />
+            <available file="${ofbiz.home.dir}/tools/misc/scipio-build-tools.jar" property="scipio.buildtools.present" />
             <if>
               <not><isset property="scipio.buildtools.present"/></not>
               <then>
-                <echo message="scipio-build-tools.jar not found! - triggering emergency build..."/>
+                <echo message="scipio-build-tools.jar not found (required for sub-builds) - triggering build..."/>
                 <antcall target="build-scipio-build-tools"/>
               </then>
             </if>
@@ -322,7 +322,7 @@ under the License.
               <arg value="-e=false"/><!-- use empty values -->
               <arg value="-g=${depres.depgraph}"/>
               <classpath>
-                <path location="tools/misc/scipio-build-tools.jar"/> <!-- FIXME: non-ideal location for this class -->
+                <path location="${ofbiz.home.dir}/tools/misc/scipio-build-tools.jar"/> <!-- FIXME: non-ideal location for this class -->
               </classpath>
             </java>
             <if>

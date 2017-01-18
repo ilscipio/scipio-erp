@@ -374,7 +374,8 @@ Unexpectedly received empty list of builds to iterate."/>
                 <pathconvert property="ofbiz.build.dependencies.prop" refid="ofbiz.build.dependencies" 
                     pathsep="${ofbiz.build.dependencies.sep}" setonempty="true">
                     <!-- strip the full path, make relative to ofbiz base folder (most versatile) -->
-                    <globmapper from="${ofbiz.home.dir}/*" to="*" />
+                    <!--<globmapper from="${ofbiz.home.dir}/*" to="*" />-->
+                    <map from="${ofbiz.home.dir}/" to="" /><!-- this one may be safer for Windows -->
                 </pathconvert>
                 <!-- will be read using ant-contrib's antcallback/antfetch
                 <echo message="${ofbiz.build.dependencies.prop}"/>-->

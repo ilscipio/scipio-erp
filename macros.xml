@@ -195,9 +195,169 @@ under the License.
   </subant>
  </presetdef>
     
-    <!-- ================================================================== -->
-    <!-- SCIPIO: New macros and definitions  -->
-    <!-- ================================================================== -->
+  <!-- ================================================================== -->
+  <!-- SCIPIO: New macros and definitions  -->
+  <!-- ================================================================== -->
+    
+    <!-- SCIPIO: Build invoker with automatic dependency resolution.
+        Fetches the ofbiz.build.dependencies filelist from each component within a given component directory 
+        and resolves the resulting dependency graph to determine a build order, mirroring the same 
+        algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17). -->
+    <macrodef name="depressubant">
+      <attribute name="dir" default=""/>
+      <attribute name="target" default=""/>
+      <attribute name="auto-build-tools" default="false"/>
+      <sequential>
+        <!-- Old stock code (arbitrary build order)
+        <externalsubant target="@{target}">
+          <fileset dir="@{dir}" casesensitive="no">
+            <exclude name="disabled/**"/>
+            <include name="*/build.xml"/>
+          </fileset>
+        </externalsubant>-->
+          
+        <if>
+          <equals arg1="@{target}" arg2="" trim="true"/>
+          <then>
+            <var name="depres.displaytarget" value="build"/>
+          </then>
+          <else>
+            <var name="depres.displaytarget" value="@{target}"/>
+          </else>
+        </if>
+          
+        <if>
+          <equals arg1="@{auto-build-tools}" arg2="true"/>
+          <then>
+            <var name="scipio.buildtools.present" unset="true"/>
+            <available file="tools/misc/scipio-build-tools.jar" property="scipio.buildtools.present" />
+            <if>
+              <not><isset property="scipio.buildtools.present"/></not>
+              <then>
+                <echo message="scipio-build-tools.jar not found! - triggering emergency build..."/>
+                <antcall target="build-scipio-build-tools"/>
+              </then>
+            </if>
+          </then>
+        </if>
+          
+        <var name="depres.depgraph" unset="true"/>
+        <var name="depres.depgraph" value="" />
+        <var name="depres.topdirname" unset="true"/>
+        <basename file="@{dir}" property="depres.topdirname"/>
+          
+        <echo message=""/>
+        <echo message="${depres.topdirname}: Starting automatic build dependency resolution for task ${depres.displaytarget}..." />
+          
+        <!-- Build depgraph: read the ofbiz.build.dependencies values out of each build files and append to depgraph -->
+        <for param="depres.buildfile">
+          <path>
+            <fileset dir="@{dir}" casesensitive="no">
+              <exclude name="disabled/**"/>
+              <include name="*/build.xml"/>
+            </fileset>
+          </path>
+          <sequential>
+            <var name="ofbiz.build.dependencies.prop" unset="true"/>
+            <var name="depres.buildfile.dir" unset="true"/>
+            <var name="depres.buildfile.name" unset="true"/>
+            <var name="depres.buildfile.relative" unset="true"/>
+              
+            <dirname file="@{depres.buildfile}" property="depres.buildfile.dir"/>
+            <basename file="@{depres.buildfile}" property="depres.buildfile.name"/>
+            <property name="depres.buildfile.relative" value="@{depres.buildfile}" relative="true" />
+
+            <!-- Special call using ant-contrib to read dependency list stored in external build file -->
+            <var name="ofbiz.build.dependencies.prop" unset="true" />
+            <antcallback dir="${depres.buildfile.dir}" target="get-ofbiz-build-dependencies" antfile="${depres.buildfile.name}"
+              inheritall="false" return="ofbiz.build.dependencies.prop">
+              <!--<property name="basedir" value="${depres.buildfile.dir}"/>-->
+              <property name="ofbiz.build.dependencies.sep" value=","/>
+              <propertyset>
+                <propertyref name="ofbiz.home.dir"/>
+              </propertyset>
+            </antcallback>
+
+            <if>
+              <and>
+                <isset property="ofbiz.build.dependencies.prop" />
+                <not><equals arg1="${ofbiz.build.dependencies.prop}" arg2="" trim="true"/></not>
+              </and>
+              <then>
+                <var name="depres.depgraph" value="${depres.depgraph}#${depres.buildfile.relative}=${ofbiz.build.dependencies.prop}" />
+              </then>
+              <else>
+                <var name="depres.depgraph" value="${depres.depgraph}#${depres.buildfile.relative}" />
+              </else>
+            </if>
+          </sequential>
+        </for>
+          
+        <if>
+          <or>
+            <not><isset property="depres.depgraph"/></not>
+            <equals arg1="${depres.depgraph}" arg2="" trim="true"/>
+          </or>
+          <then>
+            <echo message="${depres.topdirname}: No builds to invoke." /> 
+          </then>
+          <else>
+            <!-- verbose
+            <echo message="Dependency graph for ${depres.topdirname}:${line.separator}${depres.depgraph}" />  
+            -->
+            
+            <!-- Invoke automatic dependency resolution algorithm -->
+            <var name="depres.builds" unset="true"/>
+            <var name="depres.stderr" unset="true"/>
+            <var name="depres.result" unset="true"/>  
+            <java classname="com.ilscipio.scipio.ce.build.util.DependencyGraph" fork="true" 
+              outputproperty="depres.builds" errorproperty="depres.stderr" resultproperty="depres.result" failonerror="false">
+              <arg value="-f=resolve-deps-dfs"/><!-- function to run -->
+              <!-- NOTE: using comma as file separator because fileset "includes" attributes uses this -->
+              <arg value="-do=,"/><!-- output delimiter -->
+              <arg value="-dn=#"/><!-- graph entry delimiter -->
+              <arg value="-de=="/><!-- graph element=deps pairs delimiter -->
+              <arg value="-dd=,"/><!-- graph deps delimiter -->
+              <arg value="-s=false"/><!-- strict mode -->
+              <arg value="-e=false"/><!-- use empty values -->
+              <arg value="-g=${depres.depgraph}"/>
+              <classpath>
+                <path location="tools/misc/scipio-build-tools.jar"/> <!-- FIXME: non-ideal location for this class -->
+              </classpath>
+            </java>
+            <if>
+              <not><equals arg1="${depres.result}" arg2="0"/></not>
+              <then>
+                <fail message="Error automatically resolving build dependencies for ${depres.topdirname} components:${line.separator}${line.separator}
+${depres.stderr}${line.separator}${line.separator}
+Please verify the ${depres.topdirname} component build.xml files
+for possible errors in the ofbiz.build.dependencies build file references."/>
+              </then>
+            </if>
+            <echo message="${depres.topdirname}: Auto-determined build order from dependencies (ofbiz.build.dependencies):" />
+            <echo message="${depres.builds}" />
+            
+            <!-- Sanity check -->
+            <if>
+              <or>
+                <not><isset property="depres.builds"/></not>
+                <equals arg1="${depres.builds}" arg2="" trim="true"/>
+              </or>
+              <then>
+                <fail message="Error automatically resolving build dependencies for ${depres.topdirname} components:${line.separator}${line.separator}
+${depres.stderr}${line.separator}${line.separator}
+Unexpectedly received empty list of builds to iterate."/>
+              </then>
+            </if>
+            
+            <!-- Invoke build files with requested target, in the resolved order (after re-expand comma-separated deresbuilds names to file list) --> 
+            <externalsubant target="@{target}">
+              <filelist dir="${ofbiz.home.dir}" files="${depres.builds}"/>
+            </externalsubant>
+          </else>
+        </if>
+      </sequential>
+    </macrodef>
     
     <!-- FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
     <target name="get-ofbiz-build-dependencies"
@@ -213,7 +373,8 @@ under the License.
                 <var name="ofbiz.build.dependencies.prop" unset="true" />
                 <pathconvert property="ofbiz.build.dependencies.prop" refid="ofbiz.build.dependencies" 
                     pathsep="${ofbiz.build.dependencies.sep}" setonempty="true">
-                    <globmapper from="${ofbiz.home.dir}/*" to="*" /><!-- strip the full path, make relative to ofbiz base folder (most versatile) -->
+                    <!-- strip the full path, make relative to ofbiz base folder (most versatile) -->
+                    <globmapper from="${ofbiz.home.dir}/*" to="*" />
                 </pathconvert>
                 <!-- will be read using ant-contrib's antcallback/antfetch
                 <echo message="${ofbiz.build.dependencies.prop}"/>-->

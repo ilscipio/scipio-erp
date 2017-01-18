@@ -31,7 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.ofbiz.base.container.ContainerConfig;
@@ -494,10 +493,18 @@ public final class ComponentConfig {
         // SCIPIO: component dependencies
         childElements = UtilXml.childElementList(ofbizComponentElement, "depends-on");
         if (!childElements.isEmpty()) {
-            Set<String> componentDependencies = new LinkedHashSet<>(childElements.size());
+            Collection<String> componentDependencies = new LinkedHashSet<>();
             for (Element curElement : childElements) {
-                String componentName = curElement.getAttribute("component-name");
-                componentDependencies.add(componentName);
+                String depName = curElement.getAttribute("component-name");
+                if (depName.equals(this.componentName)) {
+                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has dependency on itself", module);
+                    continue;
+                }
+                if (componentDependencies.contains(depName)) {
+                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has duplicate dependency on component '" + depName + "'", module);
+                    continue;
+                }
+                componentDependencies.add(depName);
             }
             this.componentDependencies = Collections.unmodifiableList(new ArrayList<String>(componentDependencies));
         } else {

@@ -241,17 +241,13 @@ public class ComponentContainer implements Container {
             // Get the dependencies and perform some preliminary checks
             Map<String, List<String>> dependencies = new HashMap<>();
             for(Map.Entry<String, ComponentConfig> entry : nameMap.entrySet()) {
-                List<String> deps = new ArrayList<>();
                 String name = entry.getKey();
                 ComponentConfig config = entry.getValue();
+                List<String> deps = new ArrayList<>(config.getComponentDependencies().size());
                 for(String depName : config.getComponentDependencies()) {
-                    if (depName.equals(name)) {
-                        Debug.logError("SCIPIO: component '" + name + "' has dependency on itself; invalid; ignored", module);
-                        continue;
-                    }
                     if (!nameMap.containsKey(depName) && !alreadyLoadedNameMap.containsKey(depName)) {
                         Debug.logError("SCIPIO: component '" + name + "' depends on component '" + depName 
-                                + "', which is either missing or cannot be loaded before this component; dependency ignored", module);
+                                + "', which is either missing or cannot be loaded before this component; ignoring dependency", module);
                         continue;
                     }
                     // Only consider the dependencies that aren't already set in stone

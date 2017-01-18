@@ -17,10 +17,5 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<html>
-    <head>
-    </head>
-    <body>
-        <div>Delivery Information updated for Order #${orderDeliverySchedule.orderId}<#if orderDeliverySchedule.orderItemSeqId != "_NA_"> Item #${orderDeliverySchedule.orderItemSeqId}</#if>.</div>
-    </body>
-</html>
+
+<p>Delivery Information updated for Order #${orderDeliverySchedule.orderId}<#if orderDeliverySchedule.orderItemSeqId != "_NA_"> Item #${orderDeliverySchedule.orderItemSeqId}</#if>.</p>

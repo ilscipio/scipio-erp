@@ -35,7 +35,8 @@ import org.ofbiz.base.component.ComponentLoaderConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.DependencyGraph;
+
+import com.ilscipio.scipio.ce.build.util.DependencyGraph;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
@@ -116,7 +117,7 @@ public class ComponentContainer implements Container {
         // FIXME: in theory we should only clear the ones we loaded (the sizes could differ), in case multiple loaders are involved... but likely never happen
         int allComponentsSize = ComponentConfig.getAllComponents().size();
         if (componentList.size() != allComponentsSize) {
-            Debug.logError("SCIPIO: The number of components loaded by our container (" +  componentList.size() 
+            Debug.logError("Scipio: The number of components loaded by our container (" +  componentList.size() 
                 + ") is different from the number of components that were registered in the system (" + allComponentsSize + 
                 "); this is either an unsupported configuration or an error", module);
         }
@@ -246,7 +247,7 @@ public class ComponentContainer implements Container {
                 List<String> deps = new ArrayList<>(config.getComponentDependencies().size());
                 for(String depName : config.getComponentDependencies()) {
                     if (!nameMap.containsKey(depName) && !alreadyLoadedNameMap.containsKey(depName)) {
-                        Debug.logError("SCIPIO: component '" + name + "' depends on component '" + depName 
+                        Debug.logError("Scipio: component '" + name + "' depends on component '" + depName 
                                 + "', which is either missing or cannot be loaded before this component; ignoring dependency", module);
                         continue;
                     }
@@ -266,12 +267,12 @@ public class ComponentContainer implements Container {
                 resultList.add(nameMap.get(resolvedName));
             }
             
-            Debug.logInfo("SCIPIO: Performed automatic component dependency analysis and ordering for " + componentList.size() + " components:"
+            Debug.logInfo("Scipio: Performed automatic component dependency analysis and ordering for " + componentList.size() + " components:"
                     + "\nOriginal order: " + names.toString()
                     + "\nResolved order: " + resolved.toString(), module);
             return resultList;
         } catch(Exception e) {
-            Debug.logError(e, "SCIPIO: Automatic component dependency analysis failure: " + e.getMessage()
+            Debug.logError(e, "Scipio: Automatic component dependency analysis failure: " + e.getMessage()
                 + "; load order unchanged", module);
             return componentList;
         }

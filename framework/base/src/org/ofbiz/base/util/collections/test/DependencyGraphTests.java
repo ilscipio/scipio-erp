@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.test.GenericTestCaseBase;
-import org.ofbiz.base.util.collections.DependencyGraph;
+
+import com.ilscipio.scipio.ce.build.util.DependencyGraph;
 
 /**
  * SCIPIO: DependencyGraph tests.

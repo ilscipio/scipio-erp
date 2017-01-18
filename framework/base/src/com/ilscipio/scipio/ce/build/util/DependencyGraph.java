@@ -1,4 +1,4 @@
-package org.ofbiz.base.util.collections;
+package com.ilscipio.scipio.ce.build.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * <p>
  * DEV NOTE: this must have no external dependencies.
  */
+@SuppressWarnings("unused")
 public class DependencyGraph<T> {
 
     private static final int MAX_CONTAINER_PREVIEW = 500;

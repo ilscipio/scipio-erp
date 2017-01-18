@@ -3,7 +3,6 @@ package org.ofbiz.base.util.collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -23,6 +22,10 @@ import java.util.regex.Pattern;
  */
 public class DependencyGraph<T> {
 
+    private static final int MAX_CONTAINER_PREVIEW = 500;
+    
+    //private final boolean strict;
+    
     // external representation
     private final List<T> elements; // nodes
     //private final Map<T, List<T>> dependencies;
@@ -34,15 +37,24 @@ public class DependencyGraph<T> {
     /**
      * NOTE: ArrayList recommended.
      */
-    public DependencyGraph(List<T> elements, Map<T, List<T>> dependencies) {
+    public DependencyGraph(List<T> elements, Map<T, List<T>> dependencies, boolean strict) {
+        //this.strict = strict;
         this.elements = elements;
         //this.dependencies = dependencies;
         this.elementIndexes = makeElemIndexMap(elements);
-        this.edges = makeEdgesRepr(elements, dependencies, this.elementIndexes);
+        this.edges = makeEdgesRepr(elements, dependencies, this.elementIndexes, strict);
+    }
+    
+    public DependencyGraph(List<T> elements, Map<T, List<T>> dependencies) {
+        this(elements, dependencies, true);
+    }
+    
+    public DependencyGraph(Map<T, List<T>> elementsAndDependencies, boolean strict) {
+        this(new ArrayList<T>(elementsAndDependencies.keySet()), elementsAndDependencies, strict);
     }
     
     public DependencyGraph(Map<T, List<T>> elementsAndDependencies) {
-        this(new ArrayList<T>(elementsAndDependencies.keySet()), elementsAndDependencies);
+        this(elementsAndDependencies, true);
     }
     
     /**
@@ -59,26 +71,48 @@ public class DependencyGraph<T> {
      * denotes element with a dependency on the empty string value.
      * <p>
      * Spaces are not trimmed and are considered significant.
-     * Empty values are allowed and considered significant.
+     * Empty values are allowed and considered significant, unless useEmpty and strict are both
+     * set to false in which case they will be discarded where possible (unless creates an erroneous statement).
      */
-    public static DependencyGraph<String> fromStringDependencyList(Collection<String> strDepGraph, String elemDelim, String depDelim) {
+    public static DependencyGraph<String> fromStringDependencyList(Collection<String> strDepGraph, String elemDelim, String depDelim, boolean strict, boolean useEmpty) {
         List<String> elements = new ArrayList<>(strDepGraph.size());
         Map<String, List<String>> dependencies = new HashMap<>();
         //int i = 0;
         for(String valEntry : strDepGraph) {
+            if (!useEmpty && isEmpty(valEntry)) {
+                if (strict) {
+                    throw new IllegalArgumentException("Empty dependency graph entry (not allowed in strict mode)");
+                } else {
+                    continue; // these can just be stripped for convenience
+                }
+            }
+            
             String[] valParts = valEntry.split(Pattern.quote(elemDelim), 2);
+            
             if (valParts.length >= 2) {
                 String element = valParts[0];
                 String depVals = valParts[1];
                 
+                if (!useEmpty && isEmpty(element)) { // this is never logical
+                    throw new IllegalArgumentException("Empty opening element in graph dependency list entry (not allowed in strict mode)");
+                }
+                
                 String[] depValParts = depVals.split(Pattern.quote(depDelim));
+                
                 Collection<String> edges = new LinkedHashSet<>();
                 for(String dep : depValParts) {
+                    if (!useEmpty && isEmpty(dep)) {
+                        if (strict) {
+                            throw new IllegalArgumentException("Empty dependency value encountered for '" + element + "' (not allowed in strict mode)");
+                        } else {
+                            continue; // these can just be stripped for convenience
+                        }
+                    }
                     edges.add(dep);
                 }
                 
                 elements.add(element);
-                dependencies.put(valEntry, new ArrayList<String>(edges));
+                dependencies.put(element, new ArrayList<String>(edges));
             } else {
                 elements.add(valEntry);
                 // not necessary
@@ -86,7 +120,19 @@ public class DependencyGraph<T> {
             }
             //i++;
         }
-        return new DependencyGraph<String>(elements, dependencies);
+        return new DependencyGraph<String>(elements, dependencies, strict);
+    }
+    
+    /**
+     * Creates graph from a strings representation having the format:
+     * <code>element1=dependency1;dependency2;dependency3:element2=dependency1;dependency2;dependency3</code>
+     * where <code>:</code> is entryDelim parameter, <code>=</code> is elemDelim parameter and <code>;</code> is depDelim parameter.
+     * <p>
+     * Rules are same as {@link #fromStringDependencyList(Collection, String, String)}.
+     */
+    public static DependencyGraph<String> fromStringDependencyList(String strDepGraph, String entryDelim, String elemDelim, String depDelim, boolean strict, boolean useEmpty) {
+        String[] entries = strDepGraph.split(Pattern.quote(entryDelim));
+        return fromStringDependencyList(Arrays.asList(entries), elemDelim, depDelim, strict, useEmpty);
     }
     
     private static <T> Map<T, Integer> makeElemIndexMap(List<T> elements) {
@@ -99,10 +145,10 @@ public class DependencyGraph<T> {
         return map;
     }
     
-    private static <T> int[][] makeEdgesRepr(List<T> elements, Map<T, List<T>> dependencies, Map<T, Integer> elementIndexes) {
-        // Validity check: check for duplicates
+    private static <T> int[][] makeEdgesRepr(List<T> elements, Map<T, List<T>> dependencies, Map<T, Integer> elementIndexes, boolean strict) {
+        // Validity check: check for duplicates (NOTE: check this even if not strict, because may lead to errors or unexpected results)
         if (new LinkedHashSet<T>(elements).size() != elements.size()) {
-            throw new IllegalArgumentException("Dependency graph has duplicate elements");
+            throw new IllegalArgumentException("Dependency resolution graph has duplicate elements (" + makePreviewStr(elements) + ")");
         }
         
         int[][] edges = new int[elements.size()][];
@@ -110,9 +156,16 @@ public class DependencyGraph<T> {
         for(T element : elements) {
             Collection<T> deps = dependencies.get(element);
 
-            // Validity check: check for duplicates
-            if (deps != null && !deps.isEmpty() && deps.size() != new LinkedHashSet<T>(deps).size()) {
-                throw new IllegalArgumentException("'" + element.toString() + "' contains duplicate dependencies");
+            if (!isEmpty(deps)) {
+                // Validity check: check for duplicates
+                Collection<T> depsSet = new LinkedHashSet<T>(deps);
+                if (deps.size() != depsSet.size()) {
+                    if (strict) {
+                        throw new IllegalArgumentException("'" + element.toString() + "' references duplicate dependencies");
+                    } else {
+                        deps = depsSet;
+                    }
+                }
             }
             
             int[] iDeps;
@@ -122,8 +175,8 @@ public class DependencyGraph<T> {
                 for(T dep : deps) {
                     Integer val = elementIndexes.get(dep);
                     if (val == null) {
-                        throw new IllegalArgumentException("Element dependencies contain an element not"
-                                + " listed in the elements list (" + dep.toString() + ")");
+                        throw new IllegalArgumentException("'" + dep.toString() + "' is referenced as a dependency but"
+                                + " is not found within the list of available elements to order (" + makePreviewStr(elements) + ")");
                     }
                     iDeps[j] = val;
                     j++;
@@ -173,7 +226,7 @@ public class DependencyGraph<T> {
         for(int edge : edges[node]) {
             if (!resolved[edge]) {
                 if (unresolved[edge]) {
-                    throw new IllegalStateException("Circular reference detected for '" + getElemByIndex(node).toString()
+                    throw new IllegalStateException("Circular reference detected in dependencies: '" + getElemByIndex(node).toString()
                             + "' -> '" + getElemByIndex(edge).toString() + "'");
                 }
                 resolveDepsDfs(edge, out, resolved, unresolved);
@@ -189,39 +242,60 @@ public class DependencyGraph<T> {
     }
 
     /**
-     * main - command line (callable from Ant)
+     * Dependency functions command line main (callable from Ant).
      * <p>
-     * Arguments (all required except -a):
+     * Results are output to stdout with no other formatting, for capture and processing.
+     * <p>
+     * Arguments (all required except -a and -dn):
      * <pre>
-     * -f=[function name]   requested function name
+     * -f=[function name]   function to run (required)
      *                      Supported:
      *                        resolve-deps-dfs
-     * -a=[function args]   function argument, may occur as many times as needed
-     * -do=[output delim]   output list delimiter (such as ":")
-     * -de=[elem delim]     element delimiter (such as "=") NOTE: "=" is allowed
-     * -dd=[dep delim]      dependency delimiter (such as "," or ":")
-     * -g=[graph entry]     graph entry (complex), may occur as many times as needed;
-     *                      each entry is in the format:
-     *                        element=dependency1:dependency2,...
-     *                      where "=" is the element delimiter and ":" is the dependency delimiter
+     * -do=[output delim]   output list delimiter (required)
+     *                      e.g.: ";"
+     * -dn=[entry delim]    entry delimiter (optional)
+     *                      e.g.: "#"
+     * -de=[elem delim]     element delimiter (required)
+     *                      e.g.: "="
+     * -dd=[dep delim]      dependency delimiter (required)
+     *                      e.g.: ";"
+     * -s=[true/false]      strict mode (default true)
+     * -e=[true/false]      use empty string as value (default true)
+     *                      if both strict and use empty are false, automatically 
+     *                      strips out where possible.
+     * -g=[graph repr]      graph string representation, full or entry (required)
+     *                      if -dn is set, must occur only once, with complex value in the format:
+     *                        element1=dependency1;dependency2#element2=dependency1;dependency2#...
+     *                      where "#" is entry delimiter, "=" is element delimiter and ";" is dependency delimiter.
+     *                      if -dn is ommitted, may occur as many times as needed, with values in the format:
+     *                        element=dependency1;dependency2,...
+     *                      WARN: TODO: only tested with -dn
      * </pre>
-     * <p>
-     * TODO: better argument parsing
      */
     public static void main(String[] argsArr) {
-        CmdArgs args = new CmdArgs(argsArr, Arrays.asList("f", "a", "do", "de", "dd", "g"));
+        CmdArgs args = new CmdArgs(argsArr, Arrays.asList("-f", "-do", "-dn", "-de", "-dd", "-s", "-e", "-g"));
         
         final String[] supportedFuncs = new String[] { "resolve-deps-dfs" };
-        String func = args.getSingleRequiredNonEmptyArgValue("f");
+        String func = args.getSingleRequiredNonEmptyArgValue("-f");
         if ("resolve-deps-dfs".equals(func)) {
-            String outDelim = args.getSingleRequiredNonEmptyArgValue("do");
-            String elemDelim = args.getSingleRequiredNonEmptyArgValue("de");
-            String depDelim = args.getSingleRequiredNonEmptyArgValue("dd");
+            String outDelim = args.getSingleRequiredNonEmptyArgValue("-do");
+            String entryDelim = args.getFirstArgValue("-dn");
+            String elemDelim = args.getSingleRequiredNonEmptyArgValue("-de");
+            String depDelim = args.getSingleRequiredNonEmptyArgValue("-dd");
+            boolean strict = !"false".equals(args.getFirstArgValue("-s"));
+            boolean useEmpty = !"false".equals(args.getFirstArgValue("-e"));
             
-            List<String> strDepGraph = args.getRequiredArgValues("g");
-            DependencyGraph<String> depGraph = fromStringDependencyList(strDepGraph, elemDelim, depDelim);
+            List<String> strDepGraph = args.getRequiredArgValues("-g");
+            DependencyGraph<String> depGraph;
+            if (!isEmpty(entryDelim)) {
+                depGraph = fromStringDependencyList(strDepGraph.get(0), entryDelim, elemDelim, depDelim, strict, useEmpty);
+            } else {
+                depGraph = fromStringDependencyList(strDepGraph, elemDelim, depDelim, strict, useEmpty);
+            }
+
             List<String> resolved = depGraph.getResolvedDependenciesDfs();
-                    
+            
+            // NOTE: must ONLY output the resolved list because this gets captured by Ant
             System.out.print(join(resolved, outDelim));
             
         } else {
@@ -240,8 +314,8 @@ public class DependencyGraph<T> {
         private final Set<String> allowedArgNames;
         
         public CmdArgs(List<String> args, Collection<String> allowedArgNames) {
-            this.args = toArgsMap(args);
             this.allowedArgNames = (allowedArgNames instanceof Set) ? (Set<String>) allowedArgNames : new HashSet<String>(allowedArgNames);
+            this.args = toArgsMap(args);
         }
         
         public CmdArgs(String[] args, Collection<String> allowedArgNames) {
@@ -252,7 +326,7 @@ public class DependencyGraph<T> {
             Map<String, List<String>> argsMap = new LinkedHashMap<>();
             for(String arg : args) {
                 if (arg.startsWith("-")) {
-                    String[] parts = arg.split("=", 2);
+                    String[] parts = arg.split(Pattern.quote("="), 2);
                     if (parts.length >= 2) {
                         appendArg(argsMap, parts[0], parts[1]);
                     } else {
@@ -267,7 +341,7 @@ public class DependencyGraph<T> {
         
         private void appendArg(Map<String, List<String>> argsMap, String name, String val) {
             if (!POS_ARG_NAME.equals(name) && !allowedArgNames.contains(name)) {
-                throw new IllegalArgumentException("Unrecognized parameter: -" + name);
+                throw new IllegalArgumentException("Unrecognized parameter: " + name);
             }
             List<String> vals = argsMap.get(name);
             if (vals == null) {
@@ -283,7 +357,7 @@ public class DependencyGraph<T> {
         
         public List<String> getRequiredArgValues(String name) {
             List<String> vals = getArgValues(name);
-            if (vals == null || vals.isEmpty()) {
+            if (isEmpty(vals)) {
                 throw new IllegalArgumentException("Missing required argument: " + name);
             }
             return vals;
@@ -291,7 +365,7 @@ public class DependencyGraph<T> {
         
         public String getFirstArgValue(String name) {
             List<String> vals = getArgValues(name);
-            if (vals != null && !vals.isEmpty()) {
+            if (!isEmpty(vals)) {
                 return vals.get(0);
             }
             return null;
@@ -299,7 +373,7 @@ public class DependencyGraph<T> {
         
         public String getSingleRequiredArgValue(String name) {
             List<String> vals = getArgValues(name);
-            if (vals == null || vals.isEmpty()) {
+            if (isEmpty(vals)) {
                 throw new IllegalArgumentException("Missing required argument: " + name);
             }
             if (vals.size() != 1) {
@@ -310,7 +384,7 @@ public class DependencyGraph<T> {
         
         public String getSingleRequiredNonEmptyArgValue(String name) {
             String val = getSingleRequiredArgValue(name);
-            if (val == null || val.isEmpty()) {
+            if (isEmpty(val)) {
                 throw new IllegalArgumentException("Missing required argument value: " + name);
             }
             return val;
@@ -318,7 +392,13 @@ public class DependencyGraph<T> {
         
     }
     
+    
+    // Helpers (NOTE: duplication to avoid dependencies)
+    
     private static String join(Collection<String> coll, String delim) { // (to avoid dependencies)
+        if (coll.isEmpty()) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for(String str : coll) {
             sb.append(delim);
@@ -327,4 +407,27 @@ public class DependencyGraph<T> {
         return sb.substring(delim.length());
     }
     
+    private static boolean isEmpty(String str) {
+        return (str == null || str.isEmpty());
+    }
+    
+    private static boolean isEmpty(Collection<?> coll) {
+        return (coll == null || coll.isEmpty());
+    }
+    
+    private static <T> String makePreviewStr(Collection<T> coll) {
+        return makePreviewStr(new ArrayList<T>(coll).toString());
+    }
+    
+    private static <K, V> String makePreviewStr(Map<K, V> map) {
+        return makePreviewStr(new LinkedHashMap<K, V>(map).toString());
+    }
+    
+    private static String makePreviewStr(String str) {
+        String preview = str;
+        if (preview.length() > MAX_CONTAINER_PREVIEW) {
+            preview = preview.substring(0, MAX_CONTAINER_PREVIEW) + "...";
+        }
+        return preview;
+    }
 }

@@ -349,7 +349,7 @@ under the License.
         
     </target>
 
-    <target name="clean">
+    <target name="clean" depends="build-scipio-build-tools">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean" />
@@ -657,7 +657,7 @@ under the License.
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init">
+    <target name="build" depends="ofbiz-init,build-scipio-build-tools">
         <echo message="[build] ========== Start Building (Compile) =========="/>
         
         <!-- SCIPIO: hooks -->
@@ -668,11 +668,14 @@ under the License.
         <antcall target="build-framework"/>
         <antcall target="build-applications"/>
         <antcall target="build-specialpurpose"/>
+        
+        <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
         <externalsubant>
             <fileset dir="${basedir}/themes">
                 <include name="*/build.xml" />
             </fileset>
-        </externalsubant>
+        </externalsubant>-->
+        <depressubant dir="${basedir}/themes"/>
 
         <!-- SCIPIO: addons dir -->
         <addonsant/>
@@ -714,17 +717,12 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <externalsubant target="@{target}">
-              <fileset dir="${basedir}/hot-deploy" casesensitive="no">
-                <exclude name="disabled/**"/>
-                <include name="*/build.xml"/>
-              </fileset>
-            </externalsubant>
+            <depressubant dir="${basedir}/hot-deploy" target="@{target}" />
           </else>
         </if>
       </sequential>
     </macrodef>
-
+    
     <!-- ================================================================== -->
     <!-- Build JavaDocs                                                     -->
     <!-- ================================================================== -->
@@ -2239,15 +2237,20 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <externalsubant target="@{target}">
-              <fileset dir="${basedir}/addons" casesensitive="no">
-                <exclude name="disabled/**"/>
-                <include name="*/build.xml"/>
-              </fileset>
-            </externalsubant>
+            <depressubant dir="${basedir}/addons" target="@{target}" />
           </else>
         </if>
       </sequential>
     </macrodef>
+    
+    <target name="build-scipio-build-tools" description="Builds standalone Scipio setup/build tools">
+        <subant inheritall="false">
+            <filelist dir="." files="framework/base/build-scipio-build-tools.xml"/>
+            <propertyset>
+                <propertyref name="ofbiz.home.dir"/>
+            </propertyset>
+        </subant>
+        <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
+    </target>
     
 </project>

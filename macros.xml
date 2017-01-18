@@ -194,4 +194,34 @@ under the License.
    </propertyset>
   </subant>
  </presetdef>
+    
+    <!-- ================================================================== -->
+    <!-- SCIPIO: New macros and definitions  -->
+    <!-- ================================================================== -->
+    
+    <!-- FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
+    <target name="get-ofbiz-build-dependencies"
+        description="Returns this component's build dependencies, for automatic dependency resolution (SCIPIO)">
+        <!-- 
+        NOTE: Caller must specify:
+          * ofbiz.build.dependencies.sep (context-dependent)
+          * ofbiz.home.dir
+        -->
+        <if>
+            <isreference refid="ofbiz.build.dependencies"/>
+            <then>
+                <var name="ofbiz.build.dependencies.prop" unset="true" />
+                <pathconvert property="ofbiz.build.dependencies.prop" refid="ofbiz.build.dependencies" 
+                    pathsep="${ofbiz.build.dependencies.sep}" setonempty="true">
+                    <globmapper from="${ofbiz.home.dir}/*" to="*" /><!-- strip the full path, make relative to ofbiz base folder (most versatile) -->
+                </pathconvert>
+                <!-- will be read using ant-contrib's antcallback/antfetch
+                <echo message="${ofbiz.build.dependencies.prop}"/>-->
+            </then>
+            <else>
+                <property name="ofbiz.build.dependencies.prop" value="" />
+            </else>
+        </if>
+    </target>
+    
 </project>

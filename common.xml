@@ -273,4 +273,6 @@ under the License.
         <fileset refid="hotdeploy.commoncomponentbuilds" />
     </import>
     
+    <!-- FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
+    
 </project>

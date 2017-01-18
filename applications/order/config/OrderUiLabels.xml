@@ -7100,7 +7100,7 @@
         <value xml:lang="zh_TW">訂單歷史</value>
     </property>
     <property key="OrderOrderId">
-        <value xml:lang="de">Auftrag ID</value>
+        <value xml:lang="de">Auftrags-Nr.</value>
         <value xml:lang="en">Order Id</value>
         <value xml:lang="es">Código de pedido</value>
         <value xml:lang="fr">Réf. de commande</value>

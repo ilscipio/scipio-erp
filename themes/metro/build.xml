@@ -29,6 +29,10 @@ under the License.
     <property name="name" value="metro-theme"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
+    <filelist dir="." id="ofbiz.build.dependencies">
+        <file name="../base/build.xml" />
+    </filelist>
+    
     <target name="clean">
     </target>
 

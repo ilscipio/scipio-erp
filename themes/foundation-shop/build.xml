@@ -18,23 +18,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Metro Theme" default="build" basedir=".">
+<project name="OFBiz - Foundation-Shop Theme" default="build" basedir=".">
     <import file="../../macros.xml"/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <property name="desc" value="Metro Theme"/>
-    <property name="name" value="metro-theme"/>
+    <property name="desc" value="Foundation-Shop"/>
+    <property name="name" value="foundation-shop"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
+    <filelist dir="." id="ofbiz.build.dependencies">
+        <file name="../base/build.xml" />
+    </filelist>
+    
     <target name="clean">
     </target>
 
     <target name="build" depends="">
-        <!-- echo message="[build] ========== Building Metro Theme ==========" />
-        <echo message="[build] ========== Done Building Metro Theme ==========" /-->
+        <!--echo message="[build] ========== Building Foundation-Shop Theme ==========" />
+        <echo message="[build] ========== Done Building Foundation-Shop Theme ==========" /-->
     </target>
 
 </project>

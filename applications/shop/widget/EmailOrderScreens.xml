@@ -86,7 +86,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

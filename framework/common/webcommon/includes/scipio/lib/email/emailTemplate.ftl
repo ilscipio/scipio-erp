@@ -78,6 +78,31 @@
   </#if>
 </#macro>
 
+
+<#-- @section core defaults -->
+<#--  We do not wish to render section menus inside of email templates. So these are being removed here  -->
+<#macro section args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.section_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
+  <#if open>
+    <#if !type?has_content>
+      <#local type = "default">
+    </#if>
+  <#else>
+    <#-- section_core has its own stack; don't need to preserve these -->
+    <#local class = "">  
+  </#if>
+  <@scipioStdTmplLib.section_core id=id contentId=contentId title=title cellClass=cellClass class=class style=style padded=padded menuContent=menuContent 
+    fromScreenDef=false menuClass=menuClass menuId=menuId menuLayoutTitle=menuLayoutTitle menuLayoutGeneral=menuLayoutGeneral 
+    titleContainerClass=titleContainerClass menuContainerClass=menuContainerClass menuTitleContainerClass=menuTitleContainerClass menuRole=menuRole requireMenu=requireMenu 
+    forceEmptyMenu=true menuItemsInlined=menuItemsInlined hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
+    relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
+    containerClass=containerClass containerId=containerId containerStyle=containerStyle contentClass=contentClass contentStyle=contentStyle
+    attribs=attribs containerAttribs=containerAttribs contentAttribs=contentAttribs
+    open=open close=close passArgs=passArgs><#nested /></@scipioStdTmplLib.section_core>
+</#macro>
+
 <#-- @section container markup - theme override 
     NOTE: class refers to cellClass (class for outer cell container) -->
 <#macro section_markup_container type="" styleName="" open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" menuTitleContentArgs={} menuContent="" menuContentArgs={} class="" 
@@ -86,6 +111,9 @@
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false 
     containerAttribs={} containerExcludeAttribs=[] contentAttribs={} contentExcludeAttribs=[]
     origArgs={} passArgs={} catchArgs...>
+    <#local sectionIdNum = getRequestVar("scipioSectionIdNum")!0>
+    <#local sectionIdNum = sectionIdNum + 1 />
+    <#local dummy = setRequestVar("sectionIdNum", sectionIdNum)>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "section-screenlet")>
     <#local containerClass = addClassArg(containerClass, styles.grid_section!"")>
@@ -94,14 +122,17 @@
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-    <table class="spacer"><tbody><tr><td height="16px" style="font-size:16px;line-height:16px;">&nbsp;</td></tr></tbody></table>
-    <table<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
-        <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
+    <#local currRowRendered = getRequestVar("scipioCurrentRowIsRendered_"+sectionIdNum)!false>
+    <#if !currRowRendered>
+        <table<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
+            <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
+            <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
+    </#if>
       <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
       <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapeVal(title, 'htmlmarkup')}</p></#if>
       -->
       <@row open=true close=false />
+        <#local dummy = setRequestVar("scipioCurrentRowIsRendered_"+sectionIdNum, true)>
         <#local class = addClassArg(class, "section-screenlet-container")>
         <#local class = addClassArg(class, contentFlagClasses)>
         <#local class = addClassArgDefault(class, (styles.grid_large!"") + "12")>
@@ -109,6 +140,7 @@
         <@cell open=true close=false class=compileClassArg(class) />
           <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
           <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
+
           <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
           <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
           <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
@@ -122,8 +154,8 @@
           <#if menuLayoutGeneral == "bottom" || menuLayoutGeneral == "top-bottom">
             <@contentArgRender content=menuContent args=menuContentArgs />
           </#if>
-        <@cell close=true open=false />
+        <@cell close=true open=false />        
       <@row close=true open=false />
-    </table>
+    <#if !currRowRendered></table></#if>
   </#if>
 </#macro>

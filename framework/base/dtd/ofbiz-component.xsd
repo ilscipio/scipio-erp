@@ -44,11 +44,24 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>
                         SCIPIO: This is a STOCK element, but newly-implemented for Scipio (2017-01-16).
-                        It is currently implemented using a limited per-directory dependency resolution, which is
-                        automatically disabled if an explicit component-load.xml file exists in the directory.
-                        Thus, currently, the automatic ordering will only allow ordering within the directory,
-                        and not globally; in other words it is forbidden for a framework component to depend
-                        on an applications or hot-deploy component using depends-on.
+                        Designates the component(s) which this component depends on, or in other words that must
+                        be loaded before this component; the component loader will perform automatic dependency resolution
+                        to determine a build order which satisfies all dependencies.
+                        
+                        Current implementation uses a limited per-component-directory dependency resolution (non-global);
+                        reordering is only done within a given component directory (such as themes or hot-deploy);
+                        however, components from other directories may still be named and will be verified, 
+                        in order to help validate installations and for future compatibility.
+                        
+                        If a component directory contains a component-load.xml file (which dictates an explicit
+                        build order), automatic resolution will be DISABLED for the component directory and 
+                        this element ignored.
+
+                        NOTE: This directive is not used for build order; build and load order are unrelated;
+                            build.xml files must be used to control build order.
+                            However, it is recommended that build order be set to the same as load order.
+                            For automatic dependency resolution for build files, see the ofbiz.build.dependencies
+                            component build.xml filelist definitions.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attributeGroup>

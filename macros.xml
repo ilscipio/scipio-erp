@@ -248,7 +248,7 @@ under the License.
         <basename file="@{dir}" property="depres.topdirname"/>
           
         <echo message=""/>
-        <echo message="${depres.topdirname}: Starting automatic build dependency resolution for task ${depres.displaytarget}..." />
+        <echo message="${depres.topdirname}: Starting automatic build dependency resolution for ${depres.displaytarget} task..." />
           
         <!-- Build depgraph: read the ofbiz.build.dependencies values out of each build files and append to depgraph -->
         <for param="depres.buildfile">
@@ -304,9 +304,9 @@ under the License.
             <echo message="${depres.topdirname}: No builds to invoke." /> 
           </then>
           <else>
-            <!-- verbose-->
+            <!-- verbose
             <echo message="Dependency graph for ${depres.topdirname}:${line.separator}${depres.depgraph}" />  
-            
+            -->
             
             <!-- Invoke automatic dependency resolution algorithm -->
             <var name="depres.builds" unset="true"/>

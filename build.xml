@@ -364,6 +364,9 @@ under the License.
         <!-- SCIPIO: addons dir -->
         <addonsant target="clean"/>
         
+        <!-- SCIPIO: 2017-01-19: added clean task for themes (not invoked stock ofbiz) -->
+        <depressubant dir="${basedir}/themes" target="clean"/>
+        
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
         <antcall target="clean-framework"/>

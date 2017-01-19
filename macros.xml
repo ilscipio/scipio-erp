@@ -275,6 +275,7 @@ under the License.
               <property name="ofbiz.build.dependencies.sep" value=","/>
               <propertyset>
                 <propertyref name="ofbiz.home.dir"/>
+                <propertyref name="ofbiz.component.dirs"/>
               </propertyset>
             </antcallback>
 
@@ -302,9 +303,9 @@ under the License.
             <echo message="${depres.topdirname}: No builds to invoke." /> 
           </then>
           <else>
-            <!-- verbose
+            <!-- verbose-->
             <echo message="Dependency graph for ${depres.topdirname}:${line.separator}${depres.depgraph}" />  
-            -->
+            
             
             <!-- Invoke automatic dependency resolution algorithm -->
             <var name="depres.builds" unset="true"/>
@@ -373,9 +374,103 @@ Unexpectedly received empty list of builds to iterate."/>
                 <var name="ofbiz.build.dependencies.prop" unset="true" />
                 <pathconvert property="ofbiz.build.dependencies.prop" refid="ofbiz.build.dependencies" 
                     pathsep="${ofbiz.build.dependencies.sep}" setonempty="true">
-                    <!-- strip the full path, make relative to ofbiz base folder (most versatile) -->
+                    <!-- DEV NOTE: see https://ant.apache.org/manual/Tasks/script.html for language details -->
+                    <scriptmapper language="javascript"><![CDATA[
+                        var proj = self.getProject();
+                        
+                        var doFail = function(msg) {
+                            var failTask = proj.createTask("fail");
+                            failTask.setMessage("Project " + proj.getName() + ": ofbiz.build.dependencies: " + msg);
+                            failTask.perform();
+                        };
+                        var echoMsg = function(msg) {
+                            var echoTask = proj.createTask("echo");
+                            echoTask.setMessage("Project " + proj.getName() + ": ofbiz.build.dependencies: " + msg);
+                            echoTask.perform();
+                        };
+                        
+                        // NOTE: here source is the full path to file
+                        var sourceFile = new java.io.File(source);
+                        if (!sourceFile.exists()) {
+                            doFail("missing or invalid build dependency: path does not exist: " + source);
+                        } else {
+                            var isDepAlreadyHandled = function(targetDep) {
+                                // SPECIAL: 2017-01-18: if the dependency is from a different top component directory
+                                // than the current one, and it is from one already loaded, then discard the dependency
+                                // because it is for all practical purposes already built.
+                                // (we currently do not support global dependency ordering)
+                                var homeDirPath = java.nio.file.Paths.get(proj.getProperty("ofbiz.home.dir"));
+                                var getCompDir = function(path) {
+                                    var pathPath = java.nio.file.Paths.get(path);
+                                    return homeDirPath.relativize(pathPath).getName(0);
+                                }
+                                
+                                var projCompDir = getCompDir(proj.getProperty("ant.file")); // NOTE: not basedir
+                                var depCompDir = getCompDir(targetDep);
+                                if (depCompDir.compareTo(projCompDir) !== 0) {
+                                    var compDirsProp = proj.getProperty("ofbiz.component.dirs");
+                                    if (compDirsProp) {
+                                        var compDirs = compDirsProp.split(",");
+                                        for(var i=0; i < compDirs.length; i++) {
+                                            var compDirPath = java.nio.file.Paths.get(compDirs[i]);
+                                            if (projCompDir.compareTo(compDirPath) === 0) {
+                                                echoMsg("WARN: build dependency refers to a higher-layer component directory; build may fail: " + targetDep);
+                                                return false;
+                                            } else if (depCompDir.compareTo(compDirPath) === 0) {
+                                                ; //echoMsg("build dependency ignored; already handled: " + targetDep);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                                return false;
+                            };
+                        
+                            var validateCommitDep = function(targetDep) {
+                                self.addMappedName(targetDep);
+                            };
+                        
+                            if (source.toLowerCase().endsWith(".xml") && sourceFile.isFile()) {
+                                // If explicit build file referenced as dependency, interpret as explicit request and don't modify.
+                                // In other words, the component must have a build file, otherwise dependency will fail.
+                                if (!isDepAlreadyHandled(source, sourceFile)) {
+                                    validateCommitDep(source, sourceFile);
+                                }
+                            } else if (sourceFile.isDirectory()) {
+                                if (!isDepAlreadyHandled(source, sourceFile)) {
+                                    // Here, the reference is to the directory of the component, and we only
+                                    // check the dependency if the component has in fact a build file.
+                                    // If the component has no build file, we can ignore the build dependency,
+                                    // though the component itself must exist.
+                                    var dirBuildFile = new java.io.File(sourceFile, "build.xml");
+                                    if (dirBuildFile.exists() && dirBuildFile.isFile()) {
+                                        validateCommitDep(dirBuildFile.getPath(), dirBuildFile);
+                                    } else {
+                                        ; //echoMsg("build dependency ignored; has no build file: " + sourceFile.getName());
+                                    }
+                                }
+                            } else {
+                                doFail("missing or invalid build dependency: invalid path (must be a build.xml file or component directory): " + source);
+                            }
+                        }
+                    ]]></scriptmapper>
+                    <!-- strip the full path, make relative to ofbiz base folder (most versatile)
+                        NOTE: this runs after the mapper (even if you list the map before the mapper) -->
                     <!--<globmapper from="${ofbiz.home.dir}/*" to="*" />-->
                     <map from="${ofbiz.home.dir}/" to="" /><!-- this one may be safer for Windows -->
+                    
+                    <!--
+                    <compositemapper>
+                        <regexpmapper from="^(.*)/?(?&lt;!\.xml)$" to="\1/build.xml" casesensitive="false" />
+                        <regexpmapper from="^(.*\.xml)$" to="\1" casesensitive="false" />
+                    </compositemapper>-->
+                    <!--
+                    <filtermapper>
+                      <scriptfilter language="beanshell">
+                        self.setToken(self.getToken().toUpperCase());
+                      </scriptfilter>
+                    </filtermapper>
+                    -->
                 </pathconvert>
                 <!-- will be read using ant-contrib's antcallback/antfetch
                 <echo message="${ofbiz.build.dependencies.prop}"/>-->

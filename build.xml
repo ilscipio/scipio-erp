@@ -37,8 +37,13 @@ under the License.
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />
     <property name="specialpurpose.dir" value="specialpurpose" />
+    <property name="themes.dir" value="themes" />
     <property name="addons.dir" value="addons" />
     <property name="hotdeploy.dir" value="hot-deploy" />
+    
+    <!-- 2017-01-18: Top-level component directories, in their generally-expect build and load order 
+        FIXME?: this is the build order used, but load order currently inconsistent with this w.r.t. themes -->
+    <property name="ofibz.component.dirs" value="framework,applications,specialpurpose,themes,addons,hot-deploy" />
     
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
     

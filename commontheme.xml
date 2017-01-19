@@ -17,25 +17,17 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<project name="Common Theme Component Build">
+    <!-- SCIPIO: Common include for theme component build.xml files (same as common.xml but for themes) -->
+    
+    <dirname property="component.commontheme.dir" file="${ant.file.Common Theme Component Build}"/>
+    <import file="${component.commontheme.dir}/macros.xml"/>
+    <!-- TODO: investigate whether we can include common.xml directly here -->
 
-<project name="OFBiz - Metro Theme" default="build" basedir=".">
-    <import file="../../commontheme.xml"/>
-
-    <!-- ================================================================== -->
-    <!-- Initialization of all property settings                            -->
-    <!-- ================================================================== -->
-
-    <property name="desc" value="Metro Theme"/>
-    <property name="name" value="metro-theme"/>
-    <property name="ofbiz.home.dir" value="../.."/>
-
-    <filelist dir="." id="ofbiz.build.dependencies">
-        <file name="../base" />
-    </filelist>
-
-    <target name="build" depends="">
-        <!-- echo message="[build] ========== Building Metro Theme ==========" />
-        <echo message="[build] ========== Done Building Metro Theme ==========" /-->
+    <target name="clean">
     </target>
-
+    
+    <target name="build">
+    </target>
+    
 </project>

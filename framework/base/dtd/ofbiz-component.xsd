@@ -57,11 +57,13 @@ under the License.
                         build order), automatic resolution will be DISABLED for the component directory and 
                         this element ignored.
 
-                        NOTE: This directive is not used for build order; build and load order are unrelated;
+                        NOTE: This directive is not used for build order; build and load order are independent;
                             build.xml files must be used to control build order.
                             However, it is recommended that build order be set to the same as load order.
-                            For automatic dependency resolution for build files, see the ofbiz.build.dependencies
-                            component build.xml filelist definitions.
+                            For further information on automatic dependency resolution for build files, see the
+                              component://macros.xml#get-ofbiz-build-dependencies
+                            Ant target and the "ofbiz.build.dependencies" filelist definitions in individual
+                            component build.xml files.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attributeGroup>

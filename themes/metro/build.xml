@@ -30,7 +30,7 @@ under the License.
     <property name="ofbiz.home.dir" value="../.."/>
 
     <filelist dir="." id="ofbiz.build.dependencies">
-        <file name="../base/build.xml" />
+        <file name="../base" />
     </filelist>
     
     <target name="clean">

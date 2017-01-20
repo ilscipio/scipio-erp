@@ -126,6 +126,47 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonGlSetupDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#PartyAdmin" />
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Admin"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
+                        <section>
+                            <condition>
+                                <if-compare field="activeSubMenuItem" operator="equals" value="GlAccountAssignment"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PartyAdminAssignTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <label style="heading">${labelTitleProperty} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonSettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#SettingsSideBar" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!--
     ********** 
     * WIDGETS 

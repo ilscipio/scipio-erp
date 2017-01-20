@@ -60,6 +60,9 @@
         </menu-item>  
         
         <!-- Other -->
+        <menu-item name="importExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
+            <link target="importExport" />
+        </menu-item>
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
         </menu-item>
@@ -67,6 +70,9 @@
 
     <menu name="MainAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="MainAppBar" recursive="full" />
+        <menu-item name="settings">
+            <sub-menu name="Settings" include="SettingsSideBar"/>
+        </menu-item>
     </menu>
     
     <!-- 

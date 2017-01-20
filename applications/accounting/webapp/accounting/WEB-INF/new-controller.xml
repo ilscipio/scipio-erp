@@ -44,14 +44,267 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+    
+    <!-- 
+    **************
+    * Accounting 
+    **************
+    -->
 
+    <!--
+    ************** 
+    * Contracts 
+    **************
+    -->
+
+    <!-- 
+    **************
+    * Controlling 
+    **************
+    -->
+    
+    <!--
+    ************** 
+    * Inventory 
+    **************
+    -->
+    
+    <!-- 
+    **************
+    * Journals 
+    **************
+    -->
+    
+    <!-- 
+    **************
+    * Settings 
+    **************-->
+    <request-map uri="settings">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCompanies"/>
+    </request-map>
+    <request-map uri="AddCompany">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddCompany"/>
+    </request-map>
+    <request-map uri="AdminMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="TimePeriods">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TimePeriods"/>
+    </request-map>
+    <request-map uri="createCustomTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustomTimePeriod"/>
+        <response name="success" type="view" value="TimePeriods"/>
+        <response name="error" type="view" value="TimePeriods"/>
+    </request-map>
+    <request-map uri="closeFinancialTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="closeFinancialTimePeriod"/>
+        <response name="success" type="view" value="TimePeriods"/>
+        <response name="error" type="view" value="TimePeriods"/>
+    </request-map>
+    <request-map uri="PartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+    <request-map uri="createPartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+        <response name="error" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+
+    <request-map uri="updatePartyAcctgPreference">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyAcctgPreference"/>
+        <response name="success" type="view" value="PartyAcctgPreference"/>
+        <response name="error" type="view" value="PartyAcctgPreference"/>
+    </request-map>
+
+    <request-map uri="GlAccountAssignment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTypeDefaults"/>
+    </request-map>
+    <request-map uri="GlAccountTypeDefaults">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTypeDefaults"/>
+    </request-map>
+    <request-map uri="GlAccountSalInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountPurInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+    <request-map uri="GlAccountTypePaymentType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+    <request-map uri="GlAccountNrPaymentMethod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+
+    <request-map uri="createGlAccountTypeDefault">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountTypeDefault"/>
+        <response name="success" type="view" value="GlAccountTypeDefaults"/>
+        <response name="error" type="view" value="GlAccountTypeDefaults"/>
+    </request-map>
+    <request-map uri="removeGlAccountTypeDefault">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeGlAccountTypeDefault"/>
+        <response name="success" type="view" value="GlAccountTypeDefaults"/>
+        <response name="error" type="view" value="GlAccountTypeDefaults"/>
+    </request-map>
+
+    <request-map uri="addSalInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+
+    <request-map uri="removeSalInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountSalInvoice"/>
+        <response name="error" type="view" value="GlAccountSalInvoice"/>
+    </request-map>
+
+    <request-map uri="addPurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+
+    <request-map uri="removePurInvoiceItemTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountPurInvoice"/>
+        <response name="error" type="view" value="GlAccountPurInvoice"/>
+    </request-map>
+
+    <request-map uri="addPaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+
+    <request-map uri="removePaymentTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountTypePaymentType"/>
+        <response name="error" type="view" value="GlAccountTypePaymentType"/>
+    </request-map>
+
+    <request-map uri="addPaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addPaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+
+    <request-map uri="removePaymentMethodTypeGlAssignment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentMethodTypeGlAssignment"/>
+        <response name="success" type="view" value="GlAccountNrPaymentMethod"/>
+        <response name="error" type="view" value="GlAccountNrPaymentMethod"/>
+    </request-map>
+
+    <request-map uri="viewFXConversions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+    </request-map>
+
+    <request-map uri="updateFXConversion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFXConversion"/>
+        <response name="success" type="view" value="ViewFXConversions"/>
+        <response name="error" type="view" value="ViewFXConversions"/>
+    </request-map>
+
+    <request-map uri="viewRateAmounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewRateAmounts"/>
+    </request-map>
+
+    <request-map uri="updateRateAmount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateRateAmount"/>
+        <response name="success" type="view" value="ViewRateAmounts"/>
+        <response name="error" type="view" value="ViewRateAmounts"/>
+    </request-map>
+
+    <request-map uri="deleteRateAmount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteRateAmount"/>
+        <response name="success" type="view" value="ViewRateAmounts"/>
+        <response name="error" type="view" value="ViewRateAmounts"/>
+    </request-map>
+
+    <request-map uri="editProductGlAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+
+     <request-map uri="createProductGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductGlAccount"/>
+        <response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+
+    <request-map uri="updateProductGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductGlAccount"/>
+        <response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteProductGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductGlAccount"/>
+        <response name="success" type="view" value="EditProductGlAccounts"/>
+        <response name="error" type="view" value="EditProductGlAccounts"/>
+    </request-map>
     
 
-    <!-- View Mappings -->
+    <!-- 
+    **************
+    * View Mappings 
+    **************-->
     <view-map name="main" type="screen" page="component://accounting/widget/scipio/AccountingScreens.xml#main"/>
-      
-    <!-- SCIPIO: Accounting Settings (Not sure we need one for now, leaving it commented -->
-    <!-- <view-map name="settings" type="screen" page="component://accounting/widget/CommonScreens.xml#settings"/> -->
-    <!-- end of view mappings -->
+    
+    <!-- Settings -->
+    <view-map name="ListCompanies" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListCompanies"/>
+    <view-map name="AddCompany" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#AddCompany"/>
+    <view-map name="TimePeriods" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#TimePeriods"/>
+    <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#PartyAcctgPreference"/>
+    <view-map name="ListGlAccountOrganization" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrganization"/>
+    <view-map name="SetupGlJournals" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#SetupGlJournals"/>
+    <view-map name="ViewFXConversions" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ViewFXConversions"/>
+    <view-map name="ViewRateAmounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ViewRateAmounts"/>
+    <view-map name="GlAccountTypeDefaults" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#GlAccountTypeDefaults"/>
+    <view-map name="GlAccountPurInvoice" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#GlAccountPurInvoice"/>
+    <view-map name="GlAccountSalInvoice" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#GlAccountSalInvoice"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#GlAccountNrPaymentMethod"/>
+    <view-map name="EditProductGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditProductGlAccounts"/>
+    <view-map name="EditProductCategoryGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditProductCategoryGlAccounts"/>
+    <view-map name="EditVarianceReasonGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditVarianceReasonGlAccounts"/>
+    <view-map name="EditCreditCardTypeGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditCreditCardTypeGlAccounts"/>
+    <view-map name="EditOrganizationTaxAuthorityGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditOrganizationTaxAuthorityGlAccounts"/>
+    <view-map name="FixedAssetTypeGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#FixedAssetTypeGlAccounts"/>
+    <view-map name="ListGlAccountOrgPdf" type="screenfop" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="ListGlAccountOrgCsv" type="screencsv" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgCsv" content-type="text/csv" encoding="none"/>
+    
 </site-conf>
 

@@ -60,8 +60,8 @@
         </menu-item>  
         
         <!-- Other -->
-        <menu-item name="importExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
-            <link target="importExport" />
+        <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
+            <link target="ImportExportInvoice" />
         </menu-item>
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
@@ -72,6 +72,9 @@
         <include-elements menu-name="MainAppBar" recursive="full" />
         <menu-item name="settings">
             <sub-menu name="Settings" include="SettingsSideBar"/>
+        </menu-item>
+        <menu-item name="ImportExport">
+            <sub-menu name="ImportExport" include="ImportExportSideBar"/>
         </menu-item>
     </menu>
     
@@ -112,6 +115,17 @@
     **************
     -->
     
+    <!--
+    ************** 
+    * Import/Export 
+    **************
+    -->
+    <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="importInvoice" title="${uiLabelMap.AccountingInvoice}" sort-mode="off">
+            <link target="ImportExportInvoice" />
+        </menu-item>
+    </menu>
+    
     <!-- 
     **************
     * Journals 
@@ -128,9 +142,6 @@
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
-        </menu-item>
-        <menu-item name="GlobalGLSettings" title="${uiLabelMap.AccountingGlobalGLSettings}">
-            <link target="globalGLSettings" />
         </menu-item>
          <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
             <link target="editInvoiceItemType" />

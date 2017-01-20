@@ -77,6 +77,30 @@ under the License.
     
     <!-- 
     **************
+    * Import/Export 
+    **************-->
+    <request-map uri="ImportExport"> <!-- currently mapped to ImportExportInvoice -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ImportExportInvoice"/>
+    </request-map>
+    <request-map uri="ImportExportInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ImportExportInvoice"/>
+    </request-map>
+    <request-map uri="ExportInvoiceCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ExportInvoicesCsv"/>
+    </request-map>
+    <request-map uri="ImportInvoice">
+        <security auth="true" https="true"/>
+        <event invoke="importInvoice" path="" type="service"/>
+        <response name="success" type="request" value="ImportExport"/>
+        <response name="error" type="view" value="ImportExport"/>
+    </request-map>
+    
+    
+    <!-- 
+    **************
     * Settings 
     **************-->
     <request-map uri="settings">
@@ -282,6 +306,11 @@ under the License.
     * View Mappings 
     **************-->
     <view-map name="main" type="screen" page="component://accounting/widget/scipio/AccountingScreens.xml#main"/>
+    
+    
+    <!-- Import/Export -->
+    <view-map name="ImportExportInvoice" type="screen" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ImportExportInvoice"/>
+    <view-map name="ExportInvoicesCsv" type="screencsv" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ExportInvoiceCsv" content-type="text/csv" encoding="none"/>
     
     <!-- Settings -->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListCompanies"/>

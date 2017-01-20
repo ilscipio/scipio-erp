@@ -68,46 +68,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="ImportExport">
-        <section>
-            <actions>
-                <set field="titleProperty" value="CommonImportExport"/>
-                <entity-one entity-name="PartyGroup" value-field="partyGroup">
-                    <field-map field-name="partyId" from-field="parameters.organizationPartyId"/>
-                </entity-one>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonImportExport}  ${uiLabelMap.CommonFor}: ${partyGroup.groupName} [${parameters.organizationPartyId}]">
-                            <container style="${styles.grid_row}">
-                                <container style="${styles.grid_large}6">
-                                    <label style="heading">${uiLabelMap.CommonImport}</label>
-                                    <include-form name="ImportInvoice" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
-                                </container>
-                                <container style="${styles.grid_large}6">
-                                    <label style="heading">${uiLabelMap.CommonExport}</label>
-                                    <include-form name="ExportInvoice" location="component://accounting/widge/settings/GlSetupForms.xml"/>
-                                </container>
-                            </container>
-                         </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ExportInvoiceCsv">
-        <section>
-            <actions>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
-            </actions>
-            <widgets>
-                    <include-form name="ExportInvoiceCsv" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>           
-            </widgets>
-        </section>
-    </screen>
     <screen name="ListGlAccountOrganization">
         <section>
             <actions>
@@ -182,7 +142,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="AccountingPreference"/>
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingPreference}"/>
-                <set field="activeSubMenuItem" value="PartyAcctgPreference"/>
+                <set field="activeSubMenuItem" value="settings"/>
+                <set field="activeSubMenuItem2" value="PartyAcctgPreference"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
                 <set field="partyId" from-field="parameters.organizationPartyId"/>

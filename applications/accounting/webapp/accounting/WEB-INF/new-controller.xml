@@ -300,6 +300,18 @@ under the License.
         <response name="error" type="view" value="EditProductGlAccounts"/>
     </request-map>
     
+    <!-- Request EditInvoiceItemType -->
+    <request-map uri="editInvoiceItemType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditInvoiceItemType"/>
+    </request-map>
+    <request-map uri="updateInvoiceItemType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoiceItemType"/>
+        <response name="success" type="view" value="EditInvoiceItemType"/>
+        <response name="error" type="view" value="EditInvoiceItemType"/>
+    </request-map>
+    
 
     <!-- 
     **************
@@ -335,6 +347,8 @@ under the License.
     <view-map name="FixedAssetTypeGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#FixedAssetTypeGlAccounts"/>
     <view-map name="ListGlAccountOrgPdf" type="screenfop" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="ListGlAccountOrgCsv" type="screencsv" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgCsv" content-type="text/csv" encoding="none"/>
+    
+    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/scipio/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
     
 </site-conf>
 

@@ -22,8 +22,8 @@ under the License.
     
     <dirname property="component.build.commontheme.dir" file="${ant.file.Common Theme Component Build}"/>
     <import file="${component.build.commontheme.dir}/macros.xml"/>
-    <!-- TODO: investigate whether we can include common.xml directly here,
-        or instead, a third shared commonshared.xml file that both common.xml and commontheme.xml share -->
+    <!-- SCIPIO: TODO: investigate whether a third common file, common to both common.xml and commontheme.xml, is
+        needed or desirable, or alternatively, if it is always safe for commontheme.xml to include common.xml -->
 
     <target name="clean">
     </target>

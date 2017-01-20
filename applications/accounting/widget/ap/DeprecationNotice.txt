@@ -1,0 +1,1 @@
+The application is being integrated into the accounting component and may be removed in a future release.

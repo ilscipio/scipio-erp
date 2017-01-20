@@ -9,7 +9,6 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="MainAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-
         <!-- Accounting -->
         <menu-item name="payable" title="${uiLabelMap.AccountingAccountsPayable}">
             <link target="payable"/>
@@ -61,7 +60,7 @@
         
         <!-- Other -->
         <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
-            <link target="ImportExportInvoice" />
+            <link target="ImportExport" />
         </menu-item>
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
@@ -121,6 +120,9 @@
     **************
     -->
     <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="importExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
+            <link target="ImportExport" />
+        </menu-item>
         <menu-item name="importInvoice" title="${uiLabelMap.AccountingInvoice}" sort-mode="off">
             <link target="ImportExportInvoice" />
         </menu-item>

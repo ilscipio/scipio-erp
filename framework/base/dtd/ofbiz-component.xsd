@@ -61,8 +61,8 @@ under the License.
                             build.xml files must be used to control build order.
                             However, it is recommended that build order be set to the same as load order.
                             For further information on automatic dependency resolution for build files, see the
-                              component://macros.xml#get-ofbiz-build-dependencies
-                            Ant target and the "ofbiz.build.dependencies" filelist definitions in individual
+                              component://macros.xml#read-component-build-deps 
+                            Ant macro (called by get-component-build-deps targets) and the "component.build.dependencies" filelist definitions in individual
                             component build.xml files.
                     </xs:documentation>
                 </xs:annotation>

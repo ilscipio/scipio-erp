@@ -9,17 +9,13 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="MainAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <!-- Accounting -->
         <menu-item name="payable" title="${uiLabelMap.AccountingAccountsPayable}">
             <link target="payable"/>
         </menu-item>
         <menu-item name="receivable" title="${uiLabelMap.AccountingAccountsReceivable}">
             <link target="receivable"/>
-        </menu-item>
-        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
-            <link target="findPayments" />
-        </menu-item>
-        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
-            <link target="findPayments" />
         </menu-item>
         <menu-item name="transaction" title="${uiLabelMap.AccountingTransactions}">
             <condition>
@@ -30,20 +26,14 @@
             </condition>
             <link target="FindGatewayResponses" />
         </menu-item>
-        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
-            <link target="FindAgreement" />
+        <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
+            <link target="FindGlobalGlAccount" />
+        </menu-item>
+        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="findPayments" />
         </menu-item>
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
             <link target="ListFixedAssets" />
-        </menu-item>
-        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
-            <link target="ListBudgets" />
-        </menu-item>
-        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
-            <link target="CostCenters" />
-        </menu-item>
-        <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
-            <link target="FindGlobalGlAccount" />
         </menu-item>
         <menu-item name="billingaccount" title="${uiLabelMap.AccountingBillingMenu}">
             <link target="FindBillingAccount" />
@@ -51,18 +41,118 @@
         <menu-item name="FindFinAccount" title="${uiLabelMap.AccountingFinAccount}">
             <link target="FinAccountMain" />
         </menu-item>
-        <!-- Settings
-            * TaxAuthorities
         
-         -->
+        <!-- Contracts -->
+        <menu-item name="contracts" title="${uiLabelMap.AccountingContracts}">
+            <link target="agreements"/>
+        </menu-item>      
+        
+        <!-- Inventory -->
+        
+        <!-- Journals -->
+        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="Journals" />
+        </menu-item>
+        
+        <!-- Controlling -->
+        <menu-item name="controlling" title="${uiLabelMap.AccountingControlling}">
+            <link target="ListBudgets"/>
+        </menu-item>  
+        
+        <!-- Other -->
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
         </menu-item>
-        
     </menu>
 
     <menu name="MainAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="MainAppBar" recursive="full" />
+    </menu>
+    
+    <!-- 
+    **************
+    * Accounting 
+    **************
+    -->
+
+    <!--
+    ************** 
+    * Contracts 
+    **************
+    -->
+    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
+            <link target="FindAgreement" />
+        </menu-item>
+    </menu>
+
+    <!-- 
+    **************
+    * Controlling 
+    **************
+    -->
+    <menu name="ControllingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
+            <link target="ListBudgets" />
+        </menu-item>
+        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
+            <link target="CostCenters" />
+        </menu-item>
+    </menu>
+    
+    <!--
+    ************** 
+    * Inventory 
+    **************
+    -->
+    
+    <!-- 
+    **************
+    * Journals 
+    **************
+    -->
+    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+    
+    
+    <!-- 
+    **************
+    * Settings 
+    **************-->
+    <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
+            <link target="settings" />
+        </menu-item>
+        <menu-item name="GlobalGLSettings" title="${uiLabelMap.AccountingGlobalGLSettings}">
+            <link target="globalGLSettings" />
+        </menu-item>
+         <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
+            <link target="editInvoiceItemType" />
+        </menu-item>
+        <menu-item name="ViewRateAmounts" title="${uiLabelMap.AccountingRates}">
+            <link target="viewRateAmounts" />
+        </menu-item>
+        <menu-item name="PaymentMethodTypes" title="${uiLabelMap.CommonPaymentMethodType}">
+            <link target="editPaymentMethodType" />
+        </menu-item>
+        <menu-item name="ViewFXConversions" title="${uiLabelMap.AccountingFX}">
+            <condition>
+                <if-service-permission service-name="acctgFxPermissionCheck" main-action="UPDATE" />
+            </condition>
+            <link target="viewFXConversions">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="PaymentGatewayConfig" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
+            <condition>
+                <or>
+                    <if-has-permission permission="PAYPROC" action="_ADMIN"/>
+                    <if-has-permission permission="ACCOUNTING" action="_ADMIN"/>
+                </or>
+            </condition>
+            <link target="FindPaymentGatewayConfig"/>
+            <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
+        </menu-item>
     </menu>
 
 </menus>

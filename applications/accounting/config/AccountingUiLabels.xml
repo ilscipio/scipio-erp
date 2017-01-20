@@ -2841,7 +2841,7 @@
     <property key="AccountingChartOfAcctsMenu">
         <value xml:lang="ar">بيان الحسابات</value>
         <value xml:lang="cs">Účtová osnova</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen</value>
         <value xml:lang="en">Chart of Accounts</value>
         <value xml:lang="es">Carta de cuentas</value>
         <value xml:lang="fr">Plan comptable</value>
@@ -15807,7 +15807,7 @@
     <property key="AcctgChartOfAcctsTabMenu">
         <value xml:lang="ar">بيان الحسابات</value>
         <value xml:lang="cs">Účtová osnova</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen</value>
         <value xml:lang="en">Chart of Accounts</value>
         <value xml:lang="es">Carta de cuentas</value>
         <value xml:lang="fr">Plan comptable</value>
@@ -15991,7 +15991,7 @@
     </property>
     <property key="AcctgNavigateAccts">
         <value xml:lang="ar">إستكشاف الحسابات</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen</value>
         <value xml:lang="en">Navigate Accounts</value>
         <value xml:lang="es">Navegación de cuentas</value>
         <value xml:lang="fr">Naviguer dans les comptes</value>
@@ -22389,6 +22389,14 @@
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
     <!-- SCIPIO: TODO: Localize -->
+    <property key="AccountingContracts">
+        <value xml:lang="de">Verträge</value>
+        <value xml:lang="en">Contracts</value>
+    </property>
+    <property key="AccountingControlling">
+        <value xml:lang="de">Controlling</value>
+        <value xml:lang="en">Controlling</value>
+    </property>
     <property key="AccountingMaintenanceJobs">
         <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>

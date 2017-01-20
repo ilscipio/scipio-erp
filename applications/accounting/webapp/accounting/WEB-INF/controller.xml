@@ -22,6 +22,8 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+    
+    <!-- All controller entries were exported to external controller files, to simplify the work whilst reviewing all entries -->
     <include location="component://accounting/webapp/accounting/WEB-INF/new-controller.xml"/>
     <description>Accounting Manager Module Site Configuration File</description>
     

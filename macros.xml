@@ -304,9 +304,7 @@ under the License.
             <echo message="${depres.topdirname}: No builds to invoke." /> 
           </then>
           <else>
-            <!-- verbose
-            <echo message="Dependency graph for ${depres.topdirname}:${line.separator}${depres.depgraph}" />  
-            -->
+            <echo level="verbose" message="Dependency graph for ${depres.topdirname}:${line.separator}${depres.depgraph}" />  
             
             <!-- Invoke automatic dependency resolution algorithm -->
             <var name="depres.builds" unset="true"/>

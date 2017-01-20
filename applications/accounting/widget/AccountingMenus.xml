@@ -66,9 +66,6 @@
         <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
             <link target="CostCenters" />
         </menu-item>
-        <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
-            <link target="FindGlobalGlAccount" />
-        </menu-item>
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="settings" />
         </menu-item>
@@ -118,10 +115,7 @@
             <sub-menu name="Budget" include="BudgetSideBar"/>
         </menu-item>
         <menu-item name="CostCenters">
-            <sub-menu name="CostCenters" include="CostCenterSideBar"/>
-        </menu-item>
-        <menu-item name="GlobalGL" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
-            <link target="FindGlobalGlAccount" />
+            <sub-menu name="GlobalGLSettings" include="GlobalGLSettingsSideBar"/>
         </menu-item>
         <menu-item name="settings">
             <sub-menu name="Settings" include="SettingsSideBar"/>
@@ -827,11 +821,16 @@
         default-menu-item-name="EditFixedAsset">
         <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
     </menu>
-    
-    <menu name="CostCenterTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="CostCenters">
+
+    <menu name="GlobalGLSettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="chartofaccounts">
+        <!-- SCIPIO: redundant
         <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
             <link target="CostCenters"/>
+        </menu-item>
+        -->
+        <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
+            <link target="FindGlobalGlAccount" />
         </menu-item>
         <!-- SCIPIO: Commented out for now. Will need to relocate it to a proper place at some point   -->
         <!-- <menu-item name="EditCustomTimePeriod" title="${uiLabelMap.AccountingEditCustomTimePeriods}">
@@ -842,17 +841,6 @@
         </menu-item> -->
         <menu-item name="Costs" title="${uiLabelMap.ManufacturingCostCalcs}">
             <link target="EditCostCalcs" />
-        </menu-item>
-    </menu>
-    <menu name="CostCenterSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="CostCenters">
-        <include-elements menu-name="CostCenterTabBar" recursive="includes-only" />
-    </menu>
-
-    <menu name="GlobalGLSettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="chartofaccounts">
-        <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
-            <link target="FindGlobalGlAccount" />
         </menu-item>
         <menu-item name="FindGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
             <link target="FindGlAccountCategory" />

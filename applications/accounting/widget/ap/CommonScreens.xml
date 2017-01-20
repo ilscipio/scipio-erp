@@ -308,7 +308,6 @@ under the License.
     </screen>
     
     <!-- SCIPIO: Form migration -->
-    <!-- Migrated to /scipio/screens/CommonScreens.xml
     <screen name="ApPastDueInvoices">
         <section>
            <actions>
@@ -356,7 +355,7 @@ under the License.
                 </section>
             </widgets>
         </section>
-    </screen>-->
+    </screen>
     
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">

@@ -273,9 +273,9 @@ under the License.
         <fileset refid="hotdeploy.commoncomponentbuilds" />
     </import>
     
-    <target name="get-ofbiz-build-dependencies"
-        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
-        <read-ofbiz-build-deps/>
+    <target name="get-component-build-deps"
+        description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-component-build-deps/>
     </target>
     
 </project>

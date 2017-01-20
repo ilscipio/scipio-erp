@@ -29,7 +29,7 @@ under the License.
     <property name="name" value="foundation-shop"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
-    <filelist dir="." id="ofbiz.build.dependencies">
+    <filelist dir="." id="component.build.dependencies">
         <file name="../base" />
     </filelist>
 

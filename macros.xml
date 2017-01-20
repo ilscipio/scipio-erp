@@ -200,10 +200,10 @@ under the License.
   <!-- ================================================================== -->
     
     <!-- SCIPIO: Build invoker with automatic dependency resolution.
-        Fetches the ofbiz.build.dependencies filelist from each component within a given component directory 
+        Fetches the component.build.dependencies filelist from each component within a given component directory 
         and resolves the resulting dependency graph to determine a build order, mirroring the same 
         algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17). 
-        See also the "get-ofbiz-build-dependencies" target (called by this macro). -->
+        See also the "get-component-build-deps" target (called by this macro). -->
     <macrodef name="depressubant">
       <attribute name="dir" default=""/>
       <attribute name="target" default=""/>
@@ -250,7 +250,7 @@ under the License.
         <echo message=""/>
         <echo message="${depres.topdirname}: Starting automatic build dependency resolution for ${depres.displaytarget} task..." />
           
-        <!-- Build depgraph: read the ofbiz.build.dependencies values out of each build files and append to depgraph -->
+        <!-- Build depgraph: read the component.build.dependencies values out of each build files and append to depgraph -->
         <for param="depres.buildfile">
           <path>
             <fileset dir="@{dir}" casesensitive="no">
@@ -259,7 +259,7 @@ under the License.
             </fileset>
           </path>
           <sequential>
-            <var name="ofbiz.build.dependencies.prop" unset="true"/>
+            <var name="component.build.dependencies.prop" unset="true"/>
             <var name="depres.buildfile.dir" unset="true"/>
             <var name="depres.buildfile.name" unset="true"/>
             <var name="depres.buildfile.relative" unset="true"/>
@@ -269,11 +269,11 @@ under the License.
             <property name="depres.buildfile.relative" value="@{depres.buildfile}" relative="true" />
 
             <!-- Special call using ant-contrib to read dependency list stored in external build file -->
-            <var name="ofbiz.build.dependencies.prop" unset="true" />
-            <antcallback dir="${depres.buildfile.dir}" target="get-ofbiz-build-dependencies" antfile="${depres.buildfile.name}"
-              inheritall="false" return="ofbiz.build.dependencies.prop">
+            <var name="component.build.dependencies.prop" unset="true" />
+            <antcallback dir="${depres.buildfile.dir}" target="get-component-build-deps" antfile="${depres.buildfile.name}"
+              inheritall="false" return="component.build.dependencies.prop">
               <!--<property name="basedir" value="${depres.buildfile.dir}"/>-->
-              <property name="ofbiz.build.dependencies.sep" value=","/>
+              <property name="component.build.dependencies.sep" value=","/>
               <propertyset>
                 <propertyref name="ofbiz.home.dir"/>
                 <propertyref name="ofbiz.component.dirs"/>
@@ -282,11 +282,11 @@ under the License.
 
             <if>
               <and>
-                <isset property="ofbiz.build.dependencies.prop" />
-                <not><equals arg1="${ofbiz.build.dependencies.prop}" arg2="" trim="true"/></not>
+                <isset property="component.build.dependencies.prop" />
+                <not><equals arg1="${component.build.dependencies.prop}" arg2="" trim="true"/></not>
               </and>
               <then>
-                <var name="depres.depgraph" value="${depres.depgraph}#${depres.buildfile.relative}=${ofbiz.build.dependencies.prop}" />
+                <var name="depres.depgraph" value="${depres.depgraph}#${depres.buildfile.relative}=${component.build.dependencies.prop}" />
               </then>
               <else>
                 <var name="depres.depgraph" value="${depres.depgraph}#${depres.buildfile.relative}" />
@@ -333,10 +333,10 @@ under the License.
                 <fail message="Error automatically resolving build dependencies for ${depres.topdirname} components:${line.separator}${line.separator}
 ${depres.stderr}${line.separator}${line.separator}
 Please verify the ${depres.topdirname} component build.xml files
-for possible errors in the ofbiz.build.dependencies build file references."/>
+for possible errors in the component.build.dependencies build file references."/>
               </then>
             </if>
-            <echo message="${depres.topdirname}: Auto-determined build order from dependencies (ofbiz.build.dependencies):" />
+            <echo message="${depres.topdirname}: Auto-determined build order from dependencies (component.build.dependencies):" />
             <echo message="${depres.builds}" />
             
             <!-- Sanity check -->
@@ -361,14 +361,14 @@ Unexpectedly received empty list of builds to iterate."/>
       </sequential>
     </macrodef>
     
-    <!-- SCIPIO: Reads and partly validates the component's ofbiz.build.dependencies and returns them
+    <!-- SCIPIO: Reads and partly validates the component's component.build.dependencies and returns them
         to caller (depressubant) for automatic dependency resolution.
         A component build.xml file may define a build list of dependencies on other components, using the following format:
-          <filelist dir="." id="ofbiz.build.dependencies"> <!- NOTE: MUST be filelist, not fileset ->
+          <filelist dir="." id="component.build.dependencies"> <!- NOTE: MUST be filelist, not fileset ->
             <file name="../other1/build.xml" /> <!- explicit build file form: the referenced component build file must exist ->
             <file name="../other2" /> <!- abstracted component dependency: component may or may not have a build ->
           </filelist>
-        The ofbiz.build.dependencies are file paths which must specify either a component directory
+        The component.build.dependencies are file paths which must specify either a component directory
         or the project build file within it - you MUST use filelist and NOT fileset to express these. 
         The second form requires the dependency to have a build, while the first is more abstracted
         and will work even if the component has no build project or it is removed (e.g., themes).
@@ -384,32 +384,32 @@ Unexpectedly received empty list of builds to iterate."/>
             dependency resolution for both build-time and load-time resolution; see the description
             for the "depends-on" xml element in the following file for the load-time mechanism:
               component://framework/base/dtd/ofbiz-component.xsd
-        FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
-    <macrodef name="read-ofbiz-build-deps">
+        FIXME?: get-component-build-deps must currently be defined in macros.xml due to theme patterns... -->
+    <macrodef name="read-component-build-deps">
       <sequential>
         <!-- 
         NOTE: Caller must specify:
-          * ofbiz.build.dependencies.sep (context-dependent)
+          * component.build.dependencies.sep (context-dependent)
           * ofbiz.home.dir
         -->
         <if>
-            <isreference refid="ofbiz.build.dependencies"/>
+            <isreference refid="component.build.dependencies"/>
             <then>
-                <var name="ofbiz.build.dependencies.prop" unset="true" />
-                <pathconvert property="ofbiz.build.dependencies.prop" refid="ofbiz.build.dependencies" 
-                    pathsep="${ofbiz.build.dependencies.sep}" setonempty="true">
+                <var name="component.build.dependencies.prop" unset="true" />
+                <pathconvert property="component.build.dependencies.prop" refid="component.build.dependencies" 
+                    pathsep="${component.build.dependencies.sep}" setonempty="true">
                     <!-- DEV NOTE: see https://ant.apache.org/manual/Tasks/script.html for language details -->
                     <scriptmapper language="javascript"><![CDATA[
                         var proj = self.getProject();
                         
                         var doFail = function(msg) {
                             var failTask = proj.createTask("fail");
-                            failTask.setMessage("Project " + proj.getName() + ": ofbiz.build.dependencies: " + msg);
+                            failTask.setMessage("Project " + proj.getName() + ": component.build.dependencies: " + msg);
                             failTask.perform();
                         };
                         var echoMsg = function(msg) {
                             var echoTask = proj.createTask("echo");
-                            echoTask.setMessage("Project " + proj.getName() + ": ofbiz.build.dependencies: " + msg);
+                            echoTask.setMessage("Project " + proj.getName() + ": component.build.dependencies: " + msg);
                             echoTask.perform();
                         };
                         
@@ -497,21 +497,21 @@ Unexpectedly received empty list of builds to iterate."/>
                     -->
                 </pathconvert>
                 <!-- will be read using ant-contrib's antcallback/antfetch
-                <echo message="${ofbiz.build.dependencies.prop}"/>-->
+                <echo message="${component.build.dependencies.prop}"/>-->
             </then>
             <else>
-                <property name="ofbiz.build.dependencies.prop" value="" />
+                <property name="component.build.dependencies.prop" value="" />
             </else>
         </if>
       </sequential>
     </macrodef>
     
-    <!-- get-ofbiz-build-dependencies: basic form expected by depressubant
+    <!-- get-component-build-deps: basic form expected by depressubant
         NOTE: We don't really want to define this here... but without it,
             a theme not using the new commontheme.xml would need to copy this into its build file
-    <target name="get-ofbiz-build-dependencies"
-        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
-        <read-ofbiz-build-deps/>
+    <target name="get-component-build-deps"
+        description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-component-build-deps/>
     </target>
     -->
     

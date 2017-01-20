@@ -365,7 +365,7 @@ under the License.
         <addonsant target="clean"/>
         
         <!-- SCIPIO: 2017-01-19: added clean task for themes (not invoked stock ofbiz) -->
-        <depressubant dir="${basedir}/themes" target="clean"/>
+        <depres-subant dir="${basedir}/themes" target="clean"/>
         
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
@@ -683,7 +683,7 @@ under the License.
                 <include name="*/build.xml" />
             </fileset>
         </externalsubant>-->
-        <depressubant dir="${basedir}/themes"/>
+        <depres-subant dir="${basedir}/themes"/>
 
         <!-- SCIPIO: addons dir -->
         <addonsant/>
@@ -725,7 +725,7 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <depressubant dir="${basedir}/hot-deploy" target="@{target}" />
+            <depres-subant dir="${basedir}/hot-deploy" target="@{target}" />
           </else>
         </if>
       </sequential>
@@ -2245,7 +2245,7 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <depressubant dir="${basedir}/addons" target="@{target}" />
+            <depres-subant dir="${basedir}/addons" target="@{target}" />
           </else>
         </if>
       </sequential>

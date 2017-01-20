@@ -204,7 +204,7 @@ under the License.
         and resolves the resulting dependency graph to determine a build order, mirroring the same 
         algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17). 
         See also the "get-component-build-deps" target (called by this macro). -->
-    <macrodef name="depressubant">
+    <macrodef name="depres-subant">
       <attribute name="dir" default=""/>
       <attribute name="target" default=""/>
       <attribute name="auto-build-tools" default="true"/>
@@ -360,7 +360,7 @@ Unexpectedly received empty list of builds to iterate."/>
     </macrodef>
     
     <!-- SCIPIO: Reads and partly validates the component's component.build.dependencies and returns them
-        to caller (depressubant) for automatic dependency resolution.
+        to caller (depres-subant) for automatic dependency resolution.
         A component build.xml file may define a build list of dependencies on other components, using the following format:
           <filelist dir="." id="component.build.dependencies"> <!- NOTE: MUST be filelist, not fileset ->
             <file name="../other1/build.xml" /> <!- explicit build file form: the referenced component build file must exist ->
@@ -504,7 +504,7 @@ Unexpectedly received empty list of builds to iterate."/>
       </sequential>
     </macrodef>
     
-    <!-- get-component-build-deps: basic form expected by depressubant
+    <!-- get-component-build-deps: basic form expected by depres-subant
         NOTE: We don't really want to define this here... but without it,
             a theme not using the new commontheme.xml would need to copy this into its build file
     <target name="get-component-build-deps"

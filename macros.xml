@@ -385,8 +385,8 @@ Unexpectedly received empty list of builds to iterate."/>
             for the "depends-on" xml element in the following file for the load-time mechanism:
               component://framework/base/dtd/ofbiz-component.xsd
         FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
-    <target name="get-ofbiz-build-dependencies"
-        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+    <macrodef name="read-ofbiz-build-deps">
+      <sequential>
         <!-- 
         NOTE: Caller must specify:
           * ofbiz.build.dependencies.sep (context-dependent)
@@ -503,6 +503,16 @@ Unexpectedly received empty list of builds to iterate."/>
                 <property name="ofbiz.build.dependencies.prop" value="" />
             </else>
         </if>
+      </sequential>
+    </macrodef>
+    
+    <!-- get-ofbiz-build-dependencies: basic form expected by depressubant
+        NOTE: We don't really want to define this here... but without it,
+            a theme not using the new commontheme.xml would need to copy this into its build file
+    <target name="get-ofbiz-build-dependencies"
+        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-ofbiz-build-deps/>
     </target>
+    -->
     
 </project>

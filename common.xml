@@ -273,6 +273,9 @@ under the License.
         <fileset refid="hotdeploy.commoncomponentbuilds" />
     </import>
     
-    <!-- FIXME?: get-ofbiz-build-dependencies must currently be defined in macros.xml due to theme patterns... -->
+    <target name="get-ofbiz-build-dependencies"
+        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-ofbiz-build-deps/>
+    </target>
     
 </project>

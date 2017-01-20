@@ -20,9 +20,10 @@ under the License.
 <project name="Common Theme Component Build">
     <!-- SCIPIO: Common include for theme component build.xml files (same as common.xml but for themes) -->
     
-    <dirname property="component.commontheme.dir" file="${ant.file.Common Theme Component Build}"/>
-    <import file="${component.commontheme.dir}/macros.xml"/>
-    <!-- TODO: investigate whether we can include common.xml directly here -->
+    <dirname property="component.build.commontheme.dir" file="${ant.file.Common Theme Component Build}"/>
+    <import file="${component.build.commontheme.dir}/macros.xml"/>
+    <!-- TODO: investigate whether we can include common.xml directly here,
+        or instead, a third shared commonshared.xml file that both common.xml and commontheme.xml share -->
 
     <target name="clean">
     </target>
@@ -30,4 +31,9 @@ under the License.
     <target name="build">
     </target>
     
+    <target name="get-ofbiz-build-dependencies"
+        description="Reads this component's build dependencies from ofbiz.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-ofbiz-build-deps/>
+    </target>
+
 </project>

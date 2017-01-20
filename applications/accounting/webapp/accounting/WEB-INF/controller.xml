@@ -2685,7 +2685,7 @@ under the License.
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
+    <view-map name="main" type="screen" page="component://accounting/widget/scipio/AccountingScreens.xml#main"/>
 
     <!-- BillingAccount -->
     <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
@@ -3005,7 +3005,7 @@ under the License.
     <view-map name="EditGlAccountCategory" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditGlAccountCategory"/>
     <view-map name="FindGlAccountCategory" type="screen" page="component://accounting/widget/GlSetupScreens.xml#FindGlAccountCategory"/>
     <view-map name="EditGlAccountCategoryMember" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditGlAccountCategoryMember"/>
-    <view-map name="CostCenters" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#CostCenters"/>
+    <view-map name="CostCenters" type="screen" page="component://accounting/widget/CostScreens.xml#CostCenters"/>
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>
 

@@ -666,6 +666,18 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="CostCenterDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#CostCenterSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="CommonInvoiceDecorator">
         <section>

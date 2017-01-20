@@ -35,12 +35,48 @@ under the License.
                 <entity-one entity-name="CostComponentCalc" value-field="costComponentCalc"/>
             </actions>
             <widgets>
-                <decorator-screen name="GlobalGLSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CostCenterDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AccountingCostComponentCalcPanel" title="${uiLabelMap.AccountingCreateCostComponentCalc}" collapsible="true">
                             <include-form name="AddCostComponentCalc" location="component://accounting/widget/CostForms.xml"/>
                         </screenlet>
                         <include-form name="ListCostComponentCalc" location="component://accounting/widget/CostForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CostCenters">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="FormFieldTitle_costCenters"/>
+                <!--<set field="activeSubMenuItem" value="CostCenters"/>-->
+            </actions>
+            <widgets>
+               <decorator-screen name="CostCenterDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+                                <service service-name="getGlAcctgAndAmountPercentage" result-map="result">
+                                    <field-map field-name="organizationPartyId"/>
+                                </service>
+                                <set field="glAcctgAndAmountPercentageList" from-field="result.glAcctgAndAmountPercentageList" type="List"/>
+                                <set field="glAccountCategories" from-field="result.glAccountCategories" type="List"/>
+                            </actions>
+                            <widgets>
+                                <screenlet>
+                                    <platform-specific>
+                                        <html>
+                                            <html-template location="component://accounting/webapp/accounting/ledger/CostCenters.ftl"/>
+                                        </html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

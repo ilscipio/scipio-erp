@@ -96,4 +96,35 @@ under the License.
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.htm</welcome-file>
     </welcome-file-list>
+    
+    <!-- 
+    <filter>
+        <display-name>SimpleRedirectFilter</display-name>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <init-param>
+            <param-name>matchPattern</param-name>
+            <param-value>^/webtools$</param-value>
+        </init-param>
+        <init-param>
+            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
+                if false, matches only context path</description>
+            <param-name>matchFullPath</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>replacement</param-name>
+            <param-value>/accounting</param-value>
+        </init-param>
+        <init-param>
+            <param-name>usePermanentRedirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+   
+    <filter-mapping>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+     -->
 </web-app>

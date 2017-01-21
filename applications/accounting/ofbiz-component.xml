@@ -103,7 +103,8 @@ under the License.
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/accounting"/>
 
-    <!-- SCIPIO: AP/AR are reintegrated into accounting
+    <!-- SCIPIO: AP/AR are reintegrated into accounting -->
+    <!-- All requests are being redirected to accounting -->
     <webapp name="ar"
         title="Accounting - AR"
         server="default-server"
@@ -120,5 +121,5 @@ under the License.
         mount-point="/ap"
         app-bar-display="false"/>
         
-     -->
+
 </ofbiz-component>

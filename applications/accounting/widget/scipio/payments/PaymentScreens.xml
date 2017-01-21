@@ -28,7 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindPayment"/>
-                <set field="activeSubMenuItem" value="findPayment"/>
+                <set field="activeSubMenuItem" value="payments"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">

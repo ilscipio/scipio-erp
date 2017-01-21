@@ -29,7 +29,7 @@
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
-        <menu-item name="findPayment" title="${uiLabelMap.AccountingPaymentsMenu}">
+        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
             <link target="findPayments" />
         </menu-item>
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
@@ -80,7 +80,7 @@
         <menu-item name="Journals">
             <sub-menu name="Journals" include="JournalsSideBar"/>
         </menu-item>
-        <menu-item name="findPayment">
+        <menu-item name="payments">
             <sub-menu name="Payment" include="PaymentSideBar"/>
         </menu-item>
         <menu-item name="settings">

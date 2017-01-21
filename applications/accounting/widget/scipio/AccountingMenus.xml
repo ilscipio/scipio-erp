@@ -141,8 +141,9 @@
     **************
     * Settings 
     **************-->
-    <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
+    <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-menu-item-name="Settings" always-expand-selected-or-ancestor="true">
+        <menu-item name="settings" title="${uiLabelMap.AccountingCompanies}" sort-mode="off">
             <link target="settings" />
         </menu-item>
          <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
@@ -171,6 +172,17 @@
             </condition>
             <link target="FindPaymentGatewayConfig"/>
             <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
+        </menu-item>
+    </menu>
+    
+    <!-- Payment Gateway -->
+    <menu name="PaymentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-menu-item-name="PaymentGatewayConfig" always-expand-selected-or-ancestor="true">
+        <menu-item name="paymentGatewayConfigTab" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
+            <link target="FindPaymentGatewayConfig" />
+        </menu-item>
+        <menu-item name="paymentGatewayConfigTypesTab" title="${uiLabelMap.AccountingPaymentGatewayConfigTypes}">
+            <link target="FindPaymentGatewayConfigTypes" />
         </menu-item>
     </menu>
 

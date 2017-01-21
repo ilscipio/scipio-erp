@@ -312,6 +312,138 @@ under the License.
         <response name="error" type="view" value="EditInvoiceItemType"/>
     </request-map>
     
+    <!-- payment method type requests -->
+    <request-map uri="editPaymentMethodType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPaymentMethodType"/>
+    </request-map>
+
+    <request-map uri="updatePaymentMethodType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentMethodType"/>
+        <response name="success" type="view" value="EditPaymentMethodType"/>
+        <response name="error" type="view" value="EditPaymentMethodType"/>
+    </request-map>
+    <request-map uri="EditAgreementRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="createAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="updateAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="deleteAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="voidPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="voidPayment"/>
+        <response name="success" type="view" value="paymentOverview"/>
+        <response name="error" type="view" value="paymentOverview"/>
+    </request-map>
+    
+    <!-- Payment Gateway Config -->
+    <request-map uri="FindPaymentGatewayConfig">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="EditPaymentGatewayConfig">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfig">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfig"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigSagePay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigSagePay"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigAuthorizeNet">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigAuthorizeNet"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigClearCommerce">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigClearCommerce"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigCyberSource">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigCyberSource"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigPayflowPro">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigPayflowPro"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigPayPal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigPayPal"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigWorldPay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigWorldPay"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigEway">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigEway"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="FindPaymentGatewayConfigTypes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPaymentGatewayConfigTypes"/>
+    </request-map>
+    <request-map uri="EditPaymentGatewayConfigType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfigType"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigType"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfigType"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfigType"/>
+    </request-map>
+
+    <request-map uri="UpdatePaymentGatewayConfigSecurePay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigSecurePay"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    <request-map uri="UpdatePaymentGatewayConfigiDEAL">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGatewayConfigiDEAL"/>
+        <response name="success" type="view" value="EditPaymentGatewayConfig"/>
+        <response name="error" type="view" value="EditPaymentGatewayConfig"/>
+    </request-map>
+    
 
     <!-- 
     **************
@@ -349,6 +481,13 @@ under the License.
     <view-map name="ListGlAccountOrgCsv" type="screencsv" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgCsv" content-type="text/csv" encoding="none"/>
     
     <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/scipio/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
+    
+    <view-map name="EditPaymentMethodType" type="screen" page="component://accounting/widget/scipio/settings/PaymentMethodTypeScreens.xml#EditPaymentMethodType"/>
+    
+    <view-map name="FindPaymentGatewayConfig" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#FindPaymentGatewayConfig" type="screen"/>
+    <view-map name="EditPaymentGatewayConfig" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfig" type="screen"/>
+    <view-map name="FindPaymentGatewayConfigTypes" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#FindPaymentGatewayConfigTypes" type="screen"/>
+    <view-map name="EditPaymentGatewayConfigType" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfigType" type="screen"/>
     
 </site-conf>
 

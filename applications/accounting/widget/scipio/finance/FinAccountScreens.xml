@@ -35,7 +35,7 @@ under the License.
                 <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -49,15 +49,15 @@ under the License.
                                         <if-compare field="displayAdvancedSearch" operator="equals" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <include-form name="FindFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
+                                        <include-form name="FindFinAccounts" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <include-form name="QuickFindFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
+                                        <include-form name="QuickFindFinAccounts" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                     </fail-widgets>
                                 </section>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="ListFinAccounts" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -76,7 +76,7 @@ under the License.
                 <set field="titleProperty" value="${groovy: context.finAccount ? 'PageTitleEditFinAccount' : 'AccountingCreateNewFinAccount'}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -87,12 +87,12 @@ under the License.
                                     <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>
                                 <screenlet id="EditFinAccountPanel">
-                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <screenlet id="CreateFinAccountPanel">
-                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="EditFinAccount" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -114,13 +114,13 @@ under the License.
                 <set field="fromDate" from-field="parameters.fromDate"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.AccountingEditFinAccountRoleFor}"/>
                         <screenlet id="FinAccountRolePanel" collapsible="true">
-                            <include-form name="AddFinAccountRole" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="AddFinAccountRole" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
-                        <include-form name="ListFinAccountRoles" location="component://accounting/widget/FinAccountForms.xml"/>
+                        <include-form name="ListFinAccountRoles" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -137,11 +137,11 @@ under the License.
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <!-- <label style="heading" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/> -->
                         <screenlet id="FinAccountTransPanel" collapsible="true">
-                            <include-form name="AddFinAccountTrans" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="AddFinAccountTrans" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -160,12 +160,12 @@ under the License.
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="FinAccountAuthsPanel" title="${uiLabelMap.AccountingEditFinAccountAuthorityFor}]" collapsible="true">
-                            <include-form name="AddFinAccountAuth" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="AddFinAccountAuth" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
-                        <include-form name="ListFinAccountAuths" location="component://accounting/widget/FinAccountForms.xml"/>
+                        <include-form name="ListFinAccountAuths" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -187,7 +187,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/DepositWithdrawPayments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="NewDepositPayment" text="${uiLabelMap.AccountingCreateNewDepositPayment}" style="${styles.link_nav} ${styles.action_add}">
@@ -199,7 +199,7 @@ under the License.
                         </container>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="PaymentsDepositWithdraw" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="PaymentsDepositWithdraw" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section> 
                             <decorator-section name="search-results">
                                 <platform-specific>
@@ -221,7 +221,7 @@ under the License.
                 <set field="titleProperty" value="AccountingFinAccounts"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar"><!-- SCIPIO: added for consistency -->
                             <include-menu name="FinAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
@@ -267,7 +267,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="NewDepositSlip" text="${uiLabelMap.AccountingCreateNewDepositSlip}" style="${styles.link_nav} ${styles.action_add}">
@@ -277,10 +277,10 @@ under the License.
                         </container>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="FindDepositSlips" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="FindDepositSlips" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListDepositSlips" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="ListDepositSlips" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -302,7 +302,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -317,10 +317,10 @@ under the License.
                             </widgets>
                         </section>
                         <screenlet title="${uiLabelMap.AccountingEditPaymentGroupFor}">
-                            <include-form name="EditDepositSlip" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="EditDepositSlip" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingEditPaymentGroupMemberFor}">
-                            <include-form name="ListDepositSlipMember" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="ListDepositSlipMember" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -343,7 +343,7 @@ under the License.
                 <script location="component://accounting/webapp/ar/WEB-INF/actions/BatchPayments.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
@@ -381,7 +381,7 @@ under the License.
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_add}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
@@ -399,7 +399,7 @@ under the License.
                         </section>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="FindFinAccountTransactions" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="FindFinAccountTransactions" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section> 
                             <decorator-section name="search-results">
                                 <platform-specific>
@@ -421,7 +421,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_add}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
@@ -451,7 +451,7 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <screenlet id="FinAccountTransPanel" collapsible="true">
-                                            <include-form name="FindBankReconciliationFinAcctTrans" location="component://accounting/widget/FinAccountForms.xml"/>
+                                            <include-form name="FindBankReconciliationFinAcctTrans" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                         </screenlet>
                                         <platform-specific>
                                             <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/FinAccountTrans.ftl"/></html>
@@ -461,7 +461,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <screenlet id="FinAccountTransPanel" collapsible="true">
-                                    <include-form name="FindBankReconciliationFinAcctTrans" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="FindBankReconciliationFinAcctTrans" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                 </screenlet>
                                 <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/FinAccountTrans.ftl"/></html>
@@ -476,7 +476,7 @@ under the License.
     <screen name="FinAccountPortlets">
         <section>
             <widgets>
-                <include-form name="ListFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
+                <include-form name="ListFinAccounts" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
             </widgets>
         </section>
     </screen>
@@ -491,11 +491,11 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.AccountingCreateNewDepositPaymentFor}"/>
                         <screenlet id="EditDepositPaymentPanel" collapsible="true">
-                            <include-form name="EditDepositPayment" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="EditDepositPayment" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -513,10 +513,10 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="EditWithdrawalPaymentPanel" collapsible="true" title="${uiLabelMap.AccountingCreateNewWithdrawalPaymentFor}">
-                            <include-form name="EditWithdrawalPayment" location="component://accounting/widget/FinAccountForms.xml"/>
+                            <include-form name="EditWithdrawalPayment" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -534,7 +534,7 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <section>
@@ -543,12 +543,12 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet id="AddFinAccountReconciliation" title="${uiLabelMap.AccountingAddFinAccountReconciliations}">
-                                    <include-form name="EditFinAccountReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="EditFinAccountReconciliation" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <screenlet id="EditFinAccountReconciliation" title="${uiLabelMap.AccountingEditFinAccountReconciliations}">
-                                    <include-form name="EditFinAccountReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="EditFinAccountReconciliation" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -594,11 +594,11 @@ under the License.
                 <set field="previousClosingBalance" from-field="previousReconciliationClosingBalance.closingBalance"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                             <include-menu location="component://accounting/widget/AccountingMenus.xml" name="FinAccountReconciliationsTabBar"/>
                         <screenlet title="${uiLabelMap.AccountingCurrentBankReconciliation}">
-                            <include-form location="component://accounting/widget/FinAccountForms.xml" name="FinAccountReconciliationBalance"/>
+                            <include-form location="component://accounting/widget/scipio/finance/FinAccountForms.xml" name="FinAccountReconciliationBalance"/>
                         </screenlet>
                         <label style="heading" text="${uiLabelMap.AccountingGlReconciliationFor}"></label>
                         <platform-specific>
@@ -638,15 +638,15 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="FindBankReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="FindBankReconciliation" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section> 
                             <decorator-section name="search-results">
-                                <include-form name="ListFinAccountReconciliations" location="component://accounting/widget/FinAccountForms.xml"/>
+                                <include-form name="ListFinAccountReconciliations" location="component://accounting/widget/scipio/finance/FinAccountForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>

@@ -124,7 +124,7 @@ public class ComponentContainer implements Container {
         }
         
         // SCIPIO: 2017-01-19: Post-process loaded components
-        ComponentConfig.postProcessComponentConfigs(componentList);
+        componentList = ComponentConfig.postProcessComponentConfigs(componentList);
         
         Debug.logInfo("All components post-processed (" + componentList.size() + " final)", module); // SCIPIO
         

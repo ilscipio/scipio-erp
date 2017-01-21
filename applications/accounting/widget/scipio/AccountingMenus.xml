@@ -16,7 +16,8 @@
         <menu-item name="receivable" title="${uiLabelMap.AccountingAccountsReceivable}">
             <link target="receivable"/>
         </menu-item>
-        <menu-item name="transaction" title="${uiLabelMap.AccountingTransactions}">
+        <!-- Payment Transactions
+        <menu-item name="transaction" title="${uiLabelMap.AccountingTransactions}"> 
             <condition>
                 <or>
                     <if-has-permission permission="MANUAL" action="_PAYMENT" />
@@ -24,7 +25,7 @@
                 </or>
             </condition>
             <link target="FindGatewayResponses" />
-        </menu-item>
+        </menu-item>-->
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
@@ -69,8 +70,8 @@
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
-        <menu-item name="settings">
-            <sub-menu name="Settings" include="SettingsSideBar"/>
+        <menu-item name="ListFixedAssets">
+            <sub-menu name="FixedAssets" include="FixedAssetsSideBar"/>
         </menu-item>
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
@@ -78,14 +79,150 @@
         <menu-item name="Journals">
             <sub-menu name="Journals" include="JournalsSideBar"/>
         </menu-item>
+        <menu-item name="settings">
+            <sub-menu name="Settings" include="SettingsSideBar"/>
+        </menu-item>
     </menu>
+    
+    
+    
     
     <!-- 
     **************
     * Accounting 
     **************
     -->
-
+    
+    
+    <menu name="FixedAssetsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="ListFixedAssets" always-expand-selected-or-ancestor="true">
+        <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
+            <link target="ListFixedAssets" />
+        </menu-item>
+    </menu>
+    
+    <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditFixedAsset">
+        <menu-item name="EditFixedAsset" title="${uiLabelMap.AccountingFixedAsset}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="EditFixedAsset">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="FixedAssetChildren" title="${uiLabelMap.CommonEntityChildren}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="FixedAssetChildren">
+                <parameter param-name="fixedAssetId" />
+                <parameter param-name="trail" from-field="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListFixedAssetProducts" title="${uiLabelMap.AccountingFixedAssetProducts}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="ListFixedAssetProducts">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListFixedAssetCalendar" title="${uiLabelMap.AccountingFixedAssetCalendar}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="calendar">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditFixedAssetStdCosts" title="${uiLabelMap.AccountingFixedAssetStdCosts}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="EditFixedAssetStdCosts">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditFixedAssetIdents" title="${uiLabelMap.AccountingFixedAssetIdents}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="EditFixedAssetIdents">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditFixedAssetRegistrations" title="${uiLabelMap.AccountingFixedAssetRegistrations}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="EditFixedAssetRegistrations">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <!-- SCIPIO: Makes navigation problematic; TODO: REVIEW
+        <menu-item name="EditFixedAssetMeters" title="${uiLabelMap.AccountingFixedAssetMeters}">
+            <link target="EditFixedAssetMeters">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>-->
+        <menu-item name="ListFixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="ListFixedAssetMaints">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditPartyFixedAssetAssignments" title="${uiLabelMap.AccountingPartyFixedAssetAssignments}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="EditPartyFixedAssetAssignments">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="FixedAssetDepreciation" title="${uiLabelMap.AccountingDepreciation}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="showFixedAssetDepreciation">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+        <menu-item name="FixedAssetGeoLocation" title="${uiLabelMap.CommonGeoLocation}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
+            <link target="FixedAssetGeoLocation">
+                <parameter param-name="fixedAssetId" />
+            </link>
+        </menu-item>
+    </menu>
+    
+    
     <!--
     ************** 
     * Contracts 
@@ -275,6 +412,9 @@
     **************-->
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         default-menu-item-name="Settings" always-expand-selected-or-ancestor="true">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
         <menu-item name="settings" title="${uiLabelMap.AccountingCompanies}" sort-mode="off">
             <link target="settings" />
         </menu-item>
@@ -304,6 +444,22 @@
             </condition>
             <link target="FindPaymentGatewayConfig"/>
             <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
+        </menu-item>
+        <!--
+        <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="SetupGlJournals">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="GlAccountAssignment" title="${uiLabelMap.AccountingGlAccountDefault}">
+            <link target="GlAccountAssignment">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>-->
+        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriod}">
+            <link target="TimePeriods">
+                <parameter param-name="organizationPartyId" />
+            </link>
         </menu-item>
     </menu>
     

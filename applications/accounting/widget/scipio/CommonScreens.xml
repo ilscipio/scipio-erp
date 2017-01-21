@@ -125,6 +125,11 @@ under the License.
         </section>
     </screen>
     
+    <!--
+    *************** 
+    * Settings
+    ***************
+     -->
     <screen name="CommonGlSetupDecorator">
         <section>
             <actions>
@@ -166,6 +171,11 @@ under the License.
         </section>
     </screen>
     
+    <!--
+    *************** 
+    * Import/Export
+    ***************
+     -->
     <screen name="CommonImportExportDecorator">
         <section>
             <actions>
@@ -178,6 +188,11 @@ under the License.
         </section>
     </screen>
     
+    <!--
+    *************** 
+    * Journals
+    ***************
+     -->
     <screen name="CommonJournalsDecorator">
         <section>
             <actions>
@@ -212,6 +227,79 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error" text="${uiLabelMap.AccountingUserOrgNotSpecified}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!--
+    *************** 
+    * Fixed Assets
+    ***************
+     -->
+    <screen name="CommonFixedAssetsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#FixedAssetsSideBar" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="FixedAssetDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#FixedAssetsSideBar" />
+                <set field="fixedAssetId" from-field="fixedAsset.fixedAssetId" default-value="${parameters.fixedAssetId}"/>
+                <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
+                
+                <set field="titleFormat" value="\${finalTitle}${groovy: context.fixedAsset ? (': ' + context.fixedAsset.fixedAssetName + ' [' + context.fixedAssetId + ']') : ''}"/>
+                
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.fixedAssetId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="FixedAssetTabBar" location="component://accounting/widget/scipio/AccountingMenus.xml"/>
+                                <!--<section>
+                                    <condition>
+                                        <not><if-empty field="fixedAssetId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="title"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
+                                            </fail-widgets>
+                                        </section>
+                                    </widgets>
+                                </section>-->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

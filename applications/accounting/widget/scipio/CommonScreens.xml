@@ -327,6 +327,73 @@ under the License.
     
     <!--
     *************** 
+    * Payments
+    ***************
+     -->
+    <screen name="CommonPaymentDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <!-- <container style="leftclear">
+                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} [${paymentId}]  ${${extraFunctionName}}"/>
+                        </container> -->
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonPaymentGroupDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#PaymentGroup" />
+                <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
+                <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
+                <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
+                    <field-map field-name="paymentGroupId"/>
+                </entity-and>
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.paymentGroup}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <!-- TODO: Scipio - I don't think this is needed -->
+                        <!-- <section>
+                            <condition>
+                                <not><if-empty field="paymentGroupId"/></not>
+                            </condition>
+                            <widgets>     
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="title"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading" text="${title} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${paymenGroup.paymentGroupName} [${paymentGroupId}]"/>
+                                    </fail-widgets>
+                                </section>                                   
+                            </widgets>                                  
+                        </section> -->
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!--
+    *************** 
     * Settings
     ***************
      -->

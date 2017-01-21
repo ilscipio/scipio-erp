@@ -625,6 +625,172 @@ under the License.
         <response name="error" type="view" value="ImportExport"/>
     </request-map>
     
+    <!-- 
+    **************
+    * Payments
+    **************
+     -->
+    <request-map uri="findPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findPayments"/>
+    </request-map>
+    <request-map uri="newPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newPayment"/>
+    </request-map>
+    <request-map uri="editPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="createPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="editPayment"/>
+        <response name="error" type="view" value="newPayment"/>
+    </request-map>
+    <request-map uri="updatePayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePayment"/>
+        <response name="success" type="view" value="editPayment"/>
+        <response name="error" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="paymentOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="paymentOverview"/>
+    </request-map>
+    <request-map uri="editPaymentApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="createPaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="updatePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplicationDef"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="removePaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editPaymentApplications"/>
+        <response name="error" type="view" value="editPaymentApplications"/>
+    </request-map>
+    <request-map uri="setPaymentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setPaymentStatus"/>
+        <response name="success" type="view" value="paymentOverview"/>
+        <response name="error" type="view" value="paymentOverview"/>
+    </request-map>
+
+    <request-map uri="printChecks.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintChecks"/>
+    </request-map>
+
+    <request-map uri="quickSendPayment">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="quickSendPayment"/>
+        <response name="success" type="view" value="ListChecksToSend"/>
+        <response name="error" type="view" value="ListChecksToSend"/>
+    </request-map>
+
+    <request-map uri="FindSalesInvoicesByDueDate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindSalesInvoicesByDueDate">
+            <redirect-parameter name="invoiceTypeId"/>
+            <redirect-parameter name="organizationPartyId"/>
+            <redirect-parameter name="partyId"/>
+            <redirect-parameter name="daysOffset"/>
+        </response>
+    </request-map>
+    <request-map uri="FindPurchaseInvoicesByDueDate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPurchaseInvoicesByDueDate">
+            <redirect-parameter name="invoiceTypeId"/>
+            <redirect-parameter name="organizationPartyId"/>
+            <redirect-parameter name="partyId"/>
+            <redirect-parameter name="daysOffset"/>
+        </response>
+    </request-map>
+
+    <!-- Payment Group requests -->
+    <request-map uri="FindPaymentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPaymentGroup"/>
+    </request-map>
+    <request-map uri="EditPaymentGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPaymentGroup"/>
+    </request-map>
+    <request-map uri="createPaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentGroup"/>
+        <response name="success" type="view" value="EditPaymentGroup"/>
+        <response name="error" type="view" value="EditPaymentGroup"/>
+    </request-map>
+    <request-map uri="updatePaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGroup"/>
+        <response name="success" type="view" value="EditPaymentGroup"/>
+        <response name="error" type="view" value="EditPaymentGroup"/>
+    </request-map>
+    <request-map uri="deletePaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePaymentGroup"/>
+        <response name="success" type="view" value="FindPaymentGroup"/>
+        <response name="error" type="view" value="FindPaymentGroup"/>
+    </request-map>
+
+    <request-map uri="EditPaymentGroupMember">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPaymentGroupMember"/>
+    </request-map>
+    <request-map uri="createPaymentGroupMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentGroupMember"/>
+        <response name="success" type="view" value="EditPaymentGroupMember"/>
+        <response name="error" type="view" value="EditPaymentGroupMember"/>
+    </request-map>
+    <request-map uri="updatePaymentGroupMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGroupMember"/>
+        <response name="success" type="view" value="EditPaymentGroupMember"/>
+        <response name="error" type="view" value="EditPaymentGroupMember"/>
+    </request-map>
+    <request-map uri="expirePaymentGroupMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expirePaymentGroupMember"/>
+        <response name="success" type="view" value="EditPaymentGroupMember"/>
+        <response name="error" type="view" value="EditPaymentGroupMember"/>
+    </request-map>
+
+    <request-map uri="PaymentGroupOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+    </request-map>
+
+    <request-map uri="cancelPaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPaymentBatch"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="FindPaymentGroup"/>
+    </request-map>
+
+    <request-map uri="cancelCheckRunPayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelCheckRunPayments"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="FindPaymentGroup"/>
+    </request-map>
+
+    <request-map uri="DepositSlip.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepositSlipPdf"/>
+        <response name="error" type="view" value="PaymentGroupOverview"/>
+    </request-map>
     
     <!-- 
     **************
@@ -971,6 +1137,53 @@ under the License.
         <response name="error" type="view" value="EditPaymentGatewayConfig"/>
     </request-map>
     
+    
+    <!-- 
+    **************
+    * Shared Requests
+    **************-->
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
+    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
+    <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupInternalOrganization"><security auth="true" https="true"/><response name="success" type="view" value="LookupInternalOrganization"/></request-map>
+
+    <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
+    <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
+    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
+    <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
+    <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
+    <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
+    <request-map uri="LookupFacilityLocation"><security auth="true" https="true"/><response name="success" type="view" value="LookupFacilityLocation"/></request-map>
+    <request-map uri="LookupShipment"><security auth="true" https="true"/><response name="success" type="view" value="LookupShipment"/></request-map>
+    <request-map uri="LookupAgreement"><security https="true" auth="true"/><response name="success" type="view" value="LookupAgreement"/></request-map>
+    <request-map uri="LookupAgreementItem"><security auth="true" https="true"/><response name="success" type="view" value="LookupAgreementItem"/></request-map>
+    <request-map uri="LookupPaymentGroupMember"><security auth="true" https="true"/><response name="success" type="view" value="LookupPaymentGroupMember"/></request-map>
+    <request-map uri="LookupGlReconciliation"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlReconciliation"/></request-map>
+    <request-map uri="LookupCustomTimePeriod"><security auth="true" https="true"/><response name="success" type="view" value="LookupCustomTimePeriod"/></request-map>
+
+    <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
+
+    <request-map uri="invoice.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InvoicePDF"/>
+    </request-map>
+
+    <request-map uri="printCheck.pdf">
+        <!-- security https="true" auth="true"/ -->
+        <response name="success" type="view" value="PrintCheckPDF"/>
+    </request-map>
+
+    <request-map uri="PrintInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintInvoices"/>
+    </request-map>
+    
 
     <!-- 
     **************
@@ -1062,6 +1275,24 @@ under the License.
     <view-map name="FinancialAccountSummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#FinancialAccountSummary"/>
     <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance" />
     
+    <!-- Payment -->
+    <view-map name="findPayments" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#FindPayments"/>
+    <view-map name="paymentOverview" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#PaymentOverview"/>
+    <view-map name="newPayment" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#NewPayment"/>
+    <view-map name="editPayment" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#EditPayment"/>
+    <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#EditPaymentApplications"/>
+    <view-map name="ManualTransaction" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#ManualTransaction"/>
+    <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#PrintChecks" content-type="application/pdf" encoding="none"/>
+    <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
+    <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
+
+    <!-- Payment Group -->
+    <view-map name="FindPaymentGroup" type="screen" page="component://accounting/widget/scipio/payments/PaymentGroupScreens.xml#FindPaymentGroup"/>
+    <view-map name="EditPaymentGroup" type="screen" page="component://accounting/widget/scipio/payments/PaymentGroupScreens.xml#EditPaymentGroup"/>
+    <view-map name="EditPaymentGroupMember" type="screen" page="component://accounting/widget/scipio/payments/PaymentGroupScreens.xml#EditPaymentGroupMember"/>
+    <view-map name="PaymentGroupOverview" type="screen" page="component://accounting/widget/scipio/payments/PaymentGroupScreens.xml#PaymentGroupOverview"/>
+    <view-map name="DepositSlipPdf" type="screenfop" page="component://accounting/widget/scipio/payments/PaymentGroupScreens.xml#DepositSlipPdf" content-type="application/pdf" encoding="none"/>
+    
     <!-- Settings -->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListCompanies"/>
     <view-map name="AddCompany" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#AddCompany"/>
@@ -1093,6 +1324,42 @@ under the License.
     <view-map name="EditPaymentGatewayConfig" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfig" type="screen"/>
     <view-map name="FindPaymentGatewayConfigTypes" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#FindPaymentGatewayConfigTypes" type="screen"/>
     <view-map name="EditPaymentGatewayConfigType" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfigType" type="screen"/>
+    
+    
+    <!-- Shared Screens -->
+    <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
+    <view-map name="LookupPartyGroup" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupInternalOrganization" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupInternalOrganization"/>
+
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
+    <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
+    <view-map name="LookupProductCategory" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductCategory"/>
+    <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
+
+    <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupFixedAsset"/>
+    <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupGlAccount"/>
+    <view-map name="LookupBillingAccount" page="component://accounting/widget/scipio/LookupScreens.xml#LookupBillingAccount" type="screen"/>
+    <view-map name="LookupPayment" page="component://accounting/widget/scipio/LookupScreens.xml#LookupPayment" type="screen"/>
+    <view-map name="LookupInvoice" page="component://accounting/widget/scipio/LookupScreens.xml#LookupInvoice" type="screen"/>
+    <view-map name="LookupCustomTimePeriod" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupCustomTimePeriod"/>
+
+    <view-map name="LookupWorkEffort" type="screen" page="component://workeffort/widget/LookupScreens.xml#LookupWorkEffort"/>
+    <view-map name="LookupOrderHeader" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeader"/>
+    <view-map name="LookupFacility" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacility"/>
+    <view-map name="LookupFacilityLocation" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupFacilityLocation"/>
+    <view-map name="LookupShipment" type="screen" page="component://product/widget/facility/LookupScreens.xml#LookupShipment"/>
+    <view-map name="LookupAgreement" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupAgreement"/>
+    <view-map name="LookupAgreementItem" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupAgreementItem"/>
+    <view-map name="LookupPaymentGroupMember" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupPaymentGroupMember"/>
+    <view-map name="LookupGlReconciliation" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupGlReconciliation"/>
+
+    <!-- PDFs  -->
+    <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/scipio/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/scipio/AccountingPrintScreens.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="PrintInvoices" type="screenfop" page="component://accounting/widget/scipio/AccountingPrintScreens.xml#PrintInvoices" content-type="application/pdf" encoding="none"/>
     
 </site-conf>
 

@@ -39,10 +39,10 @@ under the License.
                                 <container style="clear"/>
                             </decorator-section>
                             <decorator-section name="search-options">
-                                <include-form name="FindInvoices" location="component://accounting/widget/InvoiceForms.xml"/>
+                                <include-form name="FindInvoices" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
-                                <include-form name="ListInvoices"  location="component://accounting/widget/InvoiceForms.xml"/>
+                                <include-form name="ListInvoices"  location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                             </decorator-section>
                         </decorator-screen>
                     </decorator-section>
@@ -61,10 +61,10 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingCreateNewSalesInvoice}">
-                            <include-form name="NewSalesInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="NewSalesInvoice" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingCreateNewPurchaseInvoice}">
-                            <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="NewPurchaseInvoice" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -92,13 +92,13 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet>
-                                    <include-form name="EditInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="EditInvoice" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <!-- 
                                 <screenlet>
-                                    <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="invoiceHeader" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                                 -->
                             </fail-widgets>
@@ -196,7 +196,7 @@ under the License.
                                             <parameter param-name="invoiceId"/>
                                         </link>
                                     </container>
-                                    <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="invoiceRoles" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>                             
                                 <section>
                                     <condition>
@@ -207,12 +207,12 @@ under the License.
                                             <link target="editInvoiceTimeEntries" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                                 <parameter param-name="invoiceId"/>
                                             </link>
-                                            <include-form name="ListTimeEntries" location="component://accounting/widget/InvoiceForms.xml"/>
+                                            <include-form name="ListTimeEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                         </screenlet>
                                     </widgets>
                                 </section>
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
-                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>-->  
                             </widgets>
                             <fail-widgets>
@@ -234,7 +234,7 @@ under the License.
                                 <!-- 
                                 <container style="${styles.grid_large}6">
                                     <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles">
-                                        <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
+                                        <include-form name="invoiceRoles" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                     </screenlet>
                                 </container>
                                 <section>
@@ -243,12 +243,12 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}" navigation-form-name="ListTimeEntries">
-                                            <include-form name="ListTimeEntries" location="component://accounting/widget/InvoiceForms.xml"/>
+                                            <include-form name="ListTimeEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                         </screenlet>
                                     </widgets>
                                 </section>
                                 <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
-                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                                 -->
                             </fail-widgets>
@@ -287,10 +287,10 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingAssignPaymentToInvoice}">
-                                    <include-form name="AddPayment" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="AddPayment" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}">
-                                   <include-form name="EditInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
+                                   <include-form name="EditInvoiceApplications" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                                 <section>
                                     <condition>
@@ -306,7 +306,7 @@ under the License.
                                                     <not><if-empty field="payments"/></not>
                                                 </condition>
                                                 <widgets>
-                                                    <include-form name="ListPaymentsNotApplied" location="component://accounting/widget/InvoiceForms.xml"/>
+                                                    <include-form name="ListPaymentsNotApplied" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                                 </widgets>
                                             </section>
                                             <section>
@@ -314,7 +314,7 @@ under the License.
                                                     <not><if-empty field="paymentsActualCurrency"/></not>
                                                 </condition>
                                                 <widgets>
-                                                    <include-form name="ListPaymentsNotAppliedForeignCurrency" location="component://accounting/widget/InvoiceForms.xml"/>
+                                                    <include-form name="ListPaymentsNotAppliedForeignCurrency" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                                 </widgets>
                                             </section>
                                         </screenlet>
@@ -323,7 +323,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${invoice.currencyUomId})}  ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}">
-                                    <include-form name="EditInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="EditInvoiceApplications" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -364,7 +364,7 @@ under the License.
                                     <not><if-compare field="invoice.invoiceTypeId" operator="equals" value="PAYROL_INVOICE"/></not>
                                 </condition>
                                 <widgets>
-                                    <include-form name="EditInvoiceItem" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="EditInvoiceItem" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                                 </widgets>
                                 <fail-widgets>
                                     <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceItemsPayrol.ftl"/></html></platform-specific>
@@ -372,7 +372,7 @@ under the License.
                             </section>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingInvoiceItems}">
-                            <include-form name="EditInvoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="EditInvoiceItems" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -398,7 +398,7 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}">
-                            <include-form name="EditTimeEntries" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="EditTimeEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -422,9 +422,9 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="PartyInvoiceRolePanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
-                            <include-form name="EditInvoiceRole" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="EditInvoiceRole" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
-                        <include-form name="ListInvoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
+                        <include-form name="ListInvoiceRoles" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -448,9 +448,9 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet id="PartyInvoiceTermPanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
-                            <include-form name="EditInvoiceTerm" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="EditInvoiceTerm" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
-                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
+                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -470,7 +470,7 @@ under the License.
                 <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSendPerEmail}">
-                            <include-form name="SendPerEmail" location="component://accounting/widget/InvoiceForms.xml"/>
+                            <include-form name="SendPerEmail" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -506,7 +506,7 @@ under the License.
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PageTitleListInvoices}" navigation-form-name="ListInvoices">
-                    <include-form name="ListCustomerInvoices"  location="component://accounting/widget/InvoiceForms.xml"/>
+                    <include-form name="ListCustomerInvoices"  location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                 </screenlet>
             </widgets>
         </section>
@@ -532,7 +532,7 @@ under the License.
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PageTitleListInvoices}" navigation-form-name="ListInvoices">
-                    <include-form name="ListSupplierInvoices"  location="component://accounting/widget/InvoiceForms.xml"/>
+                    <include-form name="ListSupplierInvoices"  location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                 </screenlet>
             </widgets>
         </section>
@@ -540,8 +540,8 @@ under the License.
     
     
     <!-- SCIPIO: Form migration -->
-    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceHeader 
-                                        component://accounting/widget/InvoiceForms.xml#ListInvoiceStatus
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#invoiceHeader 
+                                        component://accounting/widget/scipio/invoice/InvoiceForms.xml#ListInvoiceStatus
     -->
     <screen name="ScipioInvoiceInfo">
         <section>
@@ -577,7 +577,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceApplications -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#ListInvoiceApplications -->
     <screen name="ScipioInvoiceAppliedPayment">
         <section>
             <condition>
@@ -597,7 +597,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#invoiceItems -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#invoiceItems -->
     <screen name="ScipioInvoiceItems">
         <section>
             <condition>
@@ -637,7 +637,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoiceTerms -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#ListInvoiceTerms -->
     <screen name="ScipioInvoiceTerms">
         <section>
             <condition>
@@ -657,7 +657,7 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Form widget replacement: component://accounting/widget/InvoiceForms.xml#ListInvoicePaymentInfo -->
+    <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#ListInvoicePaymentInfo -->
     <screen name="ScipioInvoicePaymentInfo">
         <section>
             <actions>

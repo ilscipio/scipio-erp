@@ -62,7 +62,7 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FixedAssetSearchResults"/>
     </form>
 
-    <form name="FindFixedAssetOptions" extends="lookupFixedAsset" extends-resource="component://accounting/widget/FieldLookupForms.xml"
+    <form name="FindFixedAssetOptions" extends="lookupFixedAsset" extends-resource="component://accounting/widget/scipio/FieldLookupForms.xml"
         target="ListFixedAssets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>

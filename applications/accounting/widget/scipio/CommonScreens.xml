@@ -62,10 +62,9 @@ under the License.
                      then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
                 <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.gif" global="true"/>-->
                 <set field="activeApp" value="accounting" global="true"/>
-                <set field="applicationMenuName" value="MainAppBar" global="true"/>
+                <set field="applicationMenuName" value="AccountingAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://accounting/widget/scipio/AccountingMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.AccountingManagerApplication}" global="true"/>
-                
                 <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
                 <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
@@ -136,7 +135,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
                         <section>
@@ -182,10 +181,63 @@ under the License.
     <screen name="CommonJournalsDecorator">
         <section>
             <actions>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#JournalsSideBar" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPartyDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="organizationPartyId"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.AccountingUserOrgNotSpecified}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Potentially remove? -->
+    <screen name="CommonOrganizationAccountingReportsDecorator">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <include-menu name="OrganizationTabBar" location="component://accounting/widget/scipio/AccountingMenus.xml"/>
+                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -202,7 +254,7 @@ under the License.
         <section>
             <actions>
                 <set field="menuCfg.location" value="component://accounting/widget/scipio/AccountingMenus.xml"/>
-                <set field="menuCfg.name" value="MainAppSideBar"/>
+                <set field="menuCfg.name" value="AccountingAppSideBar"/>
                 <set field="menuCfg.defLocation" value="component://accounting/widget/scipio/AccountingMenus.xml"/>
             </actions>
             <widgets>

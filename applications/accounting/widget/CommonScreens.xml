@@ -499,6 +499,7 @@ under the License.
     <screen name="CommonOrganizationAccountingReportsDecorator">
         <section>
             <actions>
+                <!-- sidebar additional condition -->
                 <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="PartyAccounts"/>
                 <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
                     <field-map field-name="partyId" from-field="organizationPartyId"/>

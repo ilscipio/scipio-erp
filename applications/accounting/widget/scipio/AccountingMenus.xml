@@ -8,7 +8,7 @@
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
-    <menu name="MainAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="AccountingAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- Accounting -->
         <menu-item name="payable" title="${uiLabelMap.AccountingAccountsPayable}">
             <link target="payable"/>
@@ -49,7 +49,7 @@
         <!-- Inventory -->
         
         <!-- Journals -->
-        <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}">
+        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
             <link target="journals" />
         </menu-item>
         
@@ -67,15 +67,15 @@
         </menu-item>
     </menu>
 
-    <menu name="MainAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="MainAppBar" recursive="full" />
+    <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="AccountingAppBar" recursive="full" />
         <menu-item name="settings">
             <sub-menu name="Settings" include="SettingsSideBar"/>
         </menu-item>
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
         </menu-item>
-        <menu-item name="journals">
+        <menu-item name="Journals">
             <sub-menu name="Journals" include="JournalsSideBar"/>
         </menu-item>
     </menu>
@@ -136,12 +136,138 @@
     * Journals 
     **************
     -->
-    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Journals" always-expand-selected-or-ancestor="true">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
         <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}" sort-mode="off">
             <link target="journals" />
         </menu-item>
+        <!--
+        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+            <link target="TransactionReports" />
+        </menu-item>-->
+        <menu-item name="SalesInvoiceByProductCategorySummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
+            <link target="SalesInvoiceByProductCategorySummary" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
+            <link target="TrialBalance" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+            <link target="IncomeStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeIncomeStatement" title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+            <link target="ComparativeIncomeStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
+            <link target="BalanceSheet">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeBalanceSheet" title="${uiLabelMap.AccountingComparativeBalanceSheet}">
+            <link target="ComparativeBalanceSheet" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
+            <link target="TransactionTotals" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}">
+            <link target="InventoryValuation" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="CashFlowStatement" title="${uiLabelMap.AccountingCashFlowStatement}">
+            <link target="CashFlowStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeCashFlowStatement" title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
+            <link target="ComparativeCashFlowStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        
+        <!-- Previously unused screens -->
+        <!-- Misses bsh information
+        <menu-item name="FinancialSummaryReportOptions" title="${uiLabelMap.PageTitleFinancialSummaryReportOptions}">
+            <link target="FinancialSummaryReportOptions" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        
+         -->
+        <!-- [component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh
+        <menu-item name="SalesInvoiceByProductGlAccountSummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductGlAccountSummary}">
+            <link target="SalesInvoiceByProductGlAccountSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh
+        <menu-item name="PaymentByMethodSummary" title="${uiLabelMap.PageTitlePaymentByMethodSummary}">
+            <link target="PaymentByMethodSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh 
+        <menu-item name="InventoryIssueSummary" title="${uiLabelMap.PageTitleInventoryIssueSummary}">
+            <link target="InventoryIssueSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh
+        <menu-item name="FinancialAccountSummary" title="${uiLabelMap.PageTitleFinancialAccountSummary}">
+            <link target="FinancialAccountSummary" />
+        </menu-item> -->
+        <!-- Requires Organization
+        <menu-item name="GlAccountTrialBalance" title="${uiLabelMap.AccountingGlAccountTrialBalance}"  sort-mode="off">
+            <link target="GlAccountTrialBalance" />
+        </menu-item> -->
     </menu>
     
+    <menu name="OrganizationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="PartyAccountsSummary">
+        <menu-item name="PartyAccountsSummary" title="${uiLabelMap.AcctgPartyGlJournalSummary}" sort-mode="off">
+            <link target="PartyAccountsSummary">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="AccountReconciliation" title="${uiLabelMap.AccountingAcctTransEntryRecon}">
+            <link target="findGlAccountReconciliation">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="AccountReconciliations" title="${uiLabelMap.AccountingAcctGlRecon}">
+            <link target="findGlAccountReconciliations">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="FindAcctgTrans" title="${uiLabelMap.AccountingAcctgTrans}">
+            <link target="FindAcctgTrans">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="FindAcctgTransEntries" title="${uiLabelMap.AccountingAcctgTransEntries}">
+            <link target="FindAcctgTransEntries">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="OrganizationAccountingReports" title="${uiLabelMap.AccountingReports}">
+            <link target="TrialBalance">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="ChecksTabButton" title="${uiLabelMap.AccountingChecks}">
+            <link target="listChecksToPrint">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+    </menu>    
     
     <!-- 
     **************

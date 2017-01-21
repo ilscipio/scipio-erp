@@ -82,6 +82,138 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransactionReports"/>
     </request-map>
+    <!--
+    <request-map uri="FinancialTransactionReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransactionReport"/>
+    </request-map> -->
+    <request-map uri="FinancialSummaryReportOptions">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="FinancialSummaryReportOptions" />
+    </request-map>
+    <request-map uri="SalesInvoiceByProductCategorySummary">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="SalesInvoiceByProductCategorySummary" />
+    </request-map>
+    <request-map uri="TrialBalance">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="TrialBalance" />
+    </request-map>
+    <request-map uri="IncomeStatement">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="IncomeStatement" />
+    </request-map>
+    <request-map uri="ComparativeIncomeStatement">
+        <security https="true" auth="true" />
+        <response name="success" type="view"
+            value="ComparativeIncomeStatement" />
+        <response name="error" type="view"
+            value="ComparativeIncomeStatement" />
+    </request-map>
+    <request-map uri="BalanceSheet">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="BalanceSheet" />
+    </request-map>
+    <request-map uri="BalanceSheet.pdf">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="BalanceSheetPdf" />
+    </request-map>
+    <request-map uri="ComparativeBalanceSheet">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="ComparativeBalanceSheet" />
+    </request-map>
+    <request-map uri="ComparativeBalanceSheet.pdf">
+        <security https="true" auth="true" />
+        <response name="success" type="view"
+            value="ComparativeBalanceSheetPdf" />
+    </request-map>
+    <request-map uri="ComparativeBalanceSheet.csv">
+        <security https="true" auth="true" />
+        <response name="success" type="view"
+            value="ComparativeBalanceSheetCsv" />
+    </request-map>
+    <request-map uri="TransactionTotals">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="TransactionTotals" />
+    </request-map>
+    <request-map uri="FindPaymentsForDepositOrWithdraw">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PaymentsDepositWithdraw"/>
+        <response name="error" type="view" value="PaymentsDepositWithdraw"/>
+    </request-map>
+    <request-map uri="getPaymentRunningTotal">
+        <event type="service" invoke="getPaymentRunningTotal"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="LookupCustomerName">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupCustomerName"/>
+    </request-map>
+    <request-map uri="depositWithdrawPayments">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="depositWithdrawPayments"/>
+        <response name="success" type="view" value="PaymentsDepositWithdraw"/>
+        <response name="error" type="view" value="PaymentsDepositWithdraw"/>
+    </request-map>
+    <request-map uri="NewDepositSlip">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="NewDepositSlip"/>
+    </request-map>
+    <request-map uri="createPaymentBatch">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="checkAndCreateBatchForValidPayments"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+        <response name="error" type="view" value="NewDepositSlip"/>
+    </request-map>
+    <request-map uri="InventoryValuation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InventoryValuation"/>
+    </request-map>
+    <request-map uri="InventoryValuation.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InventoryValuationPdf"/>
+        <response name="error" type="view" value="InventoryValuation"/>
+    </request-map>
+    <request-map uri="InventoryValuation.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InventoryValuationCsv"/>
+        <response name="error" type="view" value="InventoryValuation"/>
+    </request-map>
+    <request-map uri="CashFlowStatement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CashFlowStatement"/>
+    </request-map>
+    <request-map uri="CashFlowStatementListPdf.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CashFlowStatementListPdf"/>
+    </request-map>
+    <request-map uri="CashFlowStatementListCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CashFlowStatementListCsv"/>
+    </request-map>
+    <request-map uri="ComparativeCashFlowStatement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ComparativeCashFlowStatement"/>
+        <response name="error" type="view" value="ComparativeCashFlowStatement"/>
+    </request-map>
+    <request-map uri="ComparativeCashFlowStatement.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ComparativeCashFlowStatementCsv"/>
+        <response name="error" type="view" value="ComparativeCashFlowStatement"/>
+    </request-map>
+    <request-map uri="ComparativeCashFlowStatement.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ComparativeCashFlowStatementPdf"/>
+        <response name="error" type="view" value="ComparativeCashFlowStatement"/>
+    </request-map>
+    
+    <!-- Previously unused screens -->
+    <request-map uri="SalesInvoiceByProductGlAccountSummary"><security https="true" auth="true"/><response name="success" type="view" value="SalesInvoiceByProductGlAccountSummary"/></request-map>
+    <request-map uri="PaymentByMethodSummary"><security https="true" auth="true"/><response name="success" type="view" value="PaymentByMethodSummary"/></request-map>
+    <request-map uri="InventoryIssueSummary"><security https="true" auth="true"/><response name="success" type="view" value="InventoryIssueSummary"/></request-map>
+    <request-map uri="FinancialAccountSummary"><security https="true" auth="true"/><response name="success" type="view" value="FinancialAccountSummary"/></request-map>
+    <request-map uri="GlAccountTrialBalance"><security https="true" auth="true"/><response name="success" type="view" value="GlAccountTrialBalance"/></request-map>
     
     <!-- 
     **************
@@ -467,6 +599,48 @@ under the License.
     
     <!-- Journals -->
      <view-map name="journals" type="screen" page="component://accounting/widget/scipio/journals/JournalScreens.xml#Journals"/>
+     <view-map name="TransactionReports" page="component://accounting/widget/scipio/journals/JournalScreens.xml#TransactionReports" type="screen"/>
+     <!--<view-map name="FinancialTransactionReport" page="component://accounting/widget/scipio/journals/JournalScreens.xml#FinancialTransactionReport" type="screen"/> -->
+     
+    <!-- Financial Summary Reports -->
+    <view-map name="FinancialSummaryReportOptions" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#FinancialSummaryReportOptions"/>
+    <view-map name="SalesInvoiceByProductCategorySummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#SalesInvoiceByProductCategorySummary"/>
+    <view-map name="TrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TrialBalance"/>
+    <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="TrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="IncomeStatement" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#IncomeStatement"/>
+    <view-map name="IncomeStatementListPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#IncomeStatementListPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="IncomeStatementListCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#IncomeStatementListCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="ComparativeIncomeStatement" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatement"/>
+    <view-map name="ComparativeIncomeStatementsPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatementsPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="ComparativeIncomeStatementsCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatementsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="BalanceSheet" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#BalanceSheet"/>
+    <view-map name="BalanceSheetPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#BalanceSheetPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="BalanceSheetCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#BalanceSheetCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="ComparativeBalanceSheet" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeBalanceSheet"/>
+    <view-map name="ComparativeBalanceSheetPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeBalanceSheetPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="ComparativeBalanceSheetCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeBalanceSheetCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="TransactionTotals" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotals"/>
+    <view-map name="TransactionTotalsPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotalsPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="TransactionTotalsCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotalsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="PaymentsDepositWithdraw" type="screen" page="component://accounting/widget/FinAccountScreens.xml#PaymentsDepositWithdraw"/>
+    <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
+    <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewDepositSlip"/>
+    <view-map name="InventoryValuation" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuation"/>
+    <view-map name="InventoryValuationPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuationPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="InventoryValuationCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuationCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="CashFlowStatement" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#CashFlowStatement"/>
+    <view-map name="CashFlowStatementListPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#CashFlowStatementListPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="CashFlowStatementListCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#CashFlowStatementListCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="ComparativeCashFlowStatement" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatement"/>
+    <view-map name="ComparativeCashFlowStatementPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatementPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="ComparativeCashFlowStatementCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#ComparativeCashFlowStatementCsv" content-type="text/csv" encoding="none"/>
+    
+    <view-map name="SalesInvoiceByProductGlAccountSummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#SalesInvoiceByProductGlAccountSummary"/>
+    <view-map name="PaymentByMethodSummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#PaymentByMethodSummary"/>
+    <view-map name="InventoryIssueSummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryIssueSummary"/>
+    <view-map name="FinancialAccountSummary" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#FinancialAccountSummary"/>
+    <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance" />
     
     <!-- Settings -->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListCompanies"/>

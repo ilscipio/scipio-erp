@@ -31,6 +31,23 @@ under the License.
                 <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
                     <decorator-section name="body">
                         <screenlet>
+                                <label text="This is a placeholder!"></label>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="TransactionReports">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="TransactionReports"/>
+                <set field="titleProperty" value="AccountingAcctgTrans"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <screenlet>
                                 <label>This is a placeholder!</label>
                         </screenlet>
                     </decorator-section>

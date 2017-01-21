@@ -125,6 +125,43 @@ under the License.
         </section>
     </screen>
 
+    <!-- 
+    ***************
+    * Finance
+    ***************
+     -->
+    <screen name="CommonFinAccountDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#FinAccount" />
+                <entity-one value-field="finAccount" entity-name="FinAccount"/>
+                
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.finAccountId}"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!--
     *************** 
     * Fixed Assets

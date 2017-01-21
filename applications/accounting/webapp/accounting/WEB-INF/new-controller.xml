@@ -450,6 +450,256 @@ under the License.
     **************
     -->
     
+    <!-- Financial Accounts -->
+    <!-- Fin Account -->
+    <request-map uri="FindFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccount"/>
+    </request-map>
+    <request-map uri="EditFinAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccount"/>
+    </request-map>
+    <request-map uri="createFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFinAccount"/>
+        <response name="success" type="view" value="EditFinAccount"/>
+        <response name="error" type="view" value="EditFinAccount"/>
+    </request-map>
+    <request-map uri="updateFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFinAccount"/>
+        <response name="success" type="view" value="EditFinAccount"/>
+        <response name="error" type="view" value="EditFinAccount"/>
+    </request-map>
+    <request-map uri="deleteFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFinAccount"/>
+        <response name="success" type="view" value="FindFinAccount"/>
+        <response name="error" type="view" value="FindFinAccount"/>
+    </request-map>
+    <request-map uri="FinAccountMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinAccountMain"/>
+    </request-map>
+    <request-map uri="FindDepositSlips">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindDepositSlips"/>
+    </request-map>
+    <request-map uri="updateDepositSlip">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGroup"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+        <response name="error" type="view" value="EditDepositSlipAndMembers"/>
+    </request-map>
+    <request-map uri="addDepositSlipMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentGroupMember"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+        <response name="error" type="view" value="EditDepositSlipAndMembers"/>
+    </request-map>
+    <request-map uri="updateDepositSlipMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentGroupMember"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+        <response name="error" type="view" value="EditDepositSlipAndMembers"/>
+    </request-map>
+    <request-map uri="expireDepositSlipMember">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expirePaymentGroupMember"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+        <response name="error" type="view" value="EditDepositSlipAndMembers"/>
+    </request-map>
+    <request-map uri="EditDepositSlipAndMembers">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditDepositSlipAndMembers"/>
+    </request-map>
+    <request-map uri="deleteDepositSlip">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPaymentBatch"/>
+        <response name="success" type="view" value="FindDepositSlips"/>
+        <response name="error" type="view" value="FindDepositSlips"/>
+    </request-map>
+    <request-map uri="NewDepositPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewDepositPayment"/>
+    </request-map>
+    <request-map uri="NewWithdrawalPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewWithdrawalPayment"/>
+    </request-map>
+    <request-map uri="createDepositPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PaymentsDepositWithdraw"/>
+        <response name="error" type="view" value="NewDepositPayment"/>
+    </request-map>
+    <request-map uri="createWithdrawalPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PaymentsDepositWithdraw"/>
+        <response name="error" type="view" value="NewWithdrawalPayment"/>
+    </request-map>
+    <!-- Fin Account Roles -->
+    <request-map uri="EditFinAccountRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountRoles"/>
+    </request-map>
+    <request-map uri="createFinAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFinAccountRole"/>
+        <response name="success" type="view" value="EditFinAccountRoles"/>
+        <response name="error" type="view" value="EditFinAccountRoles"/>
+    </request-map>
+    <request-map uri="updateFinAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFinAccountRole"/>
+        <response name="success" type="view" value="EditFinAccountRoles"/>
+        <response name="error" type="view" value="EditFinAccountRoles"/>
+    </request-map>
+    <request-map uri="deleteFinAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFinAccountRole"/>
+        <response name="success" type="view" value="EditFinAccountRoles"/>
+        <response name="error" type="view" value="EditFinAccountRoles"/>
+    </request-map>
+    <!-- Fin Account Transaction-->
+    <request-map uri="EditFinAccountTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountTrans"/>
+        <response name="error" type="view" value="EditFinAccountTrans"/>
+    </request-map>
+    <request-map uri="createFinAccountTrans">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFinAccountTrans"/>
+        <response name="success" type="view" value="FindFinAccountTrans"/>
+        <response name="error" type="view" value="EditFinAccountTrans"/>
+    </request-map>
+    <request-map uri="FindFinAccountTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountTrans"/>
+    </request-map>
+    <request-map uri="setFinAccountTransStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setFinAccountTransStatus"/>
+        <response name="success" type="view" value="FindFinAccountTrans"/>
+        <response name="error" type="view" value="FindFinAccountTrans"/>
+    </request-map>
+    <request-map uri="BankReconciliation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankReconciliation"/>
+    </request-map>
+    <request-map uri="getFinAccountTransRunningTotalAndBalances">
+        <event type="service-multi" invoke="getFinAccountTransRunningTotalAndBalances"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="reconcileFinAccountTrans">
+        <security https="true" auth="false"/>
+        <event type="service-multi" invoke="reconcileFinAccountTrans"/>
+        <response name="success" type="view" value="BankReconciliation"/>
+        <response name="error" type="view" value="BankReconciliation"/>
+    </request-map>
+    <request-map uri="EditFinAccountReconciliations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountReconciliations"/>
+    </request-map>
+    <request-map uri="FindFinAccountReconciliations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountReconciliations"/>
+    </request-map>
+    <request-map uri="createGlReconciliation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlReconciliation"/>
+        <response name="success" type="view" value="EditFinAccountReconciliations"/>
+        <response name="error" type="view" value="EditFinAccountReconciliations"/>
+    </request-map>
+    <request-map uri="updateFinAccountGlReconciliation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlReconciliation"/>
+        <response name="success" type="view" value="EditFinAccountReconciliations"/>
+        <response name="error" type="view" value="EditFinAccountReconciliations"/>
+    </request-map>
+    <request-map uri="ViewGlReconciliationWithTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>
+    </request-map>
+    <request-map uri="callReconcileFinAccountTrans">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="reconcileFinAccountTrans"/>
+        <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>
+        <response name="error" type="view" value="ViewGlReconciliationWithTransaction"/>
+    </request-map>
+    <request-map uri="assignGlRecToFinAccTrans">
+        <security https="true" auth="false"/>
+        <event type="service-multi" invoke="assignGlRecToFinAccTrans"/>
+        <response name="success" type="view" value="FindFinAccountTrans"/>
+        <response name="error" type="view" value="FindFinAccountTrans"/>
+    </request-map>
+
+    <request-map uri="removeFinAccountTransFromReconciliation">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removeFinAccountTransFromReconciliation"/>
+        <response name="success" type="view" value="BankReconciliation"/>
+        <response name="error" type="view" value="BankReconciliation"/>
+    </request-map>
+    <request-map uri="removeFinAccountTransAssociation">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removeFinAccountTransFromReconciliation"/>
+        <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>
+        <response name="error" type="view" value="ViewGlReconciliationWithTransaction"/>
+    </request-map>
+    <request-map uri="cancelBankReconciliation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelBankReconciliation"/>
+        <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>
+        <response name="error" type="view" value="ViewGlReconciliationWithTransaction"/>
+    </request-map>
+    <!-- Fin Account Authority-->
+    <request-map uri="EditFinAccountAuths">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountAuths"/>
+    </request-map>
+    <request-map uri="createFinAccountAuth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFinAccountAuth"/>
+        <response name="success" type="view" value="EditFinAccountAuths"/>
+        <response name="error" type="view" value="EditFinAccountAuths"/>
+    </request-map>
+    <request-map uri="expireFinAccountAuth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expireFinAccountAuth"/>
+        <response name="success" type="view" value="EditFinAccountAuths"/>
+        <response name="error" type="view" value="EditFinAccountAuths"/>
+    </request-map>
+
+    <!--request-uri FinAccountTypeGlAccount -->
+    <request-map uri="editFinAccountTypeGlAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="createFinAccountTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFinAccountTypeGlAccount"/>
+        <response name="success" type="view" value="EditFinAccountTypeGlAccounts"/>
+        <response name="error" type="view" value="EditFinAccountTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="updateFinAccountTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFinAccountTypeGlAccount"/>
+        <response name="success" type="view" value="EditFinAccountTypeGlAccounts"/>
+        <response name="error" type="view" value="EditFinAccountTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteFinAccountTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFinAccountTypeGlAccount"/>
+        <response name="success" type="view" value="EditFinAccountTypeGlAccounts"/>
+        <response name="error" type="view" value="EditFinAccountTypeGlAccounts"/>
+    </request-map>
+    
     <!--
     ************** 
     * Inventory 
@@ -1191,6 +1441,29 @@ under the License.
     **************-->
     <view-map name="main" type="screen" page="component://accounting/widget/scipio/AccountingScreens.xml#main"/>
     
+    <!-- Finance -->
+    <view-map name="FindFinAccount" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#FindFinAccount"/>
+    <view-map name="FinAccountMain" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#FinAccountMain"/>
+    <view-map name="FindDepositSlips" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#FindDepositSlips"/>
+    <view-map name="EditDepositSlipAndMembers" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditDepositSlipAndMembers"/>
+    <view-map name="NewDepositPayment" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#NewDepositPayment"/>
+    <view-map name="NewWithdrawalPayment" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#NewWithdrawalPayment"/>
+
+    <!-- TO BE REMOVED
+    <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#ListFinAccount"/>
+    -->
+
+    <view-map name="EditFinAccount" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditFinAccount"/>
+    <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditFinAccountRoles"/>
+    <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditFinAccountTrans"/>
+    <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditFinAccountAuths"/>
+    <view-map name="EditFinAccountTypeGlAccounts" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditFinAccountTypeGlAccounts"/>
+    <view-map name="FindFinAccountTrans" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#FindFinAccountTrans"/>
+    <view-map name="BankReconciliation" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#BankReconciliation"/>
+    <view-map name="EditFinAccountReconciliations" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#EditFinAccountReconciliations"/>
+    <view-map name="ViewGlReconciliationWithTransaction" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#ViewGlReconciliationWithTransaction"/>
+    <view-map name="FindFinAccountReconciliations" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#FindFinAccountReconciliations"/>
+    
     <!-- Fixed Assets -->
     <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#ListFixedAssets"/>
     <view-map name="FixedAssetSearchResults" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#FixedAssetSearchResults"/>
@@ -1256,9 +1529,7 @@ under the License.
     <view-map name="TransactionTotals" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotals"/>
     <view-map name="TransactionTotalsPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotalsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TransactionTotalsCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#TransactionTotalsCsv" content-type="text/csv" encoding="none"/>
-    <view-map name="PaymentsDepositWithdraw" type="screen" page="component://accounting/widget/FinAccountScreens.xml#PaymentsDepositWithdraw"/>
-    <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
-    <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewDepositSlip"/>
+    <view-map name="PaymentsDepositWithdraw" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="InventoryValuation" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuation"/>
     <view-map name="InventoryValuationPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuationPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="InventoryValuationCsv" type="screencsv" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#InventoryValuationCsv" content-type="text/csv" encoding="none"/>
@@ -1355,6 +1626,10 @@ under the License.
     <view-map name="LookupAgreementItem" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupAgreementItem"/>
     <view-map name="LookupPaymentGroupMember" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupPaymentGroupMember"/>
     <view-map name="LookupGlReconciliation" type="screen" page="component://accounting/widget/scipio/LookupScreens.xml#LookupGlReconciliation"/>
+
+    <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
+    <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/scipio/finance/FinAccountScreens.xml#NewDepositSlip"/>
+
 
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/scipio/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>

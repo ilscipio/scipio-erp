@@ -124,118 +124,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    <!--
-    *************** 
-    * Settings
-    ***************
-     -->
-    <screen name="CommonGlSetupDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#PartyAdmin" />
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Admin"/>
-                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="organizationPartyId"/>
-                </entity-one>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
-                    <decorator-section name="body">
-                        <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
-                        <section>
-                            <condition>
-                                <if-compare field="activeSubMenuItem" operator="equals" value="GlAccountAssignment"/>
-                            </condition>
-                            <widgets>
-                                <include-menu name="PartyAdminAssignTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                            </widgets>
-                        </section>
-                        <label style="heading">${labelTitleProperty} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="CommonSettingsDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#SettingsSideBar" />
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!--
-    *************** 
-    * Import/Export
-    ***************
-     -->
-    <screen name="CommonImportExportDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#ImportExportSideBar" />
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!--
-    *************** 
-    * Journals
-    ***************
-     -->
-    <screen name="CommonJournalsDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#JournalsSideBar" />
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <screen name="CommonPartyDecorator">
-        <section>
-            <actions>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
-                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
-                <!-- sidebar additional condition -->
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <not><if-empty field="organizationPartyId"/></not>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error" text="${uiLabelMap.AccountingUserOrgNotSpecified}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    
+
     <!--
     *************** 
     * Fixed Assets
@@ -330,6 +219,158 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!--
+    ********** 
+    * Invoices 
+    **********-->
+    <screen name="CommonInvoiceDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="Invoices"/>
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                </condition-to-field>              
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="parameters.invoiceId"/></not></condition>
+                                    <widgets>
+                                        <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                        <!-- <container style="leftclear">
+                                            <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
+                                        </container> -->
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--
+    *************** 
+    * Import/Export
+    ***************
+     -->
+    <screen name="CommonImportExportDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#ImportExportSideBar" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--
+    *************** 
+    * Journals
+    ***************
+     -->
+    <screen name="CommonJournalsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#JournalsSideBar" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonPartyDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Journals"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
+                <!-- sidebar additional condition -->
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="organizationPartyId"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.AccountingUserOrgNotSpecified}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!--
+    *************** 
+    * Settings
+    ***************
+     -->
+    <screen name="CommonGlSetupDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#PartyAdmin" />
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Admin"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
+                        <section>
+                            <condition>
+                                <if-compare field="activeSubMenuItem" operator="equals" value="GlAccountAssignment"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="PartyAdminAssignTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <label style="heading">${labelTitleProperty} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonSettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#SettingsSideBar" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     
     <!--
     ********** 

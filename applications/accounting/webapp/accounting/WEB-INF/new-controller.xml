@@ -47,7 +47,199 @@ under the License.
     
     <!-- 
     **************
-    * Accounting 
+    * Accounts Payable 
+    **************
+    -->
+
+    <!-- 
+    **************
+    * Accounts Receivable 
+    **************
+    -->    
+    
+    <!-- 
+    **************
+    * Controlling
+    **************
+    -->    
+    
+    <!-- 
+    **************
+    * Invoices 
+    **************
+    -->
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
+    <request-map uri="invoiceOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+    </request-map>
+    <request-map uri="newInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newInvoice"/>
+    </request-map>
+    <request-map uri="editInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="createInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request" value="editInvoice"/>
+        <response name="error" type="view" value="newInvoice"/>
+    </request-map>
+    <request-map uri="copyInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyInvoice"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    <request-map uri="updateInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="view" value="editInvoice"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    <request-map uri="listInvoiceItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="createInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="createInvoiceItemPayrol">
+        <security https="true" auth="true"/>
+        <event type="simple" invoke="createInvoiceItemPayrol" path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceEvents.xml"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="updateInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateInvoiceItem"/>
+        <response name="success" type="request-redirect" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="removeInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItem"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
+        <response name="error" type="view" value="listInvoiceItems"/>
+    </request-map>
+    <request-map uri="editInvoiceTimeEntries">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoiceTimeEntries"/>
+    </request-map>
+    <request-map uri="unlinkInvoiceFromTimeEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="unlinkInvoiceFromTimeEntry"/>
+        <response name="success" type="view" value="editInvoiceTimeEntries"/>
+        <response name="error" type="view" value="editInvoiceTimeEntries"/>
+    </request-map>
+    <request-map uri="editInvoiceApplications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="updateInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentApplicationDef"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="removeInvoiceApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePaymentApplication"/>
+        <response name="success" type="view" value="editInvoiceApplications"/>
+        <response name="error" type="view" value="editInvoiceApplications"/>
+    </request-map>
+    <request-map uri="invoiceStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceStatus"/>
+    </request-map>
+    
+    <!-- re Invoice Roles -->
+    <request-map uri="invoiceRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="createInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    <request-map uri="removeInvoiceRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceRole"/>
+        <response name="success" type="view" value="invoiceRoles"/>
+        <response name="error" type="view" value="invoiceRoles"/>
+    </request-map>
+    
+    <request-map uri="setInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    
+    <!-- re Invoice Terms -->
+    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
+    <request-map uri="invoiceTerms">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceTerms"/>
+    </request-map>
+    <request-map uri="createInvoiceTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceTerm"/>
+        <response name="success" type="view" value="invoiceTerms"/>
+        <response name="error" type="view" value="invoiceTerms"/>
+    </request-map>
+    -->
+    
+    <request-map uri="sendPerEmail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="sendPerEmail"/>
+    </request-map>
+    <request-map uri="executeSendPerEmail">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendInvoicePerEmail"/>
+        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="error" type="view" value="invoiceOverview"/>
+    </request-map>
+    <!-- SCIPIO: Disabled feature for now (how useful is this?!
+    <request-map uri="copyInvoiceToTemplate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyInvoiceToTemplate"/>
+        <response name="success" type="view" value="editInvoice"/>
+        <response name="error" type="view" value="editInvoice"/>
+    </request-map>
+    -->
+    <request-map uri="getInvoiceRunningTotal">
+        <event type="service" invoke="getInvoiceRunningTotal"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+     <!-- Request EditInvoiceItemType -->
+    <request-map uri="editInvoiceItemType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditInvoiceItemType"/>
+    </request-map>
+    <request-map uri="updateInvoiceItemType">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoiceItemType"/>
+        <response name="success" type="view" value="EditInvoiceItemType"/>
+        <response name="error" type="view" value="EditInvoiceItemType"/>
+    </request-map>
+    
+    
+    
+    <!-- 
+    **************
+    * Fixed Assets 
     **************
     -->
     <!-- Fixed Assets -->
@@ -803,6 +995,23 @@ under the License.
     <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/scipio/assets/widget/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
     <view-map name="calendar" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#Calendar"/>
     <view-map name="WorkEffortSummary" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#WorkEffortSummary"/>
+    
+    <!-- Invoice -->
+    <view-map name="invoiceOverview" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#invoiceOverview"/>
+    <view-map name="findInvoices" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#FindInvoices"/>
+    <view-map name="newInvoice" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#NewInvoice"/>
+    <view-map name="editInvoice" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#EditInvoice"/>
+    <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="editInvoiceTimeEntries" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#EditInvoiceTimeEntries"/>
+    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#InvoiceStatus"/>
+    <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#EditInvoiceApplications"/>
+    <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#InvoiceRoles"/>
+    <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
+    <view-map name="invoiceTerms" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#InvoiceTerms"/>
+    -->
+    <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#SendPerEmail"/>
+    <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>
+    
     
     <!-- Import/Export -->
     <view-map name="ImportExport" type="screen" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ImportExport"/>

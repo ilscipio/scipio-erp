@@ -41,13 +41,14 @@
         <menu-item name="FindFinAccount" title="${uiLabelMap.AccountingFinAccount}">
             <link target="FinAccountMain" />
         </menu-item>
+        <menu-item name="Invoices" title="${uiLabelMap.AccountingInvoices}">
+            <link target="findInvoices" />
+        </menu-item>
         
         <!-- Contracts -->
         <menu-item name="contracts" title="${uiLabelMap.AccountingContracts}">
             <link target="agreements"/>
         </menu-item>      
-        
-        <!-- Inventory -->
         
         <!-- Journals -->
         <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
@@ -73,6 +74,9 @@
         <menu-item name="ListFixedAssets">
             <sub-menu name="FixedAssets" include="FixedAssetsSideBar"/>
         </menu-item>
+        <menu-item name="Invoices">
+            <sub-menu name="Invoices" include="InvoiceSideBar"/>
+        </menu-item>
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
         </menu-item>
@@ -89,13 +93,53 @@
     
     <!-- 
     **************
-    * Accounting 
+    * Accounts Payable 
+    **************
+    -->
+    <menu name="AccountsPayableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+    
+    <!-- 
+    **************
+    * Accounts Receivavle 
+    **************
+    -->
+    <menu name="AccountsReceivableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+    
+    <!--
+    ************** 
+    * Contracts 
+    **************
+    -->
+    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
+            <link target="FindAgreement" />
+        </menu-item>
+    </menu>
+
+    <!-- 
+    **************
+    * Controlling 
+    **************
+    -->
+    <menu name="ControllingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
+            <link target="ListBudgets" />
+        </menu-item>
+        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
+            <link target="CostCenters" />
+        </menu-item>
+    </menu>
+    
+    <!-- 
+    **************
+    * Fixed Assets
     **************
     -->
     
-    
     <menu name="FixedAssetsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="ListFixedAssets" always-expand-selected-or-ancestor="true">
+        default-menu-item-name="ListFixedAssets">
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
             <link target="ListFixedAssets" />
         </menu-item>
@@ -222,37 +266,223 @@
         </menu-item>
     </menu>
     
-    
     <!--
     ************** 
-    * Contracts 
+    * Invoices 
     **************
     -->
-    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
-            <link target="FindAgreement" />
+    <menu name="InvoiceSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="newInvoice" />
+        </menu-item>
+        <menu-item name="copyInvoice" title="${uiLabelMap.CommonCopy}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="copyInvoice">
+                <parameter param-name="invoiceIdToCopyFrom" from-field="invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_APPROVED" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToReceived" title="${uiLabelMap.AccountingInvoiceStatusToReceived}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                    <or>
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="PURCHASE_INVOICE" />
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="CUST_RTN_INVOICE" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_RECEIVED" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToSent" title="${uiLabelMap.AccountingInvoiceStatusToSent}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
+            <condition>
+                <or>
+                    <and>
+                        <not>
+                            <if-empty field="invoice.invoiceId" />
+                        </not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE" />
+                    </and>
+                    <and>
+                        <not>
+                            <if-empty field="invoice.invoiceId" />
+                        </not>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
+                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE" />
+                    </and>
+                </or>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_SENT" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToReady" title="${uiLabelMap.AccountingInvoiceStatusToReady}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_READY" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToPaid" title="${uiLabelMap.AccountingInvoiceStatusToPaid}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_PAID" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToWriteoff" title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus" request-confirmation="true"
+                confirmation-message="You want to writeoff this invoice number ${invoice.invoiceId}?">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_WRITEOFF" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToInProcess" title="${uiLabelMap.AccountingInvoiceStatusToInProcess}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_IN_PROCESS" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToCancelled" title="${uiLabelMap.AccountingInvoiceStatusToCancelled}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <or>
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
+                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+                    </or>
+                </and>
+            </condition>
+            <link target="setInvoiceStatus" request-confirmation="true" confirmation-message="${uiLabelMap.AccountingConfirmationCancelOrder}">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="statusId" value="INVOICE_CANCELLED" />
+            </link>
+        </menu-item>
+        <menu-item name="addtax" title="${uiLabelMap.AccountingAddTax}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
+                </and>
+            </condition>
+            <link target="addtax">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
+                        to-field="defaultOrganizationPartyCurrencyUomId" />
+                </and>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
+            </link>
+        </menu-item>
+        <menu-item name="sendPerEmail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendPerEmail}" widget-style="+${styles.action_run_sys} ${styles.action_send}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="sendPerEmail" target-window="_blank">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
         </menu-item>
     </menu>
-
-    <!-- 
-    **************
-    * Controlling 
-    **************
-    -->
-    <menu name="ControllingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
-            <link target="ListBudgets" />
-        </menu-item>
-        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
-            <link target="CostCenters" />
-        </menu-item>
-    </menu>
-    
-    <!--
-    ************** 
-    * Inventory 
-    **************
-    -->
     
     <!--
     ************** 

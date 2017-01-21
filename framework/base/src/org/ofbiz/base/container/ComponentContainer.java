@@ -111,6 +111,7 @@ public class ComponentContainer implements Container {
                 this.loadComponentFromConfig(parentPath, def, true, componentList); // SCIPIO: always considering top-levels explicit (for now)
             }
         }
+        
         Debug.logInfo("All components loaded (" + componentList.size() + ")", module); // SCIPIO: count
         
         // SCIPIO: re-store the component definitions, in order to apply any load order or other modifications we may have made
@@ -121,6 +122,13 @@ public class ComponentContainer implements Container {
                 + ") is different from the number of components that were registered in the system (" + allComponentsSize + 
                 "); this is either an unsupported configuration or an error", module);
         }
+        
+        // SCIPIO: 2017-01-19: Post-process loaded components
+        ComponentConfig.postProcessComponentConfigs(componentList);
+        
+        Debug.logInfo("All components post-processed (" + componentList.size() + " final)", module); // SCIPIO
+        
+        // SCIPIO: Replace the globally-cached component definitions with our revamped list
         ComponentConfig.clearStoreComponents(componentList);
     }
 

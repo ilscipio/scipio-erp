@@ -258,6 +258,28 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+<xs:attribute name="override-mode" default="override-mount-point">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: 2017-01-19: Determines the behavior when this webapp's
+                    mount-point is the same as the mount-point of a previously-loaded
+                    webapp (from a different component).
+                    Possible values:
+                    override-mount-point (default): stock ofbiz behavior: the mount-point is 
+                        simply overridden through the webapp container, but entries for
+                        both webapps are left in place in the system, and the override
+                        is largely handled by the webapp container (rather than the ofbiz loader).
+                    remove-overridden-webapp: the webapp which is being overridden will be
+                        removed from the global registry, as if it had been commented out.    
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="override-mount-point"/>
+                    <xs:enumeration value="remove-overridden-webapp"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="virtual-host">
         <xs:complexType>

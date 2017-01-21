@@ -49,8 +49,8 @@
         <!-- Inventory -->
         
         <!-- Journals -->
-        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="Journals" />
+        <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="journals" />
         </menu-item>
         
         <!-- Controlling -->
@@ -74,6 +74,9 @@
         </menu-item>
         <menu-item name="ImportExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
+        </menu-item>
+        <menu-item name="journals">
+            <sub-menu name="Journals" include="JournalsSideBar"/>
         </menu-item>
     </menu>
     
@@ -134,6 +137,9 @@
     **************
     -->
     <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}" sort-mode="off">
+            <link target="journals" />
+        </menu-item>
     </menu>
     
     

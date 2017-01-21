@@ -74,6 +74,14 @@ under the License.
     * Journals 
     **************
     -->
+     <request-map uri="journals">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="journals"/>
+    </request-map>
+    <request-map uri="TransactionReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransactionReports"/>
+    </request-map>
     
     <!-- 
     **************
@@ -456,6 +464,9 @@ under the License.
     <view-map name="ImportExport" type="screen" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ImportExport"/>
     <view-map name="ImportExportInvoice" type="screen" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ImportExportInvoice"/>
     <view-map name="ExportInvoicesCsv" type="screencsv" page="component://accounting/widget/scipio/tools/ImportExportScreens.xml#ExportInvoiceCsv" content-type="text/csv" encoding="none"/>
+    
+    <!-- Journals -->
+     <view-map name="journals" type="screen" page="component://accounting/widget/scipio/journals/JournalScreens.xml#Journals"/>
     
     <!-- Settings -->
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListCompanies"/>

@@ -179,6 +179,18 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonJournalsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#JournalsSideBar" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!--
     ********** 
     * WIDGETS 

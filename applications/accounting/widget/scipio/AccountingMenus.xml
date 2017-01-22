@@ -46,8 +46,8 @@
         </menu-item>
         
         <!-- Contracts -->
-        <menu-item name="contracts" title="${uiLabelMap.AccountingContracts}">
-            <link target="agreements"/>
+        <menu-item name="Contracts" title="${uiLabelMap.AccountingContracts}">
+            <link target="FindAgreement"/>
         </menu-item>      
         
         <!-- Journals -->
@@ -73,6 +73,9 @@
         <include-elements menu-name="AccountingAppBar" recursive="full" />
         <menu-item name="chartofaccounts">
             <sub-menu name="CommonGL" include="CommonGLSideBar"/>
+        </menu-item>
+         <menu-item name="Contracts">
+            <sub-menu name="Contracts" include="ContractsSideBar"/>
         </menu-item>
         <menu-item name="FinAccount">
             <sub-menu name="FinAccount" include="FinAccountSideBar"/>
@@ -188,6 +191,237 @@
     <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
             <link target="FindAgreement" />
+        </menu-item>
+    </menu>
+    
+    <menu name="AgreementSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <!-- 
+        <menu-item name="NewAgreement" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAgreement}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditAgreement">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+         -->
+        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditAgreementItem">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewRole" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonParty}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-empty field="agreementItem.agreementItemSeqId"/>
+            </condition>
+            <link target="EditAgreementRole">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewTerm" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTerm}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-empty field="agreementItem.agreementItemSeqId"/>
+            </condition>
+            <link target="EditAgreementTerms">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewWorkEffort" title="${uiLabelMap.CommonNew} ${uiLabelMap.WorkEffort}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-empty field="agreementItem.agreementItemSeqId"/>
+            </condition>
+            <link target="EditAgreementTerms">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        
+        <menu-item name="NewGeo" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonGeo}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementGeographicalApplic">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewFacility" title="${uiLabelMap.ProductNewFacility}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemFacility">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewParty" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonParty}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemParty">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewProduct" title="${uiLabelMap.ProductNewProduct}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemProduct">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewPromo" title="${uiLabelMap.AccountingNewAgreementPromoAppl}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementPromoAppl">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewItemTerm" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTerm}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemTerm">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="AgreementItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="buttonBarItem">
+        <menu-item name="EditAgreementItem" title="${uiLabelMap.AccountingAgreementItem}">
+            <link target="EditAgreementItem">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementGeographicalApplic" title="${uiLabelMap.CommonGeo}">
+            <link target="ListAgreementGeographicalApplic">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementItemFacility" title="${uiLabelMap.ProductFacilities}">
+            <condition>
+                <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+            </condition>
+            <link target="ListAgreementItemFacilities">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementItemParties" title="${uiLabelMap.PartyParties}">
+            <link target="ListAgreementItemParties">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementItemProducts" title="${uiLabelMap.ProductProducts}">
+            <condition>
+                <if-compare field="agreement.agreementTypeId" operator="not-equals" value="PURCHASE_AGREEMENT" />
+            </condition>
+            <link target="ListAgreementItemProducts">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementPromoAppls" title="${uiLabelMap.AccountingAgreementPromoAppls}">
+            <link target="ListAgreementPromoAppls">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementItemSupplierProducts" title="${uiLabelMap.ProductProducts}">
+            <condition>
+                <if-compare field="agreement.agreementTypeId" operator="equals" value="PURCHASE_AGREEMENT" />
+            </condition>
+            <link target="ListAgreementItemSupplierProducts">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ListAgreementItemTerms" title="${uiLabelMap.AccountingAgreementItemTerms}">
+            <link target="ListAgreementItemTerms">
+                <parameter param-name="agreementId" from-field="agreementItem.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="FacilitiesReport" title="${uiLabelMap.Facilities}: ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListAgreementItemFacilitiesReport" target-window="_blank">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="ProductsReport" title="${uiLabelMap.Products}: ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListAgreementItemProductsReport" target-window="_blank">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="AgreementItemSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditAgreementItem">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewGeo" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonGeo}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementGeographicalApplic">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewFacility" title="${uiLabelMap.ProductNewFacility}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemFacility">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewParty" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonParty}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemParty">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewProduct" title="${uiLabelMap.ProductNewProduct}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemProduct">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewPromo" title="${uiLabelMap.AccountingNewAgreementPromoAppl}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementPromoAppl">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
+        </menu-item>
+        <menu-item name="NewTerm" title="${uiLabelMap.AccountingNewAgreementItemTerm}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
+            </condition>
+            <link target="EditAgreementItemTerm">
+                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+                <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
+            </link>
         </menu-item>
     </menu>
 
@@ -339,9 +573,10 @@
     
     <menu name="FixedAssetsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="ListFixedAssets">
+        <!-- Disabled for as long as there is only one entry
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
             <link target="ListFixedAssets" />
-        </menu-item>
+        </menu-item>-->
     </menu>
     
     <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

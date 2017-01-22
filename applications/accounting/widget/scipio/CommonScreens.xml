@@ -144,6 +144,85 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!--
+    ***************
+    * Contracts
+    ***************
+    -->
+    <screen name="CommonAgreementDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#ContractsSideBar" />
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
+                
+                <!-- sidebar additional condition -->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW" />
+                        <not><if-empty field="agreement"/></not>
+                    </and>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW" />
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty field="agreement" />
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading">${agreement.description} [${agreement.agreementId}]</label>
+                                        <section>
+                                            <condition>
+                                                <not>
+                                                    <if-empty field="agreementItem" />
+                                                </not>
+                                            </condition>
+                                            <widgets>
+                                                <include-menu location="component://accounting/widget/AccountingMenus.xml"
+                                                    name="AgreementItemTabBar" />
+                                                <container style="button-bar">
+                                                    <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
+                                                        style="${styles.link_nav} ${styles.action_add}" />
+                                                    <include-menu location="component://accounting/widget/AccountingMenus.xml"
+                                                        name="AgreementItemSubTabBar" />
+                                                </container>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <container style="button-bar">
+                                                    <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
+                                                        style="${styles.link_nav} ${styles.action_add}" />
+                                                    <include-menu location="component://accounting/widget/AccountingMenus.xml"
+                                                        name="AgreementSubTabBar" />
+                                                </container>
+                                            </fail-widgets>
+                                        </section>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body" />
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
+                                </label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+      
+      
+    
     <!-- 
     ***************
     * Finance

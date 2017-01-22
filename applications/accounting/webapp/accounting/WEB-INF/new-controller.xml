@@ -261,7 +261,274 @@ under the License.
         <response name="success" type="view" value="GlAccountBalanceByCostCenterPdf"/>
     </request-map> -->
     
+    <!-- 
+    **************
+    * Conntracts
+    **************
+     -->
+     <request-map uri="FindAgreement"><security https="true" auth="true"/><response name="success" type="view" value="FindAgreement"/></request-map>
+    <request-map uri="cancelAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelAgreement"/>
+        <response name="success" type="view" value="FindAgreement"/>
+        <response name="error" type="view" value="FindAgreement"/>
+    </request-map>
+
+    <request-map uri="EditAgreement"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreement"/></request-map>
+    <request-map uri="createAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+        <response name="error" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="updateAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+        <response name="error" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="copyAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+        <response name="error" type="view" value="EditAgreement"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItems"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItems"/></request-map>
+    <request-map uri="removeAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementItem"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+        <response name="error" type="view" value="ListAgreementItems"/>
+    </request-map>
+
+    <request-map uri="EditAgreementItem"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItem"/></request-map>
+    <request-map uri="createAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+        <response name="error" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="updateAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+        <response name="error" type="view" value="EditAgreementItem"/>
+    </request-map>
+
+    <request-map uri="EditAgreementTerms"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementTerms"/></request-map>
+    <request-map uri="createAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerms"/>
+        <response name="error" type="view" value="EditAgreementTerms"/>
+    </request-map>
+    <request-map uri="updateAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerms"/>
+        <response name="error" type="view" value="EditAgreementTerms"/>
+    </request-map>
+    <request-map uri="deleteAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerms"/>
+        <response name="error" type="view" value="EditAgreementTerms"/>
+    </request-map>
+
+
+    <request-map uri="ListAgreementPromoAppls"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementPromoAppls"/></request-map>
+    <request-map uri="removeAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementPromoAppl"/>
+        <response name="success" type="view" value="ListAgreementPromoAppls"/>
+        <response name="error" type="view" value="ListAgreementPromoAppls"/>
+    </request-map>
+
+    <request-map uri="EditAgreementPromoAppl"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementPromoAppl"/></request-map>
+    <request-map uri="createAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementPromoAppl"/>
+        <response name="success" type="view" value="EditAgreementPromoAppl"/>
+        <response name="error" type="view" value="EditAgreementPromoAppl"/>
+    </request-map>
+    <request-map uri="updateAgreementPromoAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementPromoAppl"/>
+        <response name="success" type="view" value="EditAgreementPromoAppl"/>
+        <response name="error" type="view" value="EditAgreementPromoAppl"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItemTerms"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemTerms"/></request-map>
+    <request-map uri="removeAgreementItemTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAgreementTerm"/>
+        <response name="success" type="view" value="ListAgreementItemTerms"/>
+        <response name="error" type="view" value="ListAgreementItemTerms"/>
+    </request-map>
+
+    <request-map uri="EditAgreementItemTerm"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItemTerm"/></request-map>
+    <request-map uri="createAgreementItemTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementItemTerm"/>
+        <response name="error" type="view" value="EditAgreementItemTerm"/>
+    </request-map>
+    <request-map uri="updateAgreementItemTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementItemTerm"/>
+        <response name="error" type="view" value="EditAgreementItemTerm"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItemProducts"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemProducts"/></request-map>
+    <request-map uri="ListAgreementItemProductsReport"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemProductsReport"/></request-map>
+    <request-map uri="removeAgreementItemProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementProductAppl"/>
+        <response name="success" type="view" value="ListAgreementItemProducts"/>
+        <response name="error" type="view" value="ListAgreementItemProducts"/>
+    </request-map>
+
+    <request-map uri="EditAgreementItemProduct"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItemProduct"/></request-map>
+    <request-map uri="createAgreementItemProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementProductAppl"/>
+        <response name="success" type="view" value="ListAgreementItemProducts"/>
+        <response name="error" type="view" value="EditAgreementItemProduct"/>
+    </request-map>
+    <request-map uri="updateAgreementItemProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementProductAppl"/>
+        <response name="success" type="view" value="ListAgreementItemProducts"/>
+        <response name="error" type="view" value="EditAgreementItemProduct"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItemFacilities"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemFacilities"/></request-map>
+    <request-map uri="ListAgreementItemFacilitiesReport"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemFacilitiesReport"/></request-map>
+    <request-map uri="removeAgreementItemFacility">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementFacilityAppl"/>
+        <response name="success" type="view" value="ListAgreementItemFacilities"/>
+        <response name="error" type="view" value="ListAgreementItemFacilities"/>
+    </request-map>
+
+    <request-map uri="EditAgreementItemFacility"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItemFacility"/></request-map>
+    <request-map uri="createAgreementItemFacility">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementFacilityAppl"/>
+        <response name="success" type="view" value="ListAgreementItemFacilities"/>
+        <response name="error" type="view" value="EditAgreementItemFacility"/>
+    </request-map>
+    <request-map uri="updateAgreementItemFacility">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementFacilityAppl"/>
+        <response name="success" type="view" value="ListAgreementItemFacilities"/>
+        <response name="error" type="view" value="EditAgreementItemFacility"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItemSupplierProducts"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemSupplierProducts"/></request-map>
+    <request-map uri="ListAgreementItemSupplierProductsReport"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemSupplierProductsReport"/></request-map>
+    <request-map uri="removeAgreementItemSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeSupplierProduct"/>
+        <response name="success" type="view" value="ListAgreementItemSupplierProducts"/>
+        <response name="error" type="view" value="ListAgreementItemSupplierProducts"/>
+    </request-map>
+
+    <request-map uri="EditAgreementItemSupplierProduct"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItemSupplierProduct"/></request-map>
+    <request-map uri="createAgreementItemSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSupplierProduct"/>
+        <response name="success" type="view" value="ListAgreementItemSupplierProducts"/>
+        <response name="error" type="view" value="EditAgreementItemSupplierProduct"/>
+    </request-map>
+    <request-map uri="updateAgreementItemSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateSupplierProduct"/>
+        <response name="success" type="view" value="ListAgreementItemSupplierProducts"/>
+        <response name="error" type="view" value="EditAgreementItemSupplierProduct"/>
+    </request-map>
+
+    <request-map uri="ListAgreementItemParties"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementItemParties"/></request-map>
+    <request-map uri="removeAgreementItemParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementPartyApplic"/>
+        <response name="success" type="view" value="ListAgreementItemParties"/>
+        <response name="error" type="view" value="ListAgreementItemParties"/>
+    </request-map>
+    <request-map uri="EditAgreementItemParty"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementItemParty"/></request-map>
+    <request-map uri="createAgreementItemParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementPartyApplic"/>
+        <response name="success" type="view" value="EditAgreementItemParty"/>
+        <response name="error" type="view" value="EditAgreementItemParty"/>
+    </request-map>
+    <request-map uri="updateAgreementItemParty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementPartyApplic"/>
+        <response name="success" type="view" value="EditAgreementItemParty"/>
+        <response name="error" type="view" value="EditAgreementItemParty"/>
+    </request-map>
+
+    <request-map uri="ListAgreementGeographicalApplic"><security https="true" auth="true"/><response name="success" type="view" value="ListAgreementGeographicalApplic"/></request-map>
+    <request-map uri="removeAgreementGeographicalApplic">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeAgreementGeographicalApplic"/>
+        <response name="success" type="view" value="ListAgreementGeographicalApplic"/>
+        <response name="error" type="view" value="ListAgreementGeographicalApplic"/>
+    </request-map>
+
+    <request-map uri="EditAgreementGeographicalApplic"><security https="true" auth="true"/><response name="success" type="view" value="EditAgreementGeographicalApplic"/></request-map>
+    <request-map uri="createAgreementGeographicalApplic">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementGeographicalApplic"/>
+        <response name="success" type="view" value="ListAgreementGeographicalApplic"/>
+        <response name="error" type="view" value="EditAgreementGeographicalApplic"/>
+    </request-map>
+
+    <!--WorkEffort Agreements-->
+    <request-map uri="EditAgreementWorkEffortApplics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementWorkEffortApplics"/>
+    </request-map>
+    <request-map uri="createAgreementWorkEffortApplic">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementWorkEffortApplic"/>
+        <response name="success" type="view" value="EditAgreementWorkEffortApplics"/>
+        <response name="error" type="view" value="EditAgreementWorkEffortApplics"/>
+    </request-map>
+    <request-map uri="deleteAgreementWorkEffortApplic">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAgreementWorkEffortApplic"/>
+        <response name="success" type="view" value="EditAgreementWorkEffortApplics"/>
+        <response name="error" type="view" value="EditAgreementWorkEffortApplics"/>
+    </request-map>
     
+    
+    <!-- Shared Agreement Screens -->
+    <request-map uri="EditAgreementRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="createAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="updateAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
+    <request-map uri="deleteAgreementRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAgreementRole"/>
+        <response name="success" type="view" value="EditAgreementRoles"/>
+        <response name="error" type="view" value="EditAgreementRoles"/>
+    </request-map>
     
     <!-- 
     **************
@@ -635,6 +902,67 @@ under the License.
         <event type="service" invoke="deleteFixedAssetMaintOrder"/>
         <response name="success" type="view" value="EditFixedAssetMaintOrders"/>
         <response name="error" type="view" value="EditFixedAssetMaintOrders"/>
+    </request-map>
+    
+    <!-- Fixed Asset Depreciation -->
+    <request-map uri="showFixedAssetDepreciation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="createFixedAssetDepMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFixedAssetDepMethod"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetDepMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFixedAssetDepMethod"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="updateFixedAssetDepMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateFixedAssetDepMethod"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="createFixedAssetTypeGlAccountForFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFixedAssetTypeGlAccount"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetTypeGlAccountForFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFixedAssetTypeGlAccount"/>
+        <response name="success" type="view" value="ShowFixedAssetDepreciation"/>
+        <response name="error" type="view" value="ShowFixedAssetDepreciation"/>
+    </request-map>
+    <request-map uri="FixedAssetTypeGlAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FixedAssetTypeGlAccounts"/>
+        <response name="error" type="view" value="FixedAssetTypeGlAccounts"/>
+    </request-map>
+    <request-map uri="createFixedAssetTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createFixedAssetTypeGlAccount"/>
+        <response name="success" type="view" value="FixedAssetTypeGlAccounts"/>
+        <response name="error" type="view" value="FixedAssetTypeGlAccounts"/>
+    </request-map>
+    <request-map uri="deleteFixedAssetTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteFixedAssetTypeGlAccount"/>
+        <response name="success" type="view" value="FixedAssetTypeGlAccounts"/>
+        <response name="error" type="view" value="FixedAssetTypeGlAccounts"/>
+    </request-map>
+
+    <!-- Fixed Asset GeoLocation-->
+    <request-map uri="FixedAssetGeoLocation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FixedAssetGeoLocation"/>
+        <response name="error" type="view" value="EditFixedAsset"/>
     </request-map>
     
 
@@ -1467,28 +1795,6 @@ under the License.
         <response name="success" type="view" value="EditPaymentMethodType"/>
         <response name="error" type="view" value="EditPaymentMethodType"/>
     </request-map>
-    <request-map uri="EditAgreementRoles">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAgreementRoles"/>
-    </request-map>
-    <request-map uri="createAgreementRole">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createAgreementRole"/>
-        <response name="success" type="view" value="EditAgreementRoles"/>
-        <response name="error" type="view" value="EditAgreementRoles"/>
-    </request-map>
-    <request-map uri="updateAgreementRole">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateAgreementRole"/>
-        <response name="success" type="view" value="EditAgreementRoles"/>
-        <response name="error" type="view" value="EditAgreementRoles"/>
-    </request-map>
-    <request-map uri="deleteAgreementRole">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteAgreementRole"/>
-        <response name="success" type="view" value="EditAgreementRoles"/>
-        <response name="error" type="view" value="EditAgreementRoles"/>
-    </request-map>
     <request-map uri="voidPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="voidPayment"/>
@@ -1701,6 +2007,36 @@ under the License.
     <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>
     <!-- <view-map name="CostCenters" type="screen" page="component://accounting/widget/CostScreens.xml#CostCenters"/>-->
+    
+    
+    <!-- 
+    **************
+    * Contracts
+    **************-->
+    <view-map name="FindAgreement" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#FindAgreement"/>
+    <view-map name="EditAgreement" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreement"/>
+    <view-map name="ListAgreementItems" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItems"/>
+    <view-map name="EditAgreementItem" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItem"/>
+    <view-map name="EditAgreementTerms" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementTerms"/>
+    <view-map name="ListAgreementPromoAppls" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementPromoAppls"/>
+    <view-map name="EditAgreementPromoAppl" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementPromoAppl"/>
+    <view-map name="ListAgreementItemTerms" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemTerms"/>
+    <view-map name="EditAgreementItemTerm" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemTerm"/>
+
+    <view-map name="ListAgreementItemProducts" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemProducts"/>
+    <view-map name="ListAgreementItemProductsReport" type="screenfop" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemProductsReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="EditAgreementItemProduct" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemProduct"/>
+    <view-map name="ListAgreementItemSupplierProducts" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemSupplierProducts"/>
+    <view-map name="ListAgreementItemSupplierProductsReport" type="screenfop" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemSupplierProductsReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="EditAgreementItemSupplierProduct" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemSupplierProduct"/>
+    <view-map name="ListAgreementItemParties" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemParties"/>
+    <view-map name="EditAgreementItemParty" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemParty"/>
+    <view-map name="ListAgreementGeographicalApplic" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementGeographicalApplic"/>
+    <view-map name="EditAgreementGeographicalApplic" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementGeographicalApplic"/>
+    <view-map name="EditAgreementWorkEffortApplics" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementWorkEffortApplics"/>
+    <view-map name="ListAgreementItemFacilities" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemFacilities"/>
+    <view-map name="EditAgreementItemFacility" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemFacility"/>
+    <view-map name="ListAgreementItemFacilitiesReport" type="screenfop" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemFacilitiesReport" content-type="application/pdf" encoding="none"/>
         
     
     <!-- 
@@ -1749,9 +2085,9 @@ under the License.
     <view-map name="EditFixedAssetMaintOrders" type="screen" page="component://accounting/scipio/assets/widget/FixedAssetScreens.xml#EditFixedAssetMaintOrders"/>
     <view-map name="calendar" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#Calendar"/>
     <view-map name="WorkEffortSummary" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#WorkEffortSummary"/>
-    
-    <!-- <view-map name="FixedAssetGeoLocation" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#FixedAssetGeoLocation"/> -->
-    
+
+    <!-- Depreciation Calculation   -->
+    <view-map name="ShowFixedAssetDepreciation" type="screen" page="component://accounting/widget/scipio/assets/FixedAssetScreens.xml#ShowFixedAssetDepreciation"/>
     
     <!-- 
     **************

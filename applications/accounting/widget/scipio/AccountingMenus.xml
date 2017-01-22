@@ -71,11 +71,17 @@
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
+        <menu-item name="billingaccount">
+            <sub-menu name="BillingAccount" include="BillingAccountSidebar"/>
+        </menu-item>
         <menu-item name="chartofaccounts">
             <sub-menu name="CommonGL" include="CommonGLSideBar"/>
         </menu-item>
-         <menu-item name="Contracts">
+        <menu-item name="Contracts">
             <sub-menu name="Contracts" include="ContractsSideBar"/>
+        </menu-item>
+        <menu-item name="controlling">
+            <sub-menu name="Controlling" include="ControllingSideBar"/>
         </menu-item>
         <menu-item name="FinAccount">
             <sub-menu name="FinAccount" include="FinAccountSideBar"/>
@@ -114,6 +120,50 @@
     **************
     -->
     <menu name="AccountsReceivableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+    
+    <!-- 
+    **************
+    * Billing Accounts
+    **************
+     -->
+    <menu name="BillingAccountSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+     
+    <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
+            <link target="FindBillingAccount" />
+        </menu-item>
+        <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
+            <link target="EditBillingAccount">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonRoles}">
+            <link target="EditBillingAccountRoles">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.CommonTerms}">
+            <link target="EditBillingAccountTerms">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="BillingAccountInvoices" title="${uiLabelMap.CommonInvoices}">
+            <link target="BillingAccountInvoices">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="BillingAccountPayments" title="${uiLabelMap.CommonPayments}">
+            <link target="BillingAccountPayments">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="BillingAccountOrders" title="${uiLabelMap.CommonOrders}">
+            <link target="BillingAccountOrders">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
     </menu>
     
     <!-- 
@@ -436,6 +486,126 @@
         </menu-item>
         <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
             <link target="CostCenters" />
+        </menu-item>
+    </menu>
+    
+    
+    <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
+            <link target="ListBudgets" />
+        </menu-item>
+        <menu-item name="EditBudget" title="${uiLabelMap.AccountingBudget}">
+            <link target="EditBudget">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+        <menu-item name="BudgetOverview" title="${uiLabelMap.AccountingBudgetOverview}">
+            <link target="BudgetOverview">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+        <menu-item name="BudgetItem" title="${uiLabelMap.CommonItems}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="EditBudgetItems">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+        <menu-item name="BudgetRoles" title="${uiLabelMap.CommonParties}">
+            <link target="BudgetRoles">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+        <menu-item name="BudgetReviews" title="${uiLabelMap.AccountingBudgetReviews}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <if-compare field="statusId" operator="not-equals" value="BG_REJECTED" />
+                </and>
+            </condition>
+            <link target="BudgetReviews">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="BudgetSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <menu-item name="EditBudget" title="${uiLabelMap.CommonEdit}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="EditBudget">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToApproved" title="${uiLabelMap.AccountingBudgetStatusToApproved}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId" />
+                <parameter param-name="statusId" value="BG_APPROVED" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToReview" title="${uiLabelMap.AccountingBudgetStatusToReviewed}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId" />
+                <parameter param-name="statusId" value="BG_REVIEWED" />
+            </link>
+        </menu-item>
+        <menu-item name="statusToReject" title="${uiLabelMap.AccountingBudgetStatusToRejected}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
+                        <if-compare field="statusId" operator="equals" value="BG_APPROVED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="updateBudgetStatus">
+                <parameter param-name="budgetId" from-field="budgetId" />
+                <parameter param-name="statusId" value="BG_REJECTED" />
+            </link>
         </menu-item>
     </menu>
     

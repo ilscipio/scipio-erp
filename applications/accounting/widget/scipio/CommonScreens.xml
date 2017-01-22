@@ -124,6 +124,23 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- 
+    ***************
+    * Billing Accounts
+    ***************
+     -->
+    <screen name="CommonBillingAccountDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#BillingAccountSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <!-- 
     ***************
@@ -219,13 +236,62 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    
+    <!-- 
+    ***************
+    * Controlling
+    ***************
+     -->
+    <screen name="CommonControllingDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#ControllingSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+     
+    <screen name="CommonBudgetDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="ListBudgets"/>
+                <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+                <entity-and list="budgetStatus" entity-name="BudgetStatus">
+                    <field-map field-name="budgetId" from-field="budgetId"/>
+                    <order-by field-name="-statusDate"/>
+                </entity-and>
+                <set field="statusId" from-field="budgetStatus[0].statusId"/>
+                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.budgetId}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonControllingDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="budgetId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="BudgetTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <label style="heading" text="Budget : [${budgetId}]"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
     </screen>  
-      
       
     
     <!-- 
     ***************
-    * Finance
+    * Financial Accounts
     ***************
      -->
     <screen name="CommonFinAccountDecorator">

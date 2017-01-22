@@ -62,6 +62,98 @@ under the License.
     **************
     -->
     
+    <!-- 
+    **************
+    * Billing Accounts
+    **************
+     -->
+     <request-map uri="FindBillingAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindBillingAccount"/>
+    </request-map>
+    <request-map uri="EditBillingAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+    </request-map>
+    <request-map uri="createBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
+    </request-map>
+    <request-map uri="updateBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
+    </request-map>
+
+    <request-map uri="EditBillingAccountRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+    </request-map>
+    <request-map uri="createBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map>
+    <request-map uri="updateBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map>
+    <request-map uri="deleteBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map>
+
+    <request-map uri="EditBillingAccountTerms">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="createBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="updateBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="removeBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="BillingAccountInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillingAccountInvoices"/>
+    </request-map>
+    <request-map uri="capturePaymentsByInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="capturePaymentsByInvoice"/>
+        <response name="success" type="view" value="BillingAccountInvoices"/>
+    </request-map>
+    <request-map uri="BillingAccountPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillingAccountPayments"/>
+    </request-map>
+    <request-map uri="BillingAccountOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillingAccountOrders"/>
+    </request-map>
+    <request-map uri="createPaymentAndAssociateToBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndApplication"/>
+        <response name="success" type="view" value="BillingAccountPayments"/>
+    </request-map>
+    
+    
     <!--
     ***************
     * Chart of Accounts
@@ -271,8 +363,7 @@ under the License.
     * Controlling
     **************
     -->    
-    
-    <!-- 
+    <!-- Cost Centers -->
     <request-map uri="CostCenters">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CostCenters"/>
@@ -292,7 +383,77 @@ under the License.
     <request-map uri="GlAccountBalanceByCostCenter.pdf">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="GlAccountBalanceByCostCenterPdf"/>
-    </request-map> -->
+    </request-map>
+    
+    
+    <!-- Budgets -->
+    <request-map uri="ListBudgets"><security https="true" auth="true"/><response name="success" type="view" value="ListBudgets"/></request-map>
+    <request-map uri="BudgetSearchResults"><security https="true" auth="false"/><response name="success" type="view" value="BudgetSearchResults"/></request-map>
+    <request-map uri="EditBudget"><security https="true" auth="true"/><response name="success" type="view" value="EditBudget"/></request-map>
+    <request-map uri="BudgetOverview"><security https="true" auth="true"/><response name="success" type="view" value="BudgetOverview"/></request-map>
+    <request-map uri="EditBudgetItems"><security https="true" auth="true"/><response name="success" type="view" value="EditBudgetItems"/></request-map>
+    <request-map uri="BudgetRoles"><security https="true" auth="true"/><response name="success" type="view" value="BudgetRoles"/></request-map>
+    <request-map uri="BudgetReviews"><security https="true" auth="true"/><response name="success" type="view" value="BudgetReviews"/></request-map>
+    <request-map uri="createBudget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudget"/>
+        <response name="success" type="view" value="EditBudget"/>
+        <response name="error" type="view" value="EditBudget"/>
+    </request-map>
+    <request-map uri="updateBudget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBudget"/>
+        <response name="success" type="view" value="EditBudget"/>
+        <response name="error" type="view" value="EditBudget"/>
+    </request-map>
+    <request-map uri="updateBudgetStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBudgetStatus"/>
+        <response name="success" type="view" value="BudgetOverview"/>
+        <response name="error" type="view" value="BudgetOverview"/>
+    </request-map>
+    <request-map uri="createBudgetItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetItem"/>
+        <response name="success" type="view" value="EditBudgetItems"/>
+        <response name="error" type="view" value="EditBudgetItems"/>
+    </request-map>
+    <request-map uri="updateBudgetItem">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateBudgetItem"/>
+        <response name="success" type="request-redirect" value="EditBudgetItems"/>
+        <response name="error" type="view" value="EditBudgetItems"/>
+    </request-map>
+    <request-map uri="removeBudgetItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBudgetItem"/>
+        <response name="success" type="view" value="EditBudgetItems"/>
+        <response name="error" type="view" value="EditBudgetItems"/>
+    </request-map>
+    <request-map uri="createBudgetRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetRole"/>
+        <response name="success" type="view" value="BudgetRoles"/>
+        <response name="error" type="view" value="BudgetRoles"/>
+    </request-map>
+    <request-map uri="removeBudgetRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBudgetRole"/>
+        <response name="success" type="view" value="BudgetRoles"/>
+        <response name="error" type="view" value="BudgetRoles"/>
+    </request-map>
+    <request-map uri="createBudgetReview">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetReview"/>
+        <response name="success" type="view" value="BudgetReviews"/>
+        <response name="error" type="view" value="BudgetReviews"/>
+    </request-map>
+    <request-map uri="removeBudgetReview">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBudgetReview"/>
+        <response name="success" type="view" value="BudgetReviews"/>
+        <response name="error" type="view" value="BudgetReviews"/>
+    </request-map>
     
     <!-- 
     **************
@@ -2231,6 +2392,20 @@ under the License.
     
     <!-- 
     **************
+    * Billing Accounts
+    **************
+     -->
+    <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#FindBillingAccount"/>
+    <view-map name="EditBillingAccount" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#EditBillingAccount"/>
+    <view-map name="EditBillingAccountRoles" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#EditBillingAccountRoles"/>
+    <view-map name="EditBillingAccountTerms" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#EditBillingAccountTerms"/>
+    <view-map name="BillingAccountInvoices" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#BillingAccountInvoices"/>
+    <view-map name="BillingAccountPayments" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#BillingAccountPayments"/>
+    <view-map name="BillingAccountOrders" type="screen" page="component://accounting/widget/scipio/billing/BillingAccountScreens.xml#BillingAccountOrders"/>
+    
+    
+    <!-- 
+    **************
     * Chart of Accounts
     **************-->
     <!-- GlAccount, GlJournalEntry, AcctgTrans -->
@@ -2260,7 +2435,6 @@ under the License.
     <view-map name="AcctgTransSearchResultPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransSearchResultPdf" content-type="application/pdf" encoding="none"/>
 
     <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
-    <!-- <view-map name="CostCenters" type="screen" page="component://accounting/widget/CostScreens.xml#CostCenters"/>-->
     
     
     <!-- 
@@ -2292,6 +2466,21 @@ under the License.
     <view-map name="EditAgreementItemFacility" type="screen" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#EditAgreementItemFacility"/>
     <view-map name="ListAgreementItemFacilitiesReport" type="screenfop" page="component://accounting/widget/scipio/contracts/AgreementScreens.xml#ListAgreementItemFacilitiesReport" content-type="application/pdf" encoding="none"/>
         
+    <!-- 
+    **************
+    * Controlling
+    **************
+     -->
+    <view-map name="CostCenters" type="screen" page="component://accounting/widget/scipio/controlling/CostScreens.xml#CostCenters"/>
+    
+    <!-- Budgets -->
+    <view-map name="ListBudgets" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#ListBudgets"/>
+    <view-map name="BudgetSearchResults" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetSearchResults"/>
+    <view-map name="EditBudget" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#EditBudget"/>
+    <view-map name="BudgetOverview" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetOverview"/>
+    <view-map name="EditBudgetItems" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#EditBudgetItems"/>
+    <view-map name="BudgetRoles" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetRoles"/>
+    <view-map name="BudgetReviews" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetReviews"/> 
     
     <!-- 
     **************

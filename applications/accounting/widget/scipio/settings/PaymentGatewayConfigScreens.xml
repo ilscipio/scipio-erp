@@ -32,7 +32,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
@@ -89,7 +89,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleUpdatePaymentGatewayConfig}">
                             <include-form name="EditPaymentGatewayConfig" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>
@@ -218,7 +218,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
@@ -244,7 +244,7 @@ under the License.
                 <entity-one entity-name="PaymentGatewayConfigType" value-field="paymentGatewayConfigType"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditPaymentGatewayConfigType" location="component://accounting/widget/PaymentGatewayConfigForms.xml"/>

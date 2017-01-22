@@ -31,7 +31,7 @@ under the License.
                 <set field="year" from-field="parameters.year" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy&quot;)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.PageTitleFinancialSummaryReportOptions}"/>
                         <screenlet title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
@@ -87,7 +87,7 @@ under the License.
                         <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <screenlet>
                                     <platform-specific>
@@ -112,7 +112,7 @@ under the License.
                         <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <screenlet>
                                     <platform-specific>
@@ -138,7 +138,7 @@ under the License.
                         <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <screenlet>
                                     <platform-specific>
@@ -163,7 +163,7 @@ under the License.
                         <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <screenlet>
                                     <platform-specific>
@@ -188,7 +188,7 @@ under the License.
                         <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>
                     </actions>
                     <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <screenlet>
                                     <platform-specific>
@@ -223,7 +223,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}"/>
@@ -335,7 +335,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/BalanceSheet.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
                             <include-form name="BalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -477,7 +477,7 @@ under the License.
 
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingComparativeBalanceSheet}">
                             <include-form name="ComparativeBalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -671,7 +671,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TransactionTotals.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingTransactionTotals}">
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -803,7 +803,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/IncomeStatement.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -952,7 +952,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/ComparativeIncomeStatement.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
                             <include-form name="ComparativeIncomeStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1156,7 +1156,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GlAccountTrialBalance.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingGlAccountTrialBalance}">
                             <include-form name="GlAccountTrialBalance"  location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1230,7 +1230,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/CostCenters.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.FormFieldTitle_costCenters}">
                             <include-form name="SelectAcctReportPeriod" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1300,7 +1300,7 @@ under the License.
                 <set field="activeSubMenuItem" value="InventoryValuation"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
@@ -1395,7 +1395,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/CashFlowStatement.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingCashFlowStatement}">
                             <include-form name="CashFlowStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
@@ -1525,7 +1525,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/ComparativeCashFlowStatement.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
                             <include-form name="ComparativeCashFlowStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>

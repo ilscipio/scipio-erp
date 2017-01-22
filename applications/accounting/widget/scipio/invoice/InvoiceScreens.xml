@@ -31,7 +31,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -58,7 +58,7 @@ under the License.
                 <entity-one entity-name="Invoice" value-field="invoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingCreateNewSalesInvoice}">
                             <include-form name="NewSalesInvoice" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
@@ -84,7 +84,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -151,7 +151,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -279,7 +279,7 @@ under the License.
                 <set field="appliedAmount" value="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}" type="BigDecimal"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -356,7 +356,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetAccountOrganizationAndClass.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd} - ${uiLabelMap.AccountingInvoice}: ${invoiceId}">
                             <section>
@@ -395,7 +395,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}">
                             <include-form name="EditTimeEntries" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
@@ -419,7 +419,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PartyInvoiceRolePanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
                             <include-form name="EditInvoiceRole" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
@@ -445,7 +445,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PartyInvoiceTermPanel" title="${uiLabelMap.AccountingPartyRoleAdd}" collapsible="true">
                             <include-form name="EditInvoiceTerm" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
@@ -467,7 +467,7 @@ under the License.
                 <set field="activeSubMenuItem" value="sendPerEmail"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSendPerEmail}">
                             <include-form name="SendPerEmail" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>

@@ -28,7 +28,7 @@ under the License.
                 <set field="titleProperty" value="AccountingGlJournals"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                                 <label text="This is a placeholder!"></label>
@@ -45,7 +45,7 @@ under the License.
                 <set field="titleProperty" value="AccountingAcctgTrans"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                                 <label>This is a placeholder!</label>

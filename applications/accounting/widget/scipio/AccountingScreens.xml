@@ -30,23 +30,23 @@ under the License.
             </actions>
             <widgets>
                 <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">                    
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">                    
                     <decorator-section name="body">
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                     <include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                 <include-screen name="ScipioIncomesExpenses" location="component://accounting/widget/scipio/CommonScreens.xml"/>
+                                 <include-screen name="ScipioIncomesExpenses" location="${parameters.mainDecoratorLocation}"/>
                             </container>
                         </container>
                     
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                 <include-screen name="ApPastDueInvoices" location="component://accounting/widget/scipio/CommonScreens.xml"/>      
+                                 <include-screen name="ApPastDueInvoices" location="${parameters.mainDecoratorLocation}"/>      
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ArPastDueInvoices" location="component://accounting/widget/scipio/CommonScreens.xml"/>
+                                <include-screen name="ArPastDueInvoices" location="${parameters.mainDecoratorLocation}"/>
                             </container>
                         </container>
                         

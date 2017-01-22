@@ -27,7 +27,7 @@ under the License.
                 <set field="titleProperty" value="CommonImportExport"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonImportExportDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                                 <label>This is a placeholder!</label>
@@ -47,7 +47,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonImportExportDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">   
 
                                 <label style="heading">${uiLabelMap.CommonImport}</label>

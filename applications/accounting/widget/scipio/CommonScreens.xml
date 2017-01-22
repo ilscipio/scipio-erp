@@ -102,7 +102,7 @@ under the License.
                 </condition-to-field>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="CommonAccountingAppSideBarMenu"/>
                     </decorator-section>
@@ -143,7 +143,7 @@ under the License.
                 </condition-to-field>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -175,7 +175,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>
@@ -196,7 +196,7 @@ under the License.
                 </condition-to-field>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -246,7 +246,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <include-menu name="OrganizationTabBar" location="component://accounting/widget/scipio/AccountingMenus.xml"/>
                         <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
@@ -270,7 +270,7 @@ under the License.
                 </condition-to-field>              
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -309,7 +309,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#ImportExportSideBar" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>
@@ -328,7 +328,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>             
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>
@@ -343,7 +343,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonJournalsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -373,7 +373,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#Payment" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="PaymentSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <!-- <container style="leftclear">
@@ -399,7 +399,7 @@ under the License.
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.paymentGroup}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="PaymentGroupSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <!-- TODO: Scipio - I don't think this is needed -->
@@ -444,7 +444,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
                         <!--<include-menu name="PartyAdminTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
                         <section>
@@ -469,7 +469,7 @@ under the License.
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#SettingsSideBar" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>

@@ -32,7 +32,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ListFixedAssets"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -85,7 +85,7 @@ under the License.
                 <set field="titleProperty" value="${groovy: context.fixedAsset ? 'PageTitleEditFixedAsset' : 'AccountingNewFixedAsset'}"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -123,7 +123,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-fixedasset-product" title="${uiLabelMap.AccountingFixedAssetProductAdd}" collapsible="true">
                             <include-form name="AddFixedAssetProduct" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -144,7 +144,7 @@ under the License.
                 <set field="fixedAssetId" from-field="workEffort.fixedAssetId"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="WorkEffortSummary" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -165,7 +165,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-fixed-asset-std-cost" title="${uiLabelMap.AccountingAddFixedAssetStdCost}" collapsible="true">
                             <include-form name="EditFixedAssetStdCost" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -189,7 +189,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="edit-fixed-asset-idents" title="${uiLabelMap.AccountingAddFixedAssetIdent}" collapsible="true">
                             <include-form name="AddFixedAssetIdent" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -238,7 +238,7 @@ under the License.
                         <!-- <set field="activeSubMenuItem" value="month"/>-->
                     </actions>
                 </section>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-screen name="Calendar" location="component://workeffort/widget/CalendarScreens.xml"/>
                     </decorator-section>
@@ -260,7 +260,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-fixed-asset-registration" title="${uiLabelMap.AccountingAddFixedAssetRegistration}" collapsible="true">
                             <include-form name="AddFixedAssetRegistration" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -284,7 +284,7 @@ under the License.
             </actions>
             <widgets>
                 <!-- SCIPIO: changed this from FixedAssetDecorator to CommonFixedAssetMaintDecorator so menu opens... -->
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
@@ -318,7 +318,7 @@ under the License.
                     <condition><if-empty field="maintHistSeqId"/></condition>
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
                 </section>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -357,7 +357,7 @@ under the License.
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-fixedasset-meter" title="${uiLabelMap.AccountingAddFixedAssetMeter}" collapsible="true">
                             <include-form name="AddFixedAssetMeter" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -381,7 +381,7 @@ under the License.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-tree name="TreeFixedAsset" location="component://accounting/widget/AccountingTrees.xml"/>
                     </decorator-section>
@@ -409,7 +409,7 @@ under the License.
                 <entity-one entity-name="FixedAssetMaintOrder" value-field="fixedAssetMaintOrder"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-fixedasset-maint-order" title="${uiLabelMap.AccountingAddFixedAssetMaintOrder}" collapsible="true">
                             <include-form name="AddFixedAssetMaintOrder" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -435,7 +435,7 @@ under the License.
                 <entity-one entity-name="PartyFixedAssetAssignment" value-field="partyFixedAssetAssignment"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-party-fixedasset-assignments" title="${uiLabelMap.AccountingAddFixedAssetPartyAssignment}" collapsible="true">
                             <include-form name="AddPartyFixedAssetAssignment" location="component://accounting/widget/scipio/assets/FixedAssetForms.xml"/>
@@ -463,7 +463,7 @@ under the License.
                 <set field="depreciation" from-field="fixedAsset.depreciation" default-value="0.0" type="BigDecimal"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleFixedAssetDepreciationHistory}">
                             <label>${uiLabelMap.FormFieldTitle_purchaseCost}: ${fixedAsset.purchaseCost}</label>
@@ -555,7 +555,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/fixedasset/FixedAssetGeoLocation.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="FixedAssetDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label>${uiLabelMap.CommonLatitude} ${latestGeoPoint.latitude}</label>
                         <label>${uiLabelMap.CommonLongitude} ${latestGeoPoint.longitude}</label>

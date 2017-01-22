@@ -41,7 +41,7 @@ under the License.
                 <set field="hasBasicPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet navigation-menu-name="newAccountOrganization">
                             <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationSubTabBar"/>
@@ -58,7 +58,7 @@ under the License.
                 <set field="titleProperty" value="AccountingNewCompany"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="AddCompany" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -77,7 +77,7 @@ under the License.
                 <set field="labelTitleProperty" value="${uiLabelMap.AccountingChartOfAcctsMenu}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="GlAccountOrganizationPanel" collapsible="true">
                             <include-form name="AssignGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -120,7 +120,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingOpenTimePeriods}">
                             <include-form name="ListOpenTimePeriods" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -150,7 +150,7 @@ under the License.
                 <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="PartyAcctgPreference" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -171,7 +171,7 @@ under the License.
                 <entity-one entity-name="GlJournal" value-field="glJournal"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="GlJournalPanel" collapsible="true">
                             <include-form name="EditGlJournal" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -193,7 +193,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="GlAccountTypeDefaultPanel" title="${uiLabelMap.CommonAdd}" collapsible="true">
                             <include-form name="EditGlAccountTypeDefault" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -215,7 +215,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="SalInvoiceItemTypeGlAsigmtPanel" title="${uiLabelMap.AccountingAssignSalesInvoiceToRevenue}" collapsible="true">
                             <include-form name="AddSalInvoiceItemTypeGlAssignment" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -236,7 +236,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PurInvoiceItemTypeGlAsigmtPanel" title="${uiLabelMap.AccountingAssignPurchaseInvoiceToRevenue}" collapsible="true">
                             <include-form name="AddPurInvoiceItemTypeGlAssignment" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -257,7 +257,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PaymentTypeGlAsigmtPanel" title="${uiLabelMap.AccountingPaymentTypeAssignAccountType}" collapsible="true">
                             <include-form name="AddPaymentTypeGlAssignment" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -278,7 +278,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PaymentMethodTypeGlAsigmtPanel" title="${uiLabelMap.AccountingPaymentMethodAssignAccountType}" collapsible="true">
                             <include-form name="AddPaymentMethodTypeGlAssignment" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -305,7 +305,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ProductGlAccountPanel" title="${uiLabelMap.ProductAddGlAccount}" collapsible="true">
                             <include-form name="AddProductGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -335,7 +335,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="FinAccountTypeGlAccountPanel" title="${uiLabelMap.AccountingAddFinAccountTypeGlAccount}" collapsible="true">
                             <include-form name="AddFinAccountTypeGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -363,7 +363,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ProductCategoryGlAccountPanel" title="${uiLabelMap.ProductAddCategoryGlAccount}" collapsible="true">
                             <include-form name="AddProductCategoryGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -390,7 +390,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="VarianceReasonGlAccountPanel" title="${uiLabelMap.AccountingVarianceReasonGlAccounts}" collapsible="true">
                             <include-form name="AddVarianceReasonGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -415,7 +415,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="CreditCardTypeGlAccountPanel" title="${uiLabelMap.AccountingCreditCardTypeGlAccount}" collapsible="true">
                             <include-form name="AddCreditCardTypeGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -443,7 +443,7 @@ under the License.
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/chartofaccounts/TaxAuthorityGlAccounts.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="OrgTaxAuthorityGlAccountPanel" title="${uiLabelMap.AccountingAddTaxAuthorityGlAccount}" collapsible="true">
                             <include-form name="AddTaxAuthorityGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -469,7 +469,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="PartyGlAccountPanel" title="${uiLabelMap.AccountingAddPartyGlAccount}" collapsible="true">
                             <include-form name="AddPartyGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -491,7 +491,7 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="FixedAssetTypeGlAccountPanel" title="${uiLabelMap.CommonAdd}" collapsible="true">
                             <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/scipio/settings/GlSetupForms.xml"/>
@@ -541,7 +541,7 @@ under the License.
                 <set field="activeSubMenuItem" value="FindGlAccountCategory"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -582,7 +582,7 @@ under the License.
                 <set field="titleProperty" value="${groovy: context.glAccountCategory ? 'FormFieldTitle_editGlAccountCategory' : 'FormFieldTitle_newGlAccountCategory'}"/><!-- FormFieldTitle_glAccountCategory -->
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -611,7 +611,7 @@ under the License.
                 <set field="glAccountCategoryId" from-field="parameters.glAccountCategoryId"/>
             </actions>
             <widgets>
-               <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+               <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <!--<label style="heading">${uiLabelMap.FormFieldTitle_editGlAccountCategoryMember}</label>-->
@@ -636,7 +636,7 @@ under the License.
                 <set field="activeSubMenuItem" value="ViewRateAmounts"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingUpdateRateAmount}" navigation-form-name="ListRateAmounts">
                             <include-form name="updateRateAmount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
@@ -665,7 +665,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="CommonSettingsDecorator" location="component://accounting/widget/scipio/CommonScreens.xml">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="FxConversionPanel" title="${uiLabelMap.AccountingUpdateFX}" collapsible="true">
                             <include-form name="updateFXConversion" location="component://accounting/widget/GlSetupForms.xml"/>

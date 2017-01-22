@@ -1381,7 +1381,7 @@
     * Settings 
     **************-->
     <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-        default-menu-item-name="Settings" always-expand-selected-or-ancestor="true">
+        default-menu-item-name="settings" always-expand-selected-or-ancestor="true">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
         </actions>
@@ -1429,7 +1429,7 @@
         <menu-item name="FindGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
             <link target="FindGlAccountCategory" />
         </menu-item>
-        <menu-item name="FindTaxAuthority" title="${uiLabelMap.AccountingTaxAuthorities}">
+        <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
             <link target="ListTaxAuthorityParties" />
         </menu-item>
         <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriod}">
@@ -1438,7 +1438,7 @@
             </link>
         </menu-item>
         <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingCustomTimePeriod}">
-            <link target="CustomTimePeriods">
+            <link target="EditCustomTimePeriod">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>

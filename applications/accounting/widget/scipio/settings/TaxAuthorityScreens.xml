@@ -28,7 +28,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTaxAuthority"/>
-                <set field="activeSubMenuItem" value="FindTaxAuthority"/>
+                <set field="activeSubMenuItem" value="TaxAuthorities"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">

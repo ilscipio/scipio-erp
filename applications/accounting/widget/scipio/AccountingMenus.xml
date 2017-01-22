@@ -172,12 +172,23 @@
     **************
      -->
      <menu name="CommonGLSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="chartofaccounts">
+        default-menu-item-name="Chartofaccounts">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
         <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
         <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
             <link target="GlAccountNavigate" />
+        </menu-item>
+        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
+            <link target="GlAccountNavigate" />
+        </menu-item>
+        <menu-item name="FindAcctgTrans" title="${uiLabelMap.AccountingAcctgTrans}">
+            <link target="FindAcctgTrans">
+                <parameter param-name="organizationPartyId" />
+            </link>
         </menu-item>
     </menu>
 

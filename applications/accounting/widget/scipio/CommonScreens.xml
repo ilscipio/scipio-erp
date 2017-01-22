@@ -162,6 +162,25 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonPartyGlDecorator">
+        <section>
+            <actions>
+                <!-- <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="PartyAccounts"/>-->
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonGLDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
+                    <decorator-section name="body">
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!--
     ***************
     * Contracts

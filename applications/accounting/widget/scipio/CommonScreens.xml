@@ -127,6 +127,30 @@ under the License.
     
     <!-- 
     ***************
+    * Accounts Payable
+    ***************
+     -->
+     
+     <screen name="CommonApDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#AccountsPayableSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- 
+    ***************
+    * Accounts Receivable
+    ***************
+     -->
+    
+    <!-- 
+    ***************
     * Billing Accounts
     ***************
      -->

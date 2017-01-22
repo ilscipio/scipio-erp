@@ -21,5 +21,22 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
    
+    <!-- Migrated from PeriodScreens  -->
+    <screen name="EditCustomTimePeriod">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingEditCustomTimePeriods"/>
+                <set field="activeSubMenuItem" value="EditCustomTimePeriod"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/period/EditCustomTimePeriod.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://accounting/webapp/accounting/period/EditCustomTimePeriod.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
 </screens>

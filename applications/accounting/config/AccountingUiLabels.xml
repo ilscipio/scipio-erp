@@ -354,6 +354,11 @@
         <value xml:lang="zh">添加分类总账账户</value>
         <value xml:lang="zh_TW">增加總帳科目分類</value>
     </property>
+    <!-- SCIPIO -->
+    <property key="AccountingCustomTimePeriod">
+        <value xml:lang="de">Individuelle Zeiträume</value>
+        <value xml:lang="en">Custom Time Period</value>
+    </property>
     <property key="AccountingAddCustomTimePeriod">
         <value xml:lang="de">Individueller Zeitraum hinzufügen</value>
         <value xml:lang="en">Add Custom Time Period</value>

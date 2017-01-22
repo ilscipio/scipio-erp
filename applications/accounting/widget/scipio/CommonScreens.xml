@@ -127,6 +127,22 @@ under the License.
 
     <!-- 
     ***************
+    * Chart of Accounts / Ledger
+    ***************
+     -->
+     <screen name="CommonGLDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#CommonGLSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- 
+    ***************
     * Finance
     ***************
      -->

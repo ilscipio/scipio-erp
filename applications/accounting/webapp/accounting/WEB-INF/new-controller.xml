@@ -213,6 +213,39 @@ under the License.
         <response name="success" type="view" value="EditGlAccountCategoryMember"/>
     </request-map>
     
+    <!-- Account Reconciliation -->
+    <request-map uri="findGlAccountReconciliation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGlAccountReconciliation"/>
+        <response type="view" name="error"  value="FindGlAccountReconciliation"/>
+    </request-map>
+    <request-map uri="EditGlReconciliation">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.accounting.GlEvents" invoke="createReconcileAccount"/>
+        <response name="success" type="view" value="EditGlReconciliation"/>
+        <response name="error" type="view" value="FindGlAccountReconciliation"/>
+    </request-map>
+    <request-map uri="EditGlReconciliations">
+        <security https="true" auth="true"/>
+        <response type="view" name="success" value="EditGlReconciliation"/>
+    </request-map>
+    <request-map uri="updateGlReconciliation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlReconciliation"/>
+        <response type="view" name="success" value="EditGlReconciliation"/>
+    </request-map>
+    <request-map uri="findGlAccountReconciliations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGlAccountReconciliations"/>
+        <response type="view" name="error"  value="FindGlAccountReconciliations"/>
+    </request-map>
+    <request-map uri="cancelReconciliation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelBankReconciliation"/>
+        <response name="success" type="view" value="FindFinAccountReconciliations"/>
+        <response name="error" type="view" value="FindFinAccountReconciliations"/>
+    </request-map>
+    
     <!--Other Gl functions -->
     <request-map uri="addtax">
         <security auth="true" https="true"/>
@@ -978,7 +1011,11 @@ under the License.
     **************
     -->
     
-    <!-- Financial Accounts -->
+    <!-- 
+    **************
+    * Financial Accounts 
+    **************
+    -->
     <!-- Fin Account -->
     <request-map uri="FindFinAccount">
         <security https="true" auth="true"/>
@@ -1226,7 +1263,7 @@ under the License.
         <event type="service" invoke="deleteFinAccountTypeGlAccount"/>
         <response name="success" type="view" value="EditFinAccountTypeGlAccounts"/>
         <response name="error" type="view" value="EditFinAccountTypeGlAccounts"/>
-    </request-map>
+    </request-map>    
     
     <!--
     ************** 
@@ -1917,6 +1954,224 @@ under the License.
         <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
     
+    <!-- Tax Authorities -->
+    <request-map uri="FindTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="FindTaxAuthority"/></request-map>
+    <request-map uri="EditTaxAuthority"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthority"/></request-map>
+    <request-map uri="createTaxAuthority">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxAuthority"/>
+        <response name="success" type="view" value="EditTaxAuthority"/>
+        <response name="error" type="view" value="EditTaxAuthority"/>
+    </request-map>
+    <request-map uri="updateTaxAuthority">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTaxAuthority"/>
+        <response name="success" type="view" value="EditTaxAuthority"/>
+        <response name="error" type="view" value="EditTaxAuthority"/>
+    </request-map>
+
+    <request-map uri="EditTaxAuthorityCategories"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityCategories"/></request-map>
+    <request-map uri="createTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTaxAuthorityCategory"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+    </request-map>
+
+    <request-map uri="EditTaxAuthorityAssocs"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityAssocs"/></request-map>
+    <request-map uri="createTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityAssoc">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTaxAuthorityAssoc"/>
+        <response name="success" type="view" value="EditTaxAuthorityAssocs"/>
+        <response name="error" type="view" value="EditTaxAuthorityAssocs"/>
+    </request-map>
+
+    <request-map uri="EditTaxAuthorityGlAccounts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityGlAccounts"/></request-map>
+    <request-map uri="createTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxAuthorityGlAccount"/>
+        <response name="success" type="view" value="EditTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTaxAuthorityGlAccount"/>
+        <response name="success" type="view" value="EditTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
+    </request-map>
+
+    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityRateProducts"/></request-map>
+    <request-map uri="createTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+    <request-map uri="deleteTaxAuthorityRateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTaxAuthorityRateProduct"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+    </request-map>
+
+    <request-map uri="ListTaxAuthorityParties"><security https="true" auth="true"/><response name="success" type="view" value="ListTaxAuthorityParties"/></request-map>
+    <request-map uri="deleteTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="ListTaxAuthorityParties"/>
+        <response name="error" type="view" value="ListTaxAuthorityParties"/>
+    </request-map>
+    <request-map uri="EditTaxAuthorityPartyInfo"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityPartyInfo"/></request-map>
+    <request-map uri="createTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditTaxAuthorityPartyInfo"/>
+        <response name="error" type="view" value="EditTaxAuthorityPartyInfo"/>
+    </request-map>
+    <request-map uri="updateTaxAuthorityPartyInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyTaxAuthInfo"/>
+        <response name="success" type="view" value="EditTaxAuthorityPartyInfo"/>
+        <response name="error" type="view" value="EditTaxAuthorityPartyInfo"/>
+    </request-map>
+    
+    <!--  TaxAuthorityGlAccount Requests  -->
+    <request-map uri="editOrganizationTaxAuthorityGlAccount">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+    </request-map>
+
+    <request-map uri="createOrganizationTaxAuthorityGlAccount">
+         <security https="true" auth="true"/>
+         <event type="service" invoke="createTaxAuthorityGlAccount"/>
+         <response name="success" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+         <response name="error" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+     </request-map>
+
+    <request-map uri="updateOrganizationTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTaxAuthorityGlAccount"/>
+        <response name="success" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteOrganizationTaxAuthorityGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteTaxAuthorityGlAccount"/>
+        <response name="success" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+        <response name="error" type="view" value="EditOrganizationTaxAuthorityGlAccounts"/>
+    </request-map>
+    
+    <!--request-uri ProductCategoryGlAccount -->
+    <request-map uri="editProductCategoryGlAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductCategoryGlAccounts"/>
+    </request-map>
+
+     <request-map uri="createProductCategoryGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductCategoryGlAccount"/>
+        <response name="success" type="view" value="EditProductCategoryGlAccounts"/>
+        <response name="error" type="view" value="EditProductCategoryGlAccounts"/>
+    </request-map>
+
+    <request-map uri="updateProductCategoryGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductCategoryGlAccount"/>
+        <response name="success" type="view" value="EditProductCategoryGlAccounts"/>
+        <response name="error" type="view" value="EditProductCategoryGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteProductCategoryGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductCategoryGlAccount"/>
+        <response name="success" type="view" value="EditProductCategoryGlAccounts"/>
+        <response name="error" type="view" value="EditProductCategoryGlAccounts"/>
+    </request-map>
+
+   <!--request-uri VarianceReasonGlAccount -->                
+    <request-map uri="editVarianceReasonGlAccounts">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="EditVarianceReasonGlAccounts"/>
+    </request-map>
+
+     <request-map uri="createVarianceReasonGlAccount">
+         <security https="true" auth="true"/>
+         <event type="service" invoke="createVarianceReasonGlAccount"/>
+         <response name="success" type="view" value="EditVarianceReasonGlAccounts"/>
+         <response name="error" type="view" value="EditVarianceReasonGlAccounts"/>
+     </request-map>
+
+    <request-map uri="updateVarianceReasonGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateVarianceReasonGlAccount"/>
+        <response name="success" type="view" value="EditVarianceReasonGlAccounts"/>
+        <response name="error" type="view" value="EditVarianceReasonGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteVarianceReasonGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteVarianceReasonGlAccount"/>
+        <response name="success" type="view" value="EditVarianceReasonGlAccounts"/>
+        <response name="error" type="view" value="EditVarianceReasonGlAccounts"/>
+    </request-map>
+
+    <!--request-uri CreditCardTypeGlAccount -->
+    <request-map uri="editCreditCardTypeGlAccounts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCreditCardTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="createCreditCardTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCreditCardTypeGlAccount"/>
+        <response name="success" type="view" value="EditCreditCardTypeGlAccounts"/>
+        <response name="error" type="view" value="EditCreditCardTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="updateCreditCardTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCreditCardTypeGlAccount"/>
+        <response name="success" type="view" value="EditCreditCardTypeGlAccounts"/>
+        <response name="error" type="view" value="EditCreditCardTypeGlAccounts"/>
+    </request-map>
+
+    <request-map uri="deleteCreditCardTypeGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCreditCardTypeGlAccount"/>
+        <response name="success" type="view" value="EditCreditCardTypeGlAccounts"/>
+        <response name="error" type="view" value="EditCreditCardTypeGlAccounts"/>
+    </request-map>
     
     <!-- 
     **************
@@ -2005,7 +2260,6 @@ under the License.
     <view-map name="AcctgTransSearchResultPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransSearchResultPdf" content-type="application/pdf" encoding="none"/>
 
     <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
-    <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>
     <!-- <view-map name="CostCenters" type="screen" page="component://accounting/widget/CostScreens.xml#CostCenters"/>-->
     
     
@@ -2167,6 +2421,7 @@ under the License.
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="GlAccountTrialBalanceReportPdf" type="screenfop" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalanceReportPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/scipio/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>
 
     
     <!-- 
@@ -2213,7 +2468,6 @@ under the License.
     <view-map name="EditProductCategoryGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditProductCategoryGlAccounts"/>
     <view-map name="EditVarianceReasonGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditVarianceReasonGlAccounts"/>
     <view-map name="EditCreditCardTypeGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditCreditCardTypeGlAccounts"/>
-    <view-map name="EditOrganizationTaxAuthorityGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditOrganizationTaxAuthorityGlAccounts"/>
     <view-map name="FixedAssetTypeGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#FixedAssetTypeGlAccounts"/>
     <view-map name="ListGlAccountOrgPdf" type="screenfop" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="ListGlAccountOrgCsv" type="screencsv" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#ListGlAccountOrgCsv" content-type="text/csv" encoding="none"/>
@@ -2230,7 +2484,16 @@ under the License.
     <view-map name="EditPaymentGatewayConfig" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfig" type="screen"/>
     <view-map name="FindPaymentGatewayConfigTypes" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#FindPaymentGatewayConfigTypes" type="screen"/>
     <view-map name="EditPaymentGatewayConfigType" page="component://accounting/widget/scipio/settings/PaymentGatewayConfigScreens.xml#EditPaymentGatewayConfigType" type="screen"/>
-    
+
+    <view-map name="EditOrganizationTaxAuthorityGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/GlSetupScreens.xml#EditOrganizationTaxAuthorityGlAccounts"/>
+    <view-map name="FindTaxAuthority" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#FindTaxAuthority"/>
+    <view-map name="EditTaxAuthority" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthority"/>
+    <view-map name="EditTaxAuthorityCategories" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityCategories"/>
+    <view-map name="EditTaxAuthorityAssocs" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityAssocs"/>
+    <view-map name="EditTaxAuthorityGlAccounts" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityGlAccounts"/>
+    <view-map name="EditTaxAuthorityRateProducts" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityRateProducts"/>
+    <view-map name="ListTaxAuthorityParties" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#ListTaxAuthorityParties"/>
+    <view-map name="EditTaxAuthorityPartyInfo" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityPartyInfo"/>
     
     <!-- 
     **************

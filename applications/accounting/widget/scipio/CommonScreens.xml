@@ -133,7 +133,10 @@ under the License.
      <screen name="CommonGLDecorator">
         <section>
             <actions>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <entity-one entity-name="GlAccount" value-field="glAccount"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#CommonGLSideBar"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Chartofaccounts"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

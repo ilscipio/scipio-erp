@@ -145,7 +145,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="parentGlAccountId" title="${{uiLabelMap.CommonParent}">
+        <field name="parentGlAccountId" title="${uiLabelMap.CommonParent}">
             <drop-down allow-empty="true">
                 <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
                     <entity-order-by field-name="accountCode"/>

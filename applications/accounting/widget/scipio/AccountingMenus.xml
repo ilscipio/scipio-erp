@@ -26,7 +26,7 @@
             </condition>
             <link target="FindGatewayResponses" />
         </menu-item>-->
-        <menu-item name="Chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
+        <menu-item name="chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
             <link target="FindGlobalGlAccount" />
         </menu-item>
         <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
@@ -61,16 +61,19 @@
         </menu-item>  
         
         <!-- Other -->
-        <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
+        <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}">
             <link target="ImportExport" />
         </menu-item>
-        <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
+        <menu-item name="settings" title="${uiLabelMap.CommonSettings}">
             <link target="settings" />
         </menu-item>
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
+        <menu-item name="chartofaccounts">
+            <sub-menu name="CommonGL" include="CommonGLSideBar"/>
+        </menu-item>
         <menu-item name="FinAccount">
             <sub-menu name="FinAccount" include="FinAccountSideBar"/>
         </menu-item>
@@ -88,9 +91,6 @@
         </menu-item>
         <menu-item name="settings">
             <sub-menu name="Settings" include="SettingsSideBar"/>
-        </menu-item>
-       <menu-item name="chartofaccounts">
-            <sub-menu name="CommonGL" include="CommonGLSideBar"/>
         </menu-item>
     </menu>
     

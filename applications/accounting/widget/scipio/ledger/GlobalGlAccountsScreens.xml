@@ -21,6 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <!-- SCIPIO: Remove
     <screen name="GenericDecorator">
         <section>
             <actions>
@@ -29,10 +30,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- SCIPIO: TODO?: PERMISSIONS? -->
                         <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <label style="heading">${uiLabelMap[labelTitleProperty]}</label>
-                        <!-- Now call the SimpleScreen form -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -40,7 +39,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="CommonAccountDecorator">
+    <screen name="CommonGLDecorator">
         <section>
             <actions>
                 <set field="glAccountId" from-field="parameters.glAccountId"/>
@@ -49,36 +48,24 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <!-- SCIPIO: NOTE: the following check was already commented in stock ofbiz.
-                                TODO: review -->
-                            <!-- do check for CATALOG, _VIEW permission -->
-                            <!-- condition>
-                                <if-has-permission permission="CATALOG" action="_VIEW"/>
-                            </condition -->
                             <widgets>
                                 <include-menu name="GlAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                                 <label style="heading">${uiLabelMap[labelTitleProperty]} ${product.internalName} [${productId}]</label>
                                 <decorator-section-include name="body"/>
                             </widgets>
-                            <!--
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.XxxxViewPermissionError}</label>
-                            </fail-widgets>
-                            -->
                         </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+     -->
 
     <screen name="AssignGlAccount">
         <section>
             <actions>
                 <set field="titleProperty" value="AcctgAssignGlAccount"/>
-                <set field="activeSubMenuItem" value="Chartofaccounts"/>
-                <set field="activeSubMenuItem2" value="AssignGlAccount"/>
+                <set field="activeSubMenuItem" value="AssignGlAccount"/>
                 <set field="labelTitleProperty" value="AcctgAssignGlAccount"/>
 
                 <!-- <set field="accountId" from-field="parameters.accountId"/> -->
@@ -100,8 +87,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AcctgNavigateAccts"/>
-                <set field="activeSubMenuItem" value="Chartofaccounts"/>
-                <set field="activeSubMenuItem2" value="GlAccountNavigate"/>
+                <set field="activeSubMenuItem" value="GlAccountNavigate"/>
                 <set field="labelTitleProperty" value="AcctgNavigateAccts"/>
                 <!-- parameters includes requestAttributes and parameter map -->
                 <!-- requestParameters is just the parameter map -->
@@ -274,7 +260,7 @@ under the License.
                 <entity-one entity-name="GlAccount" value-field="glAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountDecorator">
+                <decorator-screen name="CommonGLDecorator">
                     <decorator-section name="body">
                         <include-form name="EditGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                     </decorator-section>

@@ -121,7 +121,7 @@
     **************
     -->
     <menu name="AccountsPayableSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="apmain" title="${uiLabelMap.AccountingAccountsPayable}" sort-mode="off"> 
+        <menu-item name="apmain" title="${uiLabelMap.CommonOverview}" sort-mode="off"> 
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="apmain" link-type="anchor"/>
         </menu-item>

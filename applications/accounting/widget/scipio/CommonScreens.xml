@@ -130,7 +130,6 @@ under the License.
     * Accounts Payable
     ***************
      -->
-     
      <screen name="CommonApDecorator">
         <section>
             <actions>
@@ -148,6 +147,17 @@ under the License.
     * Accounts Receivable
     ***************
      -->
+     <screen name="CommonArDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#AccountsReceivableSideBar"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- 
     ***************
@@ -472,6 +482,7 @@ under the License.
         <section>
             <actions>
                 <set field="activeSubMenuItem" value="Invoices"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#InvoiceSideBar" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>
                 </condition-to-field>              

@@ -538,6 +538,69 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: Migrated from AP -->
+    <screen name="CommissionRun">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindSalesInvoicesForCommissionRun"/>
+                <set field="activeSubMenuItem" value="commissionRun"/>
+                <set field="salesRepPartyList" type="List" from-field="parameters.partyIds"/>
+                <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/CommissionRun.groovy"/>
+                
+                <!-- asmslect parameters, must be prefixed by asm_ for setMultipleSelectJs.ftl -->
+                <set field="asm_multipleSelectForm"  value="CommissionRun"/>
+                <set field="asm_multipleSelect"  value="CommissionRun_partyId"/>
+                <set field="asm_formSize" value="700"/>
+                <set field="asm_listItemPercentOfForm" value="95"/>
+                <set field="asm_sortable" value="false"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="asm_title" value="${uiLabelMap.AccountingSelectPartiesForCommissionInvoice}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body"> 
+                        <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionRun" location="component://accounting/widget/invoices/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionRun.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommissionReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingCommissionReport"/>
+                <set field="activeSubMenuItem" value="commissionReport"/>
+                <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/CommissionReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="CommissionReport" location="component://accounting/widget/invoices/InvoiceForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ap/invoices/CommissionReport.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- SCIPIO: Form migration -->
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#invoiceHeader 

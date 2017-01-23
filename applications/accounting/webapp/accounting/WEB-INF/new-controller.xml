@@ -59,6 +59,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="apmain"/>
     </request-map>
+     <!-- Check for duplicates
     <request-map uri="listReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListReports"/>
@@ -81,7 +82,7 @@ under the License.
         <response name="success" type="request" value="PaymentGroupOverview"/>
         <response name="error" type="view" value="FindPurchaseInvoices"/>
     </request-map>
-    <!-- Check for duplicates
+   
     <request-map uri="findInvoices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindApInvoices"/>
@@ -110,10 +111,6 @@ under the License.
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="NewOutgoingPayment"/>
     </request-map>
-    <request-map uri="FindCommissions">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="CommissionReport"/>
-    </request-map>
     <request-map uri="newInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewPurchaseInvoice"/>
@@ -135,38 +132,95 @@ under the License.
     </request-map>
      -->
 
-    <!-- Vendor -->
-    <request-map uri="findVendors">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindVendors"/>
-    </request-map>
-    <request-map uri="editVendor">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditVendor"/>
-    </request-map>
-    <request-map uri="createVendor">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createVendor"></event>
-        <response name="success" type="view" value="FindVendors"/>
-        <response name="error" type="view" value="FindVendors"/>
-    </request-map>
-    <request-map uri="updateVendor">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateVendor"></event>
-        <response name="success" type="view" value="FindVendors"/>
-        <response name="error" type="view" value="FindVendors"/>
-    </request-map>
 
-    <!--PDF -->
-    <request-map uri="CommissionReport.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="CommissionReportPdf"/>
-    </request-map>
+
 
     <!-- 
     **************
     * Accounts Receivable 
     **************
+    -->
+    <!-- Request Mappings -->
+    <request-map uri="armain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="armain"/>
+    </request-map>
+
+
+    <!-- Duplicates 
+    <request-map uri="ListReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListReports"/>
+    </request-map>
+    
+    <request-map uri="findPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPayments"/>
+    </request-map>
+    <request-map uri="batchPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BatchPayments"/>
+    </request-map>
+    <request-map uri="createPaymentBatch">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="depositWithdrawPayments"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="BatchPayments"/>
+    </request-map>
+    <request-map uri="newPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingPayment"/>
+    </request-map>
+    <request-map uri="createPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="editPayment"/>
+        <response name="error" type="view" value="NewIncomingPayment"/>
+    </request-map>
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArInvoices"/>
+    </request-map>
+    <request-map uri="newInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewSalesInvoice"/>
+    </request-map>
+    <request-map uri="createInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoice"/>
+        <response name="success" type="request" value="editInvoice"/>
+        <response name="error" type="view" value="NewSalesInvoice"/>
+    </request-map>
+    <request-map uri="FindArInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArInvoices"/>
+    </request-map>
+    <request-map uri="NewSalesInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewSalesInvoice"/>
+    </request-map>
+    <request-map uri="FindArPaymentGroups">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArPaymentGroups"/>
+    </request-map>
+    <request-map uri="massChangePaymentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangePaymentStatus"/>
+        <response name="success" type="view" value="BatchPayments"/>
+        <response name="error" type="view" value="BatchPayments"/>
+    </request-map>
+    <request-map uri="massChangeInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangeInvoiceStatus"/>
+        <response name="success" type="view" value="FindArInvoices"/>
+        <response name="error" type="view" value="FindArInvoices"/>
+    </request-map>
+    <request-map uri="cancelPaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPaymentBatch"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="FindArPaymentGroups"/>
+    </request-map>
     -->
     
     <!-- 
@@ -647,6 +701,16 @@ under the License.
         <event type="service" invoke="removeBudgetReview"/>
         <response name="success" type="view" value="BudgetReviews"/>
         <response name="error" type="view" value="BudgetReviews"/>
+    </request-map>
+    
+    <!-- Comissions -->
+    <request-map uri="FindCommissions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CommissionReport"/>
+    </request-map>
+    <request-map uri="CommissionReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CommissionReportPdf"/>
     </request-map>
     
     <!-- 
@@ -2528,6 +2592,28 @@ under the License.
         <response name="error" type="view" value="EditCreditCardTypeGlAccounts"/>
     </request-map>
     
+        <!-- Vendor -->
+    <request-map uri="findVendors">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindVendors"/>
+    </request-map>
+    <request-map uri="editVendor">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditVendor"/>
+    </request-map>
+    <request-map uri="createVendor">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVendor"></event>
+        <response name="success" type="view" value="FindVendors"/>
+        <response name="error" type="view" value="FindVendors"/>
+    </request-map>
+    <request-map uri="updateVendor">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateVendor"></event>
+        <response name="success" type="view" value="FindVendors"/>
+        <response name="error" type="view" value="FindVendors"/>
+    </request-map>
+    
     <!-- 
     **************
     * Shared Requests
@@ -2597,19 +2683,32 @@ under the License.
     <view-map name="NewPurchaseInvoice" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#NewPurchaseInvoice"/>
     <view-map name="FindApPayments" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPayments"/>
     <view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewOutgoingPayment"/>
-    <view-map name="CommissionReport" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#CommissionReport"/>
     <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPaymentGroups"/>-->
-
-    <!-- PDFs  -->
-    <view-map name="CommissionReportPdf" type="screenfop" page="component://accounting/widget/scipip/ap/ApPrintScreens.xml#CommissionReportPdf" content-type="application/pdf" encoding="none"/>
-
-    <!-- Vendor Mappings -->
-    <view-map name="FindVendors" type="screen" page="component://accounting/widget/scipio/ap/APScreens.xml#FindVendors"/>
-    <view-map name="EditVendor" type="screen" page="component://accounting/widget/scipio/ap/APScreens.xml#EditVendor"/>
 
     <!--
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupInvoice"/>
     <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupPayment"/>-->
+    
+    <!--
+    **************
+    * Accounts Receivable
+    **************
+     -->
+    
+    <view-map name="armain" type="screen" page="component://accounting/widget/scipio/ar/ARScreens.xml#ARDashboard"/>
+    
+    <!-- 
+    <view-map name="ListReports" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#ListReports"/>
+    <view-map name="FindPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindPayments"/>
+    <view-map name="BatchPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#BatchPayments"/>
+    <view-map name="FindArPaymentGroups" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindArPaymentGroups"/>
+    <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingPayment"/>
+    <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#FindArInvoices"/>
+    <view-map name="NewSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesInvoice"/>
+
+    
+    <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>
+    <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupPayment"/>-->
     
     <!-- 
     **************
@@ -2711,7 +2810,8 @@ under the License.
     <view-map name="BudgetOverview" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetOverview"/>
     <view-map name="EditBudgetItems" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#EditBudgetItems"/>
     <view-map name="BudgetRoles" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetRoles"/>
-    <view-map name="BudgetReviews" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetReviews"/> 
+    <view-map name="BudgetReviews" type="screen" page="component://accounting/widget/scipio/controlling/BudgetScreens.xml#BudgetReviews"/>     
+    
     
     <!-- 
     **************
@@ -2784,6 +2884,10 @@ under the License.
 
     <view-map name="CommissionRun" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#CommissionRun"/> <!-- Migrated from ap/InvoiceScreens -->
     
+    <!-- Commission -->
+    <view-map name="CommissionReport" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#CommissionReport"/>
+    <view-map name="CommissionReportPdf" type="screenfop" page="component://accounting/widget/scipip/ap/ApPrintScreens.xml#CommissionReportPdf" content-type="application/pdf" encoding="none"/>
+
     
     <!-- 
     **************
@@ -2914,6 +3018,10 @@ under the License.
     <view-map name="EditTaxAuthorityRateProducts" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityRateProducts"/>
     <view-map name="ListTaxAuthorityParties" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#ListTaxAuthorityParties"/>
     <view-map name="EditTaxAuthorityPartyInfo" type="screen" page="component://accounting/widget/scipio/settings/TaxAuthorityScreens.xml#EditTaxAuthorityPartyInfo"/>
+  
+    <!-- Vendor Mappings -->
+    <view-map name="FindVendors" type="screen" page="component://accounting/widget/scipio/settings/SettingScreens.xml#FindVendors"/>
+    <view-map name="EditVendor" type="screen" page="component://accounting/widget/scipio/settings/SettingScreens.xml#EditVendor"/>
     
     <!-- 
     **************

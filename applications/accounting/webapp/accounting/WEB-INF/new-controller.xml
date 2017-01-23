@@ -2885,8 +2885,8 @@ under the License.
     <view-map name="CommissionRun" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#CommissionRun"/> <!-- Migrated from ap/InvoiceScreens -->
     
     <!-- Commission -->
-    <view-map name="CommissionReport" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#CommissionReport"/>
-    <view-map name="CommissionReportPdf" type="screenfop" page="component://accounting/widget/scipip/ap/ApPrintScreens.xml#CommissionReportPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="CommissionReport" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#CommissionReport"/>
+    <view-map name="CommissionReportPdf" type="screenfop" page="component://accounting/widget/scipio/AccountingPrintScreens.xml#CommissionReportPdf" content-type="application/pdf" encoding="none"/>
 
     
     <!-- 

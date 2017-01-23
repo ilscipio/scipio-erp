@@ -481,7 +481,7 @@ under the License.
     <screen name="CommonInvoiceDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="Invoices"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="ListInvoices"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/scipio/AccountingMenus.xml#InvoiceSideBar" />
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="acctgInvoicePermissionCheck" main-action="VIEW"/>

@@ -31,7 +31,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -562,7 +562,7 @@ under the License.
                         <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJs.ftl"/></html></platform-specific>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="CommissionRun" location="component://accounting/widget/invoices/InvoiceForms.xml"/>
+                                <include-form name="CommissionRun" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <platform-specific>
@@ -588,7 +588,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
-                                <include-form name="CommissionReport" location="component://accounting/widget/invoices/InvoiceForms.xml"/>
+                                <include-form name="CommissionReport" location="component://accounting/widget/scipio/invoice/InvoiceForms.xml"/>
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <platform-specific>

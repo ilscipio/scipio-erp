@@ -99,7 +99,7 @@ under the License.
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
                             </container> -->
-                            <include-form name="FindAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="FindAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.CommonSearchResults}">
                             <section>
@@ -139,7 +139,7 @@ under the License.
                                         </link>
                                 </widgets>
                             </section>
-                            <include-form name="ListAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="ListAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -159,7 +159,7 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingAcctgTransEntries}">
-                            <include-form name="FindAcctgTransEntries" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="FindAcctgTransEntries" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                         <section>
                             <condition>
@@ -221,7 +221,7 @@ under the License.
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
-                                    <include-form name="ListFindAcctgTransEntriesByAccount" location="component://accounting/widget/GlForms.xml"/>
+                                    <include-form name="ListFindAcctgTransEntriesByAccount" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -268,7 +268,7 @@ under the License.
                                         <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         <parameter param-name="paymentId" from-field="parameters.paymentId"/>
                                     </link>
-                                    <include-form name="ListFindAcctgTransEntriesByDate" location="component://accounting/widget/GlForms.xml"/>
+                                    <include-form name="ListFindAcctgTransEntriesByDate" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -290,7 +290,7 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-form name="CreateAcctgTransAndEntries" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="CreateAcctgTransAndEntries" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -330,21 +330,21 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <screenlet title="${uiLabelMap.AccountingTransactionHeader}">
-                                            <include-form name="ViewAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                                            <include-form name="ViewAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                         </screenlet>
                                         <screenlet title="${uiLabelMap.PageTitleViewTransactionEntries}">
-                                            <include-form name="ViewAcctgTransEntries" location="component://accounting/widget/GlForms.xml"/>
+                                            <include-form name="ViewAcctgTransEntries" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
                                        <screenlet title="${uiLabelMap.AccountingTransactionHeader}">
-                                            <include-form name="EditAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                                            <include-form name="EditAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                         </screenlet>
                                         <screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
-                                            <include-form name="EditAcctgTransEntry" location="component://accounting/widget/GlForms.xml"/>
+                                            <include-form name="EditAcctgTransEntry" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                         </screenlet>
                                         <screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
-                                            <include-form name="ListAcctgTransEntries" location="component://accounting/widget/GlForms.xml"/>
+                                            <include-form name="ListAcctgTransEntries" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                                         </screenlet>
                                     </fail-widgets>
                                 </section>
@@ -374,7 +374,7 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-form name="ListUnpostedAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="ListUnpostedAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -413,7 +413,7 @@ under the License.
                         <condition><if-has-permission permission="ACCOUNTING" action="_PRINT_CHECKS"/></condition>
                         <widgets>
                             <screenlet>
-                                <include-form name="ListChecksToPrint" location="component://accounting/widget/PaymentForms.xml"/>
+                                <include-form name="ListChecksToPrint" location="component://accounting/widget/scipio/ledger/PaymentForms.xml"/>
                             </screenlet>
                         </widgets>
                         <fail-widgets>
@@ -460,7 +460,7 @@ under the License.
                         </condition>
                         <widgets>
                             <screenlet>
-                                <include-form name="ListChecksToSend" location="component://accounting/widget/PaymentForms.xml"/>
+                                <include-form name="ListChecksToSend" location="component://accounting/widget/scipio/ledger/PaymentForms.xml"/>
                             </screenlet>
                         </widgets>
                         <fail-widgets>
@@ -484,7 +484,7 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                            <include-form name="CreateAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="CreateAcctgTrans" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -505,10 +505,10 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSearchOptions}">
-                            <include-form name="FindGlAccountReconciliation" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="FindGlAccountReconciliation" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.CommonSearchResults}">
-                            <include-form name="ListGlAccountReconciliation" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="ListGlAccountReconciliation" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -528,10 +528,10 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingEditAcctRecon}">
-                            <include-form name="EditGlReconciliation" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="EditGlReconciliation" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingEditAcctRecon}">
-                            <include-form name="ListGlReconciliationEntries" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="ListGlReconciliationEntries" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -551,10 +551,10 @@ under the License.
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSearchOptions}">
-                            <include-form name="FindGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="FindGlAccountReconciliations" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.CommonSearchResults}">
-                            <include-form name="ListGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                            <include-form name="ListGlAccountReconciliations" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                         </screenlet>                     
                     </decorator-section>
                 </decorator-screen>
@@ -570,7 +570,7 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <include-form name="AcctgTransSearchResultsCsv" location="component://accounting/widget/GlForms.xml"/>
+                    <include-form name="AcctgTransSearchResultsCsv" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -584,7 +584,7 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <include-form name="AcctgTransEntriesSearchResultsCsv" location="component://accounting/widget/GlForms.xml"/>
+                    <include-form name="AcctgTransEntriesSearchResultsCsv" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                 </container>
             </widgets>
         </section>
@@ -687,8 +687,8 @@ under the License.
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <include-form name="AcctgTransDetailReportPdf" location="component://accounting/widget/GlForms.xml"/>
-                        <include-form name="AcctgTransEntriesDetailReportPdf" location="component://accounting/widget/GlForms.xml"/>
+                        <include-form name="AcctgTransDetailReportPdf" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
+                        <include-form name="AcctgTransEntriesDetailReportPdf" location="component://accounting/widget/scipio/ledger/GlForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

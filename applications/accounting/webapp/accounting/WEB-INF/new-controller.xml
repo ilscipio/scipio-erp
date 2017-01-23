@@ -2650,12 +2650,12 @@ under the License.
     <view-map name="ListGlAccountEntries" type="screen" page="component://accounting/widget/scipio/ledger/GlobalGlAccountsScreens.xml#ListGlAccountEntries"/>
     <view-map name="ListAcctgTransEntries" type="screen" page="component://accounting/widget/scipio/ledger/GlobalGlAccountsScreens.xml#ListAcctgTransEntries"/>
  
-    <view-map name="AcctgTransEntriesSearchResultsCsv" type="screencsv" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransEntriesSearchResultsCsv" content-type="text/csv" encoding="none"/>
-    <view-map name="AcctgTransEntriesSearchResultsPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransEntriesSearchResultsPdf" content-type="application/pdf" encoding="none"/>
-    <view-map name="AcctgTransSearchResultsCsv" type="screencsv" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransSearchResultsCsv" content-type="text/csv" encoding="none"/>
-    <view-map name="AcctgTransSearchResultPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransSearchResultPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="AcctgTransEntriesSearchResultsCsv" type="screencsv" page="component://accounting/widget/scipio/ledger/GlScreens.xml#AcctgTransEntriesSearchResultsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="AcctgTransEntriesSearchResultsPdf" type="screenfop" page="component://accounting/widget/scipio/ledger/GlScreens.xml#AcctgTransEntriesSearchResultsPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="AcctgTransSearchResultsCsv" type="screencsv" page="component://accounting/widget/scipio/ledger/GlScreens.xml#AcctgTransSearchResultsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="AcctgTransSearchResultPdf" type="screenfop" page="component://accounting/widget/scipio/ledger/GlScreens.xml#AcctgTransSearchResultPdf" content-type="application/pdf" encoding="none"/>
 
-    <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component:/accounting/widget/scipio/ledger/GlScreens.xml.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/scipio/ledger/GlScreens.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
 
     <!-- Party Accounts -->
     <view-map name="PartyAccountsSummary" type="screen" page="component://accounting/widget/scipio/ledger/GlScreens.xml#PartyAccountsSummary"/>

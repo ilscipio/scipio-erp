@@ -464,7 +464,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+   
     <screen name="FindPurchaseInvoicesByDueDate">
         <section>
             <actions>
@@ -497,9 +497,129 @@ under the License.
         </section>
     </screen>
     
+    <!-- 
+    *****************
+    * Accounts Payable
+    *****************
+     -->
+     
+     <screen name="FindApPaymentGroups">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindApPaymentGroups"/>
+                <set field="activeSubMenuItem" value="apPaymentGroups"/>
+                <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>
+                        <condition-expr field-name="paymentGroupTypeId" value="CHECK_RUN"/>
+                    </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonApDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindApPaymentGroups" location="component://accounting/widget/scipio/ap/VendorForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPaymentGroup" location="component://accounting/widget/scipio/payments/PaymentGroupForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section> 
+                </decorator-screen>   
+            </widgets>
+        </section>
+    </screen>
+     
+     <!-- 
+     ****************
+     * Accounts Receivable
+     ****************
+      -->
+      
+      <screen name="BatchPayments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleDepositPaymentsAndCreateBatch"/>
+                <set field="activeSubMenuItem" value="batchPayments"/>
+                <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+                <set field="cardType" from-field="parameters.cardType"/>
+                <set field="fromDate" type="Timestamp" from-field="parameters.fromDate"/>
+                <set field="thruDate" type="Timestamp" from-field="parameters.thruDate"/>
+                <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <script location="component://accounting/webapp/ar/WEB-INF/actions/BatchPayments.groovy"/>
+                <entity-and entity-name="FinAccount" list="finAccounts">
+                    <field-map field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindBatchPayments" location="component://accounting/widget/scipio/payments/PaymentForms.xml"/>
+                            </decorator-section> 
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/ar/payment/batchPayments.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewIncomingPayment">
+       <section>
+            <actions>
+                <set field="titleProperty" value="AccountingNewPaymentIncoming"/>
+                <set field="activeSubMenuItem" value="newPayment"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="CommonArDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form name="NewPaymentIn" location="component://accounting/widget/scipio/payments/PaymentForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindArPaymentGroups">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindArPaymentGroups"/>
+                <set field="activeSubMenuItem" value="arPaymentGroups"/>
+                <entity-condition entity-name="PaymentGroup" list="paymentGroupList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="paymentGroupId" from-field="parameters.paymentGroupId" ignore-if-empty="true"/>
+                        <condition-expr field-name="paymentGroupTypeId" value="BATCH_PAYMENT"/>
+                    </condition-list>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonArDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindArPaymentGroups" location="component://accounting/widget/scipio/payments/PaymentForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPaymentGroup" location="component://accounting/widget/scipio/payments/PaymentGroupForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section> 
+                </decorator-screen>   
+            </widgets>
+        </section>
+    </screen>
     
-    <!-- SCIPIO: Form migration -->
     
+    <!-- SCIPIO: Form migration --> 
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/payments/PaymentForms.xml#paymentHeader -->
     <screen name="ScipioPaymentInfo">
         <section>

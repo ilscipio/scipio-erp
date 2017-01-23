@@ -514,4 +514,31 @@ under the License.
         <field name="paidAmount" title="${uiLabelMap.CommonPaid}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
+    
+    <!-- 
+    *******************
+    * Accounts Payable
+    *******************
+     -->
+    
+    <!-- 
+    *******************
+    * Accounts Receivable
+    *******************
+     -->
+     
+     <form name="FindArPayments" type="single" target="findPayments" extends="FindPayments" extends-resource="component://accounting/widget/scipio/payments/PaymentForms.xml">
+        <field name="parentTypeId"><hidden value="RECEIPT"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+    </form>
+    <form name="FindArPaymentGroups" target="FindArPaymentGroups" extends="FindPaymentGroup" extends-resource="component://accounting/widget/scipio/payments/PaymentGroupForms.xml">
+        <field name="paymentGroupTypeId"><hidden value="BATCH_PAYMENT"/></field>
+    </form>
+     
 </forms>

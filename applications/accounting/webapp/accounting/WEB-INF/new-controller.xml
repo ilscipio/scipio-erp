@@ -59,11 +59,30 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="apmain"/>
     </request-map>
-     <!-- Check for duplicates
-    <request-map uri="listReports">
+    
+    <request-map uri="FindApPaymentGroups">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListReports"/>
+        <response name="success" type="view" value="FindApPaymentGroups"/>
     </request-map>
+    <request-map uri="massChangeInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangeInvoiceStatus"/>
+        <response name="success" type="view" value="FindPurchaseInvoices"/>
+    </request-map>
+    <request-map uri="cancelCheckRunPayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelCheckRunPayments"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="FindApPaymentGroups"/>
+    </request-map>
+    
+    <request-map uri="listAPReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAPReports"/>
+    </request-map>
+    
+     <!-- Check for duplicates
+    
     <request-map uri="FindPurchaseInvoices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPurchaseInvoices"/>
@@ -115,21 +134,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewPurchaseInvoice"/>
     </request-map>
-    <request-map uri="FindApPaymentGroups">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindApPaymentGroups"/>
-    </request-map>
-    <request-map uri="massChangeInvoiceStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="massChangeInvoiceStatus"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
-    </request-map>
-    <request-map uri="cancelCheckRunPayments">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="cancelCheckRunPayments"/>
-        <response name="success" type="view" value="PaymentGroupOverview"/>
-        <response name="error" type="view" value="FindApPaymentGroups"/>
-    </request-map>
+    
      -->
 
 
@@ -145,13 +150,38 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="armain"/>
     </request-map>
+    
+    <request-map uri="ListARReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListARReports"/>
+    </request-map>
 
+
+    <request-map uri="FindArPaymentGroups">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArPaymentGroups"/>
+    </request-map>
+    <request-map uri="massChangePaymentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangePaymentStatus"/>
+        <response name="success" type="view" value="BatchPayments"/>
+        <response name="error" type="view" value="BatchPayments"/>
+    </request-map>
+    <request-map uri="massChangeInvoiceStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangeInvoiceStatus"/>
+        <response name="success" type="view" value="FindArInvoices"/>
+        <response name="error" type="view" value="FindArInvoices"/>
+    </request-map>
+    <request-map uri="cancelPaymentGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPaymentBatch"/>
+        <response name="success" type="view" value="PaymentGroupOverview"/>
+        <response name="error" type="view" value="FindArPaymentGroups"/>
+    </request-map>
 
     <!-- Duplicates 
-    <request-map uri="ListReports">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListReports"/>
-    </request-map>
+    
     
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
@@ -195,32 +225,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindArInvoices"/>
     </request-map>
+    
     <request-map uri="NewSalesInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewSalesInvoice"/>
     </request-map>
-    <request-map uri="FindArPaymentGroups">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindArPaymentGroups"/>
-    </request-map>
-    <request-map uri="massChangePaymentStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="massChangePaymentStatus"/>
-        <response name="success" type="view" value="BatchPayments"/>
-        <response name="error" type="view" value="BatchPayments"/>
-    </request-map>
-    <request-map uri="massChangeInvoiceStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="massChangeInvoiceStatus"/>
-        <response name="success" type="view" value="FindArInvoices"/>
-        <response name="error" type="view" value="FindArInvoices"/>
-    </request-map>
-    <request-map uri="cancelPaymentGroup">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="cancelPaymentBatch"/>
-        <response name="success" type="view" value="PaymentGroupOverview"/>
-        <response name="error" type="view" value="FindArPaymentGroups"/>
-    </request-map>
+    
+
+
     -->
     
     <!-- 
@@ -2676,14 +2688,16 @@ under the License.
      -->
      
     <view-map name="apmain" type="screen" page="component://accounting/widget/scipio/ap/APScreens.xml#APDashboard"/>
+    <view-map name="ListAPReports" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#ListAPReports"/>
+    <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#FindApPaymentGroups"/>
+    
     <!-- 
-    <view-map name="ListReports" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#ListReports"/>
     <view-map name="FindPurchaseInvoices" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#FindPurchaseInvoices"/>
     <view-map name="FindApInvoices" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#FindApInvoices"/>
     <view-map name="NewPurchaseInvoice" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#NewPurchaseInvoice"/>
     <view-map name="FindApPayments" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPayments"/>
     <view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewOutgoingPayment"/>
-    <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPaymentGroups"/>-->
+    -->
 
     <!--
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ap/LookupScreens.xml#LookupInvoice"/>
@@ -2696,15 +2710,17 @@ under the License.
      -->
     
     <view-map name="armain" type="screen" page="component://accounting/widget/scipio/ar/ARScreens.xml#ARDashboard"/>
+    <view-map name="FindArPaymentGroups" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#FindArPaymentGroups"/>
+    <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#NewIncomingPayment"/>
+    <view-map name="BatchPayments" type="screen" page="component://accounting/widget/scipio/payments/PaymentScreens.xml#BatchPayments"/>
+    <view-map name="NewSalesInvoice" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#NewSalesInvoice"/>
+    <view-map name="ListARReports" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#ListARReports"/>
+    <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/scipio/invoice/InvoiceScreens.xml#FindArInvoices"/>
     
     <!-- 
-    <view-map name="ListReports" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#ListReports"/>
     <view-map name="FindPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindPayments"/>
-    <view-map name="BatchPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#BatchPayments"/>
-    <view-map name="FindArPaymentGroups" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindArPaymentGroups"/>
-    <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingPayment"/>
-    <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#FindArInvoices"/>
-    <view-map name="NewSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesInvoice"/>
+    
+    
 
     
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>

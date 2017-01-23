@@ -538,7 +538,11 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Migrated from AP -->
+    <!-- 
+    ********************
+    * Accounts Payable
+    ********************
+     -->
     <screen name="CommissionRun">
         <section>
             <actions>
@@ -601,6 +605,89 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- Migrated from AP/InvoiceScreens.xml -->
+    <screen name="ListAPReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingArPageTitleListReports"/>
+                <set field="activeSubMenuItem" value="apReports"/>
+                <set field="invoiceTypeId" value="PURCHASE_INVOICE"/>
+                <set field="organizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" default-value="${defaultOrganizationPartyId}"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonApDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingPastDueInvoices}: (${PastDueInvoicestotalAmount})" navigation-form-name="ListReports">
+                            <section>
+                                <actions>
+                                    <set field="invoices" from-field="PastDueInvoices"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/scipio/Invoice/InvoiceScreens.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})" navigation-form-name="ListReports">
+                            <section>
+                                <actions>
+                                    <set field="invoices" from-field="InvoicesDueSoon"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/scipio/Invoice/InvoiceScreens.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- 
+    *******************
+    * Accounts Receivable
+    *******************
+     -->
+     <screen name="ListARReports">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="arReports"/>
+                <set field="titleProperty" value="AccountingArPageTitleListReports"/>
+                <set field="invoiceTypeId" value="SALES_INVOICE"/>
+                <set field="organizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" default-value="${defaultOrganizationPartyId}"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonArDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingPastDueInvoices}: (${PastDueInvoicestotalAmount})">
+                            <section>
+                                <actions>
+                                    <set field="invoices" from-field="PastDueInvoices"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/scipio/invoice/InvoiceScreens.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingInvoicesDueSoon}: (${InvoicesDueSoonTotalAmount})">
+                            <section>
+                                <actions>
+                                    <set field="invoices" from-field="InvoicesDueSoon"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="ScipioInvoices"  location="component://accounting/widget/scipio/invoice/InvoiceScreens.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
     <!-- SCIPIO: Form migration -->
     <!-- SCIPIO: Form widget replacement: component://accounting/widget/scipio/invoice/InvoiceForms.xml#invoiceHeader 

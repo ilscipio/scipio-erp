@@ -141,7 +141,7 @@
             <link target="findVendors"/>
         </menu-item>
         <menu-item name="apReports" title="${uiLabelMap.AccountingReports}">
-            <link target="listReports"/>
+            <link target="listAPReports"/>
             <!-- <sub-menu name="ApReport" include="ApReportSideBar"/>-->
         </menu-item>
     </menu>
@@ -207,7 +207,7 @@
             <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
         </menu-item>
         <menu-item name="arReports" title="${uiLabelMap.AccountingReports}">
-            <link target="ListReports"/>
+            <link target="ListARReports"/>
         </menu-item>
     </menu>
     

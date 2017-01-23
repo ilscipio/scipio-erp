@@ -520,6 +520,8 @@ under the License.
     * Accounts Payable
     *******************
      -->
+     
+
     
     <!-- 
     *******************
@@ -527,7 +529,7 @@ under the License.
     *******************
      -->
      
-     <form name="FindArPayments" type="single" target="findPayments" extends="FindPayments" extends-resource="component://accounting/widget/scipio/payments/PaymentForms.xml">
+     <form name="FindArPayments" type="single" target="findArPayments" extends="FindPayments" extends-resource="component://accounting/widget/scipio/payments/PaymentForms.xml">
         <field name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">

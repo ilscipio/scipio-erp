@@ -125,21 +125,22 @@
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="apmain" link-type="anchor"/>
         </menu-item>
-        <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}">
+        <menu-item name="findApInvoices" title="${uiLabelMap.AccountingInvoicesMenu}">
             <link target="FindApInvoices"/>
             <!-- <sub-menu name="Invoice" include="ApInvoiceSideBar"/>-->
         </menu-item>
-        <menu-item name="appayments" title="${uiLabelMap.AccountingPaymentsMenu}">
-            <link target="findPayments"/>
+        <menu-item name="findApPayments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="FindApPayments"/>
             <!-- <sub-menu name="APPayment" include="ApPaymentSideBar"/> -->
         </menu-item>
         <menu-item name="apPaymentGroups" title="${uiLabelMap.AccountingApPaymentGroupMenu}">
             <link target="FindApPaymentGroups"/>
             <!--<sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/> -->
         </menu-item>
+        <!--
         <menu-item name="apfindVendors" title="${uiLabelMap.AccountingVendors}">
-            <link target="findVendors"/>
-        </menu-item>
+            <link target="findApVendors"/>
+        </menu-item>-->
         <menu-item name="apReports" title="${uiLabelMap.AccountingReports}">
             <link target="listAPReports"/>
             <!-- <sub-menu name="ApReport" include="ApReportSideBar"/>-->
@@ -170,15 +171,6 @@
         </menu-item>
     </menu>
     
-    <menu name="ApReportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="viewInvoices">
-        <include-elements menu-name="ApReportTabBar" recursive="includes-only" />
-    </menu>
-    
-    <menu name="ApPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="PaymentTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
-    </menu>
-    
     <menu name="ApPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ApPaymentTabBar" recursive="includes-only" />
         <include-elements menu-name="PaymentSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
@@ -196,15 +188,15 @@
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="armain" link-type="anchor"/>
         </menu-item>
-        <menu-item name="arinvoices" title="${uiLabelMap.AccountingInvoicesMenu}">
-            <link target="findInvoices"/>
+        <menu-item name="findArInvoices" title="${uiLabelMap.AccountingInvoicesMenu}">
+            <link target="findArInvoices"/>
         </menu-item>
-        <menu-item name="arPayments" title="${uiLabelMap.AccountingPaymentsMenu}">
-            <link target="findPayments"/>
+        <menu-item name="findArPayments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="findArPayments"/>
         </menu-item>
         <menu-item name="arPaymentGroups" title="${uiLabelMap.AccountingArPaymentGroupMenu}">
             <link target="FindArPaymentGroups"/>
-            <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
+            <!-- <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/> -->
         </menu-item>
         <menu-item name="arReports" title="${uiLabelMap.AccountingReports}">
             <link target="ListARReports"/>

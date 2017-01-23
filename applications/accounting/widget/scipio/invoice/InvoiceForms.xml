@@ -544,7 +544,58 @@ under the License.
         <field name="partyIdTo"><ignored/></field>
     </form>
     
-    <!-- SCIPIO: Migrated from AP -->
+    <!-- 
+    ************
+    * Accounts Payable
+    ************
+     -->
+      <form name="FindApInvoices" type="single" target="FindApInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml">
+        <actions>
+            <entity-condition entity-name="InvoiceType" list="invoiceTypeList">
+                <condition-list combine="or">
+                    <condition-expr field-name="parentTypeId" value="PURCHASE_INVOICE"/>
+                    <condition-expr field-name="invoiceTypeId" value="PURCHASE_INVOICE"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down>
+                <list-options key-name="invoiceTypeId" list-name="invoiceTypeList" description="${description}"/>
+            </drop-down>
+        </field>
+    </form>
+    
+    <form name="FindPurchaseInvoices" type="single" target="FindPurchaseInvoices">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+            <entity-condition entity-name="InvoiceType" list="invoiceTypeList">
+                <condition-list combine="or">
+                    <condition-expr field-name="parentTypeId" value="PURCHASE_INVOICE"/>
+                    <condition-expr field-name="invoiceTypeId" value="PURCHASE_INVOICE"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingVendorParty}" position="1"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="fromInvoiceDate" position="1"><date-time/></field>
+        <field name="thruInvoiceDate" position="2"><date-time/></field>
+        <field name="fromDueDate" position="1"><date-time/></field>
+        <field name="thruDueDate" position="2"><date-time/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" position="1">
+            <drop-down>
+                <list-options key-name="invoiceTypeId" list-name="invoiceTypeList" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
+    </form>
+     
     <form name="CommissionRun" type="single" target="CommissionRun">
         <field name="partyIds" field-name="partyId" title="${uiLabelMap.PartyPartyId}">
             <drop-down allow-multiple="true" allow-empty="true">
@@ -573,5 +624,27 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" position="1"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- 
+    **************
+    * Accounts Receivable
+    **************
+     -->
+     
+     <form name="FindArInvoices" type="single" target="findArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" default-position-span="1">
+        <actions>
+            <entity-condition entity-name="InvoiceType" list="invoiceTypeList">
+                <condition-list combine="or">
+                    <condition-expr field-name="parentTypeId" value="SALES_INVOICE"/>
+                    <condition-expr field-name="invoiceTypeId" value="SALES_INVOICE"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" position="1">
+            <drop-down>
+                <list-options key-name="invoiceTypeId" list-name="invoiceTypeList" description="${description}"/>
+            </drop-down>
+        </field>
     </form>
 </forms>

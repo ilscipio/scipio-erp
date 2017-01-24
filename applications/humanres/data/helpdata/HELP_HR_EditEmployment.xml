@@ -24,9 +24,9 @@ License.
    one.</para>
    <para>To create a new employment relationship between Company and an employee</para>
    <itemizedlist>
-   		<listitem><para>Select the Employee Party Id</para></listitem>
-     	<listitem><para>Enter the start date for the employment (e.g. Hire Date)</para></listitem>
-  		<listitem><para>Click Create</para></listitem>
+      <listitem><para>Select the Employee Party Id</para></listitem>
+      <listitem><para>Enter the start date for the employment (e.g. Hire Date)</para></listitem>
+      <listitem><para>Click Create</para></listitem>
   </itemizedlist>
   
   <para>Once created the employment detail screen will be displayed where you can update

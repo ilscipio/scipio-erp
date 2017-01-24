@@ -4,6 +4,7 @@
 <@script>
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>EditGlobalGlAccount</@ofbizUrl>';
     var assignGlAccountBaseUrl = '<@ofbizUrl escapeAs='js'>AssignGlAccount</@ofbizUrl>';
+    var accountTransactionBaseUrl = '<@ofbizUrl escapeAs='js'>FindAcctgTrans</@ofbizUrl>';
     
     
     function makeNewPageUrl($node) {
@@ -28,6 +29,15 @@
             organizationPartyId: '${organizationPartyId!""}'
         });
         return editorUrl;
+    }    
+    
+    function makeGlAccountTransactionPageUrl($node) {
+        var path = $node.data["path"]; //$node.a_attr.href
+        var editorUrl = accountTransactionBaseUrl + '?' + $.param({
+            glAccountId: $node.data["glAccountId"],
+            organizationPartyId: '${organizationPartyId!""}'
+        });
+        return editorUrl;
     }       
                             
     <#-- Function to update the action menu. Will generate new menu items based on selected option -->
@@ -38,7 +48,8 @@
                 newOptions = {
                   "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeNewPageUrl($node),
                   "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeEditPageUrl($node),
-                  "${escapeVal(uiLabelMap.AcctgAssignGlAccount, 'js')}":makeAssignGlAccountPageUrl($node)
+                  "${escapeVal(uiLabelMap.AcctgAssignGlAccount, 'js')}":makeAssignGlAccountPageUrl($node),
+                  "${escapeVal(uiLabelMap.AccountingAcctgTrans, 'js')}":makeGlAccountTransactionPageUrl($node)
                 };
             $el.empty(); // remove old options
             $.each(newOptions, function(key,value) {

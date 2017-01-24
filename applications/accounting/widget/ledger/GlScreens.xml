@@ -110,6 +110,7 @@ under the License.
                                         <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="AcctgTransSearchResultsCsv.csv">
                                             <parameter param-name="organizationPartyId"/>
                                             <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
+                                            <parameter param-name="glAccountId" from-field="parameters.glAccountId"/>
                                             <parameter param-name="productId" from-field="parameters.productId"/>
                                             <parameter param-name="isPosted" from-field="parameters.isPosted"/>
                                             <parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
@@ -125,6 +126,7 @@ under the License.
                                         <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_run_sys} ${styles.action_export}" target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
                                             <parameter param-name="organizationPartyId"/>
                                             <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
+                                            <parameter param-name="glAccountId" from-field="parameters.glAccountId"/>
                                             <parameter param-name="productId" from-field="parameters.productId"/>
                                             <parameter param-name="isPosted" from-field="parameters.isPosted"/>
                                             <parameter param-name="invoiceId" from-field="parameters.invoiceId"/>

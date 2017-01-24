@@ -354,6 +354,13 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="glAccountId" title="${uiLabelMap.FormFieldTitle_glAccountId}" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="GlAccount" description="${accountCode} ${accountName}">
+                    <entity-order-by field-name="glAccountId"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -393,6 +400,7 @@ under the License.
                 <condition-list>
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
                     <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId" ignore-if-empty="true"/>
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>

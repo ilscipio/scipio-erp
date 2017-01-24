@@ -29,7 +29,7 @@ under the License.
         <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
         <init-param>
             <param-name>matchPattern</param-name>
-            <param-value>^/webtools$</param-value>
+            <param-value>^/ar$</param-value>
         </init-param>
         <init-param>
             <description>If true, matches full path with query string (WARN: currently not URL-decoded); 

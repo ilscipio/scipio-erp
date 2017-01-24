@@ -3,6 +3,7 @@
 <#-- Javascript functions -->
 <@script>
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>EditGlobalGlAccount</@ofbizUrl>';
+    var assignGlAccountBaseUrl = '<@ofbizUrl escapeAs='js'>AssignGlAccount</@ofbizUrl>';
     
     
     function makeNewPageUrl($node) {
@@ -18,7 +19,16 @@
             glAccountId: $node.data["glAccountId"]
         });
         return editorUrl;
-    }        
+    } 
+    
+   function makeAssignGlAccountPageUrl($node) {
+        var path = $node.data["path"]; //$node.a_attr.href
+        var editorUrl = assignGlAccountBaseUrl + '?' + $.param({
+            glAccountId: $node.data["glAccountId"],
+            organizationPartyId: '${organizationPartyId!""}'
+        });
+        return editorUrl;
+    }       
                             
     <#-- Function to update the action menu. Will generate new menu items based on selected option -->
     function updateMenu($node){
@@ -27,7 +37,8 @@
             var newOptions;
                 newOptions = {
                   "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeNewPageUrl($node),
-                  "${escapeVal(uiLabelMap.CommonOpen, 'js')}": makeEditPageUrl($node)
+                  "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeEditPageUrl($node),
+                  "${escapeVal(uiLabelMap.AcctgAssignGlAccount, 'js')}":makeAssignGlAccountPageUrl($node)
                 };
             $el.empty(); // remove old options
             $.each(newOptions, function(key,value) {
@@ -70,8 +81,7 @@
 <#assign menuEventScript>
     function($node) {
         var labelCreate = "${escapeVal(uiLabelMap.CommonCreate, 'js')}";
-        var labelOpen = "${escapeVal(uiLabelMap.CommonOpen, 'js')}";
-        var labelOverride = "${escapeVal(uiLabelMap.CommonEdit, 'js')}";
+        var labelEdit = "${escapeVal(uiLabelMap.CommonEdit, 'js')}";
         var createDef = {
             "separator_before": false,
             "separator_after": false,
@@ -91,7 +101,7 @@
 
 
         return {
-            "Open": openDef,
+            "Edit": openDef,
             "Create": createDef
         };
     }

@@ -292,9 +292,6 @@
         <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
             <link target="GlAccountNavigate" />
         </menu-item>
-        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
-            <link target="GlAccountNavigate" />
-        </menu-item>
         <menu-item name="FindAcctgTrans" title="${uiLabelMap.AccountingAcctgTrans}">
             <link target="FindAcctgTrans">
                 <parameter param-name="organizationPartyId" />

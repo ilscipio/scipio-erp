@@ -111,6 +111,9 @@ under the License.
 
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <entity-one entity-name="GlAccount" value-field="glAccount"/>
+        </actions>
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
         <field name="glAccountId" title="${uiLabelMap.CommonId}"><display/></field>
         <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>

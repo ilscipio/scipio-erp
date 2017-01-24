@@ -264,11 +264,10 @@ under the License.
             <actions>
                 <!-- <set field="title" value="Edit GlAccount"/>
                 <set field="titleProperty" value=""/>
-                <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value=""/> -->
-
+                <set field="activeSubMenuItem" value="GlAccountNavigate"/>
+                
                 <set field="glAccountId" from-field="parameters.glAccountId"/>
-                <entity-one entity-name="GlAccount" value-field="glAccount"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonGLDecorator">

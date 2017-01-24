@@ -187,7 +187,8 @@ under the License.
                 <set field="glAccountId" from-field="parameters.glAccountId"/>
                 <entity-one entity-name="GlAccount" value-field="glAccount"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://accounting/widget/AccountingMenus.xml#CommonGLSideBar"/>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="Chartofaccounts"/>
+                <set field="activeSubMenuItem" default-value="chartofaccounts" from-field="activeSubMenuItem"/>
+                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="chartofaccounts"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">

@@ -802,7 +802,7 @@ under the License.
                 <set field="label2" value="${uiLabelMap.AccountingExpenses}"/> <!-- 2nd dataset label -->  
                 <!-- IMPORTANT NOTE: This script only retrieves the existing (income/expense) transactions for the default 
                 currency defined in general.properties - currency.uom.id.default -->                                 
-                <script location="component://accounting/script/com/ilscipio/accounting/dashboard/IncomeExpenses.groovy"/>
+                <script location="component://accounting/script/com/ilscipio/scipio/accounting/dashboard/IncomeExpenses.groovy"/>
            </actions>
            <widgets>
                 <section>

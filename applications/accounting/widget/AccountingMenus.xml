@@ -27,7 +27,7 @@
             <link target="FindGatewayResponses" />
         </menu-item>-->
         <menu-item name="chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
-            <link target="FindGlobalGlAccount" />
+            <link target="GlAccountNavigate" />
         </menu-item>
         <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
             <link target="findPayments" />
@@ -282,7 +282,7 @@
     **************
      -->
      <menu name="CommonGLSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="Chartofaccounts">
+        default-menu-item-name="GlAccountNavigate">
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
         </actions>

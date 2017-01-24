@@ -93,19 +93,30 @@ under the License.
                 <!-- requestParameters is just the parameter map -->
                 <set field="glAccountId" from-field="requestParameters.glAccountId"/>
                 <set field="trail" from-field="requestParameters.trail"/>
-
-                <entity-one entity-name="GlAccount" value-field="glAccount"/>
+                <script location="component://accounting/script/com/ilscipio/scipio/accounting/ledger/GetAccountsList.groovy"/>
+                <!-- Includes -->
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>                
+                <!-- <entity-one entity-name="GlAccount" value-field="glAccount"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonGLDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html>
+                        </platform-specific>
+                        
+                        <!-- 
                         <screenlet title="${uiLabelMap.AcctgNavigateAccts}">
                             <include-tree name="GlAccountTree" location="component://accounting/widget/ledger/AccountingTrees.xml"/>
                         </screenlet>
+
                         <screenlet title="${uiLabelMap.PageTitleEditGlAccount}">
                             <include-form name="EditGlAccount" location="component://accounting/widget/ledger/GlobalGlAccountsForms.xml"/>
                         </screenlet>
+                     -->
                      </decorator-section>
                 </decorator-screen>
             </widgets>

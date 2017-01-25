@@ -41,8 +41,8 @@ under the License.
                                 <!-- SCIPIO: Removed portal page
                                     <include-portal-page id="ApPortalPage"/>
                                  -->
-                                 <include-screen name="ApInvoicesDueSoon" location="component://accounting/widget/ap/APScreens.xml"/>
-                                 <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/APScreens.xml"/>
+                                 <include-screen name="ApInvoicesDueSoon" location="component://accounting/widget/ap/ApScreens.xml"/>
+                                 <include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/ApScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

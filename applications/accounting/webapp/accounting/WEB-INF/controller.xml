@@ -2792,7 +2792,7 @@ under the License.
      *************
      -->
      
-    <view-map name="apmain" type="screen" page="component://accounting/widget/ap/APScreens.xml#APDashboard"/>
+    <view-map name="apmain" type="screen" page="component://accounting/widget/ap/ApScreens.xml#APDashboard"/>
     <view-map name="ListAPReports" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#ListAPReports"/>
     <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindApPaymentGroups"/>
     <view-map name="FindApInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#FindApInvoices"/>

@@ -1352,7 +1352,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) throws IOException {
         writer.append("   <th");
         String areaStyle = modelFormField.getTitleAreaStyle();
-        String areaStyles = modelFormField.getTitleAreaStyles();
+        String areaInlineStyle = modelFormField.getTitleAreaInlineStyle();
         if (positionSpan > 1) {
             writer.append(" colspan=\"");
             writer.append(Integer.toString(positionSpan));
@@ -1363,9 +1363,9 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
             writer.append(areaStyle);
             writer.append("\"");
         }
-        if (UtilValidate.isNotEmpty(areaStyles)) {
+        if (UtilValidate.isNotEmpty(areaInlineStyle)) {
             writer.append(" style=\"");
-            writer.append(areaStyles);
+            writer.append(areaInlineStyle);
             writer.append("\"");
         }
         writer.append(">");

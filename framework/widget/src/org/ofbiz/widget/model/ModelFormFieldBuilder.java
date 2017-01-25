@@ -100,7 +100,7 @@ public class ModelFormFieldBuilder {
     private String sortFieldStyle = "";
     private FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
     private String titleAreaStyle = "";
-    private String titleAreaStyles = "";
+    private String titleAreaInlineStyle = "";
     private String titleStyle = "";
     private FlexibleStringExpander tooltip = FlexibleStringExpander.getInstance("");
     private String tooltipStyle = "";
@@ -171,7 +171,7 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = fieldElement.getAttribute("sort-field-style");
         this.title = FlexibleStringExpander.getInstance(fieldElement.getAttribute("title"));
         this.titleAreaStyle = fieldElement.getAttribute("title-area-style");
-        this.titleAreaStyles = fieldElement.getAttribute("title-area-styles");
+        this.titleAreaInlineStyle = fieldElement.getAttribute("title-area-inline-style");
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.tooltip = FlexibleStringExpander.getInstance(fieldElement.getAttribute("tooltip"));
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
@@ -280,7 +280,7 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = modelFormField.getSortFieldStyle();
         this.title = modelFormField.getTitle();
         this.titleAreaStyle = modelFormField.getTitleAreaStyle();
-        this.titleAreaStyles = modelFormField.getTitleAreaStyles();
+        this.titleAreaInlineStyle = modelFormField.getTitleAreaInlineStyle();
         this.titleStyle = modelFormField.getTitleStyle();
         this.tooltip = modelFormField.getTooltip();
         this.tooltipStyle = modelFormField.getTooltipStyle();
@@ -324,7 +324,7 @@ public class ModelFormFieldBuilder {
         this.sortFieldStyle = builder.getSortFieldStyle();
         this.title = builder.getTitle();
         this.titleAreaStyle = builder.getTitleAreaStyle();
-        this.titleAreaStyles = builder.getTitleAreaStyles();
+        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle();
         this.titleStyle = builder.getTitleStyle();
         this.tooltip = builder.getTooltip();
         this.tooltipStyle = builder.getTooltipStyle();
@@ -481,8 +481,8 @@ public class ModelFormFieldBuilder {
         return titleAreaStyle;
     }
 
-    public String getTitleAreaStyles() {
-        return titleAreaStyles;
+    public String getTitleAreaInlineStyle() {
+        return titleAreaInlineStyle;
     }
     
     public String getTitleStyle() {

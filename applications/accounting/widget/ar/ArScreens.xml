@@ -41,8 +41,8 @@ under the License.
                                 <!-- SCIPIO: Removed portal page
                                     <include-portal-page id="ArPortalPage"/>
                                  -->
-                                 <include-screen name="ArInvoicesDueSoon" location="component://accounting/widget/ar/ARScreens.xml"/>
-                                 <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/ARScreens.xml"/>
+                                 <include-screen name="ArInvoicesDueSoon" location="component://accounting/widget/ar/ArScreens.xml"/>
+                                 <include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/ArScreens.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

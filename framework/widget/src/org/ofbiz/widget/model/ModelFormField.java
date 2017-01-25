@@ -136,7 +136,7 @@ public class ModelFormField implements Serializable {
     private final String sortFieldStyle;
     private final FlexibleStringExpander title;
     private final String titleAreaStyle;
-    private final String titleAreaStyles;
+    private final String titleAreaInlineStyle;
     private final String titleStyle;
     private final FlexibleStringExpander tooltip;
     private final String tooltipStyle;
@@ -196,7 +196,7 @@ public class ModelFormField implements Serializable {
         this.sortFieldStyle = builder.getSortFieldStyle();
         this.title = builder.getTitle();
         this.titleAreaStyle = builder.getTitleAreaStyle();
-        this.titleAreaStyles = builder.getTitleAreaStyles();
+        this.titleAreaInlineStyle = builder.getTitleAreaInlineStyle();
         this.titleStyle = builder.getTitleStyle();
         this.tooltip = builder.getTooltip();
         this.tooltipStyle = builder.getTooltipStyle();
@@ -662,9 +662,9 @@ public class ModelFormField implements Serializable {
         return this.modelForm.getDefaultTitleAreaStyle();
     }
 
-    public String getTitleAreaStyles() {
-        if (UtilValidate.isNotEmpty(this.titleAreaStyles))
-            return this.titleAreaStyles;
+    public String getTitleAreaInlineStyle() {
+        if (UtilValidate.isNotEmpty(this.titleAreaInlineStyle))
+            return this.titleAreaInlineStyle;
         return "";
     }
     

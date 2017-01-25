@@ -554,8 +554,12 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountName" ><display/></field>
-        <field name="debitCreditFlag" ><display/></field>
+        <!-- <field name="debitCreditFlag" ><display/></field>
         <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
+        -->
+        <field name="postedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-area-style="amount" title-area-style="align-right"><display description="${groovy:if(debitCreditFlag.equals('D'))return(amount);if(debitCreditFlag.equals('C'))return('');}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="postedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-area-style="amount" title-area-style="align-right"><display description="${groovy:if(debitCreditFlag.equals('C'))return(amount);if(debitCreditFlag.equals('D'))return('');}" type="currency" currency="${currencyUomId}"/></field>
+        
         <field name="transactionDate"  title-area-styles="width:150px"><display type="date-time"/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="transDescription"><display/></field>

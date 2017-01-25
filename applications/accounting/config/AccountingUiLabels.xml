@@ -15996,7 +15996,7 @@
     </property>
     <property key="AcctgNavigateAccts">
         <value xml:lang="ar">إستكشاف الحسابات</value>
-        <value xml:lang="de">Kontenrahmen</value>
+        <value xml:lang="de">Kontenrahmen (Baum)</value>
         <value xml:lang="en">Navigate Accounts</value>
         <value xml:lang="es">Navegación de cuentas</value>
         <value xml:lang="fr">Naviguer dans les comptes</value>

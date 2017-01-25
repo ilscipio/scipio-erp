@@ -129,7 +129,6 @@ under the License.
         <field name="postAcctgTrans" title="${uiLabelMap.AccountingPostTransaction}"><display/></field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}"><display/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><display/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><display/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}"><display/></field>
         <field name="workEffortId"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>

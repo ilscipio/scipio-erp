@@ -424,9 +424,9 @@ Unexpectedly received empty list of builds to iterate."/>
                                 // than the current one, and it is from one already loaded, then discard the dependency
                                 // because it is for all practical purposes already built.
                                 // (we currently do not support global dependency ordering)
-                                var homeDirPath = java.nio.file.Paths.get(proj.getProperty("ofbiz.home.dir"));
+                                var homeDirPath = java.nio.file.Paths.get(proj.getProperty("ofbiz.home.dir"), []);
                                 var getCompDir = function(path) {
-                                    var pathPath = java.nio.file.Paths.get(path);
+                                    var pathPath = java.nio.file.Paths.get(path, []);
                                     return homeDirPath.relativize(pathPath).getName(0);
                                 }
                                 
@@ -437,7 +437,7 @@ Unexpectedly received empty list of builds to iterate."/>
                                     if (compDirsProp) {
                                         var compDirs = compDirsProp.split(",");
                                         for(var i=0; i < compDirs.length; i++) {
-                                            var compDirPath = java.nio.file.Paths.get(compDirs[i]);
+                                            var compDirPath = java.nio.file.Paths.get(compDirs[i], []);
                                             if (projCompDir.compareTo(compDirPath) === 0) {
                                                 echoMsg("WARN: build dependency refers to a higher-layer component directory; build may fail: " + targetDep);
                                                 return false;

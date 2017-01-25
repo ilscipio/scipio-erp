@@ -21,17 +21,39 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
     
+    <!-- SCIPIO: Common actions, common to both find form and results -->
+    <screen name="CommonAnalyticsActions">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                productStores = delegator.findByAnd("ProductStore", null, ["productStoreId", "storeName"], true);
+                context.productStores = productStores;
+                
+                // Instead of listing all, we will list only those that can actually be converted...
+                //context.currencies = delegator.findByAnd("Uom", ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true);
+                context.currencies = org.ofbiz.common.uom.UomWorker.getConvertibleUoms(delegator, dispatcher, 
+                    Boolean.TRUE, ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true, null, true);
+            ]]></script>
+        </actions>
+    </screen>
     
-     <screen name="AnalyticsSales">
+    <screen name="AnalyticsSales">
         <section>
             <actions>
                 <set field="titleProperty" value="MarketingAnalyticsSales"/>
                 <set field="activeSubMenuItem" value="AnalyticsSales"/>
                 
+                <include-screen-actions name="CommonAnalyticsActions" />
+                
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
+                
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
                 </entity-condition>
+                
                 <!-- <script location="component://marketing/webapp/sfa/WEB-INF/actions/analytics/FindMyCommunication.groovy"/> -->
+                
+                <!-- NOTE: we MUST run this early for any parameter processing -->
+                <include-screen-actions name="AnalyticsSalesStatsActions" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -49,19 +71,48 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="AnalyticsSalesStatsActions">
+        <actions>
+            <!-- double-include guard -->
+            <if>
+                <condition>
+                    <not><if-true field="ranAnalyticsSalesStatsActions"/></not>
+                </condition>
+                <then>
+                    <set field="chartType" value="line"/>
+                    <set field="chartDatasets" value="1"/>
+                    <set field="chartLibrary" value="chart"/>
+                    <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
+                    <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
+                    
+                    <set field="ranAnalyticsSalesStatsActions" type="Boolean" value="true"/>
+                </then>
+            </if>
+        </actions>
+    </screen>
     <screen name="AnalyticsSalesStats">
-      <section>
+        <section>
             <actions>
-                <set field="chartType" value="line"/>
-                <set field="chartDatasets" value="1"/>
-                <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
-                <set field="title" value="${uiLabelMap.OrderOrders}"/>
-                <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
+                <include-screen-actions name="AnalyticsSalesStatsActions" />
+                <!-- 
+                <set field="totalsDesc" value="${orderStats.totalOrderCount} ${uiLabelMap.OrderOrders}; ${orderStats.totalGrandTotal} ${currencyUomId}" />-->
+                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrderCount}; ${uiLabelMap.OrderTotal}: ${orderStats.totalGrandTotal?currency(${context.currencyUomId})}" />
+                
+                <if>
+                    <condition>
+                        <if-empty field="productStoreId"/>
+                    </condition>
+                    <then>
+                        <set field="chartTitle" value="${totalsDesc}"/>
+                    </then>
+                    <else>
+                        <set field="chartTitle" value="${productStoreId} ${totalsDesc}"/>
+                    </else>
+                </if>
+                <set field="xlabel" value="${uiLabelMap.OrderGrandTotal} (${currencyUomId})"/><!-- ${uiLabelMap.ProductSales} -->
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
-                <set field="label1" value="${uiLabelMap.ProductProductsSold}"/>
+                <set field="label1" value="${uiLabelMap.OrderGrandTotal} (${currencyUomId})"/><!-- ${uiLabelMap.ProductProductsSold} -->
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/SalesChart.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsSalesChart.ftl"/></html></platform-specific>
@@ -74,11 +125,17 @@ under the License.
             <actions>
                 <set field="titleProperty" value="MarketingAnalytics"/>
                 <set field="activeSubMenuItem" value="AnalyticsTracking"/>
+                
+                <include-screen-actions name="CommonAnalyticsActions" />
+                
                 <!-- <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy"/> -->
                 <entity-condition list="marketingCampaignList" entity-name="MarketingCampaign" filter-by-date="true"/>
                 <entity-condition list="trackingCodeList" entity-name="TrackingCode" >
                     <condition-expr field-name="marketingCampaignId" operator="equals" from-field="parameters.marketingCampaignId"/>
                 </entity-condition>
+                
+                <!-- NOTE: we MUST run this early for any parameter processing -->
+                <include-screen-actions name="AnalyticsTrackingStatsActions" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
@@ -96,20 +153,52 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="AnalyticsTrackingStatsActions">
+        <actions>
+            <!-- double-include guard -->
+            <if>
+                <condition>
+                    <not><if-true field="ranAnalyticsTrackingStatsActions"/></not>
+                </condition>
+                <then>
+                    <set field="chartType" value="line"/>
+                    <set field="chartData" value="week"/>
+                    <set field="chartDatasets" value="2"/>
+                    <set field="chartLibrary" value="chart"/>
+                    <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
+                    <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/TrackingCodeChart.groovy"/>
+                    
+                    <set field="ranAnalyticsTrackingStatsActions" type="Boolean" value="true"/>
+                </then>
+            </if>
+        </actions>
+    </screen>
     <screen name="AnalyticsTrackingStats">
         <section>
             <actions>
-                <set field="chartType" value="line"/>
-                <set field="chartData" value="week"/>
-                <set field="chartDatasets" value="2"/>
-                <set field="chartLibrary" value="chart"/>
-                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
+                <include-screen-actions name="AnalyticsTrackingStatsActions" />
+                
+                <!-- TODO
+                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrderCount}; ${uiLabelMap.OrderTotal}: ${orderStats.totalGrandTotal?currency(${context.currencyUomId})}" />
+                -->
+                 
+                <if>
+                    <condition>
+                        <if-empty field="productStoreId"/>
+                    </condition>
+                    <then>
+                        <set field="chartTitle" value="${totalsDesc}"/>
+                    </then>
+                    <else>
+                        <set field="chartTitle" value="${productStoreId} ${totalsDesc}"/>
+                    </else>
+                </if>
+                
                 <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
                 <set field="label1" value="${uiLabelMap.VisitTotal}"/>
                 <!-- <set field="label1" value="${uiLabelMap.ProductProductsSold}"/> -->
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
-                <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/TrackingCodeChart.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://marketing/webapp/sfa/analytics/AnalyticsTrackingChart.ftl"/></html></platform-specific>

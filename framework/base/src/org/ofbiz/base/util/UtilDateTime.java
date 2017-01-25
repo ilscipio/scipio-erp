@@ -21,7 +21,9 @@ package org.ofbiz.base.util;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,8 +33,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
-import javolution.util.FastMap;
 
 import com.ibm.icu.util.Calendar;
 
@@ -1316,17 +1316,10 @@ public class UtilDateTime {
             Calendar calendar = toCalendar(date);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             int month = UtilDateTime.getMonth(date, timezone, locale);
-            int quarter = 0;
-            if (month >= 2 && month < 5)
-                quarter = 3;
-            else if (month >= 5 && month < 8)
-                quarter = 6;
-            else if (month >= 8 && month < 11)
-                quarter = 9;
-            else if (month == 11)
-                quarter = 12;
-            calendar.set(Calendar.MONTH, quarter);
-            Timestamp monthStart = getMonthStart(toTimestamp(calendar.getTime()));
+            int quarter = (int) (month / 3); // zero-based
+            int quarterFirstMonth = quarter * 3;
+            calendar.set(Calendar.MONTH, quarterFirstMonth);
+            Timestamp monthStart = getMonthStart(toTimestamp(calendar.getTime()), 0, timeShift * 3);
             dateBegin = monthStart;
             dateEnd = getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 2), timezone, locale);
             break;
@@ -1334,15 +1327,12 @@ public class UtilDateTime {
             calendar = toCalendar(date);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             month = UtilDateTime.getMonth(date, timezone, locale);
-            int semester = 0;
-            if (month >= 0 && month < 5)
-                semester = 5;
-            else if (month >= 5)
-                semester = 12;
-            calendar.set(Calendar.MONTH, semester);
-            monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()));
+            int semester = (int) (month / 6); // zero-based
+            int semesterFirstMonth = (semester * 6);
+            calendar.set(Calendar.MONTH, semesterFirstMonth);
+            monthStart = UtilDateTime.getMonthStart(toTimestamp(calendar.getTime()), 0, timeShift * 6);
             dateBegin = monthStart;
-            dateEnd = getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 4), timezone, locale);
+            dateEnd = getMonthEnd(UtilDateTime.getMonthStart(monthStart, 0, 5), timezone, locale);
             break;
         case "year":
             dateBegin = getYearStart(date, 0, timeShift);
@@ -1370,51 +1360,90 @@ public class UtilDateTime {
     }
     
     public static TimeInterval getPeriodIntervalAndFormatter(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
-        
         if (!checkValidInterval(period))
             return null;
         TimeInterval timeInterval = getPeriodInterval(period, timeShift, fromDate, locale, timezone);
-        switch (period) {
-        case "hour":
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-MM-dd hha"));
-            break;
-        case "day":
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-MM-dd"));
-            break;
-        case "week":
-            timeInterval.setDateFormatter(new SimpleDateFormat("YYYY-'W'ww"));
-            break;
-        case "month":
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-MM"));
-            break;
-        case "quarter":
-            int month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
-            int quarter = 1;
-            if (month >= 3 && month < 6)
-                quarter = 2;
-            if (month >= 6 && month < 9)
-                quarter = 3;
-            if (month >= 9)
-                quarter = 4;
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + quarter + "T'"));
-            break;
-        case "semester":
-            month = UtilDateTime.getMonth(timeInterval.getDateBegin(), timezone, locale);
-            int semester = 1;
-            if (month >= 5)
-                semester = 2;
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-'" + semester + "S'"));
-            break;
-        case "year":
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy"));
-            break;
-        default:
-            timeInterval.setDateFormatter(new SimpleDateFormat("yyyy-MM"));
-            break;
-        }
+        timeInterval.setDateFormatter(getCommonPeriodDateFormat(period, locale, timezone));
         return timeInterval;
     }
+    
+    /**
+     * SCIPIO: new
+     * FIXME: currently only supports format, not parse!
+     */
+    public static DateFormat getCommonPeriodDateFormat(String period, Locale locale, TimeZone timezone) {
+        DateFormat dateFormat;
+        switch (period) {
+        case "hour":
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd hha");
+            break;
+        case "day":
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            break;
+        case "week":
+            dateFormat = new SimpleDateFormat("YYYY-'W'ww");
+            break;
+        case "month":
+            dateFormat = new SimpleDateFormat("yyyy-MM");
+            break;
+        case "quarter":
+            dateFormat = getCommonQuarterDateFormat(locale, timezone);
+            break;
+        case "semester":
+            dateFormat = getCommonSemesterDateFormat(locale, timezone);
+            break;
+        case "year":
+            dateFormat = new SimpleDateFormat("yyyy");
+            break;
+        default:
+            dateFormat = new SimpleDateFormat("yyyy-MM");
+            break;
+        }
+        return dateFormat;
+    }
 
+    /**
+     * SCIPIO: Returns a DateFormat for quarter.
+     * FIXME: currently only supports format, not parse!
+     */
+    @SuppressWarnings("serial")
+    public static DateFormat getCommonQuarterDateFormat(final Locale locale, final TimeZone timezone) {
+        return new DateFormat() {
+            @Override
+            public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+                int month = toCalendar(date, timezone, locale).get(Calendar.MONTH);
+                int quarter = (int) (month / 3); // zero-based
+                toAppendTo.append(new SimpleDateFormat("yyyy-'" + (quarter + 1) + "T'").format(date));
+                return toAppendTo;
+            }
+            @Override
+            public Date parse(String source, ParsePosition pos) {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+    
+    /**
+     * SCIPIO: Returns a DateFormat for semester.
+     * FIXME: currently only supports format, not parse!
+     */
+    @SuppressWarnings("serial")
+    public static DateFormat getCommonSemesterDateFormat(final Locale locale, final TimeZone timezone) {
+        return new DateFormat() {
+            @Override
+            public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+                int month = toCalendar(date, timezone, locale).get(Calendar.MONTH);
+                int semester = (int) (month / 6); // zero-based
+                toAppendTo.append(new SimpleDateFormat("yyyy-'" + (semester + 1) + "S'").format(date));
+                return toAppendTo;
+            }
+            @Override
+            public Date parse(String source, ParsePosition pos) {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+    
     /**
      * SCIPIO: Checks if the interval passed is a valid one
      *
@@ -1443,9 +1472,15 @@ public class UtilDateTime {
         } else if (iScope.equals("week")) {
             calendar.set(Calendar.DAY_OF_WEEK, 1);
             calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - iCount);
-        } else if (iScope.equals("month") || iScope.equals("quarter") || iScope.equals("semester")) {
+        } else if (iScope.equals("month")) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - iCount);
+        } else if (iScope.equals("quarter")) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 3));
+        } else if (iScope.equals("semester")) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - (iCount * 6));  
         } else if (iScope.equals("year")) {
             calendar.set(Calendar.DAY_OF_YEAR, 1);
             calendar.set(Calendar.MONTH, 1);

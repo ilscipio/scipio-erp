@@ -946,6 +946,11 @@ under the License.
                     <xs:documentation>The name of a style (like a CSS class) to apply to the area around the title of this field.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="title-area-styles">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The CSS style attributes to apply to the area around the title of this field.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="widget-area-style">
                 <xs:annotation>
                     <xs:documentation>The name of a style (like a CSS class) to apply to the area around the widget that the user will interact with for this field.</xs:documentation>

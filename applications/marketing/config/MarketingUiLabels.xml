@@ -3657,4 +3657,20 @@
     <property key="SfaVCard">
         <value xml:lang="en">vCard</value>
     </property>
+    <property key="SfaOrderTotalsConvertedExchangeNotice">
+        <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
+        <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
+    </property>
+    <property key="SfaOrderTotalsConvertFail">
+        <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
+        <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
+    </property>
+    <property key="SfaOnlyConvertibleCurrenciesListed">
+        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
+        <value xml:lang="en">Only convertible currencies are listed.</value>
+    </property>
+    <property key="SfaCurrencyConvertedUsingLastKnownRates">
+        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
+        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
+    </property>
 </resource>

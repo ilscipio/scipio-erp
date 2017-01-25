@@ -601,7 +601,12 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
                 Object obj = UelUtil.evaluate(context, new String(this.valueStr));
                 if (obj != null) {
                     String currencyCode = this.codeExpr.expandString(context, timeZone, locale);
-                    return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
+                    // SCIPIO: 2017-01-13: added BigDecimal instanceof check to avoid string overhead and potential loss of information
+                    if (obj instanceof BigDecimal) {
+                        return UtilFormatOut.formatCurrency((BigDecimal) obj, currencyCode, locale);
+                    } else {
+                        return UtilFormatOut.formatCurrency(new BigDecimal(obj.toString()), currencyCode, locale);
+                    }
                 }
             } catch (PropertyNotFoundException e) {
                 if (Debug.verboseOn()) {

@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<br />
 <#if orderHeader.statusId == "ORDER_REJECTED">
     ${uiLabelMap.OrderEmailProblemWithYourPaymentMethod} ${orderHeader.orderId}.<br />
     ${uiLabelMap.OrderEmailProblemCancelledNotProcessed}<br />

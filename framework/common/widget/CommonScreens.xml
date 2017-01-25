@@ -806,7 +806,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
+    
     <!-- Default "error" page for XSL-FO based output. -->
     <screen name="FoError">
         <section>
@@ -820,6 +821,72 @@ under the License.
 <!--                <platform-specific><xsl-fo><html-template location="component://common/webcommon/error.fo.ftl"/></xsl-fo></platform-specific> -->
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- SCIPIO Email Decorator -->
+    <screen name="ScipioEmailDecorator">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/openEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="headerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${headerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailHeader.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <decorator-section-include name="body" />
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="footerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${footerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailFooter.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/closeEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

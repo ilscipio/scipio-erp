@@ -43,10 +43,27 @@ under the License.
             <xs:attributeGroup ref="attlist.depends-on">
                 <xs:annotation>
                     <xs:documentation>
-                        This is yet unimplemented. It's not a trivial implementation because at the moment components are loaded
-                        in the order they are found (i.e. alphabetic or creation date).
-                        While this feature would require them all to be located first and then reordered and loaded.
-                        So, for now, simply follow the README file in hot-deploy root folder.
+                        SCIPIO: This is a STOCK element, but newly-implemented for Scipio (2017-01-16).
+                        Designates the component(s) which this component depends on, or in other words that must
+                        be loaded before this component; the component loader will perform automatic dependency resolution
+                        to determine a build order which satisfies all dependencies.
+                        
+                        Current implementation uses a limited per-component-directory dependency resolution (non-global);
+                        reordering is only done within a given component directory (such as themes or hot-deploy);
+                        however, components from other directories may still be named and will be verified, 
+                        in order to help validate installations and for future compatibility.
+                        
+                        If a component directory contains a component-load.xml file (which dictates an explicit
+                        build order), automatic resolution will be DISABLED for the component directory and 
+                        this element ignored.
+
+                        NOTE: This directive is not used for build order; build and load order are independent;
+                            build.xml files must be used to control build order.
+                            However, it is recommended that build order be set to the same as load order.
+                            For further information on automatic dependency resolution for build files, see the
+                              component://macros.xml#read-component-build-deps 
+                            Ant macro (called by get-component-build-deps targets) and the "component.build.dependencies" filelist definitions in individual
+                            component build.xml files.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attributeGroup>
@@ -238,6 +255,28 @@ under the License.
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
                     <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+<xs:attribute name="override-mode" default="override-mount-point">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: 2017-01-19: Determines the behavior when this webapp's
+                    mount-point is the same as the mount-point of a previously-loaded
+                    webapp (from a different component).
+                    Possible values:
+                    override-mount-point (default): stock ofbiz behavior: the mount-point is 
+                        simply overridden through the webapp container, but entries for
+                        both webapps are left in place in the system, and the override
+                        is largely handled by the webapp container (rather than the ofbiz loader).
+                    remove-overridden-webapp: the webapp which is being overridden will be
+                        removed from the global registry, as if it had been commented out.    
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="override-mount-point"/>
+                    <xs:enumeration value="remove-overridden-webapp"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

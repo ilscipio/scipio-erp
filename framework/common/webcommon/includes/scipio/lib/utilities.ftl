@@ -4500,6 +4500,7 @@ Returns void if nothing.
   <#if res?has_content>
     <#return res>
   </#if>
+  <#-- DEV NOTE: the conditions below almost look wrong, but they are actually correct and are here to prevent useless double-lookups already covered by the first check above -->
   <#if renderContextType != "general">
     <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
     <#if res?has_content>

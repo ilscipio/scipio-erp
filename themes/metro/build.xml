@@ -19,7 +19,7 @@ under the License.
 -->
 
 <project name="OFBiz - Metro Theme" default="build" basedir=".">
-    <import file="../../macros.xml"/>
+    <import file="../../commontheme.xml"/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -29,8 +29,9 @@ under the License.
     <property name="name" value="metro-theme"/>
     <property name="ofbiz.home.dir" value="../.."/>
 
-    <target name="clean">
-    </target>
+    <filelist dir="." id="component.build.dependencies">
+        <file name="../base" />
+    </filelist>
 
     <target name="build" depends="">
         <!-- echo message="[build] ========== Building Metro Theme ==========" />

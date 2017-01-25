@@ -141,10 +141,8 @@ under the License.
             <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType", false)>
             <#assign adjustmentAmount = Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)>
             <#if adjustmentAmount != 0>
-                <fo:table-row height="8mm" line-height="8mm">
-                    <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                    <fo:table-cell number-columns-spanned="2">
+                <fo:table-row height="8mm" line-height="8mm" font-size="8pt" >
+                    <fo:table-cell number-columns-spanned="4">
                         <fo:block text-align="right" font-weight="bold">${adjustmentType.get("description",locale)} :
                             <#if orderHeaderAdjustment.get("description")?has_content>
                                 (${orderHeaderAdjustment.get("description")!})
@@ -158,10 +156,12 @@ under the License.
         </#list>
 
         <#if otherAdjAmount != 0>
+            <#-- blank line -->
+            <fo:table-row height="7px">
+                <fo:table-cell number-columns-spanned="5"><fo:block><#-- blank line --></fo:block></fo:table-cell>
+            </fo:table-row>
             <fo:table-row height="8mm" line-height="8mm">
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="4">
                     <fo:block text-align="right" font-weight="bold">${uiLabelMap.OrderTotalOtherOrderAdjustments}:</fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="right">
@@ -169,11 +169,10 @@ under the License.
                 </fo:table-cell>
             </fo:table-row>
         </#if>
+        
         <#if shippingAmount != 0>
             <fo:table-row height="8mm" line-height="8mm">
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="4">
                     <fo:block text-align="right" font-weight="bold">${uiLabelMap.OrderTotalShippingAndHandling}:</fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
@@ -184,9 +183,7 @@ under the License.
         
         <#if taxAmount != 0>
             <fo:table-row height="8mm" line-height="8mm">
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="4">
                     <fo:block text-align="right" font-weight="bold">${uiLabelMap.OrderTotalSalesTax}:</fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" padding-before="3pt" padding-after="3pt">
@@ -196,9 +193,7 @@ under the License.
         </#if>
         <#if orderVATTaxTotal != 0>
             <fo:table-row height="8mm" line-height="8mm">
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell><fo:block></fo:block></fo:table-cell>
-                <fo:table-cell number-columns-spanned="2">
+                <fo:table-cell number-columns-spanned="4">
                     <fo:block text-align="right" font-weight="bold">${uiLabelMap.OrderSalesTaxIncluded}:</fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black">

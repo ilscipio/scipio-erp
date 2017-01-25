@@ -43,7 +43,7 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         } else if (productStore) {
             // Ultimately check for productStore, if nothing has been passed for that too, a random one taken from productStoreIds will be used
             // Find Catalogs
-            productStoreCatalogs = productStore.getRelated("ProductStoreCatalog", null, null, true);
+            productStoreCatalogs = EntityUtil.filterByDate(productStore.getRelated("ProductStoreCatalog", null, null, true));
             //      productCatalogs = productStoreCatalog.getRelated("ProductCatalog", true);
             for (productStoreCatalog in productStoreCatalogs) {
                 prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);

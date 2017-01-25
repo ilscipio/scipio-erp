@@ -21,10 +21,10 @@ License.
   <title>Employee Skills</title>
 
    <para>In this screen you can assign a skill to an employee. 
-   		Enter numeric values in 'Years Experience', 'Rating' and 'Skill Level' to provide
-		objective criteria for managing resources with the same skill.</para>
-	
-		<para>These attributes can be used to locate
+      Enter numeric values in 'Years Experience', 'Rating' and 'Skill Level' to provide
+    objective criteria for managing resources with the same skill.</para>
+  
+    <para>These attributes can be used to locate
       resources with a needed skill.</para>
 
       <para>NOTE:Skills are managed in 'Global HR Settings' where new skill groups and skills

@@ -62,6 +62,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
@@ -73,12 +74,18 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
 import org.ofbiz.webapp.view.ApacheFopWorker;
-import org.ofbiz.widget.renderer.fo.FoScreenRenderer;
-import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
+import org.w3c.dom.Document;
+import org.ofbiz.widget.model.ModelScreen;
+import org.ofbiz.widget.model.ScreenFactory;
 import org.ofbiz.widget.renderer.ScreenRenderer;
+import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.xml.sax.SAXException;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
+
+import freemarker.template.TemplateException;
+import javolution.util.FastMap;
 
 /**
  * Email Services
@@ -86,9 +93,6 @@ import com.sun.mail.smtp.SMTPAddressFailedException;
 public class EmailServices {
 
     public final static String module = EmailServices.class.getName();
-
-    protected static final HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
-    protected static final FoScreenRenderer foScreenRenderer = new FoScreenRenderer();
     public static final String resource = "CommonUiLabels";
 
     /**
@@ -248,7 +252,7 @@ public class EmailServices {
             }
             mail.setFrom(new InternetAddress(sendFrom));
             mail.setSubject(subject, "UTF-8");
-            mail.setHeader("X-Mailer", "Apache OFBiz, The Open For Business Project");
+            mail.setHeader("X-Mailer", "SCIPIO ERP");
             mail.setSentDate(new Date());
             mail.addRecipients(Message.RecipientType.TO, sendTo);
 
@@ -461,26 +465,55 @@ public class EmailServices {
 
         MapStack<String> screenContext = MapStack.create();
         screenContext.put("locale", locale);
-        ScreenRenderer screens = new ScreenRenderer(bodyWriter, screenContext, htmlScreenRenderer);
-        screens.populateContextForService(dctx, bodyParameters);
-        screenContext.putAll(bodyParameters);
 
-        if (bodyScreenUri != null) {
-            try {
-                screens.render(bodyScreenUri);
-            } catch (GeneralException e) {
-                Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
-            } catch (IOException e) {
-                Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
-            } catch (SAXException e) {
-                Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
-            } catch (ParserConfigurationException e) {
-                Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+        // Scipio new
+        Delegator delegator = dctx.getDelegator();
+        try {
+            MapStack<String> context = screenContext;
+            context.put("locale", locale);
+            // prepare the map for preRenderedContent
+            String textData = (String) context.get("textData");
+            if (UtilValidate.isNotEmpty(textData)) {
+                Map<String, Object> prc = FastMap.newInstance();
+                String mapKey = (String) context.get("mapKey");
+                if (mapKey != null) {
+                    prc.put(mapKey, mapKey);
+                }
+                prc.put("body", textData); // used for default screen defs
+                context.put("preRenderedContent", prc);
             }
+            // get the screen renderer; or create a new one
+            ScreenRenderer screens = (ScreenRenderer) context.get("screens");
+            if (screens == null) {
+             // TODO: replace "screen" to support dynamic rendering of different output
+                ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenemail.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screenemail.screenrenderer", delegator));
+                screens = new ScreenRenderer(bodyWriter, context, screenStringRenderer);
+                screens.getContext().put("screens", screens);
+            }
+            // render the screen
+            ModelScreen modelScreen = null;
+            ScreenStringRenderer renderer = screens.getScreenStringRenderer();
+            screens.populateContextForService(dctx, bodyParameters);
+            screenContext.putAll(bodyParameters);
+
+            if (bodyScreenUri != null) {
+                    screens.render(bodyScreenUri);
+            }
+        } catch (GeneralException e) {
+            Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+        } catch (IOException e) {
+            Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+        } catch (SAXException e) {
+            Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+        } catch (ParserConfigurationException e) {
+            Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+        } catch (TemplateException e) {
+            Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
         boolean isMultiPart = false;
@@ -505,13 +538,18 @@ public class EmailServices {
                 // start processing fo pdf attachment
                 try {
                     Writer writer = new StringWriter();
-                    MapStack<String> screenContextAtt = MapStack.create();
+                    MapStack<String> screenContextAtt = screenContext;
                     // substitute the freemarker variables...
-                    ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContext, foScreenRenderer);
+                    // get the screen renderer; or create a new one
+                    ScreenStringRenderer fopStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", delegator));
+                    ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContextAtt, fopStringRenderer);
+                    screensAtt.getContext().put("screens", screensAtt);
+                    
+                    // render the screen
                     screensAtt.populateContextForService(dctx, bodyParameters);
                     screenContextAtt.putAll(bodyParameters);
                     screensAtt.render(xslfoAttachScreenLocation);
-
+                    
                     /*
                     try { // save generated fo file for debugging
                         String buf = writer.toString();
@@ -520,8 +558,8 @@ public class EmailServices {
                         fw.close();
                     } catch (IOException e) {
                         Debug.logError(e, "Couldn't save xsl-fo xml debug file: " + e.toString(), module);
-                    }
-                    */
+                    }*/
+                    
 
                     // create the input stream for the generation
                     StreamSource src = new StreamSource(new StringReader(writer.toString()));
@@ -539,6 +577,7 @@ public class EmailServices {
                     // store in the list of maps for sendmail....
                     bodyParts.add(UtilMisc.<String, Object> toMap("content", baos.toByteArray(), "type", "application/pdf", "filename",
                             attachmentName));
+                    
                 } catch (Exception e) {
                     Debug.logError(e, "Error rendering PDF attachment for email: " + e.toString(), module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenPdfError",

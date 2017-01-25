@@ -8,24 +8,16 @@
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
-    <menu name="AccountingAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarDashboardMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ap" title="${uiLabelMap.AccountingAccountsPayable}" sort-mode="off" widget-style="+${styles.menu_subappitem}">
-            <link target="/ap/control/main" url-mode="inter-app" style="+${styles.menu_subappitem_link}"/>
+    <menu name="AccountingAppBar" title="${uiLabelMap.AccountingAccounting}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- Accounting -->
+        <menu-item name="payable" title="${uiLabelMap.AccountingAccountsPayable}">
+            <link target="apmain"/>
         </menu-item>
-        <menu-item name="ar" title="${uiLabelMap.AccountingAccountsReceivable}" sort-mode="off" widget-style="+${styles.menu_subappitem}">
-            <link target="/ar/control/main" url-mode="inter-app" style="+${styles.menu_subappitem_link}"/>
+        <menu-item name="receivable" title="${uiLabelMap.AccountingAccountsReceivable}">
+            <link target="armain"/>
         </menu-item>
-        <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}">
-            <link target="findInvoices" />
-        </menu-item>
-        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
-            <link target="findPayments" />
-        </menu-item>
-        <!-- TODO: Should be moved to a Settings Bar -->
-      <!--   <menu-item name="PaymentGroup" title="${uiLabelMap.AccountingPaymentGroup}">
-            <link target="FindPaymentGroup" />
-        </menu-item> -->
-        <menu-item name="transaction" title="${uiLabelMap.AccountingTransactions}">
+        <!-- Payment Transactions
+        <menu-item name="transaction" title="${uiLabelMap.AccountingTransactions}"> 
             <condition>
                 <or>
                     <if-has-permission permission="MANUAL" action="_PAYMENT" />
@@ -33,174 +25,343 @@
                 </or>
             </condition>
             <link target="FindGatewayResponses" />
+        </menu-item>-->
+        <menu-item name="chartofaccounts" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
+            <link target="GlAccountNavigate" />
         </menu-item>
-        <!-- SCIPIO: was moved to Settings Bar -->
-       <!--  <menu-item name="PaymentGatewayConfig" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
-            <condition>
-                <or>
-                    <if-has-permission permission="PAYPROC" action="_ADMIN" />
-                    <if-has-permission permission="ACCOUNTING" action="_ADMIN" />
-                </or>
-            </condition>
-            <link target="FindPaymentGatewayConfig" />
-        </menu-item> -->
-        <menu-item name="billingaccount" title="${uiLabelMap.AccountingBillingMenu}">
-            <link target="FindBillingAccount" />
-        </menu-item>
-        <menu-item name="FindFinAccount" title="${uiLabelMap.AccountingFinAccount}">
-            <link target="FinAccountMain" />
-        </menu-item>
-        <!-- TODO: Should be moved to a Settings Bar -->
-        <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
-            <link target="FindTaxAuthority" />
-        </menu-item>
-        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
-            <link target="FindAgreement" />
+        <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="findPayments" />
         </menu-item>
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
             <link target="ListFixedAssets" />
         </menu-item>
-        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
-            <link target="ListBudgets" />
+        <menu-item name="billingaccount" title="${uiLabelMap.AccountingBillingMenu}">
+            <link target="FindBillingAccount" />
         </menu-item>
-        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
-            <link target="CostCenters" />
+        <menu-item name="FinAccount" title="${uiLabelMap.AccountingFinAccount}">
+            <link target="FinAccountMain" />
         </menu-item>
-        <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
+        <menu-item name="ListInvoices" title="${uiLabelMap.AccountingInvoices}">
+            <link target="findInvoices" />
+        </menu-item>
+        
+        <!-- Contracts -->
+        <menu-item name="Contracts" title="${uiLabelMap.AccountingContracts}">
+            <link target="FindAgreement"/>
+        </menu-item>      
+        
+        <!-- Journals -->
+        <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="TransactionReports" />
+        </menu-item>
+        
+        <!-- Controlling -->
+        <menu-item name="controlling" title="${uiLabelMap.AccountingControlling}">
+            <link target="ListBudgets"/>
+        </menu-item>  
+        
+        <!-- Other -->
+        <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}">
+            <link target="ExportTransactions" />
+        </menu-item>
+        <menu-item name="settings" title="${uiLabelMap.CommonSettings}">
             <link target="settings" />
         </menu-item>
-        <!--
-        <menu-item name="companies">
-        </menu-item>
-        -->
-        <!-- NOTE: this would go either here or under OrganizationSideBar; unclear
-        <menu-item name="partyAdmin">
-        </menu-item>
-        -->
     </menu>
 
-    <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"
-        extends-resource="component://common/widget/CommonMenus.xml" always-expand-selected-or-ancestor="true">
+    <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
-        <menu-item name="invoices">
+        <menu-item name="payable">
+            <sub-menu name="AccountsPayable" include="AccountsPayableSidebar"/>
+        </menu-item>
+        <menu-item name="receivable">
+            <sub-menu name="AccountsReceivable" include="AccountsReceivableSideBar"/>
+        </menu-item>
+        <menu-item name="billingaccount">
+            <sub-menu name="BillingAccount" include="BillingAccountSidebar"/>
+        </menu-item>
+        <menu-item name="chartofaccounts">
+            <sub-menu name="CommonGL" include="CommonGLSideBar"/>
+        </menu-item>
+        <menu-item name="Contracts">
+            <sub-menu name="Contracts" include="ContractsSideBar"/>
+        </menu-item>
+        <menu-item name="controlling">
+            <sub-menu name="Controlling" include="ControllingSideBar"/>
+        </menu-item>
+        <menu-item name="FinAccount">
+            <sub-menu name="FinAccount" include="FinAccountSideBar"/>
+        </menu-item>
+        <menu-item name="ListFixedAssets">
+            <sub-menu name="FixedAssets" include="FixedAssetsSideBar"/>
+        </menu-item>
+        <menu-item name="ListInvoices">
             <sub-menu name="Invoice" include="InvoiceSideBar"/>
+        </menu-item>
+        <menu-item name="ImportExport">
+            <sub-menu name="ImportExport" include="ImportExportSideBar"/>
+        </menu-item>
+        <menu-item name="Journals">
+            <sub-menu name="Journals" include="JournalsSideBar"/>
         </menu-item>
         <menu-item name="payments">
             <sub-menu name="Payment" include="PaymentSideBar"/>
         </menu-item>
-        <!-- TODO: Should be moved to a Settings Bar -->
-      <!--   <menu-item name="PaymentGroup">
-            <sub-menu name="PaymentGroup" include="PaymentGroupSideBar"/>
-        </menu-item> -->
-        <menu-item name="transaction">
-            <sub-menu name="Transactions" include="TransactionsSideBar"/>
-        </menu-item>
-        <menu-item name="billingaccount">
-            <sub-menu name="BillingAccount" include="BillingAccountSideBar"/>
-        </menu-item>
-        <menu-item name="FindFinAccount">
-            <sub-menu name="FinAccount" include="FinAccountSideBar"/>
-        </menu-item>
-        <!-- TODO: Should be moved to a Settings Bar -->
-        <menu-item name="TaxAuthorities">
-            <sub-menu name="TaxAuthority" include="component://accounting/widget/TaxAuthorityMenus.xml#TaxAuthoritySideBar"/>
-        </menu-item>
-        <menu-item name="agreements">
-            <sub-menu name="Agreement" include="AgreementSideBar"/>
-        </menu-item>
-        <menu-item name="ListFixedAssets">
-            <sub-menu name="FixedAsset" include="FixedAssetSideBar"/>
-        </menu-item>
-        <menu-item name="ListBudgets">
-            <sub-menu name="Budget" include="BudgetSideBar"/>
-        </menu-item>
-        <menu-item name="CostCenters">
-            <sub-menu name="GlobalGLSettings" include="GlobalGLSettingsSideBar"/>
-        </menu-item>
         <menu-item name="settings">
             <sub-menu name="Settings" include="SettingsSideBar"/>
         </menu-item>
-        <!--
-        <menu-item name="companies">
-            <sub-menu name="Organization" include="OrganizationSideBar"/>
-        </menu-item>
-        -->
-        <!-- NOTE: this would go either here or under OrganizationSideBar; unclear
-        <menu-item name="partyAdmin">
-            <sub-menu name="PartyAdmin" include="PartyAdminSideBar"/>
-        </menu-item>
-        -->
     </menu>
-
-    <menu name="AgreementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="AgreementMain" title="${uiLabelMap.AccountingAgreement}">
-            <link target="EditAgreement">
-                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+    
+    
+    
+    
+    <!-- 
+    **************
+    * Accounts Payable 
+    **************
+    -->
+    <menu name="AccountsPayableSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="apmain" title="${uiLabelMap.CommonOverview}" sort-mode="off"> 
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="apmain" link-type="anchor"/>
+        </menu-item>
+        <menu-item name="findApInvoices" title="${uiLabelMap.AccountingInvoicesMenu}">
+            <link target="FindApInvoices"/>
+            <!-- <sub-menu name="Invoice" include="ApInvoiceSideBar"/>-->
+        </menu-item>
+        <menu-item name="findApPayments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="FindApPayments"/>
+            <!-- <sub-menu name="APPayment" include="ApPaymentSideBar"/> -->
+        </menu-item>
+        <menu-item name="apPaymentGroups" title="${uiLabelMap.AccountingApPaymentGroupMenu}">
+            <link target="FindApPaymentGroups"/>
+            <sub-menu name="PaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
+        </menu-item>
+        <!--
+        <menu-item name="apfindVendors" title="${uiLabelMap.AccountingVendors}">
+            <link target="findApVendors"/>
+        </menu-item>-->
+        <menu-item name="apReports" title="${uiLabelMap.AccountingReports}">
+            <link target="listAPReports"/>
+            <!-- <sub-menu name="ApReport" include="ApReportSideBar"/>-->
+        </menu-item>
+    </menu>
+    
+    <!-- 
+    <menu name="ApInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="InvoiceTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
+            <link target="CommissionRun"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="ApInvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="ApInvoiceTabBar" recursive="includes-only" />
+        <include-elements menu-name="InvoiceSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <menu-item-alias name="viewInvoices" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="newInvoice" for="PARENT-WITHSUB"/>
+    </menu>
+    
+    <menu name="ApReportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <menu-item name="commissionReport" title="${uiLabelMap.AccountingCommissionReport}">
+            <link target="FindCommissions"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="ApPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ApPaymentTabBar" recursive="includes-only" />
+        <include-elements menu-name="PaymentSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <menu-item-alias name="findApPayments" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newApPayment" for="PARENT-NOSUB"/>
+    </menu> -->
+    
+    <!-- 
+    **************
+    * Accounts Receivavle 
+    **************
+    -->
+    <menu name="AccountsReceivableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="armain" title="${uiLabelMap.CommonOverview}" sort-mode="off" override-mode="remove-replace"> 
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="armain" link-type="anchor"/>
+        </menu-item>
+        <menu-item name="findArInvoices" title="${uiLabelMap.AccountingInvoicesMenu}">
+            <link target="findArInvoices"/>
+        </menu-item>
+        <menu-item name="findArPayments" title="${uiLabelMap.AccountingPaymentsMenu}">
+            <link target="findArPayments"/>
+        </menu-item>
+        <menu-item name="arPaymentGroups" title="${uiLabelMap.AccountingArPaymentGroupMenu}">
+            <link target="FindArPaymentGroups"/>
+            <sub-menu name="ArPaymentGroup" include="component://accounting/widget/AccountingMenus.xml#PaymentGroupSideBar"/>
+        </menu-item>
+        <menu-item name="arReports" title="${uiLabelMap.AccountingReports}">
+            <link target="ListARReports"/>
+        </menu-item>
+    </menu>
+    
+    <!--
+    <menu name="ArPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="PaymentTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>        
+        <menu-item name="findPayments" title="${uiLabelMap.PageTitleFindPayment}">
+            <link target="findPayments"/>
+        </menu-item>
+        <menu-item name="batchPayments" title="${uiLabelMap.PageTitleBatchPayments}">
+            <link target="batchPayments"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="ArPaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ArPaymentTabBar" recursive="includes-only" />
+        <include-elements menu-name="PaymentSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+        <menu-item-alias name="newPayment" for="PARENT-WITHSUB"/>
+    </menu>
+    
+    <menu name="ArInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="InvoiceTabBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+    </menu>
+    
+    <menu name="ArInvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="viewInvoices">
+        <include-elements menu-name="ArInvoiceTabBar" recursive="includes-only" />
+        <include-elements menu-name="InvoiceSideBar" resource="component://accounting/widget/AccountingMenus.xml" recursive="includes-only"/>
+    </menu>
+    -->
+    
+    <!-- 
+    **************
+    * Billing Accounts
+    **************
+     -->
+    <menu name="BillingAccountSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    </menu>
+     
+    <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
+            <link target="FindBillingAccount" />
+        </menu-item>
+        <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
+            <link target="EditBillingAccount">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementTerms" title="${uiLabelMap.CommonTerms}">
-            <link target="EditAgreementTerms">
-                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonRoles}">
+            <link target="EditBillingAccountRoles">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementItems" title="${uiLabelMap.CommonItems}">
-            <link target="ListAgreementItems">
-                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+        <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.CommonTerms}">
+            <link target="EditBillingAccountTerms">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementWorkEffortApplics" title="${uiLabelMap.WorkEffort}">
-            <link target="EditAgreementWorkEffortApplics">
-                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+        <menu-item name="BillingAccountInvoices" title="${uiLabelMap.CommonInvoices}">
+            <link target="BillingAccountInvoices">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementRoles" title="${uiLabelMap.CommonParties}">
-            <link target="EditAgreementRoles">
-                <parameter param-name="agreementId" from-field="agreement.agreementId" />
+        <menu-item name="BillingAccountPayments" title="${uiLabelMap.CommonPayments}">
+            <link target="BillingAccountPayments">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
+            </link>
+        </menu-item>
+        <menu-item name="BillingAccountOrders" title="${uiLabelMap.CommonOrders}">
+            <link target="BillingAccountOrders">
+                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
     </menu>
     
-    <!-- SCIPIO: New settings sidebar -->
-    <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="settings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
-            <link target="settings" />
+    <!-- 
+    **************
+    * Chart of accounts
+    **************
+     -->
+     <menu name="CommonGLSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="GlAccountNavigate">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
+        <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
+            <link target="FindGlobalGlAccount" />
         </menu-item>
-        <menu-item name="GlobalGLSettings" title="${uiLabelMap.AccountingGlobalGLSettings}">
-            <link target="globalGLSettings" />
-        </menu-item>        
-         <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
-            <link target="editInvoiceItemType" />
+        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
+            <link target="GlAccountNavigate" />
         </menu-item>
-        <menu-item name="ViewRateAmounts" title="${uiLabelMap.AccountingRates}">
-            <link target="viewRateAmounts" />
-        </menu-item>
-        <menu-item name="PaymentMethodTypes" title="${uiLabelMap.CommonPaymentMethodType}">
-            <link target="editPaymentMethodType" />
-        </menu-item>
-        <menu-item name="ViewFXConversions" title="${uiLabelMap.AccountingFX}">
-            <condition>
-                <if-service-permission service-name="acctgFxPermissionCheck" main-action="UPDATE" />
-            </condition>
-            <link target="viewFXConversions">
+        <menu-item name="FindAcctgTrans" title="${uiLabelMap.AccountingAcctgTrans}">
+            <link target="FindAcctgTrans">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
-        <menu-item name="PaymentGatewayConfig" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
-            <condition>
-                <or>
-                    <if-has-permission permission="PAYPROC" action="_ADMIN"/>
-                    <if-has-permission permission="ACCOUNTING" action="_ADMIN"/>
-                </or>
-            </condition>
-            <link target="FindPaymentGatewayConfig"/>
-            <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
+    </menu>
+
+    <menu name="GlAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindGlobalGlAccount" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
+            <link target="FindGlobalGlAccount" />
+        </menu-item>
+        <menu-item name="AssignGlAccount" title="${uiLabelMap.AcctgAssignGlAccount}">
+            <link target="AssignGlAccount" />
+        </menu-item>
+    </menu>
+
+    <menu name="GlSettingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="activeSubMenuItem2">
+        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
+            <link target="GlAccountNavigate">
+                <parameter param-name="trail" value="null" />
+            </link>
+        </menu-item>
+        <menu-item name="AssignGlAccount" title="${uiLabelMap.AcctgAssignGlAccount}">
+            <link target="AssignGlAccount" />
+        </menu-item>
+    </menu>
+
+    <menu name="GlAccountCategoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="activeSubMenuItem2">
+        <menu-item name="EditGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
+            <link target="EditGlAccountCategory">
+                <parameter param-name="glAccountCategoryId" />
+                <parameter param-name="glAccountCategoryTypeId" />
+            </link>
+        </menu-item>
+        <menu-item name="EditGlAccountCategoryMember" title="${uiLabelMap.FormFieldTitle_glAccountCategoryMember}">
+            <link target="EditGlAccountCategoryMember">
+                <parameter param-name="glAccountCategoryId" />
+            </link>
         </menu-item>
     </menu>
     
-    <menu name="AgreementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="AgreementTabBar" recursive="includes-only" />
+    <!-- SCIPIO: new, replaces manual links -->
+    <menu name="GlAccountListSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListGlAccountsReport" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListGlAccountsReport"/>
+        </menu-item>
+        <menu-item name="ListGlAccountsExport" title="${uiLabelMap.CommonExport}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <link target="ListGlAccountsExport"/>
+        </menu-item>
     </menu>
-
+    
+    <!-- SCIPIO: new, combined bar -->
+    <menu name="GlAccountListCombinedTabBar" items-sort-mode="off" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-menu-items menu-name="GlSettingTabBar" recursive="full"/>
+        <include-menu-items menu-name="GlAccountListSubTabBar" recursive="full"/>
+    </menu>
+    
+    <!--
+    ************** 
+    * Contracts 
+    **************
+    -->
+    <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}">
+            <link target="FindAgreement" />
+        </menu-item>
+    </menu>
+    
     <menu name="AgreementSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <!-- 
@@ -431,54 +592,26 @@
             </link>
         </menu-item>
     </menu>
+
+    <!-- 
+    **************
+    * Controlling 
+    **************
+    -->
+    <menu name="ControllingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}">
+            <link target="ListBudgets" />
+        </menu-item>
+        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
+            <link target="CostCenters" />
+        </menu-item>
+    </menu>
     
-    <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- SCIPIO: redundant
-        <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
-            <link target="FindBillingAccount" />
-        </menu-item> -->
-        <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
-            <link target="EditBillingAccount">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonRoles}">
-            <link target="EditBillingAccountRoles">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.CommonTerms}">
-            <link target="EditBillingAccountTerms">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-        <menu-item name="BillingAccountInvoices" title="${uiLabelMap.CommonInvoices}">
-            <link target="BillingAccountInvoices">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-        <menu-item name="BillingAccountPayments" title="${uiLabelMap.CommonPayments}">
-            <link target="BillingAccountPayments">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-        <menu-item name="BillingAccountOrders" title="${uiLabelMap.CommonOrders}">
-            <link target="BillingAccountOrders">
-                <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
-            </link>
-        </menu-item>
-    </menu>
-
-    <menu name="BillingAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="BillingAccountTabBar" recursive="includes-only" />
-    </menu>
-
+    
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- SCIPIO: redundant
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
             <link target="ListBudgets" />
         </menu-item>
-        -->
         <menu-item name="EditBudget" title="${uiLabelMap.AccountingBudget}">
             <link target="EditBudget">
                 <parameter param-name="budgetId" />
@@ -523,11 +656,6 @@
                 <parameter param-name="budgetId" />
             </link>
         </menu-item>
-    </menu>
-
-    <menu name="BudgetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditBudget">
-        <include-elements menu-name="BudgetTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="BudgetSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -598,8 +726,13 @@
             </link>
         </menu-item>
     </menu>
-
-    <menu name="FinAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    
+    <!-- 
+    **************
+    * Finance
+    **************
+     -->
+   <menu name="FinAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EditFinAccount">
         <menu-item name="EditFinAccount" title="${uiLabelMap.AccountingFinAccount}">
             <link target="EditFinAccount">
@@ -719,72 +852,90 @@
             </link>
         </menu-item>
     </menu>
-
-    <menu name="FixedAssetMaintTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
-        <menu-item name="EditFixedAssetMaint" title="${uiLabelMap.AccountingFixedAssetMaint}">
-            <link target="EditFixedAssetMaint">
-                <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId" />
-                <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditFixedAssetMeters" title="${uiLabelMap.AccountingFixedAssetMeters}">
-            <link target="EditFixedAssetMeters">
-                <parameter param-name="fixedAssetId" />
-                <parameter param-name="maintHistSeqId" />
-                <parameter param-name="productMeterTypeId" from-field="fixedAssetMaint.intervalMeterTypeId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditFixedAssetMaintOrders" title="${uiLabelMap.AccountingFixedAssetMaintOrders}">
-            <link target="EditFixedAssetMaintOrders">
-                <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId" />
-                <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId" />
-            </link>
-        </menu-item>
+    
+    <!-- 
+    **************
+    * Fixed Assets
+    **************
+    -->
+    
+    <menu name="FixedAssetsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="ListFixedAssets">
+        <!-- Disabled for as long as there is only one entry
+        <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
+            <link target="ListFixedAssets" />
+        </menu-item>-->
     </menu>
-
-    <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        ><!-- selected-menuitem-context-field-name="activeSubMenuItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint" -->
-        <include-elements menu-name="FixedAssetMaintTabBar" recursive="includes-only" />
-        <menu-item-alias name="NewFixedAssetMaint" for="PARENT-NOSUB"/>
-        <!-- SCIPIO: I *think* this needs to show the sub-menu... not 100% sure -->
-        <menu-item-alias name="ListFixedAssetMaints" for="PARENT-WITHSUB"/>
-    </menu>
-
+    
     <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EditFixedAsset">
         <menu-item name="EditFixedAsset" title="${uiLabelMap.AccountingFixedAsset}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="EditFixedAsset">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="FixedAssetChildren" title="${uiLabelMap.CommonEntityChildren}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="FixedAssetChildren">
                 <parameter param-name="fixedAssetId" />
                 <parameter param-name="trail" from-field="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="ListFixedAssetProducts" title="${uiLabelMap.AccountingFixedAssetProducts}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="ListFixedAssetProducts">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="ListFixedAssetCalendar" title="${uiLabelMap.AccountingFixedAssetCalendar}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="calendar">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="EditFixedAssetStdCosts" title="${uiLabelMap.AccountingFixedAssetStdCosts}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="EditFixedAssetStdCosts">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="EditFixedAssetIdents" title="${uiLabelMap.AccountingFixedAssetIdents}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="EditFixedAssetIdents">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="EditFixedAssetRegistrations" title="${uiLabelMap.AccountingFixedAssetRegistrations}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="EditFixedAssetRegistrations">
                 <parameter param-name="fixedAssetId" />
             </link>
@@ -796,283 +947,66 @@
             </link>
         </menu-item>-->
         <menu-item name="ListFixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="ListFixedAssetMaints">
                 <parameter param-name="fixedAssetId" />
             </link>
-            <sub-menu name="FixedAssetMaint" include="FixedAssetMaintSideBar"/>
         </menu-item>
         <menu-item name="EditPartyFixedAssetAssignments" title="${uiLabelMap.AccountingPartyFixedAssetAssignments}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="EditPartyFixedAssetAssignments">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="FixedAssetDepreciation" title="${uiLabelMap.AccountingDepreciation}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="showFixedAssetDepreciation">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
         <menu-item name="FixedAssetGeoLocation" title="${uiLabelMap.CommonGeoLocation}">
+            <condition>
+                <not>
+                    <if-empty field="fixedAssetId"/>
+                </not>
+            </condition>
             <link target="FixedAssetGeoLocation">
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
     </menu>
-    <menu name="FixedAssetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditFixedAsset">
-        <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
-    </menu>
-
-    <menu name="GlobalGLSettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="chartofaccounts">
-        <!-- SCIPIO: redundant
-        <menu-item name="CostCenters" title="${uiLabelMap.FormFieldTitle_costCenters}">
-            <link target="CostCenters"/>
-        </menu-item>
-        -->
-        <menu-item name="Chartofaccounts" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
-            <link target="FindGlobalGlAccount" />
-        </menu-item>
-        <!-- SCIPIO: Commented out for now. Will need to relocate it to a proper place at some point   -->
-        <!-- <menu-item name="EditCustomTimePeriod" title="${uiLabelMap.AccountingEditCustomTimePeriods}">
-            <condition>
-                <if-has-permission permission="PERIOD_MAINT" />
-            </condition>
-            <link target="EditCustomTimePeriod" />
-        </menu-item> -->
-        <menu-item name="Costs" title="${uiLabelMap.ManufacturingCostCalcs}">
-            <link target="EditCostCalcs" />
-        </menu-item>
-        <menu-item name="FindGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
-            <link target="FindGlAccountCategory" />
-        </menu-item>
-    </menu>
-
-    <menu name="GlAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="FindGlobalGlAccount" title="${uiLabelMap.AcctgChartOfAcctsTabMenu}">
-            <link target="FindGlobalGlAccount" />
-        </menu-item>
-        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
-            <link target="GlAccountNavigate" />
-        </menu-item>
-        <menu-item name="AssignGlAccount" title="${uiLabelMap.AcctgAssignGlAccount}">
-            <link target="AssignGlAccount" />
-        </menu-item>
-    </menu>
-
-    <menu name="GlSettingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2">
-        <menu-item name="GlAccountNavigate" title="${uiLabelMap.AcctgNavigateAccts}">
-            <link target="GlAccountNavigate">
-                <parameter param-name="trail" value="null" />
-            </link>
-        </menu-item>
-        <menu-item name="AssignGlAccount" title="${uiLabelMap.AcctgAssignGlAccount}">
-            <link target="AssignGlAccount" />
-        </menu-item>
-    </menu>
-
-    <menu name="GlAccountCategoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2">
-        <menu-item name="EditGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
-            <link target="EditGlAccountCategory">
-                <parameter param-name="glAccountCategoryId" />
-                <parameter param-name="glAccountCategoryTypeId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditGlAccountCategoryMember" title="${uiLabelMap.FormFieldTitle_glAccountCategoryMember}">
-            <link target="EditGlAccountCategoryMember">
-                <parameter param-name="glAccountCategoryId" />
-            </link>
-        </menu-item>
-    </menu>
     
-    <!-- SCIPIO: new, replaces manual links -->
-    <menu name="GlAccountListSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="ListGlAccountsReport" title="${uiLabelMap.CommonPrint}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <link target="ListGlAccountsReport"/>
-        </menu-item>
-        <menu-item name="ListGlAccountsExport" title="${uiLabelMap.CommonExport}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <link target="ListGlAccountsExport"/>
-        </menu-item>
-    </menu>
-    
-    <!-- SCIPIO: new, combined bar -->
-    <menu name="GlAccountListCombinedTabBar" items-sort-mode="off" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-menu-items menu-name="GlSettingTabBar" recursive="full"/>
-        <include-menu-items menu-name="GlAccountListSubTabBar" recursive="full"/>
-    </menu>
-
-    <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <!-- SCIPIO: redundant
-        <menu-item name="find" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoices}">
-            <condition>
-                <if-empty field="invoice.invoiceId" />
-            </condition>
+    <!--
+    ************** 
+    * Invoices 
+    **************
+    -->
+    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="Invoices" title="${uiLabelMap.AccountingInvoices}">
             <link target="findInvoices" />
         </menu-item>
-        -->
-        <!-- SCIPIO: this is needed to reach "edit" again -->
-        <menu-item name="editInvoice" title="${uiLabelMap.AccountingInvoice}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="editInvoice">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="invoiceOverview">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonItems}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="listInvoiceItems">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="EditInvoiceTimeEntries" title="${uiLabelMap.AccountingInvoiceTimeEntries}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="editInvoiceTimeEntries">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="invoiceRoles" title="${uiLabelMap.PartyRoles}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="invoiceRoles">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)
-        <menu-item name="invoiceTerms" title="${uiLabelMap.PartyTerms}">
-            <condition>
-                <and>
-                    <not><if-empty field="invoice.invoiceId"/></not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS"/>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED"/>
-                    </or>
-                </and>
-            </condition>
-            <link target="invoiceTerms">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId"/>
-            </link>
-        </menu-item>
-        -->
-        <menu-item name="editInvoiceApplications" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_SENT" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="editInvoiceApplications">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
         <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
-            <condition>
-                <if-empty field="invoice.invoiceId" />
-            </condition>
-            <link target="CommissionRun" />
+            <link target="CommissionRun"/>
+        </menu-item>
+        <menu-item name="commissionReport" title="${uiLabelMap.AccountingCommissionReport}">
+            <link target="FindCommissions"/>
         </menu-item>
     </menu>
-
-    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="InvoiceTabBar" recursive="includes-only" />
-        <!-- Purchase Invoice PDF -->
-        <!-- SCIPIO: FIXME: the link target does not exist or was removed
-        <menu-item name="acctgTransEntriesPdf" title="${uiLabelMap.AccountingInvoicePurchase}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_PAID" />
-                    </or>
-                </and>
-            </condition>
-            <link target="InvoiceAcctgTransEntriesPdf.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-         -->
-        <!-- Invoice -->
-        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
-                        to-field="defaultOrganizationPartyCurrencyUomId" />
-                </and>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
-            </link>
-        </menu-item>
-        <!-- SCIPIO: moved to SubTab
-        <menu-item name="pdf" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-         -->
-    </menu>
-
+    
+    
+    
     <menu name="InvoiceSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -1236,25 +1170,6 @@
                 <parameter param-name="statusId" value="INVOICE_CANCELLED" />
             </link>
         </menu-item>
-        <!-- SCIPIO: Disabled feature for now (how useful is this?!
-        <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="SALES_INVOICE" />
-                        <if-compare field="invoice.invoiceTypeId" operator="equals" value="PURCHASE_INVOICE" />
-                    </or>
-                </and>
-            </condition>
-            <link target="copyInvoiceToTemplate">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-                <parameter param-name="invoiceTypeId" from-field="invoice.invoiceTypeId" />
-            </link>
-        </menu-item>
-         -->
         <menu-item name="addtax" title="${uiLabelMap.AccountingAddTax}">
             <condition>
                 <and>
@@ -1278,6 +1193,21 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur} (${defaultOrganizationPartyCurrencyUomId})" widget-style="+${styles.action_run_sys} ${styles.action_export}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
+                        to-field="defaultOrganizationPartyCurrencyUomId" />
+                </and>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
+            </link>
+        </menu-item>
         <menu-item name="sendPerEmail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendPerEmail}" widget-style="+${styles.action_run_sys} ${styles.action_send}">
             <condition>
                 <not>
@@ -1289,7 +1219,125 @@
             </link>
         </menu-item>
     </menu>
-
+    
+    <!--
+    ************** 
+    * Import/Export 
+    **************
+    -->
+    <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!--
+        <menu-item name="importExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
+            <link target="ImportExport" />
+        </menu-item>-->
+        <menu-item name="exportTransactions" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+            <link target="ExportTransactions" />
+        </menu-item>
+        <menu-item name="importInvoice" title="${uiLabelMap.AccountingInvoice}" sort-mode="off">
+            <link target="ImportExportInvoice" />
+        </menu-item>
+    </menu>
+    
+    <!-- 
+    **************
+    * Journals 
+    **************
+    -->
+    <menu name="JournalsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Journals" always-expand-selected-or-ancestor="true">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
+        <!--
+        <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}" sort-mode="off">
+            <link target="journals" />
+        </menu-item>-->
+        
+        <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+            <link target="TransactionReports" />
+        </menu-item>
+        <menu-item name="SalesInvoiceByProductCategorySummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
+            <link target="SalesInvoiceByProductCategorySummary" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
+            <link target="TrialBalance" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+            <link target="IncomeStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeIncomeStatement" title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+            <link target="ComparativeIncomeStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
+            <link target="BalanceSheet">
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeBalanceSheet" title="${uiLabelMap.AccountingComparativeBalanceSheet}">
+            <link target="ComparativeBalanceSheet" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
+            <link target="TransactionTotals" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}">
+            <link target="InventoryValuation" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="CashFlowStatement" title="${uiLabelMap.AccountingCashFlowStatement}">
+            <link target="CashFlowStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ComparativeCashFlowStatement" title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
+            <link target="ComparativeCashFlowStatement" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        
+        <!-- Previously unused screens -->
+        <!-- Misses bsh information
+        <menu-item name="FinancialSummaryReportOptions" title="${uiLabelMap.PageTitleFinancialSummaryReportOptions}">
+            <link target="FinancialSummaryReportOptions" >
+                <parameter param-name="organizationPartyId"/>
+            </link>
+        </menu-item>
+        
+         -->
+        <!-- [component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh
+        <menu-item name="SalesInvoiceByProductGlAccountSummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductGlAccountSummary}">
+            <link target="SalesInvoiceByProductGlAccountSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh
+        <menu-item name="PaymentByMethodSummary" title="${uiLabelMap.PageTitlePaymentByMethodSummary}">
+            <link target="PaymentByMethodSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh 
+        <menu-item name="InventoryIssueSummary" title="${uiLabelMap.PageTitleInventoryIssueSummary}">
+            <link target="InventoryIssueSummary" />
+        </menu-item>-->
+        <!-- Misses component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh
+        <menu-item name="FinancialAccountSummary" title="${uiLabelMap.PageTitleFinancialAccountSummary}">
+            <link target="FinancialAccountSummary" />
+        </menu-item> -->
+        <!-- Requires Organization
+        <menu-item name="GlAccountTrialBalance" title="${uiLabelMap.AccountingGlAccountTrialBalance}"  sort-mode="off">
+            <link target="GlAccountTrialBalance" />
+        </menu-item> -->
+    </menu>
+    
     <menu name="OrganizationSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -1299,7 +1347,7 @@
             <link target="AddCompany" />
         </menu-item>
     </menu>
-
+    
     <menu name="OrganizationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="PartyAccountsSummary">
         <menu-item name="PartyAccountsSummary" title="${uiLabelMap.AcctgPartyGlJournalSummary}" sort-mode="off">
@@ -1337,244 +1385,7 @@
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
-    </menu>
-    
-    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="PartyAccountsSummary">
-        <include-elements menu-name="OrganizationTabBar" recursive="includes-only" />
-    </menu>
-    
-    <menu name="OrganizationReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="TrialBalance">
-        <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
-            <link target="TrialBalance">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
-            <link target="TransactionTotals">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
-            <link target="IncomeStatement">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="CashFlowStatement" title="${uiLabelMap.AccountingCashFlowStatement}">
-            <link target="CashFlowStatement">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
-            <link target="BalanceSheet">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ComparativeIncomeStatement" title="${uiLabelMap.AccountingComparativeIncomeStatement}">
-            <link target="ComparativeIncomeStatement">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ComparativeCashFlowStatement" title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
-            <link target="ComparativeCashFlowStatement">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ComparativeBalanceSheet" title="${uiLabelMap.AccountingComparativeBalanceSheet}">
-            <link target="ComparativeBalanceSheet">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountTrialBalance" title="${uiLabelMap.AccountingGlAccountTrialBalance}">
-            <link target="GlAccountTrialBalance">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="InventoryValuation" title="${uiLabelMap.AccountingInventoryValuation}">
-            <link target="InventoryValuation">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountBalanceByCostCenter" title="${uiLabelMap.FormFieldTitle_costCenters}">
-            <link target="GlAccountBalanceByCostCenter">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-    </menu>
-
-    <menu name="PartyGlShortCuts" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2}">
-        <menu-item name="CreateSalesAcctgTrans">
-            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreateSalesAcctgTrans}">
-                <parameter param-name="organizationPartyId" />
-                <parameter param-name="debitGlAccountClassId" value="CURRENT_ASSET" />
-                <parameter param-name="creditGlAccountClassId" value="REVENUE" />
-                <parameter param-name="acctgTransTypeId" value="SALES" />
-            </link>
-        </menu-item>
-        <menu-item name="CreatePaymentAcctgTrans">
-            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreatePaymentAcctgTrans}">
-                <parameter param-name="organizationPartyId" />
-                <parameter param-name="debitGlAccountClassId" value="CASH_EQUIVALENT" />
-                <parameter param-name="creditGlAccountClassId" value="CURRENT_LIABILITY" />
-                <parameter param-name="acctgTransTypeId" value="PAYMENT_ACCTG_TRANS" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyGlUnpostedAcctgTrans">
-            <link text="${uiLabelMap.PageTitleUnpostedTransactions}" target="ListUnpostedAcctgTrans">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyGlTrianBalance">
-            <link target="TrialBalance" text="${uiLabelMap.AccountingTrialBalance}">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyIncomeStatement">
-            <link target="IncomeStatement" text="${uiLabelMap.AccountingIncomeStatement}">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyBalanceSheet">
-            <link target="BalanceSheet" text="${uiLabelMap.AccountingBalanceSheet}">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-    </menu>
-
-    <menu name="PartyTopTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemTop" default-menu-item-name="PartyAccountsSummary">
-        <menu-item name="Admin" title="${uiLabelMap.AccountingSetup}">
-            <condition>
-                <if-service-permission service-name="acctgPrefPermissionCheck" main-action="UPDATE" />
-            </condition>
-            <link target="AdminMain">
-                <parameter param-name="organizationPartyId" from-field="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyAccounts" title="${uiLabelMap.AccountingAccounting}">
-            <condition>
-                <if-service-permission service-name="basicGeneralLedgerPermissionCheck" main-action="VIEW" />
-            </condition>
-            <link target="PartyAccountsSummary">
-                <parameter param-name="organizationPartyId" from-field="organizationPartyId" />
-            </link>
-        </menu-item>
-    </menu>
-
-    <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemTop" default-menu-item-name="PartyAccountsSummary">
-        <include-elements menu-name="PartyTopTabBar" recursive="includes-only" />
-    </menu>
-
-    <menu name="PartyAdminTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="PartyAcctgPreference">
-        <menu-item name="PartyAcctgPreference" title="${uiLabelMap.AccountingPreference}">
-            <link target="PartyAcctgPreference">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ListGlAccountOrganization" title="${uiLabelMap.AccountingChartOfAcctsMenu}">
-            <link target="ListGlAccountOrganization">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="SetupGlJournals">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountAssignment" title="${uiLabelMap.AccountingGlAccountDefault}">
-            <link target="GlAccountAssignment">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriod}">
-            <link target="TimePeriods">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-    </menu>
-    
-    <menu name="PartyAdminSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="PartyAcctgPreference">
-        <include-elements menu-name="PartyAdminTabBar" recursive="full" />
-    </menu>
-
-    <menu name="PartyAdminAssignTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
-        <menu-item name="GlAccountTypeDefaults" title="${uiLabelMap.AccountingGlAccountTypeDefaults}">
-            <link target="GlAccountTypeDefaults">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ProductGlAccounts" title="${uiLabelMap.AccountingProductGlAccount}">
-            <link target="editProductGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="ProductCategoryGlAccounts" title="${uiLabelMap.AccountingProductCategoryGlAccount}">
-            <link target="editProductCategoryGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="FinAccountTypeGlAccounts" title="${uiLabelMap.AccountingFinAccountTypeGlAccount}">
-            <link target="editFinAccountTypeGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountSalInvoice" title="${uiLabelMap.AccountingInvoiceSales}">
-            <link target="GlAccountSalInvoice">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountPurInvoice" title="${uiLabelMap.AccountingInvoicePurchase}">
-            <link target="GlAccountPurInvoice">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountTypePaymentType" title="${uiLabelMap.AccountingPaymentType}/${uiLabelMap.FormFieldTitle_glAccountTypeId}">
-            <link target="GlAccountTypePaymentType">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="GlAccountNrPaymentMethod" title="${uiLabelMap.AccountingPaymentMethodId}/${uiLabelMap.AccountingGlAccountId}">
-            <link target="GlAccountNrPaymentMethod">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="VarianceReasonGlAccounts" title="${uiLabelMap.AccountingVarianceReasonGlAccounts}">
-            <link target="editVarianceReasonGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="CreditCardTypeGlAccount" title="${uiLabelMap.AccountingCreditCardTypeGlAccount}">
-            <link target="editCreditCardTypeGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="TaxAuthorityGlAccounts" title="${uiLabelMap.AccountingTaxAuthorityGlAccounts}">
-            <link target="editOrganizationTaxAuthorityGlAccount">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="PartyGlAccounts" title="${uiLabelMap.AccountingPartyGlAccounts}">
-            <link target="editPartyGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-        <menu-item name="FixedAssetTypeGlAccounts" title="${uiLabelMap.AccountingFixedAssetTypeGlAccounts}">
-            <link target="FixedAssetTypeGlAccounts">
-                <parameter param-name="organizationPartyId" />
-            </link>
-        </menu-item>
-    </menu>
-    
-    <menu name="PartyAdminAssignSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
-        <include-elements menu-name="PartyAdminAssignTabBar" recursive="full" />
-    </menu>
+    </menu>    
     
     <menu name="PartyAccountingChecksTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
@@ -1590,12 +1401,12 @@
         </menu-item>
     </menu>
     
-    <menu name="PartyAccountingChecksSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItem2" default-menu-item-name="GlAccountSalInvoice">
-        <include-elements menu-name="PartyAccountingChecksTabBar" recursive="full" />
-    </menu>
-
-    <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <!-- 
+    **************
+    * Payments
+    **************
+     -->
+     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: redundant
         <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
             <link target="findPayments" />
@@ -1895,8 +1706,81 @@
             </link>
         </menu-item>
     </menu>
-
-    <menu name="PaymentGatewayConfigTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    
+    <!-- 
+    **************
+    * Settings 
+    **************-->
+    <menu name="SettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-menu-item-name="settings" always-expand-selected-or-ancestor="true">
+        <actions>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+        </actions>
+        <menu-item name="settings" title="${uiLabelMap.AccountingCompanies}" sort-mode="off">
+            <link target="settings" />
+        </menu-item>
+         <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
+            <link target="editInvoiceItemType" />
+        </menu-item>
+        <menu-item name="ViewRateAmounts" title="${uiLabelMap.AccountingRates}">
+            <link target="viewRateAmounts" />
+        </menu-item>
+        <menu-item name="PaymentMethodTypes" title="${uiLabelMap.CommonPaymentMethodType}">
+            <link target="editPaymentMethodType" />
+        </menu-item>
+        <menu-item name="ViewFXConversions" title="${uiLabelMap.AccountingFX}">
+            <condition>
+                <if-service-permission service-name="acctgFxPermissionCheck" main-action="UPDATE" />
+            </condition>
+            <link target="viewFXConversions">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="PaymentGatewayConfig" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
+            <condition>
+                <or>
+                    <if-has-permission permission="PAYPROC" action="_ADMIN"/>
+                    <if-has-permission permission="ACCOUNTING" action="_ADMIN"/>
+                </or>
+            </condition>
+            <link target="FindPaymentGatewayConfig"/>
+            <sub-menu name="PaymentGatewayConfig" include="PaymentGatewayConfigSideBar"/>
+        </menu-item>
+        <!--
+        <menu-item name="SetupGlJournals" title="${uiLabelMap.AccountingGlJournals}">
+            <link target="SetupGlJournals">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>-->
+        <menu-item name="GlAccountAssignment" title="${uiLabelMap.AccountingGlAccountDefault}">
+            <link target="GlAccountAssignment">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="FindGlAccountCategory" title="${uiLabelMap.FormFieldTitle_glAccountCategory}">
+            <link target="FindGlAccountCategory" />
+        </menu-item>
+        <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
+            <link target="ListTaxAuthorityParties" />
+        </menu-item>
+        <menu-item name="findVendors" title="${uiLabelMap.AccountingVendors}">
+            <link target="findVendors"/>
+        </menu-item>
+        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriod}">
+            <link target="TimePeriods">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+        <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingCustomTimePeriod}">
+            <link target="EditCustomTimePeriod">
+                <parameter param-name="organizationPartyId" />
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- Payment Gateway -->
+    <menu name="PaymentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-menu-item-name="PaymentGatewayConfig" always-expand-selected-or-ancestor="true">
         <menu-item name="paymentGatewayConfigTab" title="${uiLabelMap.AccountingPaymentGatewayConfig}">
             <link target="FindPaymentGatewayConfig" />
         </menu-item>
@@ -1904,28 +1788,47 @@
             <link target="FindPaymentGatewayConfigTypes" />
         </menu-item>
     </menu>
+    
+    <menu name="TaxAuthorityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditTaxAuthority">
 
-    <menu name="PaymentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="PaymentGatewayConfigTabBar" recursive="includes-only" />
-    </menu>
+        <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingTaxAuthority}">
+            <link target="EditTaxAuthority">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
+        </menu-item>
 
-    <menu name="TransactionsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="authorizetransactiontab" title="${uiLabelMap.AccountingAuthorize}">
-            <link target="AuthorizeTransaction" />
+        <menu-item name="EditTaxAuthorityCategories" title="${uiLabelMap.ProductCategories}">
+            <link target="EditTaxAuthorityCategories">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
         </menu-item>
-        <menu-item name="capturetransactiontab" title="${uiLabelMap.AccountingCapture}">
-            <link target="CaptureTransaction" />
+        <menu-item name="EditTaxAuthorityAssocs" title="${uiLabelMap.CommonAssocs}">
+            <link target="EditTaxAuthorityAssocs">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
         </menu-item>
-        <menu-item name="gatewayresponsestab" title="${uiLabelMap.AccountingGatewayResponses}">
-            <link target="FindGatewayResponses" />
+        <menu-item name="EditTaxAuthorityGlAccounts" title="${uiLabelMap.AccountingGlAccs}">
+            <link target="EditTaxAuthorityGlAccounts">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
         </menu-item>
-        <menu-item name="manualtransactiontab" title="${uiLabelMap.AccountingManualTransaction}">
-            <link target="ManualTransaction" />
+        <menu-item name="EditTaxAuthorityRateProducts" title="${uiLabelMap.AccountingProductRates}">
+            <link target="EditTaxAuthorityRateProducts">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
         </menu-item>
-    </menu>
-
-    <menu name="TransactionsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="TransactionsTabBar" recursive="includes-only" />
+        <menu-item name="ListTaxAuthorityParties" title="${uiLabelMap.PartyParties}">
+            <link target="ListTaxAuthorityParties">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
+        </menu-item>
     </menu>
 
 </menus>

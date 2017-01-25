@@ -43,8 +43,8 @@ In order to install SCIPIO ERP, the following prerequisites must be installed:
  * Download and Install
 
 Download
-The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 stable branch, which
-provides you with the latest stable version of the 1.14.x line with latest important updates:
+The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
+provides you with the latest version of the 1.14.x line with latest important updates:
 
 1. Open your command line and run:
 a. git clone https://github.com/ilscipio/scipio-erp.git

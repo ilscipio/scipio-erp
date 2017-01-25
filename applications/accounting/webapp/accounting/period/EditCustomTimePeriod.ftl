@@ -138,7 +138,7 @@ under the License.
                     </@table>
                 </form>
             <#else>
-                <@commonMsg type="warning">${uiLabelMap.AccountingNoCurrentCustomTimePeriodSelected}</@commonMsg>>
+                <@commonMsg type="warning">${uiLabelMap.AccountingNoCurrentCustomTimePeriodSelected}</@commonMsg>
             </#if>
         </@section>
   
@@ -161,9 +161,9 @@ under the License.
                     <#assign line = 0>
                     <#list customTimePeriods as customTimePeriod>
                         <#assign alertHasntStartedClass="" />
-                        <#if hasntStarted><#assign alertHasntStartedClass="alert"></#if>
+                        <#if hasntStarted?has_content && hasntStarted><#assign alertHasntStartedClass="alert"></#if>
                         <#assign alertHasExpiredClass="" />
-                        <#if hasExpired><#assign alertHasExpiredClass="alert"></#if>
+                        <#if hasExpired?has_content && hasExpired><#assign alertHasExpiredClass="alert"></#if>
                         <#assign line = line + 1>
                         <#assign periodType = customTimePeriod.getRelatedOne("PeriodType", true)>
                         <@tr>

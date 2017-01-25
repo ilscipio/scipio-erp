@@ -61,8 +61,29 @@ public class OrderLookupServices {
 
     public static final String module = OrderLookupServices.class.getName();
 
+    // SCIPIO: find orders overload behavior options
+    private static final FindOrdersLocalOptions findOrdersOptions = new FindOrdersLocalOptions().setFullQuery(false);
+    private static final FindOrdersLocalOptions findOrdersInternalOptions = new FindOrdersLocalOptions().setFullQuery(false);
+    private static final FindOrdersLocalOptions findOrdersFullOptions = new FindOrdersLocalOptions().setFullQuery(true);
+
+    /**
+     * SCIPIO: Extra find options, not exposed through service interface, for local reuse.
+     */
+    static class FindOrdersLocalOptions {
+        public boolean fullQuery = false;
+
+        public boolean isFullQuery() {
+            return fullQuery;
+        }
+
+        public FindOrdersLocalOptions setFullQuery(boolean fullQuery) {
+            this.fullQuery = fullQuery;
+            return this;
+        }
+    }
+    
     // SCIPIO: this is now a shared implementation
-    static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context, boolean fullQuery) {
+    static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context, FindOrdersLocalOptions findOptions) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
@@ -602,7 +623,7 @@ public class OrderLookupServices {
         // SCIPIO: only if not full query
         int lowIndex;
         int highIndex;
-        if (!fullQuery) {
+        if (!findOptions.isFullQuery()) {
             // get the index for the partial list
             lowIndex = (((viewIndex.intValue() - 1) * viewSize.intValue()) + 1);
             highIndex = viewIndex.intValue() * viewSize.intValue();
@@ -624,7 +645,7 @@ public class OrderLookupServices {
                         .distinct(); // set distinct on so we only get one row per order
                         
                 // SCIPIO: only max rows if not limited
-                if (!fullQuery) {
+                if (!findOptions.isFullQuery()) {
                     eqy = eqy.maxRows(highIndex);
                 }
                 
@@ -634,7 +655,7 @@ public class OrderLookupServices {
 
                 // get the partial list for this page
                 // SCIPIO: support full query
-                if (fullQuery) {
+                if (findOptions.isFullQuery()) {
                     orderList = eli.getCompleteList();
                 } else {
                     eli.beforeFirst();
@@ -678,7 +699,7 @@ public class OrderLookupServices {
         String paramString = StringUtil.join(paramList, "&amp;");
 
         // SCIPIO: only if not full query
-        if (!fullQuery) {
+        if (!findOptions.isFullQuery()) {
             result.put("highIndex", Integer.valueOf(highIndex));
             result.put("lowIndex", Integer.valueOf(lowIndex));
             result.put("viewIndex", viewIndex);
@@ -697,21 +718,21 @@ public class OrderLookupServices {
      * SCIPIO: stock findOrders service.
      */
     public static Map<String, Object> findOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return findOrders(dctx, context, false);
+        return findOrders(dctx, context, findOrdersOptions);
     }
     
     /**
      * SCIPIO: stock findOrders service with additions for internal calls.
      */
     public static Map<String, Object> findOrdersInternal(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return findOrders(dctx, context, false);
+        return findOrders(dctx, context, findOrdersInternalOptions);
     }
 
     /**
      * SCIPIO: findOrders without view size limitations.
      * */
     public static Map<String, Object> findOrdersFull(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return findOrders(dctx, context, true);
+        return findOrders(dctx, context, findOrdersFullOptions);
     }
 
     public static void filterInventoryProblems(Map<String, ? extends Object> context, Map<String, Object> result, List<GenericValue> orderList, List<String> paramList) {

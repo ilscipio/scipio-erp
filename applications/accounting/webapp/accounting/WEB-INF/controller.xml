@@ -2812,7 +2812,7 @@ under the License.
     **************
      -->
     
-    <view-map name="armain" type="screen" page="component://accounting/widget/ar/ARScreens.xml#ARDashboard"/>
+    <view-map name="armain" type="screen" page="component://accounting/widget/ar/ArScreens.xml#ARDashboard"/>
     <view-map name="FindArPaymentGroups" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindArPaymentGroups"/>
     <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#NewIncomingPayment"/>
     <view-map name="BatchPayments" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#BatchPayments"/>

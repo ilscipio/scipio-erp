@@ -69,7 +69,39 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
             </actions>
             <widgets>
-                    <include-form name="ExportInvoiceCsv" location="component://accounting/widget/tools/ImportExportForms.xml"/>           
+                    <include-form name="ExportInvoice" location="component://accounting/widget/tools/ImportExportForms.xml"/>           
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Transactions -->
+    <screen name="ExportTransactions"> <!-- Renamed from ImportExport -->
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="exportTransactions"/>
+                <set field="titleProperty" value="AccountingAcctgTrans"/>
+                <entity-one entity-name="PartyGroup" value-field="partyGroup">
+                    <field-map field-name="partyId" from-field="parameters.organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">   
+                                <include-form name="ExportTransactions" location="component://accounting/widget/tools/ImportExportForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ExportTransactionCsv">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+            </actions>
+            <widgets>
+                    <include-form name="ExportTransactionCsv" location="component://accounting/widget/tools/ImportExportForms.xml"/>           
             </widgets>
         </section>
     </screen>

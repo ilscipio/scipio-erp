@@ -62,7 +62,7 @@
         
         <!-- Other -->
         <menu-item name="ImportExport" title="${uiLabelMap.CommonImportExport}">
-            <link target="ImportExport" />
+            <link target="ExportTransactions" />
         </menu-item>
         <menu-item name="settings" title="${uiLabelMap.CommonSettings}">
             <link target="settings" />
@@ -1226,8 +1226,12 @@
     **************
     -->
     <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!--
         <menu-item name="importExport" title="${uiLabelMap.CommonImportExport}" sort-mode="off">
             <link target="ImportExport" />
+        </menu-item>-->
+        <menu-item name="exportTransactions" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
+            <link target="ExportTransactions" />
         </menu-item>
         <menu-item name="importInvoice" title="${uiLabelMap.AccountingInvoice}" sort-mode="off">
             <link target="ImportExportInvoice" />

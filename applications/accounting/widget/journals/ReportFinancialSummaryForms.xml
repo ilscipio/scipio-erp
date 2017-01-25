@@ -219,7 +219,7 @@ under the License.
     <form name="BalanceSheetParameters" type="single" target="BalanceSheet"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="organizationPartyId"><hidden/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${nowTimestamp}"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">

@@ -410,6 +410,9 @@ Unexpectedly received empty list of builds to iterate."/>
                             echoTask.setMessage("Project " + proj.getName() + ": component.build.dependencies: " + msg);
                             echoTask.perform();
                         };
+                        var stringEndsWith = function(str, suffix) { // old JS support
+                            return str.indexOf(suffix, str.length - str.length) !== -1;
+                        };
                         
                         // NOTE: here source is the full path to file
                         var sourceFile = new java.io.File(source);
@@ -452,7 +455,7 @@ Unexpectedly received empty list of builds to iterate."/>
                                 self.addMappedName(targetDep);
                             };
                         
-                            if (source.toLowerCase().endsWith(".xml") && sourceFile.isFile()) {
+                            if (stringEndsWith(source.toLowerCase(), ".xml") && sourceFile.isFile()) {
                                 // If explicit build file referenced as dependency, interpret as explicit request and don't modify.
                                 // In other words, the component must have a build file, otherwise dependency will fail.
                                 if (!isDepAlreadyHandled(source, sourceFile)) {

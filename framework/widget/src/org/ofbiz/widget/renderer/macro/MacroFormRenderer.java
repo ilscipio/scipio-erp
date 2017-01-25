@@ -1632,10 +1632,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) throws IOException {
         String areaStyle = modelFormField.getTitleAreaStyle();
+        String areaStyles = modelFormField.getTitleAreaStyles();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowCellOpen ");
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(areaStyle));
+        sr.append(" styles=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyles));
         sr.append(" positionSpan=");
         sr.append(Integer.toString(positionSpan));
         sr.append(" />");

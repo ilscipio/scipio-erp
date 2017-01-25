@@ -1137,7 +1137,7 @@ public abstract class ModelForm extends ModelWidget {
     public String getDefaultTitleAreaStyle() {
         return this.defaultTitleAreaStyle;
     }
-
+    
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
     }

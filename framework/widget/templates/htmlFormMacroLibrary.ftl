@@ -360,9 +360,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </tr>
   <@thead close=true open=false />
 </#macro>
-<#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...>
+<#macro renderFormatHeaderRowCellOpen style styles positionSpan extraArgs...>
   <#global renderFormatHeaderRowCellOpened = true>
-  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
+  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if styles?has_content> style="${escapeVal(styles, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...>
   </th>

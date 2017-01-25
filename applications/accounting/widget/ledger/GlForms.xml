@@ -548,11 +548,12 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountCode" widget-style="${styles.link_nav_info_id} ${styles.action_find}" >
-            <hyperlink target="FindAcctgTransEntries" description="${accountCode} ${accountName}">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
+        <field name="accountName" ><display/></field>
         <field name="debitCreditFlag" ><display/></field>
         <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="transactionDate"  title-area-styles="width:150px"><display type="date-time"/></field>

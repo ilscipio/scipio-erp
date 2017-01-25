@@ -625,7 +625,7 @@ under the License.
                                     <set field="invoices" from-field="PastDueInvoices"/>
                                 </actions>
                                 <widgets>
-                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/invoice/Invoice/InvoiceScreens.xml"/>
+                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/invoice/InvoiceScreens.xml"/>
                                 </widgets>
                             </section>
                         </screenlet>
@@ -635,7 +635,7 @@ under the License.
                                     <set field="invoices" from-field="InvoicesDueSoon"/>
                                 </actions>
                                 <widgets>
-                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/invoice/Invoice/InvoiceScreens.xml"/>
+                                    <include-screen name="ScipioInvoices" location="component://accounting/widget/invoice/InvoiceScreens.xml"/>
                                 </widgets>
                             </section>
                         </screenlet>

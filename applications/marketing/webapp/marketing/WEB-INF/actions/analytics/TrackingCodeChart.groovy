@@ -1,12 +1,15 @@
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
-import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityUtilProperties;
 
+import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.common.uom.UomWorker;
+import org.ofbiz.common.uom.SimpleUomRateConverter;
 
 //// use this helper to build a List of visits, orders, order totals, and conversion rates
 //trackingCodeVisitAndOrders = ReportHelper.calcConversionRates(visits, orders, "trackingCodeId");
@@ -19,6 +22,10 @@ currentYearEndText = sdf.format(currentYearEnd);
 cacheId = "marketingTracking_" + currentYearBeginText + "-" + currentYearEndText;
 
 Map processResults() {
+    final def module = "TrackingCodeChart.groovy";
+    def debugMode = Debug.verboseOn();
+    //debugMode = true;
+    
     Map resultMap = [:];
         
     trackingCodeId = parameters.trackingCodeId;
@@ -26,6 +33,35 @@ Map processResults() {
     
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : -1;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
+    
+    // FIXME: productStoreId & currencyUomId handling copy-pasted from SalesChart.groovy
+    productStoreId = parameters.productStoreId;
+    productStore = null;
+    if (productStoreId) {
+        productStore = from("ProductStore").where("productStoreId", productStoreId).cache(true).queryOne();
+        if (!productStore) {
+            productStoreId = null;
+        }
+    }
+    
+    currencyUomId = parameters.currencyUomId;
+    currencyUom = null;
+    if (currencyUomId) {
+        currencyUom = from("Uom").where("uomId", currencyUomId).cache(true).queryOne();
+        if (!currencyUom) {
+            currencyUomId = null;
+        }
+    }
+    if (!currencyUomId) {
+        // check productStore default currency
+        currencyUomId = productStore?.defaultCurrencyUomId;
+        if (!currencyUomId) {
+            // global default lookup, based on org.ofbiz.order.shoppingcart.ShoppingCart
+            currencyUomId = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
+        }
+        currencyUom = from("Uom").where("uomId", currencyUomId).cache(true).queryOne();
+    }
+    
     
     // Check and sanitize fromDate/thruDate params
     fromDate = parameters.fromDate;
@@ -99,8 +135,17 @@ Map processResults() {
             dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateEnd, context.locale, context.timeZone);
         }
     }
-    return resultMap;
     
+    if (debugMode) {
+        Debug.logInfo("Number of results: " + resultMap.size(), module);
+    }
+    
+    context.productStoreId = productStoreId;
+    context.productStore = productStore;
+    context.currencyUomId = currencyUomId;
+    context.currencyUom = currencyUom;
+    
+    return resultMap;
 }
 result = processResults();
 context.result = result;

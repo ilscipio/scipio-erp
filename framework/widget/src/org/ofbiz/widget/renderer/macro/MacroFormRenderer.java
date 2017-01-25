@@ -1637,10 +1637,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("<@renderFormatHeaderRowCellOpen ");
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(areaStyle));
-        sr.append(" styles=");
-        sr.append(ftlFmt.makeStringLiteral(areaStyles));
         sr.append(" positionSpan=");
         sr.append(Integer.toString(positionSpan));
+        sr.append(" styleAttr=");
+        sr.append(ftlFmt.makeStringLiteral(areaStyles));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }

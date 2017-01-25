@@ -541,29 +541,26 @@ under the License.
                 <order-by field-name="acctgTransEntrySeqId"/>
             </entity-condition>
         </actions>
-        <field name="transactionDate"  title-area-styles="width:100px"><display type="date-time"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="debitCreditFlag" ><display/></field>
+        <field name="acctgTransId" widget-style="${styles.link_nav_info_id}"  title-area-styles="width:100px">
+            <hyperlink also-hidden="false" description="${acctgTransId} - ${acctgTransEntrySeqId}" target="EditAcctgTrans">
+                <parameter param-name="acctgTransId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
         <field name="accountCode" widget-style="${styles.link_nav_info_id} ${styles.action_find}" >
             <hyperlink target="FindAcctgTransEntries" description="${accountCode} ${accountName}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        
-        <field name="acctgTransId" widget-style="${styles.link_nav_info_id}"  title-area-styles="width:50px">
-            <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
-                <parameter param-name="acctgTransId"/>
-                <parameter param-name="organizationPartyId"/>
-            </hyperlink>
-        </field>
-        <field name="acctgTransEntrySeqId" widget-style="${styles.link_nav_info_id}" title-area-styles="width:50px">
-            <hyperlink also-hidden="false" description="${acctgTransEntrySeqId}" target="EditAcctgTrans">
-                <parameter param-name="acctgTransId"/>
-                <parameter param-name="organizationPartyId"/>
-            </hyperlink>
-        </field>
+        <field name="debitCreditFlag" ><display/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="transactionDate"  title-area-styles="width:150px"><display type="date-time"/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
         <field name="isPosted"><display/></field>
         <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_run_sys} ${styles.action_update}">

@@ -557,11 +557,10 @@ under the License.
         <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="transactionDate"  title-area-styles="width:150px"><display type="date-time"/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="transDescription"><display/></field>
         <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        
-        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
         <field name="isPosted"><display/></field>
         <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink target="postAcctgTrans" description="${uiLabelMap.AccountingPostTransaction}">

@@ -48,7 +48,7 @@ under the License.
                 <decorator-screen name="CommonJournalsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
-                                <label>This is a placeholder!</label>
+                            <include-form name="ListAcctgTransOverview" location="component://accounting/widget/ledger/GlForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

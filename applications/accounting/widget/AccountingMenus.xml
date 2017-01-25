@@ -52,7 +52,7 @@
         
         <!-- Journals -->
         <menu-item name="Journals" title="${uiLabelMap.AccountingGlJournals}">
-            <link target="journals" />
+            <link target="TransactionReports" />
         </menu-item>
         
         <!-- Controlling -->
@@ -1244,13 +1244,14 @@
         <actions>
             <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
         </actions>
+        <!--
         <menu-item name="journals" title="${uiLabelMap.AccountingGlJournals}" sort-mode="off">
             <link target="journals" />
-        </menu-item>
-        <!--
+        </menu-item>-->
+        
         <menu-item name="TransactionReports" title="${uiLabelMap.AccountingAcctgTrans}" sort-mode="off">
             <link target="TransactionReports" />
-        </menu-item>-->
+        </menu-item>
         <menu-item name="SalesInvoiceByProductCategorySummary" title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
             <link target="SalesInvoiceByProductCategorySummary" >
                 <parameter param-name="organizationPartyId"/>

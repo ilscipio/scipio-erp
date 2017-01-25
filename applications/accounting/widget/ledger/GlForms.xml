@@ -517,6 +517,69 @@ under the License.
         </field>
     </form>
     
+    <form name="ListAcctgTransOverview" type="list" title="List Accounting Transactions" list-name="listIt"
+        odd-row-style="alternate-row" default-entity-name="AcctgTransAndEntries"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>           
+            <entity-condition entity-name="AcctgTransAndEntries" list="listIt" distinct="true">
+                <condition-list>
+                    <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
+                    <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="productId" operator="equals" from-field="parameters.productId" ignore-if-empty="true"/>
+                    <condition-expr field-name="workEffortId" operator="equals" from-field="parameters.workEffortId" ignore-if-empty="true"/>
+                    <condition-expr field-name="shipmentId" operator="equals" from-field="parameters.shipmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                </condition-list>              
+                <order-by field-name="-transactionDate"/>
+                <order-by field-name="acctgTransEntrySeqId"/>
+            </entity-condition>
+        </actions>
+        <field name="transactionDate"  title-area-styles="width:100px"><display type="date-time"/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right" title-area-styles="width:100px"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="debitCreditFlag" ><display/></field>
+        <field name="accountCode" widget-style="${styles.link_nav_info_id} ${styles.action_find}" >
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode} ${accountName}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="acctgTransId" widget-style="${styles.link_nav_info_id}"  title-area-styles="width:50px">
+            <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
+                <parameter param-name="acctgTransId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="acctgTransEntrySeqId" widget-style="${styles.link_nav_info_id}" title-area-styles="width:50px">
+            <hyperlink also-hidden="false" description="${acctgTransEntrySeqId}" target="EditAcctgTrans">
+                <parameter param-name="acctgTransId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
+        <field name="isPosted"><display/></field>
+        <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_run_sys} ${styles.action_update}">
+            <hyperlink target="postAcctgTrans" description="${uiLabelMap.AccountingPostTransaction}">
+                <parameter param-name="acctgTransId"/>
+            </hyperlink>
+        </field>
+        
+        <field name="createTransactionDetailReportPDF" title="${uiLabelMap.AccountingInvoicePDF}" use-when="${isPosted=='Y'}" widget-style="${styles.link_run_sys} ${styles.action_export}">
+            <hyperlink target="acctgTransDetailReportPdf.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}">
+                <parameter param-name="acctgTransId"/>
+            </hyperlink>
+        </field>
+        <field name="postAcctgTrans" title="${uiLabelMap.AccountingPostTransaction}" use-when="!&quot;N&quot;.equals(isPosted)"><display/></field>
+    </form>
+    
     <!-- Accounting Transaction Entries -->
     <form name="EditAcctgTransEntry" type="single" target="createAcctgTransEntry" default-entity-name="AcctgTransEntry">
         <field name="organizationPartyId"><hidden/></field>

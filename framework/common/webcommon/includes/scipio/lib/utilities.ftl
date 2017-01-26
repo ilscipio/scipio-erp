@@ -865,18 +865,21 @@ to indicate the value null.
 -->
 <#function setVars varMaps={}>
   <#if !(varMaps.ctxVars!false)?is_boolean>
-    <#list mapKeys(varMaps.ctxVars) as name>
-      <#local dummy = setContextField(name, varMaps.ctxVars[name])>
+    <#local ctxVars = toSimpleMap(varMaps.ctxVars)>
+    <#list ctxVars?keys as name>
+      <#local dummy = setContextField(name, ctxVars[rawString(name)])>
     </#list>
   </#if>
   <#if !(varMaps.globalCtxVars!false)?is_boolean>
-    <#list mapKeys(varMaps.globalCtxVars) as name>
-      <#local dummy = setGlobalContextField(name, varMaps.globalCtxVars[name])>
+    <#local globalCtxVars = toSimpleMap(varMaps.globalCtxVars)>
+    <#list globalCtxVars?keys as name>
+      <#local dummy = setGlobalContextField(name, globalCtxVars[rawString(name)])>
     </#list>
   </#if>
   <#if !(varMaps.reqAttribs!false)?is_boolean>
-    <#list mapKeys(varMaps.reqAttribs) as name>
-      <#local dummy = setRequestAttribute(name, varMaps.reqAttribs[name])>
+    <#local reqAttribs = toSimpleMap(varMaps.reqAttribs)>
+    <#list reqAttribs?keys as name>
+      <#local dummy = setRequestAttribute(name, reqAttribs[rawString(name)])>
     </#list>
   </#if>
   <#return "">
@@ -899,13 +902,13 @@ to indicate the value null.
 -->
 <#function clearVars varLists={}>
   <#list mapsKeysOrListOrBool(varLists.ctxVars!) as name>
-    <#local dummy = setContextField(name, scipioNullObject)>
+    <#local dummy = setContextField(rawString(name), scipioNullObject)>
   </#list>
   <#list mapsKeysOrListOrBool(varLists.globalCtxVars!) as name>
-    <#local dummy = setGlobalContextField(name, scipioNullObject)>
+    <#local dummy = setGlobalContextField(rawString(name), scipioNullObject)>
   </#list>
   <#list mapsKeysOrListOrBool(varLists.reqAttribs!) as name>
-    <#local dummy = setRequestAttribute(name, scipioNullObject)>
+    <#local dummy = setRequestAttribute(rawString(name), scipioNullObject)>
   </#list>
   <#return "">
 </#function>

@@ -1714,6 +1714,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
 
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup type="" items=[] events={} treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+    <#local events = toSimpleMap(events)>
     <#if treeMenuLibrary == "jstree">     
         <div id="${escapeVal(id, 'html')}"></div>
         <script type="text/javascript"> 
@@ -1725,7 +1726,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 jQuery("#${escapeVal(id, 'js')}")
                 ${nestedEvents?trim}
                 <#if events?has_content>
-                  <#list mapKeys(events) as eventName>
+                  <#list events?keys as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })
@@ -1756,7 +1757,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
               <#elseif type == "lib-basic">
                 jQuery("#${escapeVal(id, 'js')}")
                 <#if events?has_content>
-                  <#list mapKeys(events) as eventName>
+                  <#list events?keys as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })

@@ -203,25 +203,39 @@ public class GroovyUtil {
         runScriptAtLocation(location, methodName, context);
         return context;
     }
-
-    /**
-     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
-     * initialized with binding built from the given context.
-     * <p>
-     * Added 2017-01-26.
-     */
-    public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
-        return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
-    }
     
     /**
      * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
      * initialized with the given {@link groovy.lang.Binding}.
      * <p>
+     * Similar to calling (in Groovy code):
+     * <pre>
+     * {@code
+     * def inst = GroovyUtil.getScriptClassFromLocation(location).newInstance();
+     * inst.setBinding(binding);
+     * }
+     * </pre>
+     * <p>
+     * NOTE: Although this can handle groovy classes that do not extend <code>groovy.lang.Script</code>,
+     * in such cases you may want to call {@link #getScriptClassFromLocation}
+     * together with <code>.newInstance()</code> instead of this.
+     * <p>
      * Added 2017-01-26.
+     * @see #getScriptClassFromLocation
      */
     public static Script getScriptFromLocation(String location, Binding binding) throws GeneralException {
         return InvokerHelper.createScript(getScriptClassFromLocation(location), binding);
+    }
+    
+    /**
+     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
+     * initialized with binding built from the given context.
+     * <p>
+     * Added 2017-01-26.
+     * @see #getScriptFromLocation(String, Binding)
+     */
+    public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
+        return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
     }
     
     private GroovyUtil() {}

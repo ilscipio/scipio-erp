@@ -1,6 +1,6 @@
 <#assign chartType=chartType!"pie"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
-<#assign datasets=chartDatasets?number!1 />
+<#assign datasets=(chartDatasets!1)?number />
 
 <#if bestSellingProducts?has_content>
     <#if chartType == "pie" || chartType == "bar">

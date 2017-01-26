@@ -204,5 +204,25 @@ public class GroovyUtil {
         return context;
     }
 
+    /**
+     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
+     * initialized with binding built from the given context.
+     * <p>
+     * Added 2017-01-26.
+     */
+    public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
+        return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
+    }
+    
+    /**
+     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
+     * initialized with the given {@link groovy.lang.Binding}.
+     * <p>
+     * Added 2017-01-26.
+     */
+    public static Script getScriptFromLocation(String location, Binding binding) throws GeneralException {
+        return InvokerHelper.createScript(getScriptClassFromLocation(location), binding);
+    }
+    
     private GroovyUtil() {}
 }

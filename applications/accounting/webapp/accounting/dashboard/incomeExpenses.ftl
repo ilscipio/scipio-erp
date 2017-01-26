@@ -10,9 +10,9 @@
                 <#assign currData = totalMap[key] />
                 <#if currData?has_content>
                     <#if datasets == 1>
-                        <@chartdata value="${currData['income']!0}" title=key/>
+                        <@chartdata value=(currData['income']!0) title=key/>
                     <#elseif datasets == 2>                    
-                        <@chartdata value="${currData['income']!0}" value2="${currData['expense']!0}" title=key/>
+                        <@chartdata value=(currData['income']!0) value2=(currData['expense']!0) title=key/>
                     </#if>
                 </#if>
             </#list>

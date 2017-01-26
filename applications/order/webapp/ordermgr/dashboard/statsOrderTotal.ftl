@@ -35,9 +35,9 @@ under the License.
     <#if ((currData.isEmpty())!true) == false>
         <#list mapKeys(currData) as key>
           <#if chartType=="bar" || chartType=="line">
-            <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].count)!0}" title=key/>
+            <@chartdata value=((currData[key][chartValue])!0) value2=((currData[key].count)!0) title=key/>
           <#else>
-            <@chartdata value="${(currData[key][chartValue])!0}" title=key/>
+            <@chartdata value=((currData[key][chartValue])!0) title=key/>
           </#if>
         </#list>
     </#if>  

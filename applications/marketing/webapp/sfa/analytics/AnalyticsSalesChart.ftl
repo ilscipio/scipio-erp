@@ -8,7 +8,7 @@
             <#list mapKeys(sales) as key>
                 <#assign currData = sales[key] />
                 <#if currData?has_content>                          
-                   <@chartdata value="${(currData.total)!0}" value2="${(currData.count)!0}" title=key/>
+                   <@chartdata value=((currData.total)!0) value2=((currData.count)!0) title=key/>
                 </#if>
             </#list>
         </@chart>

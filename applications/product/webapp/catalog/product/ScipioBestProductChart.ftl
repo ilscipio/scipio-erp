@@ -13,7 +13,7 @@
                     <#if currData?has_content> 
                         <#if datasets == 1>             
                             <#list currData as bestSellingProduct>     
-                                <@chartdata value="${bestSellingProduct.qtyOrdered!0}" title=(bestSellingProduct.productName!bestSellingProduct.productId)/>
+                                <@chartdata value=(bestSellingProduct.qtyOrdered!0) title=(bestSellingProduct.productName!bestSellingProduct.productId)/>
                             </#list>                           
                         </#if>
                     </#if>

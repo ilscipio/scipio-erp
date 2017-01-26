@@ -9,7 +9,7 @@
                 <#assign currData = totalMap[key] />
                 <#if currData?has_content>
                     <#if datasets == 1>
-                        <@chartdata value="${currData!0}"  title=key/>
+                        <@chartdata value=(currData!0)  title=key/>
                     </#if>                
                 </#if>
             </#list>

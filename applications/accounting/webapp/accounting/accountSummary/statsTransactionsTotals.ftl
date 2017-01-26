@@ -16,9 +16,9 @@
             <@chart type=chartType library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"")>
                 <#list mapKeys(currData) as key>
                 <#if chartType=="line">
-                    <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title=key/>
+                    <@chartdata value=((currData[key][chartValue])!0) value2=((currData[key].pos)!0) title=key/>
                 <#else>
-                    <@chartdata value="${(currData[key][chartValue])!0}" title=key/>
+                    <@chartdata value=((currData[key][chartValue])!0) title=key/>
                 </#if>
                 </#list>  
             </@chart>

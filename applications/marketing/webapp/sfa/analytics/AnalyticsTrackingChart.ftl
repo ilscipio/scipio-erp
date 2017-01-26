@@ -9,9 +9,9 @@
                 <#assign currData = result[key] />                
                 <#if currData?has_content> 
                     <#if datasets == 1>                         
-                        <@chartdata value="${currData.totalVisits!0}" title=key/>
+                        <@chartdata value=(currData.totalVisits!0) title=key/>
                     <#elseif datasets == 2>
-                        <@chartdata value="${currData.totalVisits!0}" value2="${currData.totalOrders!0}"  title=key/>                    
+                        <@chartdata value=(currData.totalVisits!0) value2=(currData.totalOrders!0)  title=key/>                    
                     </#if>
                 </#if>
             </#list>

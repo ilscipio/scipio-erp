@@ -7,7 +7,7 @@
   <@chart type=chartType library=library>
     <#list mapKeys(currData) as key>
       <#assign date = key?date/>
-        <@chartdata value="${(currData[key].count)!0}" title=key/>
+        <@chartdata value=((currData[key].count)!0) title=key/>
     </#list>
   </@chart>
 <#else>

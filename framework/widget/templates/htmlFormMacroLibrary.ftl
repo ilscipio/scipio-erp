@@ -890,7 +890,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapeVal(hiddenFormName, 'html')}">
     <#list params?keys as paramName>
-      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[escapeVal(paramName, 'html')], 'html')}" />
+      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[rawString(paramName)], 'html')}" />
     </#list>
     <#if useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>

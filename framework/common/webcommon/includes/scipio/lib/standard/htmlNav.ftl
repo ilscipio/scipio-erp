@@ -1726,7 +1726,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 jQuery("#${escapeVal(id, 'js')}")
                 ${nestedEvents?trim}
                 <#if events?has_content>
-                  <#list events?keys as eventName>
+                  <#list mapKeys(events) as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })
@@ -1757,7 +1757,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
               <#elseif type == "lib-basic">
                 jQuery("#${escapeVal(id, 'js')}")
                 <#if events?has_content>
-                  <#list events?keys as eventName>
+                  <#list mapKeys(events) as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
                       ${events[rawString(eventName)]}
                     })

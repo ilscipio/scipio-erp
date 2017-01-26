@@ -1,6 +1,7 @@
 <#assign chartType=chartType!"bar"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=chartDatasets?number!1 />
+<#assign totalMap=rewrapMap(totalMap!{}, "raw-simple")>
 
 <#if totalMap?has_content> 
     <#if chartType == "line" || chartType == "bar">

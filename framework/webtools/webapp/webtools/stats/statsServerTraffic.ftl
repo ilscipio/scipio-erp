@@ -1,9 +1,9 @@
 <#assign library=chartLibrary!"foundation"/>
-<#assign currData=chartData/>
+<#assign currData=rewrapMap(chartData, "raw-simple")>/>
 <#assign fieldIdNum=fieldIdNum!0/>
 
 <#if title?has_content><@heading relLevel=1>${title}</@heading></#if>
-<#if ((currData.isEmpty())!true) == false>
+<#if currData?has_content>
   <@chart type=chartType library=library>
     <#list mapKeys(currData) as key>
       <#assign date = key?date/>

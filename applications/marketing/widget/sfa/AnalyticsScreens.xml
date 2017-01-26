@@ -128,6 +128,8 @@ under the License.
                 
                 <include-screen-actions name="CommonAnalyticsActions" />
                 
+                <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
+                
                 <!-- <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy"/> -->
                 <entity-condition list="marketingCampaignList" entity-name="MarketingCampaign" filter-by-date="true"/>
                 <entity-condition list="trackingCodeList" entity-name="TrackingCode" >
@@ -178,10 +180,8 @@ under the License.
             <actions>
                 <include-screen-actions name="AnalyticsTrackingStatsActions" />
                 
-                <!-- TODO
-                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrderCount}; ${uiLabelMap.OrderTotal}: ${orderStats.totalGrandTotal?currency(${context.currencyUomId})}" />
-                -->
-                 
+                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrders}; ${uiLabelMap.VisitTotal}: ${orderStats.totalVisits}" />
+
                 <if>
                     <condition>
                         <if-empty field="productStoreId"/>

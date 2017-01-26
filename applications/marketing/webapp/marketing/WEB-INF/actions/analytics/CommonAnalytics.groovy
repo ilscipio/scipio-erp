@@ -12,8 +12,13 @@ import org.ofbiz.common.uom.SimpleUomRateConverter;
 import org.ofbiz.service.engine.GroovyBaseScript
 
 // FIXME: revisit reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded; other issues...
+// WARN: 2017-01-25: SUBJECT TO CHANGE; DO NOT RELY ON THIS CLASS/PATTERN AT CURRENT TIME
 // Must be instantiated with a Binding for some of the helper methods to write to...
 class AnalyticsScriptUtil extends GroovyBaseScript {
+    
+    def ZERO = BigDecimal.ZERO;
+    def scale = OrderReadHelper.scale;
+    def rounding = OrderReadHelper.rounding;
     
     public AnalyticsScriptUtil(Binding binding) {
         this.setBinding(binding);
@@ -23,8 +28,8 @@ class AnalyticsScriptUtil extends GroovyBaseScript {
         def iCount = UtilDateTime.getIntervalDefaultCount(iScope);
         if (iCount >= 0) {
             // FIXME?: why isn't this taken into account by values in UtilDateTime?
-            if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-            if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
+            if (iScope.equals("quarter")) iCount = (int) Math.round(iCount / 3);
+            if (iScope.equals("semester")) iCount = (int) Math.round(iCount / 6);
         }
         return iCount;
     }
@@ -151,6 +156,40 @@ class AnalyticsScriptUtil extends GroovyBaseScript {
             dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, iCount, fromDateTimestamp, context.locale, context.timeZone);
             maxThruDateTimestamp = dateIntervals.getDateEnd();
         }
+    }
+    
+    def readDateIntervalsFormatter() {
+        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
+        dateFormatter = dateIntervals.getDateFormatter();
+    }
+    
+    def checkCreateZeroEntries(resultMap, initialValues) {
+        
+        def dateIntv = dateIntervals;
+        
+        // Create zero-value data points (if requested) 
+        // NOTE: this also establishes the LinkedHashMap order for unordered query
+        int i = 0;
+        if (createZeroEntries) {
+            // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
+            while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntv.getDateBegin().after(thruDateTimestamp))) {
+                String date = dateFormatter.format(dateIntv.getDateBegin());
+                //Debug.logInfo("Interval date: " + date + " (" + dateIntv.getDateBegin() + " - " + dateIntv.getDateEnd() + ")", module);
+                resultMap.put(date, initialValues + ["pos": date]);
+        
+                // Get next date interval; NOTE: duplicated above
+                dateIntv = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntv.getDateBegin(), context.locale, context.timeZone);
+                i++;
+            }
+        }
+        
+        // Create first and last zero-value data points (if requested)
+        if (createFirstLastZeroEntries) {
+            String date = dateFormatter.format(dateIntv.getDateBegin());
+            resultMap.put(date, initialValues + ["pos": date]);
+            date = dateFormatter.format(maxThruDateTimestamp);
+            resultMap.put(date, initialValues + ["pos": date]);
+        }   
     }
     
     Object run() {

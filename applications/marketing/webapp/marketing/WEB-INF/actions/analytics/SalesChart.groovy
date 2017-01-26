@@ -31,6 +31,10 @@ Map processResult() {
     asutil.readProductStoreParams();
     asutil.readCurrencyUomParams();
     asutil.readChartTimeParams();
+    asutil.readDateIntervalsFormatter();
+    
+    //Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
+    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order
     
     // Perform main DB query
     // OLD: we'll do the query manually because of the performance impacts, and use EntityListIterator
@@ -67,39 +71,13 @@ Map processResult() {
         orderListIterator = from("OrderHeader").where(conditions).orderBy("orderDate").cache(false).queryIterator();
     }
     
-    // Organize results
-    //Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
-    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order; the results are ordered by -orderDate
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-    dateFormatter = dateIntervals.getDateFormatter();
+    // Process results
     try {
-        def ZERO = BigDecimal.ZERO;
-        def scale = OrderReadHelper.scale;
-        def rounding = OrderReadHelper.rounding;
+        def ZERO = asutil.ZERO;
+        def scale = asutil.scale;
+        def rounding = asutil.rounding;
         
-        // Create zero-value data points (if requested) 
-        // NOTE: this also establishes the LinkedHashMap order for unordered query
-        int i = 0;
-        if (createZeroEntries) {
-            // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
-            while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntervals.getDateBegin().after(thruDateTimestamp))) {
-                String date = dateFormatter.format(dateIntervals.getDateBegin());
-                //Debug.logInfo("Interval date: " + date + " (" + dateIntervals.getDateBegin() + " - " + dateIntervals.getDateEnd() + ")", module);
-                resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-        
-                // Get next date interval; NOTE: duplicated above
-                dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateBegin(), context.locale, context.timeZone);
-                i++;
-            }
-        }
-        
-        // Create first and last zero-value data points (if requested)
-        if (createFirstLastZeroEntries) {
-            String date = dateFormatter.format(dateIntervals.getDateBegin());
-            resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-            date = dateFormatter.format(maxThruDateTimestamp);
-            resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-        }
+        asutil.checkCreateZeroEntries(resultMap, ["total": ZERO, "count": 0]);
         
         def orderStats = [ "currencyConvertCount": 0, "currencyFailCount": 0, 
             "totalOrderCount": 0, "totalGrandTotal": ZERO];
@@ -215,8 +193,7 @@ Map processResult() {
     }    
        
     if (debugMode) {
-        Debug.logInfo("Number of results: " + resultMap.size() 
-            + "; number of zero-entry loop iterations: " + i, module);
+        Debug.logInfo("Number of results: " + resultMap.size(), module);
     }
     
     asutil.storeProductStoreParams();

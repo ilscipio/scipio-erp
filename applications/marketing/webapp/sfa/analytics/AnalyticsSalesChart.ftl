@@ -1,6 +1,6 @@
 <#assign chartType=chartType!"bar"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
-<#assign datasets=chartDatasets?number!1 />
+<#assign datasets=(chartDatasets!1)?number />
 <#if sales??>
   <#assign sales=rewrapMap(sales, "raw-simple")>
 </#if>

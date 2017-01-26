@@ -10,15 +10,11 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.common.uom.UomWorker;
 import org.ofbiz.common.uom.SimpleUomRateConverter;
 
-// FIXME: revisit reuse pattern
-GroovyUtil.runScriptAtLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/CommonAnalytics.groovy", context);
 // New util instance that sets variables in our binding
-asutil = context.analyticsScriptUtilClass.newInstance(binding);
-// old:
-//asutil = context.analyticsUtil;
-//analyticsUtil.setBinding(binding);
-// possible future construct
-//this.metaClass.mixin context.analyticsClass
+asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
+// also works here:
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil.setBinding(binding);
 
 Map processResult() {
     final def module = "SalesChart.groovy";

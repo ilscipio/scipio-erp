@@ -14,8 +14,10 @@ import org.ofbiz.common.uom.SimpleUomRateConverter;
 // NOTE: See SalesChart.groovy for more complete comments
 
 // FIXME: revisit reuse pattern
-GroovyUtil.runScriptAtLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/CommonAnalytics.groovy", context);
-asutil = context.analyticsScriptUtilClass.newInstance(binding);
+asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
+// also works here:
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil.setBinding(binding);
 
 //// use this helper to build a List of visits, orders, order totals, and conversion rates
 //trackingCodeVisitAndOrders = ReportHelper.calcConversionRates(visits, orders, "trackingCodeId");

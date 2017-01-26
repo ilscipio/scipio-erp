@@ -1304,12 +1304,13 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 -->
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
-  <#list mapKeys(paramMap) as key>
+  <#local paramMap = toSimpleMap(paramMap)>
+  <#list paramMap?keys as key>
     <#if res?has_content && (!res?ends_with(paramDelim))>
       <#local res = res + paramDelim>
     </#if>
-    <#if includeEmpty || paramMap[key]?has_content>
-      <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+    <#if includeEmpty || paramMap[rawString(key)]?has_content>
+      <#local res = res + key + "=" + rawString(paramMap[rawString(key)]!"")>
     </#if>
   </#list>
   <#return res>

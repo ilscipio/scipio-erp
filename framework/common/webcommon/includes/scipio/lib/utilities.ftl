@@ -866,20 +866,20 @@ to indicate the value null.
 <#function setVars varMaps={}>
   <#if !(varMaps.ctxVars!false)?is_boolean>
     <#local ctxVars = toSimpleMap(varMaps.ctxVars)>
-    <#list ctxVars?keys as name>
-      <#local dummy = setContextField(name, ctxVars[rawString(name)])>
+    <#list mapKeys(ctxVars) as name>
+      <#local dummy = setContextField(name, ctxVars[name])>
     </#list>
   </#if>
   <#if !(varMaps.globalCtxVars!false)?is_boolean>
     <#local globalCtxVars = toSimpleMap(varMaps.globalCtxVars)>
-    <#list globalCtxVars?keys as name>
-      <#local dummy = setGlobalContextField(name, globalCtxVars[rawString(name)])>
+    <#list mapKeys(globalCtxVars) as name>
+      <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
     </#list>
   </#if>
   <#if !(varMaps.reqAttribs!false)?is_boolean>
     <#local reqAttribs = toSimpleMap(varMaps.reqAttribs)>
-    <#list reqAttribs?keys as name>
-      <#local dummy = setRequestAttribute(name, reqAttribs[rawString(name)])>
+    <#list mapKeys(reqAttribs) as name>
+      <#local dummy = setRequestAttribute(name, reqAttribs[name])>
     </#list>
   </#if>
   <#return "">
@@ -1305,12 +1305,12 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
   <#local paramMap = toSimpleMap(paramMap)>
-  <#list paramMap?keys as key>
+  <#list mapKeys(paramMap) as key>
     <#if res?has_content && (!res?ends_with(paramDelim))>
       <#local res = res + paramDelim>
     </#if>
-    <#if includeEmpty || paramMap[rawString(key)]?has_content>
-      <#local res = res + key + "=" + rawString(paramMap[rawString(key)]!"")>
+    <#if includeEmpty || paramMap[key]?has_content>
+      <#local res = res + key + "=" + rawString(paramMap[key]!"")>
     </#if>
   </#list>
   <#return res>

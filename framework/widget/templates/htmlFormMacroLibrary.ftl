@@ -789,6 +789,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm hiddenFormName="" formName="" formType="" targetUrl="" targetWindow="" 
     params={} useRowSubmit=false useMasterSubmitField=false submitEntries=[] extraArgs...>
+  <#local params = toSimpleMap(params)>
   <#-- NOTE: if (useRowSubmit==false && useMasterSubmitField==true), we can basically skip this entire macro,
     but there's no harm going through this in case we need the hook -->
   <#--<#if !(!useRowSubmit && useMasterSubmitField)>-->
@@ -888,7 +889,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
   <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapeVal(hiddenFormName, 'html')}">
-    <#list mapKeys(params) as paramName>
+    <#list params?keys as paramName>
       <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[escapeVal(paramName, 'html')], 'html')}" />
     </#list>
     <#if useRowSubmit>

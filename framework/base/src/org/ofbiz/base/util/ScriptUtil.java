@@ -415,7 +415,10 @@ public final class ScriptUtil {
     public static Class<?> parseScript(String language, String script) {
         Class<?> scriptClass = null;
         if ("groovy".equals(language)) {
-            scriptClass = GroovyUtil.parseClass(script);
+            // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
+            // so that groovy snippets from FlexibleStringExpander support extra additions
+            //scriptClass = GroovyUtil.parseClass(script);
+            scriptClass = GroovyUtil.parseClass(script, GroovyUtil.getGroovyScriptClassLoader());
         }
         return scriptClass;
     }

@@ -45,7 +45,7 @@ def getIntervalDefaultCount(iScope) {
 
 def readDebugMode() {
     debugMode = Debug.verboseOn();
-    //debugMode = true;
+    debugMode = true;
 }
 
 def readZeroEntriesParams() {
@@ -138,7 +138,11 @@ def readChartTimeParams() {
         if (iCount < 0) {
             iCount = getIntervalDefaultCount(iScope);
         }
-        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
+        if (thruDateTimestamp) {
+            fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount, thruDateTimestamp);
+        } else {
+            fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
+        }
     } else if (!thruDateTimestamp && iCount < 0) {
         if (fromDateTimestamp.after(nowTimestamp)) {
             // fallback: If fromDate in the future, select an appropriate default iCount...
@@ -151,19 +155,20 @@ def readChartTimeParams() {
         }
     }
     
-    if (debugMode) {
-        Debug.logInfo("Fields (adjusted): fromDate: " + fromDateTimestamp
-            + "; thruDate: " + thruDateTimestamp
-            + "; iCount: " + iCount
-            + "; iScope: " + iScope
-            , module);
-    }
-    
     // Calculate the max thruDate, which is either thruDateTimestamp or (fromDateTimestamp+(iCount*iScope))
     maxThruDateTimestamp = thruDateTimestamp;
     if (!maxThruDateTimestamp) {
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, iCount, fromDateTimestamp, context.locale, context.timeZone);
         maxThruDateTimestamp = dateIntervals.getDateEnd();
+    }
+    
+    if (debugMode) {
+        Debug.logInfo("Fields (adjusted): fromDate: " + fromDateTimestamp
+            + "; thruDate: " + thruDateTimestamp
+            + "; iCount: " + iCount
+            + "; iScope: " + iScope
+            + "; maxThruDateTimestamp: " + maxThruDateTimestamp
+            , module);
     }
 }
 
@@ -178,9 +183,9 @@ def checkCreateZeroEntries(resultMap, initialValues) {
     
     // Create zero-value data points (if requested) 
     // NOTE: this also establishes the LinkedHashMap order for unordered query
-    int i = 0;
     if (createZeroEntries) {
         // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
+        int i = 0;
         while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntv.getDateBegin().after(thruDateTimestamp))) {
             String date = dateFormatter.format(dateIntv.getDateBegin());
             //Debug.logInfo("Interval date: " + date + " (" + dateIntv.getDateBegin() + " - " + dateIntv.getDateEnd() + ")", module);

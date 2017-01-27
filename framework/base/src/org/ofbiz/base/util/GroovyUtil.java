@@ -175,6 +175,10 @@ public class GroovyUtil {
     public static Class<?> parseClass(String text) {
         return new GroovyClassLoader().parseClass(text);
     }
+    
+    public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) { // SCIPIO: added 2017-01-27
+        return groovyClassLoader.parseClass(text);
+    }
 
     public static Object runScriptAtLocation(String location, String methodName, Map<String, Object> context) throws GeneralException {
         Script script = InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));

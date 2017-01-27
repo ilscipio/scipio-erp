@@ -238,5 +238,13 @@ public class GroovyUtil {
         return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
     }
     
+    /**
+     * SCIPIO: Returns the static <code>GroovyClassLoader</code> instance, configured
+     * for Ofbiz script base class and other settings.
+     */
+    public static GroovyClassLoader getGroovyScriptClassLoader() {
+        return groovyScriptClassLoader;
+    }
+    
     private GroovyUtil() {}
 }

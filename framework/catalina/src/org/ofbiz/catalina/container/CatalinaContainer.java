@@ -134,8 +134,8 @@ import org.w3c.dom.Document;
 public class CatalinaContainer implements Container {
 
     public static final String CATALINA_HOSTS_HOME = System.getProperty("ofbiz.home") + "/framework/catalina/hosts";
-    public static final String J2EE_SERVER = "OFBiz Container 3.1";
-    public static final String J2EE_APP = "OFBiz";
+    public static final String J2EE_SERVER = "Scipio Container 3.1";
+    public static final String J2EE_APP = "Scipio";
     public static final String module = CatalinaContainer.class.getName();
     private static final ThreadGroup CATALINA_THREAD_GROUP = new ThreadGroup("CatalinaContainer");
 

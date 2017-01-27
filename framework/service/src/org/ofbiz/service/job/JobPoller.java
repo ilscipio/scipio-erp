@@ -99,7 +99,7 @@ public final class JobPoller implements ServiceConfigListener {
 
     private JobPoller() {
         if (pollEnabled()) {
-            jobManagerPollerThread = new Thread(new JobManagerPoller(), "OFBiz-JobPoller");
+            jobManagerPollerThread = new Thread(new JobManagerPoller(), "Scipio-JobPoller");
             jobManagerPollerThread.setDaemon(false);
             jobManagerPollerThread.start();
         } else {
@@ -175,7 +175,7 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     /**
-     * Stops the <code>JobPoller</code>. This method is called when OFBiz shuts down.
+     * Stops the <code>JobPoller</code>. This method is called when Scipio shuts down.
      * The <code>JobPoller</code> cannot be restarted.
      */
     public void stop() {
@@ -198,7 +198,7 @@ public final class JobPoller implements ServiceConfigListener {
     private static class JobInvokerThreadFactory implements ThreadFactory {
 
         public Thread newThread(Runnable runnable) {
-            return new Thread(runnable, "OFBiz-JobQueue-" + created.getAndIncrement());
+            return new Thread(runnable, "Scipio-JobQueue-" + created.getAndIncrement());
         }
     }
 

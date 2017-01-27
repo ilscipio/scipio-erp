@@ -75,7 +75,7 @@ public final class JobManager {
 
     private static void assertIsRunning() {
         if (isShutDown) {
-            throw new IllegalStateException("OFBiz shutting down");
+            throw new IllegalStateException("Scipio shutting down");
         }
     }
 

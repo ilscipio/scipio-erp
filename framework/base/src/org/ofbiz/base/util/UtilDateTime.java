@@ -1461,10 +1461,14 @@ public class UtilDateTime {
     }
     
     public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount) {
+        return getTimeStampFromIntervalScope(iScope, iCount, null);
+    }
+    
+    public static Timestamp getTimeStampFromIntervalScope(String iScope, int iCount, Timestamp thruDate) {
         iCount--;
         if (iCount < 0)
             iCount = getIntervalDefaultCount(iScope);
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = (thruDate != null) ? toCalendar(thruDate) : Calendar.getInstance();
         if (iScope.equals("hour")) {
             calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - iCount);
         } else if (iScope.equals("day")) {

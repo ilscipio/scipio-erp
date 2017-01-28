@@ -361,6 +361,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2">
+            <lookup target-form-name="LookupPartyName" client-autocomplete-field="true" target-parameter="partyId" />
+        </field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlFiscalType" description="${description}">
@@ -404,6 +407,7 @@ under the License.
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
                     <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
                     <condition-expr field-name="productId" operator="equals" from-field="parameters.productId" ignore-if-empty="true"/>

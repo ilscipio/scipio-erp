@@ -26,6 +26,7 @@ import java.util.TreeSet;
 
 import javax.mail.internet.MimeMessage;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
@@ -34,6 +35,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -173,6 +175,80 @@ public class CommonServices {
         }
         catch(Exception e) {
             final String errorMsg = "Exception trying to reload visual theme(s)";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+    }
+    
+    /**
+     * A service used to capture file changes on the system. Automatically implements file listeners for all components recursively.
+     * 
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> startFileListener(DispatchContext dctx, Map<String, ?> context) {
+        //Delegator delegator = dctx.getDelegator();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        try {
+            Collection<ComponentConfig> allComponents = ComponentConfig.getAllComponents();
+            for (ComponentConfig config : allComponents) {
+                String name = "component-"+config.getComponentName();
+                String location = config.getRootLocation();
+                FileListener.startFileListener(name,location); 
+            }
+            return ServiceUtil.returnSuccess("File event registered.");
+        }
+        catch(Exception e) {
+            final String errorMsg = "Exception triggering File Event";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+    }
+    
+    
+    /**
+     * An empty service used to capture file changes on the system.
+     * 
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> triggerFileEvent(DispatchContext dctx, Map<String, ?> context) {
+        //Delegator delegator = dctx.getDelegator();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        try {
+            return ServiceUtil.returnSuccess("File event registered.");
+        }
+        catch(Exception e) {
+            final String errorMsg = "Exception triggering File Event";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+    }
+    
+    
+    /**
+     * Clears the system cache for location
+     * 
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> clearFileCaches(DispatchContext dctx, Map<String, ?> context) {
+        try {
+            if(Boolean.valueOf(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"))){
+                String cacheName = (String) context.get("cacheName");
+                String fileType = (String) context.get("fileType");
+                String fileLocation = (String) context.get("fileLocation");
+                UtilCache.clearCache(cacheName);            
+                return ServiceUtil.returnSuccess("Cache cleared for "+cacheName);
+            }else{
+                return ServiceUtil.returnSuccess("Cache-Lock set. Cache not cleared");
+            }
+        }
+        catch(Exception e) {
+            final String errorMsg = "Exception triggering File Event";
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }

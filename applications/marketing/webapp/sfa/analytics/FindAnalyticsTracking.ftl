@@ -56,7 +56,7 @@
             <option value="">--</option>
             <#if trackingCodeList?has_content>
                 <#list trackingCodeList as trackingCode>                    
-                    <option value="${trackingCode.trackingCodeId}" <#if parameters.trackingCodeId?has_content && parameters.trackingCodeId == trackingCode.trackingCodeId>selected="selected"</#if>>${trackingCode.description}</option>
+                    <option value="${trackingCode.trackingCodeId}"<#if parameters.trackingCodeId?has_content && parameters.trackingCodeId == trackingCode.trackingCodeId> selected="selected"</#if>>${trackingCode.description}</option>
                 </#list>
             </#if>
         </@field>

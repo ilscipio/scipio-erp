@@ -100,6 +100,9 @@ Map processResults() {
         newMap.put("pos", totalVisits);
         resultMap.put(dateBeginFormatted, newMap);
         
+        trackingStats.totalOrders += totalOrders;
+        trackingStats.totalVisits += totalVisits;
+        
         dateIntv = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntv.getDateBegin(), context.locale, context.timeZone);
         i++;
     }

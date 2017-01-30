@@ -17,16 +17,18 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- SCIPIO Email template  - Template BEGIN -->
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width" name="viewport">
 
     <style>
     <#-- STYLES -->
+
+    
 .wrapper {
   width: 100%; }
 
@@ -874,6 +876,8 @@ h6 {
   word-wrap: normal;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
+  margin-top:10px;
+  Margin-top:10px;
   margin-bottom: 10px;
   Margin-bottom: 10px; }
 
@@ -1441,5 +1445,6 @@ table.basic-table {
   <body>
     <table class="body">
       <tr>
-        <td class="float-center" align="center" valign="top">
+        <td class="center" align="center" valign="top">
           <center>
+            

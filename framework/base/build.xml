@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Base" default="jar" basedir=".">
+<project name="OFBiz - Base" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -107,4 +107,33 @@ under the License.
             </test-elements>
         </test-jar>
     </target>
+
+    <target name="init-jar-download" description="download initial jars">
+        <antcall target="base-jars-download"/>
+        <antcall target="base-ant-jars-download"/>
+        <antcall target="base-commons-jars-download"/>
+        <antcall target="base-j2eespecs-jars-download"/>
+        <antcall target="base-scripting-jars-download"/>
+    </target>
+
+    <target name="base-jars-download" description="download base root jars">
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="base"/>
+    </target>
+
+    <target name="base-ant-jars-download" description="download base ant subdir jars">
+        <ivy:retrieve pattern="lib/ant/[artifact]-[revision].[ext]" conf="ant"/>
+    </target>
+
+    <target name="base-commons-jars-download" description="download base root jars">
+        <ivy:retrieve pattern="lib/commons/[artifact]-[revision].[ext]" conf="commons"/>
+    </target>
+
+    <target name="base-j2eespecs-jars-download" description="download base root jars">
+        <ivy:retrieve pattern="lib/j2eespecs/[artifact]-[revision].[ext]" conf="j2eespecs"/>
+    </target>
+
+    <target name="base-scripting-jars-download" description="download base root jars">
+        <ivy:retrieve pattern="lib/scripting/[artifact]-[revision].[ext]" conf="scripting"/>
+    </target>
+
 </project>

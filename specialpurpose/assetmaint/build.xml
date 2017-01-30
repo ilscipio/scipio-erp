@@ -18,7 +18,7 @@
     under the License.
 -->
 
-<project name="OFBiz - Asset Maintenance Component" default="jar" basedir=".">
+<project name="OFBiz - Asset Maintenance Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -44,4 +44,8 @@
         <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
         <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
     </path>
+
+    <target name="init-jar-download" description="download initial jars">
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="application"/>
+    </target>
 </project>

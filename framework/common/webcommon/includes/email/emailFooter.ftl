@@ -25,13 +25,7 @@ under the License.
                   </tbody>
                 </table>
 
-                <table class="spacer">
-                  <tbody>
-                    <tr>
-                      <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
-                    </tr>
-                  </tbody>
-                </table>
+
                 <table class="spacer" style="background:#f3f3f3;">
                   <tbody>
                     <tr>

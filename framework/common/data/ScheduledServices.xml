@@ -18,6 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-   <JobSandbox jobId="FILE_LISTENER_INIT" jobName="Listen to file changes" runTime="2000-01-01 00:00:00.000" 
-        eventId="SCH_EVENT_STARTUP" serviceName="startFileListener" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1"/>
+    <!-- SCIPIO: file listener job (disabled for time being)
+    <JobSandbox jobId="FILE_LISTENER_INIT" jobName="Listen to file changes" runTime="2000-01-01 00:00:00.000" 
+        eventId="SCH_EVENT_STARTUP" serviceName="startFileListener" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1"/>-->
 </entity-engine-xml>

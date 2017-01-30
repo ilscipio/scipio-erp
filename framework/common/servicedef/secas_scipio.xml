@@ -20,6 +20,7 @@ under the License.
 
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
+    <!-- SCIPIO: file listener ecas (disabled for time being)
     <eca service="triggerFileEvent" event="invoke">
         <condition operator="equals" field-name="fileType" value="ftl"/>
         <set field-name="cacheName" value="template.ftl.general"/>
@@ -49,5 +50,5 @@ under the License.
         <condition operator="equals" field-name="fileType" value="ftl"/>
         <set field-name="cacheName" value="widget.screen.template.ftl.inline.basic"/>
         <action mode="sync" service="clearFileCaches"/>
-    </eca>
+    </eca>-->
 </service-eca>

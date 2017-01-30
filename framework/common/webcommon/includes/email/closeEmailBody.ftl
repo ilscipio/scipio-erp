@@ -17,14 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- SCIPIO Email template  - Template End-->
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    </center>
                 </td>
             </tr>
-        </tbody>
-    </table>
-  </body>
-
+        </table>
+        <div style="display:none; white-space:nowrap; font:15px courier; line-height:0;">
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        </div>
+    </body>
 </html>

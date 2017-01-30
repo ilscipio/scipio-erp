@@ -19,8 +19,6 @@ under the License.
 <#-- SCIPIO Email template  - Header-->
 
 <#-- Header -->
-
-    <#--  header -->
     <table align="center" class="wrapper header float-center">
         <tr>
             <td class="wrapper-inner">
@@ -30,7 +28,7 @@ under the License.
                             <table class="row collapse">
                                 <tbody>
                                     <tr>
-                                        <th class="small-6 large-6 columns first">
+                                        <th class="small-6 large-6 columns first"  style="padding-right:16px;background:#f3f3f3;">
                                             <table>
                                                 <tbody>
                                                     <tr>
@@ -46,7 +44,7 @@ under the License.
                                                 </tbody>
                                             </table>
                                         </th>
-                                        <th class="small-6 large-6 columns last">
+                                        <th class="small-6 large-6 columns last"  style="padding-right:16px;background:#f3f3f3;">
                                             <table>
                                                 <tbody>
                                                     <tr>
@@ -85,7 +83,7 @@ under the License.
             <table class="row">
               <tbody>
                 <tr>
-                  <th class="small-12 large-12 columns first last">
+                  <th class="small-12 large-12 columns first last" style="padding-left: 16px;padding-right:16px;">
                     <table>
                       <tr>
                         <th>

@@ -1714,6 +1714,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
 
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup type="" items=[] events={} treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+    <#local events = toSimpleMap(events)>
     <#if treeMenuLibrary == "jstree">     
         <div id="${escapeVal(id, 'html')}"></div>
         <script type="text/javascript"> 

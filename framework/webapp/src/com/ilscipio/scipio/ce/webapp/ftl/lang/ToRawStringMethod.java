@@ -18,21 +18,15 @@
  *******************************************************************************/
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
-import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
-
 import freemarker.core.Environment;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 /**
  * SCIPIO: ToRawStringMethod - Prevents Ofbiz auto-escaping of string.
@@ -57,7 +51,5 @@ public class ToRawStringMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of parameters passed to toRawString/rawString (none passed)");
         }
     }
-    
 
-    
 }

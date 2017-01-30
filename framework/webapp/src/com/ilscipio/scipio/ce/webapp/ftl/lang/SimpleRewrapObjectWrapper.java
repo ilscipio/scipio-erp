@@ -5,14 +5,9 @@ import java.util.Map;
 import org.ofbiz.webapp.ftl.ObjectRewrapper;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.SimpleMapModel;
-import freemarker.template.DefaultMapAdapter;
 import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.utility.ObjectWrapperWithAPISupport;
 
 public class SimpleRewrapObjectWrapper implements ObjectWrapper, ObjectRewrapper {
 
@@ -41,28 +36,15 @@ public class SimpleRewrapObjectWrapper implements ObjectWrapper, ObjectRewrapper
             if (preserving) {
                 // this is more permissive
                 if (Boolean.TRUE.equals(copying)) { // here copying just means "preferred"
-                    return new SimpleHash((Map<?, ?>) arg, objectWrapper);
+                    return LangFtlUtil.makeSimpleMapCopy((Map<?, ?>) arg, objectWrapper);
                 } else {
-                    if (objectWrapper instanceof BeansWrapper) {
-                        return new SimpleMapModel((Map<?, ?>) arg, (BeansWrapper) objectWrapper);
-                    } else if (objectWrapper instanceof ObjectWrapperWithAPISupport) {
-                        return DefaultMapAdapter.adapt((Map<?, ?>) arg, (ObjectWrapperWithAPISupport) objectWrapper);
-                    } else {
-                        return new SimpleHash((Map<?, ?>) arg, objectWrapper);
-                    }
+                    return LangFtlUtil.makeSimpleMapAdapter((Map<?, ?>) arg, objectWrapper, true);
                 }
             } else {
                 if (copying) {
-                    return new SimpleHash((Map<?, ?>) arg, objectWrapper);
+                    return LangFtlUtil.makeSimpleMapCopy((Map<?, ?>) arg, objectWrapper);
                 } else {
-                    if (objectWrapper instanceof BeansWrapper) {
-                        return new SimpleMapModel((Map<?, ?>) arg, (BeansWrapper) objectWrapper);
-                    } else if (objectWrapper instanceof ObjectWrapperWithAPISupport) {
-                        return DefaultMapAdapter.adapt((Map<?, ?>) arg, (ObjectWrapperWithAPISupport) objectWrapper);
-                    } else {
-                        throw new TemplateModelException("SimpleMapObjectWrapper tried to make an adapter wrapped "
-                                + "for a Map, but our ObjectWrapper does not support SimpleMapModel or DefaultMapAdapter");
-                    }
+                    return LangFtlUtil.makeSimpleMapAdapter((Map<?, ?>) arg, objectWrapper, false);
                 }
             }
 

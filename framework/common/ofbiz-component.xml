@@ -25,6 +25,11 @@ under the License.
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    
+    <!-- SCIPIO: Scheduled services -->
+    <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/ScheduledServices.xml"/>
+    
+    
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CommonSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonSystemPropertyData.xml"/>
@@ -63,6 +68,7 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/UnitData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/PeriodData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonPortletData.xml"/>
+    
 
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_cdyne.xml"/>
@@ -75,6 +81,7 @@ under the License.
     <service-resource type="mca" loader="main" location="servicedef/smcas_test.xml"/>
 
     <service-resource type="model" loader="main" location="servicedef/services_scipio.xml"/>
+    <service-resource type="eca" loader="main" location="servicedef/secas_scipio.xml"/>
 
     <test-suite loader="main" location="testdef/UserLoginTests.xml"/>
 </ofbiz-component>

@@ -400,10 +400,11 @@
                         </#if>
                     <#else>
                         <#-- SCIPIO: This is a sanity check, leave here for debugging, will do no harm -->
+                        <#assign selFeatureTypes=toSimpleMap(selFeatureTypes!{})>
                         <#if selFeatureTypes?has_content>
                           <p>
                             <strong>WARN: </strong> Product has selectable features 
-                              [<#list mapKeys(selFeatureTypes) as typeId>${selFeatureTypes[typeId]!typeId!}<#if typeId_has_next>, </#if></#list>]
+                              [<#list mapKeys(selFeatureTypes) as typeId>${escapeVal(selFeatureTypes[typeId]!typeId!, 'html')}<#if typeId_has_next>, </#if></#list>]
                               but is not virtual - not currently handled
                           </p>
                         </#if>

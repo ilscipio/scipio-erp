@@ -46,7 +46,7 @@
         </menu-item>
     </menu>
 
-    <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
+    <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditProductMaints" title="${uiLabelMap.AssetMaintProductMaint}">
             <condition><not><if-empty field="fixedAsset.instanceOfProductId"/></not></condition>
             <link target="EditProductMaints">
@@ -55,7 +55,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="FixedAssetSideBar" extends="FixedAssetSideBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
+    <menu name="FixedAssetSideBar" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FixedAssetTabBar" recursive="includes-only" />
         <!-- SCIPIO: we must override the FixedAssetMaint we inherited from accounting here...  -->
         <menu-item name="ListFixedAssetMaints">
@@ -63,7 +63,7 @@
         </menu-item>
     </menu>
 
-    <menu name="FixedAssetMaintTabBar" extends="FixedAssetMaintTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
+    <menu name="FixedAssetMaintTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditWorkEfforts" title="${uiLabelMap.WorkEffortAllTasks}">
             <link target="EditWorkEfforts">
                 <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>

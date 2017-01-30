@@ -22435,4 +22435,21 @@
         <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
         <value xml:lang="en">Payment ${paymentId} not found...</value>
     </property>
+    <!-- SCIPIO -->
+    <property key="AccountingCreditors">
+        <value xml:lang="de">Kreditoren</value>
+        <value xml:lang="en">Creditors</value>
+    </property>
+    <property key="AccountingCreditor">
+        <value xml:lang="de">Kreditor</value>
+        <value xml:lang="en">Creditor</value>
+    </property>
+    <property key="AccountingDebtors">
+        <value xml:lang="de">Debitoren</value>
+        <value xml:lang="en">Debtors</value>
+    </property>
+    <property key="AccountingDebtor">
+        <value xml:lang="de">Debitor</value>
+        <value xml:lang="en">Debtor</value>
+    </property>
 </resource>

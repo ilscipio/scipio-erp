@@ -824,6 +824,19 @@ under the License.
         </section>
     </screen>
     
+    <screen name="creditCardFields">
+        <section>
+            <actions>
+                <set field="fieldNamePrefix" from-field="ccfFieldNamePrefix" default-value="${''}" />
+                <set field="showSecurityCodeField" from-field="ccfShowSecurityCodeField" type="Boolean" default-value="false" />
+                <!-- SCIPIO: Parametrized, to reuse actions here (once needed) -->
+                <set field="ccfTemplateLocation" from-field="ccfTemplateLocation" default-value="component://accounting/webapp/accounting/common/creditcardfields.ftl" />
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="${ccfTemplateLocation}"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- AP widgets-->
     <!-- SCIPIO: Form migration -->

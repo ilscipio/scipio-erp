@@ -843,6 +843,18 @@ public class UtilMisc {
     }
     
     /**
+     * SCIPIO: Returns a new list of entries, where each entry corresponds to the value
+     * for the given key for each map in the collection. 
+     */
+    public static <K, V extends R, R> List<R> collectMapValuesForKey(Collection<Map<K, V>> collection, K key) {
+        List<R> res = new ArrayList<>(collection.size());
+        for(Map<K, V> map : collection) {
+            res.add(map.get(key));
+        }
+        return res;
+    }
+    
+    /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or
      * Boolean.FALSE if value is Boolean.FALSE or "false", or null if
      * anything else.

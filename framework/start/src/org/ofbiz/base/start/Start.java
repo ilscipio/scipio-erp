@@ -77,7 +77,7 @@ public final class Start {
         // Currently some commands have no dash, see OFBIZ-5872
         out.println("");
         out.println("Usage: java -jar ofbiz.jar [command] [arguments]");
-        out.println("both    -----> Runs simultaneously the POS (Point of Sales) application and OFBiz standard");
+        out.println("both    -----> Runs simultaneously the POS (Point of Sales) application and Scipio standard");
         out.println("-help, -? ----> This screen");
         out.println("load-data -----> Creates tables/load data, eg: load-data -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz. Or: load-data -file=/tmp/dataload.xml");
         out.println("pos     -----> Runs the POS (Point of Sales) application");
@@ -166,7 +166,7 @@ public final class Start {
         File logDir = new File(config.logDir);
         if (!logDir.exists()) {
             if (logDir.mkdir()) {
-                System.out.println("Created OFBiz log dir [" + logDir.getAbsolutePath() + "]");
+                System.out.println("Created Scipio log dir [" + logDir.getAbsolutePath() + "]");
             }
         }
     }
@@ -276,7 +276,7 @@ public final class Start {
     }
 
     private String sendSocketCommand(Control control) throws IOException, ConnectException {
-        String response = "OFBiz is Down";
+        String response = "Scipio is Down";
         try {
             Socket socket = new Socket(config.adminAddress, config.adminPort);
             // send the command
@@ -388,7 +388,7 @@ public final class Start {
         private ServerSocket serverSocket = null;
 
         AdminPortThread() throws StartupException {
-            super("OFBiz-AdminPortThread");
+            super("Scipio-AdminPortThread");
             try {
                 this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
             } catch (IOException e) {

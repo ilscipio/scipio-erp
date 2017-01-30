@@ -46,6 +46,7 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 
+import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -136,6 +137,7 @@ public final class ScriptUtil {
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             try {
                 Compilable compilableEngine = (Compilable) engine;
                 URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
@@ -175,6 +177,7 @@ public final class ScriptUtil {
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             try {
                 Compilable compilableEngine = (Compilable) engine;
                 compiledScript = compilableEngine.compile(script);
@@ -274,6 +277,7 @@ public final class ScriptUtil {
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Begin processing script [" + script + "] using engine " + engine.getClass().getName(), module);
             }
@@ -381,6 +385,7 @@ public final class ScriptUtil {
         if (engine == null) {
             throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
         }
+        engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
         if (Debug.verboseOn()) {
             Debug.logVerbose("Begin processing script [" + filePath + "] using engine " + engine.getClass().getName(), module);
         }
@@ -410,7 +415,10 @@ public final class ScriptUtil {
     public static Class<?> parseScript(String language, String script) {
         Class<?> scriptClass = null;
         if ("groovy".equals(language)) {
-            scriptClass = GroovyUtil.parseClass(script);
+            // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
+            // so that groovy snippets from FlexibleStringExpander support extra additions
+            //scriptClass = GroovyUtil.parseClass(script);
+            scriptClass = GroovyUtil.parseClass(script, GroovyUtil.getGroovyScriptClassLoader());
         }
         return scriptClass;
     }
@@ -513,5 +521,38 @@ public final class ScriptUtil {
             }
         }
         return sb.toString();
+    }
+    
+    /**
+     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread. 
+     * Should be called by all ScriptUtil methods every time a new ScriptEngine is gotten
+     * from the ScriptEngineManager.
+     * <p>
+     * NOTE: This is safe only with the assumption that the ScriptEngine instance
+     * passed was newly created for this thread (and not a singleton instance). 
+     * At current time (2017-01-27), this was already being assumed (implied by the presence of
+     * calls such as <code>ScriptEngine.setContext</code>, above),
+     * and is known to be true for GroovyScriptEngineImpl (see Groovy source code),
+     * further dictated by the fact that GroovyScriptEngineFactory cannot be configured
+     * without subclassing.
+     */
+    private static ScriptEngine configureScriptEngineForInvoke(ScriptEngine scriptEngine) {
+        return configureScriptEngine(scriptEngine);
+    }
+    
+    /**
+     * SCIPIO: Configures the given script engine with any non-default settings needed.
+     * <p>
+     * 2017-01-27: This now sets our custom GroovyClassLoader on the engine, so that
+     * all Groovy scripts will derived from Ofbiz GroovyBaseScript and methods
+     * such as <code>from(...)</code> (entity queries) are available everywhere,
+     * notably from inline scripts.
+     */
+    private static ScriptEngine configureScriptEngine(ScriptEngine scriptEngine) {
+        if (scriptEngine instanceof GroovyScriptEngineImpl) {
+            GroovyScriptEngineImpl groovyScriptEngine = (GroovyScriptEngineImpl) scriptEngine;
+            groovyScriptEngine.setClassLoader(GroovyUtil.getGroovyScriptClassLoader());
+        }
+        return scriptEngine;
     }
 }

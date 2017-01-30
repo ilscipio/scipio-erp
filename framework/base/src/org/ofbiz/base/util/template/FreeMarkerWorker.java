@@ -87,6 +87,13 @@ public class FreeMarkerWorker {
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
+     * SCIPIO: The default escaping charset for the Freemarker <code>?url</code> built-in.
+     * <p>
+     * NOTE: This is hardcoded here because it is also already hardcoded in <code>UrlCodec</code>.
+     */
+    private static final String defaultUrlEscapingCharset = "UTF-8";
+    
+    /**
      * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
      */
     private static final ObjectWrapper defaultOfbizSimpleMapWrapper;
@@ -181,6 +188,7 @@ public class FreeMarkerWorker {
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
             newConfig.setSetting("number_format", "0.##########");
+            newConfig.setURLEscapingCharset(getDefaultUrlEscapingCharset()); // SCIPIO: new 2017-01-27
         } catch (TemplateException e) {
             Debug.logError("Unable to set date/time and number formats in FreeMarker: " + e, module);
         }
@@ -207,6 +215,13 @@ public class FreeMarkerWorker {
         return newConfig;
     }
 
+    /**
+     * SCIPIO: Returns the default escaping charset for the Freemarker <code>?url</code> built-in.
+     */
+    public static String getDefaultUrlEscapingCharset() {
+        return defaultUrlEscapingCharset;
+    }
+    
     /**
      * Protected helper method.
      */

@@ -172,6 +172,15 @@ under the License.
                 <!-- dynamic form -->
                 <set field="miscMenusLocation" value="component://webtools/widget/MiscMenus.xml"/>
                 <include-menu-actions name="WebtoolsMenuActionsDemo4" location="${miscMenusLocation}"/>
+                
+                <!-- Test for inline scripts (new in Scipio) and GroovyBaseScript extension for inline scripts (new in Scipio, 2017-01-27) -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    productStores = select("productStoreId").from("ProductStore").orderBy("productStoreId").cache(true).queryList().collect { it.productStoreId };
+                    Debug.logInfo("Product stores in system (cached): " + productStores, "InlineDemoScript.groovy");
+                ]]></script>
+                <!-- NOTE: in the following, we cannot use the nice groovy collect() method with closure, because syntax doesn't support nested brackets... -->
+                <set field="dummy" value="${groovy: import org.ofbiz.base.util.*; Debug.logInfo('WebSite records in system (cached): ' + UtilMisc.collectMapValuesForKey(from('WebSite').orderBy('webSiteId').cache(true).queryList(), 'webSiteId'), 'InlineDemoAssignScript.groovy'); '';}"/>
             </actions>
             <widgets>
                 <!-- 

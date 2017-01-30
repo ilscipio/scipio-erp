@@ -1100,14 +1100,18 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     @chartdata
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"chart", "id":"", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
+  "type":"pie", "library":"", "id":"", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","labelUom1":"","labelUom2":"","passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.chart_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
 
-  <#global chartLibrary = library!"chart"/>
+  <#if !library?has_content>
+    <#local library = "chart">
+  </#if>
+  <#global chartLibrary = library/>
+  
   <#local chartIdNum = getRequestVar("scipioChartIdNum")!0>
   <#local chartIdNum = chartIdNum + 1 />
   <#local dummy = setRequestVar("scipioChartIdNum", chartIdNum)>

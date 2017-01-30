@@ -1446,6 +1446,13 @@
       <li>${addExtLoginKey("main")}</li>
     </ul>
   </@section>
+  
+  <@section title="Freemarker built-in ?url escaping (NOTE: escapeVal and escapeFullUrl are preferred in Scipio)">
+    <ul>
+      <li>Explicit encoding: someUri?param1=${"start''#%'end"?url("UTF-8")}</li>
+      <li>Implicit encoding (added 2017-01-27): someUri?param1=${"start''#%'end"?url}</li>
+    </ul>
+  </@section>
 </@section>
 
 <@section title="Escaping">

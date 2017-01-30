@@ -10,124 +10,27 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.common.uom.UomWorker;
 import org.ofbiz.common.uom.SimpleUomRateConverter;
 
-def getIntervalDefaultCount(iScope) {
-    def iCount = UtilDateTime.getIntervalDefaultCount(iScope);
-    if (iCount >= 0) {
-        // FIXME?: why isn't this taken into account by values in UtilDateTime?
-        if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-        if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-    }
-    return iCount;
-};
+// New util instance that sets variables in our binding
+asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
+// also works here:
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil.setBinding(binding);
 
 Map processResult() {
     final def module = "SalesChart.groovy";
-    def debugMode = Debug.verboseOn();
-    //debugMode = true;
-    
-    createZeroEntries = context.createZeroEntries;
-    if (createZeroEntries == null) {
-        createZeroEntries = true;
-    }
-    createFirstLastZeroEntries = context.createFirstLastZeroEntries;
-    if (createFirstLastZeroEntries == null) {
-        createFirstLastZeroEntries = false
-    }
+    asutil.readDebugMode();
+    asutil.readZeroEntriesParams();
     
     salesChannel = parameters.salesChannel;
     salesChannels = (parameters.salesChannel) ? [parameters.salesChannel] : [];
     
-    productStoreId = parameters.productStoreId;
-    productStore = null;
-    if (productStoreId) {
-        productStore = from("ProductStore").where("productStoreId", productStoreId).cache(true).queryOne();
-        if (!productStore) {
-            productStoreId = null;
-        }
-    }
+    asutil.readProductStoreParams();
+    asutil.readCurrencyUomParams();
+    asutil.readChartTimeParams();
+    asutil.readDateIntervalsFormatter();
     
-    currencyUomId = parameters.currencyUomId;
-    currencyUom = null;
-    if (currencyUomId) {
-        currencyUom = from("Uom").where("uomId", currencyUomId).cache(true).queryOne();
-        if (!currencyUom) {
-            currencyUomId = null;
-        }
-    }
-    if (!currencyUomId) {
-        // check productStore default currency
-        currencyUomId = productStore?.defaultCurrencyUomId;
-        if (!currencyUomId) {
-            // global default lookup, based on org.ofbiz.order.shoppingcart.ShoppingCart
-            currencyUomId = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
-        }
-        currencyUom = from("Uom").where("uomId", currencyUomId).cache(true).queryOne();
-    }
-    
-    String iScope = context.chartIntervalScope;
-    if (!iScope) { // Screen must set this, either from user or a default
-        return null;
-    }
-    int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : -1;
-    fromDate = parameters.fromDate;
-    thruDate = parameters.thruDate;
-
-    if (debugMode) {
-        Debug.logInfo("Fields (input): fromDate: " + fromDate
-            + "; thruDate: " + thruDate
-            + "; iCount: " + iCount
-            + "; iScope: " + iScope
-            , module);
-    }
-    
-    // Check and sanitize fromDate/thruDate params
-    Timestamp fromDateTimestamp = null;
-    Timestamp thruDateTimestamp = null;
-    Timestamp nowTimestamp = context.nowTimestamp;
-    if (fromDate)
-        fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);    
-    if (thruDate)
-        thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", context.timeZone, context.locale);           
-    if (fromDateTimestamp && thruDateTimestamp && fromDateTimestamp.after(thruDateTimestamp)) {
-        // switch these automatically for the user... saves him time this way
-        oldThruDateTimestamp = thruDateTimestamp
-        thruDateTimestamp = fromDateTimestamp;
-        fromDateTimestamp = oldThruDateTimestamp;
-    }
-    
-    // Make sure we have a fromDateTimestamp, and either iCount or thruDateTimestamp (otherwise endless loop!)
-    if (!fromDateTimestamp) {
-        // Determine an appropriate fromDateTimestamp and iCount (if not set)
-        if (iCount < 0) {
-            iCount = getIntervalDefaultCount(iScope);
-        }      
-        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
-    } else if (!thruDateTimestamp && iCount < 0) {
-        if (fromDateTimestamp.after(nowTimestamp)) {
-            // fallback: If fromDate in the future, select an appropriate default iCount...
-            // but having fromDate in future doesn't make much sense anyway
-            iCount = getIntervalDefaultCount(iScope);
-        } else {
-            // If fromDate in the past, user probably wanted all orders up until today
-            // (we must have a cutoff point, due to way loop is written)
-            thruDateTimestamp = nowTimestamp;
-        }
-    }
-    
-    if (debugMode) {
-        Debug.logInfo("Fields (adjusted): fromDate: " + fromDateTimestamp
-            + "; thruDate: " + thruDateTimestamp
-            + "; iCount: " + iCount
-            + "; iScope: " + iScope
-            , module);
-    }
-    
-    // Calculate the max thruDate, which is either thruDateTimestamp or (fromDateTimestamp+(iCount*iScope))
-    maxThruDateTimestamp = thruDateTimestamp;
-    if (!maxThruDateTimestamp) {
-        dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, iCount, fromDateTimestamp, context.locale, context.timeZone);
-        maxThruDateTimestamp = dateIntervals.getDateEnd();
-    }
+    //Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
+    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order
     
     // Perform main DB query
     // OLD: we'll do the query manually because of the performance impacts, and use EntityListIterator
@@ -164,39 +67,13 @@ Map processResult() {
         orderListIterator = from("OrderHeader").where(conditions).orderBy("orderDate").cache(false).queryIterator();
     }
     
-    // Organize results
-    //Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
-    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order; the results are ordered by -orderDate
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
-    dateFormatter = dateIntervals.getDateFormatter();
+    // Process results
     try {
-        def ZERO = BigDecimal.ZERO;
-        def scale = OrderReadHelper.scale;
-        def rounding = OrderReadHelper.rounding;
+        def ZERO = asutil.ZERO;
+        def scale = asutil.scale;
+        def rounding = asutil.rounding;
         
-        // Create zero-value data points (if requested) 
-        // NOTE: this also establishes the LinkedHashMap order for unordered query
-        int i = 0;
-        if (createZeroEntries) {
-            // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive due to query above)
-            while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntervals.getDateBegin().after(thruDateTimestamp))) {
-                String date = dateFormatter.format(dateIntervals.getDateBegin());
-                //Debug.logInfo("Interval date: " + date + " (" + dateIntervals.getDateBegin() + " - " + dateIntervals.getDateEnd() + ")", module);
-                resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-        
-                // Get next date interval; NOTE: duplicated above
-                dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateBegin(), context.locale, context.timeZone);
-                i++;
-            }
-        }
-        
-        // Create first and last zero-value data points (if requested)
-        if (createFirstLastZeroEntries) {
-            String date = dateFormatter.format(dateIntervals.getDateBegin());
-            resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-            date = dateFormatter.format(maxThruDateTimestamp);
-            resultMap.put(date, ["total": ZERO, "count": 0, "pos": date]);
-        }
+        asutil.checkCreateZeroEntries(resultMap, ["total": ZERO, "count": 0]);
         
         def orderStats = [ "currencyConvertCount": 0, "currencyFailCount": 0, 
             "totalOrderCount": 0, "totalGrandTotal": ZERO];
@@ -312,14 +189,11 @@ Map processResult() {
     }    
        
     if (debugMode) {
-        Debug.logInfo("Number of results: " + resultMap.size() 
-            + "; number of zero-entry loop iterations: " + i, module);
+        Debug.logInfo("Number of results: " + resultMap.size(), module);
     }
     
-    context.productStoreId = productStoreId;
-    context.productStore = productStore;
-    context.currencyUomId = currencyUomId;
-    context.currencyUom = currencyUom;
+    asutil.storeProductStoreParams();
+    asutil.storeCurrencyUomParams();
     
     return resultMap;
 }

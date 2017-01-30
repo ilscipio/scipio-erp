@@ -78,7 +78,7 @@ public final class ScriptUtil {
 
     static {
         Set<String> writableScriptNames = new HashSet<String>();
-        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngineManager manager = getScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
         if (engines.isEmpty()) {
             Debug.logInfo("No scripting engines were found.", module);
@@ -132,7 +132,7 @@ public final class ScriptUtil {
         Assert.notNull("filePath", filePath);
         CompiledScript script = parsedScripts.get(filePath);
         if (script == null) {
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByExtension(getFileExtension(filePath));
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
@@ -172,7 +172,7 @@ public final class ScriptUtil {
         String cacheKey = language.concat("://").concat(script);
         CompiledScript compiledScript = parsedScripts.get(cacheKey);
         if (compiledScript == null) {
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName(language);
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
@@ -272,7 +272,7 @@ public final class ScriptUtil {
             if (compiledScript != null) {
                 return executeScript(compiledScript, null, createScriptContext(context), null);
             }
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName(language);
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
@@ -380,7 +380,7 @@ public final class ScriptUtil {
             }
         }
         String fileExtension = getFileExtension(filePath);
-        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngineManager manager = getScriptEngineManager();
         ScriptEngine engine = manager.getEngineByExtension(fileExtension);
         if (engine == null) {
             throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
@@ -554,5 +554,13 @@ public final class ScriptUtil {
             groovyScriptEngine.setClassLoader(GroovyUtil.getGroovyScriptClassLoader());
         }
         return scriptEngine;
+    }
+    
+    /**
+     * SCIPIO: Returns an appropriate {@link javax.script.ScriptEngineManager} for current
+     * thread. Abstracts the creation and selection of the manager.
+     */
+    public static ScriptEngineManager getScriptEngineManager() {
+        return new ScriptEngineManager();
     }
 }

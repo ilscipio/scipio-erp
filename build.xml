@@ -2000,7 +2000,7 @@ under the License.
                 <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
-      <fail message="Resource name is mandatory">
+        <fail message="Resource name is mandatory">
             <condition>
                 <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
@@ -2015,7 +2015,7 @@ under the License.
                 <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
-      <filterset id="replacePlaceholders">
+        <filterset id="replacePlaceholders">
             <filter token="component-name" value="${component-name}"/>
             <filter token="component-resource-name" value="${component-resource-name}"/>
             <filter token="base-permission" value="${base-permission}"/>

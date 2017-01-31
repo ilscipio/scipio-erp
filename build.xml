@@ -1919,9 +1919,83 @@ under the License.
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
     <target name="init-lib-download" description="Initial libraries and dependencies download">
+        <tstamp>
+             <format property="ivy.start.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>
+        <antcall target="reset-lib-download-status"/>
         <antcall target="framework-lib-download"/>
         <antcall target="applications-lib-download"/>
         <antcall target="specialpurpose-lib-download"/>
+        <tstamp>
+             <format property="ivy.finish.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>
+        <echo message="status=SUCCESS${line.separator}startTime=${ivy.start.timestamp}${line.separator}finishTime=${ivy.finish.timestamp}${line.separator}" file="runtime/ivy-status.txt" />
+    </target>
+    
+    <target name="check-init-lib-download" depends="get-lib-download-status">
+        <if>
+            <equals arg1="${lib.download.bypass}" arg2="true"/>
+            <then>
+                <echo message="Skipping lib download (bypassed)"/>
+            </then>
+            <elseif>
+                <equals arg1="${lib.download.force}" arg2="true"/>
+                <then>
+                    <echo message="Lib download required (forced) - starting..."/>
+                    <antcall target="init-lib-download"/>
+                </then>
+            </elseif>
+            <else>
+                <if>
+                    <equals arg1="${lib.download.last.status}" arg2="SUCCESS"/>
+                    <then>
+                        <if>
+                            <equals arg1="${lib.download.majorlibs.present}" arg2="true"/>
+                            <then>
+                                <echo message="Last successful lib download: ${lib.download.last.finishTime} (SUCCESS, not re-running; use -Dlib.download.force=true to force)"/>
+                            </then>
+                            <else>
+                                <echo level="error" message="Lib download: SANITY CHECK FAILED: missing major libraries despite last run status marked success!"/>
+                                <echo message="Lib download required (sanity check failed) - starting..."/>
+                                <antcall target="init-lib-download"/>
+                            </else>
+                        </if>
+                    </then>
+                    <else>
+                        <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
+                        <antcall target="init-lib-download"/>
+                    </else>
+                </if>
+            </else>
+        </if>
+    </target>
+    
+    <target name="reset-lib-download-status">
+        <delete file="runtime/ivy-status.txt"/>
+    </target>
+    
+    <target name="get-lib-download-status">
+        <property file="runtime/ivy-status.txt" prefix="lib.download.last" />
+        <if>
+            <isset property="lib.download.last.status"/>
+            <then>
+                <echo level="verbose" message="Library download status: ${lib.download.last.status}"/>
+            </then>
+            <else>
+                <echo level="verbose" message="Library download status: UNKNOWN (requires run)"/>
+            </else>
+        </if>
+        <!-- Sanity check: test if some of the major libraries are present -->
+        <condition property="lib.download.majorlibs.present" value="true" else="false">
+            <and>
+                <resourcecount when="greater" count="0">
+                    <fileset file="framework/base/lib/freemarker-*.jar"/>
+                </resourcecount>
+                <resourcecount when="greater" count="0">
+                    <fileset file="framework/catalina/lib/tomcat-*.jar"/>
+                </resourcecount>
+            </and>
+        </condition>
     </target>
 
     <target name="framework-lib-download">

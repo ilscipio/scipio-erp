@@ -41,9 +41,10 @@ under the License.
     <property name="addons.dir" value="addons" />
     <property name="hotdeploy.dir" value="hot-deploy" />
     
-    <!-- 2017-01-18: Top-level component directories, in their generally-expect build and load order 
-        FIXME?: this is the build order used, but load order currently inconsistent with this w.r.t. themes -->
-    <property name="ofbiz.component.dirs" value="framework,applications,specialpurpose,themes,addons,hot-deploy" />
+    <!-- Top-level component directories, in their generally-expect build and load order 
+        NOTE: 2017-01-31: build order is for now rectified to framework->themes->... in order for the build order
+            to be consistent with the component load order (as defined in stock ofbiz) -->
+    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy" />
     
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
     
@@ -373,11 +374,12 @@ under the License.
         <!-- SCIPIO: addons dir -->
         <addonsant target="clean"/>
         
-        <!-- SCIPIO: 2017-01-19: added clean task for themes (not invoked stock ofbiz) -->
-        <dep-subant dir="${basedir}/themes" target="clean"/>
-        
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
+        
+        <!-- SCIPIO: 2017-01-19: added clean task for themes (not invoked stock ofbiz); 2017-01-31: rectified build order -->
+        <dep-subant dir="${basedir}/themes" target="clean"/>
+        
         <antcall target="clean-framework"/>
         <delete file="ofbiz.jar"/>
         
@@ -683,8 +685,6 @@ under the License.
         <antcall target="build-dev"/>
 
         <antcall target="build-framework"/>
-        <antcall target="build-applications"/>
-        <antcall target="build-specialpurpose"/>
         
         <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
         <externalsubant>
@@ -692,8 +692,12 @@ under the License.
                 <include name="*/build.xml" />
             </fileset>
         </externalsubant>-->
+        <!-- SCIPIO: 2017-01-31: rectified build order, framework->themes->..., to match component load order -->
         <dep-subant dir="${basedir}/themes"/>
 
+        <antcall target="build-applications"/>
+        <antcall target="build-specialpurpose"/>
+        
         <!-- SCIPIO: addons dir -->
         <addonsant/>
         

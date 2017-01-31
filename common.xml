@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project name="Ant - Common">
+<project name="Ant - Common" xmlns:ivy="antlib:org.apache.ivy.ant">
     <dirname property="Ant - Common.dir" file="${ant.file.Ant - Common}"/>
     <import file="${Ant - Common.dir}/macros.xml"/>
     <!-- SCIPIO: TODO: investigate whether a third common file, common to both common.xml and commontheme.xml, is
@@ -278,6 +278,15 @@ under the License.
     <target name="get-component-build-deps"
         description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
         <read-component-build-deps/>
+    </target>
+
+    <target name="init-jar-download" description="download initial jars">
+        <if>
+            <available file="lib" type="dir"/>
+            <then>
+                <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="application"/>
+            </then>
+        </if>
     </target>
     
 </project>

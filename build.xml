@@ -114,7 +114,7 @@ under the License.
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="ofbiz-init" depends="dir-init">
+    <target name="ofbiz-init" depends="dir-init,ivy-init">
         <property environment="env"/>
     </target>
 
@@ -137,12 +137,7 @@ under the License.
     </target>
     
     <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
-        <taskdef resource="org/apache/ivy/ant/antlib.xml"
-                 uri="antlib:org.apache.ivy.ant">
-            <classpath>
-                <pathelement location="framework/base/lib/ivy-2.2.0.jar" />
-            </classpath>
-        </taskdef>
+        <!-- (nothing to do for now; taskdef already defined) -->
     </target>
     
     <target name="sonar-init" depends="ivy-init">
@@ -364,7 +359,7 @@ under the License.
         
     </target>
 
-    <target name="clean" depends="build-scipio-build-tools">
+    <target name="clean" depends="build-scipio-build-tools,ivy-init">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean" />

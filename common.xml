@@ -20,9 +20,7 @@ under the License.
 <project name="Ant - Common" xmlns:ivy="antlib:org.apache.ivy.ant">
     <dirname property="Ant - Common.dir" file="${ant.file.Ant - Common}"/>
     <import file="${Ant - Common.dir}/macros.xml"/>
-    <!-- SCIPIO: TODO: investigate whether a third common file, common to both common.xml and commontheme.xml, is
-        needed or desirable, or alternatively, if it is always safe for commontheme.xml to include common.xml -->
-    
+
     <property environment="env"/>
     <property name="src.dir" value="src"/>
     <property name="dtd.dir" value="dtd"/>

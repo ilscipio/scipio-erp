@@ -1923,9 +1923,14 @@ under the License.
              <format property="ivy.start.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
         <antcall target="reset-lib-download-status"/>
+        
         <antcall target="framework-lib-download"/>
+        <antcall target="themes-lib-download"/>
         <antcall target="applications-lib-download"/>
         <antcall target="specialpurpose-lib-download"/>
+        <antcall target="addons-lib-download"/>
+        <antcall target="hotdeploy-lib-download"/>
+        
         <tstamp>
              <format property="ivy.finish.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
@@ -2014,6 +2019,24 @@ under the License.
         <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
         <iterate target="init-lib-download" filelist="specialpurpose-builds"/>
         <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
+    </target>
+    
+    <target name="addons-lib-download">
+        <echo message="[init] ========== Start Downloading Jars of Addons components (Compile) =========="/>
+        <addonsant target="init-lib-download"/>
+        <echo message="[init] ========== Start Downloading Jars of Addons components (Compile) =========="/>
+    </target>
+    
+    <target name="hotdeploy-lib-download">
+        <echo message="[init] ========== Start Downloading Jars of Hot-Deploy components (Compile) =========="/>
+        <hotdeployant target="init-lib-download"/>
+        <echo message="[init] ========== Start Downloading Jars of Hot-Deploy components (Compile) =========="/>
+    </target>
+    
+    <target name="themes-lib-download">
+        <echo message="[init] ========== Start Downloading Jars of Themes components (Compile) =========="/>
+        <dep-subant dir="${basedir}/themes" target="init-lib-download"/>
+        <echo message="[init] ========== Start Downloading Jars of Themes components (Compile) =========="/>
     </target>
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">

@@ -1919,27 +1919,27 @@ under the License.
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-jars-download" description="initial dependencies download">
-        <antcall target="framework-jars-download"/>
-        <antcall target="applications-jars-download"/>
-        <antcall target="specialpurpose-jars-download"/>
+    <target name="init-lib-download" description="Initial libraries and dependencies download">
+        <antcall target="framework-lib-download"/>
+        <antcall target="applications-lib-download"/>
+        <antcall target="specialpurpose-lib-download"/>
     </target>
 
-    <target name="framework-jars-download" if="${applications.present}">
+    <target name="framework-lib-download">
         <echo message="[init] ========== Start Downloading Jars of Framework components (Compile) =========="/>
-        <iterate target="init-jar-download" filelist="framework-builds"/>
+        <iterate target="init-lib-download" filelist="framework-builds"/>
         <echo message="[init] ========== Done Downloading Jars of Framework components (Compile) =========="/>
     </target>
 
-    <target name="applications-jars-download" if="${applications.present}">
+    <target name="applications-lib-download" if="${applications.present}">
         <echo message="[init] ========== Start Downloading Jars of Applications components (Compile) =========="/>
-        <iterate target="init-jar-download" filelist="application-builds"/>
+        <iterate target="init-lib-download" filelist="application-builds"/>
         <echo message="[init] ========== Done Downloading Jars of Applications components (Compile) =========="/>
     </target>
 
-    <target name="specialpurpose-jars-download" if="${applications.present}">
+    <target name="specialpurpose-lib-download" if="${specialpurpose.present}">
         <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
-        <iterate target="init-jar-download" filelist="specialpurpose-builds"/>
+        <iterate target="init-lib-download" filelist="specialpurpose-builds"/>
         <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
     </target>
 

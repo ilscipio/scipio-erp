@@ -24,7 +24,7 @@ under the License.
 
     <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml">
         <classpath>
-            <pathelement location="framework/base/lib/ivy-2.2.0.jar"/>
+            <pathelement location="framework/base/lib/ivy-2.4.0.jar"/>
         </classpath>
     </taskdef>
 

@@ -1923,6 +1923,7 @@ under the License.
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
     <target name="init-lib-update" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
+        <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
              <format property="lib.update.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
@@ -1943,6 +1944,7 @@ under the License.
         </tstamp>
         <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
         -->
+        <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
     
     <target name="check-init-lib-update" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">

@@ -1919,10 +1919,12 @@ under the License.
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
     <target name="init-lib-download" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
+        <!--
         <tstamp>
              <format property="lib.download.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
         <antcall target="reset-lib-download-status"/>
+        -->
         
         <antcall target="framework-lib-download"/>
         <antcall target="themes-lib-download"/>
@@ -1931,14 +1933,16 @@ under the License.
         <antcall target="addons-lib-download"/>
         <antcall target="hotdeploy-lib-download"/>
         
+        <!-- Removed - not really useful
         <tstamp>
              <format property="lib.download.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
         <echo message="status=SUCCESS${line.separator}startTime=${lib.download.start.time}${line.separator}finishTime=${lib.download.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
+        -->
     </target>
     
     <target name="check-init-lib-download" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">
-        <!-- Removed - useless (see below): depends="get-lib-download-status" -->
+        <!-- Removed - not really useful (see below): depends="get-lib-download-status" -->
         <if>
             <equals arg1="${lib.download.bypass}" arg2="true"/>
             <then>
@@ -1980,6 +1984,7 @@ under the License.
         </if>
     </target>
     
+    <!-- Removed - not really useful
     <target name="reset-lib-download-status">
         <delete file="runtime/ivy-status.txt"/>
     </target>
@@ -1995,7 +2000,7 @@ under the License.
                 <echo level="verbose" message="Library download status: UNKNOWN (requires run)"/>
             </else>
         </if>
-        <!-- Sanity check: test if some of the major libraries are present -->
+        <!- Sanity check: test if some of the major libraries are present ->
         <condition property="lib.download.majorlibs.present" value="true" else="false">
             <and>
                 <resourcecount when="greater" count="0">
@@ -2007,6 +2012,7 @@ under the License.
             </and>
         </condition>
     </target>
+    -->
 
     <target name="framework-lib-download">
         <iterate target="init-lib-download" filelist="framework-builds"/>

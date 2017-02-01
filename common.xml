@@ -287,12 +287,31 @@ under the License.
                 <available file="lib" type="dir"/>
             </and>
             <then>
+                <if>
+                    <not><equals arg1="${lib.download.clean}" arg2="false"/></not>
+                    <then>
+                        <antcall target="do-lib-clean"/>
+                    </then>
+                </if>
                 <antcall target="do-lib-download"/>
             </then>
         </if>
     </target>
     
+    <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <antcall target="common-lib-clean"/>
+    </target>
+    
+    <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <!-- NOTE: This exists because we cannot use sync="true" on <ivy:retrieve/> because it will remove 
+            files we need to keep - we need exceptions. 
+            So instead we implement our own sync by cleaning out all files except for the listed
+            exceptions. -->
+        <remove-lib-files dir="lib" excludes-refid="lib.manual.libraries"/>
+    </target>
+    
     <target name="do-lib-download" description="Downloads all jars">
+        <antcall target="common-lib-clean"/>
         <antcall target="common-lib-download"/>
     </target>
     

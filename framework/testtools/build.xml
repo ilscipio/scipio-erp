@@ -47,8 +47,13 @@ under the License.
         <fileset dir="${build.dir}/lib" includes="*.jar"/>
     </path>    
     
-    <target name="do-lib-download" description="Downloads initial jars (override)">
-        <!-- FIXME: JAR download disabled because spring-core/spring-test lib needed is missing from repo -->
-    </target>
+    <!-- SCIPIO: FIXME: the spring-core and spring-test libraries of current needed version are
+        not available, so must be committed to trunk... -->
+    <selector id="lib.manual.libraries">
+        <or>
+            <filename name="spring-core-*.jar"/>
+            <filename name="spring-test-*.jar"/>
+        </or>
+    </selector>
     
 </project>

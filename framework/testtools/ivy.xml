@@ -29,8 +29,9 @@
     <dependencies>
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
+        <!-- SCIPIO: FIXME: these specific versions are not available in the maven repo
         <dependency org="org.springframework" name="spring-core" rev="4.2.3" transitive="false" conf="application->default"/>
         <dependency org="org.springframework" name="spring-test" rev="4.2.3" transitive="false" conf="application->default"/>
-        
+         -->
     </dependencies>
 </ivy-module>

@@ -278,7 +278,7 @@ under the License.
         <read-component-build-deps/>
     </target>
 
-    <property name="lib.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
+    <property name="lib.update.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
     
     <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
     <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
@@ -357,7 +357,7 @@ under the License.
     
     <!-- NOTE: Must with called with antcall inheritrefs="true" -->
     <target name="root-lib-update" description="Downloads root lib folder jars">
-        <ivy:retrieve pattern="lib/${lib.filename.pattern.ivy}" conf="application"/>
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
     </target>
     
 </project>

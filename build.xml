@@ -1918,7 +1918,7 @@ under the License.
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-download" description="Initial libraries and dependencies download">
+    <target name="init-lib-download" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
         <tstamp>
              <format property="lib.download.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
@@ -1937,20 +1937,25 @@ under the License.
         <echo message="status=SUCCESS${line.separator}startTime=${lib.download.start.time}${line.separator}finishTime=${lib.download.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
     </target>
     
-    <target name="check-init-lib-download" depends="get-lib-download-status">
+    <target name="check-init-lib-download" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">
+        <!-- Removed - useless (see below): depends="get-lib-download-status" -->
         <if>
             <equals arg1="${lib.download.bypass}" arg2="true"/>
             <then>
-                <echo message="Skipping lib download (bypassed)"/>
+                <echo message="Skipping lib updates (bypassed)"/>
             </then>
             <elseif>
                 <equals arg1="${lib.download.force}" arg2="true"/>
                 <then>
-                    <echo message="Lib download required (forced) - starting..."/>
+                    <echo message="Lib updates check forced - starting..."/>
                     <antcall target="init-lib-download"/>
                 </then>
             </elseif>
             <else>
+                <echo message="Lib updates check starting..."/>
+                <antcall target="init-lib-download"/>
+                <!-- Removed - turns out this check is useless to deal with changes or anything after 
+                    the initial download... too simplistic
                 <if>
                     <equals arg1="${lib.download.last.status}" arg2="SUCCESS"/>
                     <then>
@@ -1970,7 +1975,7 @@ under the License.
                         <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
                         <antcall target="init-lib-download"/>
                     </else>
-                </if>
+                </if>-->
             </else>
         </if>
     </target>
@@ -2004,39 +2009,27 @@ under the License.
     </target>
 
     <target name="framework-lib-download">
-        <echo message="[init] ========== Start Downloading Jars of Framework components (Compile) =========="/>
         <iterate target="init-lib-download" filelist="framework-builds"/>
-        <echo message="[init] ========== Done Downloading Jars of Framework components (Compile) =========="/>
     </target>
 
     <target name="applications-lib-download" if="${applications.present}">
-        <echo message="[init] ========== Start Downloading Jars of Applications components (Compile) =========="/>
         <iterate target="init-lib-download" filelist="application-builds"/>
-        <echo message="[init] ========== Done Downloading Jars of Applications components (Compile) =========="/>
     </target>
 
     <target name="specialpurpose-lib-download" if="${specialpurpose.present}">
-        <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
         <iterate target="init-lib-download" filelist="specialpurpose-builds"/>
-        <echo message="[init] ========== Start Downloading Jars of SpecialPurpose components (Compile) =========="/>
     </target>
     
     <target name="addons-lib-download">
-        <echo message="[init] ========== Start Downloading Jars of Addons components (Compile) =========="/>
         <addonsant target="init-lib-download"/>
-        <echo message="[init] ========== Start Downloading Jars of Addons components (Compile) =========="/>
     </target>
     
     <target name="hotdeploy-lib-download">
-        <echo message="[init] ========== Start Downloading Jars of Hot-Deploy components (Compile) =========="/>
         <hotdeployant target="init-lib-download"/>
-        <echo message="[init] ========== Start Downloading Jars of Hot-Deploy components (Compile) =========="/>
     </target>
     
     <target name="themes-lib-download">
-        <echo message="[init] ========== Start Downloading Jars of Themes components (Compile) =========="/>
         <dep-subant dir="${basedir}/themes" target="init-lib-download"/>
-        <echo message="[init] ========== Start Downloading Jars of Themes components (Compile) =========="/>
     </target>
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">

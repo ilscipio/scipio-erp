@@ -52,7 +52,6 @@ under the License.
         </test-jar>
     </target>
 
-    
     <target name="do-lib-update" description="Downloads all jars">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
             
@@ -60,16 +59,12 @@ under the License.
     </target>
     
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
-        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed)
     <selector id="lib.update.manual.files">
         <or>
-            <filename name="ant-*.jar"/>
-            <filename name="ant/**.jar"/>
-            <filename name="ivy-*.jar"/>
-            <filename name="scripting/antlr-*.jar"/>
-            <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
-            <filename name="sonar-*.jar"/>
+            <filename name="xxx-*.jar"/>
         </or>
     </selector>
+    -->
     
 </project>

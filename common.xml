@@ -347,7 +347,6 @@ under the License.
     </target>
     
     <target name="do-lib-update" description="Downloads all jars">
-        <antcall target="common-lib-clean" inheritrefs="true"/>
         <antcall target="common-lib-update" inheritrefs="true"/>
     </target>
     

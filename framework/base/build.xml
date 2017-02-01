@@ -108,6 +108,7 @@ under the License.
         </test-jar>
     </target>
 
+    <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-download" description="Downloads all jars (base component implementation)">
         <ivy:retrieve pattern="lib/${ivy.lib.filename.pattern}" conf="base"/>
         <ivy:retrieve pattern="lib/ant/${ivy.lib.filename.pattern}" conf="ant"/>
@@ -116,4 +117,17 @@ under the License.
         <ivy:retrieve pattern="lib/scripting/${ivy.lib.filename.pattern}" conf="scripting"/>
     </target>
 
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+    <selector id="lib.manual.libraries">
+        <or>
+            <filename name="ant-*.jar"/>
+            <filename name="ant/**.jar"/>
+            <filename name="ivy-*.jar"/>
+            <filename name="scripting/antlr-*.jar"/>
+            <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
+            <filename name="sonar-*.jar"/>
+        </or>
+    </selector>
+    
 </project>

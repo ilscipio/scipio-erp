@@ -1920,7 +1920,7 @@ under the License.
     
     <target name="init-lib-download" description="Initial libraries and dependencies download">
         <tstamp>
-             <format property="ivy.start.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+             <format property="lib.download.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
         <antcall target="reset-lib-download-status"/>
         
@@ -1932,9 +1932,9 @@ under the License.
         <antcall target="hotdeploy-lib-download"/>
         
         <tstamp>
-             <format property="ivy.finish.timestamp" pattern="yyyy-MM-dd HH:mm:ss"/>
+             <format property="lib.download.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
-        <echo message="status=SUCCESS${line.separator}startTime=${ivy.start.timestamp}${line.separator}finishTime=${ivy.finish.timestamp}${line.separator}" file="runtime/ivy-status.txt" />
+        <echo message="status=SUCCESS${line.separator}startTime=${lib.download.start.time}${line.separator}finishTime=${lib.download.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
     </target>
     
     <target name="check-init-lib-download" depends="get-lib-download-status">

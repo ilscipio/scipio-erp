@@ -280,6 +280,7 @@ under the License.
 
     <property name="lib.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
     
+    <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
     <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
         <if>
             <and>
@@ -290,8 +291,8 @@ under the License.
                 <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
                     changed, separate from the ivy:retrieve call, because if nothing changed we want
                     to skip our manual clean as well as the retrieve -->
-                <echo level="info" message="lib.update.force: ${lib.update.force}" />
-                <echo level="info" message="lib.update.cache: ${lib.update.cache}" />
+                <echo level="verbose" message="lib.update.force: ${lib.update.force}" />
+                <echo level="verbose" message="lib.update.cache: ${lib.update.cache}" />
                 <condition property="lib.update.ivy.refresh" value="true" else="false">
                     <or>
                         <!-- by themselves, both 
@@ -307,21 +308,26 @@ under the License.
                         <equals arg1="${lib.update.cache}" arg2="false"/>        
                     </or>
                 </condition>
+                
                 <ivy:resolve refresh="${lib.update.ivy.refresh}"/>
-                <echo level="info" message="ivy.deps.changed: ${ivy.deps.changed}"/>
+                <echo level="verbose" message="ivy.deps.changed: ${ivy.deps.changed}"/>
+                
                 <if>
                     <or>
                         <equals arg1="${lib.update.force}" arg2="true"/>
                         <equals arg1="${ivy.deps.changed}" arg2="true"/>
                     </or>
                     <then>
+                        <dirname property="lib.component.current.dir" file="${ant.file}"/>
+                        <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
+                        <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
                         <if>
                             <not><equals arg1="${lib.update.clean}" arg2="false"/></not>
                             <then>
-                                <antcall target="do-lib-clean"/>
+                                <antcall target="do-lib-clean" inheritrefs="true"/>
                             </then>
                         </if>
-                        <antcall target="do-lib-update"/>
+                        <antcall target="do-lib-update" inheritrefs="true"/>
                     </then>
                 </if>
             </then>
@@ -329,7 +335,7 @@ under the License.
     </target>
     
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <antcall target="common-lib-clean"/>
+        <antcall target="common-lib-clean" inheritrefs="true"/>
     </target>
     
     <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
@@ -341,14 +347,15 @@ under the License.
     </target>
     
     <target name="do-lib-update" description="Downloads all jars">
-        <antcall target="common-lib-clean"/>
-        <antcall target="common-lib-update"/>
+        <antcall target="common-lib-clean" inheritrefs="true"/>
+        <antcall target="common-lib-update" inheritrefs="true"/>
     </target>
     
     <target name="common-lib-update" description="Downloads all jars (default/common implementation)">
-        <antcall target="root-lib-update"/>
+        <antcall target="root-lib-update" inheritrefs="true"/>
     </target>
     
+    <!-- NOTE: Must with called with antcall inheritrefs="true" -->
     <target name="root-lib-update" description="Downloads root lib folder jars">
         <ivy:retrieve pattern="lib/${lib.filename.pattern.ivy}" conf="application"/>
     </target>

@@ -34,6 +34,10 @@ under the License.
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
 
+    <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
+        automatic lib update check upon build and other target invocations -->
+    <property name="lib.update.bypass" value="true"/>
+    
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />
     <property name="specialpurpose.dir" value="specialpurpose" />
@@ -671,7 +675,7 @@ under the License.
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init,build-scipio-build-tools">
+    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-init-lib-update">
         <echo message="[build] ========== Start Building (Compile) =========="/>
         
         <!-- SCIPIO: hooks -->

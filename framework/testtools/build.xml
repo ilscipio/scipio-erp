@@ -49,7 +49,7 @@ under the License.
     
     <!-- SCIPIO: FIXME: the spring-core and spring-test libraries of current needed version are
         not available, so must be committed to trunk... -->
-    <selector id="lib.manual.libraries">
+    <selector id="lib.update.manual.files">
         <or>
             <filename name="spring-core-*.jar"/>
             <filename name="spring-test-*.jar"/>

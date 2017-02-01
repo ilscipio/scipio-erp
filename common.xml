@@ -280,7 +280,7 @@ under the License.
 
     <property name="lib.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
     
-    <target name="init-lib-download" description="Downloads initial jars, if applicable for component">
+    <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
         <if>
             <and>
                 <available file="ivy.xml" type="file"/>
@@ -290,38 +290,38 @@ under the License.
                 <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
                     changed, separate from the ivy:retrieve call, because if nothing changed we want
                     to skip our manual clean as well as the retrieve -->
-                <echo level="info" message="lib.download.force: ${lib.download.force}" />
-                <echo level="info" message="lib.download.cache: ${lib.download.cache}" />
-                <condition property="lib.download.ivy.refresh" value="true" else="false">
+                <echo level="info" message="lib.update.force: ${lib.update.force}" />
+                <echo level="info" message="lib.update.cache: ${lib.update.cache}" />
+                <condition property="lib.update.ivy.refresh" value="true" else="false">
                     <or>
                         <!-- by themselves, both 
-                              -Dlib.download.force=true and 
-                              -Dlib.download.cache=false
+                              -Dlib.update.force=true and 
+                              -Dlib.update.cache=false
                             will force ivy to refresh, but is also possible to pass
-                              -Dlib.download.force=true -Dlib.download.cache=true
+                              -Dlib.update.force=true -Dlib.update.cache=true
                             which will force replacing the filesystem libs without forcing ivy refresh -->
                         <and>
-                            <equals arg1="${lib.download.force}" arg2="true"/>
-                            <not><equals arg1="${lib.download.cache}" arg2="true"/></not>
+                            <equals arg1="${lib.update.force}" arg2="true"/>
+                            <not><equals arg1="${lib.update.cache}" arg2="true"/></not>
                         </and>
-                        <equals arg1="${lib.download.cache}" arg2="false"/>        
+                        <equals arg1="${lib.update.cache}" arg2="false"/>        
                     </or>
                 </condition>
-                <ivy:resolve refresh="${lib.download.ivy.refresh}"/>
+                <ivy:resolve refresh="${lib.update.ivy.refresh}"/>
                 <echo level="info" message="ivy.deps.changed: ${ivy.deps.changed}"/>
                 <if>
                     <or>
-                        <equals arg1="${lib.download.force}" arg2="true"/>
+                        <equals arg1="${lib.update.force}" arg2="true"/>
                         <equals arg1="${ivy.deps.changed}" arg2="true"/>
                     </or>
                     <then>
                         <if>
-                            <not><equals arg1="${lib.download.clean}" arg2="false"/></not>
+                            <not><equals arg1="${lib.update.clean}" arg2="false"/></not>
                             <then>
                                 <antcall target="do-lib-clean"/>
                             </then>
                         </if>
-                        <antcall target="do-lib-download"/>
+                        <antcall target="do-lib-update"/>
                     </then>
                 </if>
             </then>
@@ -337,19 +337,19 @@ under the License.
             files we need to keep - we need exceptions. 
             So instead we implement our own sync by cleaning out all files except for the listed
             exceptions. -->
-        <remove-lib-files dir="lib" excludes-refid="lib.manual.libraries"/>
+        <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
     </target>
     
-    <target name="do-lib-download" description="Downloads all jars">
+    <target name="do-lib-update" description="Downloads all jars">
         <antcall target="common-lib-clean"/>
-        <antcall target="common-lib-download"/>
+        <antcall target="common-lib-update"/>
     </target>
     
-    <target name="common-lib-download" description="Downloads all jars (default/common implementation)">
-        <antcall target="root-lib-download"/>
+    <target name="common-lib-update" description="Downloads all jars (default/common implementation)">
+        <antcall target="root-lib-update"/>
     </target>
     
-    <target name="root-lib-download" description="Downloads root lib folder jars">
+    <target name="root-lib-update" description="Downloads root lib folder jars">
         <ivy:retrieve pattern="lib/${lib.filename.pattern.ivy}" conf="application"/>
     </target>
     

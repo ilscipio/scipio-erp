@@ -109,17 +109,17 @@ under the License.
     </target>
 
     <!-- SCIPIO: Special lib download script for complex base includes -->
-    <target name="do-lib-download" description="Downloads all jars (base component implementation)">
-        <ivy:retrieve pattern="lib/${ivy.lib.filename.pattern}" conf="base"/>
-        <ivy:retrieve pattern="lib/ant/${ivy.lib.filename.pattern}" conf="ant"/>
-        <ivy:retrieve pattern="lib/commons/${ivy.lib.filename.pattern}" conf="commons"/>
-        <ivy:retrieve pattern="lib/j2eespecs/${ivy.lib.filename.pattern}" conf="j2eespecs"/>
-        <ivy:retrieve pattern="lib/scripting/${ivy.lib.filename.pattern}" conf="scripting"/>
+    <target name="do-lib-update" description="Downloads all jars (base component implementation)">
+        <ivy:retrieve pattern="lib/${lib.filename.pattern.ivy}" conf="base"/>
+        <ivy:retrieve pattern="lib/ant/${lib.filename.pattern.ivy}" conf="ant"/>
+        <ivy:retrieve pattern="lib/commons/${lib.filename.pattern.ivy}" conf="commons"/>
+        <ivy:retrieve pattern="lib/j2eespecs/${lib.filename.pattern.ivy}" conf="j2eespecs"/>
+        <ivy:retrieve pattern="lib/scripting/${lib.filename.pattern.ivy}" conf="scripting"/>
     </target>
 
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
         NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
-    <selector id="lib.manual.libraries">
+    <selector id="lib.update.manual.files">
         <or>
             <filename name="ant-*.jar"/>
             <filename name="ant/**.jar"/>

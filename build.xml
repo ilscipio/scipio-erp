@@ -1918,66 +1918,66 @@ under the License.
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-download" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
+    <target name="init-lib-update" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
         <!--
         <tstamp>
-             <format property="lib.download.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
+             <format property="lib.update.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
-        <antcall target="reset-lib-download-status"/>
+        <antcall target="reset-lib-update-status"/>
         -->
         
-        <antcall target="framework-lib-download"/>
-        <antcall target="themes-lib-download"/>
-        <antcall target="applications-lib-download"/>
-        <antcall target="specialpurpose-lib-download"/>
-        <antcall target="addons-lib-download"/>
-        <antcall target="hotdeploy-lib-download"/>
+        <antcall target="framework-lib-update"/>
+        <antcall target="themes-lib-update"/>
+        <antcall target="applications-lib-update"/>
+        <antcall target="specialpurpose-lib-update"/>
+        <antcall target="addons-lib-update"/>
+        <antcall target="hotdeploy-lib-update"/>
         
         <!-- Removed - not really useful
         <tstamp>
-             <format property="lib.download.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
+             <format property="lib.update.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
-        <echo message="status=SUCCESS${line.separator}startTime=${lib.download.start.time}${line.separator}finishTime=${lib.download.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
+        <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
         -->
     </target>
     
-    <target name="check-init-lib-download" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">
-        <!-- Removed - not really useful (see below): depends="get-lib-download-status" -->
+    <target name="check-init-lib-update" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">
+        <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
         <if>
-            <equals arg1="${lib.download.bypass}" arg2="true"/>
+            <equals arg1="${lib.update.bypass}" arg2="true"/>
             <then>
                 <echo message="Skipping lib updates (bypassed)"/>
             </then>
             <elseif>
-                <equals arg1="${lib.download.force}" arg2="true"/>
+                <equals arg1="${lib.update.force}" arg2="true"/>
                 <then>
                     <echo message="Lib updates check forced - starting..."/>
-                    <antcall target="init-lib-download"/>
+                    <antcall target="init-lib-update"/>
                 </then>
             </elseif>
             <else>
                 <echo message="Lib updates check starting..."/>
-                <antcall target="init-lib-download"/>
+                <antcall target="init-lib-update"/>
                 <!-- Removed - turns out this check is useless to deal with changes or anything after 
                     the initial download... too simplistic
                 <if>
-                    <equals arg1="${lib.download.last.status}" arg2="SUCCESS"/>
+                    <equals arg1="${lib.update.last.status}" arg2="SUCCESS"/>
                     <then>
                         <if>
-                            <equals arg1="${lib.download.majorlibs.present}" arg2="true"/>
+                            <equals arg1="${lib.update.majorlibs.present}" arg2="true"/>
                             <then>
-                                <echo message="Last successful lib download: ${lib.download.last.finishTime} (SUCCESS, not re-running; use -Dlib.download.force=true to force)"/>
+                                <echo message="Last successful lib download: ${lib.update.last.finishTime} (SUCCESS, not re-running; use -Dlib.update.force=true to force)"/>
                             </then>
                             <else>
                                 <echo level="error" message="Lib download: SANITY CHECK FAILED: missing major libraries despite last run status marked success!"/>
                                 <echo message="Lib download required (sanity check failed) - starting..."/>
-                                <antcall target="init-lib-download"/>
+                                <antcall target="init-lib-update"/>
                             </else>
                         </if>
                     </then>
                     <else>
                         <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
-                        <antcall target="init-lib-download"/>
+                        <antcall target="init-lib-update"/>
                     </else>
                 </if>-->
             </else>
@@ -1985,23 +1985,23 @@ under the License.
     </target>
     
     <!-- Removed - not really useful
-    <target name="reset-lib-download-status">
+    <target name="reset-lib-update-status">
         <delete file="runtime/ivy-status.txt"/>
     </target>
     
-    <target name="get-lib-download-status">
-        <property file="runtime/ivy-status.txt" prefix="lib.download.last" />
+    <target name="get-lib-update-status">
+        <property file="runtime/ivy-status.txt" prefix="lib.update.last" />
         <if>
-            <isset property="lib.download.last.status"/>
+            <isset property="lib.update.last.status"/>
             <then>
-                <echo level="verbose" message="Library download status: ${lib.download.last.status}"/>
+                <echo level="verbose" message="Library download status: ${lib.update.last.status}"/>
             </then>
             <else>
                 <echo level="verbose" message="Library download status: UNKNOWN (requires run)"/>
             </else>
         </if>
         <!- Sanity check: test if some of the major libraries are present ->
-        <condition property="lib.download.majorlibs.present" value="true" else="false">
+        <condition property="lib.update.majorlibs.present" value="true" else="false">
             <and>
                 <resourcecount when="greater" count="0">
                     <fileset file="framework/base/lib/freemarker-*.jar"/>
@@ -2014,28 +2014,28 @@ under the License.
     </target>
     -->
 
-    <target name="framework-lib-download">
-        <iterate target="init-lib-download" filelist="framework-builds"/>
+    <target name="framework-lib-update">
+        <iterate target="init-lib-update" filelist="framework-builds"/>
     </target>
 
-    <target name="applications-lib-download" if="${applications.present}">
-        <iterate target="init-lib-download" filelist="application-builds"/>
+    <target name="applications-lib-update" if="${applications.present}">
+        <iterate target="init-lib-update" filelist="application-builds"/>
     </target>
 
-    <target name="specialpurpose-lib-download" if="${specialpurpose.present}">
-        <iterate target="init-lib-download" filelist="specialpurpose-builds"/>
+    <target name="specialpurpose-lib-update" if="${specialpurpose.present}">
+        <iterate target="init-lib-update" filelist="specialpurpose-builds"/>
     </target>
     
-    <target name="addons-lib-download">
-        <addonsant target="init-lib-download"/>
+    <target name="addons-lib-update">
+        <addonsant target="init-lib-update"/>
     </target>
     
-    <target name="hotdeploy-lib-download">
-        <hotdeployant target="init-lib-download"/>
+    <target name="hotdeploy-lib-update">
+        <hotdeployant target="init-lib-update"/>
     </target>
     
-    <target name="themes-lib-download">
-        <dep-subant dir="${basedir}/themes" target="init-lib-download"/>
+    <target name="themes-lib-update">
+        <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
     </target>
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">

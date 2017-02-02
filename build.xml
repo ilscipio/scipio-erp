@@ -631,6 +631,7 @@ under the License.
         <invokehook target="pre-build-test" />
         
         <subant inheritall="false" target="prepare-to-build-test" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
@@ -650,6 +651,7 @@ under the License.
         <invokehook target="pre-build-qa" />
             
         <subant inheritall="false" target="prepare-to-build-qa" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
@@ -669,6 +671,7 @@ under the License.
         <invokehook target="pre-build-production" />
         
         <subant inheritall="false" target="prepare-to-build-production" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>

@@ -40,6 +40,9 @@ under the License.
     <!-- NOTE: this must be included AFTER property defs -->
     <import file="build.xml"/>
     
+    <!-- FIXME: this include list is only affecting the class compilation, NOT the jar packaging, such
+        that the tools JAR ends up with extra garbage classes after a few global builds...
+        does not yet cause issues but probably will at some point... -->
     <patternset id="src.inc.set">
       <include name="com/ilscipio/scipio/ce/build/**/*.java"/>
     </patternset>

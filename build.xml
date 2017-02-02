@@ -59,6 +59,7 @@ under the License.
         to sub-project builds by subant. mainly used by externalsubant and iterate in macros.xml -->
     <propertyset id="ofbiz.subbuild.props.pass">
         <propertyref name="ofbiz.home.dir"/>
+        <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
     </propertyset>
     

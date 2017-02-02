@@ -277,10 +277,7 @@ under the License.
               inheritall="false" return="component.build.dependencies.prop">
               <!--<property name="basedir" value="${depres.buildfile.dir}"/>-->
               <property name="component.build.dependencies.sep" value=","/>
-              <propertyset>
-                <propertyref name="ofbiz.home.dir"/>
-                <propertyref name="ofbiz.component.dirs"/>
-              </propertyset>
+              <propertyset refid="ofbiz.subbuild.props.pass"/>
             </antcallback>
 
             <if>

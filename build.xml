@@ -374,7 +374,7 @@ under the License.
         
     </target>
 
-    <target name="clean" depends="build-scipio-build-tools,ivy-init">
+    <target name="clean" depends="ivy-init,build-scipio-build-tools">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean" />

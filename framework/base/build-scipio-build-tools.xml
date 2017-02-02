@@ -26,11 +26,8 @@ under the License.
         Invoke using "ant build-scipio-build-tools" in main project. 
         TODO?: could try to refactor into own directory. -->
     
-    <import file="../../common.xml"/>
-    
-    <patternset id="src.inc.set">
-      <include name="com/ilscipio/scipio/ce/build/**/*.java"/>
-    </patternset>
+    <!-- we need to reuse build.xml definitions...
+    <import file="../../common.xml"/>-->
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -39,7 +36,14 @@ under the License.
     <property name="desc" value="Scipio Build Tools"/>
     <property name="name" value="scipio-build-tools"/>
     <property name="ofbiz.home.dir" value="../.."/>
-
+    
+    <!-- NOTE: this must be included AFTER property defs -->
+    <import file="build.xml"/>
+    
+    <patternset id="src.inc.set">
+      <include name="com/ilscipio/scipio/ce/build/**/*.java"/>
+    </patternset>
+    
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}/commons" includes="*.jar"/>

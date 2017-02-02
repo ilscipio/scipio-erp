@@ -55,6 +55,13 @@ under the License.
     
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
     
+    <!-- 2017-02-01: Names of properties (such as those defined above) that should always be passed 
+        to sub-project builds by subant. mainly used by externalsubant and iterate in macros.xml -->
+    <propertyset id="ofbiz.subbuild.props.pass">
+        <propertyref name="ofbiz.home.dir"/>
+        <propertyref regex="lib\.update\..*"/>
+    </propertyset>
+    
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
         a file named "build-main-early.xml" in its folder, which will be imported into
         the main build, supporting plugin-like additions to root build.xml.
@@ -2397,12 +2404,8 @@ under the License.
     </macrodef>
     
     <target name="build-scipio-build-tools" description="Builds standalone Scipio setup/build tools">
-        <subant inheritall="false">
-            <filelist dir="." files="framework/base/build-scipio-build-tools.xml"/>
-            <propertyset>
-                <propertyref name="ofbiz.home.dir"/>
-            </propertyset>
-        </subant>
+        <filelist id="scipio.build.tools.buildfile" dir="." files="framework/base/build-scipio-build-tools.xml"/>
+        <iterate target="jar" filelist="scipio.build.tools.buildfile"/>
         <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
     </target>
     

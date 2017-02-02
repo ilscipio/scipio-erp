@@ -64,7 +64,7 @@ under the License.
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
             <firstmatchmapper>
                 <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <regexpmapper from="^(.*/)?itext(-[^/]+\.jar)" to="\1iText\2"/>
+                <regexpmapper from="^(.*/)?itext(-[^/]+\.jar)$" to="\1iText\2"/>
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>

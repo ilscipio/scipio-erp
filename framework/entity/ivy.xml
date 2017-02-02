@@ -25,12 +25,35 @@
     <configurations>
         <!-- configurations for initial download/build -->
         <conf name="application" description="download all jars required for build"/>
+        
+        <conf name="base" description="download all base root jars required for build"/>
+        <conf name="jdbc" description="download all jdbc jars required for build"/>
     </configurations>
 
     <dependencies>
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
-        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false"/>
+        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="base->default"/>
+        
+        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk17" rev="2.2.10" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="2.2.10" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.4" transitive="false" conf="jdbc->default"/>
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.39" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.postgresql" name="postgresql" rev="9.4.1209.jre7" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.postgresql" name="postgresql" rev="9.4.1209" transitive="false" conf="jdbc->default"/>
+        
+        <!-- TODO: MISSING DEPENDENCIES
+!       framework/entity/lib/jdbc/derby-10.11.1.1.jar
+!       framework/entity/lib/jdbc/unused/firebird/1.7/jaybird-2.2.10_jre7.jar
+!       framework/entity/lib/jdbc/unused/firebird/1.8/jaybird-2.2.10_jre8.jar
+!       framework/entity/lib/jdbc/unused/hsql/hsqldb.jar
+!       framework/entity/lib/jdbc/unused/mysql/mysql-connector-java-5.1.39-bin.jar
+!       framework/entity/lib/jdbc/unused/postgresql/1.7/postgresql-9.4.1209.jre7.jar
+!       framework/entity/lib/jdbc/unused/postgresql/1.8/postgresql-9.4.1209.jar
+         -->
+         
+        <!-- WORKAROUND for evicted postgresql dependencies -->
+        <conflict manager="all"/>
     </dependencies>
 </ivy-module>

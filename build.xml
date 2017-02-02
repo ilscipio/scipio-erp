@@ -39,7 +39,7 @@ under the License.
     <property name="lib.update.bypass" value="true"/>
     <!-- IVY AUTO MODE: set this to either "global" (runs all lib updates globally, before global build) 
         or "component" (runs per-component, before each component) -->
-    <property name="lib.update.hook.mode" value="global"/>
+    <property name="lib.update.hook.mode" value="component"/>
     
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />

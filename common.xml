@@ -87,7 +87,7 @@ under the License.
     <!-- Compilation of the source files                                    -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare">
+    <target name="classes" depends="prepare,check-init-lib-update"><!-- SCIPIO: per-comonent lib update hook -->
         <javac17/>
     </target>
 
@@ -331,6 +331,32 @@ under the License.
                     </then>
                 </if>
             </then>
+        </if>
+    </target>
+    
+    <target name="check-init-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
+        <if>
+            <not><equals arg1="${lib.update.hook.mode}" arg2="component"/></not>
+            <then>
+                <echo level="verbose" message="Skipping component lib updates (not using per-component mode)"/>
+            </then>
+            <elseif>
+                <equals arg1="${lib.update.bypass}" arg2="true"/>
+                <then>
+                    <echo level="verbose" message="Skipping lib updates (bypassed)"/>
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${lib.update.force}" arg2="true"/>
+                <then>
+                    <echo level="verbose" message="Lib updates check forced - starting..."/>
+                    <antcall target="init-lib-update"/>
+                </then>
+            </elseif>
+            <else>
+                <echo level="verbose" message="Lib updates check starting..."/>
+                <antcall target="init-lib-update"/>
+            </else>
         </if>
     </target>
     

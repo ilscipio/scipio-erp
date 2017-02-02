@@ -37,6 +37,9 @@ under the License.
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
         automatic lib update check upon build and other target invocations -->
     <property name="lib.update.bypass" value="true"/>
+    <!-- IVY AUTO MODE: set this to either "global" (runs all lib updates globally, before global build) 
+        or "component" (runs per-component, before each component) -->
+    <property name="lib.update.hook.mode" value="global"/>
     
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />
@@ -1922,7 +1925,7 @@ under the License.
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-update" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download ">
+    <target name="init-lib-update" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -1947,13 +1950,19 @@ under the License.
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
     
-    <target name="check-init-lib-update" description="(WARN: Work-in-progress) Initial libraries and dependencies download, if needed only">
+    <target name="check-init-lib-update" description="(WARN: Work-in-progress) Initial libraries and dependencies download, global, if enabled only">
         <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
         <if>
-            <equals arg1="${lib.update.bypass}" arg2="true"/>
+            <not><equals arg1="${lib.update.hook.mode}" arg2="global"/></not>
             <then>
-                <echo message="Skipping lib updates (bypassed)"/>
+                <echo level="verbose" message="Skipping global lib updates (not using global mode)"/>
             </then>
+            <elseif>
+                <equals arg1="${lib.update.bypass}" arg2="true"/>
+                <then>
+                    <echo message="Skipping lib updates (bypassed)"/>
+                </then>
+            </elseif>
             <elseif>
                 <equals arg1="${lib.update.force}" arg2="true"/>
                 <then>

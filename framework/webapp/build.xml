@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - WebApp Component" default="jar" basedir=".">
+<project name="OFBiz - WebApp Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -57,5 +57,16 @@ under the License.
     <target name="jar" depends="classes">
         <main-jar/>
         <test-jar/>
+    </target>
+    
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (base component implementation)">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/)?itext(-[^/]+\.jar)" to="\1iText\2"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
     </target>
 </project>

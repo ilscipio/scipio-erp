@@ -39,6 +39,7 @@ under the License.
   <element name="iterate-subant-args" optional="yes" implicit="yes"/>
   <sequential>
    <subant target="@{target}" inheritall="@{inheritall}">
+    <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
     <iterate-subant-args />
     <filelist refid="@{filelist}"/>
    </subant>
@@ -189,9 +190,11 @@ under the License.
 
  <presetdef name="externalsubant">
   <subant inheritall="false">
+   <!-- SCIPIO: defined in build.xml
    <propertyset>
     <propertyref name="ofbiz.home.dir"/>
-   </propertyset>
+   </propertyset>-->
+   <propertyset refid="ofbiz.subbuild.props.pass"/>
   </subant>
  </presetdef>
     

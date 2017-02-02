@@ -43,5 +43,18 @@
 
         <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="application->default"/>
 
+        <!-- TODO: MISSING DEPENDENCIES
+!       framework/catalina/lib/tomcat-8.0.33-catalina-ha.jar
+!       framework/catalina/lib/tomcat-8.0.33-catalina-tribes.jar
+!       framework/catalina/lib/tomcat-8.0.33-catalina.jar
+!       framework/catalina/lib/tomcat-8.0.33-jasper.jar
+!       framework/catalina/lib/tomcat-8.0.33-tomcat-api.jar
+!       framework/catalina/lib/tomcat-8.0.33-tomcat-coyote.jar
+!       framework/catalina/lib/tomcat-8.0.33-tomcat-jni.jar
+!       framework/catalina/lib/tomcat-8.0.33-tomcat-util-scan.jar
+!       framework/catalina/lib/tomcat-8.0.33-tomcat-util.jar
+!       framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli-adapters.jar
+!       framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli.jar
+        -->
     </dependencies>
 </ivy-module>

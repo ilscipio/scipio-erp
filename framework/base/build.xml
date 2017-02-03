@@ -154,8 +154,20 @@ under the License.
             <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
             <!-- this gets downloaded separately on-demand (TODO: handle here instead?) -->
             <filename name="sonar-*.jar"/>
-            <!-- FIXME: the specific version we need, 1.2, is not in central; only 1.3 is; so manual commit for now -->
+
+            <!-- FIXME: manually-committed JARs missing from public repos -->
             <filename name="hamcrest-all-*.jar"/>
+            <filename name="avalon-framework-*.jar"/>
+            <filename name="batik-all-*.jar"/>
+            <filename name="bsh-engine-modified.jar"/>
+            <filename name="clhm-*.jar"/>
+            <filename name="ical4j-*.jar"/>
+            <filename name="jdbm-*.jar"/>
+            <filename name="jpim-*.jar"/>
+            <filename name="resolver-*.jar"/>
+            <filename name="j2eespecs/annotations-api-*.jar"/>
+            <filename name="scripting/jython-nooro.jar"/>
+            <filename name="serializer-*.jar"/>
         </or>
     </selector>
     

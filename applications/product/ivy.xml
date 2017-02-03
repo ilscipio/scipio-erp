@@ -30,8 +30,7 @@
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
         <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" transitive="false" conf="application->default"/>
-        <!-- TODO: MISSING DEPENDENCIES
-        <dependency org="?" name="watermarker" rev="0.0.4" transitive="false" conf="application->default"/>
-        -->
+        <!-- FIXME: Version missing from public repos
+        <dependency org="?" name="watermarker" rev="0.0.4" transitive="false" conf="application->default"/>-->
     </dependencies>
 </ivy-module>

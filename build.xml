@@ -66,6 +66,7 @@ under the License.
         <propertyref name="ofbiz.home.dir"/>
         <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
+        <propertyref regex="lib\.clean\..*"/>
     </propertyset>
     
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
@@ -2071,6 +2072,51 @@ under the License.
     <target name="themes-lib-update">
         <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
     </target>
+    
+    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean, global">
+        <stopwatch name="lib.clean.stopwatch" action="start"/>
+
+        <if>
+            <not><equals arg1="${lib.clean.cache}" arg2="false"/></not>
+            <then>
+                <antcall target="clean-ivy" inheritrefs="true"/>
+            </then>
+        </if>
+        
+        <antcall target="framework-lib-clean"/>
+        <antcall target="themes-lib-clean"/>
+        <antcall target="applications-lib-clean"/>
+        <antcall target="specialpurpose-lib-clean"/>
+        <antcall target="addons-lib-clean"/>
+        <antcall target="hotdeploy-lib-clean"/>
+
+        <stopwatch name="lib.clean.stopwatch" action="total"/>
+    </target>
+    
+    <target name="framework-lib-clean">
+        <iterate target="init-lib-clean" filelist="framework-builds"/>
+    </target>
+
+    <target name="applications-lib-clean" if="${applications.present}">
+        <iterate target="init-lib-clean" filelist="application-builds"/>
+    </target>
+
+    <target name="specialpurpose-lib-clean" if="${specialpurpose.present}">
+        <iterate target="init-lib-clean" filelist="specialpurpose-builds"/>
+    </target>
+    
+    <target name="addons-lib-clean">
+        <addonsant target="init-lib-clean"/>
+    </target>
+    
+    <target name="hotdeploy-lib-clean">
+        <hotdeployant target="init-lib-clean"/>
+    </target>
+    
+    <target name="themes-lib-clean">
+        <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
+    </target>
+    
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
         <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>

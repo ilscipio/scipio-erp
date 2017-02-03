@@ -343,7 +343,10 @@ under the License.
                         <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
                         <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
                         <if>
-                            <not><equals arg1="${lib.update.clean}" arg2="false"/></not>
+                            <and>
+                                <not><equals arg1="${lib.update.clean}" arg2="false"/></not>
+                                <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+                            </and>
                             <then>
                                 <antcall target="do-lib-clean" inheritrefs="true"/>
                             </then>
@@ -386,18 +389,6 @@ under the License.
         </if>
     </target>
     
-    <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <antcall target="common-lib-clean" inheritrefs="true"/>
-    </target>
-    
-    <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <!-- NOTE: This exists because we cannot use sync="true" on <ivy:retrieve/> because it will remove 
-            files we need to keep - we need exceptions. 
-            So instead we implement our own sync by cleaning out all files except for the listed
-            exceptions. -->
-        <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
-    </target>
-    
     <target name="do-lib-update" description="Downloads all jars">
         <antcall target="common-lib-update" inheritrefs="true"/>
     </target>
@@ -409,6 +400,35 @@ under the License.
     <!-- NOTE: Must with called with antcall inheritrefs="true" -->
     <target name="root-lib-update" description="Downloads root lib folder jars">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
+    </target>
+    
+    <target name="init-lib-clean" description="Cleans downloadable jars, if applicable for component">
+        <if>
+            <and>
+                <available file="ivy.xml" type="file"/>
+                <available file="lib" type="dir"/>
+            </and>
+            <then>
+                <if>
+                    <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+                    <then>
+                        <antcall target="do-lib-clean" inheritrefs="true"/>
+                    </then>
+                </if>
+            </then>
+        </if>
+    </target>
+    
+    <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <antcall target="common-lib-clean" inheritrefs="true"/>
+    </target>
+    
+    <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <!-- NOTE: This exists because we cannot use sync="true" on <ivy:retrieve/> because it will remove 
+            files we need to keep - we need exceptions. 
+            So instead we implement our own sync by cleaning out all files except for the listed
+            exceptions. -->
+        <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
     </target>
     
 </project>

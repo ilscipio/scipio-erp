@@ -173,6 +173,7 @@ under the License.
             <filename name="jpim-*.jar"/>
             <filename name="resolver-*.jar"/>
             <filename name="scripting/jython-nooro.jar"/>
+            <filename name="scripting/bsh-*.jar"/>
             <filename name="serializer-*.jar"/>
         </or>
     </selector>

@@ -154,7 +154,8 @@
         <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting->default"/>
         <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="scripting->default"/>
         <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="scripting->default"/>
-        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting->default"/>
+        <!-- FIXME: despite the version looking correct, classes in public repo are different than lib from ofbiz trunk!
+        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting->default"/>-->
         <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="scripting->default"/>
         <!-- FIXME: can't figure out the public name or a version for this
         <dependency org="?" name="jython-nooro" rev="?" transitive="false" conf="scripting->default"/>-->

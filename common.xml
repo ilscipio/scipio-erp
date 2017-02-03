@@ -344,7 +344,7 @@ under the License.
                         <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
                         <if>
                             <and>
-                                <not><equals arg1="${lib.update.clean}" arg2="false"/></not>
+                                <not><equals arg1="${lib.clean}" arg2="false"/></not>
                                 <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
                             </and>
                             <then>

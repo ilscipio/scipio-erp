@@ -186,6 +186,12 @@ under the License.
         <invokehook target="pre-clean-all" />
         
         <antcall target="clean-ivy"/>
+        <if><!-- SCIPIO: NOTE: 2017-02-03: not clear if want to clean out libs by default, so don't for now... -->
+            <equals arg1="${lib.clean.deploy}" arg2="true"/>
+            <then>
+                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+            </then>
+        </if>
         <antcall target="clean-data"/>
         <antcall target="clean-logs"/>
         <antcall target="clean-output"/>
@@ -217,6 +223,12 @@ under the License.
             <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>
         </delete>
         <antcall target="clean-ivy"/>
+        <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
+            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+            </then>
+        </if>
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-downloads" />
@@ -1937,12 +1949,23 @@ under the License.
     <!--    Ivy targets, more info at  http://ant.apache.org/ivy/  -->
     <!-- ================================================================== -->
     <target name="clean-ivy" description="Clean Ivy local cache">
-        <ivy:cleancache/>
+        <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
+            99% of the time, emptying the repository cache is a giant waste of time, so don't do it
+            by default. -->
+        <if>
+            <equals arg1="${lib.clean.cache.repo}" arg2="true"/>
+            <then>
+                <ivy:cleancache/>
+            </then>
+            <else><!-- lib.clean.cache.resolve -->
+                <delete dir="ivy/resolutionCache"/>
+            </else>
+        </if>
     </target>
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-update" depends="ivy-init" description="(WARN: Work-in-progress) Initial libraries and dependencies download, global">
+    <target name="init-lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -1967,7 +1990,7 @@ under the License.
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
     
-    <target name="check-init-lib-update" description="(WARN: Work-in-progress) Initial libraries and dependencies download, global, if enabled only">
+    <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
         <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
         <if>
             <not><equals arg1="${lib.update.hook.mode}" arg2="global"/></not>
@@ -2082,15 +2105,23 @@ under the License.
                 <antcall target="clean-ivy" inheritrefs="true"/>
             </then>
         </if>
-        
+        <if>
+            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+            </then>
+        </if>
+
+        <stopwatch name="lib.clean.stopwatch" action="total"/>
+    </target>
+    
+    <target name="init-lib-clean-deploy">
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>
         <antcall target="specialpurpose-lib-clean"/>
         <antcall target="addons-lib-clean"/>
         <antcall target="hotdeploy-lib-clean"/>
-
-        <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
     
     <target name="framework-lib-clean">

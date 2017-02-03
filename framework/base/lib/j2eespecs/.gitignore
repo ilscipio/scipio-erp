@@ -1,1 +1,6 @@
 # SCIPIO: NOTE: This file may double as an empty directory preservation placeholder.
+/annotations-api-*.jar
+/el-api-*.jar
+/geronimo-*.jar
+/jsp-api-*.jar
+/servlet-api-*.jar

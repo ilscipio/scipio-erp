@@ -39,8 +39,9 @@ under the License.
     <!-- ================================================================== -->
 
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
-        automatic lib update check upon build and other target invocations -->
-    <property name="lib.update.bypass" value="true"/>
+        automatic lib update check upon build and other target invocations
+        2017-02-03: Ivy now enabled by default (bypass false) -->
+    <property name="lib.update.bypass" value="false"/>
     <!-- IVY AUTO MODE: set this to either "global" (runs all lib updates globally, before global build) 
         or "component" (runs per-component, before each component) -->
     <property name="lib.update.hook.mode" value="component"/>

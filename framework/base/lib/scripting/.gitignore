@@ -1,1 +1,7 @@
 # SCIPIO: NOTE: This file may double as an empty directory preservation placeholder.
+/antlr-*.jar
+/asm-*.jar
+/bsf-*.jar
+/bsh-2.0b*.jar
+/jakarta-oro-*.jar
+/oro-*.jar

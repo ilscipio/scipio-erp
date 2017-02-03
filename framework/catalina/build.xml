@@ -45,10 +45,10 @@ under the License.
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
             <firstmatchmapper>
                 <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <regexpmapper from="^(.*/)?tomcat-tribes-([^/-]+)\.jar$" to="\1tomcat-\2-catalina-tribes.jar"/>
-                <regexpmapper from="^(.*/)?tomcat-extras-juli(-adapters)?-([^/-]+)\.jar$" to="\1tomcat-extras-\3-tomcat-juli\2.jar"/>
-                <regexpmapper from="^(.*/)?tomcat-((?:catalina|jasper)(?:-[^/]+)?)-([^/-]+)\.jar$" to="\1tomcat-\3-\2.jar"/>
-                <regexpmapper from="^(.*/)?tomcat-([^/]+)-([^/-]+)\.jar$" to="\1tomcat-\3-tomcat-\2.jar"/>
+                <regexpmapper from="^(.*/)?tomcat-tribes-([^/-]+)\.jar$$" to="\1tomcat-\2-catalina-tribes.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-extras-juli(-adapters)?-([^/-]+)\.jar$$" to="\1tomcat-extras-\3-tomcat-juli\2.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-((?:catalina|jasper)(?:-[^/]+)?)-([^/-]+)\.jar$$" to="\1tomcat-\3-\2.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-([^/]+)-([^/-]+)\.jar$$" to="\1tomcat-\3-tomcat-\2.jar" handledirsep="true"/>
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>

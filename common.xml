@@ -291,8 +291,10 @@ under the License.
                 <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
                     changed, separate from the ivy:retrieve call, because if nothing changed we want
                     to skip our manual clean as well as the retrieve -->
+                <!--
                 <echo level="verbose" message="lib.update.force: ${lib.update.force}" />
                 <echo level="verbose" message="lib.update.cache: ${lib.update.cache}" />
+                -->
                 <condition property="lib.update.ivy.refresh" value="true" else="false">
                     <or>
                         <!-- by themselves, both 
@@ -310,7 +312,9 @@ under the License.
                 </condition>
                 
                 <ivy:resolve refresh="${lib.update.ivy.refresh}"/>
+                <!--
                 <echo level="verbose" message="ivy.deps.changed: ${ivy.deps.changed}"/>
+                -->
                 
                 <if>
                     <or>

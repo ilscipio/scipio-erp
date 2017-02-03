@@ -1960,7 +1960,7 @@ under the License.
         <tstamp>
              <format property="lib.update.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
-        <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="runtime/ivy-status.txt" />
+        <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="ivy/ivy-status.txt" />
         -->
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
@@ -2016,11 +2016,11 @@ under the License.
     
     <!-- Removed - not really useful
     <target name="reset-lib-update-status">
-        <delete file="runtime/ivy-status.txt"/>
+        <delete file="ivy/ivy-status.txt"/>
     </target>
     
     <target name="get-lib-update-status">
-        <property file="runtime/ivy-status.txt" prefix="lib.update.last" />
+        <property file="ivy/ivy-status.txt" prefix="lib.update.last" />
         <if>
             <isset property="lib.update.last.status"/>
             <then>

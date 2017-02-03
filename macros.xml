@@ -58,6 +58,8 @@ under the License.
   <pathelement location="${ofbiz.home.dir}/extension/rhino/lib/js-1.7.R1.jar"/>
  </path>
  <path id="junit.class.path">
+  <!-- SCIPIO: 2017-02-02: The junit JAR itself should now be explicitly specified, as may miss from classpath or wrong one on classpath -->
+  <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="junit-*.jar"/> 
   <fileset dir="${ofbiz.home.dir}/framework/base/lib/scripting/" includes="*.jar"/>
   <pathelement location="${ofbiz.home.dir}/framework/base/lib/ant/ant-apache-bsf-1.7.1.jar"/>
  </path>

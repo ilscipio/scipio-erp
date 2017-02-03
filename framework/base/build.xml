@@ -153,7 +153,7 @@ under the License.
             <filename name="ant-*.jar"/>
             <filename name="ant/**.jar"/>
             <filename name="ivy-*.jar"/>
-            <!-- doesn't appear to be in use anywhere
+            <!-- doesn't appear to be in use in mandatory build code anywhere
             <filename name="scripting/antlr-*.jar"/>-->
             <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
  
@@ -172,7 +172,6 @@ under the License.
             <filename name="jdbm-*.jar"/>
             <filename name="jpim-*.jar"/>
             <filename name="resolver-*.jar"/>
-            <filename name="j2eespecs/annotations-api-*.jar"/>
             <filename name="scripting/jython-nooro.jar"/>
             <filename name="serializer-*.jar"/>
         </or>

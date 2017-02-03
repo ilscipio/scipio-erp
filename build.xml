@@ -1980,7 +1980,10 @@ under the License.
                 </then>
             </elseif>
             <elseif>
-                <equals arg1="${lib.update.force}" arg2="true"/>
+                <or>
+                    <equals arg1="${lib.update.force}" arg2="true"/>
+                    <equals arg1="${lib.update.force.deploy}" arg2="true"/>
+                </or>
                 <then>
                     <echo message="Lib updates check forced - starting..."/>
                     <antcall target="init-lib-update"/>

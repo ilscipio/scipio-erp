@@ -326,11 +326,12 @@ under the License.
                         <equals arg1="${ivy.module}" arg2="${lib.update.retrieve.last.module}"/>
                     </and>
                 </condition>
-                <echo level="info" message="[Deps changed? ${ivy.deps.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}. Forced? ${lib.update.force}.]"/>
+                <echo level="info" message="[Deps changed? ${ivy.deps.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
                 
                 <if>
                     <or>
                         <equals arg1="${lib.update.force}" arg2="true"/>
+                        <equals arg1="${lib.update.force.deploy}" arg2="true"/>
                         <equals arg1="${ivy.deps.changed}" arg2="true"/>
                         <equals arg1="${last.update.retrieve.waslast}" arg2="true"/><!-- force redeploy if last deploy didn't finish -->
                     </or>

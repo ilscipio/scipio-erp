@@ -22,6 +22,10 @@ under the License.
     xmlns:ivy="antlib:org.apache.ivy.ant"
     xmlns:sonar="antlib:org.sonar.ant:sonar">
 
+    <!-- SCIPIO: NOTE: 2017-02-02: the framework/base/lib libraries are not automatically
+        on the classpath (this is now enforced). Any needed libraries must be specified
+        explicitly, including for the <junit/> task. -->
+    
     <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml">
         <classpath>
             <pathelement location="framework/base/lib/ivy-2.4.0.jar"/>

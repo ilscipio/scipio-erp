@@ -27,7 +27,8 @@ fi
 
 top="$(cd "$(dirname "$0")"; echo "$PWD")"
 find_jar() {
-    set -- "$top"/framework/base/lib/*ant-launcher.jar
+    # SCIPIO: NOTE: 2017-02-02: launcher is now under ant subfolder
+    set -- "$top"/framework/base/lib/ant/*ant-launcher.jar
     if [ $# = 1 ] && [ -e "$1" ]; then
         echo "$1"
     else

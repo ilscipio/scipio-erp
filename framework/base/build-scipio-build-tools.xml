@@ -57,4 +57,10 @@ under the License.
     <target name="jar" depends="classes">
         <main-jar />
     </target>
+    
+    <!-- SPECIAL: PREVENT ivy from running - we don't need the dependencies,  
+        and getting them makes clean tasks too heavy -->
+    <target name="init-lib-update">
+    </target>
+    
 </project>

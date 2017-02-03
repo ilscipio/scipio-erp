@@ -156,8 +156,11 @@ under the License.
             <!-- doesn't appear to be in use anywhere
             <filename name="scripting/antlr-*.jar"/>-->
             <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
-            <!-- this gets downloaded separately on-demand (TODO: handle here instead?) -->
+ 
+            <!-- TODO?: these currently get downloaded separately, on-demand; should handle automatically instead? -->
             <filename name="sonar-*.jar"/>
+            <filename name="cobertura-*.jar"/>
+            <filename name="activemq-*.jar"/>
 
             <!-- FIXME: manually-committed JARs missing from public repos -->
             <filename name="hamcrest-all-*.jar"/>

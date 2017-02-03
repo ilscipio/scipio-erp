@@ -97,6 +97,9 @@
 !       framework/base/lib/ws-commons-util-1.0.2.jar
         -->
         
+        <!-- TODO?: HANDLE SONAR HERE INSTEAD OF HARDCODED CASE?
+        <dependency org="?" name="sonar" rev="?" transitive="false" conf="base->default"/>
+         -->
          
         <!-- re Ant -->
         <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" transitive="false" conf="ant->default"/>
@@ -135,6 +138,7 @@
 
         <!-- re scripting -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting->default"/>
+        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting->default"/>
         <!-- TODO: MISSING DEPENDENCIES
 !       framework/base/lib/scripting/asm-3.2.jar
 !       framework/base/lib/scripting/bsf-2.4.0.jar

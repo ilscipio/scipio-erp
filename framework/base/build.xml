@@ -132,8 +132,10 @@ under the License.
             <filename name="ant-*.jar"/>
             <filename name="ant/**.jar"/>
             <filename name="ivy-*.jar"/>
-            <filename name="scripting/antlr-*.jar"/>
+            <!-- doesn't appear to be in use anywhere
+            <filename name="scripting/antlr-*.jar"/>-->
             <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
+            <!-- this gets downloaded separately on-demand (TODO: handle here instead?) -->
             <filename name="sonar-*.jar"/>
         </or>
     </selector>

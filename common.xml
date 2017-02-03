@@ -288,6 +288,9 @@ under the License.
                 <available file="lib" type="dir"/>
             </and>
             <then>
+                <!-- get info about the last retrieve attempt -->
+                <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last" />
+                
                 <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
                     changed, separate from the ivy:retrieve call, because if nothing changed we want
                     to skip our manual clean as well as the retrieve -->
@@ -316,12 +319,25 @@ under the License.
                 <echo level="verbose" message="ivy.deps.changed: ${ivy.deps.changed}"/>
                 -->
                 
+                <!-- SPECIAL: check if the last (unfinished) clean/retrieve attempt was ours. if so, must force redeploy. -->
+                <condition property="last.update.retrieve.waslast" value="true" else="false">
+                    <and>
+                        <equals arg1="${ivy.organisation}" arg2="${lib.update.retrieve.last.organisation}"/>
+                        <equals arg1="${ivy.module}" arg2="${lib.update.retrieve.last.module}"/>
+                    </and>
+                </condition>
+                <echo level="info" message="Was last retrieve attempt? ${last.update.retrieve.waslast}${line.separator}Deps changed? ${ivy.deps.changed}${line.separator}Forced? ${lib.update.force}"/>
+                
                 <if>
                     <or>
                         <equals arg1="${lib.update.force}" arg2="true"/>
                         <equals arg1="${ivy.deps.changed}" arg2="true"/>
+                        <equals arg1="${last.update.retrieve.waslast}" arg2="true"/><!-- force redeploy if last deploy didn't finish -->
                     </or>
                     <then>
+                        <!-- flag this module as the last clean/retrieve attempt -->
+                        <echo message="status=RUNNING${line.separator}organisation=${ivy.organisation}${line.separator}module=${ivy.module}${line.separator}" file="${ofbiz.home.dir}/ivy/ivy-last.txt" />
+                        
                         <dirname property="lib.component.current.dir" file="${ant.file}"/>
                         <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
                         <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
@@ -332,6 +348,11 @@ under the License.
                             </then>
                         </if>
                         <antcall target="do-lib-update" inheritrefs="true"/>
+                        
+                        <!--<fail message="TEST FAIL"/>-->
+                        
+                        <!-- if we're here, then we succeeded; clear the last flag -->
+                        <delete file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
                     </then>
                 </if>
             </then>

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="Catalina" default="jar" basedir=".">
+<project name="Catalina" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -39,4 +39,19 @@ under the License.
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
     </path>
+    
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (catalina component implementation)">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/)?tomcat-tribes-([^/-]+)\.jar$" to="\1tomcat-\2-catalina-tribes.jar"/>
+                <regexpmapper from="^(.*/)?tomcat-extras-juli(-adapters)?-([^/-]+)\.jar$" to="\1tomcat-extras-\3-tomcat-juli\2.jar"/>
+                <regexpmapper from="^(.*/)?tomcat-((?:catalina|jasper)(?:-[^/]+)?)-([^/-]+)\.jar$" to="\1tomcat-\3-\2.jar"/>
+                <regexpmapper from="^(.*/)?tomcat-([^/]+)-([^/-]+)\.jar$" to="\1tomcat-\3-tomcat-\2.jar"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+    </target>
+    
 </project>

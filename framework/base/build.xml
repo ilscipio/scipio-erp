@@ -121,8 +121,25 @@ under the License.
         </ivy:retrieve>
         <ivy:retrieve pattern="lib/ant/${lib.update.filename.pattern.ivy}" conf="ant"/>
         <ivy:retrieve pattern="lib/commons/${lib.update.filename.pattern.ivy}" conf="commons"/>
-        <ivy:retrieve pattern="lib/j2eespecs/${lib.update.filename.pattern.ivy}" conf="j2eespecs"/>
-        <ivy:retrieve pattern="lib/scripting/${lib.update.filename.pattern.ivy}" conf="scripting"/>
+        <ivy:retrieve pattern="lib/j2eespecs/${lib.update.filename.pattern.ivy}" conf="j2eespecs">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/)?javax.servlet-api-3\.1\.0(\.jar)$$" to="\1servlet-api-3.1\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax.servlet-api(-[^/]+\.jar)$$" to="\1servlet-api\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax.servlet.jsp-api-2\.3\.0(\.jar)$$" to="\1jsp-api-2.3\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax.servlet.jsp-api(-[^/]+\.jar)$$" to="\1jsp-api\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax.el-api-3\.0\.0(\.jar)$$" to="\1el-api-3.0\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax.el-api(-[^/]+\.jar)$$" to="\1el-api\2" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <ivy:retrieve pattern="lib/scripting/${lib.update.filename.pattern.ivy}" conf="scripting">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/)?oro(-[^/]+\.jar)$$" to="\1jakarta-oro\2" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
     </target>
 
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
@@ -137,6 +154,8 @@ under the License.
             <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
             <!-- this gets downloaded separately on-demand (TODO: handle here instead?) -->
             <filename name="sonar-*.jar"/>
+            <!-- FIXME: the specific version we need, 1.2, is not in central; only 1.3 is; so manual commit for now -->
+            <filename name="hamcrest-all-*.jar"/>
         </or>
     </selector>
     

@@ -38,6 +38,10 @@ under the License.
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
 
+    <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
+        you may specify some default properties -->
+    <property file="build.local.properties"/>
+    
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
         automatic lib update check upon build and other target invocations
         2017-02-03: Ivy now enabled by default (bypass false) -->

@@ -45,3 +45,4 @@
 .*.swo
 desktop.ini
 .svn/
+/build.local.properties

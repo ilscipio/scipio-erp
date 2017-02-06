@@ -161,17 +161,30 @@ public class GroovyUtil {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> loadClass(String path) throws ClassNotFoundException {
         return new GroovyClassLoader().loadClass(path);
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> parseClass(InputStream in, String location) throws IOException {
         return new GroovyClassLoader().parseClass(UtilIO.readString(in), location);
     }
+    
     public static Class<?> parseClass(InputStream in, String location, GroovyClassLoader groovyClassLoader) throws IOException {
         return groovyClassLoader.parseClass(UtilIO.readString(in), location);
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> parseClass(String text) {
         return new GroovyClassLoader().parseClass(text);
     }

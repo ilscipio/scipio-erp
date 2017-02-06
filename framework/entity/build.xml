@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Entity" default="jar" basedir=".">
+<project name="OFBiz - Entity" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -52,4 +52,43 @@ under the License.
         </test-jar>
     </target>
 
+    <target name="do-lib-update" description="Downloads all jars">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="base">
+        </ivy:retrieve>
+        <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
+            <firstmatchmapper>
+                <!-- Move drivers to old locations (TODO?: remove? standardize?) -->
+                <regexpmapper from="^(.*/)?jaybird-jdk1(\d)-([^/]+)\.jar$$" to="\1firebird/1.\2/jaybird-\3_jre\2.jar" handledirsep="true"/>              
+                <regexpmapper from="^(.*/)?hsqldb-([^/]+)\.jar$$" to="\1hsql/hsqldb.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?mysql-connector-java-([^/]+)\.jar$$" to="\1mysql/mysql-connector-java-\2-bin.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jre7\.jar)$$" to="\1postgresql/1.7/\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jar)$$" to="\1postgresql/1.8/\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?(derby-[^/]+\.jar)$$" to="\1derby/\2" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <!-- if there are no JDBC drivers directly under lib/jdbc/, copy derby there by default -->
+        <if>
+            <resourcecount count="0" when="eq">
+                <fileset dir="lib/jdbc" includes="*.jar"/>
+            </resourcecount>
+            <then>
+                <copy todir="lib/jdbc">
+                    <fileset dir="lib/jdbc/unused/derby">
+                        <include name="derby-*.jar"/>
+                    </fileset>
+                </copy>
+            </then>
+        </if>
+    </target>
+    
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+    <selector id="lib.update.manual.files">
+        <or>
+            <!-- Do not delete the JDBC driver directly under lib/jdbc/ -->
+            <filename name="jdbc/*.jar"/>
+        </or>
+    </selector>
+    
 </project>

@@ -39,6 +39,7 @@ under the License.
   <element name="iterate-subant-args" optional="yes" implicit="yes"/>
   <sequential>
    <subant target="@{target}" inheritall="@{inheritall}">
+    <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
     <iterate-subant-args />
     <filelist refid="@{filelist}"/>
    </subant>
@@ -57,6 +58,8 @@ under the License.
   <pathelement location="${ofbiz.home.dir}/extension/rhino/lib/js-1.7.R1.jar"/>
  </path>
  <path id="junit.class.path">
+  <!-- SCIPIO: 2017-02-02: The junit JAR itself should now be explicitly specified, as may miss from classpath or wrong one on classpath -->
+  <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="junit-*.jar"/> 
   <fileset dir="${ofbiz.home.dir}/framework/base/lib/scripting/" includes="*.jar"/>
   <pathelement location="${ofbiz.home.dir}/framework/base/lib/ant/ant-apache-bsf-1.7.1.jar"/>
  </path>
@@ -189,9 +192,11 @@ under the License.
 
  <presetdef name="externalsubant">
   <subant inheritall="false">
+   <!-- SCIPIO: defined in build.xml
    <propertyset>
     <propertyref name="ofbiz.home.dir"/>
-   </propertyset>
+   </propertyset>-->
+   <propertyset refid="ofbiz.subbuild.props.pass"/>
   </subant>
  </presetdef>
     
@@ -274,10 +279,7 @@ under the License.
               inheritall="false" return="component.build.dependencies.prop">
               <!--<property name="basedir" value="${depres.buildfile.dir}"/>-->
               <property name="component.build.dependencies.sep" value=","/>
-              <propertyset>
-                <propertyref name="ofbiz.home.dir"/>
-                <propertyref name="ofbiz.component.dirs"/>
-              </propertyset>
+              <propertyset refid="ofbiz.subbuild.props.pass"/>
             </antcallback>
 
             <if>
@@ -515,5 +517,39 @@ Unexpectedly received empty list of builds to iterate."/>
         <read-component-build-deps/>
     </target>
     -->
+    
+    <!-- Removes all lib (jar) files from a component lib folder and its subfolders, without removing any subfolders,
+        with the given exceptions as exclude-pattern -->
+    <macrodef name="remove-lib-files">
+      <attribute name="dir"/>
+      <attribute name="excludes-refid" default=""/><!-- this takes a <selector> of <filename> elements -->
+      <element name="patterns" optional="true"/>
+      <sequential>
+        <!-- FIXME: ugly duplication, ant kludge (but at least kind to caller) -->
+        <if>
+          <isreference refid="@{excludes-refid}"/>
+          <then>
+            <!-- never delete empty dirs; never delete .git, .svn, .gitignore, ... -->
+            <delete includeemptydirs="false" defaultexcludes="true">
+              <fileset dir="@{dir}">
+                <include name="**/*.jar"/>
+                <patterns />
+                <!-- instead of taking excludes, take an include list and negate it
+                <patternset refid="@{excludes-refid}"/>-->
+                <not><selector refid="@{excludes-refid}"/></not>
+              </fileset>
+            </delete>
+          </then>
+          <else>
+            <delete includeemptydirs="false" defaultexcludes="true">
+              <fileset dir="@{dir}">
+                <include name="**/*.jar"/>
+                <patterns />
+              </fileset>
+            </delete>
+          </else>
+        </if>
+      </sequential>
+    </macrodef>
     
 </project>

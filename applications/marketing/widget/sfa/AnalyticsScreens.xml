@@ -180,7 +180,7 @@ under the License.
             <actions>
                 <include-screen-actions name="AnalyticsTrackingStatsActions" />
                 
-                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${orderStats.totalOrders}; ${uiLabelMap.VisitTotal}: ${orderStats.totalVisits}" />
+                <set field="totalsDesc" value="${uiLabelMap.OrderOrders}: ${trackingStats.totalOrders}; ${uiLabelMap.PartyVisits}: ${trackingStats.totalVisits}" />
 
                 <if>
                     <condition>
@@ -196,8 +196,7 @@ under the License.
                 
                 <set field="xlabel" value="${uiLabelMap.ProductSales}"/>
                 <set field="ylabel" value="${uiLabelMap.CommonWeek}"/>
-                <set field="label1" value="${uiLabelMap.VisitTotal}"/>
-                <!-- <set field="label1" value="${uiLabelMap.ProductProductsSold}"/> -->
+                <set field="label1" value="${uiLabelMap.PartyVisits}"/>
                 <set field="label2" value="${uiLabelMap.OrderOrders}"/>
             </actions>
             <widgets>

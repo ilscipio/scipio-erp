@@ -21,19 +21,24 @@ under the License.
     <!-- SCIPIO: Common include for theme component build.xml files (same as common.xml but for themes) -->
     
     <dirname property="component.build.commontheme.dir" file="${ant.file.Common Theme Component Build}"/>
-    <import file="${component.build.commontheme.dir}/macros.xml"/>
-    <!-- SCIPIO: TODO: investigate whether a third common file, common to both common.xml and commontheme.xml, is
-        needed or desirable, or alternatively, if it is always safe for commontheme.xml to include common.xml -->
+    <!-- 2017-01-31: We now import common.xml directly for the time being.
+        Unwanted targets can be overridden with empty ones and unwanted definitions simply ignored,
+        and the master build.xml will simply not call the targets that aren't applicable for themes 
+        (regular ant does not even have a mechanism for conditional target invocations, so it is up 
+        to the caller to determine which are applicable).
+    <import file="${component.build.commontheme.dir}/macros.xml"/>-->
+    <import file="${component.build.commontheme.dir}/common.xml"/>
 
     <target name="clean">
     </target>
     
-    <target name="build">
+    <target name="build" depends="check-init-lib-update">
     </target>
     
+    <!-- 2017-01-31: now inherited from common.xml (same implementation)
     <target name="get-component-build-deps"
         description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
         <read-component-build-deps/>
-    </target>
+    </target>-->
 
 </project>

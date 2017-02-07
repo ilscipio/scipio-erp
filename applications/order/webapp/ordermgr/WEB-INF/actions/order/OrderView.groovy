@@ -121,7 +121,7 @@ if (orderHeader) {
     orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
     context.orderVATTaxTotal = orderVATTaxTotal;
     
-    grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
+    grandTotal = orderReadHelper.getOrderGrandTotal();
     context.grandTotal = grandTotal;
 
     orderItemList = orderReadHelper.getOrderItems();

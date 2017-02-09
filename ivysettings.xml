@@ -23,7 +23,7 @@
     <caches resolutionCacheDir="${ivy.settings.dir}/ivy/resolutionCache"/>
     <resolvers>
         <ibiblio name="central" m2compatible="true"/>
-        <ibiblio name="maven" root="http://mvnrepository.com/artifact/" m2compatible="true" />
+        <ibiblio name="maven" root="https://mvnrepository.com/artifact/" m2compatible="true" />
         <filesystem name="local">
             <artifact pattern="${ivy.settings.dir}/lib/[artifact]-[revision].[ext]"/>
         </filesystem>

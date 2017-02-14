@@ -4,7 +4,11 @@ import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.widget.model.AbstractModelAction;
+import org.ofbiz.widget.model.FormFactory;
+import org.ofbiz.widget.model.MenuFactory;
+import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelLocation;
+import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.model.ScreenFactory;
 
@@ -37,15 +41,17 @@ public abstract class WidgetScriptUtil {
      * from the top-level actions block. In other words, only works reliably on action-only screens or
      * screens that have same behavior as actions-only screens.
      * See <code>widget-screen.xsd</code> for more details on actions-only screens.
+     * <p>
+     * NOTE: 
      */
-    public static Object runScreenActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException {
+    public static Object runScreenActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException, RuntimeException {
         ModelScreen widget;
         try {
             widget = ScreenFactory.getScreenFromLocation(location, screenName);
         } catch (Exception e) {
             throw new GeneralException("Error getting screen location to run screen actions: " + e.getMessage(), e);
         }
-        AbstractModelAction.runSubActions(widget.getSection().getActions(), context); // NOTE: wraps in RunTimeExceptions
+        AbstractModelAction.runSubActionsEx(widget.getSection().getActions(), context); // NOTE: wraps in RunTimeExceptions
         return null; // TODO? ever needed? made part of interface for future needs.
     }
     
@@ -67,6 +73,44 @@ public abstract class WidgetScriptUtil {
      */
     public static Object runScreenActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
         return runScreenActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
+    }
+    
+    public static Object runFormActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException {
+        return runFormActionsAtLocation(ModelLocation.fromResAndName(location, screenName), context);
+    }
+    
+    public static Object runFormActionsAtLocation(ModelLocation location, Map<String, Object> context) throws GeneralException {
+        ModelForm widget;
+        try {
+            widget = FormFactory.getFormFactory().getWidgetFromLocation(location);
+        } catch (Exception e) {
+            throw new GeneralException("Error getting screen location to run screen actions: " + e.getMessage(), e);
+        }
+        AbstractModelAction.runSubActionsEx(widget.getActions(), context); // NOTE: wraps in RunTimeExceptions
+        return null; // TODO? ever needed? made part of interface for future needs.
+    }
+    
+    public static Object runFormActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
+        return runFormActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
+    }
+    
+    public static Object runMenuActionsAtLocation(String location, String screenName, Map<String, Object> context) throws GeneralException {
+        ModelMenu widget;
+        try {
+            widget = MenuFactory.getMenuFromLocation(location, screenName);
+        } catch (Exception e) {
+            throw new GeneralException("Error getting screen location to run screen actions: " + e.getMessage(), e);
+        }
+        AbstractModelAction.runSubActionsEx(widget.getActions(), context);
+        return null;
+    }
+    
+    public static Object runMenuActionsAtLocation(ModelLocation location, Map<String, Object> context) throws GeneralException {
+        return runMenuActionsAtLocation(location.getResource(), location.getName(), context);
+    }
+    
+    public static Object runMenuActionsAtLocation(String combinedName, Map<String, Object> context) throws GeneralException {
+        return runMenuActionsAtLocation(ModelLocation.fromAddress(combinedName), context);
     }
     
 }

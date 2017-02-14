@@ -50,8 +50,6 @@ public class MenuFactory extends WidgetFactory {
     public static final UtilCache<String, Map<String, ModelMenu>> menuWebappCache = UtilCache.createUtilCache("widget.menu.webappResource", 0, 0, false);
     public static final UtilCache<String, Map<String, ModelMenu>> menuLocationCache = UtilCache.createUtilCache("widget.menu.locationResource", 0, 0, false);
 
-    private static final MenuFactory menuFactory = getFactory("menu"); // SCIPIO: new
-    
     public static MenuFactory getMenuFactory() { // SCIPIO: new
         return menuFactory;
     }

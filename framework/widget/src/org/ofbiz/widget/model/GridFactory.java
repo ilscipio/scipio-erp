@@ -53,8 +53,6 @@ public class GridFactory extends WidgetFactory {
     private static final UtilCache<String, ModelGrid> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
     private static final UtilCache<String, ModelGrid> gridWebappCache = UtilCache.createUtilCache("widget.grid.webappResource", 0, 0, false);
 
-    private static final GridFactory gridFactory = getFactory("grid"); // SCIPIO: new
-    
     public static GridFactory getGridFactory() { // SCIPIO: new
         return gridFactory;
     }

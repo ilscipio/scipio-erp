@@ -55,6 +55,12 @@ public class ScreenFactory extends WidgetFactory {
     public static final UtilCache<String, ModelScreens> screenLocationCache = UtilCache.createUtilCache("widget.screen.locationResource", 0, 0, false);
     public static final UtilCache<String, ModelScreens> screenWebappCache = UtilCache.createUtilCache("widget.screen.webappResource", 0, 0, false);
 
+    private static final ScreenFactory screenFactory = getFactory("screen"); // SCIPIO: new
+    
+    public static ScreenFactory getScreenFactory() { // SCIPIO: new
+        return screenFactory;
+    }
+    
     public static boolean isCombinedName(String combinedName) {
         int numSignIndex = combinedName.lastIndexOf("#");
         if (numSignIndex == -1) {

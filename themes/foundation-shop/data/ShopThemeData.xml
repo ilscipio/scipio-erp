@@ -65,7 +65,9 @@ under the License.
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/sass-to-js/js/dist/sass-to-js.min.js" sequenceId="06"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Chart.js/dist/Chart.min.js" sequenceId="07"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/Snap.svg/dist/snap.svg-min.js" sequenceId="08"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/pizza/dist/js/pizza.min.js" sequenceId="09"/>
+    <!--
+    Enable for "Pizza" Chart support
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/pizza/dist/js/pizza.min.js" sequenceId="09"/>-->
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="10"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation.min.js" sequenceId="11"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.topbar.js" sequenceId="12"/>

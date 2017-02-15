@@ -353,7 +353,7 @@ under the License.
                 </platform-specific>
                 <!-- render content area -->
                 <decorator-section-include name="pre-content"/>
-                <container style="${styles.grid_row} ${styles.grid_theme}" id="content-main-section">
+                <container style="${styles.grid_theme}" id="content-main-section">
                     <section>
                         <condition>
                             <not>

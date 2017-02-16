@@ -1206,6 +1206,27 @@ context.styles = [
       /* "highlightRemovedLabel" : "Removed: "     Text that precedes highlight of removed item */
     ],
 
+    /*List of icons that can be assigned per webapplication and specific menu_items. Uses font-awesome icons by default.*/
+    "app_icon" : [
+        "main" : "fa-home", // Dashboard link
+        "admin" : "fa-wrench",
+        "accounting" : "fa-balance-scale",
+        "assetmaint" : "fa-cogs",
+        "ofbizsetup" : "fa-check-square",
+        "cms" : "fa-file-text",
+        "CRM" : "fa-bullhorn",
+        "humanres" : "fa-vcard",
+        "manufacturing" : "fa-industry",
+        "facility" : "fa-cube",
+        "marketing" : "fa-comments",
+        "order" : "fa-recycle",
+        "party" : "fa-users",
+        "catalog" : "fa-sitemap",
+        "shop" : "fa-shopping-cart",
+        "solr" : "fa-search",
+        "workeffort" : "fa-sliders"
+        ],
+
   /* Always declare last */
     "dummy" : ""
 ];

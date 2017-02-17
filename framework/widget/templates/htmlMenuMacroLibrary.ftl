@@ -159,7 +159,7 @@ TODO/FIXME:
   </#if>
   
   <#if name?has_content>
-    <#local class = addClassArg(class, "menu-name-" + name)>
+    <#local class = addClassArg(class, (styles["menu_" + styleName + "_nameprefix"]!styles["menu_default_nameprefix"]!"") + name)>
   </#if>
   
   <#-- NOTE: DEPRECATED mainButtonClass (was never documented) -->
@@ -238,7 +238,7 @@ TODO/FIXME:
   <#local class = menuAppendActiveStyle(class, menuStyleName, "_itemactive", active, activeTarget)>
 
   <#if name?has_content>
-    <#local class = addClassArg(class, "item-name-" + name)>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + name)>
   </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
@@ -336,7 +336,7 @@ Only those not marked DEPRECATED should still be used.
   </#if>
   
   <#if itemName?has_content>
-    <#local class = addClassArg(class, "item-name-" + itemName)>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + itemName)>
   </#if>
   
   <#if isLink>

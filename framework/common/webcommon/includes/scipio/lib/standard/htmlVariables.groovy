@@ -110,12 +110,14 @@ context.styles = [
     "menu_generic_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_levelprefix" : "menu-level-",
+    "menu_generic_nameprefix" : "menu-name-",
     "menu_generic_item" : "",
     "menu_generic_itemdisabled" : "disabled",
     "menu_generic_itemactive" : "active",
     "menu_generic_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_itemselected" : "selected",
+    "menu_generic_itemnameprefix" : "item-name-",
     "menu_generic_item_contentdisabled" : "disabled",
     "menu_generic_item_contentactive" : "active",
     "menu_generic_item_contentactivetarget" : "active-target",
@@ -286,6 +288,7 @@ context.styles = [
     "menu_default_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_default_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_levelprefix" : "menu-level-",
+    "menu_default_nameprefix" : "menu-name-",
     "menu_default_item" : "",
     "menu_default_item_htmlwrap" : true,
     "menu_default_itemdisabled" : "disabled",
@@ -293,6 +296,7 @@ context.styles = [
     "menu_default_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_default_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_itemselected" : "selected",
+    "menu_default_itemnameprefix" : "item-name-",
     "menu_default_item_contentdisabled" : "disabled",
     "menu_default_item_contentactive" : "active",
     "menu_default_item_contentactivetarget" : "active-target",

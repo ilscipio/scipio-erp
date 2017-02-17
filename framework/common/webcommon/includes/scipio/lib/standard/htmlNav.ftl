@@ -468,7 +468,7 @@ The submenu's main class may be set as altnested in global styles.
   </#if>
   <#local class = menuAppendActiveStyle(class, styleName, "_active", active, activeTarget)>
   <#if name?has_content>
-    <#local class = addClassArg(class, "menu-name-" + name)>
+    <#local class = addClassArg(class, (styles["menu_" + styleName + "_nameprefix"]!styles["menu_default_nameprefix"]!"") + name)>
   </#if>
   
   <#local menuInfo = {"type":type, "name":name, "specialType":specialType, "styleName":styleName, 
@@ -754,7 +754,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#local contentClass = menuAppendActiveStyle(contentClass, menuStyleName, "_item_contentactive", active, activeTarget)>
 
   <#if name?has_content>
-    <#local class = addClassArg(class, "item-name-" + name)>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + name)>
   </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
@@ -768,7 +768,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_submit"]!styles["menu_default_item_generic"]!"">
   </#if>
   <#if name?has_content>
-    <#local contentClass = addClassArg(contentClass, "item-name-" + name)>
+    <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + name)>
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
   <#local specialType = "">

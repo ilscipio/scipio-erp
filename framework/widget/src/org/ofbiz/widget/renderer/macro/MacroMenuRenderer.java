@@ -531,6 +531,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("disabled", disabled);
         parameters.put("selectedAncestor", selectedAncestor);
         
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", menuItem.getName());
+        
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
         } catch (TemplateException e) {
@@ -603,6 +606,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", menu.getName());
+        
         try {
             executeMacro(writer, "renderMenuBegin", parameters);
         } catch (TemplateException e) {
@@ -635,6 +641,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean selectedAncestor = !selected && subMenu.isSameOrAncestorOf(selectedMenuAndItem.getSubMenu());
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
+        
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", subMenu.getName());
         
         try {
             executeMacro(writer, "renderSubMenuBegin", parameters);

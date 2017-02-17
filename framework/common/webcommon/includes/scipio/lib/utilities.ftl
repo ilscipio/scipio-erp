@@ -4129,8 +4129,8 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
     div:divclass;h+3:headingclass;consumeLevel=true
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
-    allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
+  <#return rewrapMap(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
+    allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId), "raw-simple")>
 
 <#-- old FTL impl
   <#local headingLevel = "">

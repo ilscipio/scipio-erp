@@ -275,7 +275,7 @@ The submenu's main class may be set as altnested in global styles.
                               * {{{generic}}}: any content, but specific type should be preferred.
     name                    = (optional) Internal name
                               If present, may be used for logic and styling needs.
-                              2017-02-17: now used to generate a class name in the form: "menu_name_${name}",
+                              2017-02-17: now used to generate a class name in the form: "menu-name-${name}",
                               which can be used for styling purposes. Note that the name is not unique globally
                               and must be used in conjunction with more precise selectors.             
     inlineItems             = ((boolean), default: false) If true, generate only items, not menu container
@@ -468,7 +468,7 @@ The submenu's main class may be set as altnested in global styles.
   </#if>
   <#local class = menuAppendActiveStyle(class, styleName, "_active", active, activeTarget)>
   <#if name?has_content>
-    <#local class = addClassArg(class, "menu_name_" + name)>
+    <#local class = addClassArg(class, "menu-name-" + name)>
   </#if>
   
   <#local menuInfo = {"type":type, "name":name, "specialType":specialType, "styleName":styleName, 
@@ -605,7 +605,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               * {{{generic}}}: any generic content, but specific types should be preferred.
     name                    = (optional) Internal name
                               If present, may be used for logic and styling needs.
-                              2017-02-17: this is now used to generate a class name in the form: "menuitem_name_${name}",
+                              2017-02-17: this is now used to generate a class name in the form: "item-name-${name}",
                               which can be used for styling purposes. Note that the name is not unique globally
                               and must be used in conjunction with more precise selectors.   
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu item
@@ -754,7 +754,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#local contentClass = menuAppendActiveStyle(contentClass, menuStyleName, "_item_contentactive", active, activeTarget)>
 
   <#if name?has_content>
-    <#local class = addClassArg(class, "menuitem_name_" + name)>
+    <#local class = addClassArg(class, "item-name-" + name)>
   </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
@@ -768,7 +768,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_submit"]!styles["menu_default_item_generic"]!"">
   </#if>
   <#if name?has_content>
-    <#local contentClass = addClassArg(contentClass, "menuitem_name_" + name)>
+    <#local contentClass = addClassArg(contentClass, "item-name-" + name)>
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
   <#local specialType = "">

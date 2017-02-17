@@ -273,6 +273,11 @@ The submenu's main class may be set as altnested in global styles.
                               For nested menus, this will inherit the type of the parent.
                               General:
                               * {{{generic}}}: any content, but specific type should be preferred.
+    name                    = (optional) Internal name
+                              If present, may be used for logic and styling needs.
+                              2017-02-17: now used to generate a class name in the form: "menu_name_${name}",
+                              which can be used for styling purposes. Note that the name is not unique globally
+                              and must be used in conjunction with more precise selectors.             
     inlineItems             = ((boolean), default: false) If true, generate only items, not menu container
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu
                               Supports prefixes (see #compileClassArg for more info):
@@ -338,7 +343,7 @@ The submenu's main class may be set as altnested in global styles.
     Enhanced for 1.14.2.             
 -->
 <#assign menu_defaultArgs = {
-  "type":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
+  "type":"", "name":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
   "nestedFirst":false, "title":"", "specialType":"", "titleClass":"", "mainButtonClass":"", "htmlwrap":true, 
   "isNestedMenu":"", "parentMenuType":"", "active":"", "activeTarget":"", "menuLevel":"", "passArgs":{}
@@ -461,9 +466,12 @@ The submenu's main class may be set as altnested in global styles.
   <#if !active?is_boolean>
     <#local active = false>
   </#if>
-  <#local class = menuAppendActiveStyle(class, styleName, "_active", active activeTarget)>
+  <#local class = menuAppendActiveStyle(class, styleName, "_active", active, activeTarget)>
+  <#if name?has_content>
+    <#local class = addClassArg(class, "menu_name_" + name)>
+  </#if>
   
-  <#local menuInfo = {"type":type, "specialType":specialType, "styleName":styleName, 
+  <#local menuInfo = {"type":type, "name":name, "specialType":specialType, "styleName":styleName, 
     "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs, "titleClass":titleClass,
     "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, 
     "nestedFirst":nestedFirst, "isNestedMenu":isNestedMenu, 
@@ -595,6 +603,11 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   * Parameters *
     type                    = (generic|link|text|submit, default: generic) Menu item (content) type
                               * {{{generic}}}: any generic content, but specific types should be preferred.
+    name                    = (optional) Internal name
+                              If present, may be used for logic and styling needs.
+                              2017-02-17: this is now used to generate a class name in the form: "menuitem_name_${name}",
+                              which can be used for styling purposes. Note that the name is not unique globally
+                              and must be used in conjunction with more precise selectors.   
     class                   = ((css-class), default: -based on menu type-) CSS classes for menu item
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -651,7 +664,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               NOTE: This currently only works for {{{generic}}} and {{{text}}} type items. 
 -->
 <#assign menuitem_defaultArgs = {
-  "type":"generic", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
+  "type":"generic", "name":"", "class":"", "contentClass":"", "id":"", "style":"", "attribs":{},
   "contentId":"", "contentStyle":"", "contentName":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":"", "selected":"", "active":"", "activeTarget":"", "target":"", "title":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":"", "nestedFirst":false,
@@ -740,6 +753,9 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
   <#local class = menuAppendActiveStyle(class, menuStyleName, "_itemactive", active, activeTarget)>
   <#local contentClass = menuAppendActiveStyle(contentClass, menuStyleName, "_item_contentactive", active, activeTarget)>
 
+  <#if name?has_content>
+    <#local class = addClassArg(class, "menuitem_name_" + name)>
+  </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
   <#if type == "link">
@@ -750,6 +766,9 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_submit"]!styles["menu_default_item_submit"]!"">
   <#else>
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_submit"]!styles["menu_default_item_generic"]!"">
+  </#if>
+  <#if name?has_content>
+    <#local contentClass = addClassArg(contentClass, "menuitem_name_" + name)>
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
   <#local specialType = "">

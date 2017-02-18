@@ -63,15 +63,18 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         this.servletContext = context;
     }
 
-    private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
-            Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
+    /**
+     * SCIPIO: Reusable version of the original ofbiz loadRenderers method.
+     */
+    public static ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
+            String name, Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
         // SCIPIO: need this name early, check if html
-        String screenRendererName = UtilProperties.getPropertyValue("widget", getName() + ".name");
+        String screenRendererName = UtilProperties.getPropertyValue("widget", name + ".name");
         
-        String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".screenrenderer");
-        String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".formrenderer");
-        String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
-        String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".menurenderer");
+        String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".screenrenderer");
+        String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".formrenderer");
+        String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".treerenderer");
+        String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".menurenderer");
         
         Map<String, List<String>> themeResources = VisualThemeWorker.getVisualThemeResources(context);
         if (themeResources != null) {
@@ -118,6 +121,11 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             request.setAttribute("menuStringRenderer", menuStringRenderer);
         }
         return screenStringRenderer;
+    }
+    
+    private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
+            Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
+        return loadRenderers(request, response, getName(), context, writer);
     }
 
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {

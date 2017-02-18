@@ -158,8 +158,9 @@ TODO/FIXME:
     </#if>
   </#if>
   
-  <#if name?has_content>
-    <#local class = addClassArg(class, (styles["menu_" + styleName + "_nameprefix"]!styles["menu_default_nameprefix"]!"") + name)>
+  <#local namePrefix = styles["menu_" + styleName + "_nameprefix"]!styles["menu_default_nameprefix"]!"">
+  <#if name?has_content && namePrefix?has_content>
+    <#local class = addClassArg(class, namePrefix + name)>
   </#if>
   
   <#-- NOTE: DEPRECATED mainButtonClass (was never documented) -->
@@ -237,8 +238,9 @@ TODO/FIXME:
   <#local activeTarget = selected>
   <#local class = menuAppendActiveStyle(class, menuStyleName, "_itemactive", active, activeTarget)>
 
-  <#if name?has_content>
-    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + name)>
+  <#local namePrefix = styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"">
+  <#if name?has_content && namePrefix?has_content>
+    <#local class = addClassArg(class, namePrefix + name)>
   </#if>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
@@ -335,8 +337,9 @@ Only those not marked DEPRECATED should still be used.
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
   </#if>
   
-  <#if itemName?has_content>
-    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"") + itemName)>
+  <#local itemNamePrefix = styles["menu_" + menuStyleName + "_itemnameprefix"]!styles["menu_default_itemnameprefix"]!"">
+  <#if itemName?has_content && itemNamePrefix?has_content>
+    <#local class = addClassArg(class, itemNamePrefix + itemName)>
   </#if>
   
   <#if isLink>

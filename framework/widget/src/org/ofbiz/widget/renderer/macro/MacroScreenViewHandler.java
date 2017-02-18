@@ -115,7 +115,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         if (!menuMacroLibraryPath.isEmpty()) {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(screenRendererName, menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
-            request.setAttribute("screenStringRenderer", screenStringRenderer);
+            request.setAttribute("menuStringRenderer", menuStringRenderer);
         }
         return screenStringRenderer;
     }

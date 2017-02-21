@@ -181,7 +181,7 @@ TODO/FIXME:
             name=item.name menuInfo=menuInfo/>
     </#list>
   <#else>
-    <@menu_markup type=type specialType=specialType class=class id=id style="" attribs=extraMenuAttribs 
+    <@menu_markup type=type specialType=specialType name=name class=class id=id style="" attribs=extraMenuAttribs 
         excludeAttribs=["class", "id", "style"] inlineItems=false titleClass=titleClass mainButtonClass=titleClass title=title 
         htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
         isNestedMenu=isNestedMenu menuLevel=menuLevel active=active activeTarget=activeTarget>
@@ -229,6 +229,7 @@ TODO/FIXME:
     <#local attribs = attribs + {"title":toolTip}>
   </#if>
   <#local menuStyleName = menuInfo.styleName>
+  <#local menuName = menuInfo.name!"">
 
   <#if disabled>
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))>
@@ -245,7 +246,8 @@ TODO/FIXME:
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
   <#-- NOTE: our "selected" actually means "active" to the Scipio macros -->
-  <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" class=class id=id 
+  <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" 
+      name=name menuName=menuName class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
       disabled=disabled active=active activeTarget=activeTarget
       isNestedMenu=menuInfo.isNestedMenu menuLevel=menuInfo.menuLevel parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
@@ -333,6 +335,7 @@ Only those not marked DEPRECATED should still be used.
   </#local>
 
   <#local menuStyleName = menuInfo.styleName>
+  <#local menuName = menuInfo.name!"">
   <#if disabled>
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
   </#if>
@@ -359,15 +362,15 @@ Only those not marked DEPRECATED should still be used.
     <#local class = menuAppendActiveStyle(class, menuStyleName, "_item_contentactive", active, activeTarget)>
 
     <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_link"]!"")>
-    <@menuitem_link_markup class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" menuLevel=menuInfo.menuLevel
+    <@menuitem_link_markup itemName=itemName menuName=menuName class=class id=id style="" name=name href=href onClick="" target=targetWindow title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_link_markup><#t>
   <#elseif isText>
     <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_text"]!styles["menu_default_item_text"]!"")>
-    <@menuitem_text_markup class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
+    <@menuitem_text_markup itemName=itemName menuName=menuName class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_text_markup><#t>
   <#else>
     <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item_generic"]!styles["menu_default_item_generic"]!"")>
-    <@menuitem_generic_markup class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
+    <@menuitem_generic_markup itemName=itemName menuName=menuName class=class id=id style="" onClick="" title="" menuLevel=menuInfo.menuLevel
         attribs={} excludeAttribs=[] disabled=disabled active=active activeTarget=activeTarget itemIndex=itemIndex>${innerContent}</@menuitem_generic_markup><#t>
   </#if>
 </#macro>

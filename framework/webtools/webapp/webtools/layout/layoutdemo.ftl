@@ -163,7 +163,8 @@
 <@heading relLevel=+1>Colors</@heading>
 <a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Secondary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Primary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_secondary!}">Secondary Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>

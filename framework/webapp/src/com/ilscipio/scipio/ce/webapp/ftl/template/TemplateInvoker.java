@@ -134,21 +134,26 @@ public class TemplateInvoker {
          */
         protected final Boolean pushCtx;
 
-        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, Boolean pushCtx) {
+        protected final Map<String, Object> ctxVars;
+        
+        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, Boolean pushCtx, Map<String, Object> ctxVars) {
             this.invokeMode = invokeMode;
             this.context = context;
-            
             this.pushCtx = pushCtx;
+            this.ctxVars = ctxVars;
         }
         
-        public InvokeOptions(InvokeMode invokeMode, Boolean pushCtx) {
-            this(invokeMode, null, pushCtx);
+        public InvokeOptions(InvokeMode invokeMode, Boolean pushCtx, Map<String, Object> ctxVars) {
+            this(invokeMode, null, pushCtx, ctxVars);
         }
 
         public InvokeMode getInvokeMode() {
             return invokeMode;
         }
 
+        /**
+         * The context object to use. By default the well-known MapStack is used.
+         */
         public Map<String, Object> getContext() {
             return context;
         }
@@ -156,10 +161,12 @@ public class TemplateInvoker {
         public Boolean getPushCtx() {
             return pushCtx;
         }
-        
-        public boolean isPushCtx() {
-            // NOTE: in future could depend on invokeMode; for now always true by default
-            return !Boolean.FALSE.equals(pushCtx);
+
+        /**
+         * NOTE: these may already be TemplateModels, or not.
+         */
+        public Map<String, Object> getCtxVars() {
+            return ctxVars;
         }
     }
 
@@ -243,14 +250,20 @@ public class TemplateInvoker {
     public void invoke(Writer out) throws TemplateException, IOException {
         Template template = getTemplate();
         Map<String, Object> context = getContext();
-        if (invokeOptions.invokeMode == InvokeMode.OFBIZ_STD) {
-            if (invokeOptions.isPushCtx()) {
+        Boolean pushCtx = invokeOptions.getPushCtx();
+        if (invokeOptions.getInvokeMode() == null || invokeOptions.getInvokeMode() == InvokeMode.OFBIZ_STD) {
+            if (pushCtx == null) pushCtx = true;
+            if (!(context instanceof MapStack)) pushCtx = false;
+            if (pushCtx) {
                 ((MapStack<String>) context).push();
             }
             try {
+                if (invokeOptions.getCtxVars() != null) {
+                    context.putAll(invokeOptions.getCtxVars());
+                }
                 FreeMarkerWorker.renderTemplate(template, context, out);
             } finally {
-                if (invokeOptions.isPushCtx()) {
+                if (pushCtx) {
                     ((MapStack<String>) context).pop();
                 }
             }

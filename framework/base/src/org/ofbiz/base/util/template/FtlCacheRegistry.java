@@ -13,22 +13,30 @@ import freemarker.template.Template;
  * SCIPIO: New FTL cache registry that maps Configurations to UtilCache instances
  * for specific types (location, inline-named, inline-self).
  * <p>
- * FIXME: types are too unspecific in current iteration, unclear how to unify them...
+ * The caches registered here must be considered to be safe for use with the
+ * <code>FreeMarkerWorker.getTemplate</code> methods.
+ * Only "well-known" caches should be published here, and the types map
+ * the "main" ones.
+ * <p>
+ * The purpose is to be able to cache templates in a standard way for
+ * any Configuration in effect.
  */
 public class FtlCacheRegistry {
 
     /**
-     * Designates cache that has or supports a unique file location as key.
+     * The main file location cache used by the configuration.
      */
-    public static final String LOCATION_CACHE = "loc";
+    public static final String MAIN_LOCATION_CACHE = "main-loc";
     /**
-     * Designates cache that has a unique name as key in general, not a location.
+     * The main general name cache used by the configuration. Should accept inline templates
+     * with a generated name.
      */
-    public static final String NAME_CACHE = "name";
+    public static final String MAIN_NAME_CACHE = "main-name";
     /**
+     * The main body cached used by the configuration.
      * Designates cache whose key is the template body itself (usually for short templates).
      */
-    public static final String BODY_CACHE = "body";
+    public static final String MAIN_BODY_CACHE = "main-body";
 
     private static final FtlCacheRegistry registry = new FtlCacheRegistry();
     

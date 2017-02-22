@@ -187,6 +187,12 @@ by default, #interpretStd returns a scalar (string)-implementing wrapper,
 so that it can be evaluated using the same syntax used for regular string variables,
 and thus can substitute more easily.
 
+Unlike {{{?interpret}}}, variables from the FTL environment are NOT available
+from #interpretStd invocations; only variables from the widget renderer
+{{{context}}} ({{{MapStack}}}) are available. This is closer to @render and is an explicit feature
+intended to prevent interfering with FTL environment of parent templates.
+Furthermore, by default, the context {{{MapStack}}} is pushed (see {{{pushCtx}}} parameter).
+
 This function accepts one parameter which is a map of parameters, described below.
 If a single string is supplied instead, it is taken as the inline string template
 to interpret, and all other parameters get defaults.
@@ -214,8 +220,17 @@ to interpret, and all other parameters get defaults.
                                   the same ObjectWrapper as currently in use, meaning the same
                                   auto-html-escaping hack will apply.
                               TODO: parameters to specify cache and configuration/objectwrappers.
+    invokeCtx               = ((map), default: -mode-dependent-) Context object to use for invocation
+                              For {{{ofbiz-std}}}, the default is to use the well-known {{{context}}} variable
+                              found in the freemarker environment at time of invocation.
+                              NOTE: In most case this should not be set and leave it to fetch the context by itself;
+                                  in which case, to pass vars, leave pushCtx to {{{true}}} and and pass them in {{{ctxVars}}} instead.                    
     pushCtx                 = ((boolean), default: -mode-dependent-) Whether to push/pop the context around the evaluation
                               For {{{ofbiz-std}}}, the default is {{{true}}}.
+                              If the invokeCtx is not a MapStack, this has no effect.
+    ctxVars                 = ((map)) Additional context vars to pass at time of invocation
+                              If pushCtx is true (default), these are lost after render finish.
+    unwrapCtxVars           = ((boolean), default: false) Whether to bother to ftl-unwrap the ctxVars or not                          
     model                   = (scalar|directive|hybrid, default: scalar) The Freemarker TemplateModel to wrap the interpreted/compiled template
                               * {{{scalar}}}: The returned value will evaluate (render) the template
                                 when it is coerced to string or passed through the {{{?string}}} built-in.

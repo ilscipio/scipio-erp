@@ -25,19 +25,25 @@ public class FtlCacheRegistry {
 
     /**
      * The main file location cache used by the configuration.
+     * File locations are globally unique in any context.
      */
     public static final String MAIN_LOCATION_CACHE = "main-loc";
-    /**
-     * The main general name cache used by the configuration. Should accept inline templates
-     * with a generated name.
-     */
-    public static final String MAIN_NAME_CACHE = "main-name";
+    
     /**
      * The main body cached used by the configuration.
      * Designates cache whose key is the template body itself (usually for short templates).
+     * The body is unique in any context.
      */
     public static final String MAIN_BODY_CACHE = "main-body";
-
+    
+    // This is unlikely to make sense on its own... the name namespace must be explicit
+    // and so this is not specific enough.
+//    /**
+//     * The main general name cache used by the configuration. Should accept inline templates
+//     * with a generated name.
+//     */
+//    public static final String MAIN_NAME_CACHE = "main-name";
+    
     private static final FtlCacheRegistry registry = new FtlCacheRegistry();
     
     private final Object syncObj = new Object();

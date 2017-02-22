@@ -474,20 +474,41 @@ public class FreeMarkerWorker {
     }
     
     /**
+     * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
+     */
+    public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
+    }
+    
+    /**
      * SCIPIO: Gets template from string out of custom cache (new).
      */
-    public static Template getTemplateFromString(String templateString, String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+    public static Template getTemplateFromString(String templateString, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        Template template = (templateKey != null) ? cache.get(templateKey) : null;
         if (template == null) {
             Reader templateReader = new StringReader(templateString);
             try {
-                template = new Template(templateLocation, templateReader, config);
+                template = new Template(templateName, templateReader, config);
             } finally {
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (templateKey != null) {
+                template = cache.putIfAbsentAndGet(templateKey, template);
+            }
         }
         return template;
+    }
+    
+    /**
+     * SCIPIO: Gets template from string, but no cache (new).
+     */
+    public static Template getTemplateFromString(String templateString, String templateName, Configuration config) throws TemplateException, IOException {
+        Reader templateReader = new StringReader(templateString);
+        try {
+            return new Template(templateName, templateReader, config);
+        } finally {
+            templateReader.close();
+        }
     }
 
     public static String getArg(Map<String, ? extends Object> args, String key, Environment env) {

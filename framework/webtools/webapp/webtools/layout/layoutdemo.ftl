@@ -62,8 +62,10 @@
 
 </@section>
 
+<!-- 
 <@section title="Special title classes" titleClass="div:+divclass;heading:+extraheadingclass">
 </@section>
+ -->
 
 <@section id="another-section-id-this-time-used-on-container-and-content">
   <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>

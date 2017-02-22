@@ -169,6 +169,88 @@ TODO: Reimplement as transform.
 
 <#-- 
 *************
+* interpretStd
+************
+Interprets/compiles a string or file location as a template and returns the template
+in a self-sufficient template invoker wrapper, which can later be evaluated using
+a simple invocation form (by default, simple string evaluation).
+
+This can be seen as an alternative to the {{{?interpret}}} built-in, 
+with significant differences. Unlike {{{?interpret}}}, the default behavior
+is to treat the invocation as a standalone template render, rather than
+evaluating within the current template environment.
+In this respect, #interpretStd is closer to the @render directive, but
+with no widget renderer involvement.
+
+Furthermore, while {{{?interpret}}} returns a directive as wrapper (evaluated using {{{<@value/>}}} syntax),
+by default, #interpretStd returns a scalar (string)-implementing wrapper,
+so that it can be evaluated using the same syntax used for regular string variables,
+and thus can substitute more easily.
+
+This function accepts one parameter which is a map of parameters, described below.
+If a single string is supplied instead, it is taken as the inline string template
+to interpret, and all other parameters get defaults.
+
+  * Parameters *
+    str                     = ((string)) An inline string to use as template
+                              The input itself automatically bypasses screen auto-html escaping.
+                              NOTE: if instead of an args map, the function receives a single
+                                  string parameter, then it is considered the value of this
+                                  parameter, and all others receive defaults.
+    location                = ((string)) A file location, alternative to inline str
+                              The input itself automatically bypasses screen auto-html escaping.
+    invokeMode              = (ofbiz-std, default: ofbiz-std) The general invocation and context mode
+                              Possible values:
+                              * {{{ofbiz-std}}}: Causes a standalone, standard ofbiz template invocation,
+                                with the {{{context}}} variable as root binding,
+                                similar to using FreeMarkerWorker directly. By default, the current
+                                context is reused and pushed (unless specified otherwise).
+                                NOTE: this is completely different from freemarker's {{{?interpret}}} built-in,
+                                    which evaluates the template as if it were part of the current environment and template.
+                              NOTE: By default, in all invokeModes, the function will attempt to use
+                                  template compilation caches appropriate for the current renderer. 
+                                  Currently there is no parameter to disable it and no reason to.
+                              NOTE: By default, in all invokeModes, the function will attempt to use 
+                                  the same ObjectWrapper as currently in use, meaning the same
+                                  auto-html-escaping hack will apply.
+                              TODO: parameters to specify cache and configuration/objectwrappers.
+    pushCtx                 = ((boolean), default: -mode-dependent-) Whether to push/pop the context around the evaluation
+                              For {{{ofbiz-std}}}, the default is {{{true}}}.
+    model                   = (scalar|directive|hybrid, default: scalar) The Freemarker TemplateModel to wrap the interpreted/compiled template
+                              * {{{scalar}}}: The returned value will evaluate (render) the template
+                                when it is coerced to string or passed through the {{{?string}}} built-in.
+                                This allows the interpreted template to substitute for a regular string variable.
+                                NOTE: 2017-02-21: This is the chosen default value because in most
+                                    cases, we want the interpreted template to be substitutable 
+                                    for variables easily. In addition, if the TemplateInvoker is
+                                    unwrapping+rewrapping repeatedly (such as if passed across a @render call),
+                                    this is the only type that will allow consistent rewrapping
+                                    using the same scalar freemarker model.
+                                DEV NOTE: we do not currently override the {{{ObjectWrapper.wrap}}} method, so
+                                    if the {{{directive}}} or {{{hybrid}}} were chosen as defaults,
+                                    the unwrapping+rewrapping would just lose the wrapper and go
+                                    back to a BeansWrapper StringModel scalar anyway.
+                                    This is something to revisit in the future, so maybe the
+                                    hybrid could be made the default...
+                              * {{{directive}}}: The returned value behaves like the return value of
+                                the {{{?interpret}}} built-in and must be evaluated using the
+                                {{{<@value />}}} syntax.
+                              * {{{hybrid}}}: implements both {{{scalar}}} and {{{directive}}} 
+                                at the same time.
+                                NOTE: in some cases freemarker may have issues with this, 
+                                    so for this and other reasons, it currently cannot be made the default.
+
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function interpretStd args={}>
+</#function>
+-->
+
+<#-- 
+*************
 * ofbizUrl
 ************
 Builds an Ofbiz navigation URL - for direct output into template document (primarily).
@@ -1924,7 +2006,7 @@ NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideal
     Rewritten for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapObject object mode="">
+<#function rewrapObject object wrapper="" mode="">
 </#function>
 -->
 

@@ -75,21 +75,54 @@ public class TemplateInvoker {
      * so for now we are relying on SCALAR and if DIRECTIVE is needed then a
      * manual wrapping call has to be done.
      */
-    protected final FtlModel preferredModel;
+    protected final WrapperModel preferredModel;
     
     public static class InvokeOptions {
 
         public enum InvokeMode {
+            
             /**
-             * Standard, standalone Ofbiz-like invocation using FreeMarkerWorker.
+             * Standard, standalone Ofbiz-like invocation, as if using FreeMarkerWorker.
              */
-            OFBIZ_STD;
+            OFBIZ_STD("ofbiz-std");
             
             /*
              * Inline, simulation of <code>?interpret</code> directive behavior.
-             * TODO: not sure this will even possible
+             * TODO: not sure this will even possible. the point would be
+             * to get ?string support.
              */
             //FTL_INLINE; // TODO
+            
+            private static final Map<String, InvokeMode> nameMap;
+            static {
+                Map<String, InvokeMode> map = new HashMap<>();
+                for(InvokeMode mode : InvokeMode.values()) {
+                    map.put(mode.getName(), mode);
+                }
+                nameMap = map;
+            }
+            
+            private final String name;
+
+            private InvokeMode(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+            
+            public static InvokeMode fromName(String str) {
+                return nameMap.get(str);
+            }
+            
+            public static InvokeMode fromNameAlways(String str) {
+                InvokeMode mode = fromName(str);
+                if(mode == null) {
+                    throw new IllegalArgumentException("Unrecognized template invoke mode: " + str);
+                }
+                return mode;
+            }
         }
         
         protected final InvokeMode invokeMode;
@@ -99,18 +132,17 @@ public class TemplateInvoker {
         /**
          * If true, pushes the Ofbiz MapStack context before invoke and pops after.
          */
-        protected final boolean pushCtx;
+        protected final Boolean pushCtx;
 
-        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, boolean pushCtx) {
+        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, Boolean pushCtx) {
             this.invokeMode = invokeMode;
             this.context = context;
+            
             this.pushCtx = pushCtx;
         }
         
-        public InvokeOptions(InvokeMode invokeMode, boolean pushCtx) {
-            this.invokeMode = invokeMode;
-            this.context = null;
-            this.pushCtx = pushCtx;
+        public InvokeOptions(InvokeMode invokeMode, Boolean pushCtx) {
+            this(invokeMode, null, pushCtx);
         }
 
         public InvokeMode getInvokeMode() {
@@ -121,8 +153,13 @@ public class TemplateInvoker {
             return context;
         }
 
-        public boolean isPushCtx() {
+        public Boolean getPushCtx() {
             return pushCtx;
+        }
+        
+        public boolean isPushCtx() {
+            // NOTE: in future could depend on invokeMode; for now always true by default
+            return !Boolean.FALSE.equals(pushCtx);
         }
     }
 
@@ -132,15 +169,46 @@ public class TemplateInvoker {
      * NOTE: <code>SCALAR</code> is unspecific between StringModel-wrapped StringTemplateInvoker
      * and dedicated TemplateScalarModel implementation.
      * <p>
-     * Currently (2017-02) our code will be using StringModel-wrapped StringTemplateInvoker.
+     * Currently (2017-02) for SCALAR our code will be using StringModel-wrapped StringTemplateInvoker.
      */
-    public enum FtlModel {
-        SCALAR,
-        DIRECTIVE,
-        HYBRID;
+    public enum WrapperModel {
+        SCALAR("scalar"),
+        DIRECTIVE("directive"),
+        HYBRID("hybrid");
+        
+        private static final Map<String, WrapperModel> nameMap;
+        static {
+            Map<String, WrapperModel> map = new HashMap<>();
+            for(WrapperModel mode : WrapperModel.values()) {
+                map.put(mode.getName(), mode);
+            }
+            nameMap = map;
+        }
+        
+        private final String name;
+
+        private WrapperModel(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+        
+        public static WrapperModel fromName(String str) {
+            return nameMap.get(str);
+        }
+        
+        public static WrapperModel fromNameAlways(String str) {
+            WrapperModel mode = fromName(str);
+            if(mode == null) {
+                throw new IllegalArgumentException("Unrecognized template invoke wrapper model: " + str);
+            }
+            return mode;
+        }
     }
     
-    protected TemplateInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, FtlModel preferredModel) {
+    protected TemplateInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) {
         this.templateSource = templateSource;
         this.invokeOptions = invokeOptions;
         this.preferredModel = preferredModel;
@@ -153,14 +221,14 @@ public class TemplateInvoker {
     /**
      * Gets a standard template invoker. 
      */
-    public static TemplateInvoker getInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, FtlModel preferredModel) throws TemplateException, IOException {
+    public static TemplateInvoker getInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) throws TemplateException, IOException {
         return new TemplateInvoker(templateSource, invokeOptions, preferredModel);
     }
     
     /**
      * Gets a template invoker same as standard except its toString() method invokes rendering.
      */
-    public static TemplateInvoker getStringInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, FtlModel preferredModel) throws TemplateException, IOException {
+    public static TemplateInvoker getStringInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) throws TemplateException, IOException {
         return new StringTemplateInvoker(templateSource, invokeOptions, preferredModel);
     }
 
@@ -182,7 +250,9 @@ public class TemplateInvoker {
             try {
                 FreeMarkerWorker.renderTemplate(template, context, out);
             } finally {
-                ((MapStack<String>) context).pop();
+                if (invokeOptions.isPushCtx()) {
+                    ((MapStack<String>) context).pop();
+                }
             }
         } else {
             throw new UnsupportedOperationException("Unsupported template invoke mode: " + invokeOptions.invokeMode);
@@ -216,7 +286,7 @@ public class TemplateInvoker {
         return invokeOptions;
     }
     
-    public FtlModel getPreferredModel() {
+    public WrapperModel getPreferredModel() {
         return preferredModel;
     }
     
@@ -244,7 +314,7 @@ public class TemplateInvoker {
      */
     public static class StringTemplateInvoker extends TemplateInvoker {
         protected StringTemplateInvoker(TemplateSource templateSource, InvokeOptions invokeOptions,
-                FtlModel preferredModel) {
+                WrapperModel preferredModel) {
             super(templateSource, invokeOptions, preferredModel);
         }
 
@@ -283,8 +353,8 @@ public class TemplateInvoker {
      * Can be called manually as this logic may not be present in <code>ObjectWrapper.wrap</code>.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper, FtlModel targetModel) throws TemplateModelException {
-        if (targetModel == null || targetModel == FtlModel.SCALAR) {
+    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper, WrapperModel targetModel) throws TemplateModelException {
+        if (targetModel == null || targetModel == WrapperModel.SCALAR) {
             if (invoker instanceof StringTemplateInvoker) {
                 // TODO: REVISIT: in this case, currently relying on StringModel and ignoring ScalarInvokerWrapper.
                 // This case currently covers all the practical usage in templates and CMS...
@@ -293,9 +363,9 @@ public class TemplateInvoker {
             } else {
                 return (T) new ScalarInvokerWrapper(invoker);
             }
-        } else if (targetModel == FtlModel.DIRECTIVE) {
+        } else if (targetModel == WrapperModel.DIRECTIVE) {
             return (T) new DirectiveInvokerWrapper(invoker);
-        } else if (targetModel == FtlModel.HYBRID) {
+        } else if (targetModel == WrapperModel.HYBRID) {
             return (T) new HybridInvokerWrapper(invoker);
         }
         throw new UnsupportedOperationException("Unsupported template invoker FTL wrapper model: " + targetModel);

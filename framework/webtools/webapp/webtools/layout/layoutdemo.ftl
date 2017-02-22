@@ -9,10 +9,6 @@
   </@commonMsg>
 </#if>
 
-<@section title="asdfasdf" titleClass="div:+divclass;heading:+extraheadingclass">
-    
-</@section>
-
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -64,6 +60,9 @@
         <@cell open=true close=false columns=6 />6<@cell close=true open=false />
     <@row close=true open=false />
 
+</@section>
+
+<@section title="Special title classes" titleClass="div:+divclass;heading:+extraheadingclass">
 </@section>
 
 <@section id="another-section-id-this-time-used-on-container-and-content">

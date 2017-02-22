@@ -41,6 +41,8 @@ import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -71,16 +73,32 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         String invokeModeStr = null;
         Boolean pushCtx = null;
         String modelStr = null;
-        
+        Map<String, Object> invokeCtx = null;
+        Map<String, Object> ctxVars = null;
+
         if (OfbizFtlObjectType.MAP.isObjectType(arg)) {
-            // NOTE: the unwrap call should have bypassed auto-escaping automatically...
-            Map<String, Object> argMap = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(arg));
+            Map<String, TemplateModel> argMap = LangFtlUtil.makeModelMap((TemplateHashModelEx) arg);
             
-            str = (String) argMap.get("str");
-            location = (String) argMap.get("location");
-            pushCtx = (Boolean) argMap.get("pushCtx");
-            invokeModeStr = (String) argMap.get("invokeMode");
-            modelStr = (String) argMap.get("model");
+            str = TransformUtil.getStringNonEscapingArg(argMap, "str");
+            location = TransformUtil.getStringNonEscapingArg(argMap, "location");
+            pushCtx = TransformUtil.getBooleanArg(argMap, "pushCtx");
+            invokeModeStr = TransformUtil.getStringNonEscapingArg(argMap, "invokeMode");
+            modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
+            boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
+
+            TemplateModel invokeCtxModel = argMap.get("invokeCtx");
+            if (OfbizFtlObjectType.MAP.isObjectType(invokeCtxModel)) {
+                invokeCtx = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(invokeCtxModel));
+            }
+            
+            TemplateModel ctxVarsModel = argMap.get("ctxVars");
+            if (OfbizFtlObjectType.MAP.isObjectType(ctxVarsModel)) {
+                if (unwrapCtxVars) {
+                    ctxVars = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(ctxVarsModel));
+                } else {
+                    ctxVars = LangFtlUtil.makeModelObjectMap((TemplateHashModelEx) ctxVarsModel);
+                }
+            }
         } else if (arg instanceof TemplateScalarModel) {
             str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
         } else {
@@ -131,7 +149,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateInvoker invoker;
         try {
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
-            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, pushCtx), model);
+            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, pushCtx, ctxVars), model);
         } catch (TemplateException e) {
             throw new TemplateModelException(e);
         } catch (IOException e) {

@@ -458,8 +458,14 @@ public class FreeMarkerWorker {
         return getTemplate(templateLocation, cachedTemplates, defaultOfbizConfig);
     }
 
+    /**
+     * Gets a Template instance from the template cache. If the Template instance isn't
+     * found in the cache, then one will be created.
+     * <p>
+     * SCIPIO: 2017-02-21: May now pass cache null to bypass caching.
+     */
     public static Template getTemplate(String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+        Template template = (cache != null) ? cache.get(templateLocation) : null;
         if (template == null) {
             // only make the reader if we need it, and then close it right after!
             Reader templateReader = makeReader(templateLocation);
@@ -468,7 +474,9 @@ public class FreeMarkerWorker {
             } finally { // SCIPIO: added finally
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (cache != null) {
+                template = cache.putIfAbsentAndGet(templateLocation, template);
+            }
         }
         return template;
     }
@@ -482,9 +490,10 @@ public class FreeMarkerWorker {
     
     /**
      * SCIPIO: Gets template from string out of custom cache (new).
+     * 2017-02-21: May now pass cache null to bypass caching.
      */
     public static Template getTemplateFromString(String templateString, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = (templateKey != null) ? cache.get(templateKey) : null;
+        Template template = (cache != null) ? cache.get(templateKey) : null;
         if (template == null) {
             Reader templateReader = new StringReader(templateString);
             try {
@@ -492,23 +501,11 @@ public class FreeMarkerWorker {
             } finally {
                 templateReader.close();
             }
-            if (templateKey != null) {
+            if (cache != null) {
                 template = cache.putIfAbsentAndGet(templateKey, template);
             }
         }
         return template;
-    }
-    
-    /**
-     * SCIPIO: Gets template from string, but no cache (new).
-     */
-    public static Template getTemplateFromString(String templateString, String templateName, Configuration config) throws TemplateException, IOException {
-        Reader templateReader = new StringReader(templateString);
-        try {
-            return new Template(templateName, templateReader, config);
-        } finally {
-            templateReader.close();
-        }
     }
 
     public static String getArg(Map<String, ? extends Object> args, String key, Environment env) {

@@ -48,7 +48,7 @@ public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
     @Override
     public Object exec(List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
-            throw new TemplateModelException("Invalid number of arguements");
+            throw new TemplateModelException("Invalid number of arguments");
         if (!(args.get(0) instanceof TemplateScalarModel))
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel");
         // SCIPIO: This is too limiting

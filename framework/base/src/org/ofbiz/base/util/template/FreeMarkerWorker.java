@@ -458,8 +458,14 @@ public class FreeMarkerWorker {
         return getTemplate(templateLocation, cachedTemplates, defaultOfbizConfig);
     }
 
+    /**
+     * Gets a Template instance from the template cache. If the Template instance isn't
+     * found in the cache, then one will be created.
+     * <p>
+     * SCIPIO: 2017-02-21: May now pass cache null to bypass caching.
+     */
     public static Template getTemplate(String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+        Template template = (cache != null) ? cache.get(templateLocation) : null;
         if (template == null) {
             // only make the reader if we need it, and then close it right after!
             Reader templateReader = makeReader(templateLocation);
@@ -468,24 +474,36 @@ public class FreeMarkerWorker {
             } finally { // SCIPIO: added finally
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (cache != null) {
+                template = cache.putIfAbsentAndGet(templateLocation, template);
+            }
         }
         return template;
     }
     
     /**
-     * SCIPIO: Gets template from string out of custom cache (new).
+     * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
      */
-    public static Template getTemplateFromString(String templateString, String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+    public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
+    }
+    
+    /**
+     * SCIPIO: Gets template from string out of custom cache (new).
+     * 2017-02-21: May now pass cache null to bypass caching.
+     */
+    public static Template getTemplateFromString(String templateString, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        Template template = (cache != null) ? cache.get(templateKey) : null;
         if (template == null) {
             Reader templateReader = new StringReader(templateString);
             try {
-                template = new Template(templateLocation, templateReader, config);
+                template = new Template(templateName, templateReader, config);
             } finally {
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (cache != null) {
+                template = cache.putIfAbsentAndGet(templateKey, template);
+            }
         }
         return template;
     }

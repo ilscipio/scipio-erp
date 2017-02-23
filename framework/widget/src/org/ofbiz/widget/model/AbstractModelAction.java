@@ -166,6 +166,24 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             }
         }
     }
+    
+    /**
+     * SCIPIO: Executes the actions contained in <code>actions</code>, without wrapping exceptions
+     * in RuntimeException.
+     * 
+     * @param actions
+     * @param context
+     * @throws GeneralException 
+     */
+    public static void runSubActionsEx(List<ModelAction> actions, Map<String, Object> context) throws GeneralException {
+        if (actions == null)
+            return;
+        for (ModelAction action : actions) {
+            if (Debug.verboseOn())
+                Debug.logVerbose("Running action " + action.getClass().getName(), module);
+            action.runAction(context);
+        }
+    }
 
     private final ModelWidget modelWidget;
 

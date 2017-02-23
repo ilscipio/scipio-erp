@@ -110,12 +110,14 @@ context.styles = [
     "menu_generic_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_levelprefix" : "menu-level-",
+    "menu_generic_nameprefix" : "menu-name-",
     "menu_generic_item" : "",
     "menu_generic_itemdisabled" : "disabled",
     "menu_generic_itemactive" : "active",
     "menu_generic_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_itemselected" : "selected",
+    "menu_generic_itemnameprefix" : "item-name-",
     "menu_generic_item_contentdisabled" : "disabled",
     "menu_generic_item_contentactive" : "active",
     "menu_generic_item_contentactivetarget" : "active-target",
@@ -286,6 +288,7 @@ context.styles = [
     "menu_default_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_default_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_levelprefix" : "menu-level-",
+    "menu_default_nameprefix" : "menu-name-",
     "menu_default_item" : "",
     "menu_default_item_htmlwrap" : true,
     "menu_default_itemdisabled" : "disabled",
@@ -293,6 +296,7 @@ context.styles = [
     "menu_default_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_default_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_itemselected" : "selected",
+    "menu_default_itemnameprefix" : "item-name-",
     "menu_default_item_contentdisabled" : "disabled",
     "menu_default_item_contentactive" : "active",
     "menu_default_item_contentactivetarget" : "active-target",
@@ -737,7 +741,7 @@ context.styles = [
     "grid_cell" : "columns",
     "grid_cell_default" : "large-12",
     "grid_display" : "display",      /* display grid */
-    "grid_theme" : "fullWidth",
+    "grid_theme" : "row fullWidth",
     "grid_end" : "end",
     "grid_small" : "small-",
     "grid_medium" : "medium-",
@@ -746,6 +750,7 @@ context.styles = [
     "grid_small_offset" : "small-offset-",
     "grid_medium_offset" : "medium-offset-",
     "grid_large_offset" : "large-offset-",
+    "grid_block_container" : "",
     "grid_block_prefix" : "",
     "grid_block_postfix" : "block-grid-",
     "grid_columns_1" : "large-1 columns",
@@ -1205,6 +1210,27 @@ context.styles = [
       /* "highlightAddedLabel" : "Added: ",       Text that precedes highlight of added item */
       /* "highlightRemovedLabel" : "Removed: "     Text that precedes highlight of removed item */
     ],
+
+    /*List of icons that can be assigned per webapplication and specific menu_items. Uses font-awesome icons by default.*/
+    "app_icon" : [
+        "main" : "fa-home", // Dashboard link
+        "admin" : "fa-wrench",
+        "accounting" : "fa-balance-scale",
+        "assetmaint" : "fa-cogs",
+        "ofbizsetup" : "fa-check-square",
+        "cms" : "fa-file-text",
+        "CRM" : "fa-bullhorn",
+        "humanres" : "fa-vcard",
+        "manufacturing" : "fa-industry",
+        "facility" : "fa-cube",
+        "marketing" : "fa-comments",
+        "order" : "fa-recycle",
+        "party" : "fa-users",
+        "catalog" : "fa-sitemap",
+        "shop" : "fa-shopping-cart",
+        "solr" : "fa-search",
+        "workeffort" : "fa-sliders"
+        ],
 
   /* Always declare last */
     "dummy" : ""

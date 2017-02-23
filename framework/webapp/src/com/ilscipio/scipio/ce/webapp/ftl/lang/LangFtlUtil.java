@@ -1171,6 +1171,26 @@ public abstract class LangFtlUtil {
             dest.put(key, source.get(key));
         }
     }
+    
+    /**
+     * Adds the still-wrapped TemplateModels in hash to a java Map.
+     * <p>
+     * <em>WARN</em>: This is not BeanModel-aware (complex map).
+     */    
+    public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModelEx source) throws TemplateModelException {
+        TemplateCollectionModel keysModel = source.keys();
+        TemplateModelIterator modelIt = keysModel.iterator();
+        while(modelIt.hasNext()) {
+            String key = getAsStringNonEscaping((TemplateScalarModel) modelIt.next());
+            dest.put(key, source.get(key));
+        }
+    }
+    
+    public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModel source, Set<String> keys) throws TemplateModelException {
+        for(String key : keys) {
+            dest.put(key, source.get(key));
+        }
+    }
 
     /**
      * Makes a simple hash from source map; only specified keys.
@@ -1193,6 +1213,18 @@ public abstract class LangFtlUtil {
         SimpleHash res = new SimpleHash(objectWrapper);
         addToSimpleMap(res, map, LangFtlUtil.toStringSet(keys));
         return res;
+    }
+    
+    public static Map<String, TemplateModel> makeModelMap(TemplateHashModelEx source) throws TemplateModelException {
+        Map<String, TemplateModel> map = new HashMap<>();
+        addModelsToMap(map, source);
+        return map;
+    }
+    
+    public static Map<String, Object> makeModelObjectMap(TemplateHashModelEx source) throws TemplateModelException {
+        Map<String, Object> map = new HashMap<>();
+        addModelsToMap(map, source);
+        return map;
     }
 
     /**

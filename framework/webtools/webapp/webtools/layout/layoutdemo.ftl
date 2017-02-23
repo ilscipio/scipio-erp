@@ -62,6 +62,11 @@
 
 </@section>
 
+<!-- 
+<@section title="Special title classes" titleClass="div:+divclass;heading:+extraheadingclass">
+</@section>
+ -->
+
 <@section id="another-section-id-this-time-used-on-container-and-content">
   <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
   <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
@@ -159,8 +164,10 @@
 <@heading relLevel=+1>Colors</@heading>
 <a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Secondary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Primary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_secondary!}">Secondary Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_warning!}">Warning Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
 
@@ -1719,6 +1726,60 @@
     ]/>
   </@section>
 
+</@section>
+
+
+<#-- NOTE: the rewrapString are just here to test the escape bypass -->
+<@section title="FTL template interpret (#interpretStd)">
+  <#assign dummy = setContextField("parentContextMyVar1", "parent context var")>
+  <#assign parentFtlVar1 = "parent ftl var">
+
+  <@section title="#interpretStd inline, defaults, as scalar">
+    <#assign compiledTmpl = interpretStd(r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (good)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}")>
+    ${compiledTmpl}
+  </@section>
+    
+  <@section title="#interpretStd from location, as directive (mimic ?interpret, but standalone render)">
+    <#assign compiledTmpl = interpretStd({
+        "location": rewrapString("component://webtools/webapp/webtools/showDateTime.ftl"),
+        "model": "directive"
+    })>
+    <@compiledTmpl/>
+  </@section>
+  
+  <@section title="#interpretStd inline, as hybrid (mimic ?interpret)">
+    <#assign compiledTmpl = interpretStd({
+        "str": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}",
+        "model": "hybrid",
+        "ctxVars": {"myVar":"my variable"}
+    })>
+    <@section title="As string:">
+      ${compiledTmpl?string}
+    </@section>
+    <@section title="As directive:">
+      <@compiledTmpl/>
+    </@section>
+  </@section>
+  
+  <@section title="#interpretStd, non-standard context">
+    <p><em>NOTE: Custom context object means most API don't work in this example.</em></p>
+    <#assign compiledTmpl = interpretStd({
+        "str": rewrapString(r"[#ftl][@heading level=6]Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em>[/@heading] with non-standard context (non-inherited). parentContextMyVar1: ${parentContextMyVar1!'missing (good)'}. http://www.ilscipio.com"),
+        "model": "scalar",
+        "invokeCtx": {"myVar":"my variable"}
+    })>
+    ${compiledTmpl}
+  </@section>
+    
+  <@section title="?interpret (ftl built-in, reference)">
+    <p><em>NOTE: For reference only. This builtin is usually inappropriate for use in Scipio, 
+        because it runs from parent environment (instead of standalone/isolated), 
+        bypasses ofbiz caching, and requires special syntax to evaluate the template. 
+        The #interpretStd function will solve these issues and more.</em></p>
+    <#assign compiledTmpl = r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (ERROR)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}"?interpret>
+    <@compiledTmpl/>
+  </@section>
+    
 </@section>
 
 <#-- NOTE: keep last -->

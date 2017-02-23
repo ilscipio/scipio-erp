@@ -22,14 +22,20 @@ public abstract class WidgetFactory implements Serializable {
 
     public static final String module = WidgetFactory.class.getName();
     
+    // SCIPIO: new: static factories
+    protected static final ScreenFactory screenFactory = new ScreenFactory();
+    protected static final FormFactory formFactory = new FormFactory();
+    protected static final MenuFactory menuFactory = new MenuFactory();
+    protected static final TreeFactory treeFactory = new TreeFactory();
+    protected static final GridFactory gridFactory = new GridFactory();
     protected static final Map<String, WidgetFactory> factoryMap;
     static {
         Map<String, WidgetFactory> map = new HashMap<>();
-        map.put("screen", new ScreenFactory());
-        map.put("form", new FormFactory());
-        map.put("menu", new MenuFactory());
-        map.put("tree", new TreeFactory());
-        map.put("grid", new GridFactory());
+        map.put("screen", screenFactory);
+        map.put("form", formFactory);
+        map.put("menu", menuFactory);
+        map.put("tree", treeFactory);
+        map.put("grid", gridFactory);
         factoryMap = map;
     }
 

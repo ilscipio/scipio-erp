@@ -52,7 +52,7 @@ under the License.
                     </@pli>
                     <#else>
                     <@pli type="button">
-                        <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()">${uiLabelMap.CommonSelect}</a>
+                        <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()" class="${styles.button}">${uiLabelMap.CommonSelect}</a>
                     </@pli>
                 </#if>
             </@pul>   

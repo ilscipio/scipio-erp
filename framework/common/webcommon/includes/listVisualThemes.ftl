@@ -31,8 +31,7 @@ under the License.
               <input type="hidden" name="userPrefTypeId" value="VISUAL_THEME"/>
               <input type="hidden" name="userPrefValue" value="${visualTheme.visualThemeId}"/>
             </form>
-            <@pul title="">
-                <@pli>
+            <@pul title=visualTheme.visualThemeId!"">
                    <#if screenshots?has_content>
                       <#list screenshots as screenshot>
                         <#-- TODO: <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>">-->
@@ -40,19 +39,19 @@ under the License.
                         <#--</a>-->
                       </#list>
                    <#else>
-                      ${uiLabelMap.CommonVisualThemeNoScreenshots}
+                      <@pli>${uiLabelMap.CommonVisualThemeNoScreenshots}</@pli>
                     </#if>
-                </@pli>
+
                 <@pli type="description">${visualTheme.visualThemeId}
                     ${visualTheme.get("description", locale)!visualTheme.visualThemeId}
                 </@pli>
                 <#if visualTheme.visualThemeId == visualThemeId>
-                    <@pli>
+                    <@pli type="description">
                         ${uiLabelMap.CommonVisualThemeSelected}
                     </@pli>
                     <#else>
                     <@pli type="button">
-                        <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()" class="${styles.button}">${uiLabelMap.CommonSelect}</a>
+                        <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()" class="${styles.button_default}">${uiLabelMap.CommonSelect}</a>
                     </@pli>
                 </#if>
             </@pul>   

@@ -390,8 +390,6 @@ TODO: Reimplement in java in com.ilscipio.scipio.ce.webapp.ftl.template.standard
 ************
 Creates a grid list.
 
-Since this is very foundation specific, this function may be dropped in future installations
-
   * Usage Examples *  
     <@grid>
         <li>Text or <a href="">Anchor</a></li>
@@ -428,25 +426,27 @@ Since this is very foundation specific, this function may be dropped in future i
   <#local dummy = pushRequestStack("scipioGridInfoStack", gridInfo)>
   <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
   <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
-  <#if type == "tiles" || type == "freetiles">
-    <#local freewallNum = getRequestVar("scipioFreewallIdNum")!0>
-    <#local freewallNum = freewallNum + 1 />
-    <#local dummy = setRequestVar("scipioFreewallIdNum", freewallNum)>
-    <#if !id?has_content>
-      <#local id = "freewall_id_${freewallNum!0}">
-    </#if>
-
-    <#local tileStyleName = tilesType>
-    <#local tileStylePrefix = "tile_" + tileStyleName>
-    <#local defaultTileStylePrefix = "tile_default">
-
-    <#local class = addClassArg(class, styles.tile_container!)>
-    <#local class = addClassArgDefault(class, styles[tileStylePrefix + "_containerclass"]!styles[defaultTileStylePrefix + "_containerclass"]!"")>
- 
-    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
-  <#elseif type=="list">
-    <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
-  </#if>
+  <#if styles.grid_block_container?has_content><@container class=styles.grid_block_container close=false/></#if>
+      <#if type == "tiles" || type == "freetiles">
+        <#local freewallNum = getRequestVar("scipioFreewallIdNum")!0>
+        <#local freewallNum = freewallNum + 1 />
+        <#local dummy = setRequestVar("scipioFreewallIdNum", freewallNum)>
+        <#if !id?has_content>
+          <#local id = "freewall_id_${freewallNum!0}">
+        </#if>
+    
+        <#local tileStyleName = tilesType>
+        <#local tileStylePrefix = "tile_" + tileStyleName>
+        <#local defaultTileStylePrefix = "tile_default">
+    
+        <#local class = addClassArg(class, styles.tile_container!)>
+        <#local class = addClassArgDefault(class, styles[tileStylePrefix + "_containerclass"]!styles[defaultTileStylePrefix + "_containerclass"]!"")>
+     
+        <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
+      <#elseif type=="list">
+        <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
+      </#if>
+  <#if styles.grid_block_container?has_content><@container open=false/></#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("scipioGridInfoStack")>
 </#macro>

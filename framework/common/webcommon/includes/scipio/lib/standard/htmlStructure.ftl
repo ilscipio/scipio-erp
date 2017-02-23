@@ -426,7 +426,6 @@ Creates a grid list.
   <#local dummy = pushRequestStack("scipioGridInfoStack", gridInfo)>
   <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
   <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
-  <#if styles.grid_block_container?has_content><@container class=styles.grid_block_container close=false/></#if>
       <#if type == "tiles" || type == "freetiles">
         <#local freewallNum = getRequestVar("scipioFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
@@ -444,9 +443,10 @@ Creates a grid list.
      
         <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
       <#elseif type=="list">
-        <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
+        <#if styles.grid_block_container?has_content><@container class=styles.grid_block_container close=false/></#if>
+            <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
+        <#if styles.grid_block_container?has_content><@container open=false/></#if>
       </#if>
-  <#if styles.grid_block_container?has_content><@container open=false/></#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("scipioGridInfoStack")>
 </#macro>

@@ -1535,6 +1535,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#if !container?is_boolean>
     <#if container?has_content>
       <#local container = container?boolean>
+    <#elseif type == "hidden">
+      <#-- 2017-02-24: no container for hidden, unless explicit specified for some reason... -->
+      <#local container = false>
     <#elseif isChildField && (((styles.field_type_nocontainer_whenchild[type])!false) || 
       ((styles.field_type_nocontainer_whenhasparent[parentFieldInfo.type!])!false))>
       <#local container = false>

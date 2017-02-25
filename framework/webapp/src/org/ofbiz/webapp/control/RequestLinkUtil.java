@@ -77,9 +77,13 @@ public abstract class RequestLinkUtil {
     }
     
     public static String checkAddExternalLoginKey(String url, HttpServletRequest request, boolean escaped) {
+        return checkAddExternalLoginKey(url, request, escaped ? "&amp;" : "&");
+    }
+    
+    public static String checkAddExternalLoginKey(String url, HttpServletRequest request, String paramDelim) {
         String extLoginKey = (String) request.getAttribute("externalLoginKey");
         if (extLoginKey != null && !extLoginKey.isEmpty()) { 
-            url = url + (url.contains("?") ? (escaped ? "&amp;" : "&") : "?") + "externalLoginKey=" + extLoginKey;
+            url = url + (url.contains("?") ? paramDelim : "?") + "externalLoginKey=" + extLoginKey;
         }
         return url;
     }

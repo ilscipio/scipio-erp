@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#include "common.ftl">
 <#-- Applications -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
 <#if (externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>

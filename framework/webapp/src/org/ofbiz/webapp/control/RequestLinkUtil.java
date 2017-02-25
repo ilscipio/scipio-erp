@@ -115,12 +115,10 @@ public abstract class RequestLinkUtil {
         for(Map.Entry<String, Object> entry : params.entrySet()) {
             appendToParamString(sb, entry.getKey(), entry.getValue(), delim);
         }
-        if (sb.length() == 0) {
-            return "";
-        } else {
+        if (sb.length() >= delim.length()) {
             sb.delete(0, delim.length());
-            return sb.toString();
         }
+        return sb.toString();
     }
     
     public static void appendToParamString(StringBuilder sb, String name, Object val, String delim) {

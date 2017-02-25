@@ -113,28 +113,31 @@ public abstract class RequestLinkUtil {
     public static String makeParamString(Map<String, Object> params, String delim) {
         StringBuilder sb = new StringBuilder("");
         for(Map.Entry<String, Object> entry : params.entrySet()) {
-            String name = entry.getKey();
-            Object val = entry.getValue();
-            if (val == null) val = "";
-            if (val instanceof Collection) { // param with multiple values (rare)
-                for(Object subVal : UtilGenerics.checkCollection(val)) {
-                    if (sb.length() > 0) {
-                        sb.append(delim);
-                    }
-                    sb.append(name);
-                    sb.append("=");
-                    sb.append(subVal.toString());
-                }
-            } else {
-                if (sb.length() > 0) {
-                    sb.append(delim);
-                }
+            appendToParamString(sb, entry.getKey(), entry.getValue(), delim);
+        }
+        if (sb.length() == 0) {
+            return "";
+        } else {
+            sb.delete(0, delim.length());
+            return sb.toString();
+        }
+    }
+    
+    public static void appendToParamString(StringBuilder sb, String name, Object val, String delim) {
+        if (val == null) val = "";
+        if (val instanceof Collection) { // param with multiple values (rare)
+            for(Object subVal : UtilGenerics.checkCollection(val)) {
+                sb.append(delim);
                 sb.append(name);
                 sb.append("=");
-                sb.append(val.toString());
+                sb.append(subVal.toString());
             }
+        } else {
+            sb.append(delim);
+            sb.append(name);
+            sb.append("=");
+            sb.append(val.toString());
         }
-        return sb.toString();
     }
     
     public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,

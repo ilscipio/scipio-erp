@@ -122,18 +122,20 @@ public abstract class RequestLinkUtil {
     }
     
     public static void appendToParamString(StringBuilder sb, String name, Object val, String delim) {
-        if (val == null) val = "";
         if (val instanceof Collection) { // param with multiple values (rare)
             for(Object subVal : UtilGenerics.checkCollection(val)) {
-                sb.append(delim);
-                sb.append(name);
-                sb.append("=");
-                sb.append(subVal.toString());
+                appendToParamStringAsString(sb, name, subVal, delim);
             }
         } else {
-            sb.append(delim);
-            sb.append(name);
-            sb.append("=");
+            appendToParamStringAsString(sb, name, val, delim);
+        }
+    }
+    
+    public static void appendToParamStringAsString(StringBuilder sb, String name, Object val, String delim) {
+        sb.append(delim);
+        sb.append(name);
+        sb.append("=");
+        if (val != null) {
             sb.append(val.toString());
         }
     }

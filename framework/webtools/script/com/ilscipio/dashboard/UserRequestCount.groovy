@@ -5,7 +5,10 @@ import org.ofbiz.base.util.UtilDateTime.TimeInterval
 import org.ofbiz.entity.*
 import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
+import org.ofbiz.base.util.cache.UtilCache
 
+contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 180000, true, false);
+cacheId = "webtools_user_requestcount";
 
 Map<Date, Map<String, BigDecimal>> processResults() {
     List mainAndExprs = FastList.newInstance();
@@ -32,4 +35,14 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     return totalRequests;
 }
 
-context.userRequestCount = processResults();
+Map cacheMap = [:];
+// TODO: Not sure wether I should leave or not the result to be cached, for now let's not cache it
+if (contentCache.get(cacheId)==null) {
+    cacheMap = processResults();
+    contentCache.put(cacheId, cacheMap);
+    Debug.log("adding totalMap to cache");
+} else {
+    cacheMap = contentCache.get(cacheId);
+    Debug.log("taking totalMap from cache");
+}
+context.userRequestCount = cacheMap;

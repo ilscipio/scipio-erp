@@ -77,7 +77,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
-        final boolean strict = TransformUtil.getBooleanArg(args, "strict", rawParamsDefault); // SCIPIO: new
+        final boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
         
         final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: modified to remove default; leave centralized
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized

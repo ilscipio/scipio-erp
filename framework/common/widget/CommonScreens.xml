@@ -1454,7 +1454,11 @@ under the License.
         * name (required) - Complex menu name
         Complex menu render options:
         * subMenuFilter - Value for <include-menu sub-menus="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgSubMenuFilter (has priority)
         * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgMaxDepth (has priority)
         Default locations:  
         * defLocation (required) - Application's default menu file location for menus
             This is only used for fallback simple/non-complex menus, when there is no explicit
@@ -1483,6 +1487,11 @@ under the License.
         * activeSubField (default: "activeSubMenu")
         * activeSubItemField (default: "activeSubMenuItem")
         * activeMainItemField (default: "activeMainMenuItem")
+        
+        NOTE: Where noted above (only where noted), some of the variables support overrides via 
+            top context variables, following the name pattern menuCfgXxxXxx (for menuCfg.xxxXxx).
+            When set these have priority over the menuCfg map entries. It is technically
+            possible to set these via global context.
     -->
     <screen name="ComplexMenu">
         <section>

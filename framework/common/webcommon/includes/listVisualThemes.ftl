@@ -35,14 +35,18 @@ under the License.
                    <#if screenshots?has_content>
                       <#list screenshots as screenshot>
                         <#-- TODO: <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>">-->
-                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) height="150px" width="100%" />
+                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) width="100%"/>
+                        <#--<span class="${style.text_right}"><@modal icon="${styles.icon} fa-search">
+                            <@img src=makeOfbizContentUrl(screenshot.resourceValue)/>
+                        </@modal>
+                        </span>-->
                         <#--</a>-->
                       </#list>
                    <#else>
                       <@pli>${uiLabelMap.CommonVisualThemeNoScreenshots}</@pli>
                     </#if>
 
-                <@pli type="description">${visualTheme.visualThemeId}
+                <@pli type="description">
                     ${visualTheme.get("description", locale)!visualTheme.visualThemeId}
                 </@pli>
                 <#if visualTheme.visualThemeId == visualThemeId>

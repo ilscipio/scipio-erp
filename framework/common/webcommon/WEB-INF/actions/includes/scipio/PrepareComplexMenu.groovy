@@ -10,8 +10,8 @@ final module = "PrepareComplexMenu.groovy";
 menuCfg = context.menuCfg ?: [:];
 cplxLoc = menuCfg.location ?: "";
 cplxName = menuCfg.name ?: "";
-cplxSubFilter = menuCfg.subMenuFilter ?: "current";
-cplxMaxDepth = menuCfg.maxDepth ?: "";
+cplxSubFilter = context.menuCfgSubMenuFilter ?: menuCfg.subMenuFilter ?: "current";
+cplxMaxDepth = context.menuCfgMaxDepth ?: menuCfg.maxDepth ?: "";
 
 cplxSelSubField = menuCfg.selMenuFieldName ?: ""; // set further below if needed: ?: "activeMainSubMenu";
 cplxSelItemField = menuCfg.selMenuItemFieldName ?: ""; // set further below if needed: ?: "activeMainMenuItem";

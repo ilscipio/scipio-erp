@@ -29,15 +29,17 @@ set /p version=version to merge :
 set /a prevRev=%version% - 1
 
 rem build the comment
-echo "Applied fix from trunk framework for revision: %version%" > comment.tmp
-svn log https://svn.apache.org/repos/asf/ofbiz/ofbiz-framework/trunk -r %version% > log.tmp
+echo "Applied fix from trunk plugins for revision: %version%" > comment.tmp
+svn log https://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk -r %version% > log.tmp
 copy comment.tmp + log.tmp = comment.tmp
 del log.tmp
 rem keep the comment.tmp file svn ignored. In case of trouble always happier to keep trace.  It will be overidden in next backport.
 
 rem commit the backport to release with comment fom file
 echo on
-svn merge -r %prevRev%:%version% https://svn.apache.org/repos/asf/ofbiz/ofbiz-framework/trunk
+cd specialpurpose
+svn merge https://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk -c%version%
+cd ..
 echo off
 
 :menu

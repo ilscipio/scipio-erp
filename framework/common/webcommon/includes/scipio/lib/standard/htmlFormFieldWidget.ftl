@@ -300,7 +300,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           </#if>
         </#if>
       </#if>
-      <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
       <input type="text" name="${escapeVal(displayInputName, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
         <@fieldElemAttribStr attribs=attribs /><#t/>
         <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>

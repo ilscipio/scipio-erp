@@ -90,7 +90,7 @@
     </#assign>
 
      <@pul title=productTitle>
-        <#if price.isSale?? && price.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
+        <#if price.isSale?? && price.isSale><@pli type="ribbon">${uiLabelMap.OrderOnSale}!</@pli></#if>
         <@pli>
            ${productImage}
         </@pli>

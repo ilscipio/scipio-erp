@@ -1032,7 +1032,7 @@ Creates a pricing table element/entry.
 Since this is very foundation specific, this function may be dropped in future installations.
 
   * Parameters *
-    type                   = ((string) price|description|title|button, default:-empty-)
+    type                   = ((string) price|description|title|button|ribbon, default:-empty-)
 -->
 <#assign pli_defaultArgs = {
   "type":"", "passArgs":{}
@@ -1049,6 +1049,9 @@ Since this is very foundation specific, this function may be dropped in future i
   <#switch type>
     <#case "price">
       <li class="${styles.pricing_price!}"><#nested></li>
+    <#break>
+    <#case "ribbon">
+      <li class="${styles.pricing_ribbon!}"><span><#nested></span></li>
     <#break>
     <#case "description">
       <li class="${styles.pricing_description!}"><#nested></li>

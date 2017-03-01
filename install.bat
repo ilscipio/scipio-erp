@@ -36,7 +36,7 @@ ECHO.
 ECHO Please make a selection
 ECHO -------------------------------------
 ECHO 1.  Install for development [compile, load seed ^& demo data]
-ECHO 2.  Install for production [compile, load seed  ^& create-admin-user-login]
+ECHO 2.  Install for production [compile, load seed ^& create-admin-user-login]
 ECHO -------------------------------------
 ECHO 3.  Recompile [compile]
 ECHO 4.  List compiler information 

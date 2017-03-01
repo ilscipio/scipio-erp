@@ -45,7 +45,7 @@ ECHO ==========PRESS 'Q' TO QUIT==========
 ECHO.
 
 SET INPUT=
-SET /P INPUT=Please select a number:
+SET /P "INPUT=Please select a number: "
 
 IF /I '%INPUT%'=='1' GOTO Selection1
 IF /I '%INPUT%'=='2' GOTO Selection2

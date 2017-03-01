@@ -7,7 +7,7 @@ import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.base.util.cache.UtilCache
 
-contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 180000, true, false);
+contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 1800000, true, false);
 cacheId = "webtools_user_requestcount";
 
 Map<Date, Map<String, BigDecimal>> processResults() {

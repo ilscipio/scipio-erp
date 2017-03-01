@@ -29,7 +29,9 @@ FIXME: Needs parameter to control injection and location of hidden modal content
     </@modal>        
             
   * Parameters *
-    id                      = (required) Model ID 
+    id                      = (required) Model general ID
+                              This receives the prefix "modal_" for the modal itself, and
+                              "modal_link_" for the modal link.
     label                   = (required) Anchor text
     icon                    = Generates icon inside the link 
                               NOTE: Has to be the full set of classes, e.g. "fa fa-fw fa-info"
@@ -53,15 +55,24 @@ FIXME: Needs parameter to control injection and location of hidden modal content
   <#local idNum = idNum + 1 />
   <#local dummy = setRequestVar("scipioModalIdNum", idNum)>  
   <#if !id?has_content>
-    <#local id = "modal_" + (renderSeqNumber!"")?string + "_" + idNum?string>
+    <#local id = (renderSeqNumber!"")?string>
+    <#if id?has_content>
+      <#local id = "_" + idNum?string>
+    <#else>
+      <#local id = idNum?string>
+    </#if>
   </#if>
-  <@modal_markup id=id label=label href=href class=class icon=icon origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
+  <#local linkHasContent = icon?has_content || label?has_content>
+  <#local modalId = "modal_" + id>
+  <#local linkId = "modal_link_" + id>
+  <@modal_markup id=id modalId=modalId linkId=linkId label=label href=href class=class icon=icon linkHasContent=linkHasContent origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 
 <#-- @modal main markup - theme override -->
-<#macro modal_markup id="" label="" href="" class="" icon="" origArgs={} passArgs={} catchArgs...>
-  <a href="#" data-reveal-id="modal_${escapeVal(id, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><@compiledClassAttribStr class=class />><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
-  <div id="modal_${escapeVal(id, 'html')}" class="${styles.modal_wrap!}" data-reveal>
+<#macro modal_markup id="" modalId="" linkId="" label="" href="" class="" icon="" linkHasContent=true origArgs={} passArgs={} catchArgs...>
+  <a id="${escapeVal(linkId, 'html')}" href="#" data-reveal-id="${escapeVal(modalId, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><#rt/>
+    <#lt/><@compiledClassAttribStr class=class /><#if !linkHasContent> style="display:none;"</#if>><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
+  <div id="${escapeVal(modalId, 'html')}" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
   </div>

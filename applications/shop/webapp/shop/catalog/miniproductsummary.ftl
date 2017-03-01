@@ -39,7 +39,7 @@ under the License.
         <@img src=imgSrc type="contain" link=imgLink!"" width="100%" height="100px"/>
     </#assign>
     <@pul>
-        <#if priceResult.isSale?? && priceResult.isSale><li class="ribbon"><span>${uiLabelMap.OrderOnSale}!</span></li></#if>
+        <#if priceResult.isSale?? && priceResult.isSale><@pli type="ribbon">${uiLabelMap.OrderOnSale}!</@pli></#if>
             <@pli>
                ${productImage}
             </@pli>

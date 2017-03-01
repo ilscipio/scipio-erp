@@ -931,6 +931,7 @@ context.styles = [
     "pricing_wrap" : "pricing-table",
     "pricing_price" : "price",
     "pricing_description" : "description",
+    "pricing_ribbon" : "ribbon",
     "pricing_title" : "title",
     "pricing_cta" : "cta-button",
     "pricing_bullet" : "bullet-item",

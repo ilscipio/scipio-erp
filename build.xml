@@ -1697,7 +1697,7 @@ under the License.
     </target>
     <target name="create-admin-user-login"
             description="Prompt for a user name, then create a user login with admin privileges and a temporary password equal to 'scipio'. After a successful login the user will be prompted for a new password. Note: this uses load-admin-user-login target">
-        <input addproperty="userLoginId" message="Enter user name (log in with the temporary password 'scipio'):"/>
+        <input addproperty="userLoginId" message="Enter user name (default: 'admin') (log in with the temporary password 'scipio'):" defaultvalue="admin"/>
         <antcall target="load-admin-user-login"/>
     </target>
 

@@ -162,11 +162,10 @@
                                 topPadding = 50;
                             
                             $window.scroll(function() {
-                                offset = $sidebar.offset()
                                 if ( $(window).width() > 1024) {
                                     if ($window.scrollTop() > offset.top) {
                                         $sidebar.stop().animate({
-                                            marginTop: $window.scrollTop() - offset.top + topPadding
+                                            marginTop: $window.scrollTop() - $sidebar.position().top + topPadding
                                         });
                                     } else {
                                         $sidebar.stop().animate({

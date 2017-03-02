@@ -29,10 +29,14 @@ under the License.
             <actions>
                 <set field="tabMenuItem" value="findExpression"/>
                 <set field="titleProperty" value="${titleProperty}" default-value="TemporalExpressionFind"/>
+                <!-- sidebar additional condition -->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <if-service-permission service-name="tempExprPermissionCheck" main-action="CREATE"/>
+                </condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="TemporalExpressionDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="body">
                         <section>
                             <condition>
                                 <if-service-permission service-name="tempExprPermissionCheck" main-action="CREATE"/>
@@ -43,8 +47,6 @@ under the License.
                                 </container>
                             </widgets>
                         </section>
-                    </decorator-section>
-                    <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="search-options">
                                 <include-form name="FindTemporalExpression" location="component://webtools/widget/tempExprForms.xml"/>

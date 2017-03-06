@@ -741,7 +741,8 @@ context.styles = [
     "grid_cell" : "columns",
     "grid_cell_default" : "large-12",
     "grid_display" : "display",      /* display grid */
-    "grid_theme" : "row fullWidth",
+    "grid_theme_pre" : "row fullWidth", /*pre-content-section*/
+    "grid_theme" : "row fullWidth", /*content-section*/
     "grid_end" : "end",
     "grid_small" : "small-",
     "grid_medium" : "medium-",

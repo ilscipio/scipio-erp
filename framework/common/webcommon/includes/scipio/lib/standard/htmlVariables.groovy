@@ -752,6 +752,7 @@ context.styles = [
     "grid_medium_offset" : "medium-offset-",
     "grid_large_offset" : "large-offset-",
     "grid_block_container" : "",
+    "grid_block_wrap" : "",
     "grid_block_prefix" : "",
     "grid_block_postfix" : "block-grid-",
     "grid_postfix_container" : "",

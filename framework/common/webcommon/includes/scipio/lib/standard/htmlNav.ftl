@@ -1413,7 +1413,7 @@ functionality.
                       <li><a ${actionStr}>${i}</a></li>
                     </#if>
                   <#else>
-                  <#if displayDots><li>${escapeVal(placeHolder, 'htmlmarkup')}</li></#if>
+                  <#if displayDots><li><span>${escapeVal(placeHolder, 'htmlmarkup')}</span></li></#if>
                   <#local displayDots = false/>
                   </#if>
                 </#list>

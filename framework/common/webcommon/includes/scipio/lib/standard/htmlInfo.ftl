@@ -198,7 +198,7 @@ Creates a panel box.
   <#local class = addClassArg(class, type)>
   <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
     <#if !topContent?is_boolean><@contentArgRender content=topContent args=topContentArgs /></#if>
-    <div<@compiledClassAttribStr class=(styles.panel_head!)/>><#if title?has_content><h5 class="${styles.panel_title!}">${escapeVal(title, 'htmlmarkup')}</h5></#if></div>
+    <#if title?has_content><div<@compiledClassAttribStr class=(styles.panel_head!)/>><@heading class="${styles.panel_title!}">${escapeVal(title, 'htmlmarkup')}</@heading></div></#if>
     <div<@compiledClassAttribStr class=(styles.panel_body!)/>><#nested></div>
     <#if !bottomContent?is_boolean><@contentArgRender content=bottomContent args=bottomContentArgs /></#if>
   </div>

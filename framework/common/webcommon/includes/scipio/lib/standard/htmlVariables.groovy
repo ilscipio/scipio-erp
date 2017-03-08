@@ -204,10 +204,10 @@ context.styles = [
     "menu_sidebar_item_text" : "text-entry",
     "menu_sidebar_item_submit" : "",
     /* Tab and secondary navigation menus*/
-    "menu_tab" : "button-group force-button menu-type-tab",
+    "menu_tab" : "button-group force-button menu-type-tab tabs",
     "menu_tab_altnested" : "menu-type-tab",
     "menu_tab_type" : "menu-type-tab",
-    "menu_tab_item" : "",
+    "menu_tab_item" : "tab-title",
     "menu_tab_itemdisabled" : "disabled",
     "menu_tab_itemactive" : "active",
     "menu_tab_itemactivetarget" : "active-target",
@@ -741,7 +741,8 @@ context.styles = [
     "grid_cell" : "columns",
     "grid_cell_default" : "large-12",
     "grid_display" : "display",      /* display grid */
-    "grid_theme" : "row fullWidth",
+    "grid_theme_pre" : "row fullWidth", /*pre-content-section*/
+    "grid_theme" : "row fullWidth", /*content-section*/
     "grid_end" : "end",
     "grid_small" : "small-",
     "grid_medium" : "medium-",
@@ -751,8 +752,10 @@ context.styles = [
     "grid_medium_offset" : "medium-offset-",
     "grid_large_offset" : "large-offset-",
     "grid_block_container" : "",
+    "grid_block_wrap" : "",
     "grid_block_prefix" : "",
     "grid_block_postfix" : "block-grid-",
+    "grid_postfix_container" : "",
     "grid_columns_1" : "large-1 columns",
     "grid_columns_2" : "large-2 medium-3 columns",
     "grid_columns_3" : "large-3 medium-4 columns",

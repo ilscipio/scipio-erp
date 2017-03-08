@@ -1466,6 +1466,7 @@ Creates a slider wrapper.
   <#local sliderIdNum = getRequestVar("scipioSliderIdNum")!0>
   <#local sliderIdNum = sliderIdNum + 1 />
   <#local dummy = setRequestVar("scipioSliderIdNum", sliderIdNum)>
+  <#local dummy = setRequestVar("scipioSlideIdNum", 0)> <#-- Start counting slides from 0 -->
   <#--<#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>-->
   <#global sliderId = id>  
   <#if !sliderId?has_content>
@@ -1493,8 +1494,10 @@ Creates a slider wrapper.
             </script>
           <#break>
         <#case "slick">
-            <div<@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
-                <#nested/>
+            <div class="slider-parent">
+                <div<@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}">
+                    <#nested/>
+                </div>
             </div>
             <script type="text/javascript">
             $(document).ready(function(){
@@ -1584,7 +1587,7 @@ Slider data entry - a single slide.
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
             <#if image?has_content>
-              <img src="${escapeFullUrl(image, 'html')}"/>
+              <img src="${escapeFullUrl(image, 'html')}"  class="${styles.slide_image!}"/>
             </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1597,7 +1600,7 @@ Slider data entry - a single slide.
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
               <#if image?has_content>
-                <img src="${escapeFullUrl(image, 'html')}"/>
+                <img src="${escapeFullUrl(image, 'html')}" class="${styles.slide_image!}"/>
               </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>

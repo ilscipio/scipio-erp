@@ -199,7 +199,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":"", "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
   "collapse":false, "fieldTitleBlank":false, "origLabel":"", "postfix":"", "postfixColumns":"", 
-  "manualInput":"", "inlineLabel":false, "required":false, "passArgs":{}
+  "manualInput":"", "inlineLabel":false, "inlinePostfix":false,"required":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datetime_widget_defaultArgs)>
@@ -223,14 +223,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel postfix=postfix 
-    postfixColumns=postfixColumns manualInput=manualInput required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    postfixColumns=postfixColumns inlinePostfix=inlinePostfix manualInput=manualInput required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" style="" title="" value="" size="" maxlength="" id="" dateType="" dateDisplayType="" 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
+    alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" inlinePostfix=false manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
     <#local class = addClassArg(class, styles.field_datetime_default!"")>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
@@ -263,7 +263,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local postfix = true>
   </#if>
   <div class="${styles.grid_row!} ${styles.collapse!} date">
-    <div class="${styles.grid_small!}<#if postfix>${12-postfixColumns}<#else>12</#if> ${styles.grid_cell!}">
+    <div class="${styles.grid_small!}<#if postfix && !inlinePostfix>${12-postfixColumns}<#else>12</#if><#if postfix && inlinePostfix> ${styles.grid_postfix_container}</#if> ${styles.grid_cell!}">
       <#if tooltip?has_content> 
         <#local class = addClassArg(class, styles.field_datetime_tooltip!styles.field_default_tooltip!"")>
         <#-- tooltip supplants title -->
@@ -327,9 +327,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#if compositeType?has_content>
         <input type="hidden" name="${escapeVal(compositeType, 'html')}" value="Timestamp"/>
       </#if>
-    </div>
+    <#if !inlinePostfix></div></#if>
   <#if postfix>
-    <div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}">
+    <#if !inlinePostfix><div class="${styles.grid_small!}${postfixColumns} ${styles.grid_cell!}"></#if>
       <span class="${styles.postfix!}"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
     </div>
   </#if>
@@ -413,7 +413,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "formName":"", "defaultDateTimeString":"", "imgSrc":"", "localizedIconTitle":"", "titleClass":"", "defaultOptionFrom":"", 
   "defaultOptionThru":"", "opEquals":"", "opSameDay":"", "opGreaterThanFromDayStart":"", "opGreaterThan":"",
   "opLessThan":"", "opUpToDay":"", "opUpThruDay":"", "opIsEmpty":"", 
-  "title":"", "tooltip":"", "inlineLabel":false, "origLabel":"", "required":false, "passArgs":{}
+  "title":"", "tooltip":"", "inlineLabel":false, "inlinePostfix":false, "origLabel":"", "required":false, "passArgs":{}
 }>
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_datefind_widget_defaultArgs)>
@@ -458,14 +458,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleClass=titleClass defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
     opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty 
-    title=title tooltip=tooltip inlineLabel=inlineLabel origLabel=origLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
+    title=title tooltip=tooltip inlineLabel=inlineLabel inlinePostfix=inlinePostfix origLabel=origLabel required=required origArgs=origArgs passArgs=passArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
-    title="" tooltip="" inlineLabel=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
+    title="" tooltip="" inlineLabel=false inlinePostfix=false origLabel=origLabel required=false origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_datefind_default!"")>
   <#local selectClass = styles.field_datefind_select_default!"">
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
@@ -487,15 +487,15 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local opSelectName = rawString(name) + "_fld0_op">
   </#if>
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${escapeVal(dateDisplayFormat, 'html')}">
-    <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
+    <div class="${styles.grid_small!}<#if !inlinePostfix>5<#else>6 ${styles.grid_postfix_container}</#if> ${styles.grid_cell!}">
       <input type="text"<#if displayInputId?has_content> id="${escapeVal(displayInputId, 'html')}"</#if><#if displayInputName?has_content> name="${escapeVal(displayInputName, 'html')}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
         <#if localizedInputTitle?has_content> title="${escapeVal(localizedInputTitle, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>/><#lt/>
       <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
-    </div>
-    <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+    <#if !inlinePostfix></div></#if>
+    <#if !inlinePostfix><div class="${styles.grid_small!}1 ${styles.grid_cell!}"></#if>
       <span class="${styles.postfix!}"><i class="${styles.icon} ${styles.icon_calendar}"></i></span>
     </div>
-    <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
+    <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small_offset!}1">
       <select<#if opSelectName?has_content> name="${escapeVal(opSelectName, 'html')}"</#if><#if selectClass?has_content> class="${selectClass}"</#if><#-- class="selectBox"-->>
         <option value="equals"<#if defaultOptionFrom == "equals"> selected="selected"</#if>>${escapeVal(opEquals, 'htmlmarkup')}</option>
         <option value="sameDay"<#if defaultOptionFrom == "sameDay"> selected="selected"</#if>>${escapeVal(opSameDay, 'htmlmarkup')}</option>

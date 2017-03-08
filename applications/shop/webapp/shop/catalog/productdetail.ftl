@@ -528,8 +528,8 @@
       <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
     <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
-
-    <@menu type="tab">
+    
+    <@menu type="tab" attribs={"data-tab":true, "role":"tablist"}>
       <li class="${styles.menu_tab_item}"><a href="#panel11" class="nav-link active" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
       <li class="${styles.menu_tab_item}"><a href="#panel21" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
     </@menu>

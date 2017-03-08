@@ -55,7 +55,7 @@ under the License.
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
 
-<@menu type="tab">
+<@menu type="tab" attribs={"data-tab":true, "role":"tablist"}>
   <li class="${styles.menu_tab_item}"><a href="#panel1" class="nav-link active" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
   <li class="${styles.menu_tab_item}"><a href="#panel2" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
   <li class="${styles.menu_tab_item}"><a href="#panel3" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>

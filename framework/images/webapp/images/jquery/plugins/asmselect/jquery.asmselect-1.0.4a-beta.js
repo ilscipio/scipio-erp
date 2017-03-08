@@ -56,7 +56,7 @@
 				// initialize the alternate select multiple
 
 				// this loop ensures uniqueness, in case of existing asmSelects placed by ajax (1.0.3)
-				while($("#" + options.containerClass + index).size() > 0) index++; 
+				while($("#" + options.containerClass + index).length > 0) index++; 
 
 				$select = $("<select></select>")
 					.addClass(options.selectClass)

@@ -94,7 +94,7 @@ under the License.
                                                 <@section title=uiLabelMap.CommonPassword>
                                                     <#-- SCIPIO: WARN: Proper HTML-escaping of params high importance here -->
                                                     <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
-                                                        <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=(labelUsername!)/>
+                                                        <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw(labelUsername!)/>
                                                         <@row>
                                                             <@cell columns=12>
                                                                 <a href="<@ofbizUrl>login</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>

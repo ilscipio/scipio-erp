@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section>
+<@section title=uiLabelMap.CommonOverview>
   <#if orderHeader.externalId?has_content>
     <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
   </#if>
   <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
     
-  <@heading>${uiLabelMap.CommonOverview}</@heading>
   <@table type="fields"> <#-- orig: class="basic-table" -->
   
   <#if orderHeader.orderName?has_content>

@@ -620,23 +620,23 @@ ${virtualJavaScript!}
     </#if>
     <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
 
-    <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
+    <@menu type="tab">
+      <li class="${styles.menu_tab_item}"><a href="#panel11" class="nav-link active" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
+      <li class="${styles.menu_tab_item}"><a href="#panel21" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
 
       <#-- "Configuration" is too weird for an iitem like a pizza: ${uiLabelMap.CommonConfiguration} -->
-      <li class="tab-title"><a href="#panel31"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonOptions}</a></li>
-    </ul>
-    <div class="tabs-content">
-        <div class="content active" id="panel11">
+      <li class="${styles.menu_tab_item}"><a href="#panel31" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonOptions}</a></li>
+    </@menu>
+    <div class="tabs-content tab-content">
+        <div class="content tab-pane active" id="panel11" role="tabpanel">
             <@productDetailLongDescContent />
         </div>
             
-        <div class="content" id="panel21">
+        <div class="content tab-pane" id="panel21" role="tabpanel">
             <@productDetailProductAttribContent />
         </div>
         
-        <div class="content" id="panel31">
+        <div class="content tab-pane" id="panel31" role="tabpanel">
             <@productConfigurator />
         </div>
     </div>

@@ -55,17 +55,17 @@ under the License.
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
 
-<ul class="tabs" data-tab>
-  <li class="tab-title active"><a href="#panel1"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
-  <li class="tab-title"><a href="#panel2"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
-  <li class="tab-title"><a href="#panel3"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>
-  <li class="tab-title"><a href="#panel4"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.AccountingPaymentMethodInformation}</a></li>
-  <li class="tab-title"><a href="#panel5"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.EcommerceDefaultShipmentMethod}</a></li>
-</ul>
-<div class="tabs-content">
+<@menu type="tab">
+  <li class="${styles.menu_tab_item}"><a href="#panel1" class="nav-link active" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
+  <li class="${styles.menu_tab_item}"><a href="#panel2" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
+  <li class="${styles.menu_tab_item}"><a href="#panel3" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>
+  <li class="${styles.menu_tab_item}"><a href="#panel4" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.AccountingPaymentMethodInformation}</a></li>
+  <li class="${styles.menu_tab_item}"><a href="#panel5" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.EcommerceDefaultShipmentMethod}</a></li>
+</@menu>
+<div class="tabs-content tab-content">
     
      <#-- Personal information -->
-     <div class="content active" id="panel1">
+     <div class="content tab-pane active" id="panel1" role="tabpanel">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <#if person??>
@@ -99,7 +99,7 @@ under the License.
      </div>
 
     <#-- ============================================================= -->
-    <div class="content" id="panel2">
+    <div class="content tab-pane" id="panel2" role="tabpanel">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
@@ -120,7 +120,7 @@ under the License.
     </div>
     
     <#-- Contact Information -->
-    <div class="content" id="panel3">
+    <div class="content tab-pane" id="panel3" role="tabpanel">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
@@ -257,7 +257,7 @@ under the License.
     </div>
     
     <#-- Payment -->
-    <div class="content" id="panel4">
+    <div class="content tab-pane" id="panel4" role="tabpanel">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
@@ -329,7 +329,7 @@ under the License.
         </@section>    
     </div>
     <#-- Shipping info -->
-    <div class="content" id="panel5">
+    <div class="content tab-pane" id="panel5" role="tabpanel">
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
             <#-- SCIPIO: this isn't a link, it's a form submit, put it at bottom so not mistakable

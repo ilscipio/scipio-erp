@@ -90,7 +90,7 @@ under the License.
                                 <small>
                                     <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword class="${styles.medium!}">
                                         <@row>
-                                            <@cell class="${styles.grid_large!}centered">
+                                            <@cell class="large-centered ">
                                                 <@section title=uiLabelMap.CommonPassword>
                                                     <#-- SCIPIO: WARN: Proper HTML-escaping of params high importance here -->
                                                     <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
@@ -98,7 +98,13 @@ under the License.
                                                         <@row>
                                                             <@cell columns=12>
                                                                 <a href="<@ofbizUrl>login</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+                                                            </@cell>
+                                                        </@row>
+                                                        <@row>
+                                                            <@cell columns=6>
                                                                 <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint widgetOnly=true/>
+                                                            </@cell>
+                                                            <@cell columns=6>
                                                                 <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword widgetOnly=true/>
                                                             </@cell>
                                                         </@row>

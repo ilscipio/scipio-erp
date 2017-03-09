@@ -266,6 +266,31 @@ to interpret, and all other parameters get defaults.
 
 <#-- 
 *************
+* interpretStdLoc
+************
+Interprets/compiles a file location as a template and returns the template
+in a self-sufficient template invoker wrapper, which can later be evaluated using
+a simple invocation form (by default, simple string evaluation).
+
+This is merely an alias to #interpretStd, where if a single string is passed instead of
+an args map, it is interpreted to be a file location instead of the template itself.
+
+  * Parameters *
+    (other)                 = See #interpretStd
+
+  * Related *                           
+    @ofbizUrl
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function interpretStdLoc args={}>
+</#function>
+-->
+
+<#-- 
+*************
 * ofbizUrl
 ************
 Builds an Ofbiz navigation URL - for direct output into template document (primarily).

@@ -59,10 +59,10 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execTyped(args);
+        return execTyped(args, false);
     }
     
-    public Object execTyped(List<TemplateModel> args) throws TemplateModelException {
+    public Object execTyped(List<TemplateModel> args, boolean singleStrAsLoc) throws TemplateModelException {
         if (args.size() != 1) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
@@ -100,7 +100,11 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                 }
             }
         } else if (arg instanceof TemplateScalarModel) {
-            str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
+            if (singleStrAsLoc) {
+                location = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
+            } else {
+                str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
+            }
         } else {
             throw new TemplateModelException("Invalid arg type (expected string or hash): " + arg.getClass());
         }

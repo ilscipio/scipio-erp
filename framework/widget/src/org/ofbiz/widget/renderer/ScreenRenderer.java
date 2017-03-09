@@ -520,6 +520,29 @@ public class ScreenRenderer {
     public Map<String, Object> getContext() {
         return context;
     }
+    
+    /**
+     * SCIPIO: returns the writer used when asString is false in render calls.
+     */
+    public Appendable getWriter() {
+        return writer;
+    }
+
+    /**
+     * SCIPIO: writer override. 
+     * WARN: ADVANCED RENDERER USAGE ONLY.
+     */
+    public void setWriter(Appendable writer) {
+        this.writer = writer;
+    }
+
+    /**
+     * SCIPIO: context override. 
+     * WARN: ADVANCED RENDERER USAGE ONLY.
+     */
+    public void setContext(MapStack<String> context) {
+        this.context = context;
+    }
 
     public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
         this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),

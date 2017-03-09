@@ -18,35 +18,9 @@
  *******************************************************************************/
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.cache.UtilCache;
-
-import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.InvokeOptions;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.InvokeOptions.InvokeMode;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.WrapperModel;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateSource;
-
-import freemarker.core.Environment;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateHashModelEx;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 /**
  * SCIPIO: InterpretStdLocMethod - Template interpretation method, alternative to <code>?interpret</code> built-in

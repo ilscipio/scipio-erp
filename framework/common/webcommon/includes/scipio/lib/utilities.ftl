@@ -197,6 +197,9 @@ This function accepts one parameter which is a map of parameters, described belo
 If a single string is supplied instead, it is taken as the inline string template
 to interpret, and all other parameters get defaults.
 
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template str.
+
   * Parameters *
     str                     = ((string)) An inline string to use as template
                               The input itself automatically bypasses screen auto-html escaping.
@@ -274,6 +277,9 @@ a simple invocation form (by default, simple string evaluation).
 
 This is merely an alias to #interpretStd, where if a single string is passed instead of
 an args map, it is interpreted to be a file location instead of the template itself.
+
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template location.
 
   * Parameters *
     (other)                 = See #interpretStd

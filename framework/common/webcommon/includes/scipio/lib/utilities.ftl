@@ -142,7 +142,7 @@ TODO: Reimplement as transform.
 <#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
     asString=false shareScope="" maxDepth="" subMenus="">
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
-  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
+  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
     <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
     <#if type == "screen">
       ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
@@ -182,7 +182,7 @@ TODO: Reimplement as transform.
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
-  </@varSection>
+  </@varSection><#t>
   </#if>
 </#macro>
 
@@ -1164,7 +1164,7 @@ to indicate the value null.
     <#local origValues = extractVars(varMaps, true)>
   </#if>
   <#local dummy = setVars(varMaps)>
-  <#nested>
+  <#nested><#t>
   <#if clearValues>
     <#local dummy = clearVars(varMaps)>
   <#elseif restoreValues>

@@ -1,1 +1,1 @@
-<p>Hello from included FTL file</p>
+<span>Hello from included FTL file</span>

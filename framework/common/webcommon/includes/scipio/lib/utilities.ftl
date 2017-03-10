@@ -69,6 +69,10 @@ NOTE: 2016-11-14: Scope handling is revamped for consistency.
     and sections in ftl files (their XML equivalents perform stack pushing), though it rarely manifests as
     an issue due to the ftl bindings being copies from context.
 
+NOTE: 2017-09-10: If both {{{resource}}} and {{{name}}} are empty, this macro simply returns nothing, without
+    producing any error. This is to make it more friendly to template code, so that surrounding #if statements
+    can be safely omitted.
+
 TODO: Reimplement as transform.
 
   * Parameters *
@@ -79,9 +83,10 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree|section|ftl, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|section|ftl, default: -dependent on resource-, fallback default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
+                                NOTE: this is the default in most cases, but not all.
                               * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
                                 same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
                               * {{{menu}}} or {{{include-menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
@@ -95,6 +100,7 @@ TODO: Reimplement as transform.
                                 so it does not interfere with other templates. You cannot use this to reuse definitions
                                 from other FTL files; use #include for that. for more advanced options or 
                                 to render inline strings as templates, try #interpretStd instead.
+                                NOTE: if type is omitted and resource ends with the extension ".ftl", this type is implied; allows brevity.
                               NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
                                   guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
                                   The non-{{{include-}}} versions may be implemented using other means
@@ -129,18 +135,20 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     
   * History *
+    Enhanced for 1.14.4 (type="ftl", improved defaults handling).
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
     asString=false shareScope="" maxDepth="" subMenus="">
+  <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
-    <#-- assuming type=="screen" for now -->
+    <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
     <#if type == "screen">
       ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
     <#elseif type == "section">
       ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
-    <#elseif type == "ftl">
+    <#elseif type == "ftl" || (!type?has_content && resource?ends_with(".ftl"))>
       <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
       ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>
     <#else>
@@ -175,6 +183,7 @@ TODO: Reimplement as transform.
       </#if>
     </#if>
   </@varSection>
+  </#if>
 </#macro>
 
 <#-- 

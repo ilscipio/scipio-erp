@@ -205,7 +205,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             else {
                 ModelScreenWidget section = sectionMap.get(sectionName);
-                Appendable effWriter = asString ? new java.io.StringWriter() : writer
+                Appendable effWriter = asString ? new java.io.StringWriter() : writer;
                 // if no section by that name, write nothing
                 if (section != null) {
                     section.renderWidgetString(effWriter, context, this.screenStringRenderer);

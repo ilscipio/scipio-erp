@@ -1808,6 +1808,35 @@
     <@section title="Standalone (isolated) FTL include">
       <@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" />
     </@section>
+    
+    <@section title="Render nothing (empty)">
+      <@render resource="" name="" />
+    </@section>
+    
+    <#assign captureWarn><em>NOTE: 2017-03-10: This code is considered <strong>EXPERIMENTAL</strong> for Scipio - 
+        stock Ofbiz facilities do not support capturing properly. If you must capture a @render call in production code,
+        always pass <code>@render asString=true</code>. The tests below attempt to capture without
+        <code>asString=true</code>, which is currently not guaranteed to work in all cases.</em><br/></#assign>
+    <@section title="Simple Widget CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="screen" resource="component://webtools/widget/MiscScreens.xml#DemoSimpleLabelWidget" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Render nothing (empty) CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render resource="" name="" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include with nested @render CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test2.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
   </@section>
 
   <@section title="Admin plain site-map/tree">

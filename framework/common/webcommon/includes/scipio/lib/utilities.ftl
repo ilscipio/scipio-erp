@@ -79,7 +79,7 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree|section, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|section|ftl, default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
                               * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
@@ -88,6 +88,13 @@ TODO: Reimplement as transform.
                               * {{{form}}} or {{{include-form}}}: an Ofbiz form (widget) by {{{component://}}} location
                               * {{{tree}}} or {{{include-tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              * {{{ftl}}}: special standalone isolated Freemarker template include mode. {{{resource}}} is 
+                                expected to point to an FTL file. this differs from the Freemarker #include command in that
+                                the FTL is processed in a standard ofbiz way similar to a screen, the context stack is by default pushed/pop
+                                around the include (unless context does not support), and the template gets its own variable binding environment
+                                so it does not interfere with other templates. You cannot use this to reuse definitions
+                                from other FTL files; use #include for that. for more advanced options or 
+                                to render inline strings as templates, try #interpretStd instead.
                               NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
                                   guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
                                   The non-{{{include-}}} versions may be implemented using other means
@@ -130,9 +137,12 @@ TODO: Reimplement as transform.
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
     <#-- assuming type=="screen" for now -->
     <#if type == "screen">
-        ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
+      ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
     <#elseif type == "section">
-        ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
+      ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
+    <#elseif type == "ftl">
+      <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
+      ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>
     <#else>
       <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>

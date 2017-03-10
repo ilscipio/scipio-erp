@@ -72,7 +72,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         String str = null;
         String location = null;
         String invokeModeStr = null;
-        Boolean pushCtx = null;
+        Boolean shareScope = null;
         String modelStr = null;
         Map<String, Object> invokeCtx = null;
         Map<String, Object> ctxVars = null;
@@ -96,7 +96,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                     str = TransformUtil.getStringNonEscapingArg(argMap, "str");
                     location = TransformUtil.getStringNonEscapingArg(argMap, "location");
                 }
-                pushCtx = TransformUtil.getBooleanArg(argMap, "pushCtx");
+                shareScope = TransformUtil.getBooleanArg(argMap, "shareScope");
                 invokeModeStr = TransformUtil.getStringNonEscapingArg(argMap, "invokeMode");
                 modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
                 boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
@@ -164,7 +164,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateInvoker invoker;
         try {
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
-            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, pushCtx, ctxVars, envOut), model);
+            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, shareScope, ctxVars, envOut), model);
         } catch (TemplateException e) {
             throw new TemplateModelException(e);
         } catch (IOException e) {

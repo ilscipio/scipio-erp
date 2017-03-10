@@ -132,23 +132,23 @@ public class TemplateInvoker {
         /**
          * If true, pushes the Ofbiz MapStack context before invoke and pops after.
          */
-        protected final Boolean pushCtx;
+        protected final Boolean shareScope;
 
         protected final Map<String, Object> ctxVars;
         
         protected final boolean envOut;
         
         public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, 
-                Boolean pushCtx, Map<String, Object> ctxVars, boolean envOut) {
+                Boolean shareScope, Map<String, Object> ctxVars, boolean envOut) {
             this.invokeMode = invokeMode;
             this.context = context;
-            this.pushCtx = pushCtx;
+            this.shareScope = shareScope;
             this.ctxVars = ctxVars;
             this.envOut = envOut;
         }
         
-        public InvokeOptions(InvokeMode invokeMode, Boolean pushCtx, Map<String, Object> ctxVars) {
-            this(invokeMode, null, pushCtx, ctxVars, false);
+        public InvokeOptions(InvokeMode invokeMode, Boolean shareScope, Map<String, Object> ctxVars) {
+            this(invokeMode, null, shareScope, ctxVars, false);
         }
 
         public InvokeMode getInvokeMode() {
@@ -162,8 +162,12 @@ public class TemplateInvoker {
             return context;
         }
 
-        public Boolean getPushCtx() {
-            return pushCtx;
+        public Boolean getShareScope() {
+            return shareScope;
+        }
+        
+        public Boolean getShareScope(Boolean defaultVal) {
+            return shareScope != null ? shareScope : defaultVal;
         }
 
         /**
@@ -258,11 +262,10 @@ public class TemplateInvoker {
     public void invoke(Writer out) throws TemplateException, IOException {
         Template template = getTemplate();
         Map<String, Object> context = getContext();
-        Boolean pushCtx = invokeOptions.getPushCtx();
         if (invokeOptions.getInvokeMode() == null || invokeOptions.getInvokeMode() == InvokeMode.OFBIZ_STD) {
-            if (pushCtx == null) pushCtx = true;
-            if (!(context instanceof MapStack)) pushCtx = false;
-            if (pushCtx) {
+            Boolean protectScope = !invokeOptions.getShareScope(false);
+            if (!(context instanceof MapStack)) protectScope = false;
+            if (protectScope) {
                 ((MapStack<String>) context).push();
             }
             try {
@@ -271,7 +274,7 @@ public class TemplateInvoker {
                 }
                 FreeMarkerWorker.renderTemplate(template, context, out);
             } finally {
-                if (pushCtx) {
+                if (protectScope) {
                     ((MapStack<String>) context).pop();
                 }
             }
@@ -342,7 +345,19 @@ public class TemplateInvoker {
         @Override
         public String toString() {
             try {
-                return invoke();
+                // NOTE: this env check really belongs in the TemplateModels below, but because of the bean wrapper
+                // mode, it has to be here.
+                if (this.getInvokeOptions().isEnvOut()) {
+                    Environment env = FreeMarkerWorker.getCurrentEnvironment();
+                    if (env != null) {
+                        Writer out = env.getOut();
+                        if (out != null) {
+                            this.invoke(out);
+                            return "";
+                        }
+                    }
+                } 
+                return this.invoke();
             } catch (TemplateException e) {
                 Debug.logError(e, module);
                 return "";
@@ -412,12 +427,7 @@ public class TemplateInvoker {
         
         protected String invokeAsString() throws TemplateModelException {
             try {
-                if (invoker.getInvokeOptions().isEnvOut()) {
-                    invoker.invoke(FreeMarkerWorker.getCurrentEnvironment().getOut());
-                    return "";
-                } else {
-                    return invoker.invoke();
-                }
+                return invoker.invoke();
             } catch (TemplateException e) {
                 throw new TemplateModelException(e);
             } catch (IOException e) {

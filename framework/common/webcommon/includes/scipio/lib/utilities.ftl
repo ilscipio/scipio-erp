@@ -139,16 +139,19 @@ TODO: Reimplement as transform.
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
+<#macro render resource="" name="" type="" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
     asString=false shareScope="" maxDepth="" subMenus="">
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
     <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
+    <#if !type?has_content>
+      <#local type = resource?ends_with(".ftl")?string("ftl", "screen")>
+    </#if>
     <#if type == "screen">
       ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
     <#elseif type == "section">
       ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
-    <#elseif type == "ftl" || (!type?has_content && resource?ends_with(".ftl"))>
+    <#elseif type == "ftl">
       <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
       ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>
     <#else>

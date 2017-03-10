@@ -13,13 +13,16 @@ import { getLine, lineNo, updateLineHeight } from "./utils_line"
 
 // Line objects. These hold state related to a line, including
 // highlighting info (the styles array).
-export function Line(text, markedSpans, estimateHeight) {
-  this.text = text
-  attachMarkedSpans(this, markedSpans)
-  this.height = estimateHeight ? estimateHeight(this) : 1
+export class Line {
+  constructor(text, markedSpans, estimateHeight) {
+    this.text = text
+    attachMarkedSpans(this, markedSpans)
+    this.height = estimateHeight ? estimateHeight(this) : 1
+  }
+
+  lineNo() { return lineNo(this) }
 }
 eventMixin(Line)
-Line.prototype.lineNo = function() { return lineNo(this) }
 
 // Change the content (text, markers) of a line. Automatically
 // invalidates cached information and tries to re-estimate the
@@ -66,6 +69,9 @@ export function buildLineContent(cm, lineView) {
                  col: 0, pos: 0, cm: cm,
                  trailingSpace: false,
                  splitSpaces: (ie || webkit) && cm.getOption("lineWrapping")}
+  // hide from accessibility tree
+  content.setAttribute("role", "presentation")
+  builder.pre.setAttribute("role", "presentation")
   lineView.measure = {}
 
   // Iterate over the logical lines that make up this visual line.

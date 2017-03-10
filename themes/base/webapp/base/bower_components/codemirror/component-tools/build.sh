@@ -13,15 +13,17 @@ if [[ ! -z "$(git tag | grep "^$TAG\$")" ]]; then
     exit -1
 fi
 
-work="$PWD"
-test -f "$work/$0"
+repo="$(dirname $(dirname $0))"
+test -f "$repo/component-tools/$(basename $0)"
 
 td="$(mktemp -d)"
 cd "$td"
 npm install codemirror@$TAG
 
-cd "$work"
-rsync -ar --delete --exclude .git --exclude component-tools "$td/node_modules/codemirror/" "$work/"
+
+cd "$repo"
+rsync -ar --delete --exclude .git --exclude component-tools "$td/node_modules/codemirror/" "$repo/"
+cp component-tools/bower.json "$repo/"
 rm -rf "$td"
 
 git add -A

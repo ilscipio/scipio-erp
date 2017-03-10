@@ -43,6 +43,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.widget.WidgetFactory;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.CommonWidgetModels.AutoEntityParameters;
@@ -110,8 +111,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public static final class SectionsRenderer implements Map<String, ModelScreenWidget> {
         private final Map<String, ModelScreenWidget> sectionMap;
         private final ScreenStringRenderer screenStringRenderer;
-        private final Map<String, Object> context;
-        private final Appendable writer;
+        //private final Map<String, Object> context;
+        //private final Appendable writer;
+        // SCIPIO: 2017-03-09: now using RenderContextFetcher
+        private final RenderContextFetcher contextFetcher;
         
         // SCIPIO: feature: ability to render previously-defined sections (from a caller) as if part of these sections.
         // Essentially we mix sections from different decorators therefore different contexts.
@@ -123,13 +126,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final SectionsRenderer prevSections;
         private final boolean includePrevSections;
 
-        public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, Map<String, Object> context, Appendable writer,
+        public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
                 ScreenStringRenderer screenStringRenderer) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             localMap.putAll(sectionMap);
             this.sectionMap = Collections.unmodifiableMap(localMap);
-            this.context = context;
-            this.writer = writer;
+            this.contextFetcher = contextFetcher;
             this.screenStringRenderer = screenStringRenderer;
             
             this.includePrevSections = false;
@@ -138,7 +140,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.prevSections = null;
         }
         
-        public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, Map<String, Object> context, Appendable writer,
+        public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
                 ScreenStringRenderer screenStringRenderer, 
                 SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
@@ -148,8 +150,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             localMap.putAll(sectionMap);
             this.sectionMap = Collections.unmodifiableMap(localMap);
-            this.context = context;
-            this.writer = writer;
+            this.contextFetcher = contextFetcher;
             this.screenStringRenderer = screenStringRenderer;
             
             this.includePrevSections = includePrevSections;
@@ -178,14 +179,23 @@ public abstract class ModelScreenWidget extends ModelWidget {
          * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
          * */
         public String render(String sectionName, boolean asString) throws GeneralException, IOException {
+            return render(sectionName, asString, getContext(), getWriter());
+        }
+        
+        /** 
+         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
+         * <p>
+         * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
+         * */
+        protected String render(String sectionName, boolean asString, MapStack<String> context, Appendable writer) throws GeneralException, IOException {
             if (includePrevSections) {
                 // SCIPIO: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
-                    Appendable writer = asString ? new java.io.StringWriter() : this.writer;
-                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
-                    return asString ? writer.toString() : "";
+                    Appendable effWriter = asString ? new java.io.StringWriter() : writer;
+                    section.renderWidgetString(effWriter, context, this.screenStringRenderer);
+                    return asString ? effWriter.toString() : "";
                 }
                 else if (prevSections != null && prevSectionMap != null && prevSectionMap.get(sectionName) != null) {
                     // render previous sections with previous renderer so that it uses the right context
@@ -195,12 +205,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
             }
             else {
                 ModelScreenWidget section = sectionMap.get(sectionName);
-                Appendable writer = asString ? new java.io.StringWriter() : this.writer;
+                Appendable effWriter = asString ? new java.io.StringWriter() : writer
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(writer, this.context, this.screenStringRenderer);
+                    section.renderWidgetString(effWriter, context, this.screenStringRenderer);
                 }
-                return asString ? writer.toString() : "";
+                return asString ? effWriter.toString() : "";
             }
         }
         
@@ -219,15 +229,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 asString = Boolean.FALSE;
             }
             if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
-                MapStack<String> context;
-                if (!(this.context instanceof MapStack<?>)) {
-                    context = MapStack.create(this.context);
-                } else {
-                    context = UtilGenerics.<MapStack<String>>cast(this.context);
-                }
+                MapStack<String> context = getContext(); // SCIPIO: simplified
+//                if (!(this.context instanceof MapStack<?>)) {
+//                    context = MapStack.create(this.context);
+//                } else {
+//                    context = UtilGenerics.<MapStack<String>>cast(this.context);
+//                }
                 context.push();
                 try {
-                    return render(sectionName, asString);
+                    return render(sectionName, asString, context, getWriter());
                 } finally {
                     context.pop();
                 }
@@ -244,6 +254,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
         }
 
+        public Appendable getWriter() { // SCIPIO
+            return contextFetcher.getWriter();
+        }
+        
+        public MapStack<String> getContext() { // SCIPIO
+            return contextFetcher.getContext();
+        }
+        
         @Override
         public int size() {
             return sectionMap.size();
@@ -1154,14 +1172,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack standAloneStack = contextMs.standAloneChildStack();
-            standAloneStack.put("screens", new ScreenRenderer(writer, standAloneStack, screenStringRenderer));
+            // SCIPIO: 2017-03-09: workaround for context fetching problems
+            RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
+            standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));
             
             SectionsRenderer sections;
             if (!filteredPrevSectionMap.isEmpty()) {
-                sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer, prevSections, filteredPrevSectionMap, true);
+                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, prevSections, filteredPrevSectionMap, true);
             }
             else {
-                sections = new SectionsRenderer(filteredSectionMap, standAloneStack, writer, screenStringRenderer);
+                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer);
             }
             
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack

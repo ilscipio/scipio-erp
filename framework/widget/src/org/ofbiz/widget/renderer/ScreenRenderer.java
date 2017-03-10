@@ -59,6 +59,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.renderer.FtlContextFetcher;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.webapp.renderer.SimpleContextFetcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -109,6 +110,20 @@ public class ScreenRenderer implements RenderContextFetcher {
         this.screenStringRenderer = screenStringRenderer;
     }
 
+    /**
+     * SCIPIO: creates a renderer that uses FtlContextFetcher to get the writer,
+     * which prevents errors in template usage of screens.render (known ofbiz flaw).
+     * FIXME: CURRENTLY ONLY SUPPORT FTL ENV.
+     */
+    public static ScreenRenderer makeWithEnvAwareFetching(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
+        return new ScreenRenderer(new FtlContextFetcher(writer, context), screenStringRenderer);
+    }
+    
+    public static RenderContextFetcher makeEnvAwareContextFetcher(Appendable writer, MapStack<String> context) {
+        // FIXME: CURRENTLY ONLY SUPPORT FTL ENV
+        return new FtlContextFetcher(writer, context);
+    }
+    
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>

@@ -100,7 +100,7 @@ public class FoPrintServerEvents {
         // render and obtain the XSL-FO
         Writer writer = new StringWriter();
         try {
-            ScreenRenderer screens = new ScreenRenderer(writer, null, htmlScreenRenderer);
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, htmlScreenRenderer);
             screens.populateContextForService(dctx, parameters);
             screens.render(screen);
         } catch (Throwable t) {

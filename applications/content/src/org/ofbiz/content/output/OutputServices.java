@@ -104,7 +104,7 @@ public class OutputServices {
 
             Writer writer = new StringWriter();
             // substitute the freemarker variables...
-            ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContextTmp, foScreenRenderer);
+            ScreenRenderer screensAtt = ScreenRenderer.makeWithEnvAwareFetching(writer, screenContextTmp, foScreenRenderer);
             screensAtt.populateContextForService(dctx, screenContext);
             screenContextTmp.putAll(screenContext);
             screensAtt.getContext().put("formStringRenderer", foFormRenderer);
@@ -213,7 +213,7 @@ public class OutputServices {
 
             Writer writer = new StringWriter();
             // substitute the freemarker variables...
-            ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContextTmp, foScreenRenderer);
+            ScreenRenderer screensAtt = ScreenRenderer.makeWithEnvAwareFetching(writer, screenContextTmp, foScreenRenderer);
             screensAtt.populateContextForService(dctx, screenContext);
             screenContextTmp.putAll(screenContext);
             screensAtt.getContext().put("formStringRenderer", foFormRenderer);

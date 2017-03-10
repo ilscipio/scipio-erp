@@ -257,7 +257,15 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
                                 at the same time.
                                 NOTE: in some cases freemarker may have issues with this, 
                                     so for this and other reasons, it currently cannot be made the default.
-
+    envOut                  = ((boolean), default: false) Whether to output as string or environment writer
+                              If set to true, the string-rendering methods of the model ({{{?string}}}) will output
+                              to the current Freemarker environment output INSTEAD of returning as a string,
+                              and will instead always return an empty string.
+                              This is for advanced usage and is usually only needed so that the string-like
+                              models behave more like Ofbiz's {{{screens}}} object, or for performance
+                              reasons.
+                              This only applies to {{{scalar}}} and {{{hybrid}}} models, and doesn't affect
+                              the {{{directive}}} model or the directive mode of the {{{hybrid}}} model.
     
   * History *
     Added for 1.14.4.

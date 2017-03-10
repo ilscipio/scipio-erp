@@ -76,6 +76,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         String modelStr = null;
         Map<String, Object> invokeCtx = null;
         Map<String, Object> ctxVars = null;
+        boolean envOut = false;
 
         boolean strLocRead = false;
         if (OfbizFtlObjectType.STRING.isObjectType(arg)) {
@@ -99,6 +100,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                 invokeModeStr = TransformUtil.getStringNonEscapingArg(argMap, "invokeMode");
                 modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
                 boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
+                envOut = TransformUtil.getBooleanArg(argMap, "envOut", false);
     
                 TemplateModel invokeCtxModel = argMap.get("invokeCtx");
                 if (OfbizFtlObjectType.MAP.isObjectType(invokeCtxModel)) {
@@ -162,7 +164,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateInvoker invoker;
         try {
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
-            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, pushCtx, ctxVars), model);
+            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, pushCtx, ctxVars, envOut), model);
         } catch (TemplateException e) {
             throw new TemplateModelException(e);
         } catch (IOException e) {

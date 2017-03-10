@@ -136,15 +136,19 @@ public class TemplateInvoker {
 
         protected final Map<String, Object> ctxVars;
         
-        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, Boolean pushCtx, Map<String, Object> ctxVars) {
+        protected final boolean envOut;
+        
+        public InvokeOptions(InvokeMode invokeMode, Map<String, Object> context, 
+                Boolean pushCtx, Map<String, Object> ctxVars, boolean envOut) {
             this.invokeMode = invokeMode;
             this.context = context;
             this.pushCtx = pushCtx;
             this.ctxVars = ctxVars;
+            this.envOut = envOut;
         }
         
         public InvokeOptions(InvokeMode invokeMode, Boolean pushCtx, Map<String, Object> ctxVars) {
-            this(invokeMode, null, pushCtx, ctxVars);
+            this(invokeMode, null, pushCtx, ctxVars, false);
         }
 
         public InvokeMode getInvokeMode() {
@@ -167,6 +171,10 @@ public class TemplateInvoker {
          */
         public Map<String, Object> getCtxVars() {
             return ctxVars;
+        }
+        
+        public boolean isEnvOut() {
+            return envOut;
         }
     }
 
@@ -401,6 +409,21 @@ public class TemplateInvoker {
         public Object getWrappedObject() {
             return invoker;
         }
+        
+        protected String invokeAsString() throws TemplateModelException {
+            try {
+                if (invoker.getInvokeOptions().isEnvOut()) {
+                    invoker.invoke(FreeMarkerWorker.getCurrentEnvironment().getOut());
+                    return "";
+                } else {
+                    return invoker.invoke();
+                }
+            } catch (TemplateException e) {
+                throw new TemplateModelException(e);
+            } catch (IOException e) {
+                throw new TemplateModelException(e);
+            }
+        }
     }
     
     public static class DirectiveInvokerWrapper extends InvokerWrapper implements TemplateDirectiveModel {
@@ -422,13 +445,7 @@ public class TemplateInvoker {
 
         @Override
         public String getAsString() throws TemplateModelException {
-            try {
-                return invoker.invoke();
-            } catch (TemplateException e) {
-                throw new TemplateModelException(e);
-            } catch (IOException e) {
-                throw new TemplateModelException(e);
-            }
+            return invokeAsString();
         }
     }
 
@@ -445,13 +462,7 @@ public class TemplateInvoker {
 
         @Override
         public String getAsString() throws TemplateModelException {
-            try {
-                return invoker.invoke();
-            } catch (TemplateException e) {
-                throw new TemplateModelException(e);
-            } catch (IOException e) {
-                throw new TemplateModelException(e);
-            }
+            return invokeAsString();
         }
     }
     

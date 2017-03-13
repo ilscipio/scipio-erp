@@ -1700,3 +1700,141 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </div>
     </#switch>
 </#macro>
+
+<#--
+*************
+* Tabs
+************
+Creates a content block that is organized by tabs. First element is always set to active. Not to be confused with @menu of type "tab", which does not wrap the content in a container.
+
+[[[<img src="http://www.scipioerp.com/files/2017/03/tabs.png" alt=""/>]]]
+
+  * Usage Examples *  
+    <@tabs type="">
+        <@tab title="First Tab">
+            // content
+        </@tab>
+        <@tab title="Second Tab">
+            // content
+        </@tab>
+    </@tabs>            
+                    
+  * Parameters *
+    type                    = (vertical|horizontal, default: horizontal)
+    title                   = Title
+    id                      = ID for outermost container
+    class                   = ((css-class)) CSS classes or additional classes for outermost container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+
+  * History *
+    Added for 1.14.3
+-->
+<#assign tabs_defaultArgs = {
+  "type":"horizontal", "title":"", "id":"", "class":"",
+  "passArgs":{}
+}>
+<#macro tabs args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.tabs_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  
+  <#local styleName = type?replace("-","_")>
+  <#if (!styleName?has_content) || (!(styles["tabs_" + styleName]!false)?is_string)>
+    <#local styleName = "horizontal">
+  </#if>
+  
+  <@tabs_markup type=type title=title id=id class=class
+    origArgs=origArgs passArgs=passArgs><#nested></@tabs_markup>
+</#macro>
+
+<#-- @tabs main markup - theme override -->
+<#macro tabs_markup type="" title="" id="" class=""
+    origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.tabs_wrap!"")>
+  <#local class = addClassArg(class, type)>
+  
+  <#local tabsIdNum = getRequestVar("scipioTabsIdNum")!0>
+  <#local tabsIdNum = tabsIdNum + 1 />
+  <#local dummy = setRequestVar("scipioTabsIdNum", tabsIdNum)>
+  
+  <#local dummy = setRequestVar("scipioTabLength", tabLength)>
+  
+  <#local dummy = setRequestVar("scipioTabInfoStack", {})>
+  <#local nestedContent><#nested /></#local>
+  <#local globalTabInfo=getRequestVar("scipioTabInfoStack"!{})>
+    
+    <#if title?has_content><@heading class="${styles.tabs_title!}">${escapeVal(title, 'htmlmarkup')}</@heading></#if>
+
+    <ul <@compiledClassAttribStr class=class /> data-tab role="tablist">
+        <#--<li class="tab-title active"><a href="#panel1" data-toggle="tab" role="tab">Tab 1</a></li>-->
+        <#list globalTabInfo?keys as localTab>
+            <#local tab = globalTabInfo[localTab]/>
+            <li class="${styles.tabs_item_title}<#if tab['tabLength']?has_content && tab['tabLength']==1> ${styles.tabs_item_title_active}</#if>">
+                <a href="#${tab['id']!""}" class="${styles.tabs_item_title_link}" data-toggle="tab" role="tab">${tab['title']!tab['id']!tab['tabLength']}</a>
+            </li>
+        </#list>
+    </ul>
+    <div<#if styles.tabs_item_container?has_content> class="${styles.tabs_item_container}"</#if>>
+        ${nestedContent!}
+    </div>
+</#macro>
+
+<#-- 
+*************
+* Tab element
+************
+Creates a tab element/entry.
+
+  * Parameters *
+    title                   = Title
+    id                      = ID for outermost container
+    class                   = ((css-class)) CSS classes or additional classes for outermost container
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+  
+-->
+<#assign tab_defaultArgs = {
+  "title":"", "id":"", "class":"",
+  "passArgs":{}
+}>
+<#macro tab args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.tab_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@tab_markup title=title id=id class=class
+               origArgs=origArgs passArgs=passArgs><#nested></@tab_markup>
+</#macro>
+
+<#-- @tab main markup - theme override -->
+<#macro tab_markup title="" id="" class="" origArgs={} passArgs={} catchArgs...>
+  <#local tabsIdNum = getRequestVar("scipioTabsIdNum")!0>  
+        
+  <#-- global tab counter -->
+  <#local tabIdNum = getRequestVar("scipioTabIdNum")!0>
+  <#local tabIdNum = tabIdNum + 1 />
+  <#local dummy = setRequestVar("scipioTabIdNum", tabIdNum)>
+  
+  <#-- local tab counter -->
+  <#local tabLength = getRequestVar("scipioTabLength")!0>
+  <#local tabLength = tabLength + 1 />
+  <#local dummy = setRequestVar("scipioTabLength", tabLength)>
+    
+  <#local class = addClassArg(class, styles.tabs_item_wrap!"")>
+  <#if tabLength==1>
+    <#local class = addClassArg(class, styles.tabs_item_active!"")>
+  </#if>
+  <#if !id?has_content>
+    <#local id = "tab_${tabsIdNum!}_${tabIdNum}"/>
+  </#if>  
+  
+  <#local globalTabInfo=getRequestVar("scipioTabInfoStack"!{})>
+  <#local tabsInfo = mergeArgMapsBasic(globalTabInfo, {id:{"id":id,"tabLength":tabLength,"title":title}})>
+  <#local dummy = setRequestVar("scipioTabInfoStack", tabsInfo)>
+                          
+    <div <@compiledClassAttribStr class=class /> id="${escapeVal(id, 'html')}" role="tabpanel">
+        <#nested>
+    </div>
+</#macro>

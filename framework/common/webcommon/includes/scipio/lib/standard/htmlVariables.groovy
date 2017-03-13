@@ -938,6 +938,18 @@ context.styles = [
     "pricing_title" : "title",
     "pricing_cta" : "cta-button",
     "pricing_bullet" : "bullet-item",
+    
+    /* Tabs */
+    "tabs_container" : "",
+    "tabs_wrap" : "tabs",                           /* Bootstrap: "nav nav-tabs" */
+    "tabs_item_title" : "tab-title",                /* Bootstrap: "nav-item" */
+    "tabs_item_title_link" : "",                    /* Bootstrap: "nav-link" */
+    "tabs_item_title_active" : "active",
+    "tabs_item_title_disabled" : "",
+    "tabs_item_container": "tabs-content",          /* Bootstrap: "tab-content" */
+    "tabs_item_wrap" : "content",                   /* Bootstrap: "tab-pane" */
+    "tabs_item_active" : "active",
+    "tabs_item_disabled" : "disabled",
 
   /* Modal */
     "modal_wrap" : "reveal-modal",

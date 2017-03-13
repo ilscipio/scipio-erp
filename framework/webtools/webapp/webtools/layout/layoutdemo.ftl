@@ -551,6 +551,25 @@
   </#if>
 </@section>
 
+<@section title="Tabs">
+    <@row>
+        <@cell columns="6">
+            <@tabs type="vertical" title="Horizontal">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+        <@cell columns="6">
+            <@tabs type="horizontal" title="Vertical">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+    </@row>
+</@section>
+
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
      usually don't need in @section macro. See outputted markup for results. -->
 <#if debugMode>

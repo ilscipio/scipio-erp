@@ -487,7 +487,7 @@ public class EmailServices {
             if (screens == null) {
              // TODO: replace "screen" to support dynamic rendering of different output
                 ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenemail.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screenemail.screenrenderer", delegator));
-                screens = new ScreenRenderer(bodyWriter, context, screenStringRenderer);
+                screens = ScreenRenderer.makeWithEnvAwareFetching(bodyWriter, context, screenStringRenderer);
                 screens.getContext().put("screens", screens);
             }
             // render the screen
@@ -542,7 +542,7 @@ public class EmailServices {
                     // substitute the freemarker variables...
                     // get the screen renderer; or create a new one
                     ScreenStringRenderer fopStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screenfop.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screenfop.screenrenderer", delegator));
-                    ScreenRenderer screensAtt = new ScreenRenderer(writer, screenContextAtt, fopStringRenderer);
+                    ScreenRenderer screensAtt = ScreenRenderer.makeWithEnvAwareFetching(writer, screenContextAtt, fopStringRenderer);
                     screensAtt.getContext().put("screens", screensAtt);
                     
                     // render the screen

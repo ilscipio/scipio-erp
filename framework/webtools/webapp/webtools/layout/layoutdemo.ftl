@@ -551,6 +551,25 @@
   </#if>
 </@section>
 
+<@section title="Tabs">
+    <@row>
+        <@cell columns="6">
+            <@tabs type="vertical" title="Horizontal">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+        <@cell columns="6">
+            <@tabs type="horizontal" title="Vertical">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+    </@row>
+</@section>
+
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
      usually don't need in @section macro. See outputted markup for results. -->
 <#if debugMode>
@@ -1789,18 +1808,54 @@
   <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
-    <p>Button Menu</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2" />
-    <p>Button Menu (sub-menus filtered out)</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
-
-    <p>Test form</p>
-    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
-
-    <p>Max depth arg test</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" />
-    <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none" />
+    <@section title="Button Menu">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2" />
+    </@section>
+    <@section title="Button Menu (sub-menus filtered out)">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
+    </@section>
+    <@section title="Test form">
+      <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
+    </@section>
+    
+    <@section title="Max depth arg test">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" />
+      <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none" />
+    </@section>
+    
+    <@section title="Standalone (isolated) FTL include">
+      <@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" />
+    </@section>
+    
+    <@section title="Render nothing (empty)">
+      <@render resource="" name="" />
+    </@section>
+    
+    <#assign captureWarn><em>NOTE: 2017-03-10: This code is considered <strong>EXPERIMENTAL</strong> for Scipio - 
+        stock Ofbiz facilities do not support capturing properly. If you must capture a @render call in production code,
+        always pass <code>@render asString=true</code>. The tests below attempt to capture without
+        <code>asString=true</code>, which is currently not guaranteed to work in all cases.</em><br/></#assign>
+    <@section title="Simple Widget CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="screen" resource="component://webtools/widget/MiscScreens.xml#DemoSimpleLabelWidget" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Render nothing (empty) CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render resource="" name="" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include with nested @render CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test2.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
   </@section>
 
   <@section title="Admin plain site-map/tree">

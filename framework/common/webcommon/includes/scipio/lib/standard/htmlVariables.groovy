@@ -207,7 +207,7 @@ context.styles = [
     "menu_tab" : "button-group force-button menu-type-tab tabs",
     "menu_tab_altnested" : "menu-type-tab",
     "menu_tab_type" : "menu-type-tab",
-    "menu_tab_item" : "tab-title",
+    "menu_tab_item" : "",
     "menu_tab_itemdisabled" : "disabled",
     "menu_tab_itemactive" : "active",
     "menu_tab_itemactivetarget" : "active-target",
@@ -938,6 +938,19 @@ context.styles = [
     "pricing_title" : "title",
     "pricing_cta" : "cta-button",
     "pricing_bullet" : "bullet-item",
+    
+    /* Tabs */
+    "tabs_container" : "",
+    "tabs_wrap" : "tabs",                           /* Bootstrap: "nav nav-tabs" */
+    "tabs_item_title" : "tab-title",                /* Bootstrap: "nav-item" */
+    "tabs_item_title_link" : "",                    /* Bootstrap: "nav-link" */
+    "tabs_item_title_link_active" : "",
+    "tabs_item_title_active" : "active",
+    "tabs_item_title_disabled" : "",
+    "tabs_item_container": "tabs-content",          /* Bootstrap: "tab-content" */
+    "tabs_item_wrap" : "content",                   /* Bootstrap: "tab-pane" */
+    "tabs_item_active" : "active",
+    "tabs_item_disabled" : "disabled",
 
   /* Modal */
     "modal_wrap" : "reveal-modal",

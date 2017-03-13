@@ -81,7 +81,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
             // TODO: uncomment these lines when the renderers are implemented
             //TreeStringRenderer treeStringRenderer = new MacroTreeRenderer(UtilProperties.getPropertyValue("widget", getName() + ".treerenderer"), writer);
             //MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(UtilProperties.getPropertyValue("widget", getName() + ".menurenderer"), writer);
-            ScreenRenderer screens = new ScreenRenderer(writer, null, screenStringRenderer);
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, screenStringRenderer);
             screens.populateContextForRequest(request, response, servletContext);
 
             // this is the object used to render forms from their definitions
@@ -134,7 +134,7 @@ public class ScreenFopViewHandler extends AbstractViewHandler {
         Debug.logError(msg + ": " + e + "; Screen XSL:FO text was:\n" + screenOutString, module);
         try {
             Writer writer = new StringWriter();
-            ScreenRenderer screens = new ScreenRenderer(writer, null, new HtmlScreenRenderer());
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, null, new HtmlScreenRenderer());
             screens.populateContextForRequest(request, response, servletContext);
             screens.getContext().put("errorMessage", msg + ": " + e);
             screens.render(DEFAULT_ERROR_TEMPLATE);

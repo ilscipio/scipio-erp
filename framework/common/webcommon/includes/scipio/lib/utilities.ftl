@@ -69,6 +69,10 @@ NOTE: 2016-11-14: Scope handling is revamped for consistency.
     and sections in ftl files (their XML equivalents perform stack pushing), though it rarely manifests as
     an issue due to the ftl bindings being copies from context.
 
+NOTE: 2017-09-10: If both {{{resource}}} and {{{name}}} are empty, this macro simply returns nothing, without
+    producing any error. This is to make it more friendly to template code, so that surrounding #if statements
+    can be safely omitted.
+
 TODO: Reimplement as transform.
 
   * Parameters *
@@ -79,15 +83,24 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree|section, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|section|ftl, default: -dependent on resource-, fallback default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
+                                NOTE: this is the default in most cases, but not all.
                               * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
                                 same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
                               * {{{menu}}} or {{{include-menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
                               * {{{form}}} or {{{include-form}}}: an Ofbiz form (widget) by {{{component://}}} location
                               * {{{tree}}} or {{{include-tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              * {{{ftl}}}: special standalone isolated Freemarker template include mode. {{{resource}}} is 
+                                expected to point to an FTL file. this differs from the Freemarker #include command in that
+                                the FTL is processed in a standard ofbiz way similar to a screen, the context stack is by default pushed/pop
+                                around the include (unless context does not support), and the template gets its own variable binding environment
+                                so it does not interfere with other templates. You cannot use this to reuse definitions
+                                from other FTL files; use #include for that. for more advanced options or 
+                                to render inline strings as templates, try #interpretStd instead.
+                                NOTE: if type is omitted and resource ends with the extension ".ftl", this type is implied; allows brevity.
                               NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
                                   guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
                                   The non-{{{include-}}} versions may be implemented using other means
@@ -122,17 +135,25 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     
   * History *
+    Enhanced for 1.14.4 (type="ftl", improved defaults handling).
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
+<#macro render resource="" name="" type="" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
     asString=false shareScope="" maxDepth="" subMenus="">
-  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
-    <#-- assuming type=="screen" for now -->
+  <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
+  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
+    <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
+    <#if !type?has_content>
+      <#local type = resource?ends_with(".ftl")?string("ftl", "screen")>
+    </#if>
     <#if type == "screen">
-        ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
+      ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
     <#elseif type == "section">
-        ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
+      ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
+    <#elseif type == "ftl">
+      <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
+      ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>
     <#else>
       <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>
@@ -164,7 +185,8 @@ TODO: Reimplement as transform.
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
     </#if>
-  </@varSection>
+  </@varSection><#t>
+  </#if>
 </#macro>
 
 <#-- 
@@ -196,6 +218,9 @@ Furthermore, by default, the context {{{MapStack}}} is pushed (see {{{pushCtx}}}
 This function accepts one parameter which is a map of parameters, described below.
 If a single string is supplied instead, it is taken as the inline string template
 to interpret, and all other parameters get defaults.
+
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template str.
 
   * Parameters *
     str                     = ((string)) An inline string to use as template
@@ -254,13 +279,49 @@ to interpret, and all other parameters get defaults.
                                 at the same time.
                                 NOTE: in some cases freemarker may have issues with this, 
                                     so for this and other reasons, it currently cannot be made the default.
-
+    envOut                  = ((boolean), default: false) Whether to output as string or environment writer
+                              If set to true, the string-rendering methods of the model ({{{?string}}}) will output
+                              to the current Freemarker environment output INSTEAD of returning as a string,
+                              and will instead always return an empty string.
+                              This is for advanced usage and is usually only needed so that the string-like
+                              models behave more like Ofbiz's {{{screens}}} object, or for performance
+                              reasons.
+                              This only applies to {{{scalar}}} and {{{hybrid}}} models, and doesn't affect
+                              the {{{directive}}} model or the directive mode of the {{{hybrid}}} model.
     
   * History *
     Added for 1.14.4.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function interpretStd args={}>
+</#function>
+-->
+
+<#-- 
+*************
+* interpretStdLoc
+************
+Interprets/compiles a file location as a template and returns the template
+in a self-sufficient template invoker wrapper, which can later be evaluated using
+a simple invocation form (by default, simple string evaluation).
+
+This is merely an alias to #interpretStd, where if a single string is passed instead of
+an args map, it is interpreted to be a file location instead of the template itself.
+
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template location.
+
+  * Parameters *
+    (other)                 = See #interpretStd
+
+  * Related *                           
+    @ofbizUrl
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function interpretStdLoc args={}>
 </#function>
 -->
 
@@ -1106,7 +1167,7 @@ to indicate the value null.
     <#local origValues = extractVars(varMaps, true)>
   </#if>
   <#local dummy = setVars(varMaps)>
-  <#nested>
+  <#nested><#t>
   <#if clearValues>
     <#local dummy = clearVars(varMaps)>
   <#elseif restoreValues>

@@ -729,7 +729,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                     if (screens == null) {
                      // TODO: replace "screen" to support dynamic rendering of different output
                         ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", delegator));
-                        screens = new ScreenRenderer(out, context, screenStringRenderer);
+                        screens = ScreenRenderer.makeWithEnvAwareFetching(out, context, screenStringRenderer);
                         screens.getContext().put("screens", screens);
                     }
                     // render the screen

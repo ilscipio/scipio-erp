@@ -199,6 +199,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         return rendererName;
     }
 
+    /**
+     * SCIPIO: manual call to force initial context register, in case we are in a rendering context
+     * where renderScreenBegin is not called (most likely a different renderer).
+     */
+    public void registerContext(Appendable writer, Map<String, Object> context) throws IOException {
+        contextHandler.registerInitialContext(writer, context);
+    }
+    
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
         executeMacro(writer, "renderScreenBegin", null);
@@ -209,6 +217,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
+        contextHandler.registerInitialContext(writer, context); // SCIPIO: NOTE: this may be needed in some non-widget rendering contexts
         if (section.isMainSection()) {
             this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
         }

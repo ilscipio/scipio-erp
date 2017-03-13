@@ -151,7 +151,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             MapStack<String> context = MapStack.create();
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
-            ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
             context.put("screens", screens);
             // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
             // for some cases where only request is available

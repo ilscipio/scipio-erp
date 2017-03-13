@@ -59,50 +59,65 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execTyped(args);
+        return execTyped(args, false);
     }
     
-    public Object execTyped(List<TemplateModel> args) throws TemplateModelException {
-        if (args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+    public Object execTyped(List<TemplateModel> args, boolean singleStrAsLoc) throws TemplateModelException {
+        if (args.size() != 1 && args.size() != 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
         TemplateModel arg = args.get(0);
+        TemplateModel arg2 = (args.size() >= 2) ? args.get(1) : null;
         
         String str = null;
         String location = null;
         String invokeModeStr = null;
-        Boolean pushCtx = null;
+        Boolean shareScope = null;
         String modelStr = null;
         Map<String, Object> invokeCtx = null;
         Map<String, Object> ctxVars = null;
+        boolean envOut = false;
 
-        if (OfbizFtlObjectType.MAP.isObjectType(arg)) {
-            Map<String, TemplateModel> argMap = LangFtlUtil.makeModelMap((TemplateHashModelEx) arg);
-            
-            str = TransformUtil.getStringNonEscapingArg(argMap, "str");
-            location = TransformUtil.getStringNonEscapingArg(argMap, "location");
-            pushCtx = TransformUtil.getBooleanArg(argMap, "pushCtx");
-            invokeModeStr = TransformUtil.getStringNonEscapingArg(argMap, "invokeMode");
-            modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
-            boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
-
-            TemplateModel invokeCtxModel = argMap.get("invokeCtx");
-            if (OfbizFtlObjectType.MAP.isObjectType(invokeCtxModel)) {
-                invokeCtx = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(invokeCtxModel));
+        boolean strLocRead = false;
+        if (OfbizFtlObjectType.STRING.isObjectType(arg)) {
+            if (singleStrAsLoc) {
+                location = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
+            } else {
+                str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
             }
-            
-            TemplateModel ctxVarsModel = argMap.get("ctxVars");
-            if (OfbizFtlObjectType.MAP.isObjectType(ctxVarsModel)) {
-                if (unwrapCtxVars) {
-                    ctxVars = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(ctxVarsModel));
-                } else {
-                    ctxVars = LangFtlUtil.makeModelObjectMap((TemplateHashModelEx) ctxVarsModel);
+            strLocRead = true;
+            arg = arg2;
+        }
+        if (arg != null) {
+            if (OfbizFtlObjectType.MAP.isObjectType(arg)) {
+                Map<String, TemplateModel> argMap = LangFtlUtil.makeModelMap((TemplateHashModelEx) arg);
+                
+                if (!strLocRead) {
+                    str = TransformUtil.getStringNonEscapingArg(argMap, "str");
+                    location = TransformUtil.getStringNonEscapingArg(argMap, "location");
                 }
+                shareScope = TransformUtil.getBooleanArg(argMap, "shareScope");
+                invokeModeStr = TransformUtil.getStringNonEscapingArg(argMap, "invokeMode");
+                modelStr = TransformUtil.getStringNonEscapingArg(argMap, "model");
+                boolean unwrapCtxVars = TransformUtil.getBooleanArg(argMap, "unwrapCtxVars", false);
+                envOut = TransformUtil.getBooleanArg(argMap, "envOut", false);
+    
+                TemplateModel invokeCtxModel = argMap.get("invokeCtx");
+                if (OfbizFtlObjectType.MAP.isObjectType(invokeCtxModel)) {
+                    invokeCtx = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(invokeCtxModel));
+                }
+                
+                TemplateModel ctxVarsModel = argMap.get("ctxVars");
+                if (OfbizFtlObjectType.MAP.isObjectType(ctxVarsModel)) {
+                    if (unwrapCtxVars) {
+                        ctxVars = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(ctxVarsModel));
+                    } else {
+                        ctxVars = LangFtlUtil.makeModelObjectMap((TemplateHashModelEx) ctxVarsModel);
+                    }
+                }
+            } else {
+                throw new TemplateModelException("Invalid arg type (expected string or hash): " + arg.getClass());
             }
-        } else if (arg instanceof TemplateScalarModel) {
-            str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
-        } else {
-            throw new TemplateModelException("Invalid arg type (expected string or hash): " + arg.getClass());
         }
         InvokeMode invokeMode;
         WrapperModel model;
@@ -149,7 +164,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateInvoker invoker;
         try {
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
-            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, pushCtx, ctxVars), model);
+            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, shareScope, ctxVars, envOut), model);
         } catch (TemplateException e) {
             throw new TemplateModelException(e);
         } catch (IOException e) {

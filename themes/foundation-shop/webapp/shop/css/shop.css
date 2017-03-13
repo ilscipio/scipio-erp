@@ -185,8 +185,16 @@ body {
     margin: 0 -10px;
   }
   
-  .slider { display: none; }
-  .slider.slick-initialized { display: block; }
+.slick-slider .slick-slide{
+    display: none;
+}
+ .slick-slider .slick-slide:first-child{
+    display: block;
+}
+.slick-initialized.slick-slider .slick-slide,
+.slick-initialized.slick-slider .slick-slide:first-child{
+    display: block;
+}
     
 /*FOOTER*/
 footer {

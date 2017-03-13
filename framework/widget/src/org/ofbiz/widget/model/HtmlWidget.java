@@ -39,6 +39,7 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.ftl.ExtendedWrapper;
+import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
@@ -365,8 +366,10 @@ public class HtmlWidget extends ModelScreenWidget {
 
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack<String> standAloneStack = contextMs.standAloneChildStack();
-            standAloneStack.put("screens", new ScreenRenderer(writer, standAloneStack, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, writer, screenStringRenderer);
+            // SCIPIO: 2017-03-09: workaround for context fetching problems
+            RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
+            standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, contextFetcher, screenStringRenderer);
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();

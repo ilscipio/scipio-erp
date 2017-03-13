@@ -1,0 +1,1 @@
+<span>Hello from included FTL file</span>

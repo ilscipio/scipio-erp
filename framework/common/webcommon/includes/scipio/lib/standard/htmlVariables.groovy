@@ -944,6 +944,7 @@ context.styles = [
     "tabs_wrap" : "tabs",                           /* Bootstrap: "nav nav-tabs" */
     "tabs_item_title" : "tab-title",                /* Bootstrap: "nav-item" */
     "tabs_item_title_link" : "",                    /* Bootstrap: "nav-link" */
+    "tabs_item_title_link_active" : "",
     "tabs_item_title_active" : "active",
     "tabs_item_title_disabled" : "",
     "tabs_item_container": "tabs-content",          /* Bootstrap: "tab-content" */

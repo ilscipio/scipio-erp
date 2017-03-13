@@ -1772,7 +1772,8 @@ Creates a content block that is organized by tabs. First element is always set t
         <#list globalTabInfo?keys as localTab>
             <#local tab = globalTabInfo[localTab]/>
             <li class="${styles.tabs_item_title}<#if tab['tabLength']?has_content && tab['tabLength']==1> ${styles.tabs_item_title_active}</#if>">
-                <a href="#${tab['id']!""}" class="${styles.tabs_item_title_link}" data-toggle="tab" role="tab">${tab['title']!tab['id']!tab['tabLength']}</a>
+                <a href="#${tab['id']!""}" class="${styles.tabs_item_title_link}<#if tab['tabLength']?has_content && tab['tabLength']==1> ${styles.tabs_item_title_link_active}</#if>" 
+                data-toggle="tab" role="tab">${tab['title']!tab['id']!tab['tabLength']}</a>
             </li>
         </#list>
     </ul>

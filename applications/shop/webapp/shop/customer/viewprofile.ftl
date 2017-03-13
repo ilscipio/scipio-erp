@@ -55,17 +55,10 @@ under the License.
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
 
-<@menu type="tab" attribs={"data-tab":true, "role":"tablist"}>
-  <li class="${styles.menu_tab_item}"><a href="#panel1" class="nav-link active" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
-  <li class="${styles.menu_tab_item}"><a href="#panel2" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
-  <li class="${styles.menu_tab_item}"><a href="#panel3" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>
-  <li class="${styles.menu_tab_item}"><a href="#panel4" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.AccountingPaymentMethodInformation}</a></li>
-  <li class="${styles.menu_tab_item}"><a href="#panel5" class="nav-link" data-toggle="tab" role="tab"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.EcommerceDefaultShipmentMethod}</a></li>
-</@menu>
-<div class="tabs-content tab-content">
-    
-     <#-- Personal information -->
-     <div class="content tab-pane active" id="panel1" role="tabpanel">
+
+<@tabs>
+    <#-- Party Personal Info Tab -->
+    <@tab title=uiLabelMap.PartyPersonalInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <#if person??>
@@ -96,10 +89,10 @@ under the License.
               <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
             </#if>
         </@section>
-     </div>
-
-    <#-- ============================================================= -->
-    <div class="content tab-pane" id="panel2" role="tabpanel">
+    </@tab>
+    
+    <#-- Account Info Tab -->
+    <@tab title=uiLabelMap.EcommerceAccountInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
@@ -117,10 +110,10 @@ under the License.
               </@field>
             <@field type="display" label=uiLabelMap.CommonUsername>${userLogin.userLoginId}</@field>
         </@section>
-    </div>
+    </@tab>
     
-    <#-- Contact Information -->
-    <div class="content tab-pane" id="panel3" role="tabpanel">
+    <#-- Party Contact Tab -->
+    <@tab title=uiLabelMap.PartyContactInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
@@ -254,10 +247,10 @@ under the License.
             <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
           </#if>
         </@section>
-    </div>
+    </@tab>
     
-    <#-- Payment -->
-    <div class="content tab-pane" id="panel4" role="tabpanel">
+    <#-- Payment Method Tab -->
+    <@tab title=uiLabelMap.AccountingPaymentMethodInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
@@ -326,10 +319,11 @@ under the License.
           <#else>
             <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoPaymentMethodInformation}</@commonMsg>
           </#if>
-        </@section>    
-    </div>
-    <#-- Shipping info -->
-    <div class="content tab-pane" id="panel5" role="tabpanel">
+        </@section>
+    </@tab>
+    
+    <#-- Shipping Info Tab -->
+    <@tab title=uiLabelMap.EcommerceDefaultShipmentMethod>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
             <#-- SCIPIO: this isn't a link, it's a form submit, put it at bottom so not mistakable
@@ -357,8 +351,10 @@ under the License.
           </@fields>
           </form>
         </@section>
-    </div>
-</div>
+    </@tab>
+
+
+</@tabs>
 
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?

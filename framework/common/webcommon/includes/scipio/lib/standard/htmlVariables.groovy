@@ -207,7 +207,7 @@ context.styles = [
     "menu_tab" : "button-group force-button menu-type-tab tabs",
     "menu_tab_altnested" : "menu-type-tab",
     "menu_tab_type" : "menu-type-tab",
-    "menu_tab_item" : "tab-title",
+    "menu_tab_item" : "",
     "menu_tab_itemdisabled" : "disabled",
     "menu_tab_itemactive" : "active",
     "menu_tab_itemactivetarget" : "active-target",

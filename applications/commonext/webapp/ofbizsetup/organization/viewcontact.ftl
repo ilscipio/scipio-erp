@@ -73,6 +73,7 @@ under the License.
                     </#if>
                   </div>
                   </#if>
+                  <#-- 
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId == "USA">
                     <#assign addr1 = postalAddress.address1!>
                     <#if addr1?has_content && (addr1.indexOf(" ") > 0)>
@@ -80,7 +81,7 @@ under the License.
                       <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
                       <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonLookupWhitepages}</a>
                     </#if>
-                  </#if>
+                  </#if> -->
                   <#if postalAddress.geoPointId?has_content>
                     <#if contactMechPurposeType?has_content>
                       <#assign popUptitle = contactMechPurposeType.get("description",locale) + uiLabelMap.CommonGeoLocation>

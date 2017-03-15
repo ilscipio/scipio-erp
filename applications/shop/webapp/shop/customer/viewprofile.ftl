@@ -180,10 +180,11 @@ under the License.
                           ${telecomNumber.countryCode!}
                           <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                           <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
+                          <#-- 
                           <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode == "011")>
                             <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                             <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
-                          </#if>
+                          </#if>-->
                         <#else>
                           ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
                         </#if>

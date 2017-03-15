@@ -12,6 +12,7 @@ public class SimpleContextFetcher implements RenderContextFetcher {
     
     public SimpleContextFetcher(Appendable writer, MapStack<String> context) {
         this.writer = writer;
+        if (context == null) context = MapStack.create();
         this.context = context;
     }
 

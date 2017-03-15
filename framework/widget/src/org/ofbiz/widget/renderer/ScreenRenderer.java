@@ -97,7 +97,6 @@ public class ScreenRenderer implements RenderContextFetcher {
     protected int renderFormSeqNumber = 0;
 
     public ScreenRenderer(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
-        if (context == null) context = MapStack.create();
         this.contextFetcher = new SimpleContextFetcher(writer, context);
         this.screenStringRenderer = screenStringRenderer;
     }

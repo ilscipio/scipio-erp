@@ -73,6 +73,7 @@ under the License.
                     </#if>
                   </div>
                   </#if>
+                  <#-- 
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId == "USA">
                     <#assign addr1 = postalAddress.address1!>
                     <#if addr1?has_content && (addr1.indexOf(" ") > 0)>
@@ -80,7 +81,7 @@ under the License.
                       <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
                       <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonLookupWhitepages}</a>
                     </#if>
-                  </#if>
+                  </#if> -->
                   <#if postalAddress.geoPointId?has_content>
                     <#if contactMechPurposeType?has_content>
                       <#assign popUptitle = contactMechPurposeType.get("description",locale) + uiLabelMap.CommonGeoLocation>
@@ -93,10 +94,11 @@ under the License.
                     ${telecomNumber.countryCode!}
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode!"000"}-</#if>${telecomNumber.contactNumber?default("000-0000")}
                     <#if partyContactMech.extension?has_content>${uiLabelMap.PartyContactExt}&nbsp;${partyContactMech.extension}</#if>
+                    <#--
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode == "011">
                       <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                       <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
-                    </#if>
+                    </#if>-->
                   </div>
                 <#elseif "EMAIL_ADDRESS" == contactMech.contactMechTypeId>
                   <div>

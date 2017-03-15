@@ -161,14 +161,14 @@ under the License.
                         <div>
                           <#if postalAddress?has_content>
                             <@formattedAddress address=postalAddress emphasis=false />
-                            <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
+                            <#-- <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
                               <#assign addr1 = postalAddress.address1!?string />
                               <#if (addr1?index_of(" ") > 0)>
                                 <#assign addressNum = addr1?substring(0, addr1?index_of(" ")) />
                                 <#assign addressOther = addr1?substring(addr1?index_of(" ")+1) />
                                 <br/><a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav_inline!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                               </#if>
-                            </#if>
+                            </#if> -->
                           <#else>
                             ${uiLabelMap.PartyPostalInformationNotFound}.
                           </#if>
@@ -180,10 +180,11 @@ under the License.
                           ${telecomNumber.countryCode!}
                           <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                           <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
+                          <#-- 
                           <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode == "011")>
                             <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                             <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
-                          </#if>
+                          </#if>-->
                         <#else>
                           ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
                         </#if>

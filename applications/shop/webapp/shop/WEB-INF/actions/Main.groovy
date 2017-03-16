@@ -19,7 +19,7 @@
 
 import org.ofbiz.product.catalog.*;
 
-catalogId = CatalogWorker.getCurrentCatalogId(request);
+context.catalogId = CatalogWorker.getCurrentCatalogId(request);
 // SCIPIO: This is not necessary anymore and interferes with SideDeepCategory.groovy and Breadcrumbs.groovy
 //promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
 //request.setAttribute("productCategoryId", promoCat);

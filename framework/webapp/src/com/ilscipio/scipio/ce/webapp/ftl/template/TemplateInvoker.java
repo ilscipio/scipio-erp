@@ -51,7 +51,7 @@ import freemarker.template.TemplateScalarModel;
  * this is imperfect but allows consistent unwrapping/rewrapping without needing 
  * to modify the ObjectWrapper. HOWEVER this means we only support the "scalar" model for now.
  * <p>
- * FIXME: the reliance on BeansWrapper StringModel means that the bean does not support
+ * FIXME?: the reliance on BeansWrapper StringModel means that the bean does not support
  * the <code>?has_content</code> built-in. This is a limitation caused by the <code>?has_content</code>
  * built-in that is hardcoded and delegates to BeanModel.empty method (not overridden by StringModel),
  * which does not invoke the toString method for our invoker object.

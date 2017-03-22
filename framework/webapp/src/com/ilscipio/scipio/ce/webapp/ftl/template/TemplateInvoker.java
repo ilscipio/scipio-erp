@@ -51,6 +51,16 @@ import freemarker.template.TemplateScalarModel;
  * this is imperfect but allows consistent unwrapping/rewrapping without needing 
  * to modify the ObjectWrapper. HOWEVER this means we only support the "scalar" model for now.
  * <p>
+ * FIXME?: the reliance on BeansWrapper StringModel means that the bean does not support
+ * the <code>?has_content</code> built-in. This is a limitation caused by the <code>?has_content</code>
+ * built-in that is hardcoded and delegates to BeanModel.empty method (not overridden by StringModel),
+ * which does not invoke the toString method for our invoker object.
+ * This is works out, because <code>?has_content</code> usage on the direct variable would
+ * cause double-rendering and performance problems.
+ * Instead, templates should use <code>??</code> operator or force cast to string
+ * using <code>?string</code> so it is unambiguous at which point the rendering will occur and
+ * will only happen once.
+ * <p>
  * TODO: in future should have a dedicated TemplateDirectiveModel + TemplateScalarModel hybrid + individuals
  * in order to be consistent with the <code>?interpret</code> directive behavior (but needs
  * special code for rewrapping in context, ideally ObjectWrapper.wrap override).

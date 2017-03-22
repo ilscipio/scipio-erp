@@ -1374,7 +1374,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#-- SCIPIO: NOTE: IMPORTANT: 2016-11-03: javascript:document[formName] in the href here MUST be
             passed through jQuery() - otherwise jQuery.validate is not triggered, and text-link everywhere will fail to trigger validation  -->
         <a<@fieldClassAttribStr class=class alert=alert /> <#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:jQuery(document['${escapeVal(formName, 'js-html')}']).submit()<#else>javascript:void(0)</#if>"<#t/>
+          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:jQuery(document['${escapeVal(formName, 'js-html')}']).submit();void(0)<#else>javascript:void(0)</#if>"<#t/>
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if></#if><#t/>
           <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
           <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>

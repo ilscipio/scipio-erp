@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
       getDependentDropdownValues('${escapeVal(requestName, 'js')}', 
         '${escapeVal(paramKey, 'js')}', 
         '${escapeVal(mainIdFull, 'js')}', 
-        '${escapeVal(depIdFull, 'js')}}', 
+        '${escapeVal(depIdFull, 'js')}', 
         '${escapeVal(responseName, 'js')}', 
         '${escapeVal(dependentKeyName, 'js')}', 
         '${escapeVal(descName, 'js')}', 

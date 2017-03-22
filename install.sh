@@ -31,7 +31,7 @@ echo ""
 echo " Please make a selection"
 echo " -------------------------------------"
 echo " 1.  Install for development [compile, load seed & demo data]"
-echo " 2.  Install for production [compile, load seed]"
+echo " 2.  Install for production [compile, load seed & create-admin-user-login]"
 echo " -------------------------------------";
 echo " 3.  Recompile [compile]"
 echo " 4.  List ant compiler information"
@@ -50,7 +50,7 @@ do
             exit 1
             ;;
         "Install for Production")
-            sh ant load-extseed
+            sh ant load-extseed create-admin-user-login
             exit 1
             ;;
         "Recompile")

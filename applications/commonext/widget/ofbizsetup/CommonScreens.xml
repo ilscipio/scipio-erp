@@ -103,7 +103,7 @@
                 <condition-to-field field="commonSetupAppBasePermCond" type="Boolean" only-if-field="empty">
                     <if-has-permission permission="SETUP" action="_VIEW"/>
                 </condition-to-field> -->
-                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" value="true"/>
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" default-value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -263,7 +263,7 @@
                 <condition-to-field field="commonSetupAppBasePermCond" type="Boolean" only-if-field="empty">
                     <if-has-permission permission="SETUP" action="_VIEW"/>
                 </condition-to-field> -->
-                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" value="true"/>
+                <set field="commonSetupAppBasePermCond" from-field="commonSetupAppBasePermCond" type="Boolean" default-value="true"/>
                 <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${commonWebtoolsAppBasePermCond}"/>
             </actions>
             <widgets>

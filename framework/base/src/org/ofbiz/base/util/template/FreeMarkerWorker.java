@@ -847,8 +847,10 @@ public class FreeMarkerWorker {
     /**
      * OFBiz specific TemplateExceptionHandler.  Sanitizes any error messages present in
      * the stack trace prior to printing to the output writer.
+     * <p>
+     * SCIPIO: 2017-03-23: now public for reuse.
      */
-    static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
+    public static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
         public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);

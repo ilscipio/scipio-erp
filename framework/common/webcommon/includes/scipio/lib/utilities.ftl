@@ -83,7 +83,7 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree|section|ftl, default: -dependent on resource-, fallback default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|decorator|section|ftl, default: -dependent on resource-, fallback default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
                                 NOTE: this is the default in most cases, but not all.
@@ -93,6 +93,8 @@ TODO: Reimplement as transform.
                               * {{{form}}} or {{{include-form}}}: an Ofbiz form (widget) by {{{component://}}} location
                               * {{{tree}}} or {{{include-tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              * {{{decorator}}} (WORK-IN-PROGRESS): an Ofbiz decorator-screen.
+                                the {{{sections}}} parameter maps decorator-section names to Freemarker code to be included.
                               * {{{ftl}}}: special standalone isolated Freemarker template include mode. {{{resource}}} is 
                                 expected to point to an FTL file. this differs from the Freemarker #include command in that
                                 the FTL is processed in a standard ofbiz way similar to a screen, the context stack is by default pushed/pop
@@ -133,15 +135,23 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
+    sections                = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
+                              WORK-IN-PROGRESS
+                              The entries may be TemplateInvoker instances returned from #interpretStd or #interpretStdLoc.
+                              Alternatively, simple strings may be passed which will be interpreted as template locations
+                              or screen widgets based on extension.
+                              Only file locations are supported this way due to security risks of mixing locations and inline content,
+                              and because locations allow for optimizations.            
     
   * History *
-    Enhanced for 1.14.4 (type="ftl", improved defaults handling).
+    Enhanced for 1.14.4 (type="ftl", type="decorator" (WORK-IN-PROGRESS), improved defaults handling).
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
-    asString=false shareScope="" maxDepth="" subMenus="">
+    asString=false shareScope="" maxDepth="" subMenus="" sections={}>
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
+  <#-- TODO: in many cases we could optimize the variable preservation code by delegating to the java... -->
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
     <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
     <#if !type?has_content>
@@ -149,6 +159,9 @@ TODO: Reimplement as transform.
     </#if>
     <#if type == "screen">
       ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
+    <#elseif type == "decorator">
+      <p>(@render type="decorator" is not yet implemented)</p><#t>
+      <#--${StringUtil.wrapString(screens.renderDecoratorScopedGen(resource, name, asString, shareScope, sections)})}--><#t>
     <#elseif type == "section">
       ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
     <#elseif type == "ftl">

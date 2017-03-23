@@ -35,6 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -245,21 +246,40 @@ public class ControlServlet extends HttpServlet {
 
                 // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
                 try {
-                    rd.forward(request, response); //SCIPIO: Changed from include to forward so that the response can be handled appropriately
+                    rd.forward(request, response); // SCIPIO: Changed from include to forward so that the response can be handled appropriately
                 } catch (Throwable t) {
                     Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 
                     String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
-                    try {
-                        response.getWriter().print(errorMessage);
-                    } catch (Throwable t2) {
+                    // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
+                    if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
                         try {
-                            int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                            Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
-                            response.sendError(errorToSend, errorMessage);
-                        } catch (Throwable t3) {
-                            // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
-                            throw new IllegalStateException(errorMessage);
+                            response.getWriter().print(errorMessage);
+                        } catch (Throwable t2) {
+                            try {
+                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
+                                response.sendError(errorToSend, errorMessage);
+                            } catch (Throwable t3) {
+                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                throw new IllegalStateException(errorMessage);
+                            }
+                        }
+                    } else {
+                        // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
+                        final String genericErrorMessage = "An error occurred. Please contact support.";
+                        try {
+                            response.getWriter().print(genericErrorMessage);
+                        } catch (Throwable t2) {
+                            try {
+                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() 
+                                    + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
+                                response.sendError(errorToSend, genericErrorMessage);
+                            } catch (Throwable t3) {
+                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                throw new IllegalStateException(genericErrorMessage);
+                            }
                         }
                     }
                 }

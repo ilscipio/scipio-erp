@@ -35,6 +35,8 @@
         <!-- re init -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="base->default"/>
         
+        <!-- DEV NOTE: IF YOU INCREASE ANY OF THESE VERSION NUMBERS, MAKE SURE TO UPDATE THE ONES
+            IN THE ROOT /ivy.xml FILE (AS LONG AS THEY EXIST) -->
         <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc->default"/>
         <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk17" rev="2.2.10" transitive="false" conf="jdbc->default"/>
         <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="2.2.10" transitive="false" conf="jdbc->default"/>

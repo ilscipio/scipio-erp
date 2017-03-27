@@ -51,6 +51,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
@@ -71,6 +72,7 @@ import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
+import freemarker.template.utility.DeepUnwrap;
 
 /** FreeMarkerWorker - Freemarker Template Engine Utilities.
  *
@@ -847,9 +849,26 @@ public class FreeMarkerWorker {
     /**
      * OFBiz specific TemplateExceptionHandler.  Sanitizes any error messages present in
      * the stack trace prior to printing to the output writer.
+     * <p>
+     * SCIPIO: 2017-03-23: now public for reuse.
+     * SCIPIO: 2017-03-23: modified to allow customized behavior - see UtilRender.
      */
-    static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
+    public static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
         public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
+            // SCIPIO: 2017-03-23: new switch, split up code
+            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(env);
+            if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
+                handleTemplateExceptionDebug(te, env, out);
+            } else {
+                handleTemplateExceptionRethrow(te, env, out);
+            }
+        }
+        
+        protected void handleTemplateExceptionRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
+            TemplateExceptionHandler.RETHROW_HANDLER.handleTemplateException(te, env, out);
+        }
+        
+        protected void handleTemplateExceptionDebug(TemplateException te, Environment env, Writer out) throws TemplateException {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);
             te.printStackTrace(pw);
@@ -922,4 +941,32 @@ public class FreeMarkerWorker {
         }
     }
     
+    /**
+     * SCIPIO: Gets the render exception mode from the environment or more generic variables (best-effort).
+     */
+    public static UtilRender.RenderExceptionMode getRenderExceptionMode(Environment env) {
+        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
+        if (env != null) {
+            try {
+                TemplateModel modeModel = env.getVariable(UtilRender.RENDER_EXCEPTION_MODE_VAR);
+                if (modeModel != null) {
+                    UtilRender.RenderExceptionMode mode = UtilRender.RenderExceptionMode.valueOfPermissive(DeepUnwrap.permissiveUnwrap(modeModel));
+                    if (mode != null) return mode;
+                }
+                TemplateModel contextModel = env.getVariable("context");
+                if (contextModel instanceof freemarker.ext.util.WrapperTemplateModel) {
+                    Object obj = ((freemarker.ext.util.WrapperTemplateModel) contextModel).getWrappedObject();
+                    if (obj instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        UtilRender.RenderExceptionMode mode = UtilRender.getRenderExceptionMode((Map<String, ?>) obj);
+                        if (mode != null) return mode;
+                    }
+                }
+            } catch (Exception e) {
+                ;
+            }
+        }
+        return UtilRender.getGlobalRenderExceptionMode();
+    }
 }

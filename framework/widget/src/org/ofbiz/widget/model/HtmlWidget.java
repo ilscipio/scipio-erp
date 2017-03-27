@@ -32,6 +32,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -144,19 +145,19 @@ public class HtmlWidget extends ModelScreenWidget {
             } catch (IllegalArgumentException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg);
+                writeError(writer, errMsg, e, context);
             } catch (MalformedURLException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg);
+                writeError(writer, errMsg, e, context);
             } catch (TemplateException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg);
+                writeError(writer, errMsg, e, context);
             } catch (IOException e) {
                 String errMsg = "Error rendering included template at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                writeError(writer, errMsg);
+                writeError(writer, errMsg, e, context);
             }
         } else {
             throw new IllegalArgumentException("Rendering not yet supported for the template at location: " + location);
@@ -190,27 +191,32 @@ public class HtmlWidget extends ModelScreenWidget {
         } catch (IllegalArgumentException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg);
+            writeError(writer, errMsg, e, context);
         } catch (MalformedURLException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg);
+            writeError(writer, errMsg, e, context);
         } catch (TemplateException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg);
+            writeError(writer, errMsg, e, context);
         } catch (IOException e) {
             String errMsg = "Error rendering inline template [" + templateId + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
-            writeError(writer, errMsg);
+            writeError(writer, errMsg, e, context);
         }
     }
 
     // TODO: We can make this more fancy, but for now this is very functional
-    public static void writeError(Appendable writer, String message) {
-        try {
-            writer.append(message);
-        } catch (IOException e) {
+    public static void writeError(Appendable writer, String message, Throwable ex, Map<String, ?> context) {
+        // SCIPIO: modified so that if rethrow mode is enabled, propagates instead of printing
+        if (UtilRender.getRenderExceptionMode(context) == UtilRender.RenderExceptionMode.DEBUG) {
+            try {
+                writer.append(message);
+            } catch (IOException e) {
+            }
+        } else {
+            throw new RuntimeException(ex);
         }
     }
 

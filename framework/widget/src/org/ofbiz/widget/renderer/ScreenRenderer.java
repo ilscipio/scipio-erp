@@ -71,8 +71,6 @@ import org.ofbiz.widget.model.AbstractModelAction;
 import org.ofbiz.widget.model.ModelAction;
 import org.ofbiz.widget.model.ModelLocation;
 import org.ofbiz.widget.model.ModelScreen;
-import org.ofbiz.widget.model.ModelScreenSettings;
-import org.ofbiz.widget.model.ModelScreens;
 import org.ofbiz.widget.model.ScreenFactory;
 import org.xml.sax.SAXException;
 
@@ -301,18 +299,22 @@ public class ScreenRenderer implements RenderContextFetcher {
      * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
      * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
      * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
-     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param ctxVars variables to dump into the context after it is pushed
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         if (asString == null) {
             asString = Boolean.FALSE;
         }
         MapStack<String> context = getContext();
         if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
             context.push();
+            if (ctxVars != null) {
+                context.putAll(ctxVars);
+            }
             try {
                 if (UtilValidate.isNotEmpty(screenName)) {
                     return render(resourceName, screenName, asString, context, getWriter());
@@ -323,12 +325,19 @@ public class ScreenRenderer implements RenderContextFetcher {
                 context.pop();
             }
         } else { // if (shareScope == Boolean.TRUE)
+            if (ctxVars != null) {
+                context.putAll(ctxVars);
+            }
             if (UtilValidate.isNotEmpty(screenName)) {
                 return render(resourceName, screenName, asString, context, getWriter());
             } else {
                 return render(resourceName, asString, context, getWriter());
             }
         }
+    }
+    
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, asString, shareScope, null);
     }
     
     /**
@@ -343,11 +352,16 @@ public class ScreenRenderer implements RenderContextFetcher {
      * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
      * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
      * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
-     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param ctxVars variables to dump into the context after it is pushed
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
+    public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
+    }
+    
     public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
     }

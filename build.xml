@@ -1918,7 +1918,7 @@ under the License.
         <if>
             <equals arg1="${ant.java.version}" arg2="1.7"/>
             <then>
-                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].jre7.[ext]" conf="postgresjre7"/>
+                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgresjre7"/>
             </then>
             <else>
                 <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>

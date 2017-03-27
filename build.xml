@@ -2169,9 +2169,11 @@ under the License.
         <if>
             <equals arg1="${ant.java.version}" arg2="1.7"/>
             <then>
+                <echo message="Java 1.7 detected, fetching postgres JRE7 JDBC driver"/>
                 <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgresjre7"/>
             </then>
             <else>
+                <echo message="Java 1.8+ detected, fetching postgres JRE8+ JDBC driver"/>
                 <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>
             </else>
         </if>

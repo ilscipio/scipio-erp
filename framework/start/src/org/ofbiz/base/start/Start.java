@@ -395,12 +395,12 @@ public final class Start {
         String desc = getPropertyValue("scipiometainfo.properties", "scipio.release.desc", "SCIPIO ERP");
         String version = getPropertyValue("scipiometainfo.properties", "scipio.release.version", "unknown version");
         String branch = getPropertyValue("scipiometainfo.properties", "scipio.release.branch", "unknown");
-        logInfo("\n"
+        logInfo("\n\n\n"
                 + "\n*****************************************************************************"
                 + "\n" + desc + " " + version + " (" + branch + " branch) FRAMEWORK IS LOADED"
                 + "\n*****************************************************************************"
                 + "\n* Please wait for any startup jobs to finish..."
-                + "\n", module);
+                + "\n\n\n", module);
     }
     
     /**

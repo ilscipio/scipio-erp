@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Start {
 
+    public static final String module = Start.class.getName();
+    
     /*
      * This class implements a thread-safe state machine. The design is critical
      * for reliable starting and stopping of the server.
@@ -375,11 +377,61 @@ public final class Start {
         }
         if (config.shutdownAfterLoad) {
             stopServer();
+        } else {
+            // SCIPIO: 2017-03-28: new
+            printStartupReadyMessage();
         }
     }
 
     public Config getConfig() {
         return this.config;
+    }
+    
+    /**
+     * SCIPIO: prints the system startup ready/welcome message.
+     * 2017-03-28.
+     */
+    void printStartupReadyMessage() {
+        String desc = getPropertyValue("scipiometainfo.properties", "scipio.release.desc", "SCIPIO ERP");
+        String version = getPropertyValue("scipiometainfo.properties", "scipio.release.version", "unknown version");
+        String branch = getPropertyValue("scipiometainfo.properties", "scipio.release.branch", "unknown");
+        logInfo("\n\n\n"
+                + "\n*****************************************************************************"
+                + "\n" + desc + " " + version + " (" + branch + " branch) FRAMEWORK IS LOADED"
+                + "\n*****************************************************************************"
+                + "\n* Please wait for any startup jobs to finish..."
+                + "\n\n\n", module);
+    }
+    
+    /**
+     * SCIPIO: Gets property value.
+     * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.
+     */
+    String getPropertyValue(String resource, String name, String defaultValue) {
+        try {
+            Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.base.util.UtilProperties");
+            java.lang.reflect.Method method = cls.getMethod("getPropertyValue", String.class, String.class, String.class);
+            return (String) method.invoke(null, resource, name, defaultValue);
+        } catch(Exception e) {
+            System.out.println("Error loading or invoking UtilProperties");
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+    
+    /**
+     * SCIPIO: Logs info message.
+     * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.
+     */
+    void logInfo(String message, String module) {
+        try {
+            Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.base.util.Debug");
+            java.lang.reflect.Method method = cls.getMethod("logInfo", String.class, String.class);
+            method.invoke(null, message, module);
+        } catch(Exception e) {
+            System.out.println("Error loading or invoking Debug.logInfo");
+            e.printStackTrace();
+        }
     }
 
     // ----------------------------------------------- //

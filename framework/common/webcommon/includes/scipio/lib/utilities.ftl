@@ -340,6 +340,38 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
 
 <#-- 
 *************
+* makeSectionsRenderer
+************
+Creates a sections renderer that can be used in place of the "sections" object.
+
+The returned object implements a single {{{render(name)}}} method that can be used to
+render the section by name.
+
+WARN: 2017-03-28: currently this only implements the sections renderer "ftl" type,
+    which means the sections cannot be passed back to the widget renderer.
+TODO: widget renderer-compatible sections renderer ("screen" type).
+
+  * Parameters *
+    type                    = (ftl) (required) The sections renderer type
+                              Possible values:
+                              * {{{ftl}}}: creates an FTL-only sections renderer
+                                it cannot be used from the widget renderer.
+                                the sectionsMap values should usually be return values
+                                from either #interpretStd, #interpretStdLoc or {{{?interpret}}}.
+                                if strings are passed, they are simply outputted as-is.
+    sectionsMap             = ((map)) Map of section names to implementations
+                              See type for allowed values.
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeSectionsRenderer type sectionsMap>
+</#function>
+-->
+
+<#-- 
+*************
 * ofbizUrl
 ************
 Builds an Ofbiz navigation URL - for direct output into template document (primarily).

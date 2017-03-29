@@ -1801,6 +1801,36 @@
     
 </@section>
 
+<@section title="makeSectionsRenderer">
+    <@section title="ftl">
+      <#-- not supported due to Freemarker limitations
+      <#macro ftlSectionTestDirective>
+        <p>hello from test directive!</p>
+      </#macro>-->
+      <#assign ftlSections = makeSectionsRenderer("ftl", {
+        "left-column" : interpretStd('<p>hello from test interpretStd!</p>'),
+        <#-- not supported due to Freemarker limitations
+        "right-column" : ftlSectionTestDirective,
+        -->
+        "main-column" : "<p>hello from test string!</p>",
+        "top-column" : "<p>hello from test ?interpret</p>"?interpret
+      })>
+      
+      <@section title="Regular output:">
+        ${ftlSections.render("left-column")}
+        ${ftlSections.render("right-column")}
+        ${ftlSections.render("main-column")}
+        ${ftlSections.render("top-column")}
+      </@section>
+      <@section title="asString output:">
+        ${rawString(ftlSections.render("left-column", true))}
+        ${rawString(ftlSections.render("right-column", true))}
+        ${rawString(ftlSections.render("main-column", true))}
+        ${rawString(ftlSections.render("top-column", true))}
+      </@section>
+    </@section>
+</@section>
+
 <#-- NOTE: keep last -->
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->

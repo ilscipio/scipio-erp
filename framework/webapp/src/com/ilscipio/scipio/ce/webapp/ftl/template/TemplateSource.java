@@ -59,16 +59,16 @@ public abstract class TemplateSource {
     /**
      * Gets source for inline template, where the cache key is different from the template itself.
      */
-    public static TemplateSource getForInline(String templateStr, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateStr, templateKey, templateName, cache, config));
+    public static TemplateSource getForInline(String templateBody, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateKey, templateName, cache, config));
     }
     
     /**
      * Gets source for inline template, where the cache key is the template string itself.
      * NOTE: this is probably not appropriate for large templates.
      */
-    public static TemplateSource getForInlineSelfCache(String templateStr, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateStr, templateStr, templateName, cache, config));
+    public static TemplateSource getForInlineSelfCache(String templateBody, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, templateName, cache, config));
     }
     
     /**
@@ -76,26 +76,26 @@ public abstract class TemplateSource {
      * The template name is auto-decided.
      * NOTE: this is probably not appropriate for large templates.
      */
-    public static TemplateSource getForInlineSelfCache(String templateStr, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateStr, templateStr, makeTemplateNameForInline(templateStr), cache, config));
+    public static TemplateSource getForInlineSelfCache(String templateBody, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, templateBody, makeTemplateNameForInline(templateBody), cache, config));
     }
     
     /**
      * Gets source for inline template, but with NO caching.
      */
-    public static TemplateSource getForInlineNoCache(String templateStr, String templateName, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateStr, null, templateName, null, config));
+    public static TemplateSource getForInlineNoCache(String templateBody, String templateName, Configuration config) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, templateName, null, config));
     }
     
     /**
      * Gets source for inline template, but with NO caching.
      * The template name is auto-decided.
      */
-    public static TemplateSource getForInlineNoCache(String templateStr, Configuration config) throws TemplateException, IOException {
-        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateStr, null, makeTemplateNameForInline(templateStr), null, config));
+    public static TemplateSource getForInlineNoCache(String templateBody, Configuration config) throws TemplateException, IOException {
+        return new DirectTemplateSource(FreeMarkerWorker.getTemplateFromString(templateBody, null, makeTemplateNameForInline(templateBody), null, config));
     }
     
-    public static String makeTemplateNameForInline(String templateStr) {
+    public static String makeTemplateNameForInline(String templateBody) {
         // FIXME: using date hack for unique template name for now (what macro renderer does)
         return "inline_template_" + (new java.util.Date()).toString();
     }

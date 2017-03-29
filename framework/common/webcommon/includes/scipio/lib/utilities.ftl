@@ -236,12 +236,12 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
     first being the template str.
 
   * Parameters *
-    str                     = ((string)) An inline string to use as template
+    body                    = ((string)) An inline string to use as template body
                               The input itself automatically bypasses screen auto-html escaping.
                               NOTE: if instead of an args map, the function receives a single
                                   string parameter, then it is considered the value of this
                                   parameter, and all others receive defaults.
-    location                = ((string)) A file location, alternative to inline str
+    location                = ((string)) A file location, alternative to inline {{{template}}}
                               The input itself automatically bypasses screen auto-html escaping.
     invokeMode              = (ofbiz-std, default: ofbiz-std) The general invocation and context mode
                               Possible values:

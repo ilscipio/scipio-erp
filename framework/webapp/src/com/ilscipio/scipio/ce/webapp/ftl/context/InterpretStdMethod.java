@@ -69,7 +69,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateModel arg = args.get(0);
         TemplateModel arg2 = (args.size() >= 2) ? args.get(1) : null;
         
-        String str = null;
+        String body = null;
         String location = null;
         String invokeModeStr = null;
         Boolean shareScope = null;
@@ -83,7 +83,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
             if (singleStrAsLoc) {
                 location = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
             } else {
-                str = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
+                body = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) arg);
             }
             strLocRead = true;
             arg = arg2;
@@ -93,7 +93,7 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                 Map<String, TemplateModel> argMap = LangFtlUtil.makeModelMap((TemplateHashModelEx) arg);
                 
                 if (!strLocRead) {
-                    str = TransformUtil.getStringNonEscapingArg(argMap, "str");
+                    body = TransformUtil.getStringNonEscapingArg(argMap, "body");
                     location = TransformUtil.getStringNonEscapingArg(argMap, "location");
                 }
                 shareScope = TransformUtil.getBooleanArg(argMap, "shareScope");
@@ -145,13 +145,13 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
                             + " a location template cache to use; not using cache", module);
                 }
                 templateSource = TemplateSource.getForLocation(location, cache, config);
-            } else if (str != null) {
+            } else if (body != null) {
                 cache = TemplateSource.getTemplateInlineSelfCacheForConfig(config, env);
                 if (cache == null) {
                     Debug.logWarning("Scipio: #interpretStd: could not determine"
                             + " an inline template cache to use; not using cache", module);
                 } 
-                templateSource = TemplateSource.getForInlineSelfCache(str, cache, config);
+                templateSource = TemplateSource.getForInlineSelfCache(body, cache, config);
             } else {
                 throw new TemplateModelException("Expected a 'location' or inline 'str' in interpretStd args map, but none passed");
             }

@@ -1803,15 +1803,12 @@
 
 <@section title="makeSectionsRenderer">
     <@section title="ftl">
-      <#-- not supported due to Freemarker limitations
-      <#macro ftlSectionTestDirective>
-        <p>hello from test directive!</p>
-      </#macro>-->
+      <#macro ftlSectionTestMacro>
+        <p>hello from test macro!</p>
+      </#macro>
       <#assign ftlSections = makeSectionsRenderer("ftl", {
         "left-column" : interpretStd('<p>hello from test interpretStd!</p>'),
-        <#-- not supported due to Freemarker limitations
-        "right-column" : ftlSectionTestDirective,
-        -->
+        "right-column" : ftlSectionTestMacro,
         "main-column" : "<p>hello from test string!</p>",
         "top-column" : "<p>hello from test ?interpret</p>"?interpret
       })>

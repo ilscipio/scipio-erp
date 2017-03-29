@@ -19,6 +19,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker;
 
 import freemarker.core.Environment;
+import freemarker.core.Macro;
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -115,12 +116,26 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
             } finally {
                 env.setOut(prevOut);
             }
+        } else if (section instanceof Macro) {
+            // WARN: Macro is deprecated and may be replaced in later versions, at which point this will fail to compile
+            Environment env = FreeMarkerWorker.getCurrentEnvironment();
+            final String tempMacroName = "_secRenCurMacro"; // DEV NOTE: this should be a fixed name; should not be variable
+            env.setVariable(tempMacroName, (TemplateModel) section);
+            Writer prevOut = env.getOut();
+            try {
+                env.setOut((Writer) writer);
+                LangFtlUtil.execMacro(tempMacroName, env);
+            } finally {
+                env.setOut(prevOut);
+            }
         } else if (section instanceof TemplateScalarModel) {
             TemplateScalarModel scalar = (TemplateScalarModel) section;
             String content = scalar.getAsString();
             writer.append(content);
         } else if (section instanceof String) {
             writer.append((String) section);
+        } else if (section == null) {
+            ;
         } else {
             throw new TemplateModelException("Unsupported ftl sections renderer section class: " + section.getClass().getName());
         }

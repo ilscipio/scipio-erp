@@ -26,6 +26,10 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
             super(writer, context);
         }
         
+        public FtlWriterOnlyFetcher() {
+            super(null, null);
+        }
+        
         @Override
         public Appendable getWriter() {
             Appendable writer = getWriterFromEnvironment(FreeMarkerWorker.getCurrentEnvironment());
@@ -44,6 +48,10 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
             super(writer, context);
         }
         
+        public FtlFullFetcher() {
+            super(null, null);
+        }
+        
         @Override
         public MapStack<String> getContext() {
             MapStack<String> context = getContextFromEnvironment(FreeMarkerWorker.getCurrentEnvironment());
@@ -60,6 +68,10 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
             super(writer, context);
         }
         
+        public FallbackFtlWriterOnlyFetcher() {
+            super(null, null);
+        }
+        
         @Override
         public Appendable getWriter() {
             if (writer != null) return writer;
@@ -74,6 +86,10 @@ public abstract class FtlContextFetcher extends SimpleContextFetcher {
     public static class FallbackFtlFullFetcher extends FallbackFtlWriterOnlyFetcher {
         public FallbackFtlFullFetcher(Appendable writer, MapStack<String> context) {
             super(writer, context);
+        }
+        
+        public FallbackFtlFullFetcher() {
+            super(null, null);
         }
 
         @Override

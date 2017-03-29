@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -72,6 +73,7 @@ public abstract class LangFtlUtil {
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
     private static Template stringBuiltInCall = null;
     private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
+    private static final Map<String, Template> macroCalls = new ConcurrentHashMap<>();
 
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
@@ -1749,6 +1751,59 @@ public abstract class LangFtlUtil {
      */
     public static TemplateModel execFunction(Template functionCall, Environment env) throws TemplateModelException {
         return execFunction(functionCall, null, env);
+    }
+    
+    
+    /**
+     * Executes an arbitrary FTL macro.
+     */
+    public static void execMacro(String macroName, Map<String, TemplateModel> args, Environment env) throws TemplateModelException {
+        execMacro(getMacroCall(macroName, (args != null ? args.keySet() : null), env), args, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro.
+     */
+    public static void execMacro(String macroName, Environment env) throws TemplateModelException {
+        execMacro(getMacroCall(macroName, null, env), null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL macro call - non-abstracted version (for optimization only!).
+     */
+    public static Template getMacroCall(String macroName, Collection<String> argNames, Environment env) throws TemplateModelException {
+        final String cacheKey = macroName + (argNames != null ? ":" + StringUtils.join(argNames, ":") : "");
+        Template macroCall = macroCalls.get(cacheKey);
+        if (macroCall == null) {
+            String argVarsStr = "";
+            if (argNames != null) {
+                for(String argName : argNames) {
+                    argVarsStr += " " + argName + "=_scpEfnArg_"+argName;
+                }
+            }
+            macroCall = makeFtlCodeTemplate("<@" + macroName + argVarsStr + "/>");
+            macroCalls.put(cacheKey, macroCall);
+        }
+        return macroCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
+     */
+    public static void execMacro(Template macroCall, Map<String, TemplateModel> args, Environment env) throws TemplateModelException {
+        if (args != null) {
+            for(Map.Entry<String, TemplateModel> entry : args.entrySet()) {
+                env.setVariable("_scpEfnArg_"+entry.getKey(), entry.getValue());
+            }
+        }
+        execFtlCode(macroCall, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
+     */
+    public static void execMacro(Template macroCall, Environment env) throws TemplateModelException {
+        execMacro(macroCall, null, env);
     }
     
     

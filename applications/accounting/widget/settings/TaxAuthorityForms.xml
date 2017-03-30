@@ -441,9 +441,6 @@ under the License.
         <row-actions>
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
-
-        <field name="taxAuthPartyId"><hidden/></field>
-        <field name="taxAuthGeoId"><hidden/></field>
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
@@ -453,6 +450,8 @@ under the License.
             </hyperlink>
         </field>
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}"><display/></field>
+        <field name="taxAuthPartyId"><display/></field>
+        <field name="taxAuthGeoId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="isExempt"><display/></field>
@@ -479,8 +478,16 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="partyTaxAuthInfo==null" target="createTaxAuthorityPartyInfo"/>
 
-        <field name="taxAuthPartyId"><hidden/></field>
-        <field name="taxAuthGeoId"><hidden/></field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="TaxAuthority" description="${taxAuthPartyId}"></entity-options>
+            </drop-down>
+        </field>
 
         <field use-when="partyTaxAuthInfo!=null" name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">

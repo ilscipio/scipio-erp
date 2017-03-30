@@ -108,7 +108,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         return this.modelScreen;
     }
 
-    public static final class SectionsRenderer implements Map<String, ModelScreenWidget> {
+    public static final class SectionsRenderer implements org.ofbiz.webapp.renderer.BasicSectionsRenderer, Map<String, ModelScreenWidget> { // SCIPIO: new BasicSectionsRenderer interface
         private final Map<String, ModelScreenWidget> sectionMap;
         private final ScreenStringRenderer screenStringRenderer;
         //private final Map<String, Object> context;

@@ -113,12 +113,12 @@ public class ScreenRenderer implements RenderContextFetcher {
      * FIXME: CURRENTLY ONLY SUPPORT FTL ENV.
      */
     public static ScreenRenderer makeWithEnvAwareFetching(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
-        return new ScreenRenderer(new FtlContextFetcher(writer, context), screenStringRenderer);
+        return new ScreenRenderer(new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context), screenStringRenderer);
     }
     
     public static RenderContextFetcher makeEnvAwareContextFetcher(Appendable writer, MapStack<String> context) {
         // FIXME: CURRENTLY ONLY SUPPORT FTL ENV
-        return new FtlContextFetcher(writer, context);
+        return new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context);
     }
     
     /**

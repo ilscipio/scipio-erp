@@ -1768,7 +1768,7 @@
   
   <@section title="#interpretStd inline, as hybrid (mimic ?interpret)">
     <#assign compiledTmpl = interpretStd({
-        "str": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}",
+        "body": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}",
         "model": "hybrid",
         "ctxVars": {"myVar":"my variable"}
     })>
@@ -1783,7 +1783,7 @@
   <@section title="#interpretStd, non-standard context">
     <p><em>NOTE: Custom context object means most API don't work in this example.</em></p>
     <#assign compiledTmpl = interpretStd({
-        "str": rewrapString(r"[#ftl][@heading level=6]Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em>[/@heading] with non-standard context (non-inherited). parentContextMyVar1: ${parentContextMyVar1!'missing (good)'}. http://www.ilscipio.com"),
+        "body": rewrapString(r"[#ftl][@heading level=6]Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em>[/@heading] with non-standard context (non-inherited). parentContextMyVar1: ${parentContextMyVar1!'missing (good)'}. http://www.ilscipio.com"),
         "model": "scalar",
         "invokeCtx": {"myVar":"my variable"}
     })>
@@ -1799,6 +1799,33 @@
     <@compiledTmpl/>
   </@section>
     
+</@section>
+
+<@section title="makeSectionsRenderer">
+    <@section title="ftl">
+      <#macro ftlSectionTestMacro>
+        <p>hello from test macro!</p>
+      </#macro>
+      <#assign ftlSections = makeSectionsRenderer("ftl", {
+        "left-column" : interpretStd('<p>hello from test interpretStd!</p>'),
+        "right-column" : ftlSectionTestMacro,
+        "main-column" : "<p>hello from test string!</p>",
+        "top-column" : "<p>hello from test ?interpret</p>"?interpret
+      })>
+      
+      <@section title="Regular output:">
+        ${ftlSections.render("left-column")}
+        ${ftlSections.render("right-column")}
+        ${ftlSections.render("main-column")}
+        ${ftlSections.render("top-column")}
+      </@section>
+      <@section title="asString output:">
+        ${rawString(ftlSections.render("left-column", true))}
+        ${rawString(ftlSections.render("right-column", true))}
+        ${rawString(ftlSections.render("main-column", true))}
+        ${rawString(ftlSections.render("top-column", true))}
+      </@section>
+    </@section>
 </@section>
 
 <#-- NOTE: keep last -->

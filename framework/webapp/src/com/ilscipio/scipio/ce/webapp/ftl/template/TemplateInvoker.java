@@ -258,6 +258,7 @@ public class TemplateInvoker {
     
     /**
      * Gets a template invoker same as standard except its toString() method invokes rendering.
+     * @deprecated should be avoided because breaks toString contract and the original exception type is lost
      */
     public static TemplateInvoker getStringInvoker(TemplateSource templateSource, InvokeOptions invokeOptions, WrapperModel preferredModel) throws TemplateException, IOException {
         return new StringTemplateInvoker(templateSource, invokeOptions, preferredModel);
@@ -347,7 +348,9 @@ public class TemplateInvoker {
     
     /**
      * Variant of TemplateInvoker that invokes rendering when toString() is called.
+     * @deprecated should be avoided because breaks toString contract and the original exception type is lost
      */
+    @Deprecated
     public static class StringTemplateInvoker extends TemplateInvoker {
         protected StringTemplateInvoker(TemplateSource templateSource, InvokeOptions invokeOptions,
                 WrapperModel preferredModel) {

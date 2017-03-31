@@ -47,7 +47,9 @@ public class EntityCache extends AbstractCache<GenericPK, GenericValue> {
 
     public GenericValue put(GenericPK pk, GenericValue entity) {
         if (pk.getModelEntity().getNeverCache()) {
-            Debug.logWarning("Tried to put a value of the " + pk.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.", module);
+            if (Debug.verboseOn()) { // SCIPIO: only log if verbose on (but still log as warning!)
+                Debug.logWarning("Tried to put a value of the " + pk.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.", module);
+            }
             return null;
         }
 

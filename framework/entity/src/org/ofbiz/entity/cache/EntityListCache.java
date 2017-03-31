@@ -69,7 +69,9 @@ public class EntityListCache extends AbstractEntityConditionCache<Object, List<G
     public List<GenericValue> put(String entityName, EntityCondition condition, List<String> orderBy, List<GenericValue> entities) {
         ModelEntity entity = this.getDelegator().getModelEntity(entityName);
         if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put a value of the " + entityName + " entity in the cache but this entity has never-cache set to true, not caching.", module);
+            if (Debug.verboseOn()) { // SCIPIO: only log if verbose on (but still log as warning!)
+                Debug.logWarning("Tried to put a value of the " + entityName + " entity in the cache but this entity has never-cache set to true, not caching.", module);
+            }
             return null;
         }
         for (GenericValue memberValue : entities) {

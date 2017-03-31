@@ -507,7 +507,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
             if (o instanceof Serializable) {
                 return UtilObject.getByteCount(o);
             } else {
-                if (Debug.infoOn()) Debug.logInfo("Unable to compute memory size for non serializable object; returning 0 byte size for object of " + o.getClass(), module);
+                // SCIPIO: only log if verbose (but still log as info)
+                if (Debug.verboseOn()) Debug.logInfo("Unable to compute memory size for non serializable object; returning 0 byte size for object of " + o.getClass(), module);
                 return 0;
             }
         } catch (NotSerializableException e) {

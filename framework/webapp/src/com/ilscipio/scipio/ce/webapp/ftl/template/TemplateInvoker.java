@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
@@ -16,7 +15,6 @@ import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.InvokeOptions.
 
 import freemarker.core.Environment;
 import freemarker.ext.util.WrapperTemplateModel;
-import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateDirectiveBody;
@@ -60,6 +58,9 @@ import freemarker.template.TemplateScalarModel;
  * Instead, templates should use <code>??</code> operator or force cast to string
  * using <code>?string</code> so it is unambiguous at which point the rendering will occur and
  * will only happen once.
+ * <p>
+ * FIXME: 2017-03-31: We are currently FORCED to throw exceptions from the StringTemplateInvoker.toString
+ * method, which is a big problem... breaks contract AND rewraps the exceptions in a runtime one...
  * <p>
  * TODO: in future should have a dedicated TemplateDirectiveModel + TemplateScalarModel hybrid + individuals
  * in order to be consistent with the <code>?interpret</code> directive behavior (but needs
@@ -368,12 +369,20 @@ public class TemplateInvoker {
                     }
                 } 
                 return this.invoke();
+                // FIXME: we're not supposed to do this AT ALL because it breaks toString() contract,
+                // but in the circumstances we have no choice but to rethrow this, because otherwise
+                // we swallow errors that could be considered security issues
+//            } catch (TemplateException e) {
+//                Debug.logError(e, module);
+//                return "";
+//            } catch (IOException e) {
+//                Debug.logError(e, module);
+//                return "";
+//            }
             } catch (TemplateException e) {
-                Debug.logError(e, module);
-                return "";
+                throw new RuntimeException(e);
             } catch (IOException e) {
-                Debug.logError(e, module);
-                return "";
+                throw new RuntimeException(e);
             }
         }
     }

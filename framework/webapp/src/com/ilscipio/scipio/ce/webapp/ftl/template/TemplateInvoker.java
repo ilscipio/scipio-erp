@@ -61,6 +61,7 @@ import freemarker.template.TemplateScalarModel;
  * <p>
  * FIXME: 2017-03-31: We are currently FORCED to throw exceptions from the StringTemplateInvoker.toString
  * method, which is a big problem... breaks contract AND rewraps the exceptions in a runtime one...
+ * so I have changed code to avoid the beanwrapper even if it is currently impossible.
  * <p>
  * TODO: in future should have a dedicated TemplateDirectiveModel + TemplateScalarModel hybrid + individuals
  * in order to be consistent with the <code>?interpret</code> directive behavior (but needs
@@ -409,19 +410,17 @@ public class TemplateInvoker {
      */
     @SuppressWarnings("unchecked")
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper, WrapperModel targetModel) throws TemplateModelException {
-        if (targetModel == null || targetModel == WrapperModel.SCALAR) {
-            if (invoker instanceof StringTemplateInvoker) {
-                // TODO: REVISIT: in this case, currently relying on StringModel and ignoring ScalarInvokerWrapper.
-                // This case currently covers all the practical usage in templates and CMS...
-                // NOTE: if this method were called from ObjectWrapper.wrap, would cause endless loop...
-                return (T) objectWrapper.wrap(invoker);
-            } else {
-                return (T) new ScalarInvokerWrapper(invoker);
-            }
+        if (targetModel == null || targetModel == WrapperModel.HYBRID) {
+            return (T) new HybridInvokerWrapper(invoker);
+        } else if (targetModel == null || targetModel == WrapperModel.SCALAR) {
+            // 2017-03-31: just avoid the bean wrapper as much as possible, even though may not entirely be able to
+//            if (invoker instanceof StringTemplateInvoker) {
+//                return (T) objectWrapper.wrap(invoker);
+//            } else {
+            return (T) new ScalarInvokerWrapper(invoker);
+//            }
         } else if (targetModel == WrapperModel.DIRECTIVE) {
             return (T) new DirectiveInvokerWrapper(invoker);
-        } else if (targetModel == WrapperModel.HYBRID) {
-            return (T) new HybridInvokerWrapper(invoker);
         }
         throw new UnsupportedOperationException("Unsupported template invoker FTL wrapper model: " + targetModel);
     }

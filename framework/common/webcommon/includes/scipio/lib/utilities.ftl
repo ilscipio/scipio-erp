@@ -269,29 +269,15 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
     ctxVars                 = ((map)) Additional context vars to pass at time of invocation
                               If pushCtx is true (default), these are lost after render finish.
     unwrapCtxVars           = ((boolean), default: false) Whether to bother to ftl-unwrap the ctxVars or not                          
-    model                   = (scalar|directive|hybrid, default: scalar) The Freemarker TemplateModel to wrap the interpreted/compiled template
+    model                   = (hybrid|scalar|directive|hybrid, default: hybrid) The Freemarker TemplateModel to wrap the interpreted/compiled template
                               * {{{scalar}}}: The returned value will evaluate (render) the template
                                 when it is coerced to string or passed through the {{{?string}}} built-in.
                                 This allows the interpreted template to substitute for a regular string variable.
-                                NOTE: 2017-02-21: This is the chosen default value because in most
-                                    cases, we want the interpreted template to be substitutable 
-                                    for variables easily. In addition, if the TemplateInvoker is
-                                    unwrapping+rewrapping repeatedly (such as if passed across a @render call),
-                                    this is the only type that will allow consistent rewrapping
-                                    using the same scalar freemarker model.
-                                DEV NOTE: we do not currently override the {{{ObjectWrapper.wrap}}} method, so
-                                    if the {{{directive}}} or {{{hybrid}}} were chosen as defaults,
-                                    the unwrapping+rewrapping would just lose the wrapper and go
-                                    back to a BeansWrapper StringModel scalar anyway.
-                                    This is something to revisit in the future, so maybe the
-                                    hybrid could be made the default...
                               * {{{directive}}}: The returned value behaves like the return value of
                                 the {{{?interpret}}} built-in and must be evaluated using the
                                 {{{<@value />}}} syntax.
                               * {{{hybrid}}}: implements both {{{scalar}}} and {{{directive}}} 
                                 at the same time.
-                                NOTE: in some cases freemarker may have issues with this, 
-                                    so for this and other reasons, it currently cannot be made the default.
     envOut                  = ((boolean), default: false) Whether to output as string or environment writer
                               If set to true, the string-rendering methods of the model ({{{?string}}}) will output
                               to the current Freemarker environment output INSTEAD of returning as a string,

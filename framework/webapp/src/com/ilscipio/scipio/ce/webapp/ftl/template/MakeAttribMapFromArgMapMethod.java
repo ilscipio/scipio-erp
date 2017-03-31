@@ -26,7 +26,6 @@ import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
 
-import freemarker.core.Environment;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateHashModel;

@@ -402,9 +402,12 @@ public class TemplateInvoker {
      * TODO: currently (2017-02) this always wraps using StringModel, done by most of the
      * default object wrapper impls.
      */
-    @SuppressWarnings("unchecked")
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper) throws TemplateModelException {
-        return wrap(invoker, objectWrapper, invoker.getPreferredModel());
+        return wrap(invoker, invoker.getPreferredModel(), objectWrapper);
+    }
+    
+    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker) throws TemplateModelException {
+        return wrap(invoker, invoker.getPreferredModel(), null);
     }
     
     /**
@@ -412,12 +415,12 @@ public class TemplateInvoker {
      * Can be called manually as this logic may not be present in <code>ObjectWrapper.wrap</code>.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, ObjectWrapper objectWrapper, WrapperModel targetModel) throws TemplateModelException {
+    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, WrapperModel targetModel, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetModel == null || targetModel == WrapperModel.HYBRID) {
             return (T) new HybridInvokerWrapper(invoker);
         } else if (targetModel == null || targetModel == WrapperModel.SCALAR) {
             // 2017-03-31: just avoid the bean wrapper as much as possible, even though may not entirely be able to
-//            if (invoker instanceof StringTemplateInvoker) {
+//            if (invoker instanceof StringTemplateInvoker && objectWrapper != null) {
 //                return (T) objectWrapper.wrap(invoker);
 //            } else {
             return (T) new ScalarInvokerWrapper(invoker);
@@ -426,6 +429,10 @@ public class TemplateInvoker {
             return (T) new DirectiveInvokerWrapper(invoker);
         }
         throw new UnsupportedOperationException("Unsupported template invoker FTL wrapper model: " + targetModel);
+    }
+    
+    public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, WrapperModel targetModel) throws TemplateModelException {
+        return wrap(invoker, targetModel, null);
     }
     
     /**
@@ -458,10 +465,11 @@ public class TemplateInvoker {
     }
     
     public static class DirectiveInvokerWrapper extends InvokerWrapper implements TemplateDirectiveModel {
-        protected DirectiveInvokerWrapper(TemplateInvoker invoker) {
+        public DirectiveInvokerWrapper(TemplateInvoker invoker) {
             super(invoker);
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public void execute(Environment env, Map args, TemplateModel[] modelArgs, TemplateDirectiveBody body)
                 throws TemplateException, IOException {
@@ -470,7 +478,7 @@ public class TemplateInvoker {
     }
     
     public static class ScalarInvokerWrapper extends InvokerWrapper implements TemplateScalarModel {
-        protected ScalarInvokerWrapper(TemplateInvoker invoker) {
+        public ScalarInvokerWrapper(TemplateInvoker invoker) {
             super(invoker);
         }
 
@@ -481,10 +489,11 @@ public class TemplateInvoker {
     }
 
     public static class HybridInvokerWrapper extends InvokerWrapper implements TemplateDirectiveModel, TemplateScalarModel {
-        protected HybridInvokerWrapper(TemplateInvoker invoker) {
+        public HybridInvokerWrapper(TemplateInvoker invoker) {
             super(invoker);
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public void execute(Environment env, Map args, TemplateModel[] modelArgs, TemplateDirectiveBody body)
                 throws TemplateException, IOException {

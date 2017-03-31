@@ -303,7 +303,7 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
                               the {{{directive}}} model or the directive mode of the {{{hybrid}}} model.
     
   * History *
-    Added for 1.14.4.
+    Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function interpretStd args={}>
@@ -331,7 +331,7 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
     @ofbizUrl
     
   * History *
-    Added for 1.14.4.
+    Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function interpretStdLoc args={}>
@@ -363,7 +363,7 @@ TODO: widget renderer-compatible sections renderer ("screen" type).
                               See type for allowed values.
     
   * History *
-    Added for 1.14.4.
+    Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function makeSectionsRenderer type sectionsMap>

@@ -51,7 +51,9 @@ public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<E
     protected V put(String entityName, EntityCondition condition, K key, V value) {
         ModelEntity entity = this.getDelegator().getModelEntity(entityName);
         if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put a value of the " + entityName + " entity in the cache but this entity has never-cache set to true, not caching.", module);
+            if (Debug.verboseOn()) { // SCIPIO: only log if verbose on (but still log as warning!)
+                Debug.logWarning("Tried to put a value of the " + entityName + " entity in the cache but this entity has never-cache set to true, not caching.", module);
+            }
             return null;
         }
 

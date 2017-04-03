@@ -170,7 +170,11 @@ under the License.
                                                 <label style="heading" text="${uiLabelMap.PageTitleListCommunicationsRelatedParties} ${partyId}"/>
                                                 <label style="heading+1" text="${partyIdFrom}"/>  
                                                 <iterate-section entry="account" list="accounts">
-                                                    <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
+                                                    <section>
+                                                        <widgets>
+                                                            <include-form location="component://party/widget/partymgr/CommunicationEventForms.xml" name="ListCommEvents"/>
+                                                        </widgets>
+                                                    </section>
                                                 </iterate-section>
                                                 <iterate-section entry="contact" list="contacts">
                                                     <section>

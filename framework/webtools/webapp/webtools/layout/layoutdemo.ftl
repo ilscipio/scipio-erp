@@ -1766,9 +1766,10 @@
     <@compiledTmpl/>
   </@section>
   
-  <@section title="#interpretStd inline, as hybrid (mimic ?interpret)">
+  <@section title="#interpretStd inline, as hybrid (mimic ?interpret), with nested render (implicit ScipioObjectWrapper test)">
+    <#assign dummy = setContextField("nestedCompiledTmpl", compiledTmpl)>
     <#assign compiledTmpl = interpretStd({
-        "body": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}",
+        "body": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. nestedCompiledTmpl: <@nestedCompiledTmpl/>",
         "model": "hybrid",
         "ctxVars": {"myVar":"my variable"}
     })>

@@ -5,10 +5,16 @@ import java.util.Map;
 
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.EscapingModel;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioModelFactory;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioObjectWrapper;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.CollectionModel;
 import freemarker.ext.beans.StringModel;
+import freemarker.ext.util.ModelFactory;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
@@ -22,53 +28,34 @@ import freemarker.template.Version;
  * <p>
  * TODO: Revisit this in future because Freemarker 2.4 supports an alternative to this
  * and there may be need for non-html also.
+ * <p>
+ * @deprecated 2017-04-03: this has been revamped to plug into the new freemarkerWrapperFactories.properties system.
+ * See {@link org.ofbiz.base.util.template.ScipioFtlWrappers}.
  */
-//not sure if this is the best way to get FTL to use my fancy MapModel derivative, but should work at least...
-public class ExtendedWrapper extends BeansWrapper implements EscapingObjectWrapper { // SCIPIO: Now implements EscapingObjectWrapper for identification purposes
+@Deprecated
+public abstract class ExtendedWrapper extends BeansWrapper implements ScipioExtendedObjectWrapper { // SCIPIO: Now implements EscapingObjectWrapper for identification purposes
 
     protected final String lang;
     protected final SimpleEncoder encoder;
     
-    public ExtendedWrapper(Version version, String lang) {
+    // SCIPIO: 2017-04-03: this is now PRIVATE - use 
+    private ExtendedWrapper(Version version, String lang) {
         super(version);
         this.lang = lang;
         this.encoder = UtilCodec.getEncoder(lang);
     }
 
-    @Override
-    public TemplateModel wrap(Object object) throws TemplateModelException {
-        // This StringHtmlWrapperForFtl option seems to be the best option
-        // and handles most things without causing too many problems
-        if (object instanceof String) {
-            return new StringWrapperForFtl((String) object, this);
-        } else if (object instanceof Collection && !(object instanceof Map)) {
-            // An additional wrapper to ensure ${aCollection} is properly encoded for html
-            return new CollectionWrapperForFtl((Collection<?>) object, this);
-        }
-        return super.wrap(object);
-    }
+//    @Override
+//    public TemplateModel wrap(Object object) throws TemplateModelException {
+//        // This StringHtmlWrapperForFtl option seems to be the best option
+//        // and handles most things without causing too many problems
+//        if (object instanceof String) {
+//            return new StringWrapperForFtl((String) object, this);
+//        } else if (object instanceof Collection && !(object instanceof Map)) {
+//            // An additional wrapper to ensure ${aCollection} is properly encoded for html
+//            return new CollectionWrapperForFtl((Collection<?>) object, this);
+//        }
+//        return super.wrap(object);
+//    }
     
-
-    public class StringWrapperForFtl extends StringModel implements EscapingModel { // SCIPIO: special interface, and renamed
-        public StringWrapperForFtl(String str, BeansWrapper wrapper) {
-            super(str, wrapper);
-        }
-        @Override
-        public String getAsString() {
-            return encoder.encode(super.getAsString());
-        }
-    }
-
-    public class CollectionWrapperForFtl extends CollectionModel implements EscapingModel { // SCIPIO: special interface, and renamed
-
-        public CollectionWrapperForFtl(Collection<?> collection, BeansWrapper wrapper) {
-            super(collection, wrapper);
-        }
-
-        @Override
-        public String getAsString() {
-            return encoder.encode(super.getAsString());
-        }
-
-    }
 }

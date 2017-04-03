@@ -54,6 +54,8 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicBeansWrapperImpl;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicDefaultObjectWrapperImpl;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.core.Environment;
@@ -61,6 +63,7 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -74,8 +77,11 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 import freemarker.template.utility.DeepUnwrap;
 
-/** FreeMarkerWorker - Freemarker Template Engine Utilities.
- *
+/** 
+ * FreeMarkerWorker - Freemarker Template Engine Utilities.
+ * <p>
+ * SCIPIO: 2017-04-03: All ObjectWrappers are now made from custom types in ScipioFtlWrappers and
+ * they support custom plugin wrapping logic.
  */
 public class FreeMarkerWorker {
 
@@ -85,7 +91,9 @@ public class FreeMarkerWorker {
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
-    private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
+    // SCIPIO: 2017-04-03: custom wrapper FIXME: should not force BeansWrapper in the future...
+    //private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
+    private static final BeansWrapper defaultOfbizWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizWrapper(version);
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
@@ -97,37 +105,23 @@ public class FreeMarkerWorker {
     
     /**
      * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
+     * FIXME: should not force BeansWrapper in the future...
      */
-    private static final ObjectWrapper defaultOfbizSimpleMapWrapper;
-    static {
-        BeansWrapperBuilder builder = new BeansWrapperBuilder(version);
-        builder.setSimpleMapWrapper(true);
-        defaultOfbizSimpleMapWrapper = builder.build();
-    }
+    private static final BeansWrapper defaultOfbizSimpleMapWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizSimpleMapWrapper(version);
     
     /**
      * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
      * using adapters for collections.
+     * FIXME: should not force DefaultObjectWrapper in the future...
      */
-    private static final ObjectWrapper defaultSimpleTypeWrapper;
-    static {
-        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
-        builder.setUseAdaptersForContainers(true);
-        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
-        defaultSimpleTypeWrapper = builder.build();
-    }
+    private static final DefaultObjectWrapper defaultSimpleTypeWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeWrapper(version);
     
     /**
      * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
      * using copies for collections.
+     * FIXME: should not force DefaultObjectWrapper in the future...
      */
-    private static final ObjectWrapper defaultSimpleTypeCopyingWrapper;
-    static {
-        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
-        builder.setUseAdaptersForContainers(false);
-        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
-        defaultSimpleTypeCopyingWrapper = builder.build();
-    }
+    private static final DefaultObjectWrapper defaultSimpleTypeCopyingWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeCopyingWrapper(version);
     
     /**
      * SCIPIO: A copy of the current thread Environment.

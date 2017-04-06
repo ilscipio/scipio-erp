@@ -848,4 +848,16 @@ under the License.
         <prim-key field="systemResourceId"/>
         <prim-key field="systemPropertyId"/>
     </entity>
+    
+    
+    <!-- ========================================================= -->
+    <!-- ====================== Scipio CMS ======================= -->
+    <!-- ========================================================= -->
+    <!-- Replaces CommonExt NoteData Extension -->
+    <extend-entity entity-name="NoteData">
+        <field name="url" type="value"><description>URL linked to current notification</description></field>
+        <index name="systemInfo" unique="false"><!-- to be able to select the SYSTEMNOTE records quickly -->
+          <index-field name="noteName"/>
+        </index>
+    </extend-entity>
 </entitymodel>

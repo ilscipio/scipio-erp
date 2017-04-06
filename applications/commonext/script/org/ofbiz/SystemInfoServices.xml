@@ -64,7 +64,8 @@ under the License.
         <set field="removeData.noteName" value="SYSTEMNOTE"/>
         <remove-by-and entity-name="NoteData" map="removeData"/>
     </simple-method>
-
+    
+    
     <simple-method method-name="getSystemInfoStatus" short-description="">
         <!-- communication events -->
         <entity-count entity-name="CommunicationEventRole" count-field="comCount">
@@ -125,6 +126,7 @@ under the License.
         </if-not-empty>
     </simple-method>
 
+    <!-- SCIPIO: Deprecated
     <simple-method method-name="getLastSystemInfoNote"
         short-description="Get the last 3 system info notes"
         login-required="false">
@@ -156,4 +158,5 @@ under the License.
             </if-not-empty>
         </if-not-empty>
     </simple-method>
+     -->
 </simple-methods>

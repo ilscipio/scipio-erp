@@ -21,7 +21,7 @@ under the License.
 <#-- SCIPIO: TODO?: Anon user fields for business account (with party group) -->
 
 
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@script>
 function submitForm(form, mode, value) {

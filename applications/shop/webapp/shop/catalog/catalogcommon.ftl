@@ -1,7 +1,7 @@
 
 <#-- SCIPIO: common shop catalog definitions and macros -->
 
-<#include "../common/common.ftl">
+<#include "component://shop/webapp/shop/common/common.ftl">
 
 <#-- TODO: params instead of context vars -->
 <#macro productDetailImages>

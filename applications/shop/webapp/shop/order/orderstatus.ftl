@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#if orderHeader?has_content>
   <#-- SCIPIO: NOTE: this condition came from ofbiz patch. TODO: review if we want it/safe

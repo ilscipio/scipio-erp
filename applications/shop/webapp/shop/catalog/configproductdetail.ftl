@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#-- SCIPIO: TODO: reorganize the code sharing with productdetail, very similar -->
 <#-- SCIPIO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->

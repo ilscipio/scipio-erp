@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#-- SCIPIO: TODO?: Create shopping list from order (commented) -->
 <#-- SCIPIO: TODO: This is unable to list selected config product options (harder than showcart) -->

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#include "customercommon.ftl">
+<#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <#-- SCIPIO: TODO?: Some of this is redundant with newcustomer.ftl - investigate -->
 

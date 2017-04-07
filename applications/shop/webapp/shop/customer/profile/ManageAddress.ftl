@@ -134,7 +134,7 @@ under the License.
       </#if>
       </ul>
       <div id="displayEditBillToPostalAddress" style="display: none;">
-        <#include "EditBillToAddress.ftl" />
+        <#include "component://shop/webapp/shop/customer/profile/EditBillToAddress.ftl" />
       </div>
       <@script>
         jQuery("#displayEditBillToPostalAddress").dialog({autoOpen: false, modal: true,
@@ -183,7 +183,7 @@ under the License.
       </#if>
       </ul>
       <div id="displayEditShipToPostalAddress" style="display: none;">
-        <#include "EditShipToAddress.ftl" />
+        <#include "component://shop/webapp/shop/customer/profile/EditShipToAddress.ftl" />
       </div>
       <@script>
           jQuery("#displayEditShipToPostalAddress").dialog({autoOpen: false, modal: true,
@@ -217,7 +217,7 @@ under the License.
             <#assign postalAddressFlag = "Y" />
             <#assign postalAddress = partyContactMechValueMap.postalAddress! />
             <div id="displayEditAddressForm_${contactMech.contactMechId}" style="display: none;">
-              <#include "EditPostalAddress.ftl" />
+              <#include "component://shop/webapp/shop/customer/profile/EditPostalAddress.ftl" />
             </div>
             <#if postalAddress??>
                 <div class="form-field">

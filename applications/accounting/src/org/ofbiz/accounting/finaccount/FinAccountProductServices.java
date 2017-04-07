@@ -103,7 +103,10 @@ public class FinAccountProductServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        String replenishEnumId = finAccountType.getString("replenishEnumId");
+        
+        String replenishEnumId = null;
+        
+        if(finAccountType.getString("replenishEnumId") != null) replenishEnumId = finAccountType.getString("replenishEnumId");
 
         // get the order read helper
         OrderReadHelper orh = new OrderReadHelper(orderHeader);

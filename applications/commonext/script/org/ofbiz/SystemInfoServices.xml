@@ -64,7 +64,8 @@ under the License.
         <set field="removeData.noteName" value="SYSTEMNOTE"/>
         <remove-by-and entity-name="NoteData" map="removeData"/>
     </simple-method>
-
+    
+    
     <simple-method method-name="getSystemInfoStatus" short-description="">
         <!-- communication events -->
         <entity-count entity-name="CommunicationEventRole" count-field="comCount">
@@ -114,17 +115,34 @@ under the License.
         </if-not-empty>
         
     </simple-method>
+    
+    <!-- SCIPIO: Modified previous implementation  -->
     <simple-method method-name="getSystemInfoNotes" short-description="">
-        <entity-and entity-name="NoteData" list="systemInfoNotes">
-            <field-map field-name="noteParty" from-field="parameters.userLogin.partyId"/>
-            <field-map field-name="noteName" value="SYSTEMNOTE"/>
-            <order-by field-name="-noteDateTime"/>
-        </entity-and>
+        <set field="viewSize" from-field="parameters.viewSize" type="Integer" default-value="10"/>
+        <set field="viewIndex" from-field="parameters.viewIndex" type="Integer" default-value="0"/>
+        <if-compare operator="equals" value="false" field="parameters.showAll">
+            <entity-and entity-name="NoteData" list="systemInfoNotes">
+                <field-map field-name="noteParty" from-field="parameters.userLogin.partyId"/>
+                <field-map field-name="noteName" value="SYSTEMNOTE"/>
+                <order-by field-name="-noteDateTime"/>
+                <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+            </entity-and>
+            
+            <else>
+                <entity-and entity-name="NoteData" list="systemInfoNotes">
+                    <field-map field-name="noteParty" from-field="parameters.userLogin.partyId"/>
+                    <field-map field-name="noteName" value="SYSTEMNOTE"/>
+                    <order-by field-name="-noteDateTime"/>                    
+                </entity-and>
+            </else>
+        </if-compare>
+        
         <if-not-empty field="systemInfoNotes">
             <field-to-result field="systemInfoNotes"/>
         </if-not-empty>
     </simple-method>
 
+    <!-- SCIPIO: Deprecated
     <simple-method method-name="getLastSystemInfoNote"
         short-description="Get the last 3 system info notes"
         login-required="false">
@@ -154,6 +172,44 @@ under the License.
                 <set field="lastSystemInfoNote3" from-field="systemInfoNotes[2]"/>
                 <field-to-result field="lastSystemInfoNote3"/>
             </if-not-empty>
+        </if-not-empty>
+    </simple-method>
+     -->
+     
+     
+   <!-- SCIPIO-->
+   <simple-method method-name="getSystemMessages" short-description="Fetches System notifications/messages from the database">
+        <set field="viewSize" from-field="parameters.viewSize" type="Integer" default-value="10"/>
+        <set field="viewIndex" from-field="parameters.viewIndex" type="Integer" default-value="0"/>
+        <set field="toPartyId" from-field="parameters.toPartyId" type="String" default-value="${parameters.userLogin.partyId}"/>
+        
+        <entity-count entity-name="SystemMessages" count-field="count">
+            <condition-list combine="and">
+                <condition-expr field-name="toPartyId" from-field="toPartyId"/>
+                <condition-expr field-name="isRead" operator="equals" value="N"/>    
+            </condition-list>
+        </entity-count>
+        <if-compare operator="equals" value="false" field="parameters.showAll">
+
+            <entity-and entity-name="SystemMessages" list="messages">
+                <field-map field-name="toPartyId" from-field="toPartyId"/>
+                <field-map field-name="isRead" value="N"/>
+                <order-by field-name="-createdStamp"/>
+                <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+            </entity-and>
+            
+            <else>
+                <entity-and entity-name="SystemMessages" list="messages">
+                    <field-map field-name="toPartyId" from-field="toPartyId"/>
+                    <field-map field-name="isRead" value="N"/>
+                    <order-by field-name="-createdStamp"/>                    
+                </entity-and>
+            </else>
+        </if-compare>
+        
+        <if-not-empty field="messages">
+            <field-to-result field="messages"/>
+            <field-to-result field="count"/>
         </if-not-empty>
     </simple-method>
 </simple-methods>

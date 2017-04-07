@@ -39,6 +39,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.ScipioFtlWrappers;
 import org.ofbiz.webapp.ftl.ExtendedWrapper;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
 import org.ofbiz.widget.renderer.ScreenRenderer;
@@ -46,6 +47,7 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
 import org.w3c.dom.Element;
 
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -58,7 +60,9 @@ public class HtmlWidget extends ModelScreenWidget {
     public static final String module = HtmlWidget.class.getName();
 
     private static final UtilCache<String, Template> specialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.general", 0, 0, false);
-    protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
+    // SCIPIO: 2017-04-03: use new generalized extended wrapper
+    //protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration(new ExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
+    protected static final Configuration specialConfig = FreeMarkerWorker.makeConfiguration((BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedWrapper(FreeMarkerWorker.version, "html")); // SCIPIO: generalized, must pass "html"
 
     // SCIPIO: caches for inlined templates
     private static final UtilCache<String, Template> inlineBasicTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.inline.basic", 0, 0, false);

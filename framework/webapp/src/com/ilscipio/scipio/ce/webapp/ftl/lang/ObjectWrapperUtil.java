@@ -5,9 +5,18 @@ import java.util.Map;
 
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.base.util.template.ScipioFtlWrappers;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBeansWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioDefaultObjectWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedBeansWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedBeansWrapperImpl;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedDefaultObjectWrapperImpl;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
 import org.ofbiz.webapp.ftl.ExtendedWrapper;
 
 import freemarker.core.Environment;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateModelException;
 
@@ -58,13 +67,8 @@ public abstract class ObjectWrapperUtil {
         objectWrapperFetcherMap = map;
     }
     
-    private static final ExtendedWrapper defaultHtmlExtendedWrapper = new ExtendedWrapper(FreeMarkerWorker.version, "html");
-    private static final ExtendedWrapper defaultHtmlExtendedSimpleMapWrapper;
-    static {
-        ExtendedWrapper wrapper = new ExtendedWrapper(FreeMarkerWorker.version, "html");
-        wrapper.setSimpleMapWrapper(true);
-        defaultHtmlExtendedSimpleMapWrapper = wrapper;
-    }
+    private static final ScipioExtendedObjectWrapper defaultHtmlExtendedWrapper = ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedWrapper(FreeMarkerWorker.version, "html");
+    private static final ScipioExtendedObjectWrapper defaultHtmlExtendedSimpleMapWrapper = ScipioFtlWrappers.getSystemObjectWrapperFactory().getExtendedSimpleMapWrapper(FreeMarkerWorker.version, "html");
 
     public static interface ObjectWrapperFetcher {
         ObjectWrapper getWrapper(Environment env);
@@ -94,11 +98,15 @@ public abstract class ObjectWrapperUtil {
         @Override
         public ObjectWrapper getWrapper(Environment env) {
             ObjectWrapper curr = env.getObjectWrapper();
-            if (curr instanceof ExtendedWrapper) {
-                if (((ExtendedWrapper) curr).isSimpleMapWrapper()) {
-                    return FreeMarkerWorker.getDefaultOfbizSimpleMapWrapper();
+            if (curr instanceof ScipioExtendedObjectWrapper) {
+                if (curr instanceof ScipioBeansWrapper) {
+                    if (((BeansWrapper) curr).isSimpleMapWrapper()) {
+                        return FreeMarkerWorker.getDefaultOfbizSimpleMapWrapper();
+                    } else {
+                        return FreeMarkerWorker.getDefaultOfbizWrapper();
+                    }
                 } else {
-                    return FreeMarkerWorker.getDefaultOfbizWrapper();
+                    return FreeMarkerWorker.getDefaultOfbizSimpleMapWrapper();
                 }
             } else {
                 return curr;
@@ -118,7 +126,8 @@ public abstract class ObjectWrapperUtil {
         @Override
         public ObjectWrapper getWrapper(Environment env) {
             ObjectWrapper wrapper = env.getObjectWrapper();
-            if (wrapper instanceof ExtendedWrapper && ((ExtendedWrapper) wrapper).isSimpleMapWrapper() == simpleMap) {
+            // FIXME: Support for extended ScipioDefaultObjectWrapper: it is currently ditched by this code
+            if (wrapper instanceof ScipioExtendedBeansWrapper && ((BeansWrapper) wrapper).isSimpleMapWrapper() == simpleMap) {
                 return wrapper;
             } else {
                 // semi-reliable way to get the language
@@ -132,6 +141,8 @@ public abstract class ObjectWrapperUtil {
                     if (simpleEncoder instanceof UtilCodec.HtmlEncoder) { // heuristic
                         return simpleMap ? defaultHtmlExtendedWrapper : defaultHtmlExtendedSimpleMapWrapper;
                     } else {
+                        // TODO: REVIEW: what is this doing for non-html?? HtmlWidget was missing other lang support,
+                        // that's why not doing it here...
                         return simpleMap ? FreeMarkerWorker.getDefaultOfbizWrapper() : FreeMarkerWorker.getDefaultOfbizSimpleMapWrapper();
                     }
                 } else {

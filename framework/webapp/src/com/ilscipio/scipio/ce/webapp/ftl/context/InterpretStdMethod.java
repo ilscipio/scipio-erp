@@ -164,18 +164,15 @@ public class InterpretStdMethod implements TemplateMethodModelEx {
         TemplateInvoker invoker;
         try {
             // NOTE: must get StringInvoker so BeansWrapper's StringModel can invoke toString()
-            invoker = TemplateInvoker.getStringInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, shareScope, ctxVars, envOut), model);
+            invoker = TemplateInvoker.getInvoker(templateSource, new InvokeOptions(invokeMode, invokeCtx, shareScope, ctxVars, envOut), model);
         } catch (TemplateException e) {
             throw new TemplateModelException(e);
         } catch (IOException e) {
             throw new TemplateModelException(e);
         }
-        
-        // TODO?: in the future the wrap logic should be handled in a custom ObjectWrapper,
-        // but the scope of such change is too big for now.
-        // note this means the selection of this wrapper will be lost on subsequent unwrap+rewrap.
-        // NOTE: currently we encourage simple StringModel wrapper here (stock ftl)
-        return TemplateInvoker.wrap(invoker, env.getObjectWrapper());
+
+        // NOTE: the wrapping is now handled through the ObjectWrapper implementation
+        return invoker;
     }
 
 }

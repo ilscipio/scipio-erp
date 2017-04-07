@@ -20,9 +20,9 @@ import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
-import org.ofbiz.webapp.ftl.EscapingModel;
-import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
-import org.ofbiz.webapp.ftl.ExtendedWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.EscapingModel;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBeansWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -181,7 +181,7 @@ public abstract class LangFtlUtil {
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -194,7 +194,7 @@ public abstract class LangFtlUtil {
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(Environment env) {
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -208,7 +208,7 @@ public abstract class LangFtlUtil {
     public static ObjectWrapper getNonEscapingObjectWrapper() {
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -961,8 +961,8 @@ public abstract class LangFtlUtil {
      * in loss of ordering, a log warning will be printed.
      */
     public static TemplateHashModelEx makeSimpleMapAdapter(Map<?, ?> map, ObjectWrapper objectWrapper, boolean permissive) throws TemplateModelException {
-        // COMPATIBILITY MODE: check if exactly BeansWrapper, or a class that we know extends it
-        if (BeansWrapper.class.equals(objectWrapper.getClass()) || objectWrapper instanceof ExtendedWrapper) {
+        // COMPATIBILITY MODE: check if exactly BeansWrapper, or a class that we know extends it WITHOUT extending DefaultObjectWrapper
+        if (objectWrapper instanceof ScipioBeansWrapper || BeansWrapper.class.equals(objectWrapper.getClass())) {
             return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
         } else if (objectWrapper instanceof ObjectWrapperWithAPISupport) {
             return DefaultMapAdapter.adapt(map, (ObjectWrapperWithAPISupport) objectWrapper);

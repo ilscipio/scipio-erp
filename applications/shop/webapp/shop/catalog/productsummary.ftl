@@ -1,4 +1,4 @@
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#if requestAttributes.solrProduct??>
     <#assign solrProduct = requestAttributes.solrProduct>

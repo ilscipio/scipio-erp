@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "customercommon.ftl">
+<#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <#-- TODO: this was turned into menu below, may need something more to achieve look... extra menu class/type...
         this code was BEFORE or LEFT of title, not after

@@ -16,7 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#--
 <@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />

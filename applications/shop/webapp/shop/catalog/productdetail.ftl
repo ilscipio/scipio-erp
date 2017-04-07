@@ -1,5 +1,5 @@
 
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#-- variable setup -->
 <#assign price = priceMap! />

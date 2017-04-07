@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)!>
 <#if associatedProducts?has_content>

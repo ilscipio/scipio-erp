@@ -549,3 +549,29 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
   margin-top: 2em;
   font-weight: bold;
 }
+
+
+/*Messages*/
+.message_wrap {
+    display:block;
+    width: 200px;
+    line-height: 1.6em;
+    border-top:1px solid $steel;
+    
+    .message_header {
+        text-decoration: bold;
+        padding-bottom:0px;
+    }
+    
+    .message_time {
+        font-size:0.7em;
+    }
+    
+    .message_body {
+        font-size:0.8em;
+        color: $gainsboro;
+        line-height: 1.2em;
+    }
+}
+
+

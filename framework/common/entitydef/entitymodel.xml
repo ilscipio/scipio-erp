@@ -853,11 +853,28 @@ under the License.
     <!-- ========================================================= -->
     <!-- ====================== Scipio CMS ======================= -->
     <!-- ========================================================= -->
-    <!-- Replaces CommonExt NoteData Extension -->
-    <extend-entity entity-name="NoteData">
+    <!-- Replaces CommonExt-NoteData extension-->
+    <entity entity-name="SystemMessages" package-name="com.ilscipio.scipio.common" title="User message table. Used to send system notifications to the UI.">
+        <field name="messageId" type="id"></field>
+        <field name="typeId" type="id"></field>
+        <field name="fromPartyId" type="id"></field>
+        <field name="toPartyId" type="id"></field>
+        <field name="title" type="value"></field>
+        <field name="description" type="description"></field>
         <field name="url" type="value"><description>URL linked to current notification</description></field>
+        <field name="isRead" type="indicator"><description>Marks the message as read by the user</description></field>
+                
+        <prim-key field="messageId"/>
+        
+        <relation type="one" fk-name="FROM_PARTY" rel-entity-name="Party">
+            <key-map field-name="fromPartyId" rel-field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="TO_PARTY" rel-entity-name="Party">
+            <key-map field-name="toPartyId" rel-field-name="partyId"/>
+        </relation>
+        
         <index name="systemInfo" unique="false"><!-- to be able to select the SYSTEMNOTE records quickly -->
-          <index-field name="noteName"/>
+          <index-field name="typeId"/>
         </index>
-    </extend-entity>
+    </entity>
 </entitymodel>

@@ -165,6 +165,8 @@ under the License.
                     }
                 }
             ]]></script>
+            <!-- Fetch messages from system -->
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/GetUserNotifications.groovy" />
         </actions>
     </screen>
     

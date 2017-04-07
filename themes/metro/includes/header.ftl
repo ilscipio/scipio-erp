@@ -154,7 +154,7 @@ under the License.
         <#list systemNotifications as notification>
             <li>
                 
-                <#if notification.url?has_content><a href="${notification.url}"></#if>
+                <a href="${notification.url!"#"}">
                     <div class="message_wrap">
                         <#--<div class="message_status">
                             <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
@@ -164,7 +164,7 @@ under the License.
                         </div>
                         <div class="message_body">${notification.description!""}</div>
                     </div>
-                <#if notification.url?has_content></a></#if>
+                </a>
             </li>
         </#list>
         <#-- 

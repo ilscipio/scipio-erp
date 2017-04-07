@@ -855,7 +855,7 @@ under the License.
     <!-- ========================================================= -->
     <!-- Replaces CommonExt-NoteData extension-->
     <entity entity-name="SystemMessages" package-name="com.ilscipio.scipio.common" title="User message table. Used to send system notifications to the UI.">
-        <field name="messageId" type="id"></field>
+        <field name="messageId" type="id-ne"></field>
         <field name="typeId" type="id"></field>
         <field name="fromPartyId" type="id"></field>
         <field name="toPartyId" type="id"></field>

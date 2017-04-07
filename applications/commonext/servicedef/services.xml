@@ -79,5 +79,4 @@ under the License.
         <attribute name="messages" type="List" mode="OUT" optional="true"/>
         <attribute name="count" type="Long" mode="OUT" optional="true"/>
     </service>
-    
 </services>

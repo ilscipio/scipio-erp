@@ -65,5 +65,12 @@ under the License.
         <attribute name="fileType" type="String" mode="IN" optional="true"/>
         <attribute name="cacheName" mode="IN" type="String"/>
     </service>
+    
+    
+    <!-- Messages -->
+    <service name="createSystemMessage" engine="entity-auto" default-entity-name="SystemMessages" auth="true" invoke="create">
+        <description>Creates a new system message</description>
+        <auto-attributes include="all" mode="IN" optional="true"/>
+    </service>
 
 </services>

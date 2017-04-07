@@ -20,5 +20,17 @@ under the License.
 
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
+   
+   
+    <!-- SCIPIO -->
+    <!-- System messages - triggered alongside the original -->
+    <eca service="createSystemInfoNote" event="commit">
+        <condition field-name="noteParty" operator="is-not-empty"/>
+        <set env-name="noteParty" field-name="toPartyId"/>
+        <set env-name="noteName" field-name="title"/>
+        <set env-name="noteInfo" field-name="description"/>
+        <set field-name="url" value="${moreInfoUrl}?${moreInfoItemName}=${moreInfoItemId}" />
+        <action service="createSystemMessage" mode="sync"/>
+    </eca>
         
 </service-eca>

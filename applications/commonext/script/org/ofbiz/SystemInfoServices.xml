@@ -183,7 +183,14 @@ under the License.
         <set field="viewIndex" from-field="parameters.viewIndex" type="Integer" default-value="0"/>
         <set field="toPartyId" from-field="parameters.toPartyId" type="String" default-value="${parameters.userLogin.partyId}"/>
         
+        <entity-count entity-name="SystemMessages" count-field="count">
+            <condition-list combine="and">
+                <condition-expr field-name="toPartyId" from-field="toPartyId"/>
+                <condition-expr field-name="isRead" operator="equals" value="N"/>    
+            </condition-list>
+        </entity-count>
         <if-compare operator="equals" value="false" field="parameters.showAll">
+
             <entity-and entity-name="SystemMessages" list="messages">
                 <field-map field-name="toPartyId" from-field="toPartyId"/>
                 <field-map field-name="isRead" value="N"/>
@@ -202,6 +209,7 @@ under the License.
         
         <if-not-empty field="messages">
             <field-to-result field="messages"/>
+            <field-to-result field="count"/>
         </if-not-empty>
     </simple-method>
 </simple-methods>

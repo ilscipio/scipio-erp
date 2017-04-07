@@ -9,4 +9,5 @@ if(context.userLogin!=null){
     result = runService("getSystemMessages", inMap);
     Debug.logInfo(""+result,module);
     context.systemNotifications = result.messages !=null ? result.messages : [];
+    context.systemNotificationsCount = result.count;
 }

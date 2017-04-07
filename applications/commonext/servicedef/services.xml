@@ -77,6 +77,7 @@ under the License.
         <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
         
         <attribute name="messages" type="List" mode="OUT" optional="true"/>
+        <attribute name="count" type="Long" mode="OUT" optional="true"/>
     </service>
     
 </services>

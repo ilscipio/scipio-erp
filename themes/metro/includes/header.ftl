@@ -148,6 +148,34 @@ under the License.
   </#if>
 </#macro>
 
+<#macro notificationsMenu>
+<ul class="dropdown">
+        <li class="not-click"><label>${uiLabelMap["CommonLastSytemNotes"]}</label></li>
+        <#list systemNotifications as notification>
+            <li>
+                
+                <#if notification.url?has_content><a href="${notification.url}"></#if>
+                    <div class="message_wrap">
+                        <#--<div class="message_status">
+                            <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
+                        </div>-->
+                        <div class="message_header">
+                            ${notification.title!""} <span class="message_time right">${notification.createdStamp?string.short}</span>
+                        </div>
+                        <div class="message_body">${notification.description!""}</div>
+                    </div>
+                <#if notification.url?has_content></a></#if>
+            </li>
+        </#list>
+        <#-- 
+        <li class="active">
+            <a href="#">
+                <div>View All</div>
+            </a>
+        </li>-->
+</ul>
+</#macro>
+
 <#-- Macro for rendering your company logo. Uses a smaller version of your logo if isSmall=true. -->
 <#macro logoMenu hasLink=true isSmall=false>
     <#if layoutSettings.headerImageUrl??>
@@ -332,6 +360,13 @@ under the License.
                             </ul>-->
 
                             <ul class="right">
+                                <#-- Notifications -->
+                                <#if systemNotifications?has_content>
+                                    <li class="has-dropdown not-click"><a href="#"><i class="${styles.icon!} ${styles.icon_prefix!}bell"></i><#if systemNotificationsCount?has_content> <span class="label">${systemNotificationsCount}</span></#if></a>
+                                        <@notificationsMenu />
+                                    </li>
+                                </#if>
+                                <#-- UserLogin -->
                                 <li class="has-dropdown">
                                    <#if userLogin??><a class="" href="#"><i class="${styles.icon_user}"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a><#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
                                     <ul class="dropdown">

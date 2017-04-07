@@ -145,9 +145,9 @@ under the License.
             </li>
         </#list>
         <#-- 
-        <li class="active right">
+        <li class="active">
             <a href="#">
-                <div class="label bg-white">View All</div>
+                <div>View All</div>
             </a>
         </li>-->
 </ul>
@@ -328,7 +328,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <ul class="right">
           <#-- Notifications -->
           <#if systemNotifications?has_content>
-              <li class="has-dropdown not-click"><a href="#" <#--  class="right-off-canvas-toggle "-->><i class="${styles.icon!} ${styles.icon_prefix!}bell"></i><#if systemNotifications?size &gt; 0> <span class="label">${systemNotifications?size}</span></#if></a>
+              <li class="has-dropdown not-click"><a href="#"><i class="${styles.icon!} ${styles.icon_prefix!}bell"></i><#if systemNotificationsCount?has_content> <span class="label">${systemNotificationsCount}</span></#if></a>
                 <@notificationsMenu />
               </li>
           </#if>

@@ -48,9 +48,9 @@ under the License.
     <field-type-def type="long-varchar" sql-type="VARCHAR(255)" java-type="String"/>
     <field-type-def type="very-long" sql-type="TEXT" java-type="String"/>
     
-    <!-- SCIPIO: TODO: REVIEW: the sizes for comment and description are set to unlimited, but
+    <!-- SCIPIO: TODO: REVIEW: the sizes for comment and description could be set to unlimited (TEXT), but
         a large number of entitymodels may be relying on the previous size limit for security
-        and functionality reasons... these two TEXT types are NOT final -->
+        and functionality reasons... these must be reviewed for functionality, security and performance -->
     <field-type-def type="comment" sql-type="TEXT" java-type="String"/>
     <field-type-def type="description" sql-type="TEXT" java-type="String"/>
     <field-type-def type="name" sql-type="VARCHAR(255)" java-type="String"/>

@@ -204,7 +204,7 @@ context.styles = [
     "menu_sidebar_item_text" : "text-entry",
     "menu_sidebar_item_submit" : "",
     /* Tab and secondary navigation menus*/
-    "menu_tab" : "button-group force-button menu-type-tab tabs",
+    "menu_tab" : "button-group force-button menu-type-tab",
     "menu_tab_altnested" : "menu-type-tab",
     "menu_tab_type" : "menu-type-tab",
     "menu_tab_item" : "",

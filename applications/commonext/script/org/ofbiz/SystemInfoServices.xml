@@ -212,4 +212,22 @@ under the License.
             <field-to-result field="count"/>
         </if-not-empty>
     </simple-method>
+   
+    <simple-method method-name="convertSystemMessageFromNoteData" short-description="Creates a new system message from a notedata entry">
+        <make-value value-field="systemMessage" entity-name="SystemMessages"/>
+        <sequenced-id sequence-name="SystemMessages" field="systemMessage.messageId"/>
+        <set field="systemMessage.fromPartyId" from-field="system"/>
+        <set field="systemMessage.toPartyId" from-field="parameters.noteParty"/>
+        <set field="systemMessage.title" from-field="parameters.noteName" default-value="Message #${systemMessage.messageId}"/>
+        <set field="systemMessage.description" from-field="parameters.noteInfo"/>
+        <if-not-empty field="parameters.moreInfoUrl">
+            <set field="systemMessage.url" from-field="parameters.moreInfoUrl"/>
+            <if-not-empty field="parameters.moreInfoItemName">
+                <set field="systemMessage.url" value="${systemMessage.url}?${parameters.moreInfoItemName}=${parameters.moreInfoItemId}"/>                    
+            </if-not-empty>
+        </if-not-empty>
+        <set field="systemMessage.createdStamp" from-field="parameters.noteDateTime"/>
+        <set field="systemMessage.isRead" value="N"/>
+        <create-value value-field="systemMessage"/>
+    </simple-method>
 </simple-methods>

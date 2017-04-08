@@ -79,4 +79,10 @@ under the License.
         <attribute name="messages" type="List" mode="OUT" optional="true"/>
         <attribute name="count" type="Long" mode="OUT" optional="true"/>
     </service>
+    
+    <service name="convertSystemMessageFromNoteData" engine="simple" auth="true"
+        location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="convertSystemMessageFromNoteData">
+        <description>Get system messages for an authenticated party</description>
+        <auto-attributes mode="IN" entity-name="NoteData" include="all" optional="true"/>        
+    </service>
 </services>

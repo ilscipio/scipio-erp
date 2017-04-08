@@ -22,7 +22,7 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
-      <@menuitem type="link" href=makeOfbizUrl("createnewnote?${paramString}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makeOfbizUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>
   </#macro>

@@ -167,7 +167,7 @@ under the License.
         <set field-name="moreInfoUrl" value="/partymgr/control/MyCommunicationEvents"/>
         <action service="createSystemInfoNote" mode="sync"/>
     </eca>
-     <eca service="createCommunicationEvent" event="commit">
+    <eca service="createCommunicationEvent" event="commit">
         <condition field-name="statusId" operator="equals" value="COM_ENTERED"/>
         <condition field-name="communicationEventTypeId" operator="equals" value="COMMENT_NOTE"/>
         <condition field-name="partyIdTo" operator="is-not-empty"/>

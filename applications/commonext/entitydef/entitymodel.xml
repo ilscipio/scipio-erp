@@ -24,7 +24,6 @@ under the License.
     <description>None</description>
     <version>1.0</version>
 
-  <!-- SCIPIO: Deprecated
   <extend-entity entity-name="NoteData">
     <field name="moreInfoUrl" type="value"><description>url to go to the related screen in the system</description></field>
     <field name="moreInfoItemId" type="value"><description>The id of the item to be displayed i.e. custRequestId, commEventId etc</description></field>
@@ -33,6 +32,6 @@ under the License.
       <index-field name="noteName"/>
     </index>
   </extend-entity> 
-  -->
+
 
 </entitymodel>

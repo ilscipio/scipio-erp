@@ -31,7 +31,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
 
 <#if paymentMethodType.paymentMethodTypeId =="EXT_BILLACT">
     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED" && orderPaymentPreference.statusId != "PAYMENT_RECEIVED">
-        <a href="<@ofbizUrl>receivepayment?${paramString}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+        <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
     </#if>
 </#if>
 -->
@@ -275,7 +275,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <div>&nbsp;<#if orderPaymentPreference.authRefNum??>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
                             -->
                         <#else>
-                            <a href="<@ofbizUrl>receivepayment?${paramString}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+                            <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
                         </#if>
                         </@cell>
                         <@cell columns=6>

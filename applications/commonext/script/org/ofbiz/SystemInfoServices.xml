@@ -186,14 +186,13 @@ under the License.
         <entity-count entity-name="SystemMessages" count-field="count">
             <condition-list combine="and">
                 <condition-expr field-name="toPartyId" from-field="toPartyId"/>
-                <condition-expr field-name="isRead" operator="equals" value="N"/>    
+                <condition-expr field-name="isRead" operator="not-equals" value="Y"/>    
             </condition-list>
         </entity-count>
         <if-compare operator="equals" value="false" field="parameters.showAll">
 
             <entity-and entity-name="SystemMessages" list="messages">
                 <field-map field-name="toPartyId" from-field="toPartyId"/>
-                <field-map field-name="isRead" value="N"/>
                 <order-by field-name="-createdStamp"/>
                 <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
             </entity-and>
@@ -201,7 +200,6 @@ under the License.
             <else>
                 <entity-and entity-name="SystemMessages" list="messages">
                     <field-map field-name="toPartyId" from-field="toPartyId"/>
-                    <field-map field-name="isRead" value="N"/>
                     <order-by field-name="-createdStamp"/>                    
                 </entity-and>
             </else>

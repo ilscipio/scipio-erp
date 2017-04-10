@@ -451,8 +451,27 @@ under the License.
             </hyperlink>
         </field>
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}"><display/></field>
-        <field name="taxAuthPartyId"><display/></field>
-        <field name="taxAuthGeoId"><display/></field>
+        <row-actions>
+            <entity-one entity-name="Party" value-field="taxAuthParty" auto-field-map="false">
+                <field-map field-name="partyId" from-field="taxAuthPartyId"/>
+            </entity-one>
+        </row-actions>
+        <field name="taxAuthPartyId">
+             <hyperlink also-hidden="false" description="${taxAuthPartyId} - ${taxAuthParty.groupName}" target="/partymgr/control/viewprofile" target-type="inter-app">
+                <parameter param-name="partyId" from-field="taxAuthPartyId"/>               
+            </hyperlink>
+        </field>
+        <row-actions>
+            <entity-one entity-name="Geo" value-field="geo" auto-field-map="false">
+                <field-map field-name="geoId" from-field="taxAuthGeoId"/>
+            </entity-one>
+        </row-actions>
+        <field name="taxAuthGeoId">
+            <hyperlink also-hidden="false" description="${taxAuthGeoId} - ${geo.geoName}" target="/partymgr/control/PartyGeoLocation" target-type="inter-app">
+                <parameter param-name="partyId" from-field="taxAuthPartyId"/>
+                <parameter param-name="geoId" from-field="taxAuthGeoId"/>               
+            </hyperlink>
+        </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="isExempt"><display/></field>

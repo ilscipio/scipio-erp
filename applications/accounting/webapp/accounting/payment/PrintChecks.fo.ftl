@@ -329,11 +329,11 @@ by hand from a real template using a ruler.
                                                             <fo:block>${payment.effectiveDate?date?string.short}</fo:block>
                                                         </fo:table-cell>
                                                         <fo:table-cell padding="3pt">
-                                                            <fo:block><#if invoice??>${uiLabelMap.AccountingInvoice} : ${invoice.invoiceId}</#if></fo:block>
+                                                            <fo:block><#if invoice?has_content>${uiLabelMap.AccountingInvoice} : ${invoice.invoiceId!"#"}</#if></fo:block>
                                                         </fo:table-cell>
                                                         <fo:table-cell padding="3pt">
                                                             <fo:block>
-                                                                <#if invoice??>${invoice.referenceNumber!}</#if>
+                                                                <#if invoice?has_content>${invoice.referenceNumber!}</#if>
                                                                 ${paymentApplication.taxAuthGeoId!}
                                                             </fo:block>
                                                         </fo:table-cell>

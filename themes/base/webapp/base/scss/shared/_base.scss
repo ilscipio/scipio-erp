@@ -573,6 +573,12 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
         font-size:0.8em;
         line-height: 1.2em;
     }
+    
+    &.message_isread {
+        .message_body,.message_header{ 
+            color: #999;
+        }
+    }
 }
 
 

@@ -153,9 +153,9 @@ under the License.
         <li class="not-click"><label>${uiLabelMap["CommonLastSytemNotes"]}</label></li>
         <#list systemNotifications as notification>
             <li>
-                
-                <a href="${notification.url!"#"}">
-                    <div class="message_wrap">
+                <#if notification.url?has_content><#assign notificationUrl=addParamsToUrl(notification.url,{"scipioSysMsgId":notification.messageId})></#if>
+                <a href="${notificationUrl!"#"}">
+                    <div class="message_wrap <#if notification.isRead?has_content && notification.isRead=='Y'>message_isread</#if>">
                         <#--<div class="message_status">
                             <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
                         </div>-->

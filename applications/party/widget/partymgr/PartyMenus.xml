@@ -273,6 +273,17 @@
             </link>
         </menu-item>
         
+        <menu-item name="EditUserLoginSecurityGroups" title="${uiLabelMap.SecurityGroups}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <condition>
+                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+            </condition>
+            <link target="EditUserLoginSecurityGroups">
+                <parameter param-name="userLoginId" from-field="userLogin.userLoginId"/>
+            </link>
+        </menu-item>
+        
+        
+        
          <menu-item name="createIdentification" title="${uiLabelMap.CommonNew} ${uiLabelMap.PartyPartyIdentification}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="viewidentifications">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>

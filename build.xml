@@ -192,8 +192,8 @@ under the License.
         <antcall target="clean-ivy"/>
         <if><!-- SCIPIO: NOTE: 2017-04-11: we'll now clear out the deploy folders here by default, because the clean-downloads
                 call below which we just removed was already doing this, and it doesn't look like it was causing issues for anyone
-            <equals arg1="${lib.clean.deploy}" arg2="true"/>-->
-            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <equals arg1="${lib.clean.deployed}" arg2="true"/>-->
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
                 <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
@@ -235,7 +235,7 @@ under the License.
         </delete>
         <antcall target="clean-ivy"/>
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
-            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
                 <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
@@ -2117,7 +2117,7 @@ under the License.
             </then>
         </if>
         <if>
-            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
                 <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>

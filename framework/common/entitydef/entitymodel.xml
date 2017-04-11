@@ -872,9 +872,5 @@ under the License.
         <relation type="one" fk-name="TO_PARTY" rel-entity-name="Party">
             <key-map field-name="toPartyId" rel-field-name="partyId"/>
         </relation>
-        
-        <index name="systemInfo" unique="false"><!-- to be able to select the SYSTEMNOTE records quickly -->
-          <index-field name="typeId"/>
-        </index>
     </entity>
 </entitymodel>

@@ -217,7 +217,7 @@ under the License.
     </target>
 
     <target name="clean-downloads"
-          description="Clean all downloaded files">
+          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use init-lib-clean instead)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-downloads" />
@@ -226,8 +226,10 @@ under the License.
             <fileset dir="framework/base/lib" includes="cobertura-*.jar"/>
             <fileset dir="framework/base/lib" includes="sonar-*.jar"/>
             <fileset dir="framework/base/lib" includes="activemq-*.jar"/>
+            <!-- SCIPIO: 2017-04-11: for this to be consistent we have to remove all except derby
             <fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/>
-            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>
+            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>-->
+            <fileset dir="framework/entity/lib/jdbc" includes="*.jar" excludes="derby-*.jar"/>
         </delete>
         <antcall target="clean-ivy"/>
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->

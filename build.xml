@@ -204,7 +204,10 @@ under the License.
         <antcall target="clean-cache"/>
         <antcall target="clean-tempfiles"/>
         <antcall target="clean-search-indexes"/>
-        <antcall target="clean-downloads"/>
+        <!-- SCIPIO: 2017-04-11: do NOT run clean-downloads on clean-all - you must run 
+            clean-downloads explicitly to remove those - and they are currently do not represent
+            all supported JDBC drivers but only the legacy ofbiz download targets (TODO: clarify the legacy download targets)
+        <antcall target="clean-downloads"/>-->
         <antcall target="clean-uploads"/>
         <antcall target="clean"/>
         

@@ -190,8 +190,10 @@ under the License.
         <invokehook target="pre-clean-all" />
         
         <antcall target="clean-ivy"/>
-        <if><!-- SCIPIO: NOTE: 2017-02-03: not clear if want to clean out libs by default, so don't for now... -->
-            <equals arg1="${lib.clean.deploy}" arg2="true"/>
+        <if><!-- SCIPIO: NOTE: 2017-04-11: we'll now clear out the deploy folders here by default, because the clean-downloads
+                call below which we just removed was already doing this, and it doesn't look like it was causing issues for anyone
+            <equals arg1="${lib.clean.deploy}" arg2="true"/>-->
+            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
             <then>
                 <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>

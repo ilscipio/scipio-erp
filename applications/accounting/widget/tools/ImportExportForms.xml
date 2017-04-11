@@ -79,7 +79,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="acctgTransId" required-field="false"><lookup target-form-name="LookupTransaction"/></field>
+        <field name="acctgTransId" required-field="false">
+            <!-- SCIPIO: TODO: REQUEST DOES NOT EXIST
+            <lookup target-form-name="LookupTransaction"/>-->
+            <text/>
+        </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="false"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>

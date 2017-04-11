@@ -193,7 +193,7 @@ under the License.
         <if><!-- SCIPIO: NOTE: 2017-02-03: not clear if want to clean out libs by default, so don't for now... -->
             <equals arg1="${lib.clean.deploy}" arg2="true"/>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         <antcall target="clean-data"/>
@@ -235,7 +235,7 @@ under the License.
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
             <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         
@@ -2117,14 +2117,14 @@ under the License.
         <if>
             <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
     
-    <target name="init-lib-clean-deploy">
+    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not the library cache)">
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>

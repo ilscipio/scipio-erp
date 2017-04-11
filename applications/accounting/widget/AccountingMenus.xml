@@ -958,6 +958,7 @@
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
+        <!-- SCIPIO: TODO: REVIEW: this request was removed from controller.xml, for reasons unknown to me
         <menu-item name="EditPartyFixedAssetAssignments" title="${uiLabelMap.AccountingPartyFixedAssetAssignments}">
             <condition>
                 <not>
@@ -967,7 +968,7 @@
             <link target="EditPartyFixedAssetAssignments">
                 <parameter param-name="fixedAssetId" />
             </link>
-        </menu-item>
+        </menu-item>-->
         <menu-item name="FixedAssetDepreciation" title="${uiLabelMap.AccountingDepreciation}">
             <condition>
                 <not>

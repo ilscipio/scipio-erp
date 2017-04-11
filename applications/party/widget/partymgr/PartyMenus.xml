@@ -620,7 +620,7 @@
                     <if-compare field="communicationEvent.statusId" operator="equals" value="COM_ENTERED"/>
                 </and>
             </condition>
-            <link target="/sfa/control/EditSalesOpportunity" url-mode="inter-app">
+            <link target="/crm/control/EditSalesOpportunity" url-mode="inter-app">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
@@ -831,7 +831,7 @@
                     <if-compare field="communicationEvent.statusId" operator="equals" value="COM_ENTERED"/>
                 </and>
             </condition>
-            <link target="/sfa/control/EditSalesOpportunity" url-mode="inter-app">
+            <link target="/crm/control/EditSalesOpportunity" url-mode="inter-app">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>

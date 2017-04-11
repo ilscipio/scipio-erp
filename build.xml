@@ -190,10 +190,12 @@ under the License.
         <invokehook target="pre-clean-all" />
         
         <antcall target="clean-ivy"/>
-        <if><!-- SCIPIO: NOTE: 2017-02-03: not clear if want to clean out libs by default, so don't for now... -->
-            <equals arg1="${lib.clean.deploy}" arg2="true"/>
+        <if><!-- SCIPIO: NOTE: 2017-04-11: we'll now clear out the deploy folders here by default, because the clean-downloads
+                call below which we just removed was already doing this, and it doesn't look like it was causing issues for anyone
+            <equals arg1="${lib.clean.deployed}" arg2="true"/>-->
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         <antcall target="clean-data"/>
@@ -204,7 +206,10 @@ under the License.
         <antcall target="clean-cache"/>
         <antcall target="clean-tempfiles"/>
         <antcall target="clean-search-indexes"/>
-        <antcall target="clean-downloads"/>
+        <!-- SCIPIO: 2017-04-11: do NOT run clean-downloads on clean-all - you must run 
+            clean-downloads explicitly to remove those - and they are currently do not represent
+            all supported JDBC drivers but only the legacy ofbiz download targets (TODO: clarify the legacy download targets)
+        <antcall target="clean-downloads"/>-->
         <antcall target="clean-uploads"/>
         <antcall target="clean"/>
         
@@ -214,7 +219,7 @@ under the License.
     </target>
 
     <target name="clean-downloads"
-          description="Clean all downloaded files">
+          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use init-lib-clean instead)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-downloads" />
@@ -223,14 +228,16 @@ under the License.
             <fileset dir="framework/base/lib" includes="cobertura-*.jar"/>
             <fileset dir="framework/base/lib" includes="sonar-*.jar"/>
             <fileset dir="framework/base/lib" includes="activemq-*.jar"/>
+            <!-- SCIPIO: 2017-04-11: for this to be consistent we have to remove all except derby
             <fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/>
-            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>
+            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>-->
+            <fileset dir="framework/entity/lib/jdbc" includes="*.jar" excludes="derby-*.jar"/>
         </delete>
         <antcall target="clean-ivy"/>
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
-            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         
@@ -2110,16 +2117,16 @@ under the License.
             </then>
         </if>
         <if>
-            <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deploy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
     
-    <target name="init-lib-clean-deploy">
+    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not the library cache)">
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>

@@ -345,7 +345,7 @@ under the License.
                         <if>
                             <and>
                                 <not><equals arg1="${lib.clean}" arg2="false"/></not>
-                                <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+                                <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
                             </and>
                             <then>
                                 <antcall target="do-lib-clean" inheritrefs="true"/>
@@ -410,7 +410,7 @@ under the License.
             </and>
             <then>
                 <if>
-                    <not><equals arg1="${lib.clean.deploy}" arg2="false"/></not>
+                    <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
                     <then>
                         <antcall target="do-lib-clean" inheritrefs="true"/>
                     </then>

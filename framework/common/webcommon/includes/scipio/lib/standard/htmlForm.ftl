@@ -252,8 +252,9 @@ to a form submit.
 *************
 * asmSelectScript
 ************
-Generates script data and markup needed to turn a multiple-select form field into
-dynamic jquery asmselect.
+Generates script data and markup needed to turn a multiple-select form field into dynamic jquery asmselect.
+DEPRECATED: asmSelect came from older Ofbiz but was no longer maintained by the asmSelect authors; can
+    use {{{<@field type="select" multiple=true>}}} instead.
 
 IMPL NOTE: This must support legacy Ofbiz parameters.
                     

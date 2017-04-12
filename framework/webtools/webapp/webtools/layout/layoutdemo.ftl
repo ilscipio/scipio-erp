@@ -809,7 +809,7 @@
       <@field type="select" items=items name="select1" label="Select 4 (multiple)" currentValue="val3" multiple=true />
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple=true asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple=true 
-        asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
+        dynSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
      
       <@field type="display" label="Display Field 1" tooltip="This is a tooltip text" formatText=true>
         This 

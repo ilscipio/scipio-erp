@@ -260,7 +260,7 @@ which was originally implemented with asmSelect.
 IMPL NOTE: This must support legacy Ofbiz parameters.
 
 DEV NOTE: this interface is still needed to support the related-field dynamic population, 
-    even though asmSelect is done.
+    even though asmSelect is done. this is already incorporated into @field as dynSelectArgs option.
                     
   * Parameters *
     * General *
@@ -310,13 +310,13 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
         multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
-      <#-- 2017-04-12: TODO: REMOVE asmSelect - let the regular select multiple=true work instead
-          NOTE: for some reason the sortable=true flag no longer working in asmSelect. -->
+      <#-- 2017-04-12: REMOVED asmSelect - let the regular select multiple=true work instead
+          NOTE: for some reason the sortable=true flag no longer working in asmSelect.
         <#if useDefaults>
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
             "removeLabel": uiLabelMap.CommonRemove
-            <#--, debugMode: true-->
+            <#- -, debugMode: true- ->
           }>
           <#local asmSelectOpts = defaultAsmSelectOpts + (styles.field_select_asmselect!{}) + {"sortable": sortable}>
         <#else>
@@ -325,7 +325,7 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
         
         // use asmSelect in Widget Forms
         multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
-      
+      -->
           
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes

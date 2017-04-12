@@ -252,12 +252,15 @@ to a form submit.
 *************
 * dynamicSelectFieldScript
 ************
-Special select field-generating script that dynamically fetches values.
+Special select field-generating script that dynamically fetches values based on related fields.
 
 Based on the original component://common/webcommon/includes/setMultipleSelectJs.ftl Ofbiz code interface,
 which was originally implemented with asmSelect.
 
 IMPL NOTE: This must support legacy Ofbiz parameters.
+
+DEV NOTE: this interface is still needed to support the related-field dynamic population, 
+    even though asmSelect is done.
                     
   * Parameters *
     * General *

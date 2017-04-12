@@ -270,20 +270,22 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     formName                = Form name
     relatedFieldId          = Related field ID (optional)
     htmlwrap                = ((boolean), default: true) If true, wrap in @script
-    asmSelectOptions        = (optional) (deprecated) A map of overriding options to pass to asmselect
-    asmSelectDefaults       = ((boolean), default: true) (deprecated) If false, will not include any defaults and use asmSelectOptions only
+    useDefaults             = ((boolean), default: true) If false, will not include any defaults and use explicit options only
+    
     * Needed only if relatedFieldId specified *
     relatedTypeName         = Related type, name
     relatedTypeFieldId      = Related type field ID
     paramKey                = Param key 
     requestName             = Request name
     responseName            = Response name
+    
+  * History *
+    Added for 1.14.3 to replace and provide ''some'' compatibility for code that used @asmSelectScript. 
 -->
 <#assign dynamicSelectFieldScript_defaultArgs = {
   "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "relatedFieldId":"", 
   "relatedTypeName":"", "relatedTypeFieldId":"", "paramKey":"", 
-  "requestName":"", "responseName":"", "htmlwrap":true, 
-  "asmSelectOptions":{}, "asmSelectDefaults":true, "passArgs":{}
+  "requestName":"", "responseName":"", "htmlwrap":true, "useDefaults":true, "passArgs":{}
 }>
 <#macro dynamicSelectFieldScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.dynamicSelectFieldScript_defaultArgs)>
@@ -303,20 +305,19 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
         multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
-        <#if asmSelectDefaults>
+        <#-- TODO: ELIMINATE asmSelect, replace with simpler @field for now - but dynamic data retrieval still required -->
+      
+        <#if useDefaults>
           <#-- SCIPIO: get options from styles -->
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
-            "sortable": sortable,
             "removeLabel": uiLabelMap.CommonRemove
             <#--, debugMode: true-->
           }>
-          <#local asmSelectOpts = defaultAsmSelectOpts + (styles.field_select_asmselect!{}) + asmSelectOptions>
+          <#local asmSelectOpts = defaultAsmSelectOpts + (styles.field_select_asmselect!{}) + {"sortable": sortable}>
         <#else>
-          <#local asmSelectOpts = asmSelectOptions>
+          <#local asmSelectOpts = {"sortable": sortable}>
         </#if>
-        
-        <#-- TODO: ELIMINATE asmSelect -->
         
         // use asmSelect in Widget Forms
         multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
@@ -349,6 +350,9 @@ DEPRECATED: asmSelect came from older Ofbiz but was no longer maintained by the 
     
   * Related *
     @dynamicSelectFieldScript
+    
+  * History *
+    Deprecated for 1.14.3.
 -->
 <#macro asmSelectScript args={} inlineArgs...>
   <@dynamicSelectFieldScript args=mergeArgMaps(args, inlineArgs, {})/>

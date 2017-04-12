@@ -581,4 +581,10 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
     }
 }
 
-
+/*trumbowyg fix*/
+.trumbowyg-modal {
+    .dataTables_wrapper div.dataTables_filter label {
+        float:none;
+        margin-right:0px;
+     }
+}

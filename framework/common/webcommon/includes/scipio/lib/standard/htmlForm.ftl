@@ -268,7 +268,9 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
                               Sometimes needed in templates as FTL workaround.
     id                      = Select elem id
     title                   = Select title
-    sortable                = ((boolean), default: false)
+    sortable                = ((boolean), default: false) Request for values to be sortable, IF applicable
+                              NOTE: 2017-04-12: this currently does nothing in the standard markup,
+                                  but it may be left specified as a preference, for future use.
     formId                  = Form ID
     formName                = Form name
     relatedFieldId          = Related field ID (optional)
@@ -283,7 +285,7 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
     responseName            = Response name
     
   * History *
-    Added for 1.14.3 to replace and provide ''some'' compatibility for code that used @asmSelectScript. 
+    Added for 1.14.3 to replace and provide ''some'' compatibility for code that used @asmSelectScript (2017-04-12). 
 -->
 <#assign dynamicSelectFieldScript_defaultArgs = {
   "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "relatedFieldId":"", 
@@ -308,10 +310,9 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
         multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
-        <#-- TODO: ELIMINATE asmSelect, replace with simpler @field for now - but dynamic data retrieval still required -->
-      
+      <#-- 2017-04-12: TODO: REMOVE asmSelect - let the regular select multiple=true work instead
+          NOTE: for some reason the sortable=true flag no longer working in asmSelect. -->
         <#if useDefaults>
-          <#-- SCIPIO: get options from styles -->
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
             "removeLabel": uiLabelMap.CommonRemove
@@ -324,6 +325,7 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
         
         // use asmSelect in Widget Forms
         multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
+      
           
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes

@@ -348,8 +348,9 @@ DEV NOTE: this interface is still needed to support the related-field dynamic po
 * asmSelectScript
 ************
 Generates script data and markup needed to turn a multiple-select form field into dynamic jquery asmselect.
-DEPRECATED: asmSelect came from older Ofbiz but was no longer maintained by the asmSelect authors; can
-    use @dynamicSelectFieldScript or {{{<@field type="select" multiple=true>}}} instead.
+DEPRECATED: asmSelect came from older Ofbiz but was no longer maintained by the asmSelect authors; ca
+    use @dynamicSelectFieldScript instead, or {{{<@field type="select" multiple=true>}}} if you don't need
+    the related-field logic.
     
   * Related *
     @dynamicSelectFieldScript

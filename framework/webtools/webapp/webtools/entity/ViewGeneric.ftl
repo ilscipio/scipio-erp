@@ -56,7 +56,7 @@ function ShowTab(lname) {
         </#if>
         <#if value?has_content>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${curFindString}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
       </#if>
@@ -225,7 +225,7 @@ function ShowTab(lname) {
                             <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>

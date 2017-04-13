@@ -4743,6 +4743,9 @@
         <value xml:lang="zh_TW">修改信用卡</value>
     </property>
     <property key="AccountingEditCustomTimePeriods">
+        <value xml:lang="en">Custom Time Periods</value>
+    </property>
+    <property key="AccountingEditCustomTimePeriods">
         <value xml:lang="de">Individuelle Zeiträume bearbeiten</value>
         <value xml:lang="en">Edit Custom Time Periods</value>
         <value xml:lang="fr">Modifier les périodes de temps</value>

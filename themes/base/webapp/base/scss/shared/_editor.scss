@@ -68,7 +68,6 @@ $transition-duration: 150ms !default;
     resize: none;
     outline: none;
     overflow: auto;
-    white-space: pre-wrap;
 }
 
 .trumbowyg-box-blur .trumbowyg-editor {
@@ -96,6 +95,7 @@ $transition-duration: 150ms !default;
     display: block;
     overflow: auto;
     border: none;
+    white-space: normal;
     font-size: 14px;
     font-family: "Inconsolata", "Consolas", "Courier", "Courier New", sans-serif;
     line-height: 18px;

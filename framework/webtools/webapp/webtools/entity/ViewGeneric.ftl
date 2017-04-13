@@ -75,7 +75,7 @@ function ShowTab(lname) {
     </@nav>
     <br/>
     
-    <#if value?has_content>
+  <#if value?has_content>
     <@row>
         <@cell>
           <@heading id="xml-view" attribs={"data-magellan-destination":"xml-view"}>${uiLabelMap.WebtoolsEntityXMLRepresentation}</@heading>
@@ -86,7 +86,7 @@ function ShowTab(lname) {
         
         </@cell>
     </@row>
-</#if>    
+  </#if>    
     
     <#--
     <#if value?has_content>
@@ -109,7 +109,7 @@ function ShowTab(lname) {
     
 
    
-    <#if enableEdit && ( hasUpdatePermission || hasCreatePermission)>
+    <#if enableEdit && (hasUpdatePermission || hasCreatePermission)>
         <#assign alt_row = false>
            <@row>
             <@cell>

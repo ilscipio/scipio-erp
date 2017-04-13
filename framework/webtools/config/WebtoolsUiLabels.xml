@@ -5961,6 +5961,14 @@
         <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
         <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
     </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
+        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
+        <value xml:lang="en">The specified entity value has been successfully removed.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
+        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
+        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
+    </property>
     <property key="WebtoolsDeveloperDocumentation">
         <value xml:lang="de">Developer Documentation</value>
         <value xml:lang="en">Developer Documentation</value>

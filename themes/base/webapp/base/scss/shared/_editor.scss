@@ -95,7 +95,7 @@ $transition-duration: 150ms !default;
     display: block;
     overflow: auto;
     border: none;
-    white-space: normal;
+    white-space: pre-wrap;
     font-size: 14px;
     font-family: "Inconsolata", "Consolas", "Courier", "Courier New", sans-serif;
     line-height: 18px;

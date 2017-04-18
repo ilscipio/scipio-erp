@@ -1,4 +1,4 @@
-SCIPIO: 2017-04-18: a new self signed SSL certificate was created with own CA following http://httpd.apache.org/docs/current/ssl/ssl_faq.html#realcert
+SCIPIO: 2017-04-18: a new self signed SSL certificate was created with own CA following [roughly] http://httpd.apache.org/docs/current/ssl/ssl_faq.html#realcert
 This certificate is valid for 10 years (until 2027-04-16 17:23:47 GMT)
 Characteristics: C=US, ST=DE, L=Wilmington, O=Apache Software Fundation, OU=Apache OFBiz, CN=ofbiz-vm.apache.org/emailAddress=dev@ofbiz.apache.org
 The password is still the same: changeit

@@ -5,3 +5,5 @@ Characteristics: C=DE, ST=Hesse, L=Heuchelheim, O=ilscipio GmbH, OU=SCIPIO ERP, 
 The password is still the same: changeit
 To view details, use: 
   keytool -list -v -keystore ofbizssl.jks
+NOTE: The RMI self-signed certificate has also been updated, and has the same information and password, but it is
+    a different certificate with different signature than the web certificate.

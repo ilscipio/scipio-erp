@@ -718,7 +718,9 @@ under the License.
     <screen name="CommonTaxAuthorityDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="TaxAuthorities"/>
+                <!-- SCIPIO: now has own sub-menu 
+                <set field="activeSubMenuItem" value="TaxAuthorities"/>-->
+                <set field="activeSubMenu" value="TaxAuthority"/>
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>

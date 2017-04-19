@@ -1759,7 +1759,8 @@
             <link target="FindGlAccountCategory" />
         </menu-item>
         <menu-item name="TaxAuthorities" title="${uiLabelMap.AccountingTaxAuthorities}">
-            <link target="ListTaxAuthorityParties" />
+            <link target="FindTaxAuthority" />
+            <sub-menu name="TaxAuthority" include="TaxAuthoritySideBar"/>
         </menu-item>
         <menu-item name="findVendors" title="${uiLabelMap.AccountingVendors}">
             <link target="findVendors"/>
@@ -1787,16 +1788,16 @@
         </menu-item>
     </menu>
     
-    <menu name="TaxAuthorityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditTaxAuthority">
-
+    <menu name="TaxAuthorityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: don't use this, it just hides errors: default-menu-item-name="EditTaxAuthority" -->
+        <menu-item-alias name="FindTaxAuthority" for="PARENT-NOSUB"/>
+        <menu-item-alias name="NewTaxAuthority" for="PARENT-NOSUB"/>
         <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingTaxAuthority}">
             <link target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
             </link>
         </menu-item>
-
         <menu-item name="EditTaxAuthorityCategories" title="${uiLabelMap.ProductCategories}">
             <link target="EditTaxAuthorityCategories">
                 <parameter param-name="taxAuthPartyId"/>
@@ -1827,6 +1828,10 @@
                 <parameter param-name="taxAuthGeoId"/>
             </link>
         </menu-item>
+    </menu>
+    <menu name="TaxAuthoritySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        always-expand-selected-or-ancestor="true">
+        <include-elements menu-name="TaxAuthorityTabBar" recursive="includes-only"/>
     </menu>
 
 </menus>

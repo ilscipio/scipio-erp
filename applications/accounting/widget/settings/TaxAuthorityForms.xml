@@ -441,6 +441,12 @@ under the License.
         </actions>
         <row-actions>
             <entity-one value-field="party" entity-name="PartyNameView"/>
+            <entity-one entity-name="Party" value-field="taxAuthParty" auto-field-map="false">
+                <field-map field-name="partyId" from-field="taxAuthPartyId"/>
+            </entity-one>
+            <entity-one entity-name="Geo" value-field="geo" auto-field-map="false">
+                <field-map field-name="geoId" from-field="taxAuthGeoId"/>
+            </entity-one>
         </row-actions>
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
@@ -451,21 +457,11 @@ under the License.
             </hyperlink>
         </field>
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}"><display/></field>
-        <row-actions>
-            <entity-one entity-name="Party" value-field="taxAuthParty" auto-field-map="false">
-                <field-map field-name="partyId" from-field="taxAuthPartyId"/>
-            </entity-one>
-        </row-actions>
         <field name="taxAuthPartyId">
              <hyperlink also-hidden="false" description="${taxAuthPartyId} - ${taxAuthParty.groupName}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId" from-field="taxAuthPartyId"/>               
             </hyperlink>
         </field>
-        <row-actions>
-            <entity-one entity-name="Geo" value-field="geo" auto-field-map="false">
-                <field-map field-name="geoId" from-field="taxAuthGeoId"/>
-            </entity-one>
-        </row-actions>
         <field name="taxAuthGeoId">
             <hyperlink also-hidden="false" description="${taxAuthGeoId} - ${geo.geoName}" target="/partymgr/control/PartyGeoLocation" target-type="inter-app">
                 <parameter param-name="partyId" from-field="taxAuthPartyId"/>

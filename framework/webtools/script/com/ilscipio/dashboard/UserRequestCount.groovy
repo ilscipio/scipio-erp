@@ -7,6 +7,8 @@ import org.ofbiz.entity.condition.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.base.util.cache.UtilCache
 
+final module = "UserRequestCount.groovy";
+
 contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 1800000, true, false);
 cacheId = "webtools_user_requestcount";
 
@@ -37,12 +39,13 @@ Map<Date, Map<String, BigDecimal>> processResults() {
 
 Map cacheMap = [:];
 // TODO: Not sure wether I should leave or not the result to be cached, for now let's not cache it
-if (contentCache.get(cacheId)==null) {
+if (contentCache.get(cacheId)==null || "Y".equals(parameters.forceRefresh)) {
+    Debug.logInfo("building totalMap", module);
     cacheMap = processResults();
     contentCache.put(cacheId, cacheMap);
-    Debug.log("adding totalMap to cache");
+    Debug.logInfo("finished totalMap; adding to cache", module);
 } else {
     cacheMap = contentCache.get(cacheId);
-    Debug.log("taking totalMap from cache");
+    Debug.logInfo("taking totalMap from cache", module);
 }
 context.userRequestCount = cacheMap;

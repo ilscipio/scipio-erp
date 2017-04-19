@@ -1508,10 +1508,6 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
      * <p>
      * NOTE: This handles the special PARENT/PARENT-WITHSUB/PARENT-NOSUB values, and NONE handling.
      * <p>
-     * DOES NOT HANDLE the non-error fallbacks for NONE special values 
-     * NOR the error fallbacks for failed lookups. the MenuAndItemLookup.getLookupMenuItemName() should
-     * be checked for these cases.
-     * <p>
      * NOTE: this overload assumes subMenu was already looked up and merely stores subMenuName in the lookup result.
      */
     public MenuAndItemLookup resolveMenuAndItem(String menuItemName, String subMenuName, ModelSubMenu subMenu, boolean mapNames) {

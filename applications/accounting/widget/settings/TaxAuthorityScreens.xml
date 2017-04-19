@@ -28,7 +28,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindTaxAuthority"/>
-                <set field="activeSubMenuItem" value="TaxAuthorities"/>
+                <!-- SCIPIO: 
+                <set field="activeSubMenuItem" value="TaxAuthorities"/>-->
+                <set field="activeSubMenuItem" value="FindTaxAuthority"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -55,13 +57,13 @@ under the License.
     <screen name="EditTaxAuthority">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="EditTaxAuthority"/>
                 <set field="labelTitleProperty" value="PageTitleEditTaxAuthority"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
                 <set field="titleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthority' : 'AccountingNewTaxAuthority'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.taxAuthority ? 'EditTaxAuthority' : 'NewTaxAuthority'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
@@ -158,7 +160,7 @@ under the License.
                             <label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>
                             <include-form name="AddTaxAuthorityRateProduct" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
                         </screenlet>
-                        <label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>                        
+                        <!--<label>${uiLabelMap.AccountingTaxAuthorityCategoryAdvice}</label>-->                      
                         <include-form name="ListTaxAuthorityRateProducts" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
                     </decorator-section>
                 </decorator-screen>

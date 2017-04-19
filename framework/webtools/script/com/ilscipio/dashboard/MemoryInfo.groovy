@@ -6,6 +6,10 @@ import org.ofbiz.common.uom.UomWorker
 
 context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
 
+final module = "MemoryInfo.groovy"
+
+Debug.logInfo("Begin fetching memory info", module);
+
 cacheList = [];
 totalCacheMemory = 0.0;
 names = new TreeSet(UtilCache.getUtilCacheTableKeySet());
@@ -57,3 +61,5 @@ usedMemoryMB = ((((rt.totalMemory() - rt.freeMemory()) - totalCacheMemory)  / 10
 memoryInfo.put("Used Memory without cache", UtilFormatOut.formatQuantity(usedMemoryMB));
 
 context.memoryInfo = memoryInfo;
+
+Debug.logInfo("Finished fetching memory info", module);

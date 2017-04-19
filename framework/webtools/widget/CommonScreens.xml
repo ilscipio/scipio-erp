@@ -254,7 +254,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Dashboard widget implementation -->
+    <!-- SCIPIO: Dashboard widget implementation 
+        TODO: move to more approp file -->
     <screen name="ScipioMemoryInfo">
         <section>
             <actions>

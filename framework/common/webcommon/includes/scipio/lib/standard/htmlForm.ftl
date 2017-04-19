@@ -250,12 +250,17 @@ to a form submit.
 
 <#-- 
 *************
-* asmSelectScript
+* dynamicSelectFieldScript
 ************
-Generates script data and markup needed to turn a multiple-select form field into
-dynamic jquery asmselect.
+Special select field-generating script that dynamically fetches values based on related fields.
+
+Based on the original component://common/webcommon/includes/setMultipleSelectJs.ftl Ofbiz code interface,
+which was originally implemented with asmSelect.
 
 IMPL NOTE: This must support legacy Ofbiz parameters.
+
+DEV NOTE: this interface is still needed to support the related-field dynamic population, 
+    even though asmSelect is done. this is already incorporated into @field as dynSelectArgs option.
                     
   * Parameters *
     * General *
@@ -263,27 +268,32 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
                               Sometimes needed in templates as FTL workaround.
     id                      = Select elem id
     title                   = Select title
-    sortable                = ((boolean), default: false)
+    sortable                = ((boolean), default: false) Request for values to be sortable, IF applicable
+                              NOTE: 2017-04-12: this currently does nothing in the standard markup,
+                                  but it may be left specified as a preference, for future use.
     formId                  = Form ID
     formName                = Form name
-    asmSelectOptions        = (optional) A map of overriding options to pass to asmselect
-    asmSelectDefaults       = ((boolean), default: true) If false, will not include any defaults and use asmSelectOptions only
     relatedFieldId          = Related field ID (optional)
     htmlwrap                = ((boolean), default: true) If true, wrap in @script
+    useDefaults             = ((boolean), default: true) If false, will not include any defaults and use explicit options only
+    
     * Needed only if relatedFieldId specified *
     relatedTypeName         = Related type, name
     relatedTypeFieldId      = Related type field ID
     paramKey                = Param key 
     requestName             = Request name
     responseName            = Response name
+    
+  * History *
+    Added for 1.14.3 to replace and provide ''some'' compatibility for code that used @asmSelectScript (2017-04-12). 
 -->
-<#assign asmSelectScript_defaultArgs = {
-  "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "asmSelectOptions":{}, 
-  "asmSelectDefaults":true, "relatedFieldId":"", "relatedTypeName":"", "relatedTypeFieldId":"", "paramKey":"", 
-  "requestName":"", "responseName":"", "htmlwrap":true, "passArgs":{}
+<#assign dynamicSelectFieldScript_defaultArgs = {
+  "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "relatedFieldId":"", 
+  "relatedTypeName":"", "relatedTypeFieldId":"", "paramKey":"", 
+  "requestName":"", "responseName":"", "htmlwrap":true, "useDefaults":true, "passArgs":{}
 }>
-<#macro asmSelectScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.asmSelectScript_defaultArgs)>
+<#macro dynamicSelectFieldScript args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.dynamicSelectFieldScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
@@ -300,20 +310,22 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
         multiple.attr('title', '${escapeVal(title, 'js')}');
       </#if>
       
-        <#if asmSelectDefaults>
-          <#-- SCIPIO: get options from styles -->
+      <#-- 2017-04-12: REMOVED asmSelect - let the regular select multiple=true work instead
+          NOTE: for some reason the sortable=true flag no longer working in asmSelect.
+        <#if useDefaults>
           <#local defaultAsmSelectOpts = {
             "addItemTarget": 'top',
-            "sortable": sortable!false,
             "removeLabel": uiLabelMap.CommonRemove
-            <#--, debugMode: true-->
+            <#- -, debugMode: true- ->
           }>
-          <#local asmSelectOpts = defaultAsmSelectOpts + styles.field_select_asmselect!{} + asmSelectOptions>
+          <#local asmSelectOpts = defaultAsmSelectOpts + (styles.field_select_asmselect!{}) + {"sortable": sortable}>
         <#else>
-          <#local asmSelectOpts = asmSelectOptions>
+          <#local asmSelectOpts = {"sortable": sortable}>
         </#if>
+        
         // use asmSelect in Widget Forms
         multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
+      -->
           
       <#if relatedFieldId?has_content> <#-- can be used without related field -->
         // track possible relatedField changes
@@ -331,6 +343,25 @@ IMPL NOTE: This must support legacy Ofbiz parameters.
     </@script>
     </#if>
   </#if>
+</#macro>
+
+<#-- 
+*************
+* asmSelectScript
+************
+Generates script data and markup needed to turn a multiple-select form field into dynamic jquery asmselect.
+DEPRECATED: asmSelect came from older Ofbiz but was no longer maintained by the asmSelect authors; ca
+    use @dynamicSelectFieldScript instead, or {{{<@field type="select" multiple=true>}}} if you don't need
+    the related-field logic.
+    
+  * Related *
+    @dynamicSelectFieldScript
+    
+  * History *
+    Deprecated for 1.14.3.
+-->
+<#macro asmSelectScript args={} inlineArgs...>
+  <@dynamicSelectFieldScript args=mergeArgMaps(args, inlineArgs, {})/>
 </#macro>
 
 <#-- 
@@ -1178,8 +1209,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               By default, this is determined based on whether the items arg is specified or not (NOT whether
                               there is any nested content or not).
                               If specifying both items arg AND nested content (discouraged), this should be manually set to true.
-    asmSelectArgs           = ((map)) Optional map of args to pass to @asmSelectScript to transform a multiple type select into a jQuery asmselect select
+    dynSelectArgs           = ((map)) Optional map of args to pass to @dynamicSelectFieldScript to transform a multiple type select into a dynamic select
                               Usually only valid if multiple is true.
+    asmSelectArgs           = ((map)) (deprecated) Old alias for dynSelectArgs        
     formName                = Name of form containing the field
     formId                  = ID of form containing the field
     title                   = Title attribute of <select> element
@@ -1331,7 +1363,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
+  "manualItems":"", "manualItemsOnly":"", "dynSelectArgs":{}, "asmSelectArgs":false, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
   "inline":"", "ignoreParentField":"",
   "opValue":"", "opFromValue":"", "opThruValue":"", "ignoreCaseValue":"", "hideOptions":false, "hideIgnoreCase":false,
   "titleClass":"", "formatText":"",
@@ -2015,6 +2047,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 manualItems=manualItems
                                 manualItemsOnly=manualItemsOnly
                                 currentDescription=currentDescription
+                                dynSelectArgs=dynSelectArgs
                                 asmSelectArgs=asmSelectArgs
                                 inlineLabel=effInlineLabel
                                 required=required

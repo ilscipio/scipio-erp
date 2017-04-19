@@ -152,10 +152,24 @@ public class GenericWebEvent {
 
         // if this is a delete, do that before getting all of the non-pk parameters and validating them
         if (updateMode.equals("DELETE")) {
+            
+            // SCIPIO: 2017-04-13: NOTE whether a delete attempt was made, and save the previous value
+            request.setAttribute("updateGenericDeleteAttempt", Boolean.TRUE);
+            try {
+                GenericValue previousValue = delegator.findOne(findByEntity.getEntityName(), findByEntity.getPrimaryKey(), false);
+                request.setAttribute("updateGenericValue", previousValue);
+            } catch (GenericEntityException e) {
+                String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.delete_failed", locale) + ": " + e.toString();
+                Debug.logWarning(e, errMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                return "error";
+            }
+            
+            int removed = 0;
             // Remove associated/dependent entries from other tables here
             // Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
             try {
-                delegator.removeByPrimaryKey(findByEntity.getPrimaryKey());
+                removed = delegator.removeByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
                 String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.delete_failed", locale) + ": " + e.toString();
                 Debug.logWarning(e, errMsg, module);
@@ -163,6 +177,10 @@ public class GenericWebEvent {
                 return "error";
             }
 
+            if (removed > 0) {
+                // SCIPIO: 2017-04-13: NOTE whether delete attempt succeeded
+                request.setAttribute("updateGenericDeleteSuccess", Boolean.TRUE);
+            }
             return "success";
         }
 

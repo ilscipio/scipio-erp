@@ -1203,30 +1203,6 @@ context.styles = [
         "multi": "data-list-multiform",
         "default": "generic"
     ],
-    
-    /* Field select element multiple-select classes (jQuery asmselect) */
-    "field_select_asmselect" : [
-      "containerClass" : "asmContainer",            /* Class for container that wraps this widget */
-      "selectClass" : "asmSelect",                  /* Class for the newly created <select> */
-      "optionDisabledClass" : "asmOptionDisabled",  /* Class for items that are already selected / disabled */
-      "listClass" : "asmList",                      /* Class for the list ($ol) */
-      "listSortableClass" : "asmListSortable",      /* Another class given to the list when it is sortable */
-      "listItemClass" : "asmListItem",              /* Class for the <li> list items */
-      "listItemLabelClass" : "asmListItemLabel",    /* Class for the label text that appears in list items */
-      "removeClass" : "asmListItemRemove button tiny",          /* Class given to the "remove" link */
-      "highlightClass" : "asmHighlight"             /* Class given to the highlight <span> */
-      /* "listType" : "ol",           Ordered list 'ol', or unordered list 'ul' */
-      /* "sortable" : false,          Should the list be sortable? */
-      /* "highlight" : false,         Use the highlight feature? */
-      /* "animate" : false,           Animate the the adding/removing of items in the list? */
-      /* "addItemTarget" : "bottom",        Where to place new selected items in list: top or bottom */
-      /* "hideWhenAdded" : false,         Hide the option when added to the list? works only in FF */
-      /* "debugMode" : false,         Debug mode keeps original select visible */
-
-      /* "removeLabel" : "remove",          Text used in the "remove" link */
-      /* "highlightAddedLabel" : "Added: ",       Text that precedes highlight of added item */
-      /* "highlightRemovedLabel" : "Removed: "     Text that precedes highlight of removed item */
-    ],
 
     /*List of icons that can be assigned per webapplication and specific menu_items. Uses font-awesome icons by default.*/
     "app_icon" : [

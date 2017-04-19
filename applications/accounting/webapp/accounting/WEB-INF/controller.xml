@@ -2388,15 +2388,19 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCustomTimePeriod"/>
     </request-map>
+    <request-map uri="AddCustomTimePeriod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddCustomTimePeriod"/>
+    </request-map>
     <request-map uri="createCustomTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustomTimePeriod"/>
         <response name="success" type="view" value="EditCustomTimePeriod"/>
-        <response name="error" type="view" value="EditCustomTimePeriod"/>
+        <response name="error" type="view" value="AddCustomTimePeriod"/>
     </request-map>
     <request-map uri="updateCustomTimePeriod">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateCustomTimePeriod"/>
+        <event type="service-multi" invoke="updateCustomTimePeriod"/>
         <response name="success" type="view" value="EditCustomTimePeriod"/>
         <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
@@ -3096,7 +3100,8 @@ under the License.
     <view-map name="ListCompanies" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#ListCompanies"/>
     <view-map name="AddCompany" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#AddCompany"/>
     <view-map name="TimePeriods" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#TimePeriods"/>
-    <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>
+    <view-map name="AddCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#AddCustomTimePeriod"/>
+    <view-map name="EditCustomTimePeriod" type="screen" page="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>    
 
     <view-map name="PartyAcctgPreference" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#PartyAcctgPreference"/>
     <view-map name="ListGlAccountOrganization" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#ListGlAccountOrganization"/>
@@ -3106,7 +3111,7 @@ under the License.
     <view-map name="GlAccountTypeDefaults" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountTypeDefaults"/>
     <view-map name="GlAccountPurInvoice" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountPurInvoice"/>
     <view-map name="GlAccountSalInvoice" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountSalInvoice"/>
-    <view-map name="GlAccountTypePaymentType" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountTypePaymentType"/>
+    <view-map name="GlAccountTypePaymentType" type="screen" page="component:title//accounting/widget/settings/GlSetupScreens.xml#GlAccountTypePaymentType"/>
     <view-map name="GlAccountNrPaymentMethod" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#GlAccountNrPaymentMethod"/>
     <view-map name="EditProductGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditProductGlAccounts"/>
     <view-map name="EditProductCategoryGlAccounts" type="screen" page="component://accounting/widget/settings/GlSetupScreens.xml#EditProductCategoryGlAccounts"/>

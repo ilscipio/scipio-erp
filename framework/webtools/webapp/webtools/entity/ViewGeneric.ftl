@@ -16,12 +16,17 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign enableEdit = parameters.enableEdit!false>
-<#if !enableEdit?is_boolean>
-  <#if enableEdit?is_string && enableEdit == "true">
-    <#assign enableEdit = true>
-  <#else>
-    <#assign enableEdit = false>
+<#-- SCIPIO: 2017-04-13: if the value was just deleted, do not allow editing -->
+<#if (deleteSuccess!false) == true>
+  <#assign enableEdit = false>
+<#else>
+  <#assign enableEdit = parameters.enableEdit!false>
+  <#if !enableEdit?is_boolean>
+    <#if enableEdit?is_string && enableEdit == "true">
+      <#assign enableEdit = true>
+    <#else>
+      <#assign enableEdit = false>
+    </#if>
   </#if>
 </#if>
 <#--
@@ -48,18 +53,24 @@ function ShowTab(lname) {
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <#if !enableEdit>
         <#if hasCreatePermission>          
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
-          <#--WARN: TODO: REVIEW for security issues-->
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
-        </#if>
-        <#if value?has_content>
-          <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${curFindString}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+          <#if !enableEdit>
+            <#--WARN: TODO: REVIEW for security issues-->
+            <#local editLabel = uiLabelMap.CommonEdit>
+            <#local editClass = styles.action_update!>
+            <#if value?has_content && (deleteSuccess!false) == true>
+              <#local editLabel = uiLabelMap.CommonRecreate>
+              <#local editClass = styles.action_add!>
+            </#if>
+            <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
           </#if>
         </#if>
-      </#if>
+        <#if value?has_content && (deleteSuccess!false) != true>
+          <#if hasDeletePermission>
+            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+          </#if>
+        </#if>
     </@menu>
 </#macro>
 
@@ -75,7 +86,15 @@ function ShowTab(lname) {
     </@nav>
     <br/>
     
-    <#if value?has_content>
+    <#-- SCIPIO: special message to indicate the value has been removed and no further operations will be available,
+        although we should show the value (otherwise we don't know what was removed). -->
+    <#if value?has_content && (deleteSuccess!false) == true>
+        <@commonMsg type="info-important">
+            ${uiLabelMap.WebtoolsSpecifiedEntityValueRemovedDetail}
+        </@commonMsg>
+    </#if>
+    
+  <#if value?has_content>
     <@row>
         <@cell>
           <@heading id="xml-view" attribs={"data-magellan-destination":"xml-view"}>${uiLabelMap.WebtoolsEntityXMLRepresentation}</@heading>
@@ -86,7 +105,7 @@ function ShowTab(lname) {
         
         </@cell>
     </@row>
-</#if>    
+  </#if>    
     
     <#--
     <#if value?has_content>
@@ -106,10 +125,8 @@ function ShowTab(lname) {
     </@row>
     
     </#if>-->
-    
-
    
-    <#if enableEdit && ( hasUpdatePermission || hasCreatePermission)>
+    <#if enableEdit && (hasUpdatePermission || hasCreatePermission)>
         <#assign alt_row = false>
            <@row>
             <@cell>
@@ -225,7 +242,7 @@ function ShowTab(lname) {
                             <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>

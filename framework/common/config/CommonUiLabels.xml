@@ -16346,4 +16346,8 @@
         <value xml:lang="de">Zeitintervall</value>
         <value xml:lang="en">Time Interval</value>        
     </property>
+    <property key="CommonRecreate">
+        <value xml:lang="de">Neu erstellen</value>
+        <value xml:lang="en">Recreate</value>        
+    </property>
 </resource>

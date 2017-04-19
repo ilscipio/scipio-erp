@@ -10,6 +10,8 @@ import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.entity.util.EntityUtilProperties
 import org.ofbiz.base.util.*;
 
+final module = "PartySecurityAlerts.groovy"
+
 iCount = (context.chartIntervalCount != null) ? context.chartIntervalCount : 0;
 String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
 if (iCount <= 0)
@@ -35,12 +37,15 @@ dve.addViewLink("UL", "ULH", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("use
 dve.addRelation("many", "", "ServerHit", [
     new ModelKeyMap("visitId", "visitId")
 ]);
+
+Debug.logInfo("Running main query...", module);
 userLoginAndHistoryList = from(dve).where(EntityCondition.makeCondition(
         EntityCondition.makeCondition(exprsList, EntityJoinOperator.OR),
         EntityOperator.AND,
         EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, dateIntervals.getDateBegin())
         )).orderBy("lastUpdatedStamp DESC").queryList();
-
+    
+Debug.logInfo("Main query executed; processing data and related queries...", module);
 securityAlerts = [];
 for (userLoginAndHistory in userLoginAndHistoryList) {
     serverHits = userLoginAndHistory.getRelated("ServerHit", UtilMisc.toMap("hitTypeId", "REQUEST"), null, true);
@@ -78,6 +83,8 @@ highIndex = highIndex > listSize ? listSize : highIndex;
 lowIndex = lowIndex > highIndex ? highIndex : lowIndex;
 
 resultPartialList = securityAlerts.subList(lowIndex, highIndex);
+
+Debug.logInfo("Data processed", module);
 
 context.viewIndex = viewIndex;
 context.viewSize = viewSize;

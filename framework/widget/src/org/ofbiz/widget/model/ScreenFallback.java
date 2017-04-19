@@ -1,5 +1,6 @@
 package org.ofbiz.widget.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilValidate;
@@ -114,7 +115,8 @@ public abstract class ScreenFallback {
         
     }
     
-    public static class SimpleFlexibleScreenFallbackSettings implements FlexibleScreenFallbackSettings {
+    @SuppressWarnings("serial")
+    public static class SimpleFlexibleScreenFallbackSettings implements FlexibleScreenFallbackSettings, Serializable {
         
         protected final FlexibleStringExpander nameExdr;
         protected final FlexibleStringExpander locationExdr;

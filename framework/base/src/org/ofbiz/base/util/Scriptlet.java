@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -27,7 +28,8 @@ import java.util.Map;
  * followed by a colon (":"), and the script. Example: <code>groovy:return foo.bar();</code>.
  * </p>
  */
-public final class Scriptlet {
+@SuppressWarnings("serial")
+public final class Scriptlet implements Serializable { // SCIPIO: serializable
 
     private final String language;
     private final String script;

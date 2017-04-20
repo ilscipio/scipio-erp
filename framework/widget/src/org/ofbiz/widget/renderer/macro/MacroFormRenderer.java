@@ -1068,6 +1068,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
             items.append("}");
         }
         items.append("]");
+        // SCIPIO: 2017-04-20: new
+        String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
         appendFieldInfo(sr, context, modelFormField);
@@ -1089,6 +1091,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        sr.append(" noCurrentSelectedKey=");
+        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey)); 
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());

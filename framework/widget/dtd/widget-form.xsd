@@ -1134,7 +1134,9 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="no-current-selected-key">
                 <xs:annotation>
-                    <xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation>
+                    <xs:documentation>The key to mark as selected when there is no current entry value.
+                        SCIPIO: 2017-04-20: This has now been implemented (implementation was missing from stock ofbiz); it behaves
+                            as a default value (same as defaultValue parameter of @field macro in the Freemarker templating API).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>

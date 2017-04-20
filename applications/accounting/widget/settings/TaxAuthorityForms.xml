@@ -420,11 +420,11 @@ under the License.
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}" position="2"><text-find/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
-        <field name="isExempt">
-            <check no-current-selected-key="N" />
+        <field name="isExempt" widget-style="smallSelect">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="isNexus" position="2">
-            <check no-current-selected-key="N" />
+        <field name="isNexus" widget-style="smallSelect" position="2">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>

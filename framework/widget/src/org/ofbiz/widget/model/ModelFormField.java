@@ -2811,6 +2811,7 @@ public class ModelFormField implements Serializable {
     public static class ListOptions extends OptionSource implements Serializable {
         private final FlexibleStringExpander description;
         private final FlexibleMapAccessor<Object> keyAcsr;
+        private final FlexibleMapAccessor<Object> altKeyAcsr; // SCIPIO: 2017-04-20: new, for check fields only
         private final FlexibleMapAccessor<List<? extends Object>> listAcsr;
         private final String listEntryName;
 
@@ -2818,6 +2819,7 @@ public class ModelFormField implements Serializable {
             super(modelFormField);
             this.listEntryName = optionElement.getAttribute("list-entry-name");
             this.keyAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("key-name"));
+            this.altKeyAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("alt-key-name"));
             this.listAcsr = FlexibleMapAccessor.getInstance(optionElement.getAttribute("list-name"));
             this.description = FlexibleStringExpander.getInstance(optionElement.getAttribute("description"));
         }
@@ -2827,16 +2829,23 @@ public class ModelFormField implements Serializable {
             this.listAcsr = original.listAcsr;
             this.listEntryName = original.listEntryName;
             this.keyAcsr = original.keyAcsr;
+            this.altKeyAcsr = original.altKeyAcsr;
             this.description = original.description;
         }
 
-        public ListOptions(String listName, String listEntryName, String keyName, String description,
+        public ListOptions(String listName, String listEntryName, String keyName, String altKeyName, String description,
                 ModelFormField modelFormField) {
             super(modelFormField);
             this.listAcsr = FlexibleMapAccessor.getInstance(listName);
             this.listEntryName = listEntryName;
             this.keyAcsr = FlexibleMapAccessor.getInstance(keyName);
+            this.altKeyAcsr = FlexibleMapAccessor.getInstance(altKeyName);
             this.description = FlexibleStringExpander.getInstance(description);
+        }
+        
+        public ListOptions(String listName, String listEntryName, String keyName, String description,
+                ModelFormField modelFormField) {
+            this(listName, listEntryName, keyName, null, description, modelFormField);
         }
 
         @Override
@@ -2852,22 +2861,30 @@ public class ModelFormField implements Serializable {
                         Map<String, Object> dataMap = UtilGenerics.checkMap(data);
                         localContext.putAll(dataMap);
                     }
-                    Object keyObj = keyAcsr.get(localContext);
-                    String key = null;
-                    if (keyObj instanceof String) {
-                        key = (String) keyObj;
-                    } else {
-                        try {
-                            key = (String) ObjectType.simpleTypeConvert(keyObj, "String", null, null);
-                        } catch (GeneralException e) {
-                            String errMsg = "Could not convert field value for the field: [" + this.keyAcsr.toString()
-                                    + "] to String for the value [" + keyObj + "]: " + e.toString();
-                            Debug.logError(e, errMsg, module);
-                        }
-                    }
-                    optionValues.add(new OptionValue(key, description.expandString(localContext)));
+                    String key = getKeyValue(keyAcsr, localContext);
+                    String altKey = getKeyValue(altKeyAcsr, localContext);
+                    optionValues.add(new OptionValue(key, altKey, description.expandString(localContext)));
                 }
             }
+        }
+        
+        private String getKeyValue(FlexibleMapAccessor<Object> keyAscr, Map<String, Object> localContext) {
+            // SCIPIO: 2017-04-20: factored out from main method
+            if (keyAcsr == null) return null;
+            Object keyObj = keyAcsr.get(localContext);
+            String key = null;
+            if (keyObj instanceof String) {
+                key = (String) keyObj;
+            } else {
+                try {
+                    key = (String) ObjectType.simpleTypeConvert(keyObj, "String", null, null);
+                } catch (GeneralException e) {
+                    String errMsg = "Could not convert field value for the field: [" + this.keyAcsr.toString()
+                            + "] to String for the value [" + keyObj + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                }
+            }
+            return key;
         }
 
         @Override
@@ -2881,6 +2898,10 @@ public class ModelFormField implements Serializable {
 
         public FlexibleMapAccessor<Object> getKeyAcsr() {
             return keyAcsr;
+        }
+        
+        public FlexibleMapAccessor<Object> getAltKeyAcsr() {
+            return altKeyAcsr;
         }
 
         public FlexibleMapAccessor<List<? extends Object>> getListAcsr() {
@@ -3044,10 +3065,16 @@ public class ModelFormField implements Serializable {
     public static class OptionValue implements Serializable {
         private final String description;
         private final String key;
+        private final String altKey; // SCIPIO: 2017-04-20: new, for check fields only
 
-        public OptionValue(String key, String description) {
+        public OptionValue(String key, String altKey, String description) {
             this.key = key;
+            this.altKey = altKey;
             this.description = description;
+        }
+        
+        public OptionValue(String key, String description) {
+            this(key, null, description);
         }
 
         public String getDescription() {
@@ -3056,6 +3083,14 @@ public class ModelFormField implements Serializable {
 
         public String getKey() {
             return key;
+        }
+        
+        /**
+         * SCIPIO: Off state key, for check fields only (new 2017-04-20).
+         * May be null.
+         */
+        public String getAltKey() {
+            return altKey;
         }
     }
 
@@ -3240,10 +3275,13 @@ public class ModelFormField implements Serializable {
     public static class SingleOption extends OptionSource implements Serializable {
         private final FlexibleStringExpander description;
         private final FlexibleStringExpander key;
+        private final FlexibleStringExpander altKey; // SCIPIO: 2017-04-20: new, for check field. NOTE: may be null
 
         public SingleOption(Element optionElement, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = FlexibleStringExpander.getInstance(optionElement.getAttribute("key"));
+            String altKeyStr = optionElement.hasAttribute("alt-key") ? optionElement.getAttribute("alt-key") : null;
+            this.altKey = altKeyStr != null ? FlexibleStringExpander.getInstance(altKeyStr) : null;
             this.description = FlexibleStringExpander.getInstance(UtilXml.checkEmpty(optionElement.getAttribute("description"),
                     optionElement.getAttribute("key")));
         }
@@ -3251,18 +3289,26 @@ public class ModelFormField implements Serializable {
         private SingleOption(SingleOption original, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = original.key;
+            this.altKey = original.altKey;
             this.description = original.description;
         }
 
         public SingleOption(String key, String description, ModelFormField modelFormField) {
+            this(key, null, description, modelFormField);
+        }
+        
+        public SingleOption(String key, String altKey, String description, ModelFormField modelFormField) {
             super(modelFormField);
             this.key = FlexibleStringExpander.getInstance(key);
+            this.altKey = altKey != null ? FlexibleStringExpander.getInstance(altKey) : null;
             this.description = FlexibleStringExpander.getInstance(UtilXml.checkEmpty(description, key));
         }
 
         @Override
         public void addOptionValues(List<OptionValue> optionValues, Map<String, Object> context, Delegator delegator) {
-            optionValues.add(new OptionValue(key.expandString(context), description.expandString(context)));
+            optionValues.add(new OptionValue(key.expandString(context), 
+                    altKey != null ? altKey.expandString(context) : null,
+                    description.expandString(context)));
         }
 
         @Override
@@ -3276,6 +3322,14 @@ public class ModelFormField implements Serializable {
 
         public FlexibleStringExpander getKey() {
             return key;
+        }
+        
+        /**
+         * SCIPIO: Off state key, for check fields only (new 2017-04-20).
+         * May be null.
+         */
+        public FlexibleStringExpander getAltKey() { // 
+            return altKey;
         }
     }
 

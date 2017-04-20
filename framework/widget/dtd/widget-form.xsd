@@ -2122,7 +2122,7 @@ under the License.
                         If specified the list entry will be placed in the local
                         context, otherwise each list entry must be a Map that will be expanded
                         into the local context.
-                </xs:documentation>
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="key-name" use="required">
@@ -2132,7 +2132,15 @@ under the License.
                         to the server; this should be the full name of the location of the
                         key value in the context, given the list-entry-name or expanded
                         list-entry Map as the options you would most likely use.
-                </xs:documentation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="alt-key-name">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: CHECK FIELD ONLY: Alternate key name (new 2017-04-20). 
+                        2017-04-20: Currently only used for checkboxes, for the "off" state.
+                        Corresponds to the "altValue" map argument in the "items" argument of the @field macro of the Freemarker templating API.
+                        NOTE: If this resolves to a non-empty value, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="description">
@@ -2145,6 +2153,14 @@ under the License.
     <xs:element name="option">
         <xs:complexType>
             <xs:attribute type="xs:string" name="key" use="required" />
+            <xs:attribute type="xs:string" name="alt-key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: CHECK FIELD ONLY: Alternate key (new 2017-04-20). 
+                        2017-04-20: Currently only used for checkboxes, for the "off" state.
+                        Corresponds to the "altValue" map argument in the "items" argument of the @field macro of the Freemarker templating API.
+                        NOTE: If this is specified, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="description">
                 <xs:annotation>
                     <xs:documentation>What the user will see in the widget; defaults to the value of the key attribute.</xs:documentation>

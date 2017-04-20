@@ -85,20 +85,6 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#local events = {}>
   </#if>
   <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
-  <#-- old
-  <#list items as item>
-    <div class="switch small">
-    <span <@renderClass className alert />><#rt/>
-      <input type="checkbox"<#if (item_index == 0)> id="${escapeVal(id, 'html')}"</#if><#rt/>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${escapeVal(tooltip, 'html')}"</#if><#rt/>
-        <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
-          <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
-          name="${escapeVal(name, 'html')}" value="${escapeVal(item.value!"", 'html')}" <#if item.event?has_content> ${escapeVal(item.event, 'html')}="${escapeVal(item.action!, 'html')}"<#elseif event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>/><#rt/>
-          <label for="${escapeVal(id, 'html')}"></label>
-    </span>
-    </div>
-  </#list>
-  -->
 </#macro>
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>

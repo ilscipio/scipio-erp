@@ -1063,7 +1063,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             items.append("{'value':");
             items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
+            // SCIPIO: 2017-04-20: alt-value support
+            if (optionValue.getAltKey() != null) {
+                items.append(",'altValue':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getAltKey()));
+            }
+            items.append(",'description':");
             items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
             items.append("}");
         }

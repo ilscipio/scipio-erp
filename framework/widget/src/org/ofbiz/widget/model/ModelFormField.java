@@ -988,31 +988,54 @@ public class ModelFormField implements Serializable {
     public static class CheckField extends FieldInfoWithOptions implements Serializable {
         public final static String ROW_SUBMIT_FIELD_NAME = "_rowSubmit";
         private final FlexibleStringExpander allChecked;
+        private final FlexibleStringExpander key; // SCIPIO: 2017-04-20: new, for single check fields
+        private final FlexibleStringExpander altKey; // SCIPIO: 2017-04-20: new, for single check fields
 
         private CheckField(CheckField original, ModelFormField modelFormField) {
             super(original, modelFormField);
             this.allChecked = original.allChecked;
+            this.key = original.key;
+            this.altKey = original.altKey;
         }
 
         public CheckField(Element element, ModelFormField modelFormField) {
-            super(element, modelFormField);
+            super(element, modelFormField, makeDefaultOptions(element, modelFormField));
             allChecked = FlexibleStringExpander.getInstance(element.getAttribute("all-checked"));
+            key = element.hasAttribute("key") ? FlexibleStringExpander.getInstance(element.getAttribute("key")) : null;
+            altKey = element.hasAttribute("alt-key") ? FlexibleStringExpander.getInstance(element.getAttribute("alt-key")) : null;
+        }
+        
+        // SCIPIO: allow a different default
+        private static List<OptionSource> makeDefaultOptions(Element element, ModelFormField modelFormField) {
+            String key = element.hasAttribute("key") ? element.getAttribute("key") : null;
+            String altKey = element.hasAttribute("alt-key") ? element.getAttribute("alt-key") : null;
+            if (key != null || altKey != null) {
+                if (key == null) key = "Y";
+                return UtilMisc.<OptionSource> toList(new SingleOption(key, altKey, " ", modelFormField));
+            } 
+            return null;
         }
 
         public CheckField(int fieldSource, ModelFormField modelFormField) {
             super(fieldSource, FieldInfo.CHECK, modelFormField);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.key = null;
+            this.altKey = null;
         }
         
         // SCIPIO: Allow adding options to check fields
         public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
             super(fieldSource, FieldInfo.CHECK, optionSourceList);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.key = null;
+            this.altKey = null;
         }
 
         public CheckField(ModelFormField modelFormField) {
             super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.CHECK, modelFormField);
             this.allChecked = FlexibleStringExpander.getInstance("");
+            this.key = null;
+            this.altKey = null;
         }
 
         @Override
@@ -1041,6 +1064,14 @@ public class ModelFormField implements Serializable {
         public void renderFieldString(Appendable writer, Map<String, Object> context, FormStringRenderer formStringRenderer)
                 throws IOException {
             formStringRenderer.renderCheckField(writer, context, this);
+        }
+        
+        public String getKey(Map<String, Object> context) {
+            return key != null ? this.key.expandString(context) : null;
+        }
+        
+        public String getAltKey(Map<String, Object> context) {
+            return altKey != null ? this.altKey.expandString(context) : null;
         }
     }
 
@@ -2059,7 +2090,8 @@ public class ModelFormField implements Serializable {
         private final FlexibleStringExpander noCurrentSelectedKey;
         private final List<OptionSource> optionSources;
 
-        public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
+        // SCIPIO: 2017-04-20: added defaultOptions
+        public FieldInfoWithOptions(Element element, ModelFormField modelFormField, List<OptionSource> defaultOptions) {
             super(element, modelFormField);
             this.noCurrentSelectedKey = FlexibleStringExpander.getInstance(element.getAttribute("no-current-selected-key"));
             // read all option and entity-options sub-elements, maintaining order
@@ -2076,11 +2108,19 @@ public class ModelFormField implements Serializable {
                     }
                 }
             } else {
-                // this must be added or the multi-form select box options would not show up
-                optionSources.add(new SingleOption("Y", " ", modelFormField));
+                if (defaultOptions != null) { // SCIPIO: 2017-04-20: new
+                    optionSources.addAll(defaultOptions);
+                } else {
+                    // this must be added or the multi-form select box options would not show up
+                    optionSources.add(new SingleOption("Y", " ", modelFormField));
+                }
             }
             optionSources.trimToSize();
             this.optionSources = Collections.unmodifiableList(optionSources);
+        }
+        
+        public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
+            this(element, modelFormField, null);
         }
 
         // Copy constructor.

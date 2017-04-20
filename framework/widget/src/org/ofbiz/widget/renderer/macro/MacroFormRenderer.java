@@ -1061,23 +1061,30 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (items.length() > 1) {
                 items.append(",");
             }
-            items.append("{'value':");
-            items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            items.append("{");
+            if (optionValue.getKey() != null) {
+                items.append("'value':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            }
             // SCIPIO: 2017-04-20: alt-value support
             if (optionValue.getAltKey() != null) {
-                items.append(",'altValue':");
+                if (items.length() > 1) items.append(",");
+                items.append("'altValue':");
                 items.append(ftlFmt.makeStringLiteralSQ(optionValue.getAltKey()));
             }
             String description = optionValue.getDescription();
             // SCIPIO: 2017-04-20: special one-char empty-title prevention
             if (description != null && !" ".equals(description)) {
-                items.append(",'description':");
+                if (items.length() > 1) items.append(",");
+                items.append("'description':");
                 items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
             }
             items.append("}");
         }
         items.append("]");
         // SCIPIO: 2017-04-20: new
+        String key = checkField.getKey(context);
+        String altKey = checkField.getAltKey(context);
         String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
@@ -1101,7 +1108,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
         sr.append(" noCurrentSelectedKey=");
-        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey)); 
+        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        sr.append(" key=");
+        sr.append(ftlFmt.makeStringLiteral(key)); 
+        sr.append(" altKey=");
+        sr.append(ftlFmt.makeStringLiteral(altKey)); 
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());

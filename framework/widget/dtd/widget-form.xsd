@@ -1140,6 +1140,20 @@ under the License.
                             as defaultValue parameter of @field macro in the Freemarker templating API).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Key value for single checkbox (with multiple checkbox, used as key value where unspecified).
+                        (Corresponds to the "value" parameter of the @field macro from Freemarker templating API).
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="alt-key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Alt key value for single checkbox (with multiple checkbox, used as alt key value where unspecified)
+                        (Corresponds to the "altValue" parameter of the @field macro from Freemarker templating API).
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="container" substitutionGroup="AllFields">

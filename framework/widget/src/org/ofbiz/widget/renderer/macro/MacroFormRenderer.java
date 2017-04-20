@@ -1068,8 +1068,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 items.append(",'altValue':");
                 items.append(ftlFmt.makeStringLiteralSQ(optionValue.getAltKey()));
             }
-            items.append(",'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                items.append(",'description':");
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");
@@ -1129,8 +1133,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             items.append("{'key':");
             items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                items.append(", 'description':");
+                // SCIPIO: 2017-02
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");

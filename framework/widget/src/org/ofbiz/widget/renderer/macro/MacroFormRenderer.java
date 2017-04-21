@@ -1107,12 +1107,18 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
-        sr.append(" noCurrentSelectedKey=");
-        sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
-        sr.append(" key=");
-        sr.append(ftlFmt.makeStringLiteral(key)); 
-        sr.append(" altKey=");
-        sr.append(ftlFmt.makeStringLiteral(altKey)); 
+        if (noCurrentSelectedKey != null) { // SCIPIO: NOTE: by doing this, we let macro decide how to handle default
+            sr.append(" noCurrentSelectedKey=");
+            sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        }
+        if (key != null) {
+            sr.append(" key=");
+            sr.append(ftlFmt.makeStringLiteral(key));
+        }
+        if (altKey != null) {
+            sr.append(" altKey=");
+            sr.append(ftlFmt.makeStringLiteral(altKey));
+        }
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());

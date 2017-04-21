@@ -215,7 +215,7 @@ under the License.
         <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
-        <field name="thruDate" title="${uiLabelmap.CommonThru}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthorityAssocType" description="${description}">
@@ -250,8 +250,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelmap.CommonFrom}"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelmap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
@@ -404,8 +404,8 @@ under the License.
             </drop-down>
         </field>
         <field name="taxPercentage" position="2"><text/></field>
-        <field name="fromDate" title="${uiLabelmap.CommonFrom}"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelmap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="description"><textarea/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>

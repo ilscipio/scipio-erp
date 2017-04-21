@@ -1142,17 +1142,36 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="key">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Key value for single checkbox (with multiple checkbox, used as key value where unspecified).
+                    <xs:documentation>SCIPIO: Key value for single check field (with multiple checkbox, used as key value where unspecified).
                         (Corresponds to the "value" parameter of the @field macro from Freemarker templating API).
+                        Default: "Y"
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="alt-key">
                 <xs:annotation>
-                    <xs:documentation>SCIPIO: Alt key value for single checkbox (with multiple checkbox, used as alt key value where unspecified)
+                    <xs:documentation>SCIPIO: Alt key value for single check field (with multiple checkbox, used as alt key value where unspecified).
+                        NOTE: if specified, this automatically implies use-hidden="true" (unless explicitly set false, in which case this is ignored).
                         (Corresponds to the "altValue" parameter of the @field macro from Freemarker templating API).
+                        Default: If use-hidden="true", "N"; otherwise, none (empty)
                         Added 2017-04-20.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="use-hidden" default="">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: (boolean) If true, checkbox alt-key will be submitted when the check field is off using hidden inputs.
+                        Requires dynamic script (javascript).
+                        Default: true if alt-key is specified (even if empty); false otherwise.
+                        NOTE: to prevent submitting empty value, 
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="" />
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

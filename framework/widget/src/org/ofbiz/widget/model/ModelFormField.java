@@ -990,30 +990,45 @@ public class ModelFormField implements Serializable {
         private final FlexibleStringExpander allChecked;
         private final FlexibleStringExpander key; // SCIPIO: 2017-04-20: new, for single check fields
         private final FlexibleStringExpander altKey; // SCIPIO: 2017-04-20: new, for single check fields
+        private final Boolean useHidden; // SCIPIO: 2017-04-20: new, for single check fields
 
         private CheckField(CheckField original, ModelFormField modelFormField) {
             super(original, modelFormField);
             this.allChecked = original.allChecked;
             this.key = original.key;
             this.altKey = original.altKey;
+            this.useHidden = original.useHidden;
         }
 
         public CheckField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField, makeDefaultOptions(element, modelFormField));
             allChecked = FlexibleStringExpander.getInstance(element.getAttribute("all-checked"));
-            key = element.hasAttribute("key") ? FlexibleStringExpander.getInstance(element.getAttribute("key")) : null;
-            altKey = element.hasAttribute("alt-key") ? FlexibleStringExpander.getInstance(element.getAttribute("alt-key")) : null;
+            
+            // SCIPIO: FIXME: duplication with KeyFields calls due to construction issues
+            KeyFields fields = new KeyFields(element, modelFormField);
+            useHidden = fields.useHidden;
+            this.key = fields.key != null ? FlexibleStringExpander.getInstance(fields.key) : null;
+            this.altKey = fields.altKey != null ? FlexibleStringExpander.getInstance(fields.altKey) : null;
         }
         
-        // SCIPIO: allow a different default
-        private static List<OptionSource> makeDefaultOptions(Element element, ModelFormField modelFormField) {
-            String key = element.hasAttribute("key") ? element.getAttribute("key") : null;
-            String altKey = element.hasAttribute("alt-key") ? element.getAttribute("alt-key") : null;
-            if (key != null || altKey != null) {
+        private static class KeyFields { // SCIPIO: workaround for constructor limits
+            String key;
+            String altKey;
+            Boolean useHidden;
+            
+            public KeyFields(Element element, ModelFormField modelFormField) {
+                key = element.hasAttribute("key") ? element.getAttribute("key") : null;
+                altKey = element.hasAttribute("alt-key") ? element.getAttribute("alt-key") : null;
+                useHidden = UtilMisc.booleanValue(element.getAttribute("use-hidden"));
                 if (key == null) key = "Y";
-                return UtilMisc.<OptionSource> toList(new SingleOption(key, altKey, " ", modelFormField));
-            } 
-            return null;
+                if (altKey == null && Boolean.TRUE.equals(useHidden)) altKey = "N";
+            }
+        }
+        
+        // SCIPIO: allow a different default WARN: duplication required due to java
+        private static List<OptionSource> makeDefaultOptions(Element element, ModelFormField modelFormField) {
+            KeyFields fields = new KeyFields(element, modelFormField);
+            return UtilMisc.<OptionSource> toList(new SingleOption(fields.key, fields.altKey, " ", modelFormField));
         }
 
         public CheckField(int fieldSource, ModelFormField modelFormField) {
@@ -1021,6 +1036,7 @@ public class ModelFormField implements Serializable {
             this.allChecked = FlexibleStringExpander.getInstance("");
             this.key = null;
             this.altKey = null;
+            this.useHidden = null;
         }
         
         // SCIPIO: Allow adding options to check fields
@@ -1029,6 +1045,7 @@ public class ModelFormField implements Serializable {
             this.allChecked = FlexibleStringExpander.getInstance("");
             this.key = null;
             this.altKey = null;
+            this.useHidden = null;
         }
 
         public CheckField(ModelFormField modelFormField) {
@@ -1036,6 +1053,7 @@ public class ModelFormField implements Serializable {
             this.allChecked = FlexibleStringExpander.getInstance("");
             this.key = null;
             this.altKey = null;
+            this.useHidden = null;
         }
 
         @Override
@@ -1072,6 +1090,10 @@ public class ModelFormField implements Serializable {
         
         public String getAltKey(Map<String, Object> context) {
             return altKey != null ? this.altKey.expandString(context) : null;
+        }
+        
+        public Boolean getUseHidden(Map<String, Object> context) {
+            return useHidden;
         }
     }
 

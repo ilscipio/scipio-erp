@@ -78,14 +78,14 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#-- SCIPIO: NOTE: here noCurrentSelectedKey, key, and altKey may be omitted by caller (java) when null, so that way we decide the defaults ourselves -->
-<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" noCurrentSelectedKey="" key="" altKey=false extraArgs...>
+<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" noCurrentSelectedKey="" key="" altKey=false useHidden="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked value=key altValue=altKey currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked value=key altValue=altKey useHidden=useHidden currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>

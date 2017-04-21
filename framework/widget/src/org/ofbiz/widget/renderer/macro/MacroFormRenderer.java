@@ -1086,6 +1086,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String key = checkField.getKey(context);
         String altKey = checkField.getAltKey(context);
         String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
+        Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
         appendFieldInfo(sr, context, modelFormField);
@@ -1119,6 +1120,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
             sr.append(" altKey=");
             sr.append(ftlFmt.makeStringLiteral(altKey));
         }
+        sr.append(" useHidden=");
+        sr.append(ftlFmt.makeTernaryBooleanLiteral(useHidden));
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());

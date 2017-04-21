@@ -22455,4 +22455,10 @@
         <value xml:lang="de">Debitor</value>
         <value xml:lang="en">Debtor</value>
     </property>
+    <property key="PageTitleNewTaxAuthorityPartyInfo">
+        <value xml:lang="de">Neue Informationen der Steuerbehörde</value>
+        <value xml:lang="en">New Tax Authority Party Info</value>
+        <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
+        <value xml:lang="fr">Ajouter informations d'une administration fiscale</value>
+    </property>
 </resource>

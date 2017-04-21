@@ -245,15 +245,32 @@ under the License.
     <screen name="EditTaxAuthorityPartyInfo">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditTaxAuthorityPartyInfo"/>
-                <set field="activeSubMenuItem" value="EditTaxAuthorityPartyInfo"/>
-                
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
+                <!-- NOTE: assumes taxAuthPartyId & taxAuthGeoId in context -->
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="fromDate" from-field="parameters.fromDate"/>
+                <entity-one entity-name="PartyTaxAuthInfo" value-field="partyTaxAuthInfo"/>
+                
+                <set field="titleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthorityPartyInfo' : 'PageTitleNewTaxAuthorityPartyInfo'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.taxAuthority ? 'EditTaxAuthorityPartyInfo' : 'NewTaxAuthorityPartyInfo'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="partyTaxAuthInfo"/></not>
+                            </condition>
+                            <widgets>
+                                <container>
+                                    <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
+                                        <parameter param-name="taxAuthPartyId"/>
+                                        <parameter param-name="taxAuthGeoId"/>
+                                    </link>
+                                </container>
+                            </widgets>
+                        </section>
                         <include-screen name="EditTaxAuthorityPartyInfoWidgets"/>
                     </decorator-section>
                 </decorator-screen>
@@ -267,17 +284,10 @@ under the License.
                 <!-- NOTE: assumes taxAuthPartyId & taxAuthGeoId in context -->
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
-
                 <entity-one entity-name="PartyTaxAuthInfo" value-field="partyTaxAuthInfo"/>
             </actions>
             <widgets>
                 <screenlet>
-                    <container>
-                        <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
-                            <parameter param-name="taxAuthPartyId"/>
-                            <parameter param-name="taxAuthGeoId"/>
-                        </link>
-                    </container>
                     <include-form name="EditTaxAuthorityPartyInfo" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
                 </screenlet>
             </widgets>

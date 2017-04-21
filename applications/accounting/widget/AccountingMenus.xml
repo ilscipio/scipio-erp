@@ -1795,6 +1795,7 @@
         <menu-item-alias name="EditTaxAuthorityCategories" for="EditTaxAuthorityRateProducts"/>
         <menu-item-alias name="ListTaxAuthorityParties" for="EditTaxAuthority"/>
         <menu-item-alias name="EditTaxAuthorityPartyInfo" for="EditTaxAuthority"/>
+        <menu-item-alias name="NewTaxAuthorityPartyInfo" for="EditTaxAuthority"/>
         <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingTaxAuthority}">
             <link target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId"/>

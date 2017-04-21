@@ -2427,24 +2427,25 @@ under the License.
         <response name="error" type="view" value="EditTaxAuthority"/>
     </request-map>
 
-    <request-map uri="EditTaxAuthorityCategories"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityCategories"/></request-map>
+    <!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" (request preserved so all existing links still work) -->
+    <request-map uri="EditTaxAuthorityCategories"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityRateProducts"/></request-map>
     <request-map uri="createTaxAuthorityCategory">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTaxAuthorityCategory"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
     </request-map>
     <request-map uri="updateTaxAuthorityCategory">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTaxAuthorityCategory"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
     </request-map>
     <request-map uri="deleteTaxAuthorityCategory">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteTaxAuthorityCategory"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/>
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/>
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityCategories" -->
     </request-map>
 
     <request-map uri="EditTaxAuthorityAssocs"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityAssocs"/></request-map>
@@ -2481,25 +2482,24 @@ under the License.
         <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
     </request-map>
 
-    <!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" (request preserved so all existing links still work) -->
-    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityCategories"/></request-map>
+    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityRateProducts"/></request-map>
     <request-map uri="createTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
     </request-map>
     <request-map uri="updateTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
     </request-map>
     <request-map uri="deleteTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
-        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
     </request-map>
 
     <!-- SCIPIO: 2017-04-20: combined screens: value="ListTaxAuthorityParties" (request preserved so all existing links still work) -->

@@ -89,12 +89,13 @@ under the License.
         </section>
     </screen>
 
+    <!-- SCIPIO: 2017-04-20: DEPRECATED: now integrated into EditTaxAuthorityRateProducts -->
     <screen name="EditTaxAuthorityCategories">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditTaxAuthorityRateProducts"/><!-- SCIPIO: switched out: PageTitleEditTaxAuthorityCategories -->
+                <set field="titleProperty" value="PageTitleEditTaxAuthorityCategories"/>
                 <set field="activeSubMenuItem" value="EditTaxAuthorityCategories"/>
-                <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityRateProducts"/><!-- SCIPIO: switched out: PageTitleEditTaxAuthorityCategories -->
+                <set field="labelTitleProperty" value="PageTitleEditTaxAuthorityCategories"/>
 
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
@@ -102,17 +103,24 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="TaxAuthorityCategoriesPanel" title="${uiLabelMap.ProductCategories}" collapsible="true"><!-- PageTitleAddTaxAuthorityCategory -->
-                            <include-form name="AddTaxAuthorityCategory" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
-                        </screenlet>
-                        <include-form name="ListTaxAuthorityCategories" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
-                        <!-- SCIPIO: 2017-04-20: combined screens -->
-                        <include-screen name="EditTaxAuthorityRateProductWidgets"/>
+                        <include-screen name="EditTaxAuthorityCategoriesWidgets"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: 2017-04-20: factored out for reuse -->
+    <screen name="EditTaxAuthorityCategoriesWidgets">
+        <section>
+            <widgets>
+                <screenlet id="TaxAuthorityCategoriesPanel" title="${uiLabelMap.ProductCategories}" collapsible="true"><!-- PageTitleAddTaxAuthorityCategory -->
+                    <include-form name="AddTaxAuthorityCategory" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
+                </screenlet>
+                <include-form name="ListTaxAuthorityCategories" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="EditTaxAuthorityAssocs">
         <section>
             <actions>
@@ -135,6 +143,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditTaxAuthorityGlAccounts">
         <section>
             <actions>
@@ -157,7 +166,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <!-- SCIPIO: 2017-04-20: DEPRECATED: now integrated into EditTaxAuthorityCategories -->
+
     <screen name="EditTaxAuthorityRateProducts">
         <section>
             <actions>
@@ -171,6 +180,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <!-- SCIPIO: 2017-04-20: combined screens -->
+                        <include-screen name="EditTaxAuthorityCategoriesWidgets"/>
                         <include-screen name="EditTaxAuthorityRateProductWidgets"/>
                     </decorator-section>
                 </decorator-screen>

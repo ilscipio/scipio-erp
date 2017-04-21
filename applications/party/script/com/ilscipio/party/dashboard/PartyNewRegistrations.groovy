@@ -18,7 +18,7 @@ for (int i = 0; i <= iCount; i++) {
     createdDateAndExprs.add(EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
     createdDateAndExprs.add(EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
     
-    createdPartiesCount = from("Party").where(createdDateAndExprs).queryCount();
+    createdPartiesCount = from("Party").select("partyId").where(createdDateAndExprs).queryCount();
     
     totalMap.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), createdPartiesCount);    
     dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);    

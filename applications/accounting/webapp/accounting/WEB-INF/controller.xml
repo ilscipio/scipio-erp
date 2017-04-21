@@ -2481,32 +2481,38 @@ under the License.
         <response name="error" type="view" value="EditTaxAuthorityGlAccounts"/>
     </request-map>
 
-    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityRateProducts"/></request-map>
+    <!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" (request preserved so all existing links still work) -->
+    <request-map uri="EditTaxAuthorityRateProducts"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityCategories"/></request-map>
     <request-map uri="createTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
-        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
     </request-map>
     <request-map uri="updateTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
-        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
     </request-map>
     <request-map uri="deleteTaxAuthorityRateProduct">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteTaxAuthorityRateProduct"/>
-        <response name="success" type="view" value="EditTaxAuthorityRateProducts"/>
-        <response name="error" type="view" value="EditTaxAuthorityRateProducts"/>
+        <response name="success" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
+        <response name="error" type="view" value="EditTaxAuthorityCategories"/><!-- SCIPIO: 2017-04-20: combined screens: value="EditTaxAuthorityRateProducts" -->
     </request-map>
 
-    <request-map uri="ListTaxAuthorityParties"><security https="true" auth="true"/><response name="success" type="view" value="ListTaxAuthorityParties"/></request-map>
+    <!-- SCIPIO: 2017-04-20: combined screens: value="ListTaxAuthorityParties" (request preserved so all existing links still work) -->
+    <request-map uri="ListTaxAuthorityParties"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthority"/></request-map>
     <request-map uri="deleteTaxAuthorityPartyInfo">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyTaxAuthInfo"/>
-        <response name="success" type="view" value="ListTaxAuthorityParties"/>
-        <response name="error" type="view" value="ListTaxAuthorityParties"/>
+        <!-- SCIPIO: 2017-04-20: have to redirect due to issues with re-querying -->
+        <response name="success" type="request-redirect" value="EditTaxAuthority">
+            <redirect-parameter name="taxAuthPartyId"/>
+            <redirect-parameter name="taxAuthGeoId"/>
+        </response>
+        <response name="error" type="view" value="EditTaxAuthority"/><!-- SCIPIO: 2017-04-20: combined screens: value="ListTaxAuthorityParties" -->
     </request-map>
     <request-map uri="EditTaxAuthorityPartyInfo"><security https="true" auth="true"/><response name="success" type="view" value="EditTaxAuthorityPartyInfo"/></request-map>
     <request-map uri="createTaxAuthorityPartyInfo">

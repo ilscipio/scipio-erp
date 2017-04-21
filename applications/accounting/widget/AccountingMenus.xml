@@ -1792,13 +1792,16 @@
         <!-- SCIPIO: don't use this, it just hides errors: default-menu-item-name="EditTaxAuthority" -->
         <menu-item-alias name="FindTaxAuthority" for="PARENT-NOSUB"/>
         <menu-item-alias name="NewTaxAuthority" for="PARENT-NOSUB"/>
+        <menu-item-alias name="EditTaxAuthorityRateProducts" for="EditTaxAuthorityCategories"/>
+        <menu-item-alias name="ListTaxAuthorityParties" for="EditTaxAuthority"/>
+        <menu-item-alias name="EditTaxAuthorityPartyInfo" for="EditTaxAuthority"/>
         <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingTaxAuthority}">
             <link target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
             </link>
         </menu-item>
-        <menu-item name="EditTaxAuthorityCategories" title="${uiLabelMap.ProductCategories}">
+        <menu-item name="EditTaxAuthorityCategories" title="${uiLabelMap.AccountingProductRates}"><!-- ProductCategories -->
             <link target="EditTaxAuthorityCategories">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -1816,18 +1819,20 @@
                 <parameter param-name="taxAuthGeoId"/>
             </link>
         </menu-item>
+        <!-- SCIPIO: DEPRECATED (combined screens, aliased above)
         <menu-item name="EditTaxAuthorityRateProducts" title="${uiLabelMap.AccountingProductRates}">
             <link target="EditTaxAuthorityRateProducts">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
+        <!-- SCIPIO: DEPRECATED (combined screens, aliased above)
         <menu-item name="ListTaxAuthorityParties" title="${uiLabelMap.PartyParties}">
             <link target="ListTaxAuthorityParties">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="TaxAuthoritySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
         always-expand-selected-or-ancestor="true">

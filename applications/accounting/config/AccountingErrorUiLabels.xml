@@ -878,4 +878,9 @@
         <value xml:lang="zh">获取订单头时出错</value>
         <value xml:lang="zh_TW">獲取訂單頭時出錯</value>
     </property>
+    <!-- SCIPIO: TODO: Localize -->
+    <property key="AccountingUserGeoInvalidTaxAuthority">
+        <value xml:lang="de">Der angegebene Benutzer- und Geo-Standort ist kein gültiger Tax Authority</value>
+        <value xml:lang="en">The specified user and geo location is not a valid Tax Authority</value>
+    </property>
 </resource>

@@ -63,6 +63,11 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
+        
+        <!-- SCIPIO: extra verification to help error message -->
+        <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
+        <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
+        <call-simple-method method-name="verifyValidTaxAuthority"/>
 
         <make-value entity-name="TaxAuthorityAssoc" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -76,6 +81,21 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
+
+        <!-- SCIPIO: extra verification to help error message -->
+        <if>
+            <condition>
+                <or>
+                    <not><if-empty field="parameters.toTaxAuthPartyId"/></not>
+                    <not><if-empty field="parameters.toTaxAuthGeoId"/></not>
+                </or>
+            </condition>
+            <then>
+                <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
+                <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
+                <call-simple-method method-name="verifyValidTaxAuthority"/>
+            </then>
+        </if>
 
         <entity-one entity-name="TaxAuthorityAssoc" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -295,5 +315,19 @@ under the License.
         ]]></call-bsh>
         <set-service-fields service-name="createPartyTaxAuthInfo" map="parameters" to-map="createPartyTaxAuthInfoMap"/>
         <call-service service-name="createPartyTaxAuthInfo" in-map-name="createPartyTaxAuthInfoMap" include-user-login="true"/>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-04-21: new -->
+    <simple-method method-name="verifyValidTaxAuthority" short-description="SCIPIO: verifies the given partyId + geoId is a valid TaxAuthority">
+        <entity-one entity-name="TaxAuthority" value-field="verifiedTaxAuthority" auto-field-map="false">
+            <field-map field-name="taxAuthPartyId" from-field="vvta.partyId"/>
+            <field-map field-name="taxAuthGeoId" from-field="vvta.geoId"/>
+        </entity-one>
+        <if-empty field="verifiedTaxAuthority">
+            <add-error>
+                <fail-property resource="AccountingErrorUiLabels" property="AccountingUserGeoInvalidTaxAuthority"/>
+            </add-error>
+        </if-empty>
+        <check-errors/>
     </simple-method>
 </simple-methods>

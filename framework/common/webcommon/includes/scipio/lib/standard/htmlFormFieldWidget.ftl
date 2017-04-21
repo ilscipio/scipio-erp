@@ -849,7 +849,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
-  "value":"", "altValue":"", "useHidden":"", "required":false, 
+  "value":"", "altValue":false, "useHidden":"", "required":false, 
   "readonly":"", "disabled":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -905,7 +905,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip title=title multiMode=multiMode 
     fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition readonly=readonly disabled=disabled
-    value=value altValue=altValue required=required origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    value=value altValue=altValue useHidden=useHidden required=required origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
@@ -914,7 +914,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
      NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" disabled="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" disabled="" value="" altValue=false useHidden="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -946,13 +946,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local currentId = id>
   <#list items as item>
     <#local inputAttribs = {}>
-    <#local itemValue = item.value!value!"">
-    <#local itemAltValue = item.altValue!altValue!false>
-    <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
-      <#local itemUseHidden = true>
-    <#else>
-      <#local itemUseHidden = item.useHidden!useHidden!false>
-      <#if !itemUseHidden?is_boolean>
+    <#local itemValue = item.value!value>
+    <#local itemAltValue = item.altValue!altValue>
+    <#local itemUseHidden = item.useHidden!useHidden>
+    <#if !itemUseHidden?is_boolean>
+      <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
+        <#local itemUseHidden = true>
+      <#else>
         <#local itemUseHidden = false>
       </#if>
     </#if>

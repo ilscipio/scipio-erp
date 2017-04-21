@@ -29,8 +29,8 @@ Map<Date, Map<String, BigDecimal>> processResults() {
         List serverHitDateAndExprs = FastList.newInstance(mainAndExprs);
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
-       
-        serverRequestHits = from("ServerHit").where(serverHitDateAndExprs).queryCount();
+        
+        serverRequestHits = from("ServerHit").select("visitId").where(serverHitDateAndExprs).queryCount();
         totalRequests.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), serverRequestHits);
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntervals.getDateEnd(), context.locale, context.timeZone);
     }

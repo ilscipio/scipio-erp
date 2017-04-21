@@ -395,7 +395,7 @@ under the License.
         <field name="mimeTypeId" title="${uiLabelMap.ContentDocumentType}" use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; !&quot;SURVEY&quot;.equals(templateDataResourceTypeId)">
             <display-entity entity-name="MimeType" description="${description}"/>
         </field>
-        <field name="mimeTypeId" title="${uiLabelMap.ContentDocumentType}" use-when="&quot;TEMPLATE&quot;.equals(contentTypeId)" widget-style="smallSelect">
+        <field name="mimeTypeId" title="${uiLabelMap.ContentDocumentType}" use-when="&quot;TEMPLATE&quot;.equals(contentTypeId)" widget-style="+smallSelect">
             <drop-down allow-empty="false">
                 <option key="application/msword" description="${uiLabelMap.ContentMSWord}"/>
                 <option key="application/pdf" description="${uiLabelMap.ContentPDFFile}"/>

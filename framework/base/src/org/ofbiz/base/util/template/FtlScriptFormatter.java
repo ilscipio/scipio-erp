@@ -1,6 +1,5 @@
 package org.ofbiz.base.util.template;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,11 +13,21 @@ public class FtlScriptFormatter {
 
     public static final String module = FtlScriptFormatter.class.getName();
     
+    
+    /******************************************************/
+    /* Properties */
+    /******************************************************/
+    
     protected String literalDQStringDefault;
     protected String literalDQGeneralDefault;
     
     protected String literalSQStringDefault;
     protected String literalSQGeneralDefault;
+    
+
+    /******************************************************/
+    /* Constructors */
+    /******************************************************/
     
     public FtlScriptFormatter() {
         this.literalDQStringDefault = "\"\"";
@@ -32,6 +41,48 @@ public class FtlScriptFormatter {
         return new FtlScriptFormatter();
     }
 
+
+    /******************************************************/
+    /* Setters and configuration */
+    /******************************************************/
+    
+    public String getLiteralDQStringDefault() {
+        return literalDQStringDefault;
+    }
+
+    public void setLiteralDQStringDefault(String literalDQStringDefault) {
+        this.literalDQStringDefault = literalDQStringDefault;
+    }
+
+    public String getLiteralDQGeneralDefault() {
+        return literalDQGeneralDefault;
+    }
+
+    public void setLiteralDQGeneralDefault(String literalDQGeneralDefault) {
+        this.literalDQGeneralDefault = literalDQGeneralDefault;
+    }
+
+    public String getLiteralSQStringDefault() {
+        return literalSQStringDefault;
+    }
+
+    public void setLiteralSQStringDefault(String literalSQStringDefault) {
+        this.literalSQStringDefault = literalSQStringDefault;
+    }
+
+    public String getLiteralSQGeneralDefault() {
+        return literalSQGeneralDefault;
+    }
+
+    public void setLiteralSQGeneralDefault(String literalSQGeneralDefault) {
+        this.literalSQGeneralDefault = literalSQGeneralDefault;
+    }
+    
+    
+    /******************************************************/
+    /* String literal and value building methods */
+    /******************************************************/
+    
     /**
      * SCIPIO: Makes an escaped Freemarker string literal including enclosing double-quotes.
      * <p>
@@ -141,39 +192,32 @@ public class FtlScriptFormatter {
     public <T> String makeStringValueSQ(T value) {
         return value.toString();
     }
-
-
-    public String getLiteralDQStringDefault() {
-        return literalDQStringDefault;
+    
+    
+    /******************************************************/
+    /* Boolean literal and value building methods */
+    /******************************************************/
+    
+    public String makeBooleanLiteral(boolean value) {
+        return Boolean.toString(value);
+    }
+    
+    public String makeTernaryBooleanLiteral(Boolean value) {
+        return value != null ? value.toString() : this.literalDQGeneralDefault;
+    }
+    
+    public String makeBooleanLiteralSQ(boolean value) {
+        return Boolean.toString(value);
+    }
+    
+    public String makeTernaryBooleanLiteralSQ(Boolean value) {
+        return value != null ? value.toString() : this.literalSQGeneralDefault;
     }
 
-    public void setLiteralDQStringDefault(String literalDQStringDefault) {
-        this.literalDQStringDefault = literalDQStringDefault;
-    }
-
-    public String getLiteralDQGeneralDefault() {
-        return literalDQGeneralDefault;
-    }
-
-    public void setLiteralDQGeneralDefault(String literalDQGeneralDefault) {
-        this.literalDQGeneralDefault = literalDQGeneralDefault;
-    }
-
-    public String getLiteralSQStringDefault() {
-        return literalSQStringDefault;
-    }
-
-    public void setLiteralSQStringDefault(String literalSQStringDefault) {
-        this.literalSQStringDefault = literalSQStringDefault;
-    }
-
-    public String getLiteralSQGeneralDefault() {
-        return literalSQGeneralDefault;
-    }
-
-    public void setLiteralSQGeneralDefault(String literalSQGeneralDefault) {
-        this.literalSQGeneralDefault = literalSQGeneralDefault;
-    }
+    
+    /******************************************************/
+    /* Versatile literal and value building methods */
+    /******************************************************/
 
     /**
      * Makes a Freemarker literal from any supported object type.
@@ -268,6 +312,5 @@ public class FtlScriptFormatter {
             sb.append(singleQuote ? makeStringLiteralSQ(object.toString()) : makeStringLiteral(object.toString())); 
         }
     }
-    
     
 }

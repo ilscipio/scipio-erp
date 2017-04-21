@@ -1061,13 +1061,32 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (items.length() > 1) {
                 items.append(",");
             }
-            items.append("{'value':");
-            items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            items.append("{");
+            if (optionValue.getKey() != null) {
+                items.append("'value':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            }
+            // SCIPIO: 2017-04-20: alt-value support
+            if (optionValue.getAltKey() != null) {
+                if (items.length() > 1) items.append(",");
+                items.append("'altValue':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getAltKey()));
+            }
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                if (items.length() > 1) items.append(",");
+                items.append("'description':");
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");
+        // SCIPIO: 2017-04-20: new
+        String key = checkField.getKey(context);
+        String altKey = checkField.getAltKey(context);
+        String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
+        Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
         appendFieldInfo(sr, context, modelFormField);
@@ -1089,6 +1108,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        if (noCurrentSelectedKey != null) { // SCIPIO: NOTE: by doing this, we let macro decide how to handle default
+            sr.append(" noCurrentSelectedKey=");
+            sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        }
+        if (key != null) {
+            sr.append(" key=");
+            sr.append(ftlFmt.makeStringLiteral(key));
+        }
+        if (altKey != null) {
+            sr.append(" altKey=");
+            sr.append(ftlFmt.makeStringLiteral(altKey));
+        }
+        sr.append(" useHidden=");
+        sr.append(ftlFmt.makeTernaryBooleanLiteral(useHidden));
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1120,8 +1153,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             items.append("{'key':");
             items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                items.append(", 'description':");
+                // SCIPIO: 2017-02
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");

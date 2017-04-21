@@ -948,11 +948,11 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local inputAttribs = {}>
     <#local itemValue = item.value!value>
     <#local itemAltValue = item.altValue!altValue>
-    <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
-      <#local itemUseHidden = true>
-    <#else>
-      <#local itemUseHidden = item.useHidden!useHidden>
-      <#if !itemUseHidden?is_boolean>
+    <#local itemUseHidden = item.useHidden!useHidden>
+    <#if !itemUseHidden?is_boolean>
+      <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
+        <#local itemUseHidden = true>
+      <#else>
         <#local itemUseHidden = false>
       </#if>
     </#if>

@@ -1235,6 +1235,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               such that the hidden input receives the passed name. Any javascript must adapt appropriately.
                               On the other hand, the {{{id}}} of the checkbox is unchanged, and the hidden field
                               receives an id with a {{{_hidden}}} suffix.
+                              NOTE: 2017-04-20: An explicit true or false value for useHidden now overrides the automatic-enabling
+                                  by the presence of altValue, so that useHidden=false guarantees no hidden even if you
+                                  set an altValue; however, in this case altValue is ignored. This is to simplify some caller
+                                  code language.
     altValue                = Value to submit with form when checkbox is unselected
                               WARN: This affects javascript lookups, field name and id; see {{{useHidden}}} parameter.
                               If this is specified (non-boolean, non-false), it automatically turns on {{{useHidden}}}

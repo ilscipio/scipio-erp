@@ -454,13 +454,18 @@ under the License.
         </row-actions>
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
-           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+            <!-- SCIPIO: TODO: REVIEW: there's no agreementId here, I don't know where this comes from...
+            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
-            </hyperlink>
+            </hyperlink>-->
+            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="/partymgr/control/viewprofile" target-type="inter-app">
+                <parameter param-name="partyId"/>
+            </hyperlink> 
         </field>
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}"><display/></field>
+        <!-- SCIPIO: due to screen combining, these are implied now
         <field name="taxAuthPartyId">
              <hyperlink also-hidden="false" description="${taxAuthPartyId} - ${taxAuthPartyGroup.groupName}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId" from-field="taxAuthPartyId"/>               
@@ -471,7 +476,7 @@ under the License.
                 <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 <parameter param-name="geoId" from-field="taxAuthGeoId"/>               
             </hyperlink>
-        </field>
+        </field> -->
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="isExempt"><display/></field>
@@ -498,15 +503,22 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="partyTaxAuthInfo==null" target="createTaxAuthorityPartyInfo"/>
 
-        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
+        <!-- SCIPIO: due to screen merging, we'll make taxAuthGeoId and taxAuthPartyId read-only after create, otherwise strange (these are part of PK) -->
+        <field use-when="partyTaxAuthInfo==null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId"></entity-options>
             </drop-down>
         </field>
-        <field name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
+        <field use-when="partyTaxAuthInfo!=null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
+            <display-entity entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId" also-hidden="true"/>
+        </field>
+        <field use-when="partyTaxAuthInfo==null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthority" description="${taxAuthPartyId}"></entity-options>
             </drop-down>
+        </field>
+        <field use-when="partyTaxAuthInfo!=null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
+            <display description="${taxAuthPartyId}" also-hidden="true"/>
         </field>
 
         <field use-when="partyTaxAuthInfo!=null" name="partyId" title="${uiLabelMap.CommonParty}">

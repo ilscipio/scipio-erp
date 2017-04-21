@@ -26,7 +26,7 @@ under the License.
         
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
             <drop-down allow-empty="true">
-                <entity-options entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId"></entity-options>
+                <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
             </drop-down>
         </field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}" position="2">
@@ -60,7 +60,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="TaxAuthority" default-field-type="display"/>
 
-        <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
+        <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"/></field>
         <field name="taxAuthPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
@@ -100,7 +100,7 @@ under the License.
                 <parameter param-name="taxAuthGeoId"/>
             </hyperlink>
         </field>
-        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"/></field>
         <field name="requireTaxIdForExemption"><display/></field>
         <field name="taxIdFormatPattern"><display/></field>
         <field name="includeTaxInPrice"><display/></field>
@@ -121,7 +121,7 @@ under the License.
         </field>
 
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority!=null" position="2">
-            <display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}"></display-entity>
+            <display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"></display-entity>
         </field>
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority==null&amp;&amp;taxAuthGeoId==null" required-field="true" position="2">
             <lookup target-form-name="LookupGeo"/>
@@ -212,7 +212,7 @@ under the License.
                 <parameter param-name="taxAuthGeoId" from-field="toTaxAuthGeoId"/>
             </hyperlink>
         </field>
-        <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
+        <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"/></field>
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
@@ -240,10 +240,14 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}" position="2"><lookup target-form-name="LookupGeo"/></field>
+        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
+            </drop-down>
+        </field>
 
-        <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}">
+        <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthorityAssocType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -301,8 +305,8 @@ under the License.
         <auto-fields-service service-name="createTaxAuthorityGlAccount"/>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="organizationPartyId" title="${uiLabelMap.PartyOrganizationPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}"><lookup target-form-name="LookupGlAccount"/></field>
+        <field name="organizationPartyId" title="${uiLabelMap.PartyOrganizationPartyId}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" required-field="true"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
@@ -479,7 +483,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="taxAuthGeoId">
-            <hyperlink also-hidden="false" description="${taxAuthGeoId} - ${geo.geoName}" target="/partymgr/control/PartyGeoLocation" target-type="inter-app">
+            <hyperlink also-hidden="false" description="${geo.geoName} [${geo.geoId}]" target="/partymgr/control/PartyGeoLocation" target-type="inter-app">
                 <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 <parameter param-name="geoId" from-field="taxAuthGeoId"/>               
             </hyperlink>
@@ -514,11 +518,11 @@ under the License.
         <!-- SCIPIO: due to screen merging, we'll make taxAuthGeoId and taxAuthPartyId read-only after create, otherwise strange (these are part of PK) -->
         <field use-when="partyTaxAuthInfo==null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true">
             <drop-down allow-empty="true">
-                <entity-options entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId"></entity-options>
+                <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
             </drop-down>
         </field>
         <field use-when="partyTaxAuthInfo!=null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
-            <display-entity entity-name="Geo" description="${geoName} - ${geoId}" key-field-name="geoId" also-hidden="true"/>
+            <display-entity entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId" also-hidden="true"/>
         </field>
         <field use-when="partyTaxAuthInfo==null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" required-field="true" position="2">
             <drop-down allow-empty="true">

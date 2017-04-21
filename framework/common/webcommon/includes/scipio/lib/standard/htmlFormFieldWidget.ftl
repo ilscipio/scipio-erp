@@ -849,7 +849,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "style":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
   "tooltip":"", "title":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", 
-  "value":"", "altValue":"", "useHidden":"", "required":false, 
+  "value":"", "altValue":false, "useHidden":"", "required":false, 
   "readonly":"", "disabled":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
@@ -914,7 +914,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
      NOTE: "value", "altValue" and "useHidden" are only fallbacks/common/defaults; the ones in items maps have priority -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" style="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
     events={} tooltip="" title="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
-    labelType="standard" labelPosition="after" readonly="" disabled="" value="" altValue="" useHidden="" required=false origArgs={} passArgs={} catchArgs...>
+    labelType="standard" labelPosition="after" readonly="" disabled="" value="" altValue=false useHidden="" required=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -946,8 +946,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local currentId = id>
   <#list items as item>
     <#local inputAttribs = {}>
-    <#local itemValue = item.value!value!"">
-    <#local itemAltValue = item.altValue!altValue!false>
+    <#local itemValue = item.value!value>
+    <#local itemAltValue = item.altValue!altValue>
     <#if !itemAltValue?is_boolean || (itemAltValue?is_boolean && itemAltValue == true)>
       <#local itemUseHidden = true>
     <#else>

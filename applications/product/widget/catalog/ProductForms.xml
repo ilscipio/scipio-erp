@@ -371,14 +371,14 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}" widget-style="smallSelect">
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}" widget-style="+smallSelect">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductPricePurpose" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonType}" widget-style="smallSelect" position="2">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonType}" widget-style="+smallSelect" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType" description="${description}">
                     <entity-order-by field-name="description" />

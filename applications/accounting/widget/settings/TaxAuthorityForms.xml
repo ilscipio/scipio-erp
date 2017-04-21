@@ -130,13 +130,13 @@ under the License.
             <lookup target-form-name="LookupGeo"/>
         </field>
 
-        <field name="requireTaxIdForExemption" widget-style="smallSelect">
+        <field name="requireTaxIdForExemption" widget-style="+smallSelect">
             <drop-down no-current-selected-key="Y">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-        <field name="includeTaxInPrice" widget-style="smallSelect" position="2">
+        <field name="includeTaxInPrice" widget-style="+smallSelect" position="2">
             <drop-down no-current-selected-key="N">
                 <option key="Y" description="${uiLabelMap.CommonY}"/>
                 <option key="N" description="${uiLabelMap.CommonN}"/>
@@ -420,10 +420,10 @@ under the License.
         <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}" position="2"><text-find/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
-        <field name="isExempt" widget-style="smallSelect">
+        <field name="isExempt" widget-style="+smallSelect">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="isNexus" widget-style="smallSelect" position="2">
+        <field name="isNexus" widget-style="+smallSelect" position="2">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
@@ -523,8 +523,8 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo!=null" ><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo==null"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="isExempt" widget-style="smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
-        <field name="isNexus" widget-style="smallSelect" position="2"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="isExempt" widget-style="+smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="isNexus" widget-style="+smallSelect" position="2"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
 
         <field use-when="partyTaxAuthInfo!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field use-when="partyTaxAuthInfo==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>

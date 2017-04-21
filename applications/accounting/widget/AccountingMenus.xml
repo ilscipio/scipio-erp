@@ -1840,4 +1840,49 @@
         <include-elements menu-name="TaxAuthorityTabBar" recursive="includes-only"/>
     </menu>
 
+    <!-- SCIPIO: new -->
+    <menu name="NewTaxAuthoritySubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingNewTaxAuthority}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditTaxAuthority" />
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: new -->
+    <menu name="EditTaxAuthoritySubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditTaxAuthority" title="${uiLabelMap.AccountingNewTaxAuthority}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="taxAuthority"/></not>
+            </condition>
+            <link target="EditTaxAuthority" />
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="ListTaxAuthorityPartiesSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditTaxAuthorityPartyInfo" title="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditTaxAuthorityPartyInfo">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: new -->
+    <menu name="EditTaxAuthorityPartyInfoSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditTaxAuthority" title="${uiLabelMap.CommonBack}" widget-style="+${styles.action_nav} ${styles.action_cancel}">
+            <link target="EditTaxAuthority" text="${uiLabelMap.CommonBack}" style="${styles.link_nav} ">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditTaxAuthorityPartyInfo" title="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="partyTaxAuthInfo"/></not>
+            </condition>
+            <link target="EditTaxAuthorityPartyInfo">
+                <parameter param-name="taxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId"/>
+            </link>
+        </menu-item>
+    </menu>
 </menus>

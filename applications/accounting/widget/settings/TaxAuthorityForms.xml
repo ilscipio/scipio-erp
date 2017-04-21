@@ -327,20 +327,28 @@ under the License.
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
 
-        <field name="taxAuthorityRateTypeId" title="${uiLabelMap.CommonType}">
+        <field name="taxAuthorityRateTypeId" title="${uiLabelMap.CommonType}" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="TaxAuthorityRateType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}"><lookup size="10" target-form-name="LookupProductStore"/></field>
-        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="TaxAuthorityCategoryView" description="${description} [${productCategoryId}]">
                     <entity-constraint name="taxAuthPartyId" env-name="taxAuthPartyId"/>
                     <entity-constraint name="taxAuthGeoId" env-name="taxAuthGeoId"/>
                     <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}">
+            <!-- <lookup size="10" target-form-name="LookupProductStore"/> -->
+            <drop-down allow-empty="true">
+                <!-- TODO: filter results... -->
+                <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
+                    <entity-order-by field-name="storeName"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -367,10 +375,31 @@ under the License.
 
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
+        
+        <!-- SCIPIO: TODO: REVIEW: which of these are really required-field?? the form here is hard to reconcile with the id-ne on 
+            TaxAuthorityRateProduct entity... note that service may also automatically create some... -->
 
-        <field name="taxAuthorityRateTypeId" title="${uiLabelMap.CommonType}">
+        <field name="taxAuthorityRateTypeId" title="${uiLabelMap.CommonType}" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="TaxAuthorityRateType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreId" title="${uiLabelMap.CommonStore}" position="2">
+            <!-- <lookup size="10" target-form-name="LookupProductStore"/> -->
+            <drop-down allow-empty="true">
+                <!-- TODO: filter results... -->
+                <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" tooltip="${uiLabelMap.AccountingTaxAuthorityRateProductUseCategoryTab}" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="TaxAuthorityCategoryView" description="${description} [${productCategoryId}]">
+                    <entity-constraint name="taxAuthPartyId" env-name="taxAuthPartyId"/>
+                    <entity-constraint name="taxAuthGeoId" env-name="taxAuthGeoId"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -380,16 +409,6 @@ under the License.
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]">
                     <entity-constraint name="enumTypeId" value="PTSOFTTFR"/>
                     <entity-order-by field-name="sequenceId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="productStoreId" title="${uiLabelMap.CommonStore}"><lookup size="10" target-form-name="LookupProductStore"/></field>
-        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" tooltip="${uiLabelMap.AccountingTaxAuthorityRateProductUseCategoryTab}" position="2">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="TaxAuthorityCategoryView" description="${description} [${productCategoryId}]">
-                    <entity-constraint name="taxAuthPartyId" env-name="taxAuthPartyId"/>
-                    <entity-constraint name="taxAuthGeoId" env-name="taxAuthGeoId"/>
-                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -513,23 +532,26 @@ under the License.
     </form>
     <form name="EditTaxAuthorityPartyInfo" type="single" target="updateTaxAuthorityPartyInfo" title="" default-map-name="partyTaxAuthInfo"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
+        </actions>
         <alt-target use-when="partyTaxAuthInfo==null" target="createTaxAuthorityPartyInfo"/>
 
-        <!-- SCIPIO: due to screen merging, we'll make taxAuthGeoId and taxAuthPartyId read-only after create, otherwise strange (these are part of PK) -->
-        <field use-when="partyTaxAuthInfo==null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true">
+        <!-- SCIPIO: NOTE: due to screen merging, only need to show the editable taxAuthGeoId & taxAuthPartyId if there was an error looking up the taxAuthority -->
+        <field use-when="taxAuthority==null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
             </drop-down>
         </field>
-        <field use-when="partyTaxAuthInfo!=null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
+        <field use-when="taxAuthority!=null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
             <display-entity entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId" also-hidden="true"/>
         </field>
-        <field use-when="partyTaxAuthInfo==null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" required-field="true" position="2">
+        <field use-when="taxAuthority==null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" required-field="true" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthority" description="${taxAuthPartyId}"></entity-options>
             </drop-down>
         </field>
-        <field use-when="partyTaxAuthInfo!=null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
+        <field use-when="taxAuthority!=null" name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}" position="2">
             <display description="${taxAuthPartyId}" also-hidden="true"/>
         </field>
 

@@ -37,9 +37,7 @@ under the License.
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar">
-                                    <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
+                                <include-menu name="NewTaxAuthoritySubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindTaxAuthority" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
@@ -57,20 +55,18 @@ under the License.
     <screen name="EditTaxAuthority">
         <section>
             <actions>
-                <set field="labelTitleProperty" value="PageTitleEditTaxAuthority"/>
-
                 <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
                 <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
                 <entity-one entity-name="TaxAuthority" value-field="taxAuthority"/>
+                
                 <set field="titleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthority' : 'AccountingNewTaxAuthority'}"/>
                 <set field="activeSubMenuItem" value="${groovy: context.taxAuthority ? 'EditTaxAuthority' : 'NewTaxAuthority'}"/>
+                <set field="labelTitleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthority' : 'AccountingNewTaxAuthority'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar">
-                            <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.link_nav} ${styles.action_add}"/>
-                        </container>
+                        <include-menu name="EditTaxAuthoritySubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <screenlet>
                             <include-form name="EditTaxAuthority" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
                         </screenlet>
@@ -226,13 +222,8 @@ under the License.
     <screen name="ListTaxAuthorityPartiesWidgets">
         <section>
             <widgets>
-                <screenlet title="${uiLabelMap.PartyParties}"><!-- PageTitleListTaxAuthorityParties -->
-                    <container>
-                        <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
-                            <parameter param-name="taxAuthPartyId"/>
-                            <parameter param-name="taxAuthGeoId"/>
-                        </link>
-                    </container>
+                <screenlet title="${uiLabelMap.PartyParties}" navigation-menu-name="ListTaxAuthorityPartiesSubTabBar"><!-- PageTitleListTaxAuthorityParties -->
+                    <include-menu name="ListTaxAuthorityPartiesSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     <include-form name="FindTaxAuthorityParties" location="component://accounting/widget/settings/TaxAuthorityForms.xml"/>
                 </screenlet>
                 <!-- <screenlet> title="${uiLabelMap.PageTitleListTaxAuthorityParties}" -->
@@ -252,25 +243,13 @@ under the License.
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="PartyTaxAuthInfo" value-field="partyTaxAuthInfo"/>
                 
-                <set field="titleProperty" value="${groovy: context.taxAuthority ? 'PageTitleEditTaxAuthorityPartyInfo' : 'PageTitleNewTaxAuthorityPartyInfo'}"/>
-                <set field="activeSubMenuItem" value="${groovy: context.taxAuthority ? 'EditTaxAuthorityPartyInfo' : 'NewTaxAuthorityPartyInfo'}"/>
+                <set field="titleProperty" value="${groovy: context.partyTaxAuthInfo ? 'PageTitleEditTaxAuthorityPartyInfo' : 'PageTitleNewTaxAuthorityPartyInfo'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.partyTaxAuthInfo ? 'EditTaxAuthorityPartyInfo' : 'NewTaxAuthorityPartyInfo'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <not><if-empty field="partyTaxAuthInfo"/></not>
-                            </condition>
-                            <widgets>
-                                <container>
-                                    <link target="EditTaxAuthorityPartyInfo" text="${uiLabelMap.AccountingNewTaxAuthorityPartyInfo}" style="${styles.link_nav} ${styles.action_add}">
-                                        <parameter param-name="taxAuthPartyId"/>
-                                        <parameter param-name="taxAuthGeoId"/>
-                                    </link>
-                                </container>
-                            </widgets>
-                        </section>
+                        <include-menu name="EditTaxAuthorityPartyInfoSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <include-screen name="EditTaxAuthorityPartyInfoWidgets"/>
                     </decorator-section>
                 </decorator-screen>

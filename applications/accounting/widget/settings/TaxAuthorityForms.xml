@@ -183,7 +183,7 @@ under the License.
         <auto-fields-service service-name="createTaxAuthorityCategory"/>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}"><lookup target-form-name="LookupProductCategory"/></field>
+        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" required-field="true"><lookup target-form-name="LookupProductCategory"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 

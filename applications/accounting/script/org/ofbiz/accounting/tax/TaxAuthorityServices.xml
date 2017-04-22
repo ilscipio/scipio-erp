@@ -64,10 +64,11 @@ under the License.
         </check-permission>
         <check-errors/>
         
-        <!-- SCIPIO: extra verification to help error message -->
+        <!-- SCIPIO: extra verification to help error message; REMOVED - re-add if needed again
         <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
         <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
         <call-simple-method method-name="verifyValidTaxAuthority"/>
+        -->
 
         <make-value entity-name="TaxAuthorityAssoc" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -82,7 +83,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <!-- SCIPIO: extra verification to help error message -->
+        <!-- SCIPIO: extra verification to help error message; REMOVED - re-add if needed again
         <if>
             <condition>
                 <or>
@@ -96,6 +97,7 @@ under the License.
                 <call-simple-method method-name="verifyValidTaxAuthority"/>
             </then>
         </if>
+        -->
 
         <entity-one entity-name="TaxAuthorityAssoc" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>

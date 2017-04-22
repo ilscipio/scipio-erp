@@ -239,6 +239,13 @@ public class TemplateInvoker {
         return new TemplateInvoker(templateSource, invokeOptions, preferredModel);
     }
     
+    /**
+     * Gets a standard template invoker. 
+     */
+    public static TemplateInvoker getInvoker(TemplateSource templateSource, InvokeOptions invokeOptions) throws TemplateException, IOException {
+        return new TemplateInvoker(templateSource, invokeOptions, null);
+    }
+    
 //    /**
 //     * Gets a template invoker same as standard except its toString() method invokes rendering.
 //     * @deprecated should be avoided because breaks toString contract and the original exception type is lost

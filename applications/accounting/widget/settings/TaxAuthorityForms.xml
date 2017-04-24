@@ -272,6 +272,28 @@ under the License.
                 context.taxAuthorityInfoList = infoList;
             ]]></script>
         </actions>
+        <page-script><![CDATA[
+        if (typeof changeToTaxAuthCombinedId === 'undefined') {
+            function changeToTaxAuthCombinedId(combinedInput) {
+                var form=jQuery(combinedInput).closest('form'),
+                    id=jQuery(combinedInput).val().split('::'), 
+                    partyId = id.length ? id[0] : '',
+                    geoId = id.length ? id[1] : '';
+                jQuery('input[name=toTaxAuthPartyId]', form).val(partyId); 
+                jQuery('input[name=toTaxAuthGeoId]', form).val(geoId);
+            }
+            
+            jQuery(document).ready(function() {
+                var inputs = jQuery('select.AddTaxAuthorityAssoc_toTaxAuthCombinedId_field, .AddTaxAuthorityAssoc_toTaxAuthCombinedId_field select');
+                inputs.each(function() {
+                    changeToTaxAuthCombinedId(jQuery(this));
+                });
+                inputs.on('change', function() {
+                    changeToTaxAuthCombinedId(this);
+                });
+            });
+        }
+        ]]></page-script>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
         
@@ -285,7 +307,7 @@ under the License.
         <field name="toTaxAuthPartyId"><hidden value=""/></field>
         <field name="toTaxAuthGeoId"><hidden value=""/></field>
         <field name="toTaxAuthCombinedId" title="${uiLabelMap.CommonTo} ${uiLabelMap.AccountingTaxAuthority}" required-field="true" 
-            event="onchange" action="var id=jQuery(this).val().split('::'), form=jQuery(this).closest('form'); jQuery('input[name=toTaxAuthPartyId]', form).val(id[0]); jQuery('input[name=toTaxAuthGeoId]', form).val(id[1]);">
+            widget-style="+AddTaxAuthorityAssoc_toTaxAuthCombinedId_field">
             <drop-down allow-empty="false">
                 <list-options key-name="taxAuthCombinedId" list-name="taxAuthorityInfoList" 
                     description="${party.groupName} ${party.firstName} ${party.lastName} [${taxAuthPartyId}] / ${geo.geoName} [${taxAuthGeoId}]"/>

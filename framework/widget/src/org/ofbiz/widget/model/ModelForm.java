@@ -2343,4 +2343,17 @@ public abstract class ModelForm extends ModelWidget {
     public String getWidgetType() { // SCIPIO: new
         return "form";
     }
+    
+    /**
+     * SCIPIO: Combines an extra style (like selected-style) to a main style 
+     * string (like widget-style).
+     * <p>
+     * NOTE: currently, the extra style is always added as an extra, and
+     * never replaces. The extra's prefix (+/=) is stripped.
+     * <p>
+     * ALWAYS USE THIS METHOD TO CONCATENATE EXTRA STYLES.
+     */
+    public static String combineExtraStyle(String style, String extraStyle) {
+        return ModelMenu.combineExtraStyle(style, extraStyle);
+    }
 }

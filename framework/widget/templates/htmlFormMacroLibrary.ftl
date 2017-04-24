@@ -176,7 +176,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderSingleFormFieldTitle extraArgs...></#macro>
 
 <#-- SCIPIO: formScope values: general, item; formSpread values: general, single-cell (html ok), multi-cell (may be bad html) -->
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" formScope="general" formSpread="general" extraArgs...>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" formScope="general" formSpread="general" pageScripts=[] extraArgs...>
   <#if !method?has_content>
     <#local method = "post">
   </#if>
@@ -198,7 +198,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local progressOptions = (attribs.progressOptions)!{}><#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
   <#local formInfo = {"name":name, "formType":formType, "formScope":formScope, "formSpread":formSpread,
-    "showProgress":showProgress, "progressOptions":progressOptions, "progressSuccessAction":progressSuccessAction, "attribs":attribs}>
+    "showProgress":showProgress, "progressOptions":progressOptions, "progressSuccessAction":progressSuccessAction, "attribs":attribs, "pageScripts":pageScripts}>
   <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
 <#-- SCIPIO: TODO/FIXME: prevent invalid html; (SHOULD BE) handled by renderSubmitForm
     CURRENTLY PROBLEMATIC; adding this condition prevents <form> between cells,
@@ -255,6 +255,13 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       });
     </@script>
   </#if>
+  <#if (formInfo.pageScripts)?has_content>
+    <@script>
+      <#list formInfo.pageScripts as pageScript>
+        ${rawString(pageScript)}
+      </#list>
+    </@script>
+  </#if>
 <#--
 <#else>
   <#- SCIPIO: TODO/FIXME: in this case we have to omit the <form> element, but are then missing
@@ -270,11 +277,11 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   </#if>
 </#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} pageScripts=[] extraArgs...>
   <#-- SCIPIO: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
   <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#if !formInfo?has_content>
-    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true, "pageScripts":pageScripts}>
     <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
   </#if>
 
@@ -334,6 +341,13 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#if (formInfo.setByListWrapper!false) == true>
     <#local dummy = popRequestStack("htmlFormRenderFormStack")>
+    <#if (formInfo.pageScripts)?has_content>
+      <@script>
+        <#list formInfo.pageScripts as pageScript>
+          ${rawString(pageScript)}
+        </#list>
+      </@script>
+    </#if>
   </#if>
 </#macro>
 

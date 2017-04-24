@@ -84,6 +84,7 @@ import org.ofbiz.widget.model.ModelFormField.TextField;
 import org.ofbiz.widget.model.ModelFormField.TextFindField;
 import org.ofbiz.widget.model.ModelFormField.TextareaField;
 import org.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.ofbiz.widget.model.ModelPageScript;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelSingleForm;
 import org.ofbiz.widget.model.ModelWidget;
@@ -1498,11 +1499,34 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(formScope));
         sr.append(" formSpread=");
         sr.append(ftlFmt.makeStringLiteral(formSpread));
+        appendFormPageScripts(writer, sr, context, modelForm);
         sr.append(" />");
         
         executeMacro(writer, sr.toString());
     }
 
+    
+    /**
+     * SCIPIO: appends special page scripts to macro call.
+     * New 2017-04-21.
+     */
+    private void appendFormPageScripts(Appendable writer, Appendable sr, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // SCIPIO: 2017-04-21: special pageScripts
+        List<Object> pageScripts = new ArrayList<>();
+        for(ModelPageScript pageScript : modelForm.getPageScripts()) {
+            pageScripts.add(pageScript.getScript(context));
+        }
+        Environment env;
+        try {
+            env = getEnvironment(writer);
+            freemarker.template.TemplateModel pageScriptsModel = env.getObjectWrapper().wrap(pageScripts);
+            env.setGlobalVariable("_scpFormRenPageScripts", pageScriptsModel);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+        sr.append(" pageScripts=_scpFormRenPageScripts");
+    }
+    
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         String focusFieldName = modelForm.getFocusFieldName();
         String formName = FormRenderer.getCurrentFormName(modelForm, context);
@@ -1629,9 +1653,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
         sr.append(" attribs=(");
         sr.append(attribs);
-        sr.append(") />");
+        sr.append(") ");
+        appendFormPageScripts(writer, sr, context, modelForm);
+        sr.append("/>");
         executeMacro(writer, sr.toString());
-
     }
 
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {

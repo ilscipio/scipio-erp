@@ -67,6 +67,8 @@ under the License.
                 <xs:element minOccurs="0" ref="row-actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-row-style" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-target" />
+                <!-- SCIPIO: 2017-04-21: new: extra spot to insert javascript -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="page-script" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-service" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-entity" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="field" />
@@ -706,6 +708,35 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>If use-when return true, concat this style to existing style of the line.</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="page-script">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Spot to put extra javascript.
+                Added 2017-04-21.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute name="lang" default="javascript">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="javascript" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="preprocessor" default="none">
+                <xs:annotation>
+                    <xs:documentation>If preprocessor="flexible", flexible expressions are used to interpret the content.
+                        Default: none (no preprocessing)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none" />
+                        <xs:enumeration value="flexible" />
+                        <!-- TODO: interpreted Freemarker support
+                        <xs:enumeration value="ftl" />-->
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

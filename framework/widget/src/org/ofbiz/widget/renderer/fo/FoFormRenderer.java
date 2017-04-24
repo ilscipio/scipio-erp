@@ -468,4 +468,10 @@ public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRend
     public String getRendererName() { // SCIPIO: new
         return "xsl-fo";
     }
+
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        // SCIPIO: new
+    }
 }

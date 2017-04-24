@@ -1499,34 +1499,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(formScope));
         sr.append(" formSpread=");
         sr.append(ftlFmt.makeStringLiteral(formSpread));
-        appendFormPageScripts(writer, sr, context, modelForm);
         sr.append(" />");
         
         executeMacro(writer, sr.toString());
     }
 
-    
-    /**
-     * SCIPIO: appends special page scripts to macro call.
-     * New 2017-04-21.
-     */
-    private void appendFormPageScripts(Appendable writer, Appendable sr, Map<String, Object> context, ModelForm modelForm) throws IOException {
-        // SCIPIO: 2017-04-21: special pageScripts
-        List<Object> pageScripts = new ArrayList<>();
-        for(ModelPageScript pageScript : modelForm.getPageScripts()) {
-            pageScripts.add(pageScript.getScript(context));
-        }
-        Environment env;
-        try {
-            env = getEnvironment(writer);
-            freemarker.template.TemplateModel pageScriptsModel = env.getObjectWrapper().wrap(pageScripts);
-            env.setGlobalVariable("_scpFormRenPageScripts", pageScriptsModel);
-        } catch (TemplateException e) {
-            throw new IOException(e);
-        }
-        sr.append(" pageScripts=_scpFormRenPageScripts");
-    }
-    
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         String focusFieldName = modelForm.getFocusFieldName();
         String formName = FormRenderer.getCurrentFormName(modelForm, context);
@@ -1654,7 +1631,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" attribs=(");
         sr.append(attribs);
         sr.append(") ");
-        appendFormPageScripts(writer, sr, context, modelForm);
         sr.append("/>");
         executeMacro(writer, sr.toString());
     }
@@ -3661,5 +3637,38 @@ public final class MacroFormRenderer implements FormStringRenderer {
      */
     protected void appendRequiredFieldParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         sr.append(" requiredField=" + (modelFormField.getRequiredField() ? "\"true\"" : "\"false\""));
+    }
+
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        if (modelForm.getPageScripts().size() <= 0) return;
+        // SCIPIO: 2017-04-21: new
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderFormPageScripts ");
+        appendFormPageScripts(writer, sr, context, modelForm);
+        sr.append("/>");
+        executeMacro(writer, sr.toString());
+    }
+    
+    /**
+     * SCIPIO: appends special page scripts to macro call.
+     * New 2017-04-21.
+     */
+    private void appendFormPageScripts(Appendable writer, Appendable sr, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // SCIPIO: 2017-04-21: special pageScripts
+        List<Object> pageScripts = new ArrayList<>();
+        for(ModelPageScript pageScript : modelForm.getPageScripts()) {
+            pageScripts.add(pageScript.getScript(context));
+        }
+        Environment env;
+        try {
+            env = getEnvironment(writer);
+            freemarker.template.TemplateModel pageScriptsModel = env.getObjectWrapper().wrap(pageScripts);
+            env.setGlobalVariable("_scpFormRenPageScripts", pageScriptsModel);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+        sr.append(" pageScripts=_scpFormRenPageScripts");
     }
 }

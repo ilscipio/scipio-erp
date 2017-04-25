@@ -634,8 +634,7 @@ under the License.
         <field name="partyTaxId" position="2"><text/></field>
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo!=null" ><display/></field>
-        <!-- SCIPIO: FIXME: forced to specify fromDate because the service doesn't return it properly to the screen when empty here -->
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo==null" required-field="true"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo==null"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="isExempt" widget-style="+smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="isNexus" widget-style="+smallSelect" position="2"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>

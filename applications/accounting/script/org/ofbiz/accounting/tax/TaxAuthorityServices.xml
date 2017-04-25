@@ -169,6 +169,24 @@ under the License.
         </check-permission>
         <check-errors/>
 
+        <!-- SCIPIO: 2017-04-24: special check for PK, to show comprehensible error msg -->
+        <entity-one entity-name="TaxAuthorityGlAccount" value-field="lookedUpValue" auto-field-map="true"/>
+        <if>
+            <condition>
+                <not><if-empty field="lookedUpValue"/></not>
+            </condition>
+            <then>
+                <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
+                <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <add-error>
+                    <fail-property resource="AccountingErrorUiLabels" property="AccountingTaxAuthGlAccountAlreadyExists"/>
+                </add-error>
+                <check-errors/>
+            </then>
+        </if>
+
         <make-value entity-name="TaxAuthorityGlAccount" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>

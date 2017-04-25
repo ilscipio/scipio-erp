@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -721,6 +722,8 @@ public class ConfigXMLReader {
         public boolean saveHomeView = false;
         public Map<String, String> redirectParameterMap = new HashMap<String, String>();
         public Map<String, String> redirectParameterValueMap = new HashMap<String, String>();
+        public Set<String> excludeParameterSet = null; // SCIPIO: new 2017-04-24
+        public String includeMode = "auto"; // SCIPIO: new 2017-04-24
 
         public RequestResponse() {
         }
@@ -742,6 +745,28 @@ public class ConfigXMLReader {
                         from = redirectParameterElement.getAttribute("name");
                     this.redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
                 }
+            }
+            // SCIPIO: new 2017-04-24
+            Set<String> excludeParameterSet = new HashSet<>();
+            for (Element redirectParametersElement : UtilXml.childElementList(responseElement, "redirect-parameters")) {
+                for (Element redirectParameterElement : UtilXml.childElementList(redirectParametersElement, "param")) {
+                    if ("exclude".equals(redirectParameterElement.getAttribute("mode"))) {
+                        excludeParameterSet.add(redirectParameterElement.getAttribute("name"));
+                    } else {
+                        if (UtilValidate.isNotEmpty(redirectParameterElement.getAttribute("value"))) {
+                            this.redirectParameterValueMap.put(redirectParameterElement.getAttribute("name"), redirectParameterElement.getAttribute("value"));
+                        } else {
+                            String from = redirectParameterElement.getAttribute("from");
+                            if (UtilValidate.isEmpty(from))
+                                from = redirectParameterElement.getAttribute("name");
+                            this.redirectParameterMap.put(redirectParameterElement.getAttribute("name"), from);
+                        }
+                    }
+                }
+                this.includeMode = redirectParametersElement.getAttribute("include-mode");
+            } 
+            if (excludeParameterSet.size() > 0) {
+                this.excludeParameterSet = Collections.unmodifiableSet(excludeParameterSet);
             }
         }
     }

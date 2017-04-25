@@ -1255,15 +1255,51 @@ public class RequestHandler {
 
     /**
      * Creates a query string based on the redirect parameters for a request response, if specified, or for all request parameters if no redirect parameters are specified.
+     * <p>
+     * SCIPIO: 2017-04-24: ENHANCED (see site-conf.xsd).
      *
      * @param request the Http request
      * @param requestResponse the RequestResponse Object
      * @return return the query string
      */
     public String makeQueryString(HttpServletRequest request, ConfigXMLReader.RequestResponse requestResponse) {
-        if (requestResponse == null ||
-                (requestResponse.redirectParameterMap.size() == 0 && requestResponse.redirectParameterValueMap.size() == 0)) {
-            Map<String, Object> urlParams = UtilHttp.getUrlOnlyParameterMap(request);
+        if (requestResponse == null || 
+                ("auto".equals(requestResponse.includeMode) && requestResponse.redirectParameterMap.size() == 0 && requestResponse.redirectParameterValueMap.size() == 0) ||
+                !"url-params".equals(requestResponse.includeMode) || "all-params".equals(requestResponse.includeMode)) {
+            Map<String, Object> urlParams;
+            if ("all-params".equals(requestResponse.includeMode)) {
+                urlParams = UtilHttp.getParameterMap(request, requestResponse.excludeParameterSet, false);
+            } else {
+                urlParams = UtilHttp.getUrlOnlyParameterMap(request);
+                
+                // SCIPIO: remove excluded
+                if (requestResponse.excludeParameterSet != null) {
+                    for(String name : requestResponse.excludeParameterSet) {
+                        urlParams.remove(name);
+                    }
+                }
+            }
+
+            // SCIPIO: we now support adding extra params
+            for (Map.Entry<String, String> entry: requestResponse.redirectParameterMap.entrySet()) {
+                String name = entry.getKey();
+                String from = entry.getValue();
+
+                Object value = request.getAttribute(from);
+                if (value == null) {
+                    value = request.getParameter(from);
+                }
+
+                urlParams.put(name, value);
+            }
+
+            for (Map.Entry<String, String> entry: requestResponse.redirectParameterValueMap.entrySet()) {
+                String name = entry.getKey();
+                String value = entry.getValue();
+
+                urlParams.put(name, value);
+            }
+            
             String queryString = UtilHttp.urlEncodeArgs(urlParams, false);
             if(UtilValidate.isEmpty(queryString)) {
                 return queryString;

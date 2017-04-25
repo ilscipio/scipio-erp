@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +39,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
@@ -650,5 +652,22 @@ public final class WidgetWorker {
             throw new IllegalArgumentException("Path '" + path + "' is not a valid widget folder component path");
         }
         return path.substring(0, i + "/widget/".length());
+    }
+    
+    /**
+     * SCIPIO: Extracts ONLY the non-interpreted styles from a style string.
+     * Skips anything that contains a flexible expression, removes + and = prefixes.
+     */
+    public static <T extends Collection<String>> T extractSimpleStyles(String style, T out) {
+        String[] entries = style.split("\\s+");
+        for(String entry : entries) {
+            if (entry.isEmpty() || entry.contains(FlexibleStringExpander.openBracket) || entry.contains(FlexibleStringExpander.closeBracket))
+                continue;
+            if (entry.startsWith("=") || entry.startsWith("+")) {
+                entry = entry.substring(1);
+            }
+            out.add(entry);
+        }
+        return out;
     }
 }

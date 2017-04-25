@@ -30,12 +30,10 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItem selectedMenuAndItem;
-    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
+    private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes; // TODO? not being used
     
     private transient MenuItemState itemState;
 
-    
-    
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
         setCurrentDepth(1);

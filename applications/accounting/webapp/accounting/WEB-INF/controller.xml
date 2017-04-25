@@ -2509,8 +2509,14 @@ under the License.
         <event type="service" invoke="deletePartyTaxAuthInfo"/>
         <!-- SCIPIO: 2017-04-20: have to redirect due to issues with re-querying -->
         <response name="success" type="request-redirect" value="EditTaxAuthority">
-            <redirect-parameter name="taxAuthPartyId"/>
-            <redirect-parameter name="taxAuthGeoId"/>
+            <!-- NOTE: we must use all-params here so view size & index params are preserved (even if not listed),
+                but also exclude the params that will interfere with other forms -->
+            <redirect-parameters include-mode="all-params">
+                <param name="taxAuthPartyId" mode="include"/>
+                <param name="taxAuthGeoId" mode="include"/>
+                <param name="partyId" mode="exclude"/>
+                <param name="fromDate" mode="exclude"/>
+            </redirect-parameters>
         </response>
         <response name="error" type="view" value="EditTaxAuthority"/><!-- SCIPIO: 2017-04-20: combined screens: value="ListTaxAuthorityParties" -->
     </request-map>

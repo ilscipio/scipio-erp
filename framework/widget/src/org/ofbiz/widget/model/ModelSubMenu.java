@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItemLookup;
@@ -75,6 +77,8 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
 
     private final Map<String, ModelMenuItemAlias> menuItemAliasMap;
     private final Map<String, String> menuItemNameAliasMap; // for optimized simple-hidden item alias lookups
+    
+    private transient Set<String> simpleStyleNames = null;
     
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
@@ -344,6 +348,23 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         return getStyle("subMenuStyle", this.style.getOriginal(), subMenuModelStyle);
     }
     
+    /**
+     * WARN: returns unordered
+     */
+    public Set<String> getSimpleStyleNames() {
+        // WARN: special thread-safety pattern in place (unmodifiableSet important!)
+        Set<String> styleNames = this.simpleStyleNames;
+        if (styleNames == null) {
+            styleNames = Collections.unmodifiableSet(WidgetWorker.extractSimpleStyles(getStyle(), new HashSet<String>()));
+            this.simpleStyleNames = styleNames;
+        }
+        return styleNames;
+    }
+    
+    public boolean hasSimpleStyleName(String name) {
+        return getSimpleStyleNames().contains(name);
+    }
+    
     public String getTitle(Map<String, Object> context) {
         return this.title.expandString(context);
     }
@@ -553,6 +574,10 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         return menuItem.isSame(menuItemMap.get(menuItem.getName()));
     }
     
+    public boolean isChildOf(ModelMenuItem menuItem) {
+        return getParentMenuItem().isSame(menuItem);
+    }
+    
     public boolean isAncestorOf(ModelMenuItem menuItem) {
         if (menuItem == null) {
             return false;
@@ -678,4 +703,11 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         return expanded;
     }
 
+    public boolean isSeparateMenuTargetStatic(ModelMenu modelMenu) {
+        return this.hasSimpleStyleName(modelMenu.getSeparateMenuTargetStyle());
+    }
+    
+    public boolean isSeparateMenuCandidate() {
+        return this.isSeparateMenuTargetStatic(this.getTopMenu());
+    }
 }

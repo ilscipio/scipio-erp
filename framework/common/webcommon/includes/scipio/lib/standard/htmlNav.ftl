@@ -338,15 +338,25 @@ The submenu's main class may be set as altnested in global styles.
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
                               NOTE: Previously this was named "mainButtonClass"; mainButtonClass is deprecated, and
                                   will get the same value as titleClass now.
+    sepMenuType             = (default-sidebar|...|, default: -none-) Separate-menu type
+                              These are the entries named "sepmenu_[sepMenuType]_config" (dashes replaced by underscores) in 
+                              the global styles hash and are customizable.
+                              Standard provided types:
+                              * default-sidebar
+    sepMenuDef              = ((map)) Separate-menu content for the core menu entries (only), represented as hash of @menu args
+                              NOTE: not all of the @menu arguments are applicable
+    itemClass               = ((css-class)) Extra CSS classes for every item of the immediate level
                                   
   * History *
-    Enhanced for 1.14.2.             
+    Enhanced for 1.14.3.
+    Enhanced for 1.14.2.       
 -->
 <#assign menu_defaultArgs = {
   "type":"", "name":"", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
   "nestedFirst":false, "title":"", "specialType":"", "titleClass":"", "mainButtonClass":"", "htmlwrap":true, 
-  "isNestedMenu":"", "parentMenuType":"", "active":"", "activeTarget":"", "menuLevel":"", "passArgs":{}
+  "isNestedMenu":"", "parentMenuType":"", "active":"", "activeTarget":"", "menuLevel":"", 
+  "sepMenuType":"", "sepMenuDef":{}, "itemClass":"", "passArgs":{}
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -473,12 +483,24 @@ The submenu's main class may be set as altnested in global styles.
     <#local class = addClassArg(class, namePrefix + name)>
   </#if>
   
+  <#if sepMenuType?has_content>
+    <#local sepStyleName = sepMenuType?replace("-","_")>
+    <#local sepMenu = (styles["sepmenu_" + sepStyleName + "_config"]!{}) + {
+         "type":sepMenuType,
+         "hasMenu":(sepMenuDef.items)?has_content,
+         "render":separateMenuImpl, 
+         "menuDef":toSimpleMap(sepMenuDef)
+    }>
+  <#else>
+    <#local sepMenu = {"hasMenu":false}>
+  </#if>
+  
   <#local menuInfo = {"type":type, "name":name, "specialType":specialType, "styleName":styleName, 
     "inlineItems":inlineItems, "class":class, "id":id, "style":style, "attribs":attribs, "titleClass":titleClass,
     "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, 
     "nestedFirst":nestedFirst, "isNestedMenu":isNestedMenu, 
     "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName,
-    "active":active, "activeTarget":activeTarget, "menuLevel":menuLevel}>
+    "active":active, "activeTarget":activeTarget, "menuLevel":menuLevel, "itemClass":itemClass}>
   <#local dummy = setRequestVar("scipioCurrentMenuInfo", menuInfo)><#-- for easier access from nested content, in case -->
   <#local dummy = pushRequestStack("scipioMenuStack", menuInfo)>
   <#local dummy = setRequestVar("scipioCurrentMenuItemIndex", 0)>
@@ -486,7 +508,7 @@ The submenu's main class may be set as altnested in global styles.
   <@menu_markup type=type name=name specialType=specialType class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] 
     inlineItems=inlineItems htmlwrap=htmlwrap title=title titleClass=titleClass mainButtonClass=titleClass isNestedMenu=isNestedMenu 
     parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType 
-    active=active activeTarget=activeTarget menuLevel=menuLevel origArgs=origArgs passArgs=passArgs>
+    active=active activeTarget=activeTarget menuLevel=menuLevel sepMenu=sepMenu origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -555,11 +577,54 @@ The submenu's main class may be set as altnested in global styles.
   <#return class>
 </#function>
 
+<#-- 2017-04-25: callback that renders the core of the separate menu, to keep logic out of menu_markup,
+    and optionally will also do the superficial extra entries like titles and separators.
+    menuOnly=false is ONLY supported for the following layouts: before-inline. 
+    NOTE: menu markup can optionally pass menuOnly=true and implement the extra entries itself.
+        but in simple cases, this macro can handle the extra items fine. 
+    DEV NOTE: NOT USED BY THE WIDGET CODE (in the end) -->
+<#macro separateMenuImpl sepMenu={} menuOnly=true catchArgs...>
+  <#local menuDef = sepMenu.menuDef!{}>
+  <#if sepMenu.hasMenu>
+    <#if sepMenu.layout!?ends_with("inline")>
+      <#local menuDef = menuDef + {"inlineItems":true}>
+    </#if>
+    <#if sepMenu.sepItemClass?has_content>
+      <#local menuDef = menuDef + {"itemClass":sepMenu.sepItemClass}>
+    </#if>
+    <#if sepMenu.sepMenuClass?has_content>
+      <#local menuDef = menuDef + {"class":addClassArg(menuDef.class!"", getPlainClassArgNames(sepMenu.sepMenuClass))}><#-- TODO?: support crushing (=)? -->
+    </#if>
+  </#if>
+  <#if menuOnly>
+    <#if sepMenu.hasMenu>
+      <@menu args=menuDef/>
+    </#if>
+  <#else>
+    <#if (sepMenu.layout!) == "before-inline">
+      <#if sepMenu.hasMenu>
+        <#if sepMenu.sepTitle?has_content>
+          <@menuitem type="text" class=sepMenu.sepTitleItemClass text=getTextLabelFromExpr(sepMenu.sepTitle)/>
+        </#if>
+        <#-- NOTE: for now we can let the target macro handle the extra items, but if we needed to we could
+          pass menuOnly=true and implement the extra superficial entries manually instead -->
+        <@menu args=menuDef/>
+        <#if sepMenu.separatorEnabled>
+          <@menuitem type="generic" class=sepMenu.separatorItemClass/>
+        </#if>
+      </#if>
+      <#if sepMenu.nonsepTitle?has_content && (sepMenu.hasMenu || sepMenu.nonsepTitleAlways)>
+        <@menuitem type="text" class=sepMenu.nonsepTitleItemClass text=getTextLabelFromExpr(sepMenu.nonsepTitle)/>
+      </#if>
+    </#if>
+  </#if>
+</#macro>
+
 <#-- @menu container main markup - theme override 
     DEV NOTE: This is called directly from both @menu and widgets @renderMenuFull -->
 <#macro menu_markup type="" specialType="" name="" class="" id="" style="" attribs={} excludeAttribs=[] 
     inlineItems=false titleClass="" title="" htmlwrap="ul" isNestedMenu=false parentMenuType="" parentMenuSpecialType=""
-    active=false activeTarget="" menuLevel=1
+    active=false activeTarget="" menuLevel=1 sepMenu={}
     origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems && htmlwrap?has_content>
     <#-- NOTE: here we always test specialType and never type, so that many (custom) menu types may reuse the same 
@@ -578,6 +643,12 @@ The submenu's main class may be set as altnested in global styles.
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
+  </#if>
+  <#-- 2017-04-25: new separate-menu implementation. sepMenu contains all the entries defined in styles["sepmenu_[sepMenu.type]_config"] entries. -->
+  <#if (sepMenu.layout!) == "before-inline">
+    <#-- NOTE: for now we can let the target macro handle the extra items, but if we needed to we could
+        pass menuOnly=true and implement the extra superficial entries manually instead -->
+    <@sepMenu.render sepMenu=sepMenu menuOnly=false/>
   </#if>
       <#nested>
   <#if !inlineItems && htmlwrap?has_content>
@@ -725,6 +796,10 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
     <#else>
       <#local wrapNested = false>
     </#if>
+  </#if>
+
+  <#if menuInfo.itemClass?has_content>
+    <#local class = addClassArg(class, getPlainClassArgNames(menuInfo.itemClass))><#-- TODO?: support crushing (=)? -->
   </#if>
 
   <#if !disabled?is_boolean>

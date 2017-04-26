@@ -1,13 +1,8 @@
 package org.ofbiz.widget.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 
@@ -29,10 +24,12 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private String subMenuFilter;
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
-    private transient ModelMenu.MenuAndItem selectedMenuAndItem;
+    private transient MenuAndItem selectedMenuAndItem;
     private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes; // TODO? not being used
     
     private transient MenuItemState itemState;
+    
+    private transient ModelSubMenu separateMenu; // 2017-04-25: tracks the best separate menu candidate
 
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
@@ -42,6 +39,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         this.selectedMenuAndItem = null;
         this.flaggedMenuNodes = null;
         this.itemState = null;
+        this.separateMenu = null;
     }
     
     protected Object setArg(String key, Object value) {
@@ -86,6 +84,10 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         setInternal("currentDepth", this.currentDepth);
     }
     
+    public ModelMenu getModelMenu() {
+        return modelMenu;
+    }
+
     public int getMaxDepth() {
         return maxDepth;
     }
@@ -153,7 +155,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     /**
      * Gets selected submenu/item pair from model menu from cache.
      */
-    public ModelMenu.MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
+    public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
         if (this.selectedMenuAndItem == null) {
             this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
         }
@@ -166,6 +168,74 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         // 2016-11-11: also determine all the possible manually-selected items, which might get crazy...
         this.flaggedMenuNodes = ModelMenu.FlaggedMenuNodes.resolve(context, modelMenu.getManualSelectedNodes(), 
                 modelMenu.getManualExpandedNodes(), this.selectedMenuAndItem);
+    }
+    
+    public ModelSubMenu getSeparateMenu() {
+        return separateMenu;
+    }
+
+    public void setSeparateMenu(ModelSubMenu separateMenu) {
+        this.separateMenu = separateMenu;
+    }
+    
+    /**
+     * Returns true if separate sub-menus are enabled and this sub-menu will be used as the separate menu,
+     * and saves it in the render state.
+     * <p>
+     * NOTE: 2017-04-25: the current only supported logic allowed means this return true at most once
+     * per complex menu. avoiding "candidate" logic completely because it will be too complicated.
+     */
+    public boolean checkUpdateSeparateMenuTargetSelected(Map<String, Object> context, ModelSubMenu subMenu) {
+        boolean matches = false;
+        // NOTE: this.separateMenu == null check only works for 
+        // greatest-ancestor and selected-only.
+        // TODO?: selected-or-nearest-ancestor (selected, but if hidden use nearest ancestor) 
+        // might bedesirable (null check wouldn't work), but appears too hard to do from here and not clear if wanted
+        if (this.separateMenu == null && modelMenu.isSeparateMenuEnabled()) {
+            MenuAndItem selected = getSelectedMenuAndItem(context);
+            if (!MenuAndItem.isEmpty(selected) && 
+                    subMenu.isSeparateMenuTargetStatic(modelMenu)) {
+                if ("selected-only".equals(modelMenu.getSeparateMenuTargetPreference())) {
+                    if (subMenu.isParentOf(selected.getMenuItem())) {
+                        matches = true;
+                    }
+                } else { // greatest-ancestor
+                    // NOTE: this logic depends on the iteration done by MacroMenuRenderer and the null checks...
+                    // we do top to bottom and first one on selected ancestor path is kept
+                    if (subMenu.isAncestorOf(selected.getMenuItem())) {
+                        matches = true;
+                    }
+                }
+            }
+        }
+        if (matches) {
+            this.setSeparateMenu(subMenu);
+        }
+        return matches;
+    }
+    
+    /**
+     * Returns true if the subMenu has the target style and is NOT on the selected path.
+     */
+    public boolean isSeparateMenuTargetStaticNonSelected(Map<String, Object> context, ModelSubMenu subMenu) {
+        if (isSeparateMenuTargetStatic(context, subMenu)) {
+            MenuAndItem selected = getSelectedMenuAndItem(context);
+            if (!MenuAndItem.isEmpty(selected)) {
+                if (subMenu.isAncestorOf(selected.getMenuItem())) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns true if the subMenu has the target style.
+     */
+    public boolean isSeparateMenuTargetStatic(Map<String, Object> context, ModelSubMenu subMenu) {
+        return modelMenu.isSeparateMenuEnabled() && subMenu.isSeparateMenuTargetStatic(modelMenu);
     }
     
     // context helper methods

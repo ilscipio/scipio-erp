@@ -1836,7 +1836,7 @@
         </menu-item>-->
     </menu>
     <menu name="TaxAuthoritySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-        always-expand-selected-or-ancestor="true">
+        always-expand-selected-or-ancestor="true" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="TaxAuthorityTabBar" recursive="includes-only"/>
     </menu>
 

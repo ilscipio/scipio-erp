@@ -135,7 +135,7 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
-    sections                = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
+    secMap                  = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
                               WORK-IN-PROGRESS
                               The entries may be TemplateInvoker instances returned from #interpretStd or #interpretStdLoc.
                               Alternatively, simple strings may be passed which will be interpreted as template locations
@@ -149,7 +149,7 @@ TODO: Reimplement as transform.
     Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
-    asString=false shareScope="" maxDepth="" subMenus="" sections={}>
+    asString=false shareScope="" maxDepth="" subMenus="" secMap={}>
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
   <#-- TODO: in many cases we could optimize the variable preservation code by delegating to the java... -->
   <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
@@ -163,7 +163,7 @@ TODO: Reimplement as transform.
       <p>(@render type="decorator" is not yet implemented)</p><#t>
       <#--${StringUtil.wrapString(screens.renderDecoratorScopedGen(resource, name, asString, shareScope, sections)})}--><#t>
     <#elseif type == "section">
-      ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
+      ${StringUtil.wrapString((sections.renderScopedGen(name, asString, shareScope))!"")}<#t>
     <#elseif type == "ftl">
       <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
       ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>

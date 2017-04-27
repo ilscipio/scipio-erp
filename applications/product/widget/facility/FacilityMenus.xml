@@ -142,7 +142,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="FacilitySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditFacility">
+          default-menu-item-name="EditFacility" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="FacilityTabBar" recursive="includes-only" />
         <!-- SCIPIO: NewFacility is a "virtual" item set active by EditFacility screen when in "new" mode.
             here we tell it to highlight the parent item and hide the sub-menu. -->
@@ -218,7 +218,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ShipmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ShipmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <menu-item-alias name="FindShipment" for="PARENT-NOSUB"/>
         <menu-item-alias name="NewShipment" for="PARENT-NOSUB"/>
         <menu-item name="facility" title="${uiLabelMap.ProductFacilities}">
@@ -325,7 +325,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ShipmentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ShipmentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ShipmentGatewayConfigTabBar" recursive="includes-only" />
     </menu>
     
@@ -394,7 +394,7 @@ under the License.
         <include-elements menu-name="FacilityGroupTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="FacilitySettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">         
+    <menu name="FacilitySettingsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">         
          <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
             <link target="ViewContactMechs">
                 <parameter param-name="facilityId"/>
@@ -412,7 +412,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilityInventorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FacilityInventorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <!--
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" override-mode="remove-replace" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <link target="EditFacility">
@@ -455,7 +455,7 @@ under the License.
     </menu>
     
     <!-- SCIPIO: Migrate to proper other menu-->
-    <menu name="FacilityPackOrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FacilityPackOrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" override-mode="remove-replace" widget-style="+${styles.menu_sidebar_itemdashboard}">
             <link target="EditFacility">
                 <parameter param-name="facilityId"/>
@@ -469,7 +469,7 @@ under the License.
     </menu>
     
     
-    <menu name="FacilityPickingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FacilityPickingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <menu-item-alias name="PicklistOptions" for="PARENT-WITHSUB"/>
         <!-- SCIPIO: redundant
         <menu-item name="PicklistOptions" title="${uiLabelMap.ProductPicking}">

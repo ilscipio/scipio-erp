@@ -90,6 +90,7 @@
             background-color: $white-smoke;
             border-bottom: 1px solid $gainsboro;
             
+            
             a {
                 color: $jet;
             }
@@ -107,7 +108,8 @@
             text-transform: $side-nav-heading-text-transform;
             padding-left: 0.4rem;
             background: rgba($side-nav-link-color, 0.9); 
-            color: $white;
+            color: #efefef;
+            margin:0px;
             margin-top:1rem;
       
             &:first-child {

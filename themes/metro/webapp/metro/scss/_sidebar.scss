@@ -119,15 +119,17 @@ $sidebar-width: 200px;
     }
 
     &.heading {
-      color: $white;
       font: {
         size: $side-nav-heading-font-size;
         weight: $side-nav-heading-font-weight;
       }
       text-transform: $side-nav-heading-text-transform;
-      padding-left: 0.4rem;
-      background: $side-nav-heading-color;
-      //border-left: 4px solid  $primary-color;
+      background: #444;
+      border-bottom: none;
+      border-top: 1px solid #5e5e5e;
+      color: #999;
+      display: block;
+      padding: 0.3rem 0.9375rem;
       margin-top:1rem;
       
       &:first-child {
@@ -325,6 +327,29 @@ $sidebar-width: 200px;
             }
         }
         */
+    }
+    
+    li a:not(.button) {
+        color: $white;
+    }
+    
+    li.heading {
+      font: {
+        size: $side-nav-heading-font-size;
+        weight: $side-nav-heading-font-weight;
+      }
+      text-transform: $side-nav-heading-text-transform;
+      background: #444;
+      border-bottom: none;
+      border-top: 1px solid #5e5e5e;
+      color: #999;
+      display: block;
+      padding: 0.3rem 0.9375rem;
+      margin-top:1rem;
+      
+      &:first-child {
+        margin-top:0px;
+      }
     }
 }
 

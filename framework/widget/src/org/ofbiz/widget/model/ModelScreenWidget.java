@@ -235,14 +235,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
 //                } else {
 //                    context = UtilGenerics.<MapStack<String>>cast(this.context);
 //                }
-                context.push();
+                if (context != null) context.push();
                 try {
-                    if (ctxVars != null && !ctxVars.isEmpty()) {
+                    if (context != null && ctxVars != null && !ctxVars.isEmpty()) {
                         context.putAll(ctxVars);
                     }
                     return render(sectionName, asString, context, getWriter());
                 } finally {
-                    context.pop();
+                    if (context != null) context.pop();
                 }
             } else {
                 return render(sectionName, asString);

@@ -58,7 +58,6 @@
         size: $side-nav-heading-font-size;
         weight: $side-nav-heading-font-weight;
       }
-      text-transform: $side-nav-heading-text-transform;
     }
   }
 }
@@ -101,6 +100,24 @@
             background: rgba(0, 64, 84, 0.05);
             > a:first-child:not(.button) {
                 cursor: $sub-nav-active-cursor;
+            }
+        }
+        
+        &.heading {
+            text-transform: $side-nav-heading-text-transform;
+            padding-left: 0.4rem;
+            background: rgba($side-nav-link-color, 0.9); 
+            color: $white;
+            margin:0px;
+            margin-top:1rem;
+            
+        }
+        
+        &.scipio-nav-actions-menu-item{
+            background-color: $white-smoke;
+            //margin-bottom:2px;             
+            a {
+                color: $jet;
             }
         }
     }

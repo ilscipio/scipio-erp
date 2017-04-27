@@ -119,13 +119,26 @@ $sidebar-width: 200px;
     }
 
     &.heading {
-      color: $side-nav-heading-color;
+      color: $white;
       font: {
         size: $side-nav-heading-font-size;
         weight: $side-nav-heading-font-weight;
       }
       text-transform: $side-nav-heading-text-transform;
+      padding-left: 0.4rem;
+      background: $side-nav-heading-color;
+      border-left: 4px solid  $primary-color;
+      margin-top:1rem;
     }
+    
+    &.scipio-nav-actions-menu-item{
+        background-color: rgba($white-smoke,0.2);
+        //margin-bottom:2px;             
+        a {
+            //color: $jet;
+            border-left-color: $jet;
+        }
+   }
     
     &.dashboard {
             a {

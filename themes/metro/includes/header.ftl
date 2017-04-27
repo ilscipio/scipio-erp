@@ -143,9 +143,7 @@ under the License.
     <#--<#if applicationMenuLocation?has_content && applicationMenuName?has_content>
         <@render type="menu" name=applicationMenuName resource=applicationMenuLocation />
     </#if>-->
-  <#if sections??>
-    ${sections.render("left-column")}
-  </#if>
+    <@render type="section" name="left-column"/>
 </#macro>
 
 <#macro notificationsMenu>

@@ -237,7 +237,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
 //                }
                 context.push();
                 try {
-                    if (ctxVars != null) {
+                    if (ctxVars != null && !ctxVars.isEmpty()) {
                         context.putAll(ctxVars);
                     }
                     return render(sectionName, asString, context, getWriter());

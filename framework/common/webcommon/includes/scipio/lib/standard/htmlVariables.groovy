@@ -314,7 +314,7 @@ context.styles = [
         "sepTitleItemClass" : "+heading",
         "nonsepTitle" : "#LABEL:CommonNavigation",
         "nonsepTitleItemClass" : "+heading",
-        "nonsepTitleAlways" : false,
+        "nonsepTitleAlways" : true,
         "separatorEnabled" : true,
         "separatorItemClass" : "+separator",
         "sepMenuClass" : "+scipio-nav-actions-separate-menu", // NOTE: currently this might not be outputted... but still may have internal use

@@ -127,7 +127,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="BomSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="BomSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="BomTabBar" recursive="includes-only" />
     </menu>
 
@@ -219,7 +219,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ProductionRunSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductionRunSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProductionRunTabBar" recursive="includes-only" />
     </menu>
     
@@ -417,7 +417,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RoutingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RoutingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RoutingTabBar" recursive="includes-only" />
         <menu-item-alias name="findRouting" for="PARENT-NOSUB"/>
     </menu>
@@ -445,7 +445,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="RoutingTaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RoutingTaskSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RoutingTaskTabBar" recursive="includes-only" />
         <menu-item-alias name="routingTask" for="PARENT-NOSUB"/>
     </menu>

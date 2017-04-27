@@ -73,7 +73,14 @@ TODO/FIXME:
   <#local prevMenuInfo = readRequestStack("renderMenuStack")!{}>
   <#local topLevel = !(prevMenuInfo.type)??>
   <#local isNestedMenu = !topLevel>
-  <#local menuLevel = (getRequestStackSize("renderMenuStack")!0)+1>
+  
+  <#-- 2017-04-25: DO NOT use physical stack size for menu level - we need to keep relative increases
+  <#local menuLevel = (getRequestStackSize("renderMenuStack")!0)+1> -->
+  <#local menuLevel = (prevMenuInfo.menuLevel!0)+1>
+  <#-- 2017-04-25: if we have inline entries, do NOT increase level -->
+  <#if inlineEntries && (menuLevel > 1)>
+    <#local menuLevel = menuLevel - 1>
+  </#if>
   
   <#local parentMenuType = "">
   <#local parentStyleName = "">

@@ -389,7 +389,13 @@ The submenu's main class may be set as altnested in global styles.
     <#local isNestedMenu = (prevMenuInfo.type)??>
   </#if>
   <#if !menuLevel?is_number>
-    <#local menuLevel = (getRequestStackSize("scipioMenuStack")!0) + 1>
+    <#-- 2017-04-25: DO NOT use physical stack size for menu level - we need to keep relative increases
+    <#local menuLevel = (getRequestStackSize("scipioMenuStack")!0) + 1>-->
+    <#local menuLevel = (prevMenuInfo.menuLevel!0)+1>
+    <#-- 2017-04-25: if we have inline entries, do NOT increase level -->
+    <#if inlineItems && (menuLevel > 1)>
+      <#local menuLevel = menuLevel - 1>
+    </#if>
   </#if>
 
   <#local parentStyleName = "">

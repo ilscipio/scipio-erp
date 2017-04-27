@@ -16350,4 +16350,9 @@
         <value xml:lang="de">Neu erstellen</value>
         <value xml:lang="en">Recreate</value>        
     </property>
+    <property key="CommonNavigation">
+        <value xml:lang="de">Navigation</value>
+        <value xml:lang="en">Navigation</value>
+        <value xml:lang="fr">Navigation</value>
+    </property>
 </resource>

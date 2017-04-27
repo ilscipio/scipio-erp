@@ -178,7 +178,7 @@ under the License.
         </menu-item>-->
     </menu>
     
-    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
         <menu-item-alias name="OrderFindOrder" for="PARENT-NOSUB"/>
         <menu-item-alias name="OrderNewNote" for="PARENT-WITHSUB"/>
@@ -360,7 +360,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RequirementTabBar" recursive="includes-only" />
     </menu>
     
@@ -448,7 +448,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="QuoteTabBar" recursive="includes-only" />
     </menu>
     
@@ -629,7 +629,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RequestTabBar" recursive="includes-only" />
         <menu-item name="requestitems">
             <sub-menu name="RequestItem" include="RequestItemSideBar"/>
@@ -684,7 +684,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
         <menu-item-alias name="OrderFindReturn" for="PARENT-NOSUB"/>
         <menu-item-alias name="OrderQuickReturn" for="PARENT-WITHSUB"/>
@@ -717,7 +717,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="RequestItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequestItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="editrequestitemmenu" recursive="includes-only" />
     </menu>
     

@@ -234,6 +234,7 @@ public abstract class ModelForm extends ModelWidget {
     private final String submitHiddenFormNamePrefix;
     private final String rowSubmitSelectFieldNamePrefix;
     private final String rowSubmitSelectFieldParamNamePrefix;
+    private final List<ModelPageScript> pageScripts;
     
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
@@ -589,6 +590,19 @@ public abstract class ModelForm extends ModelWidget {
         }
         altRowStyles.trimToSize();
         this.altRowStyles = Collections.unmodifiableList(altRowStyles);
+        
+        // SCIPIO: 2017-04-21: new page scripts
+        ArrayList<ModelPageScript> pageScripts = new ArrayList<>();
+        if (parentModel != null) {
+            pageScripts.addAll(parentModel.pageScripts);
+        }
+        for (Element pageScriptElem : UtilXml.childElementList(formElement, "page-script")) {
+            ModelPageScript pageScript = ModelPageScript.fromElement(pageScriptElem);
+            pageScripts.add(pageScript);
+        }
+        altRowStyles.trimToSize();
+        this.pageScripts = Collections.unmodifiableList(pageScripts);
+        
         Set<String> useWhenFields = new HashSet<String>();
         if (parentModel != null) {
             useWhenFields.addAll(parentModel.useWhenFields);
@@ -1049,6 +1063,14 @@ public abstract class ModelForm extends ModelWidget {
 
     public List<AltRowStyle> getAltRowStyles() {
         return altRowStyles;
+    }
+    
+    /**
+     * SCIPIO: Returns page scripts.
+     * New 2017-04-21.
+     */
+    public List<ModelPageScript> getPageScripts() {
+        return pageScripts;
     }
 
     public List<AltTarget> getAltTargets() {
@@ -2320,5 +2342,18 @@ public abstract class ModelForm extends ModelWidget {
     @Override
     public String getWidgetType() { // SCIPIO: new
         return "form";
+    }
+    
+    /**
+     * SCIPIO: Combines an extra style (like selected-style) to a main style 
+     * string (like widget-style).
+     * <p>
+     * NOTE: currently, the extra style is always added as an extra, and
+     * never replaces. The extra's prefix (+/=) is stripped.
+     * <p>
+     * ALWAYS USE THIS METHOD TO CONCATENATE EXTRA STYLES.
+     */
+    public static String combineExtraStyle(String style, String extraStyle) {
+        return ModelMenu.combineExtraStyle(style, extraStyle);
     }
 }

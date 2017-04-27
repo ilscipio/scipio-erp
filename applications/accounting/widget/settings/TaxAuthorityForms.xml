@@ -62,7 +62,7 @@ under the License.
 
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"/></field>
         <field name="taxAuthPartyId">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
@@ -95,7 +95,7 @@ under the License.
         </row-actions>
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
-           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditTaxAuthority">
+           <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
             </hyperlink>
@@ -201,18 +201,31 @@ under the License.
         <row-actions>
             <set field="partyId" from-field="toTaxAuthPartyId"/>
             <entity-one entity-name="PartyNameView"  value-field="party"></entity-one>
+            <!-- SCIPIO: new -->
+            <set field="geoId" from-field="toTaxAuthGeoId"/>
+            <entity-one entity-name="Geo"  value-field="geo"></entity-one>
         </row-actions>
 
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
 
+        <!-- SCIPIO: combine these for display
         <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
-           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditTaxAuthority">
+            <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId" from-field="toTaxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId" from-field="toTaxAuthGeoId"/>
             </hyperlink>
         </field>
         <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoId}]"/></field>
+        -->
+        <field name="toTaxAuthPartyId"><hidden/></field>
+        <field name="toTaxAuthGeoId"><hidden/></field>
+        <field name="toTaxAuthCombinedId" title="${uiLabelMap.CommonTo} ${uiLabelMap.AccountingTaxAuthority}">
+            <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}] / ${geo.geoName} [${geo.geoId}]" target="EditTaxAuthority">
+                <parameter param-name="taxAuthPartyId" from-field="toTaxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId" from-field="toTaxAuthGeoId"/>
+            </hyperlink>
+        </field> 
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
@@ -225,7 +238,7 @@ under the License.
         </field>
         
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityAssoc" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -238,16 +251,70 @@ under the License.
     
     <form name="AddTaxAuthorityAssoc" type="single" target="createTaxAuthorityAssoc" title="" default-map-name="taxAuthorityAssoc"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <!-- SCIPIO: new; TODO?: factor out for reuse -->
+            <entity-condition entity-name="TaxAuthority" list="taxAuthorityList">
+                <order-by field-name="taxAuthPartyId"/>
+                <order-by field-name="taxAuthGeoId"/>
+            </entity-condition>
+            <script lang="groovy"><![CDATA[
+                infoList = [];
+                if (context.taxAuthorityList) {
+                    for(taxAuthority in context.taxAuthorityList) {
+                        def info = [:];
+                        info.putAll(taxAuthority);
+                        info.taxAuthCombinedId = taxAuthority.taxAuthPartyId + "::" + taxAuthority.taxAuthGeoId;
+                        info.party = from("PartyNameView").where("partyId", taxAuthority.taxAuthPartyId).queryOne();
+                        info.geo = from("Geo").where("geoId", taxAuthority.taxAuthGeoId).queryOne();
+                        infoList.add(info);
+                    }
+                }
+                context.taxAuthorityInfoList = infoList;
+            ]]></script>
+        </actions>
+        <page-script><![CDATA[
+        if (typeof changeToTaxAuthCombinedId === 'undefined') {
+            function changeToTaxAuthCombinedId(combinedInput) {
+                var form=jQuery(combinedInput).closest('form'),
+                    id=jQuery(combinedInput).val().split('::'), 
+                    partyId = id.length ? id[0] : '',
+                    geoId = id.length ? id[1] : '';
+                jQuery('input[name=toTaxAuthPartyId]', form).val(partyId); 
+                jQuery('input[name=toTaxAuthGeoId]', form).val(geoId);
+            }
+            
+            jQuery(document).ready(function() {
+                var inputs = jQuery('select.AddTaxAuthorityAssoc_toTaxAuthCombinedId_field, .AddTaxAuthorityAssoc_toTaxAuthCombinedId_field select');
+                inputs.each(function() {
+                    changeToTaxAuthCombinedId(jQuery(this));
+                });
+                inputs.on('change', function() {
+                    changeToTaxAuthCombinedId(this);
+                });
+            });
+        }
+        ]]></page-script>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
+        
+        <!-- SCIPIO: this is needlessly confusing and it's impossible for users to select a tax authority; instead, combine into one select
         <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
             </drop-down>
+        </field> -->
+        <field name="toTaxAuthPartyId"><hidden value=""/></field>
+        <field name="toTaxAuthGeoId"><hidden value=""/></field>
+        <field name="toTaxAuthCombinedId" title="${uiLabelMap.CommonTo} ${uiLabelMap.AccountingTaxAuthority}" required-field="true" 
+            widget-style="+AddTaxAuthorityAssoc_toTaxAuthCombinedId_field">
+            <drop-down allow-empty="false">
+                <list-options key-name="taxAuthCombinedId" list-name="taxAuthorityInfoList" 
+                    description="${party.groupName} ${party.firstName} ${party.lastName} [${taxAuthPartyId}] / ${geo.geoName} [${taxAuthGeoId}]"/>
+            </drop-down>
         </field>
-
-        <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}" required-field="true">
+        
+        <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}" position="2" >
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthorityAssocType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -284,7 +351,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="organizationPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
-           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+           <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -478,16 +545,16 @@ under the License.
         
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
             <!-- SCIPIO: TODO: REVIEW: there's no agreementId here, I don't know where this comes from...
-            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+            <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
             </hyperlink>-->
             <!-- SCIPIO: also, better to link to edit here
-            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="/partymgr/control/viewprofile" target-type="inter-app">
+            <hyperlink also-hidden="false" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>-->
-            <hyperlink target="EditTaxAuthorityPartyInfo" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" also-hidden="false">
+            <hyperlink target="EditTaxAuthorityPartyInfo" description="${party.groupName} ${party.firstName} ${party.lastName} [${partyId}]" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
                 <parameter param-name="partyId"/>
@@ -556,7 +623,7 @@ under the License.
         </field>
 
         <field use-when="partyTaxAuthInfo!=null" name="partyId" title="${uiLabelMap.CommonParty}">
-            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
+            <display-entity entity-name="PartyNameView" description="${groupName} ${firstName} ${lastName}">
                 <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
@@ -567,8 +634,7 @@ under the License.
         <field name="partyTaxId" position="2"><text/></field>
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo!=null" ><display/></field>
-        <!-- SCIPIO: FIXME: forced to specify fromDate because the service doesn't return it properly to the screen when empty here -->
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo==null" required-field="true"><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="partyTaxAuthInfo==null"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="isExempt" widget-style="+smallSelect"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
         <field name="isNexus" widget-style="+smallSelect" position="2"><drop-down no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>

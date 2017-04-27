@@ -51,6 +51,17 @@ class OneShotMacro {
         this(enabled, macroName, macroNameMap, null);
     }
     
+//    /**
+//     * Deep copy constructor.
+//     */
+//    public OneShotMacro(OneShotMacro other) {
+//        this.enabled = other.enabled;
+//        this.macroName = other.macroName;
+//        this.macroNameMap = other.macroNameMap;
+//        this.state = new State(macroName, ftlFmt);
+//        this.ftlFmt = other.ftlFmt;
+//    }
+    
     public boolean isEnabled() {
         return enabled;
     }
@@ -65,7 +76,7 @@ class OneShotMacro {
     public boolean isReady() {
         return (enabled && state.sb.length() > 0 && state.isRootLevel());
     }
-    
+
     /**
      * Returns the final macro invocation string representation.
      * <p>
@@ -80,6 +91,39 @@ class OneShotMacro {
         return state.sb.toString();
     }
     
+    public void setMarker() {
+        state.setMarker();
+    }
+
+    public String getBufferFromMarker() {
+        return state.getBufferFromMarker();
+    }
+
+    public String getBufferFromFirstValueSinceMarker() {
+        return state.getBufferFromFirstValueSinceMarker();
+    }
+
+    /**
+     * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
+     */
+    public void resetToMarker() {
+        state.resetToMarker();
+    }
+
+    /**
+     * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
+     */
+    public void clearMarker() {
+        state.clearMarker();
+    }
+
+    /**
+     * WARN: NO ESCAPING - CALLER ESCAPES
+     */
+    public void addExtraRootMacroArgRaw(String name, String valueStr) {
+        state.addExtraRootMacroArgRaw(name, valueStr);
+    }
+
     /**
      * Transforms a legacy Ofbiz macro call into data to be appended to the one-shot buffer.
      * <p>
@@ -95,17 +139,25 @@ class OneShotMacro {
     }
     
     static class State {
-        public final StringBuffer sb = new StringBuffer();
-        public final String macroName;
-        private final List<LevelInfo> levelStack;
-        private final Map<String, VarTextValuePair> substituteVarMap = new HashMap<String, VarTextValuePair>();
+        public StringBuffer sb = new StringBuffer();
+        public String macroName;
+        private List<LevelInfo> levelStack;
+        private Map<String, VarTextValuePair> substituteVarMap = new HashMap<>();
         private int subsituteVarCounter = 0;
-        public final FtlScriptFormatter ftlFmt;
+        public FtlScriptFormatter ftlFmt;
+        
+        // SPECIAL: these try to remember the state at a marked location, very hackish for now...
+        // TODO: REVIEW: NOT making copy of substituteVarMap for now... we need to leave it as is for our purposes... 
+        private int markerIndex = -1;
+        private List<LevelInfo> markerLevelStack = null;
+        private int firstValueSinceMarkerIndex = -1;
+        
+        // this is added just before the final "/>"
+        private StringBuffer extraRootMacroArgStr = new StringBuffer();
         
         public State(String macroName, FtlScriptFormatter ftlFmt) {
             this.macroName = macroName;
-            levelStack = new ArrayList<LevelInfo>();
-            levelStack.add(new LevelInfo());
+            this.levelStack = LevelInfo.makeStack();
             this.ftlFmt = ftlFmt;
         }
         
@@ -147,6 +199,50 @@ class OneShotMacro {
         public VarTextValuePair getSubsituteTextForId(String identifier) {
             return substituteVarMap.get(identifier);
         }
+        
+        public void setMarker() {
+            this.markerIndex = sb.length();
+            this.markerLevelStack = LevelInfo.cloneStack(levelStack);
+            this.firstValueSinceMarkerIndex = -1;
+        }
+        
+        public String getBufferFromMarker() {
+            if (markerIndex < 0) throw new IllegalStateException("no marker present");
+            return sb.substring(markerIndex);
+        }
+        
+        public String getBufferFromFirstValueSinceMarker() {
+            if (firstValueSinceMarkerIndex < 0) throw new IllegalStateException("no marker present");
+            return sb.substring(firstValueSinceMarkerIndex);
+        }
+        
+        /**
+         * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
+         */
+        public void resetToMarker() {
+            if (markerIndex < 0) throw new IllegalStateException("no marker present");
+            sb.setLength(markerIndex);
+            this.levelStack = LevelInfo.cloneStack(markerLevelStack);
+        }
+        
+        /**
+         * WARN: DOES NOT RESET substituteVarMap - INTENTIONAL
+         */
+        public void clearMarker() {
+            this.markerIndex = -1;
+            this.markerLevelStack = null;
+            this.firstValueSinceMarkerIndex = -1;
+        }
+        
+        /**
+         * WARN: NO ESCAPING - CALLER ESCAPES
+         */
+        public void addExtraRootMacroArgRaw(String name, String valueStr) {
+            extraRootMacroArgStr.append(" ");
+            extraRootMacroArgStr.append(name);
+            extraRootMacroArgStr.append("=");
+            extraRootMacroArgStr.append(valueStr);
+        }
     }
     
     private static class VarTextValuePair {
@@ -175,6 +271,23 @@ class OneShotMacro {
         public LevelInfo() {
             this.hasItems = false;
             this.currListVarName = null;
+        }
+        public LevelInfo(LevelInfo other) {
+            this.hasItems = other.hasItems;
+            this.currListVarName = other.currListVarName;
+        }
+        
+        public static List<LevelInfo> makeStack() {
+            List<LevelInfo> newStack = new ArrayList<>();
+            newStack.add(new LevelInfo());
+            return newStack;
+        }
+        public static List<LevelInfo> cloneStack(List<LevelInfo> levelStack) {
+            List<LevelInfo> newStack = new ArrayList<LevelInfo>(levelStack.size());
+            for(LevelInfo info : levelStack) {
+                newStack.add(new LevelInfo(info));
+            }
+            return newStack;
         }
     }
     
@@ -223,9 +336,11 @@ class OneShotMacro {
                 sb.append(state.macroName);
                 boolean hasItems = appendMacroArgs(sb, state, macroParameters);
                 state.pushLevelInfo(new LevelInfo(hasItems));
-            }
-            else {
+            } else {
                 checkListAppendArgName(state, this.varType, this.varName);
+                if (state.firstValueSinceMarkerIndex < 0) {
+                    state.firstValueSinceMarkerIndex = state.sb.length();
+                }
                 boolean hasItems = appendMacroMapArg(state.sb, state, macroParameters, false);
                 state.pushLevelInfo(new LevelInfo(hasItems));
             }
@@ -247,9 +362,9 @@ class OneShotMacro {
             // pop this elem's level info (in addition to list above)
             state.popLevelInfo();
             if (state.isRootLevel()) {
+                state.sb.append(state.extraRootMacroArgStr);
                 state.sb.append("/>");
-            }
-            else {
+            } else {
                 state.sb.append("}");
                 // we printed an item, so know previous row had items
                 state.getLevelInfo().hasItems = true;
@@ -281,8 +396,7 @@ class OneShotMacro {
                 } catch (IOException e) {
                     Debug.logError(e, module);
                 }
-            }
-            else {
+            } else {
                 checkListAppendArgName(state, this.varType, this.varName);
                 appendMacroMapArg(state.sb, state, macroParameters, true);
                 state.getLevelInfo().hasItems = true;
@@ -306,8 +420,7 @@ class OneShotMacro {
                     sb.append(name);
                     sb.append('=');
                     sb.append(value);
-                }
-                else {
+                } else {
                     sb.append(name);
                     sb.append("=");
                     if (value instanceof String) {
@@ -344,8 +457,7 @@ class OneShotMacro {
                     sb.append('"');
                     sb.append(':');
                     sb.append(value);
-                }
-                else {
+                } else {
                     sb.append('"');
                     sb.append(name);
                     sb.append('"');
@@ -373,21 +485,18 @@ class OneShotMacro {
                     if (state.isHasItems()) {
                         state.sb.append(',');
                     }
-                }
-                else {
+                } else {
                     // Different var name, so make a new list...
                     appendListClose(state, varType, varName);
                     appendArgName(state, varType, varName);
                     appendListOpen(state, varType, varName);
                 }
-            }
-            else {
+            } else {
                 // Incoming isn't a list, so close list...
                 appendListClose(state, varType, varName);
                 appendArgName(state, varType, varName);
             }
-        }
-        else {
+        } else {
             appendArgName(state, varType, varName);
             if (varType == VarType.LIST) {
                 appendListOpen(state, varType, varName);

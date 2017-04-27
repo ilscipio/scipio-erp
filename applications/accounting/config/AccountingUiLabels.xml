@@ -7086,7 +7086,7 @@
     <property key="AccountingGlAccountDefault">
         <value xml:lang="ar">القيم الإفتراضية للحساب المحاسبي</value>
         <value xml:lang="de">HB Standard Konto</value>
-        <value xml:lang="en">GL Account defaults</value>
+        <value xml:lang="en">GL Account Defaults</value>
         <value xml:lang="es">Valores predeterminados de cuentas de LM</value>
         <value xml:lang="fr">Comptes par défaut</value>
         <value xml:lang="hi_IN">जीएल(GL) खाता डिफ़ॉल्ट्स</value>

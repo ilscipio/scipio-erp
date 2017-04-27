@@ -84,6 +84,7 @@ import org.ofbiz.widget.model.ModelFormField.TextField;
 import org.ofbiz.widget.model.ModelFormField.TextFindField;
 import org.ofbiz.widget.model.ModelFormField.TextareaField;
 import org.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.ofbiz.widget.model.ModelPageScript;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelSingleForm;
 import org.ofbiz.widget.model.ModelWidget;
@@ -388,13 +389,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String clientAutocomplete = "false";
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
         boolean ajaxEnabled = updateAreas != null && this.javaScriptEnabled;
@@ -473,13 +468,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String visualEditorEnable = "";
         String buttons = "";
@@ -714,13 +703,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String mask = dateTimeField.getMask();
         if ("Y".equals(mask)) {
@@ -846,13 +829,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String currentDescription = null;
         if (UtilValidate.isNotEmpty(currentValue)) {
@@ -1375,15 +1352,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (!sb.toString().isEmpty()) {
             //check for required field style on single forms
             if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-                String requiredStyle = modelFormField.getRequiredFieldStyle();
-                if (UtilValidate.isNotEmpty(requiredStyle)) {
-                    // SCIPIO: add, don't replace
-                    //style = requiredStyle;
-                    if (UtilValidate.isEmpty(style))
-                        style = requiredStyle;
-                    else
-                        style = requiredStyle + " " + style;
-                }
+                style = combineRequiredStyle(style, false, context, modelFormField); // SCIPIO
             }
             StringWriter sr = new StringWriter();
             sr.append("<@renderFieldTitle ");
@@ -1629,9 +1598,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
         sr.append(" attribs=(");
         sr.append(attribs);
-        sr.append(") />");
+        sr.append(") ");
+        sr.append("/>");
         executeMacro(writer, sr.toString());
-
     }
 
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
@@ -2273,13 +2242,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String name = modelFormField.getParameterName(context);
         String value = modelFormField.getEntry(context, lookupField.getDefaultValue(context));
@@ -2817,13 +2780,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderPasswordField ");
@@ -3636,5 +3593,69 @@ public final class MacroFormRenderer implements FormStringRenderer {
      */
     protected void appendRequiredFieldParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         sr.append(" requiredField=" + (modelFormField.getRequiredField() ? "\"true\"" : "\"false\""));
+    }
+
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        if (modelForm.getPageScripts().size() <= 0) return;
+        // SCIPIO: 2017-04-21: new
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderFormPageScripts ");
+        appendFormPageScripts(writer, sr, context, modelForm);
+        sr.append("/>");
+        executeMacro(writer, sr.toString());
+    }
+    
+    /**
+     * SCIPIO: appends special page scripts to macro call.
+     * New 2017-04-21.
+     */
+    private void appendFormPageScripts(Appendable writer, Appendable sr, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // SCIPIO: 2017-04-21: special pageScripts
+        List<Object> pageScripts = new ArrayList<>();
+        for(ModelPageScript pageScript : modelForm.getPageScripts()) {
+            pageScripts.add(pageScript.getScript(context));
+        }
+        Environment env;
+        try {
+            env = getEnvironment(writer);
+            freemarker.template.TemplateModel pageScriptsModel = env.getObjectWrapper().wrap(pageScripts);
+            env.setGlobalVariable("_scpFormRenPageScripts", pageScriptsModel);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+        sr.append(" pageScripts=_scpFormRenPageScripts");
+    }
+    
+    // SCIPIO: new 2017-04-21 - FIXME: hardcoded 'required' style added
+    String combineRequiredStyle(String className, boolean allowDefault, Map<String, Object> context, ModelFormField modelFormField) {
+        // ORIGINAL:
+//        String requiredStyle = modelFormField.getRequiredFieldStyle();
+//        if (UtilValidate.isEmpty(requiredStyle))
+//            requiredStyle = "required";
+//        if (UtilValidate.isEmpty(className))
+//            className = requiredStyle;
+//        else
+//            className = requiredStyle + " " + className;
+        String requiredStyle = modelFormField.getRequiredFieldStyle();
+        if (UtilValidate.isNotEmpty(requiredStyle)) {
+            // SCIPIO: NOTE: we expand as a bugfix to original ofbiz
+            requiredStyle = FlexibleStringExpander.expandString(requiredStyle, context);
+        } else {
+            if (allowDefault) {
+                // SCIPIO: FIXME: the 'required' style is currently hardcoded! 
+                // this should be gotten from global styles (ftl) instead...
+                // but this is currently not done from the target macros...
+                requiredStyle = "required";
+            } else {
+                requiredStyle = "";
+            }
+        }
+        return ModelForm.combineExtraStyle(className, requiredStyle);
+    }
+    
+    String combineRequiredStyle(String className, Map<String, Object> context, ModelFormField modelFormField) {
+        return combineRequiredStyle(className, true, context, modelFormField);
     }
 }

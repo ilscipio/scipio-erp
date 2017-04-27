@@ -80,7 +80,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="CatalogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CatalogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CatalogTabBar" recursive="includes-only" />
     </menu>
     
@@ -216,7 +216,7 @@ under the License.
             </link>
         </menu-item> -->
     </menu>
-    <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CategoryTabBar" recursive="includes-only" />
     </menu>
 
@@ -406,7 +406,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProductStoreTabBar" recursive="includes-only" />
         <menu-item name="EditProductStoreWebSites">
             <sub-menu name="WebSite" include="component://content/widget/content/ContentMenus.xml#WebSiteSideBar"/>
@@ -522,7 +522,7 @@ under the License.
     </menu>
     
     <!-- SCIPIO: new Promo Sidebar -->
-    <menu name="PromoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PromoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PromoTabBar" recursive="includes-only" />
     </menu>
     
@@ -828,7 +828,7 @@ under the License.
         <!-- SCIPIO: EditProductCommunicationEvents removed -->
         <!-- SCIPIO: ViewProductGroupOrder removed -->
     </menu>
-    <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProductTabBar" recursive="includes-only" />
         <menu-item name="EditProductFeatures">
             <!-- SCIPIO: NOTE: see comments on EditProductFeatures in ProductTabBar -->

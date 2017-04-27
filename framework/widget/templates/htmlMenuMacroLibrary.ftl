@@ -65,7 +65,7 @@ TODO/FIXME:
   
   TODO?: menu-container-style does not currently fully support the standard Scipio +/= class prefix; generally, "+" will be assumed.
 -->
-<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] selected=false selectedAncestor=false titleStyle="" name="" extraArgs...>
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[] sepMenuType="" sepMenuDef={} selected=false selectedAncestor=false titleStyle="" name="" itemClass="" extraArgs...>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -73,7 +73,14 @@ TODO/FIXME:
   <#local prevMenuInfo = readRequestStack("renderMenuStack")!{}>
   <#local topLevel = !(prevMenuInfo.type)??>
   <#local isNestedMenu = !topLevel>
-  <#local menuLevel = (getRequestStackSize("renderMenuStack")!0)+1>
+  
+  <#-- 2017-04-25: DO NOT use physical stack size for menu level - we need to keep relative increases
+  <#local menuLevel = (getRequestStackSize("renderMenuStack")!0)+1> -->
+  <#local menuLevel = (prevMenuInfo.menuLevel!0)+1>
+  <#-- 2017-04-25: if we have inline entries, do NOT increase level -->
+  <#if inlineEntries && (menuLevel > 1)>
+    <#local menuLevel = menuLevel - 1>
+  </#if>
   
   <#local parentMenuType = "">
   <#local parentStyleName = "">
@@ -168,8 +175,22 @@ TODO/FIXME:
   
   <#local menuInfo = {"type":type, "name":name, "specialType":specialType, "styleName":styleName, "class":class, "id":id, 
     "menuIdNum":menuIdNum, "menuCtxRole":menuCtxRole, "inlineEntries":inlineEntries, "htmlwrap":htmlwrap,
-    "isNestedMenu":isNestedMenu, "menuLevel":menuLevel,
+    "isNestedMenu":isNestedMenu, "menuLevel":menuLevel, "itemClass":itemClass,
     "parentMenuType":parentMenuType, "parentMenuSpecialType":parentMenuSpecialType, "parentStyleName":parentStyleName}>
+    
+  <#if sepMenuType?has_content>
+    <#local sepStyleName = sepMenuType?replace("-","_")>
+    <#local sepMenu = (styles["sepmenu_" + sepStyleName + "_config"]!{}) + {
+         "type":sepMenuType,
+         "hasMenu":(sepMenuDef.items)?has_content,
+         "render":menuWidgetSepMenuImpl, 
+         "menuDef":toSimpleMap(sepMenuDef),
+         "menuInfo":menuInfo
+    }>
+  <#else>
+    <#local sepMenu = {"hasMenu":false}>
+  </#if>
+  
   <#local dummy = pushRequestStack("renderMenuStack", menuInfo)> <#-- pushing info to stack, so that this can be used by subsequently --> 
   <#if inlineEntries>
     <#list items as item>
@@ -181,7 +202,7 @@ TODO/FIXME:
             name=item.name menuInfo=menuInfo/>
     </#list>
   <#else>
-    <@menu_markup type=type specialType=specialType name=name class=class id=id style="" attribs=extraMenuAttribs 
+    <@menu_markup type=type specialType=specialType sepMenu=sepMenu name=name class=class id=id style="" attribs=extraMenuAttribs 
         excludeAttribs=["class", "id", "style"] inlineItems=false titleClass=titleClass mainButtonClass=titleClass title=title 
         htmlwrap=htmlwrap parentMenuType=parentMenuType parentMenuSpecialType=parentMenuSpecialType
         isNestedMenu=isNestedMenu menuLevel=menuLevel active=active activeTarget=activeTarget>
@@ -210,6 +231,53 @@ TODO/FIXME:
 </#if>
 </#macro>
 
+<#-- widget version of @separateMenuImpl -->
+<#macro menuWidgetSepMenuImpl sepMenu={} menuOnly=true catchArgs...>
+  <#local menuDef = sepMenu.menuDef!{}>
+  <#if sepMenu.hasMenu>
+    <#local inlineEntries = false>
+    <#if sepMenu.layout!?ends_with("inline")>
+      <#local inlineEntries = true>
+    </#if>
+    <#local itemClass = sepMenu.sepItemClass!"">
+    <#local style = menuDef.style>
+    <#if sepMenu.sepMenuClass?has_content>
+      <#local style = addClassArg(style, getPlainClassArgNames(sepMenu.sepMenuClass))>
+    </#if>
+    <#-- WARN: ID intentionally discarded to prevent duplicate IDs (FIXME?) 
+    <#local id = menuDef.id>-->
+    <#local id = "">
+  </#if>
+  <#if menuOnly>
+    <#if sepMenu.hasMenu>
+      <#-- DEV NOTE: if change, make sure to copy-paste this call the 2 others below -->
+      <@renderMenuFull boundaryComment=(menuDef.boundaryComment!"") id=id style=style
+        title=menuDef.title inlineEntries=inlineEntries menuCtxRole=menuDef.menuCtxRole
+        items=menuDef.items selected=menuDef.selected selectedAncestor=menuDef.selectedAncestor
+        titleStyle=menuDef.titleStyle name=menuDef.name itemClass=itemClass/>
+    </#if>
+  <#else>
+    <#if (sepMenu.layout!) == "before-inline">
+      <#if sepMenu.hasMenu>
+        <#if sepMenu.sepTitle?has_content>
+          <#-- TODO: review these calls. NOTE: we can't use @menuitem here... only @renderMenuItemFull or @menuitem_markup -->
+          <@renderMenuItemFull style=sepMenu.sepTitleItemClass linkArgs={"text":getTextLabelFromExpr(sepMenu.sepTitle)} menuInfo=sepMenu.menuInfo/>
+        </#if>
+        <@renderMenuFull boundaryComment=(menuDef.boundaryComment!"") id=id style=style
+          title=menuDef.title inlineEntries=inlineEntries menuCtxRole=menuDef.menuCtxRole
+          items=menuDef.items selected=menuDef.selected selectedAncestor=menuDef.selectedAncestor
+          titleStyle=menuDef.titleStyle name=menuDef.name itemClass=itemClass/>
+        <#if sepMenu.separatorEnabled>
+          <@renderMenuItemFull style=sepMenu.separatorItemClass linkArgs={"text":""} menuInfo=sepMenu.menuInfo/>
+        </#if>
+      </#if>
+      <#if sepMenu.nonsepTitle?has_content && (sepMenu.hasMenu || sepMenu.nonsepTitleAlways)>
+        <@renderMenuItemFull style=sepMenu.nonsepTitleItemClass linkArgs={"text":getTextLabelFromExpr(sepMenu.nonsepTitle)} menuInfo=sepMenu.menuInfo/>
+      </#if>
+    </#if>
+  </#if>
+</#macro>
+
 <#-- SCIPIO: Render full menu item. Separate macro required due to recursive nested menus. 
     NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! 
     NOTE (2016-08-26): The items arg is no longer populated; instead, an explicit subMenuList is now passed.
@@ -231,6 +299,10 @@ TODO/FIXME:
   <#local menuStyleName = menuInfo.styleName>
   <#local menuName = menuInfo.name!"">
 
+  <#if menuInfo.itemClass?has_content>
+    <#local class = addClassArg(class, getPlainClassArgNames(menuInfo.itemClass))><#-- TODO?: support crushing (=)? -->
+  </#if>
+
   <#if disabled>
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))>
   </#if>
@@ -246,11 +318,12 @@ TODO/FIXME:
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
 
   <#-- NOTE: our "selected" actually means "active" to the Scipio macros -->
-  <@menuitem_markup type=type menuType=menuInfo.type!"" menuSpecialType=menuInfo.specialType!"" 
+  <@menuitem_markup type=type menuType=(menuInfo.type!"") menuSpecialType=(menuInfo.specialType!"")
       name=name menuName=menuName class=class id=id 
       style="" attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=false htmlwrap=htmlwrap 
       disabled=disabled active=active activeTarget=activeTarget
-      isNestedMenu=menuInfo.isNestedMenu menuLevel=menuInfo.menuLevel parentMenuType=menuInfo.parentMenuType parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
+      isNestedMenu=menuInfo.isNestedMenu menuLevel=menuInfo.menuLevel parentMenuType=menuInfo.parentMenuType 
+      parentMenuSpecialType=menuInfo.parentMenuSpecialType itemIndex=itemIndex><#rt>
     <#if linkArgs?has_content>
       <@renderLink linkUrl=linkArgs.linkUrl parameterList=linkArgs.parameterList targetWindow=linkArgs.targetWindow 
           uniqueItemName=linkArgs.uniqueItemName actionUrl=linkArgs.actionUrl linkType=linkArgs.linkType id=linkArgs.id 
@@ -298,7 +371,7 @@ Only those not marked DEPRECATED should still be used.
 </#macro>
 
 <#-- SCIPIO: Highly modified @renderLink call, delegates markup to @menuitem_xxx_markup macros and images to @renderImage -->
-<#macro renderLink linkUrl parameterList targetWindow uniqueItemName actionUrl linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false selectedAncestor=false itemIndex=0 menuInfo={} itemName="" extraArgs...>
+<#macro renderLink linkUrl="" parameterList=[] targetWindow="" uniqueItemName="" actionUrl="" linkType="" id="" style="" name="" height="" width="" text="" imgStr="" menuCtxRole="" imgArgs={} disabled=false selected=false selectedAncestor=false itemIndex=0 menuInfo={} itemName="" extraArgs...>
   <#local class = style>
   <#local isLink = (linkType == "hidden-form" || linkUrl?has_content)>
   <#local hasImg = imgArgs?has_content || imgStr?has_content>
@@ -308,10 +381,10 @@ Only those not marked DEPRECATED should still be used.
        because can't centralize these menus easily anywhere else. -->
   <#if menuCtxRole == "screenlet-nav-menu">
     <#if !class?has_content && isLink>
-      <#local class = "${styles.menu_section_item_link!}">
+      <#local class = styles.menu_section_item_link!>
     </#if>
   </#if>
-  <#if linkType?has_content && "hidden-form" == linkType>
+  <#if "hidden-form" == linkType>
     <#local hiddenFormContent>
       <form method="post" action="${escapeFullUrl(actionUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${escapeVal(uniqueItemName, 'html')}" class="menu-widget-action-form"><#t>
         <#list parameterList as parameter>

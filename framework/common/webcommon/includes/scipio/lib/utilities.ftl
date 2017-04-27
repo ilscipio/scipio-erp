@@ -3644,7 +3644,7 @@ a replacing string ("=").
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#if (!class?has_content)>
+  <#if !(class?has_content)>
     <#return "+" + newClass> <#-- if string was empty, make sure start with "+" so we don't crush next defaults -->
   <#else>
     <#return class + " " + newClass> <#-- don't worry about spaces here; trimmed later -->

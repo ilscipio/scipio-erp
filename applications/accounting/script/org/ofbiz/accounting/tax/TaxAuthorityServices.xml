@@ -63,6 +63,12 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
+        
+        <!-- SCIPIO: extra verification to help error message; REMOVED - re-add if needed again
+        <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
+        <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
+        <call-simple-method method-name="verifyValidTaxAuthority"/>
+        -->
 
         <make-value entity-name="TaxAuthorityAssoc" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -76,6 +82,22 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
+
+        <!-- SCIPIO: extra verification to help error message; REMOVED - re-add if needed again
+        <if>
+            <condition>
+                <or>
+                    <not><if-empty field="parameters.toTaxAuthPartyId"/></not>
+                    <not><if-empty field="parameters.toTaxAuthGeoId"/></not>
+                </or>
+            </condition>
+            <then>
+                <set field="vvta.partyId" from-field="parameters.toTaxAuthPartyId"/>
+                <set field="vvta.geoId" from-field="parameters.toTaxAuthGeoId"/>
+                <call-simple-method method-name="verifyValidTaxAuthority"/>
+            </then>
+        </if>
+        -->
 
         <entity-one entity-name="TaxAuthorityAssoc" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
@@ -146,6 +168,24 @@ under the License.
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
         <check-errors/>
+
+        <!-- SCIPIO: 2017-04-24: special check for PK, to show comprehensible error msg -->
+        <entity-one entity-name="TaxAuthorityGlAccount" value-field="lookedUpValue" auto-field-map="true"/>
+        <if>
+            <condition>
+                <not><if-empty field="lookedUpValue"/></not>
+            </condition>
+            <then>
+                <set field="taxAuthPartyId" from-field="parameters.taxAuthPartyId"/>
+                <set field="taxAuthGeoId" from-field="parameters.taxAuthGeoId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <add-error>
+                    <fail-property resource="AccountingErrorUiLabels" property="AccountingTaxAuthGlAccountAlreadyExists"/>
+                </add-error>
+                <check-errors/>
+            </then>
+        </if>
 
         <make-value entity-name="TaxAuthorityGlAccount" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -240,6 +280,8 @@ under the License.
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <create-value value-field="newEntity"/>
+        <!-- SCIPIO: 2017-04-24: this service must output the fromDate when it's omitted so it can be re-queried -->
+        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
     </simple-method>
     <simple-method method-name="updatePartyTaxAuthInfo" short-description="update a PartyTaxAuthInfo">
         <set value="_UPDATE" field="securityAction"/>
@@ -295,5 +337,19 @@ under the License.
         ]]></call-bsh>
         <set-service-fields service-name="createPartyTaxAuthInfo" map="parameters" to-map="createPartyTaxAuthInfoMap"/>
         <call-service service-name="createPartyTaxAuthInfo" in-map-name="createPartyTaxAuthInfoMap" include-user-login="true"/>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-04-21: new -->
+    <simple-method method-name="verifyValidTaxAuthority" short-description="SCIPIO: verifies the given partyId + geoId is a valid TaxAuthority">
+        <entity-one entity-name="TaxAuthority" value-field="verifiedTaxAuthority" auto-field-map="false">
+            <field-map field-name="taxAuthPartyId" from-field="vvta.partyId"/>
+            <field-map field-name="taxAuthGeoId" from-field="vvta.geoId"/>
+        </entity-one>
+        <if-empty field="verifiedTaxAuthority">
+            <add-error>
+                <fail-property resource="AccountingErrorUiLabels" property="AccountingUserGeoInvalidTaxAuthority"/>
+            </add-error>
+        </if-empty>
+        <check-errors/>
     </simple-method>
 </simple-methods>

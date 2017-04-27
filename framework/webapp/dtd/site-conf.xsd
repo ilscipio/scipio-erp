@@ -526,6 +526,7 @@ under the License.
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="redirect-parameters"/><!-- SCIPIO: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="redirect-parameter">
                     <xs:annotation>
                         <xs:documentation>
@@ -771,9 +772,68 @@ under the License.
                     Set a string value to the parameter.
                 </xs:documentation>
             </xs:annotation>
-            
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="redirect-parameters">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Advanced redirect parameter definitions and control.
+                Added 2017-04-24.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="param">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Adds a parameter with the given name to the redirect. Finds value in a
+                            request attribute if exists, or a request parameter if no attribute is found.
+                            SCIPIO: NOTE: This is the same as the original 'request-parameter' attribute.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attributeGroup ref="attlist.redirect-parameter"/>
+                        <xs:attribute name="mode" default="include">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SCIPIO: If this is set to exclude, the parameter is excluded instead of
+                                    included.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="include"/>
+                                    <xs:enumeration value="exclude"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="include-mode" default="auto">
+                <xs:annotation>
+                    <xs:documentation>
+                        Controls whether to automatically include parameters, or only set those explicitly defined.
+                        * auto (default) - the stock ofbiz behavior: if any "parameter" elements are defined,
+                          only those are included ("explicit" mode). if no "parameter" elements are defined,
+                          then all previous URL-only parameters are included ("url-only"), unless they are
+                          specifically excluded by exclude entries.
+                        * url-params - includes all incoming get url parameters, except those explicitly excluded.
+                        * all-params - includes all incoming parameters, even those from post.
+                        * explicit - only include the specifically listed parameters.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="auto"/>
+                        <xs:enumeration value="explicit"/>
+                        <xs:enumeration value="url-params"/>
+                        <xs:enumeration value="all-params"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="view-map">
         <xs:annotation>
             <xs:documentation>

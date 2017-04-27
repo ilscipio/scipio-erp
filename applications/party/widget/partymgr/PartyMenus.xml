@@ -231,7 +231,7 @@
         </menu-item>
     </menu>
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="viewprofile">
+        default-menu-item-name="viewprofile" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
         <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
         <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
@@ -401,7 +401,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
         <menu-item-alias name="NewPartyInvitation" for="PARENT-NOSUB"/>
     </menu>
@@ -753,7 +753,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CommEventTabBar" recursive="includes-only" />
     </menu>
     

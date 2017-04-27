@@ -675,6 +675,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local origArgs = args>
   <#if !text?has_content>
     <#local text><#nested></#local>
+    <#-- 2017-04-26: we have to prevent escaping for nested text, because caller should already escape that one as markup -->
+    <#local text = wrapAsRaw({"raw":text, "htmlmarkup":text})>
   </#if>
   <@field_option_markup_widget text=text value=value selected=selected style=style origArgs=origArgs passArgs=passArgs/>
 </#macro>

@@ -274,7 +274,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#-- SCIPIO: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
   <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#if !formInfo?has_content>
-    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true}>
     <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
   </#if>
 
@@ -887,4 +887,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#--</#if>-->
 </#macro>
 
-  
+<#-- SCIPIO: 2017-04-24: new -->
+<#macro renderFormPageScripts pageScripts=[] extraArgs...>
+  <@script>
+    <#list pageScripts as pageScript>
+      ${rawString(pageScript)}
+    </#list>
+  </@script>
+</#macro>

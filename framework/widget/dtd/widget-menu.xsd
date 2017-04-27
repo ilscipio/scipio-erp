@@ -330,6 +330,72 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="separate-menu-type">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The separate-menu type, which defines its layout, styling and configuration.
+                        This should name a custom type defined in freemarker global styles hash in the pattern
+                        "sepmenu_[separate-menu-type]_config" (but with dashes instead of underscore).
+                        If specified, when a sub-menu having the separate-menu-target-style is selected,
+                        it is removed/hidden from the tree and rendered separately, following this type.
+                        Example values: 
+                        * default-sidebar
+                        Default: none (must be specified to enable separate menu)
+                        Added 2017-04-25.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="separate-menu-target-style">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: If this is set to a menu style, then any selected sub-menu having this style
+                        will be removed/hidden in the tree and rendered separately, 
+                        following configuration implied by separate-menu-type.
+                        NOTE: The style must be specified via widget definitions directly as simple name and will NOT work with flexible expressions.
+                            It may be set on the style attribute of either the sub-menu element OR its model menu (IF it is used as style model).
+                        Default: none (must be specified to enable separate menu)
+                        Added 2017-04-25.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="separate-menu-target-preference">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Controls how and whether ancestors of the selected menu having the
+                        separate-menu-target-style are considered as candidates for the separate menu.
+                        * greatest-ancestor: the greatest ancestor having the target style is extracted
+                        * selected-only: only the selected target (leaf) menu may be extracted (no nesting possible)
+                        Default: greatest-ancestor
+                        Depending on how the menu is organized, there may be large or no difference between these options.
+                        Added 2017-04-25.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="greatest-ancestor" />
+                        <xs:enumeration value="selected-only" />
+                        <!-- TODO?: this looks too hard to implement (selected, but if hidden use nearest ancestor):
+                        <xs:enumeration value="selected-or-nearest-ancestor" />-->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="separate-menu-target-original-action">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: What to do with the original target entry/entries in the non-separated menu.
+                        * preserve: leaves all original menus in place; the separated one is a copy
+                        * remove-selected: removes the selected or selected-ancestor menu only
+                        * remove-all: removes all target menus, even if not selected, except the ones on the selected path
+                        Default: preserve
+                        Added 2017-04-25.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="preserve" />
+                        <xs:enumeration value="remove-selected" />
+                        <xs:enumeration value="remove-all" />
+                        <!-- no need for this here - style + js can be used for hiding using "preserve"
+                        <xs:enumeration value="hide" />-->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:complexType name="menu-elements-include"><!-- SCIPIO: Element name: "include-elements" -->

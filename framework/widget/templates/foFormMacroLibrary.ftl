@@ -81,7 +81,7 @@ under the License.
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={} method="" extraArgs...></#macro>
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField extraArgs...></#macro>
 <#macro renderMultiFormClose extraArgs...></#macro>
-    
+
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...><fo:table border="solid black"><#list columnStyles as columnStyle><fo:table-column<#if columnStyle?has_content> <@getFoStyle columnStyle/></#if>/></#list></#macro>
 <#macro renderFormatListWrapperClose formName extraArgs...></fo:table-body></fo:table></#macro>
 
@@ -160,3 +160,6 @@ under the License.
 
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm extraArgs...></#macro>
+
+<#-- SCIPIO: 2017-04-24: new -->
+<#macro renderFormPageScripts pageScripts=[] extraArgs...></#macro>

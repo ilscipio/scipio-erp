@@ -307,6 +307,20 @@ context.styles = [
     "menu_default_item_submit" : "",
     "menu_default_item_generic" : "",
     
+    /* separate-menu configurations */
+    "sepmenu_default_sidebar_config" : [
+        "layout" : "before-inline",
+        "sepTitle" : "#LABEL:CommonActions",
+        "sepTitleItemClass" : "+heading",
+        "nonsepTitle" : "#LABEL:CommonNavigation",
+        "nonsepTitleItemClass" : "+heading",
+        "nonsepTitleAlways" : true,
+        "separatorEnabled" : true,
+        "separatorItemClass" : "+separator",
+        "sepMenuClass" : "+scipio-nav-actions-separate-menu", // NOTE: currently this might not be outputted... but still may have internal use
+        "sepItemClass" : "+scipio-nav-actions-menu-item" // ugly kludge due to having no UL wrapper or any wrapper at all around actions menu items...
+    ],
+    
     /* Misc menu styles */
     "menu_subappitem" : "subappitem",
     "menu_subappitem_link" : "subapplink",

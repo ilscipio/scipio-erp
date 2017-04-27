@@ -125,3 +125,6 @@ under the License.
 
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm extraArgs...></#macro>
+
+<#-- SCIPIO: 2017-04-24: new -->
+<#macro renderFormPageScripts pageScripts=[] extraArgs...></#macro>

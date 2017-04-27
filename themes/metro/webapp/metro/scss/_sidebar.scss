@@ -129,6 +129,10 @@ $sidebar-width: 200px;
       background: $side-nav-heading-color;
       //border-left: 4px solid  $primary-color;
       margin-top:1rem;
+      
+      &:first-child {
+        margin-top:0px;
+      }
     }
     
     &.scipio-nav-actions-menu-item{

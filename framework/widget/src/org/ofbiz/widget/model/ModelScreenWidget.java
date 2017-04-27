@@ -224,7 +224,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         /** 
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
          */
-        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
+        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
             if (asString == null) {
                 asString = Boolean.FALSE;
             }
@@ -237,6 +237,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
 //                }
                 context.push();
                 try {
+                    if (ctxVars != null) {
+                        context.putAll(ctxVars);
+                    }
                     return render(sectionName, asString, context, getWriter());
                 } finally {
                     context.pop();
@@ -247,11 +250,26 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
         
         /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
+         */
+        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
+            return renderScoped(sectionName, asString, shareScope, null);
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+         * generic object/ftl-friendly version.
+         */
+        public String renderScopedGen(String sectionName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
+        }
+        
+        /** 
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
          * generic object/ftl-friendly version.
          */
         public String renderScopedGen(String sectionName, Object asString, Object shareScope) throws GeneralException, IOException {
-            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), null);
         }
 
         public Appendable getWriter() { // SCIPIO

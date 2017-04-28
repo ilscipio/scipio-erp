@@ -316,17 +316,7 @@ public class CommonServices {
             try {
                 MapStack<String> context = screenContext;
                 context.put("locale", locale);
-                // prepare the map for preRenderedContent
-                String textData = (String) context.get("textData");
-                if (UtilValidate.isNotEmpty(textData)) {
-                    Map<String, Object> prc = FastMap.newInstance();
-                    String mapKey = (String) context.get("mapKey");
-                    if (mapKey != null) {
-                        prc.put(mapKey, mapKey);
-                    }
-                    prc.put("body", textData); // used for default screen defs
-                    context.put("preRenderedContent", prc);
-                }
+
                 // get the screen renderer; or create a new one
                 ScreenRenderer screens = (ScreenRenderer) context.get("screens");
                 if (screens == null) {
@@ -335,11 +325,13 @@ public class CommonServices {
                     screens = ScreenRenderer.makeWithEnvAwareFetching(bodyWriter, context, screenStringRenderer);
                     screens.getContext().put("screens", screens);
                 }
+                
                 // render the screen
                 ModelScreen modelScreen = null;
                 ScreenStringRenderer renderer = screens.getScreenStringRenderer();
                 screens.populateContextForService(dctx, bodyParameters);
                 screenContext.putAll(bodyParameters);
+
 
                 if (resource != null) {
                         String html = screens.renderScoped(resource, screenName, true, true);

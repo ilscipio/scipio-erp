@@ -108,6 +108,10 @@ TODO: Reimplement as transform.
                                   The non-{{{include-}}} versions may be implemented using other means
                                   and may be more efficient, but sometimes it may be needed to force the include mechanism.
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              WARN: For {{{type="section"}}}, {{{ctxVars}}} may not work as expected; you may have to pass
+                                  {{{globalCtxVars}}} instead, due to issues with scoping and nesting.
+                                  {{{globalCtxVars}}} will work in most cases, but unfortunately they are overridden
+                                  by the invoked's sections local vars, so they can't be used to provide overrides.
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
@@ -160,6 +164,8 @@ TODO: Reimplement as transform.
           because it may be using different "context" object (even if derived from the original context stack).
           We do not have to do this with globalCtxVars the globalContext should be the same since the section
           context should be derived from the original context stack.
+      WARN 2: Even with this, ctxVars may not work as expected for type="section" due to further nesting.
+          May be forced to rely on globalCtxVars and leave it at that... (TODO: REVIEW)
       NOTE: We make assumption that the nested context is a MapStack. if it's not we'd have even more problems,
           but shouldn't be anywhere. 
   -->

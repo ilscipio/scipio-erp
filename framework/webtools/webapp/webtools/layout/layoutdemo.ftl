@@ -1853,7 +1853,8 @@
     </@section>
     
     <@section title="Standalone (isolated) FTL include">
-      <@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" />
+      <@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" ctxVars={"layoutdemoftltestvar1":"and hello from layout demo passed var"}/>
+      <p>layoutdemoftltestvar1 (should say "missing"): ${layoutdemoftltestvar1!"missing"}</p>
     </@section>
     
     <@section title="Render nothing (empty)">

@@ -177,40 +177,64 @@ public abstract class ModelScreenWidget extends ModelWidget {
          * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
          * <p>
          * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
-         * */
+         * NOTE: this method has shareScope=true implied (no protection). See renderScoped for protection.
+         */
         public String render(String sectionName, boolean asString) throws GeneralException, IOException {
-            return render(sectionName, asString, getContext(), getWriter());
+            return render(sectionName, asString, true, null);
         }
         
         /** 
-         * This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker 
-         * <p>
          * SCIPIO: supports asString bool, to render as string to result instead of default writer, logical default false
          * */
-        protected String render(String sectionName, boolean asString, MapStack<String> context, Appendable writer) throws GeneralException, IOException {
+        protected String render(String sectionName, boolean asString, boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
             if (includePrevSections) {
                 // SCIPIO: new handling for previous section support
                 ModelScreenWidget section = localSectionMap.get(sectionName);
                 // if no section by that name, write nothing
                 if (section != null) {
-                    Appendable effWriter = asString ? new java.io.StringWriter() : writer;
-                    section.renderWidgetString(effWriter, context, this.screenStringRenderer);
+                    Appendable effWriter = asString ? new java.io.StringWriter() : this.getWriter();
+                    renderSection(effWriter, section, shareScope, ctxVars);
                     return asString ? effWriter.toString() : "";
                 }
                 else if (prevSections != null && prevSectionMap != null && prevSectionMap.get(sectionName) != null) {
                     // render previous sections with previous renderer so that it uses the right context
-                    return prevSections.render(sectionName, asString);
+                    return prevSections.render(sectionName, asString, shareScope, ctxVars);
                 }
                 return "";
             }
             else {
                 ModelScreenWidget section = sectionMap.get(sectionName);
-                Appendable effWriter = asString ? new java.io.StringWriter() : writer;
+                Appendable effWriter = asString ? new java.io.StringWriter() : this.getWriter();
                 // if no section by that name, write nothing
                 if (section != null) {
-                    section.renderWidgetString(effWriter, context, this.screenStringRenderer);
+                    renderSection(effWriter, section, shareScope, ctxVars);
                 }
                 return asString ? effWriter.toString() : "";
+            }
+        }
+        
+        /**
+         * SCIPIO: the inner call around renderWidgetString
+         * 2017-04-26: this is refactored because the ctxVars put and the context push has to be done around
+         * the innermost renderWidgetString call due to prevSections.
+         */
+        protected void renderSection(Appendable writer, ModelScreenWidget section, boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
+            MapStack<String> context = this.getContext();
+            if (shareScope) {
+                if (ctxVars != null && !ctxVars.isEmpty()) {
+                    context.putAll(ctxVars);
+                }
+                section.renderWidgetString(writer, context, this.screenStringRenderer);
+            } else {
+                context.push();
+                try {
+                    if (ctxVars != null && !ctxVars.isEmpty()) {
+                        context.putAll(ctxVars);
+                    }
+                    section.renderWidgetString(writer, context, this.screenStringRenderer);
+                } finally {
+                    context.pop();
+                }
             }
         }
         
@@ -223,27 +247,27 @@ public abstract class ModelScreenWidget extends ModelWidget {
         
         /** 
          * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
+         * 
+         * @param asString whether to render as string instead of saved writer; default: false
+         * @param shareScope whether to share scope; default: false (for renderScoped only!)
+         */
+        public String renderScoped(String sectionName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
+            return render(sectionName, asString != null ? asString : Boolean.FALSE, shareScope != null ? shareScope : Boolean.FALSE, ctxVars);
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE).
          */
         public String renderScoped(String sectionName, Boolean asString, Boolean shareScope) throws GeneralException, IOException {
-            if (asString == null) {
-                asString = Boolean.FALSE;
-            }
-            if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
-                MapStack<String> context = getContext(); // SCIPIO: simplified
-//                if (!(this.context instanceof MapStack<?>)) {
-//                    context = MapStack.create(this.context);
-//                } else {
-//                    context = UtilGenerics.<MapStack<String>>cast(this.context);
-//                }
-                context.push();
-                try {
-                    return render(sectionName, asString, context, getWriter());
-                } finally {
-                    context.pop();
-                }
-            } else {
-                return render(sectionName, asString);
-            }
+            return renderScoped(sectionName, asString, shareScope, null);
+        }
+        
+        /** 
+         * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+         * generic object/ftl-friendly version.
+         */
+        public String renderScopedGen(String sectionName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException {
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
         }
         
         /** 
@@ -251,7 +275,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
          * generic object/ftl-friendly version.
          */
         public String renderScopedGen(String sectionName, Object asString, Object shareScope) throws GeneralException, IOException {
-            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
+            return renderScoped(sectionName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), null);
         }
 
         public Appendable getWriter() { // SCIPIO

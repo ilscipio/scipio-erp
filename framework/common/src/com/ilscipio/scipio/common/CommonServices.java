@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
@@ -25,17 +26,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.mail.internet.MimeMessage;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.common.email.NotificationServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -43,6 +49,7 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityDataLoader;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -50,6 +57,14 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceSynchronization;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
+import org.ofbiz.widget.model.ModelScreen;
+import org.ofbiz.widget.renderer.ScreenRenderer;
+import org.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
+import org.xml.sax.SAXException;
+
+import freemarker.template.TemplateException;
+import javolution.util.FastMap;
 
 /**
  * SCIPIO: Common Services
@@ -252,6 +267,100 @@ public class CommonServices {
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
         }
+    }
+    
+    /**
+     * Render Partial Screen 
+     * 
+     * @param dctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
+     */
+    public static Map<String, Object> renderPartialScreen(DispatchContext dctx, Map<String, ?> rServiceContext) {
+        Map<String, Object> responseMap = ServiceUtil.returnSuccess();
+        try {
+            Map<String, Object> serviceContext = UtilMisc.makeMapWritable(rServiceContext);
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            String webSiteId = (String) serviceContext.remove("webSiteId");
+            String resource = (String) serviceContext.remove("resource");
+            String screenName = (String) serviceContext.remove("screenName");
+            
+            Locale locale = (Locale) serviceContext.get("locale");
+            Map<String, Object> bodyParameters = UtilGenerics.checkMap(serviceContext.remove("bodyParameters"));
+            if (bodyParameters == null) {
+                bodyParameters = MapStack.create();
+            }
+            if (!bodyParameters.containsKey("locale")) {
+                bodyParameters.put("locale", locale);
+            } else {
+                locale = (Locale) bodyParameters.get("locale");
+            }
+            String partyId = (String) serviceContext.get("partyId");
+            if (partyId == null) {
+                partyId = (String) bodyParameters.get("partyId");
+            }
+            String orderId = (String) bodyParameters.get("orderId");
+            String custRequestId = (String) bodyParameters.get("custRequestId");
+            
+            bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
+            NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
+            String contentType = (String) serviceContext.remove("contentType");
+
+            StringWriter bodyWriter = new StringWriter();
+
+            MapStack<String> screenContext = MapStack.create();
+            screenContext.put("locale", locale);
+
+            // Scipio new
+            Delegator delegator = dctx.getDelegator();
+            try {
+                MapStack<String> context = screenContext;
+                context.put("locale", locale);
+
+                // get the screen renderer; or create a new one
+                ScreenRenderer screens = (ScreenRenderer) context.get("screens");
+                if (screens == null) {
+                 // TODO: replace "screen" to support dynamic rendering of different output
+                    ScreenStringRenderer screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator), EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", delegator));
+                    screens = ScreenRenderer.makeWithEnvAwareFetching(bodyWriter, context, screenStringRenderer);
+                    screens.getContext().put("screens", screens);
+                }
+                
+                // render the screen
+                ModelScreen modelScreen = null;
+                ScreenStringRenderer renderer = screens.getScreenStringRenderer();
+                screens.populateContextForService(dctx, bodyParameters);
+                screenContext.putAll(bodyParameters);
+
+
+                if (resource != null) {
+                        String html = screens.renderScoped(resource, screenName, true, true);
+                        responseMap.put("html", html);
+                }
+            } catch (GeneralException e) {
+                Debug.logError(e, "Error rendering screen: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+            } catch (IOException e) {
+                Debug.logError(e, "Error rendering screen: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+            } catch (SAXException e) {
+                Debug.logError(e, "Error rendering screen: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+            } catch (ParserConfigurationException e) {
+                Debug.logError(e, "Error rendering screen: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+            } catch (TemplateException e) {
+                Debug.logError(e, "Error rendering screen: " + e.toString(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
+            }
+        }
+        catch(Exception e) {
+            final String errorMsg = "Exception triggering File Event";
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg + ": " + e.getMessage());
+        }
+        
+        return responseMap;
     }
 
 }

@@ -779,7 +779,7 @@
     </menu>
 
     <menu name="FinAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditFinAccount">
+        default-menu-item-name="EditFinAccount" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="FinAccountTabBar" recursive="includes-only" />
     </menu>
 
@@ -862,11 +862,12 @@
     -->
     
     <menu name="FixedAssetsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="ListFixedAssets">
+        default-menu-item-name="ListFixedAssets" menu-container-style="+scipio-nav-actions-menu">
         <!-- Disabled for as long as there is only one entry
         <menu-item name="ListFixedAssets" title="${uiLabelMap.AccountingFixedAssets}">
             <link target="ListFixedAssets" />
         </menu-item>-->
+        <include-elements menu-name="FixedAssetTabBar" recursive="includes-only"/>
     </menu>
     
     <menu name="FixedAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -1459,7 +1460,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
         <menu-item-alias name="findPayment" for="PARENT-NOSUB"/>
         <menu-item-alias name="newPayment" for="PARENT-NOSUB"/>
@@ -1633,7 +1634,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PaymentGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PaymentGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" >
         <include-elements menu-name="PaymentGroupTabBar" recursive="includes-only" />
     </menu>
 

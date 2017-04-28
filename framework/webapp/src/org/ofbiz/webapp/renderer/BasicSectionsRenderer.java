@@ -1,6 +1,7 @@
 package org.ofbiz.webapp.renderer;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
 
@@ -34,5 +35,17 @@ public interface BasicSectionsRenderer {
      * generic object/ftl-friendly version.
      */
     String renderScopedGen(String sectionName, Object asString, Object shareScope) throws GeneralException, IOException, TemplateException;
+    
+    /** 
+     * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+     * and optionally sets some context vars after the pushing.
+     */
+    String renderScoped(String sectionName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, TemplateException;
+    
+    /** 
+     * SCIPIO: version which scopes by default by pushing context stack (shareScope FALSE),
+     * and optionally sets some context vars after the pushing.
+     */
+    String renderScopedGen(String sectionName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, TemplateException;
     
 }

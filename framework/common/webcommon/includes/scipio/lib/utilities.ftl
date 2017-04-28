@@ -108,6 +108,10 @@ TODO: Reimplement as transform.
                                   The non-{{{include-}}} versions may be implemented using other means
                                   and may be more efficient, but sometimes it may be needed to force the include mechanism.
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              WARN: For {{{type="section"}}}, {{{ctxVars}}} may not work as expected; you may have to pass
+                                  {{{globalCtxVars}}} instead, due to issues with scoping and nesting.
+                                  {{{globalCtxVars}}} will work in most cases, but unfortunately they are overridden
+                                  by the invoked's sections local vars, so they can't be used to provide overrides.
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
@@ -116,9 +120,10 @@ TODO: Reimplement as transform.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
-    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
+    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
+                              WARN: 2017-04-26: This does NOT work reliably for {{{ctxVars}}}.
     asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
                               In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
                               which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
@@ -135,7 +140,7 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
-    sections                = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
+    secMap                  = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
                               WORK-IN-PROGRESS
                               The entries may be TemplateInvoker instances returned from #interpretStd or #interpretStdLoc.
                               Alternatively, simple strings may be passed which will be interpreted as template locations
@@ -148,26 +153,60 @@ TODO: Reimplement as transform.
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
-<#macro render resource="" name="" type="" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
-    asString=false shareScope="" maxDepth="" subMenus="" sections={}>
+<#macro render resource="" name="" type="" ctxVars={} globalCtxVars={} reqAttribs={} clearValues="" restoreValues="" 
+    asString=false shareScope=false maxDepth="" subMenus="" secMap={}>
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
-  <#-- TODO: in many cases we could optimize the variable preservation code by delegating to the java... -->
-  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
+  <#if !type?has_content>
     <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
-    <#if !type?has_content>
-      <#local type = resource?ends_with(".ftl")?string("ftl", "screen")>
+    <#local type = resource?ends_with(".ftl")?string("ftl", "screen")>
+  </#if>
+  <#-- WARN: 2017-04-26: For type="section" we MUST pass the ctxVars down to the called method,
+          because it may be using different "context" object (even if derived from the original context stack).
+          We do not have to do this with globalCtxVars the globalContext should be the same since the section
+          context should be derived from the original context stack.
+      WARN 2: Even with this, ctxVars may not work as expected for type="section" due to further nesting.
+          May be forced to rely on globalCtxVars and leave it at that... (TODO: REVIEW)
+      NOTE: We make assumption that the nested context is a MapStack. if it's not we'd have even more problems,
+          but shouldn't be anywhere. 
+  -->
+  <#local innerCtxVars = ctxVars>
+  <#local outerCtxVars = {}>
+  <#if shareScope?is_boolean && shareScope == true>
+    <#-- WARN: if shareScope=true and restoreValues=true, we can't rely on the called function to restore the values...
+          so this complicates further.
+        FIXME: these cases are suboptimal, we're causing double value assignments, 
+        but we must honor the @render interface for now,
+        and we can't remove the innerCtxVars due to the section. issue above.
+        have to rewrite @varSection to avoid this duplication -->
+    <#if !restoreValues?is_boolean || restoreValues == true>
+      <#local innerCtxVars = ctxVars>
+      <#local outerCtxVars = ctxVars>
+    <#elseif clearValues?is_boolean && clearValues == true>
+      <#local innerCtxVars = ctxVars>
+      <#local outerCtxVars = ctxVars>
     </#if>
-    <#if type == "screen">
-      ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
-    <#elseif type == "decorator">
+  </#if>
+  <#if type == "screen">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
+      ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope, innerCtxVars))}<#t>
+    </@varSection><#t>
+  <#elseif type == "decorator">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
       <p>(@render type="decorator" is not yet implemented)</p><#t>
-      <#--${StringUtil.wrapString(screens.renderDecoratorScopedGen(resource, name, asString, shareScope, sections)})}--><#t>
-    <#elseif type == "section">
-      ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
-    <#elseif type == "ftl">
+      <#--${StringUtil.wrapString(screens.renderDecoratorScopedGen(resource, name, asString, shareScope, sections, innerCtxVars)})}--><#t>
+    </@varSection><#t>  
+  <#elseif type == "section">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
+      ${StringUtil.wrapString((sections.renderScopedGen(name, asString, shareScope, innerCtxVars))!"")}<#t>
+    </@varSection><#t>  
+  <#elseif type == "ftl">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
       <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
-      ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope})}<#t>
-    <#else>
+      ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope, "ctxVars":innerCtxVars})}<#t>
+    </@varSection><#t>  
+  <#else>
+    <#-- TODO: innerCtxVars & outerCtxVars, requires widget patch -->
+    <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues><#t>
       <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>
       <#if !name?has_content>
@@ -197,8 +236,8 @@ TODO: Reimplement as transform.
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
-    </#if>
-  </@varSection><#t>
+    </@varSection><#t>
+  </#if>
   </#if>
 </#macro>
 
@@ -1040,6 +1079,8 @@ Sets context variables and request attributes.
 This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.
 
+TODO: REIMPLEMENT AS TRANSFORM
+
   * Parameters *
     varMaps                 = ((map)) Map of maps of vars to set
                               * {{{ctxVars}}}: A map of screen context vars to be set before the invocation
@@ -1053,24 +1094,18 @@ to indicate the value null.
                                     object found in the global {{{scipioNullObject}}} variable.
 -->
 <#function setVars varMaps={}>
-  <#if !(varMaps.ctxVars!false)?is_boolean>
-    <#local ctxVars = toSimpleMap(varMaps.ctxVars)>
-    <#list mapKeys(ctxVars) as name>
-      <#local dummy = setContextField(name, ctxVars[name])>
-    </#list>
-  </#if>
-  <#if !(varMaps.globalCtxVars!false)?is_boolean>
-    <#local globalCtxVars = toSimpleMap(varMaps.globalCtxVars)>
-    <#list mapKeys(globalCtxVars) as name>
-      <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
-    </#list>
-  </#if>
-  <#if !(varMaps.reqAttribs!false)?is_boolean>
-    <#local reqAttribs = toSimpleMap(varMaps.reqAttribs)>
-    <#list mapKeys(reqAttribs) as name>
-      <#local dummy = setRequestAttribute(name, reqAttribs[name])>
-    </#list>
-  </#if>
+  <#local ctxVars = toSimpleMap(varMaps.ctxVars!{})>
+  <#list mapKeys(ctxVars) as name>
+    <#local dummy = setContextField(name, ctxVars[name])>
+  </#list>
+  <#local globalCtxVars = toSimpleMap(varMaps.globalCtxVars!{})>
+  <#list mapKeys(globalCtxVars) as name>
+    <#local dummy = setGlobalContextField(name, globalCtxVars[name])>
+  </#list>
+  <#local reqAttribs = toSimpleMap(varMaps.reqAttribs!{})>
+  <#list mapKeys(reqAttribs) as name>
+    <#local dummy = setRequestAttribute(name, reqAttribs[name])>
+  </#list>
   <#return "">
 </#function>
 
@@ -1083,6 +1118,8 @@ Sets context variables and request attributes.
 This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.
 
+TODO: REIMPLEMENT AS TRANSFORM
+
   * Parameters *
     varLists                = ((map)) A map of lists, or map of maps (keys used), of var names to clear
                               * {{{ctxVars}}}: A list (or map - keys used) of screen context vars names to clear
@@ -1090,23 +1127,21 @@ to indicate the value null.
                               * {{{reqAttribs}}}: A list (or map - keys used) of request attributes names to clear
 -->
 <#function clearVars varLists={}>
-  <#list mapsKeysOrListOrBool(varLists.ctxVars!) as name>
+  <#list mapsKeysOrList(varLists.ctxVars!) as name>
     <#local dummy = setContextField(rawString(name), scipioNullObject)>
   </#list>
-  <#list mapsKeysOrListOrBool(varLists.globalCtxVars!) as name>
+  <#list mapsKeysOrList(varLists.globalCtxVars!) as name>
     <#local dummy = setGlobalContextField(rawString(name), scipioNullObject)>
   </#list>
-  <#list mapsKeysOrListOrBool(varLists.reqAttribs!) as name>
+  <#list mapsKeysOrList(varLists.reqAttribs!) as name>
     <#local dummy = setRequestAttribute(rawString(name), scipioNullObject)>
   </#list>
   <#return "">
 </#function>
 
-<#function mapsKeysOrListOrBool object>
+<#function mapsKeysOrList object>
   <#if object?is_sequence>
     <#return object>
-  <#elseif object?is_boolean>
-    <#return []>
   <#else>
     <#return mapKeys(object)>
   </#if>
@@ -1121,7 +1156,7 @@ Gets all the named attributes and context vars.
 This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.
 
-TODO: This is currently extremely inefficient; should implement as transform.
+TODO: REIMPLEMENT AS TRANSFORM
 
   * Parameters *
     varLists                = ((map)) A map of lists, or map of maps (keys used), of var names to extract values
@@ -1137,21 +1172,21 @@ TODO: This is currently extremely inefficient; should implement as transform.
   <#local ctxVarsMap = {}>
   <#local globalCtxVarsMap = {}>
   <#local reqAttribsMap = {}>
-  <#list mapsKeysOrListOrBool(varLists.ctxVars!) as name>
+  <#list mapsKeysOrList(varLists.ctxVars!) as name>
     <#if context[name]??>
       <#local ctxVarsMap = ctxVarsMap + {name: context[name]}>
     <#elseif saveNulls>
       <#local ctxVarsMap = ctxVarsMap + {name: scipioNullObject}>
     </#if>
   </#list>
-  <#list mapsKeysOrListOrBool(varLists.globalCtxVars!) as name>
+  <#list mapsKeysOrList(varLists.globalCtxVars!) as name>
     <#if globalContext[name]??>
       <#local globalCtxVarsMap = globalCtxVarsMap + {name: globalContext[name]}>
     <#elseif saveNulls>
       <#local globalCtxVarsMap = globalCtxVarsMap + {name: scipioNullObject}>
     </#if>
   </#list>
-  <#list mapsKeysOrListOrBool(varLists.reqAttribs!) as name>
+  <#list mapsKeysOrList(varLists.reqAttribs!) as name>
     <#if request.getAttribute(name)??>
       <#local reqAttribsMap = reqAttribsMap + {name: request.getAttribute(name)}>
     <#elseif saveNulls>
@@ -1170,6 +1205,8 @@ Sets context variables and request attributes around a nested block. Can also be
 This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.
 
+TODO: REIMPLEMENT AS TRANSFORM
+
   * Parameters *
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
@@ -1184,7 +1221,7 @@ to indicate the value null.
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
 -->
-<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
+<#macro varSection ctxVars={} globalCtxVars={} reqAttribs={} clearValues="" restoreValues="">
   <#if !clearValues?is_boolean>
     <#-- DEV NOTE: if clearValues was true as default, you'd have to check for explicit
         restoreValues (!restoreValues?is_boolean) before setting the true default here -->

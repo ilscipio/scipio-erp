@@ -421,7 +421,7 @@ under the License.
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="FixedAssetTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <!-- <include-menu name="FixedAssetTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
                                 <!--<section>
                                     <condition>
                                         <not><if-empty field="fixedAssetId"/></not>

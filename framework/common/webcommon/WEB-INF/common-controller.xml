@@ -165,6 +165,14 @@ under the License.
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
     </request-map>
+    
+    <!-- Scipio Partial screen renderer. Relies on section renderer. Returns JSON object -->
+    <request-map uri="ajaxRender">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="renderPartialScreen"/>
+        <response name="error"  type="request" value="json"/>
+        <response name="success"  type="request" value="json"/>
+    </request-map>
 
     <request-map uri="showHelp">
         <security https="true" auth="true"/>

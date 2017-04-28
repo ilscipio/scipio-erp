@@ -74,5 +74,16 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
+    
+    <!-- Partial Screen renderer -->
+    <service name="renderPartialScreen" engine="java" export="true"
+            location="com.ilscipio.scipio.common.CommonServices" invoke="renderPartialScreen" auth="true">
+        <description>Renders a partial screen and returns the rendered String. Supported types: section|screen</description>
+        <attribute name="resource" mode="IN" type="String" optional="false" />
+        <attribute name="name" mode="IN" type="String" optional="false" />
+        <attribute name="type" mode="IN" type="String" optional="false" />
+        <attribute name="html" mode="OUT" type="String" optional="true" allow-html="any"/>
+       
+    </service>
 
 </services>

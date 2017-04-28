@@ -167,6 +167,10 @@ public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, O
                 if (context != null) context.pop();
             }
         } else {
+            MapStack<String> context = getContext(); // SCIPIO: simplified
+            if (context != null && ctxVars != null && !ctxVars.isEmpty()) {
+                context.putAll(ctxVars);
+            }
             return render(sectionName, asString);
         }
     }

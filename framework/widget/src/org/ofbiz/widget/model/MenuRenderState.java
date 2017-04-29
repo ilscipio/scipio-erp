@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
+import org.ofbiz.widget.model.ModelMenu.SeparateMenuConfig;
 
 /**
  * SCIPIO: a state passed around in context used to record info about the menu
@@ -30,7 +31,8 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient MenuItemState itemState;
     
     private transient ModelSubMenu separateMenu; // 2017-04-25: tracks the best separate menu candidate
-
+    private transient final SeparateMenuConfig separateMenuConfig; // ensures don't re-evaluate expressions after begin render
+    
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
         setCurrentDepth(1);
@@ -40,6 +42,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         this.flaggedMenuNodes = null;
         this.itemState = null;
         this.separateMenu = null;
+        this.separateMenuConfig = modelMenu.getSeparateMenuConfig(context);
     }
     
     protected Object setArg(String key, Object value) {
@@ -177,7 +180,11 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     public void setSeparateMenu(ModelSubMenu separateMenu) {
         this.separateMenu = separateMenu;
     }
-    
+
+    public SeparateMenuConfig getSeparateMenuConfig() {
+        return separateMenuConfig;
+    }
+
     /**
      * Returns true if separate sub-menus are enabled and this sub-menu will be used as the separate menu,
      * and saves it in the render state.
@@ -191,11 +198,11 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         // greatest-ancestor and selected-only.
         // TODO?: selected-or-nearest-ancestor (selected, but if hidden use nearest ancestor) 
         // might bedesirable (null check wouldn't work), but appears too hard to do from here and not clear if wanted
-        if (this.separateMenu == null && modelMenu.isSeparateMenuEnabled()) {
+        if (this.separateMenu == null && separateMenuConfig.isEnabled()) {
             MenuAndItem selected = getSelectedMenuAndItem(context);
             if (!MenuAndItem.isEmpty(selected) && 
-                    subMenu.isSeparateMenuTargetStatic(modelMenu)) {
-                if ("selected-only".equals(modelMenu.getSeparateMenuTargetPreference())) {
+                    subMenu.isSeparateMenuTargetStatic(separateMenuConfig.getTargetStyle())) {
+                if ("selected-only".equals(separateMenuConfig.getTargetPreference())) {
                     if (subMenu.isParentOf(selected.getMenuItem())) {
                         matches = true;
                     }
@@ -235,7 +242,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
      * Returns true if the subMenu has the target style.
      */
     public boolean isSeparateMenuTargetStatic(Map<String, Object> context, ModelSubMenu subMenu) {
-        return modelMenu.isSeparateMenuEnabled() && subMenu.isSeparateMenuTargetStatic(modelMenu);
+        return separateMenuConfig.isEnabled() && subMenu.isSeparateMenuTargetStatic(separateMenuConfig.getTargetStyle());
     }
     
     // context helper methods

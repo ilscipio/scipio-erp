@@ -576,7 +576,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
      
                                     subMenuOutput = oneShotMacro.getBufferFromFirstValueSinceMarker();
                                     
-                                    String origAction = renderState.getModelMenu().getSeparateMenuTargetOriginalAction();
+                                    String origAction = renderState.getSeparateMenuConfig().getTargetOriginalAction();
                                     if (origAction.startsWith("remove")) {
                                         // simply delete the text output we made
                                         oneShotMacro.resetToMarker();
@@ -591,7 +591,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                                     oneShotMacro.addExtraRootMacroArgRaw("sepMenuDef", subMenuOutput);
                                 }
                             } else if (renderState != null && renderState.isSeparateMenuTargetStaticNonSelected(context, childSubMenu) &&
-                                    "remove-all".equals(renderState.getModelMenu().getSeparateMenuTargetOriginalAction())) {
+                                    "remove-all".equals(renderState.getSeparateMenuConfig().getTargetOriginalAction())) {
                                 ; // do not render - removing all candidates
                             } else {
                                 // Regular case
@@ -649,7 +649,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("name", menu.getName());
         
         // SCIPIO: 2017-04-25: new
-        parameters.put("sepMenuType", menu.getSeparateMenuType());
+        parameters.put("sepMenuType", renderState.getSeparateMenuConfig().getType());
         // NOTE: sepMenuDef is added using special code further below
         
         try {

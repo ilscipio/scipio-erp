@@ -43,7 +43,7 @@ public abstract class MultiVarMethod implements TemplateMethodModelEx {
         @Override
         protected Object execTyped(List<TemplateModel> args) throws TemplateModelException {
             TemplateHashModelEx varListsModel = (TemplateHashModelEx) args.get(0);
-            TemplateBooleanModel saveNullsModel = TemplateBooleanModel.FALSE;
+            TemplateBooleanModel saveNullsModel = TemplateBooleanModel.TRUE;
             if (args.size() >= 2) {
                 saveNullsModel = (TemplateBooleanModel) args.get(1);
             }

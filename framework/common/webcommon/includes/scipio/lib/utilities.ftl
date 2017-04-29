@@ -1129,10 +1129,14 @@ to indicate the value null.
                               * {{{ctxVars}}}: A list (or map - keys used) of screen context vars names to extract
                               * {{{globalCtxVars}}}: A list (or map - keys used) of screen global context vars names to extract
                               * {{{reqAttribs}}}: A list (or map - keys used) of request attributes names to extract
-    saveNulls               = ((boolean), default: false) If true, null/missing values will get map entries with {{{ScipioNullObject}}}; otherwise, omitted from results
+    saveNulls               = ((boolean), default: true) If true, null/missing values will get map entries with null value; otherwise, omitted from results
+                              NOTE: 2017-04-28: default is now 
     
   * Return Value *
-    A map of maps with same keys as parameters. 
+    A map of maps with same keys as parameters.
+    
+  * History *
+    Modified for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function extractVars varLists={} saveNulls=false>

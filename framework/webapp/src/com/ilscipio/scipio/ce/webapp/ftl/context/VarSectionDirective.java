@@ -54,7 +54,7 @@ public class VarSectionDirective implements TemplateDirectiveModel {
         if (clearValues) {
             ClearVarsMethod.clearVars(CommonVarMaps.getRawSequences(varMaps), env);
         } else if (restoreValues) { 
-            SetVarsMethod.setVars(origValues, null, env);
+            SetVarsMethod.setVars(origValues, env);
         }
     }
 

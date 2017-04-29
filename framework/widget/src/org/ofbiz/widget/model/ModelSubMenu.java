@@ -703,11 +703,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         return expanded;
     }
 
-    public boolean isSeparateMenuTargetStatic(ModelMenu modelMenu) {
-        return this.hasSimpleStyleName(modelMenu.getSeparateMenuTargetStyle());
-    }
-    
-    public boolean isSeparateMenuCandidate() {
-        return this.isSeparateMenuTargetStatic(this.getTopMenu());
+    public boolean isSeparateMenuTargetStatic(String separateMenuTargetStyle) {
+        return this.hasSimpleStyleName(separateMenuTargetStyle);
     }
 }

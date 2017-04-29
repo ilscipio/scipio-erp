@@ -356,7 +356,7 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="separate-menu-target-preference">
+            <xs:attribute type="xs:string" name="separate-menu-target-preference">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Controls how and whether ancestors of the selected menu having the
                         separate-menu-target-style are considered as candidates for the separate menu.
@@ -367,16 +367,17 @@ under the License.
                         Added 2017-04-25.
                     </xs:documentation>
                 </xs:annotation>
+                <!-- logical:
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="greatest-ancestor" />
                         <xs:enumeration value="selected-only" />
-                        <!-- TODO?: this looks too hard to implement (selected, but if hidden use nearest ancestor):
-                        <xs:enumeration value="selected-or-nearest-ancestor" />-->
+                        <!- TODO?: this looks too hard to implement (selected, but if hidden use nearest ancestor):
+                        <xs:enumeration value="selected-or-nearest-ancestor" />->
                     </xs:restriction>
-                </xs:simpleType>
+                </xs:simpleType>-->
             </xs:attribute>
-            <xs:attribute name="separate-menu-target-original-action">
+            <xs:attribute type="xs:string" name="separate-menu-target-original-action">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: What to do with the original target entry/entries in the non-separated menu.
                         * preserve: leaves all original menus in place; the separated one is a copy
@@ -386,15 +387,16 @@ under the License.
                         Added 2017-04-25.
                     </xs:documentation>
                 </xs:annotation>
+                <!-- logical:
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="preserve" />
                         <xs:enumeration value="remove-selected" />
                         <xs:enumeration value="remove-all" />
-                        <!-- no need for this here - style + js can be used for hiding using "preserve"
-                        <xs:enumeration value="hide" />-->
+                        <!- no need for this here - style + js can be used for hiding using "preserve"
+                        <xs:enumeration value="hide" />->
                     </xs:restriction>
-                </xs:simpleType>
+                </xs:simpleType>-->
             </xs:attribute>
         </xs:complexType>
     </xs:element>

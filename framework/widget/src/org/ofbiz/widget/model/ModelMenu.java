@@ -149,10 +149,10 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
     private final Map<String, String> menuItemNameAliasMap;
     
     // SCIPIO: 2017-04-25: new separated menu options
-    private final String separateMenuType;
-    private final String separateMenuTargetStyle;
-    private final String separateMenuTargetPreference;
-    private final String separateMenuTargetOriginalAction;
+    private final FlexibleStringExpander separateMenuType;
+    private final FlexibleStringExpander separateMenuTargetStyle;
+    private final FlexibleStringExpander separateMenuTargetPreference;
+    private final FlexibleStringExpander separateMenuTargetOriginalAction;
     
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
@@ -203,10 +203,10 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         String forceExtendsSubMenuModelScope = "";
         String forceAllSubMenuModelScope = "";
         boolean alwaysExpandSelectedOrAncestor = false;
-        String separateMenuType = "";
-        String separateMenuTargetStyle = "";
-        String separateMenuTargetPreference = "";
-        String separateMenuTargetOriginalAction = "";
+        FlexibleStringExpander separateMenuType = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetStyle = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetPreference = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetOriginalAction = FlexibleStringExpander.getInstance("");
         
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
@@ -344,11 +344,11 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         if (!menuElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
             alwaysExpandSelectedOrAncestor = "true".equals(menuElement.getAttribute("always-expand-selected-or-ancestor"));
         
-        separateMenuType = getString(menuElement, "separate-menu-type", separateMenuType);
-        separateMenuTargetStyle = getString(menuElement, "separate-menu-target-style", separateMenuTargetStyle);
-        separateMenuTargetPreference = getString(menuElement, "separate-menu-target-preference", separateMenuTargetPreference);
-        if (separateMenuTargetPreference.isEmpty()) separateMenuTargetPreference = "greatest-ancestor";
-        separateMenuTargetOriginalAction = getString(menuElement, "separate-menu-target-original-action", separateMenuTargetOriginalAction);
+        separateMenuType = getExpander(menuElement, "separate-menu-type", separateMenuType);
+        separateMenuTargetStyle = getExpander(menuElement, "separate-menu-target-style", separateMenuTargetStyle);
+        separateMenuTargetPreference = getExpander(menuElement, "separate-menu-target-preference", separateMenuTargetPreference);
+        if (separateMenuTargetPreference.isEmpty()) separateMenuTargetPreference = FlexibleStringExpander.getInstance("greatest-ancestor");
+        separateMenuTargetOriginalAction = getExpander(menuElement, "separate-menu-target-original-action", separateMenuTargetOriginalAction);
         
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
@@ -1934,25 +1934,62 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
     public List<ModelMenuNode> getManualExpandedNodes() {
         return manualExpandedNodes;
     }
-
-    public boolean isSeparateMenuEnabled() {
-        return !separateMenuType.isEmpty() && !separateMenuTargetStyle.isEmpty();
-    }
     
-    public String getSeparateMenuType() {
-        return separateMenuType;
+    // SCIPIO: DEV NOTE: WARN: DO NOT CALL THESE separate menu accessors on the fly; use MenuRenderState instead
+    private String getSeparateMenuType(Map<String, Object> context) {
+        return separateMenuType.expandString(context);
     }
 
-    public String getSeparateMenuTargetStyle() {
-        return separateMenuTargetStyle;
+    private String getSeparateMenuTargetStyle(Map<String, Object> context) {
+        return separateMenuTargetStyle.expandString(context);
     }
     
-    public String getSeparateMenuTargetPreference() {
-        return separateMenuTargetPreference;
+    private String getSeparateMenuTargetPreference(Map<String, Object> context) {
+        return separateMenuTargetPreference.expandString(context);
     }
     
-    public String getSeparateMenuTargetOriginalAction() {
-        return separateMenuTargetOriginalAction;
+    private String getSeparateMenuTargetOriginalAction(Map<String, Object> context) {
+        return separateMenuTargetOriginalAction.expandString(context);
+    }
+    
+    public SeparateMenuConfig getSeparateMenuConfig(Map<String, Object> context) {
+        return new SeparateMenuConfig(this, context);
+    }
+    
+    public static class SeparateMenuConfig {
+        private final String type;
+        private final String targetStyle;
+        private final String targetPreference;
+        private final String targetOriginalAction;
+        private final boolean enabled;
+        
+        private SeparateMenuConfig(ModelMenu modelMenu, Map<String, Object> context) {
+            this.type = modelMenu.getSeparateMenuType(context);
+            this.targetStyle = modelMenu.getSeparateMenuTargetStyle(context);
+            this.targetPreference = modelMenu.getSeparateMenuTargetPreference(context);
+            this.targetOriginalAction = modelMenu.getSeparateMenuTargetOriginalAction(context);
+            this.enabled = !type.isEmpty() && !targetStyle.isEmpty();
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getTargetStyle() {
+            return targetStyle;
+        }
+
+        public String getTargetPreference() {
+            return targetPreference;
+        }
+
+        public String getTargetOriginalAction() {
+            return targetOriginalAction;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
     }
 
     /**

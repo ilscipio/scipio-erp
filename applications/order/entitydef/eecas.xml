@@ -42,7 +42,7 @@ under the License.
     <eca entity="OrderHeader" operation="create-store" event="return">
         <condition field-name="statusId" operator="equals" value="ORDER_CREATED"/>
         <set field-name="noteParty" value="admin"/>
-        <set field-name="noteInfo" value="An order has been cancelled"/>
+        <set field-name="noteInfo" value="An order has been created"/>
         <set field-name="moreInfoItemName" value="orderId"/>
         <set field-name="moreInfoItemId" env-name="orderId"/>
         <set field-name="moreInfoUrl" value="/ordermgr/control/orderview"/>

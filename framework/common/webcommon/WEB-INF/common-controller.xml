@@ -165,13 +165,21 @@ under the License.
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
     </request-map>
+    <!-- SCIPIO: version of "json" that will only output attributes specifically requested in "scipioOutParams" map or "scipioOutAttrNames" list -->
+    <request-map uri="jsonExplicit">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributesExplicit"/>
+        <response name="success" type="none"/>
+    </request-map>
     
-    <!-- Scipio Partial screen renderer. Relies on section renderer. Returns JSON object -->
+    <!-- SCIPIO: specific view render request that outputs page output to json -->
     <request-map uri="ajaxRender">
         <security https="true" auth="true"/>
-        <event type="service" invoke="renderPartialScreen"/>
-        <response name="error"  type="request" value="json"/>
-        <response name="success"  type="request" value="json"/>
+        <!-- TODO? this is as a separate event, but at best can only emulate controller, with duplication,
+            so maybe should try to integrate further into controller so gives exact same behavior... -->
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
     </request-map>
 
     <request-map uri="showHelp">

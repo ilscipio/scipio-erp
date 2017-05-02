@@ -114,4 +114,15 @@ under the License.
         </section>
     </screen>
     
+    <screen name="DemoLabelWidgetWithVars">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "executing-include"); ]]></script>
+            </actions>
+            <widgets>
+                <label text="Hello from included widget. mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

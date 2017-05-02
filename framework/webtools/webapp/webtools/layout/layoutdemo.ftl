@@ -1843,13 +1843,29 @@
       <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
     </@section>
     <@section title="Test form">
-      <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
+      <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm"
+        ctxVars={"myFormPassedVar1":"Hello from a scope-protected context var"}
+        globalCtxVars={"myFormPassedGlobalVar1":"Hello from a scope-protected global context var"}/>
+    </@section>
+    <@section title="Test form (alt include method)">
+      <@render type="include-form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" 
+        ctxVars={"myFormPassedVar1":"Hello from a scope-protected context var (alt)"}
+        globalCtxVars={"myFormPassedGlobalVar1":"Hello from a scope-protected global context var (alt)"}/>
+      <p>globalContext.myFormPassedGlobalVar1 (this should say 'missing', should have been automatically unset): ${globalContext.myFormPassedGlobalVar1!"missing"} ${context.myFormPassedGlobalVar1!"missing"}</p>
     </@section>
     
     <@section title="Max depth arg test">
       <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
-      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" />
-      <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none" />
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" 
+          ctxVars={"myMenuPassedVar1":"PassedScopedContextVar"}
+          globalCtxVars={"myMenuPassedGlobalVar1":"PassedGlobalContextVar"}
+          reqAttribs={"myMenuPassedReqAttrib1":"PassedReqAttrib"} />
+      <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none"
+          ctxVars={"myMenuPassedVar1":"PassedScopedContextVar (alt)"}
+          globalCtxVars={"myMenuPassedGlobalVar1":"PassedGlobalContextVar (alt)"}
+          reqAttribs={"myMenuPassedReqAttrib1":"PassedReqAttrib (alt)"} />
+      <p>globalContext.myMenuPassedGlobalVar1 (this should say 'missing', should have been automatically unset): ${globalContext.myMenuPassedGlobalVar1!"missing"} ${context.myMenuPassedGlobalVar1!"missing"}</p>
+      <p>myMenuPassedReqAttrib1 (this should say 'missing', should have been automatically unset): ${request.getAttribute("myMenuPassedReqAttrib1")!"missing"}</p>
     </@section>
     
     <@section title="Standalone (isolated) FTL include">

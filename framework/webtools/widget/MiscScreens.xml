@@ -497,6 +497,49 @@ under the License.
                         </section>
                     </screenlet>
                     
+                    <screenlet title="New include directive actions (post-context-stack-push)">
+                        <section share-scope="false">
+                            <actions>
+                                <set field="mySimpleVar1" value="OutsideValue"/>
+                                <script lang="groovy"><![CDATA[
+                                    public class TestUtil {
+                                        def logVars(context, label) {
+                                            org.ofbiz.base.util.Debug.logInfo(label + ": mySimpleVar1: " + context.mySimpleVar1
+                                                + "; mySimpleVar2: " + context.mySimpleVar2, "IncludeActionsTestGroovy");
+                                        }
+                                    }
+                                    context.testUtil = new TestUtil();
+                                    context.remove("mySimpleVar2");
+                                ]]></script>
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <actions>
+                                        <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "pre-include, pre-stack-push"); ]]></script>
+                                    </actions>
+                                    <widgets>
+                                        <label text="Hello from before include directive. mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+                                        <include-screen name="DemoLabelWidgetWithVars">
+                                            <actions>
+                                                <set field="mySimpleVar1" value="InnerStackValue"/>
+                                                <set field="mySimpleVar2" value="InnerStackValue"/>
+                                                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "pre-include, post-stack-push"); ]]></script>
+                                            </actions>
+                                        </include-screen>
+                                        <section>
+                                            <actions>
+                                                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "post-include, post-stack-pop"); ]]></script>
+                                            </actions>
+                                            <widgets>
+                                                <label text="Hello from after include directive (stack popped). mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+                                            </widgets>
+                                        </section>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </screenlet>
+                    
                     <screenlet title="New conditional element tests (if, if-widget)">
                         <section>
                             <actions>

@@ -2236,4 +2236,11 @@ public class RequestHandler {
     public boolean isUseCookies() {
         return cookies;
     }
+    
+    /**
+     * SCIPIO: Returns the static charset (only).
+     */
+    public String getCharset() {
+        return charset;
+    }
 }

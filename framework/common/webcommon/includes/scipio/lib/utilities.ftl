@@ -123,7 +123,6 @@ TODO: Reimplement as transform.
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
     clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
-                              WARN: 2017-04-26: This does NOT work reliably for {{{ctxVars}}}.
     asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
                               In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
                               which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
@@ -204,8 +203,7 @@ TODO: Reimplement as transform.
       ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope, "ctxVars":innerCtxVars})}<#t>
     </@varSection><#t>  
   <#else>
-    <#-- TODO: innerCtxVars & outerCtxVars, skipSetCtxVars=skipSetCtxVars, requires widget patch -->
-    <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=false><#t>
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
       <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>
       <#if !name?has_content>
@@ -216,22 +214,22 @@ TODO: Reimplement as transform.
       <#-- DEV NOTE: WARN: name clashes -->
       <#if type == "menu">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
       <#elseif type == "screen">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>

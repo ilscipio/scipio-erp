@@ -340,6 +340,21 @@ under the License.
                 </menu-item>
             </sub-menu>
         </menu-item>
+        <menu-item name="myMenuPassedVar1" title="${groovy: context.myMenuPassedVar1 ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="myMenuPassedGlobalVar1" title="${groovy: context.myMenuPassedGlobalVar1 ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="myMenuPassedReqAttrib1" title="${groovy: request.getAttribute('myMenuPassedReqAttrib1') ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
     </menu>
     
     <menu name="WebtoolsPlainSiteMapDemo" selected-menu-context-field-name="activeMainMenu" selected-menuitem-context-field-name="activeMainMenuItem">

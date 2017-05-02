@@ -42,6 +42,7 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.view.AbstractViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
+import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
@@ -53,7 +54,7 @@ import org.xml.sax.SAXException;
 import freemarker.template.TemplateException;
 import freemarker.template.utility.StandardCompress;
 
-public class MacroScreenViewHandler extends AbstractViewHandler {
+public class MacroScreenViewHandler extends AbstractViewHandler implements ViewHandlerExt {
 
     public static final String module = MacroScreenViewHandler.class.getName();
 
@@ -128,9 +129,9 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         return loadRenderers(request, response, getName(), context, writer);
     }
 
-    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    // SCIPIO: 2017-05-01: factored out Writer for reuse
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
         try {
-            Writer writer = response.getWriter();
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             // compress output if configured to do so
             if (UtilValidate.isEmpty(encoding)) {
@@ -148,6 +149,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
                 // to speed up output.
                 writer = new StandardCompress().getWriter(writer, null);
             }
+            
             MapStack<String> context = MapStack.create();
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
@@ -176,6 +178,17 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
+        }
+    }
+
+    // SCIPIO: added 2017-05-01
+    @Override
+    public void render(String name, String page, String info, String contentType, String encoding,
+            HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+        try {
+            this.render(name, page, info, contentType, encoding, request, response, response.getWriter());
+        } catch (IOException e) {
+            throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
         }
     }
 }

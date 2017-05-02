@@ -778,8 +778,19 @@ under the License.
             <xs:attribute type="xs:string" name="name" use="required" />
         </xs:complexType>
     </xs:element>
+
     <xs:element name="include-form" substitutionGroup="AllWidgets">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
@@ -796,6 +807,16 @@ under the License.
     </xs:element>
     <xs:element name="include-grid" substitutionGroup="AllWidgets">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
@@ -812,6 +833,16 @@ under the License.
     </xs:element>
     <xs:element name="include-menu" substitutionGroup="AllWidgets">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
@@ -851,6 +882,16 @@ under the License.
     </xs:element>
     <xs:element name="include-screen" substitutionGroup="AllWidgets">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" />
             <xs:attribute type="xs:string" name="share-scope" default="false">
@@ -867,6 +908,16 @@ under the License.
     </xs:element>
     <xs:element name="include-tree" substitutionGroup="AllWidgets">
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="actions">
+                    <xs:annotation>
+                        <xs:documentation>SCIPIO: actions to execute before the widget include occurs but AFTER the context stack 
+                            is pushed, for use in conjunction with the scope protection afforded by share-scope="false".
+                            Allows to set context fields that will be automatically removed after the include returns, to prevent clashes.
+                            Cleaner and faster than adding a section around the call, and better way to emulate parameter passing.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="required" />
             <xs:attribute type="xs:string" name="location" use="required" />
             <xs:attribute type="xs:string" name="share-scope" default="false">

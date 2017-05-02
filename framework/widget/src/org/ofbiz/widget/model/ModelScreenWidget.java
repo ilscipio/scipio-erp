@@ -998,17 +998,34 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
+    /**
+     * SCIPIO: Builds actions list
+     */
+    static List<ModelAction> readActions(ModelWidget modelWidget, Element parentElement, String childName) {
+        // read all actions under the "actions" element
+        if (childName != null) {
+            parentElement = UtilXml.firstChildElement(parentElement, childName);
+        }
+        if (parentElement != null) {
+            return AbstractModelAction.readSubActions(modelWidget, parentElement);
+        } else {
+            return null; //Collections.emptyList();
+        }
+    }
+    
     public static final class IncludeScreen extends ModelScreenWidget {
         public static final String TAG_NAME = "include-screen";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr;
+        private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
         public IncludeScreen(ModelScreen modelScreen, Element includeScreenElement) {
             super(modelScreen, includeScreenElement);
             this.nameExdr = FlexibleStringExpander.getInstance(includeScreenElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(includeScreenElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(includeScreenElement.getAttribute("share-scope"));
+            this.actions = readActions(modelScreen, includeScreenElement, "actions");
         }
 
         @Override
@@ -1036,6 +1053,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 widgetTrail.add(thisName);
                 context.put("_WIDGETTRAIL_", widgetTrail);
             }
+            
+            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
             // don't need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
             String name = this.getName(context);
@@ -1493,12 +1512,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr;
+        private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
         public Form(ModelScreen modelScreen, Element formElement) {
             super(modelScreen, formElement);
             this.nameExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("share-scope"));
+            this.actions = readActions(modelScreen, formElement, "actions");
         }
 
         @Override
@@ -1516,6 +1537,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+            
+            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+
             try {
                 ModelForm modelForm = getModelForm(context);
                 FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
@@ -1584,12 +1608,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr;
+        private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
         public Grid(ModelScreen modelScreen, Element formElement) {
             super(modelScreen, formElement);
             this.nameExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(formElement.getAttribute("share-scope"));
+            this.actions = readActions(modelScreen, formElement, "actions");
         }
 
         @Override
@@ -1607,6 +1633,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+            
+            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+
             ModelForm modelForm = getModelForm(context);
             FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
             try {
@@ -1681,12 +1710,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
         private final FlexibleStringExpander shareScopeExdr;
+        private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
         public Tree(ModelScreen modelScreen, Element treeElement) {
             super(modelScreen, treeElement);
             this.nameExdr = FlexibleStringExpander.getInstance(treeElement.getAttribute("name"));
             this.locationExdr = FlexibleStringExpander.getInstance(treeElement.getAttribute("location"));
             this.shareScopeExdr = FlexibleStringExpander.getInstance(treeElement.getAttribute("share-scope"));
+            this.actions = readActions(modelScreen, treeElement, "actions");
         }
 
         @Override
@@ -1704,6 +1735,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 }
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
+
+            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
             String name = this.getName(context);
             String location = this.getLocation(context);
@@ -2064,6 +2097,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final FlexibleStringExpander shareScopeExdr; // SCIPIO: added share-scope for menus (not in stock ofbiz)
         private final FlexibleStringExpander maxDepthExdr; // SCIPIO: new
         private final FlexibleStringExpander subMenuFilterExdr; // SCIPIO: new
+        private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
@@ -2072,6 +2106,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope")); // SCIPIO: added
             this.maxDepthExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("max-depth")); // SCIPIO: added
             this.subMenuFilterExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("sub-menus")); // SCIPIO: added
+            this.actions = readActions(modelScreen, menuElement, "actions");
         }
 
         @Override
@@ -2095,6 +2130,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 UtilGenerics.<MapStack<String>>cast(context).push();
             }
             
+            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+
             ModelMenu modelMenu = getModelMenu(context);
             
             // SCIPIO: new render state to carry around max depth

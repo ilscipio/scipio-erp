@@ -1355,28 +1355,64 @@ under the License.
         <section>
             <widgets>
                 <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"
-                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}"/>
+                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-menu>
             </widgets>
         </section>
     </screen>
     <screen name="scipioFormWidgetWrapper">
         <section>
             <widgets>
-                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
+                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-form>
             </widgets>
         </section>
     </screen>
     <screen name="scipioTreeWidgetWrapper">
         <section>
             <widgets>
-                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
+                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-tree>
             </widgets>
         </section>
     </screen>
     <screen name="scipioScreenWidgetWrapper">
         <section>
             <widgets>
-                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"/>
+                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-screen>
             </widgets>
         </section>
     </screen>

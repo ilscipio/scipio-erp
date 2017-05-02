@@ -1169,6 +1169,35 @@
 </#if>
 
 <#if debugMode>
+<@section title="JSON render test">
+  <@script>
+    jQuery(document).ready(function() {
+        jQuery.ajax({
+            url: '<@ofbizUrl escapeAs="js">ajaxRender</@ofbizUrl>',
+            type: 'POST',
+            data: {
+                "view" : "runService"                       
+            },
+            success: function(data) {
+                if (data.renderOut) {
+                    var renderOut = data.renderOut;
+                    if (renderOut.length > 1000) {
+                        renderOut = renderOut.substring(0, 1000) + " ...";
+                    }
+                    jQuery('#json-output-test').text(renderOut);
+                } else if (data._ERROR_MESSAGE_) {
+                    jQuery('#json-output-test').text("ERROR: " + data._ERROR_MESSAGE_);
+                } else { // TODO: (data._ERROR_MESSAGE_LIST_) 
+                    jQuery('#json-output-test').text("GENERAL ERROR");
+                }
+            }
+        });
+    });
+  </@script>
+  <div id="json-output-test">
+  </div>
+</@section>
+
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>

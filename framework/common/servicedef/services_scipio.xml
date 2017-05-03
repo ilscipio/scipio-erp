@@ -75,7 +75,9 @@ under the License.
         <auto-attributes include="pk" mode="OUT" optional="false"/>
     </service>
     
-    <!-- Partial Screen renderer -->
+    <!-- Partial Screen renderer
+        removed for now: this cannot be called as request event due to security risk, so
+        do not want to encourage unless it finds some alternate use 
     <service name="renderPartialScreen" engine="java" export="true"
             location="com.ilscipio.scipio.common.CommonServices" invoke="renderPartialScreen" auth="true">
         <description>Renders a partial screen and returns the rendered String. Supported types: section|screen</description>
@@ -83,7 +85,7 @@ under the License.
         <attribute name="name" mode="IN" type="String" optional="false" />
         <attribute name="type" mode="IN" type="String" optional="false" />
         <attribute name="html" mode="OUT" type="String" optional="true" allow-html="any"/>
-       
     </service>
-
+     -->
+     
 </services>

@@ -69,6 +69,35 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: If true, the include will not cause or report as error if resource is missing.
+                    Added 2017-05-03.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="order" default="pre-local">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Can be set to "post-local" so that definitions in the included files
+                    will crush the ones defined directly in the including file.
+                    Added 2017-05-03.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="pre-local"/>
+                    <xs:enumeration value="post-local"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="description" type="xs:string"/>
     <xs:element name="owner" type="xs:string"/>

@@ -142,7 +142,31 @@ public class ConfigXMLReader {
         if (controllerConfig == null) {
             controllerConfig = controllerCache.putIfAbsentAndGet(url, new ControllerConfig(url));
         }
-        return controllerConfig;
+        return controllerConfig.isNull() ? null : controllerConfig; // SCIPIO: check for special null key
+    }
+    
+    /**
+     * SCIPIO: version of getControllerConfig that supports optional loading.
+     * Added 2017-05-03.
+     */
+    public static ControllerConfig getControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
+        ControllerConfig controllerConfig = controllerCache.get(url);
+        if (controllerConfig == null) {
+            try {
+                controllerConfig = new ControllerConfig(url);
+            } catch(WebAppConfigurationException e) {
+                if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("controller skipped (not found, optional): " + url.toString(), module);
+                    }
+                    controllerConfig = ControllerConfig.NULL_CONFIG; // special cache key
+                } else {
+                    throw e;
+                }
+            }
+            controllerConfig = controllerCache.putIfAbsentAndGet(url, controllerConfig);
+        }
+        return controllerConfig.isNull() ? null : controllerConfig;
     }
 
     public static URL getControllerConfigURL(ServletContext context) {
@@ -163,6 +187,8 @@ public class ConfigXMLReader {
             if (Debug.verboseOn())
                 Debug.logVerbose("Loaded XML Config - " + location, module);
             return rootElement;
+        } catch (java.io.FileNotFoundException e) { // SCIPIO: special case: let caller log this one, IF necessary
+            throw new WebAppConfigurationException(e);
         } catch (Exception e) {
             Debug.logError(e, module);
             throw new WebAppConfigurationException(e);
@@ -170,6 +196,9 @@ public class ConfigXMLReader {
     }
 
     public static class ControllerConfig {
+        // SCIPIO: special key for cache lookups that return null
+        public static final ControllerConfig NULL_CONFIG = new ControllerConfig();
+        
         public URL url;
         private String errorpage;
         private String protectView;
@@ -180,6 +209,9 @@ public class ConfigXMLReader {
         // SCIPIO: extended info on includes needed
         //private List<URL> includes = new ArrayList<URL>();
         private List<Include> includes = new ArrayList<>();
+        // SCIPIO: split-up includes
+        private List<Include> includesPreLocal = new ArrayList<>();
+        private List<Include> includesPostLocal = new ArrayList<>();
         private Map<String, Event> firstVisitEventList = new HashMap<String, Event>();
         private Map<String, Event> preprocessorEventList = new HashMap<String, Event>();
         private Map<String, Event> postprocessorEventList = new HashMap<String, Event>();
@@ -207,76 +239,146 @@ public class ConfigXMLReader {
                 }
             }
         }
+        
+        private ControllerConfig() { // SCIPIO: special null config 
+            this.url = null;
+        }
+        
+        public boolean isNull() { // SCIPIO: special
+            return this.url == null;
+        }
 
         // SCIPIO: all calls below modified for more complex include options (non-recursive include)
         
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getAfterLoginEventList());
-                } else {
-                    result.push(controllerConfig.afterLoginEventList);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLoginEventList());
+                    } else {
+                        result.push(controllerConfig.afterLoginEventList);
+                    }
                 }
             }
             result.push(afterLoginEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLoginEventList());
+                    } else {
+                        result.push(controllerConfig.afterLoginEventList);
+                    }
+                }
+            }
             return result;
         }
 
         public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getBeforeLogoutEventList());
-                } else {
-                    result.push(controllerConfig.beforeLogoutEventList);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getBeforeLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.beforeLogoutEventList);
+                    }
                 }
             }
             result.push(beforeLogoutEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getBeforeLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.beforeLogoutEventList);
+                    }
+                }
+            }
             return result;
         }
 
         public String getDefaultRequest() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String defaultRequest = controllerConfig.getDefaultRequest();
+                    String defaultRequest;
+                    if (include.recursive) {
+                        defaultRequest = controllerConfig.getDefaultRequest();
+                    } else {
+                        defaultRequest = controllerConfig.defaultRequest;
+                    }
+                    if (defaultRequest != null) {
+                        return defaultRequest;
+                    }
+                }
+            }
             if (defaultRequest != null) {
                 return defaultRequest;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String defaultRequest = controllerConfig.getDefaultRequest();
-                String defaultRequest;
-                if (include.recursive) {
-                    defaultRequest = controllerConfig.getDefaultRequest();
-                } else {
-                    defaultRequest = controllerConfig.defaultRequest;
-                }
-                if (defaultRequest != null) {
-                    return defaultRequest;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String defaultRequest = controllerConfig.getDefaultRequest();
+                    String defaultRequest;
+                    if (include.recursive) {
+                        defaultRequest = controllerConfig.getDefaultRequest();
+                    } else {
+                        defaultRequest = controllerConfig.defaultRequest;
+                    }
+                    if (defaultRequest != null) {
+                        return defaultRequest;
+                    }
                 }
             }
             return null;
         }
 
         public String getErrorpage() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String errorpage = controllerConfig.getErrorpage();
+                    String errorpage;
+                    if (include.recursive) {
+                        errorpage = controllerConfig.getErrorpage();
+                    } else {
+                        errorpage = controllerConfig.errorpage;
+                    }
+                    if (errorpage != null) {
+                        return errorpage;
+                    }
+                }
+            }
             if (errorpage != null) {
                 return errorpage;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String errorpage = controllerConfig.getErrorpage();
-                String errorpage;
-                if (include.recursive) {
-                    errorpage = controllerConfig.getErrorpage();
-                } else {
-                    errorpage = controllerConfig.errorpage;
-                }
-                if (errorpage != null) {
-                    return errorpage;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String errorpage = controllerConfig.getErrorpage();
+                    String errorpage;
+                    if (include.recursive) {
+                        errorpage = controllerConfig.getErrorpage();
+                    } else {
+                        errorpage = controllerConfig.errorpage;
+                    }
+                    if (errorpage != null) {
+                        return errorpage;
+                    }
                 }
             }
             return null;
@@ -284,50 +386,94 @@ public class ConfigXMLReader {
 
         public Map<String, String> getEventHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getEventHandlerMap());
-                } else {
-                    result.push(controllerConfig.eventHandlerMap);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerMap);
+                    }
                 }
             }
             result.push(eventHandlerMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getEventHandlerMap());
+                    } else {
+                        result.push(controllerConfig.eventHandlerMap);
+                    }
+                }
+            }
             return result;
         }
 
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getFirstVisitEventList());
-                } else {
-                    result.push(controllerConfig.firstVisitEventList);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getFirstVisitEventList());
+                    } else {
+                        result.push(controllerConfig.firstVisitEventList);
+                    }
                 }
             }
             result.push(firstVisitEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getFirstVisitEventList());
+                    } else {
+                        result.push(controllerConfig.firstVisitEventList);
+                    }
+                }
+            }
             return result;
         }
 
         public String getOwner() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String owner = controllerConfig.getOwner();
+                    String owner;
+                    if (include.recursive) {
+                        owner = controllerConfig.getOwner();
+                    } else {
+                        owner = controllerConfig.owner;
+                    }
+                    if (owner != null) {
+                        return owner;
+                    }
+                }
+            }
             if (owner != null) {
                 return owner;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String owner = controllerConfig.getOwner();
-                String owner;
-                if (include.recursive) {
-                    owner = controllerConfig.getOwner();
-                } else {
-                    owner = controllerConfig.owner;
-                }
-                if (owner != null) {
-                    return owner;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String owner = controllerConfig.getOwner();
+                    String owner;
+                    if (include.recursive) {
+                        owner = controllerConfig.getOwner();
+                    } else {
+                        owner = controllerConfig.owner;
+                    }
+                    if (owner != null) {
+                        return owner;
+                    }
                 }
             }
             return null;
@@ -335,50 +481,94 @@ public class ConfigXMLReader {
 
         public Map<String, Event> getPostprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getPostprocessorEventList());
-                } else {
-                    result.push(controllerConfig.postprocessorEventList);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostprocessorEventList());
+                    } else {
+                        result.push(controllerConfig.postprocessorEventList);
+                    }
                 }
             }
             result.push(postprocessorEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostprocessorEventList());
+                    } else {
+                        result.push(controllerConfig.postprocessorEventList);
+                    }
+                }
+            }
             return result;
         }
 
         public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
             MapContext<String, Event> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getPreprocessorEventList());
-                } else {
-                    result.push(controllerConfig.preprocessorEventList);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreprocessorEventList());
+                    } else {
+                        result.push(controllerConfig.preprocessorEventList);
+                    }
                 }
             }
             result.push(preprocessorEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreprocessorEventList());
+                    } else {
+                        result.push(controllerConfig.preprocessorEventList);
+                    }
+                }
+            }
             return result;
         }
 
         public String getProtectView() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String protectView = controllerConfig.getProtectView();
+                    String protectView;
+                    if (include.recursive) {
+                        protectView = controllerConfig.getProtectView();
+                    } else {
+                        protectView = controllerConfig.protectView;
+                    }
+                    if (protectView != null) {
+                        return protectView;
+                    }
+                }
+            }
             if (protectView != null) {
                 return protectView;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String protectView = controllerConfig.getProtectView();
-                String protectView;
-                if (include.recursive) {
-                    protectView = controllerConfig.getProtectView();
-                } else {
-                    protectView = controllerConfig.protectView;
-                }
-                if (protectView != null) {
-                    return protectView;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String protectView = controllerConfig.getProtectView();
+                    String protectView;
+                    if (include.recursive) {
+                        protectView = controllerConfig.getProtectView();
+                    } else {
+                        protectView = controllerConfig.protectView;
+                    }
+                    if (protectView != null) {
+                        return protectView;
+                    }
                 }
             }
             return null;
@@ -386,56 +576,105 @@ public class ConfigXMLReader {
 
         public Map<String, RequestMap> getRequestMapMap() throws WebAppConfigurationException {
             MapContext<String, RequestMap> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getRequestMapMap());
-                } else {
-                    result.push(controllerConfig.requestMapMap);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getRequestMapMap());
+                    } else {
+                        result.push(controllerConfig.requestMapMap);
+                    }
                 }
             }
             result.push(requestMapMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getRequestMapMap());
+                    } else {
+                        result.push(controllerConfig.requestMapMap);
+                    }
+                }
+            }
             return result;
         }
 
         public String getSecurityClass() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String securityClass = controllerConfig.getSecurityClass();
+                    String securityClass;
+                    if (include.recursive) {
+                        securityClass = controllerConfig.getSecurityClass();
+                    } else {
+                        securityClass = controllerConfig.securityClass;
+                    }
+                    if (securityClass != null) {
+                        return securityClass;
+                    }
+                }
+            }
             if (securityClass != null) {
                 return securityClass;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String securityClass = controllerConfig.getSecurityClass();
-                String securityClass;
-                if (include.recursive) {
-                    securityClass = controllerConfig.getSecurityClass();
-                } else {
-                    securityClass = controllerConfig.securityClass;
-                }
-                if (securityClass != null) {
-                    return securityClass;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String securityClass = controllerConfig.getSecurityClass();
+                    String securityClass;
+                    if (include.recursive) {
+                        securityClass = controllerConfig.getSecurityClass();
+                    } else {
+                        securityClass = controllerConfig.securityClass;
+                    }
+                    if (securityClass != null) {
+                        return securityClass;
+                    }
                 }
             }
             return null;
         }
 
         public String getStatusCode() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String statusCode = controllerConfig.getStatusCode();
+                    String statusCode;
+                    if (include.recursive) {
+                        statusCode = controllerConfig.getStatusCode();
+                    } else {
+                        statusCode = controllerConfig.statusCode;
+                    }
+                    if (statusCode != null) {
+                        return statusCode;
+                    }
+                }
+            }
             if (statusCode != null) {
                 return statusCode;
             }
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                //String statusCode = controllerConfig.getStatusCode();
-                String statusCode;
-                if (include.recursive) {
-                    statusCode = controllerConfig.getStatusCode();
-                } else {
-                    statusCode = controllerConfig.statusCode;
-                }
-                if (statusCode != null) {
-                    return statusCode;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String statusCode = controllerConfig.getStatusCode();
+                    String statusCode;
+                    if (include.recursive) {
+                        statusCode = controllerConfig.getStatusCode();
+                    } else {
+                        statusCode = controllerConfig.statusCode;
+                    }
+                    if (statusCode != null) {
+                        return statusCode;
+                    }
                 }
             }
             return null;
@@ -443,31 +682,57 @@ public class ConfigXMLReader {
 
         public Map<String, String> getViewHandlerMap() throws WebAppConfigurationException {
             MapContext<String, String> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getViewHandlerMap());
-                } else {
-                    result.push(controllerConfig.viewHandlerMap);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getViewHandlerMap());
+                    } else {
+                        result.push(controllerConfig.viewHandlerMap);
+                    }
                 }
             }
             result.push(viewHandlerMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getViewHandlerMap());
+                    } else {
+                        result.push(controllerConfig.viewHandlerMap);
+                    }
+                }
+            }
             return result;
         }
 
         public Map<String, ViewMap> getViewMapMap() throws WebAppConfigurationException {
             MapContext<String, ViewMap> result = MapContext.getMapContext();
-            for (Include include : includes) {
-                ControllerConfig controllerConfig = getControllerConfig(include.location);
-                // SCIPIO: support non-recursive
-                if (include.recursive) {
-                    result.push(controllerConfig.getViewMapMap());
-                } else {
-                    result.push(controllerConfig.viewMapMap);
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getViewMapMap());
+                    } else {
+                        result.push(controllerConfig.viewMapMap);
+                    }
                 }
             }
             result.push(viewMapMap);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getViewMapMap());
+                    } else {
+                        result.push(controllerConfig.viewMapMap);
+                    }
+                }
+            }
             return result;
         }
 
@@ -563,7 +828,15 @@ public class ConfigXMLReader {
                         // SCIPIO: support non-recursive
                         URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
                         boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
-                        includes.add(new Include(urlLocation, recursive));
+                        boolean optional = "true".equals(includeElement.getAttribute("optional"));
+                        String order = includeElement.getAttribute("order");
+                        Include include = new Include(urlLocation, recursive, optional, order);
+                        includes.add(include);
+                        if (include.isPostLocal()) {
+                            includesPostLocal.add(include);
+                        } else {
+                            includesPreLocal.add(include);
+                        }
                     } catch (MalformedURLException mue) {
                         Debug.logError(mue, "Error processing include at [" + includeLocation + "]:" + mue.toString(), module);
                     }
@@ -591,11 +864,40 @@ public class ConfigXMLReader {
         public static class Include {
             public final URL location;
             public final boolean recursive;
+            public final boolean optional; // SCIPIO: added 2017-05-03
+            public final Order order; // SCIPIO: added 2017-05-03
             
-            public Include(URL location, boolean recursive) {
-                super();
+            public Include(URL location, boolean recursive, boolean optional, Order order) {
                 this.location = location;
                 this.recursive = recursive;
+                this.optional = optional;
+                this.order = order;
+            }
+            
+            public Include(URL location, boolean recursive, boolean optional, String order) {
+                this(location, recursive, optional, Order.fromName(order));
+            }
+            
+            public Include(URL location, boolean recursive) {
+                this(location, recursive, false, Order.PRE_LOCAL);
+            }
+            
+            public boolean isPostLocal() {
+                return this.order == Order.POST_LOCAL;
+            }
+            public enum Order {
+                PRE_LOCAL,
+                POST_LOCAL;
+                
+                public static Order fromName(String name) {
+                    if (name == null || name.isEmpty() || name.equals("pre-local")) {
+                        return PRE_LOCAL;
+                    } else if ("post-local".equals(name)) {
+                        return POST_LOCAL;
+                    } else {
+                        throw new IllegalArgumentException("invalid controller include order value: " + name);
+                    }
+                }
             }
         }
     }

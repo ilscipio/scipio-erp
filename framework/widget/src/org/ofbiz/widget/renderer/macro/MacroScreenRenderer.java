@@ -65,6 +65,7 @@ import org.ofbiz.widget.model.ScreenFactory;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
+import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlScreenRenderer.ScreenletMenuRenderer;
 import org.xml.sax.SAXException;
@@ -209,10 +210,18 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
+        // SCIPIO: 2017-05-03: special: always skip this if filtered render mode
+        if (ScreenRenderer.isTargetedRenderMode(context)) {
+            return;
+        }
         executeMacro(writer, "renderScreenBegin", null);
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
+        // SCIPIO: 2017-05-03: special: always skip this if filtered render mode
+        if (ScreenRenderer.isTargetedRenderMode(context)) {
+            return;
+        }
         executeMacro(writer, "renderScreenEnd", null);
     }
 

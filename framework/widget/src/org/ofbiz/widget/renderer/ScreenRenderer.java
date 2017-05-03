@@ -582,6 +582,20 @@ public class ScreenRenderer implements RenderContextFetcher {
         // SCIPIO: set the request method for easy access. it is UPPERCASE.
         context.put("requestMethod", request.getMethod().toUpperCase());
         
+        // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
+        // TODO?: we only allow this from req attributes for now, so only special events and request handler functions will enable this.
+        // Could also do req parameter fallback directly from here in future, but implications unclear...
+        String scpRenderTargetSecName = (String) request.getAttribute("scpRenderTargetSecName");
+        //if (scpRenderTargetSecName == null) scpRenderTargetSecName = request.getParameter("scpRenderTargetSecName");
+        if (UtilValidate.isNotEmpty(scpRenderTargetSecName)) {
+            context.put("scpRenderTargetSecName", scpRenderTargetSecName);
+        }
+        String scpRenderTargetElemId = (String) request.getAttribute("scpRenderTargetElemId");
+        //if (scpRenderTargetElemId == null) scpRenderTargetElemId = request.getParameter("scpRenderTargetElemId");
+        if (UtilValidate.isNotEmpty(scpRenderTargetElemId)) {
+            context.put("scpRenderTargetElemId", scpRenderTargetElemId);
+        }
+        
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         
@@ -787,6 +801,19 @@ public class ScreenRenderer implements RenderContextFetcher {
                 Debug.logError(e, "Error running local render init screen actions for [" + resource + "]", module);
             }
         }
+    }
+ 
+    public static String getRenderTargetSecName(Map<String, Object> context) { // SCIPIO
+        return (String) context.get("scpRenderTargetSecName");
+    }
+    
+    public static String getRenderTargetElemId(Map<String, Object> context) { // SCIPIO
+        return (String) context.get("scpRenderTargetElemId");
+    }
+    
+    public static boolean isTargetedRenderMode(Map<String, Object> context) { // SCIPIO
+        // NOTE: DO NOT RELY on .containsKey
+        return context.get("scpRenderTargetSecName") != null || context.get("scpRenderTargetElemId") != null;
     }
 
 }

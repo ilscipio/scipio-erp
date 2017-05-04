@@ -241,7 +241,7 @@ under the License.
                             </html>
                         </platform-specific>
                         <!-- render appbar or its opening part -->
-                        <section name="Render-Main-Nav">
+                        <section name="Global-Main-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="appbarOpenTemplateLocation" />
@@ -273,7 +273,7 @@ under the License.
                     </condition>
                     <widgets>
                         <!-- render appheader: both menu widget style and ftl template style menus are supported -->
-                        <section name="Render-App-Nav">
+                        <section name="Global-App-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="userLogin" />
@@ -538,7 +538,7 @@ under the License.
                     </condition>
                     <widgets>
                         <!-- render footer -->
-                        <section name="Render-Footer">
+                        <section name="Global-Footer">
                             <condition>
                                 <if-empty field="applicationFooterTemplate" />
                             </condition>
@@ -611,10 +611,10 @@ under the License.
                                 <not><if-empty-section section-name="body"/></not>
                             </condition>
                             <widgets>
-                                    <container id="content-main-body">
-                                        <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
-                                        <decorator-section-include name="body"/>
-                                    </container>
+                                <container id="content-main-body">
+                                    <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
@@ -746,25 +746,33 @@ under the License.
             </condition>
             <widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <label style="h1" text="${headerTitle}"/>
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <label style="h1" text="${headerTitle}"/>
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </widgets>
             <fail-widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </fail-widgets>
         </section>            

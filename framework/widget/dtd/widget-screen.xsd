@@ -239,7 +239,13 @@ under the License.
                 <xs:element minOccurs="0" ref="widgets" />
                 <xs:element minOccurs="0" ref="fail-widgets" />
             </xs:sequence>
-            <xs:attribute type="xs:string" name="name" />
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>Optional section name.
+                        SCIPIO: This may now be used during targeted rendering (not used in stock ofbiz). 
+                            Section names are treated as GLOBAL for this purpose. 2017-05-03.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="share-scope"><!-- default="true" -->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: New share-scope on inlined sections. Default: true.</xs:documentation>

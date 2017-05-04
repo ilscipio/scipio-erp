@@ -241,7 +241,9 @@ under the License.
             </xs:sequence>
             <xs:attribute type="xs:string" name="name">
                 <xs:annotation>
-                    <xs:documentation>Optional section name.</xs:documentation>
+                    <xs:documentation>Optional section name.
+                        SCIPIO: NOTE: This name may now be used for functional purposes, to designate
+                        code sections (2017-05-04).</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="share-scope"><!-- default="true" -->
@@ -254,6 +256,19 @@ under the License.
                         <xs:enumeration value="false" />
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="contains" default="*">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Complex string describing the sections that this section
+                        may and may not contain. This is used for optimization, to avoid executing parts not needed.
+                        This is a shortcut to writing verbose conditions manually everywhere.
+                        May contain section names or the single wildcard "*". They can all be negated using "!".
+                        NOTE: The wildcard can only be used at the beginning or the end of a name.
+                        ex.: 
+                          "MySection1, !MySection2, *"
+                          "MySection1, !MySection-*, !*"
+                        Added 2017-05-04.</xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
     </xs:element>

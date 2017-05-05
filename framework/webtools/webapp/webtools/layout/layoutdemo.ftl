@@ -1169,35 +1169,64 @@
 </#if>
 
 <#if debugMode>
-<@section title="JSON render test">
+<a name="ajax-render-test"></a>
+<@section title="AJAX Render Test">
   <@script>
-    jQuery(document).ready(function() {
+    function runAjaxRenderTest(params, outputElemId) {
+        var outElem = jQuery('#'+outputElemId);
+        outElem.val("(LOADING...)");
+        
         jQuery.ajax({
             url: '<@ofbizUrl escapeAs="js">ajaxRender</@ofbizUrl>',
             type: 'POST',
-            data: {
-                "view" : "runService"                       
-            },
+            data: params,
             success: function(data) {
+                var outElem = jQuery('#'+outputElemId);
                 if (data.renderOut) {
                     var renderOut = data.renderOut;
-                    if (renderOut.length > 1000) {
-                        renderOut = renderOut.substring(0, 1000) + " ...";
-                    }
-                    jQuery('#json-output-test').text(renderOut);
+                    outElem.val(renderOut);
                 } else if (data._ERROR_MESSAGE_) {
-                    jQuery('#json-output-test').text("ERROR: " + data._ERROR_MESSAGE_);
+                    outElem.val("ERROR: " + data._ERROR_MESSAGE_);
                 } else { // TODO: (data._ERROR_MESSAGE_LIST_) 
-                    jQuery('#json-output-test').text("GENERAL ERROR");
+                    outElem.val("GENERAL ERROR");
                 }
             }
         });
-    });
+    };
   </@script>
-  <div id="json-output-test">
-  </div>
-</@section>
+  
+  <#macro ajaxRenderTest params={} extraMsg="" title="">
+    <#local fieldRows = 30>
+    <#local defaultMsg = "(click Run to execute test)">
+    <#global ajaxRenderTestCount = (ajaxRenderTestCount!0) + 1>
+    <#local id = "ajax-render-test-${ajaxRenderTestCount}">
+      <@section title=title>
+        <@script>
+            function runAjaxRenderTest${ajaxRenderTestCount}() {
+                runAjaxRenderTest(<@objectAsScript lang="js" object=params/>, "${id}");
+            }
+        </@script>
+        ${extraMsg}
+        <@menu type="button">
+          <@menuitem type="link" href="javascript:runAjaxRenderTest${ajaxRenderTestCount}(); void(0);" text=uiLabelMap.CommonRun />
+        </@menu>
+        <@field type="textarea" id=id fieldsType="default-compact">${defaultMsg}</@field>
+      </@section>
+  </#macro>
+  
+  <@ajaxRenderTest title="Full page (OK)" params={
+    "view" : "runService"
+  }/>
+  
+  <@ajaxRenderTest title="Partial section WIP NON-WORKING BROKEN (TODO)" params={
+    "view" : "runService", 
+    "scpRenderTargetExpr" : "$Global-Column-Main"
+  }/>
 
+</@section>
+</#if>
+
+<#if debugMode>
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>

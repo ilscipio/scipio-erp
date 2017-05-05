@@ -1745,6 +1745,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#-- auto value integration -->
   <#if !autoValue?is_boolean>
     <#local autoValue = scpAutoVal!false>
+    <#if !autoValue?is_boolean><#-- TODO: REVIEW: without this there was a crash. probably shouldn't happen -->
+      <#local autoValue = false>
+    </#if>
   </#if>
   <#if autoValue>
     <#if type == "checkbox" || type == "radio">

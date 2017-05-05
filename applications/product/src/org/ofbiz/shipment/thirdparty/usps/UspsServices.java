@@ -235,7 +235,7 @@ public class UspsServices {
         }
 
         if (responseDocument == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentRateNotAvailable", locale));
         }
 
@@ -1746,8 +1746,12 @@ public class UspsServices {
         }
         if (UtilValidate.isEmpty(conUrl)) {
             // SCIPIO: Throw config exception to can handle more gracefully
-            throw new UspsConfigurationException(UtilProperties.getMessage(resourceError, 
+            if(Debug.verboseOn()) {
+                throw new UspsConfigurationException(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsConnectUrlIncomplete", locale));
+            }else{
+                return null;
+            }
         }
 
         OutputStream os = new ByteArrayOutputStream();

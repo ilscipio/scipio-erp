@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -488,6 +489,7 @@ public class RenderTargetExpr implements Serializable {
         private final Set<String> exactIncludes;
         private final Set<String> exactExcludes;
         private final boolean matchAll;
+        private final Map<Character, Boolean> matchAllTypes;
         private final List<String> wildIncludes; // TODO: find way to optimize
         private final List<String> wildExcludes; // TODO: find way to optimize
         
@@ -496,11 +498,13 @@ public class RenderTargetExpr implements Serializable {
             String[] tokenArr = containsExprTokenSplitPat.split(strExpr.trim());
             if (tokenArr.length <= 0) throw new IllegalArgumentException("Section contains-expression cannot be empty");
             
+            // NOTE: these are layered by specificity from most exact to most generic
             Set<String> exactIncludes = new HashSet<>();
             Set<String> exactExcludes = new HashSet<>();
-            boolean matchAll = false;
             ArrayList<String> wildIncludes = new ArrayList<>();
             ArrayList<String> wildExcludes = new ArrayList<>();
+            Map<Character, Boolean> matchAllTypes = new HashMap<>();
+            boolean matchAll = false;
             
             for(String fullToken : tokenArr) {
                 String token = fullToken;
@@ -520,7 +524,14 @@ public class RenderTargetExpr implements Serializable {
                             + " or invalid type specifier (should start with " + TYPE_PREFIXES_STR + "): " + fullToken);
                 String name = token.substring(1);
                 
-                if (name.contains(WILDCARD_STRING)) {
+                if (name.equals(WILDCARD_STRING)) {
+                    // TODO: find way to optimize
+                    matchAllTypes.put(type, !exclude);
+                } else if (name.contains(WILDCARD_STRING)) {
+                    // TODO: support multiple wild
+                    if (name.indexOf(WILDCARD) != name.lastIndexOf(WILDCARD)) {
+                        throw new UnsupportedOperationException("Section contains-expression has a name with multiple wildcards, not supported: " + fullToken);
+                    }
                     // TODO: find way to optimize
                     if (exclude) {
                         wildExcludes.add(token);
@@ -528,6 +539,7 @@ public class RenderTargetExpr implements Serializable {
                         wildIncludes.add(token);
                     }
                 } else {
+                    // this already optimized enoughs
                     if (exclude) {
                         exactExcludes.add(token);
                     } else {
@@ -538,11 +550,12 @@ public class RenderTargetExpr implements Serializable {
             
             this.exactIncludes = exactIncludes.isEmpty() ? Collections.<String> emptySet() : exactIncludes;
             this.exactExcludes = exactExcludes.isEmpty() ? Collections.<String> emptySet() : exactExcludes;
-            this.matchAll = matchAll;
             wildIncludes.trimToSize();
             this.wildIncludes = wildIncludes.isEmpty() ? null : wildIncludes;
             wildExcludes.trimToSize();
             this.wildExcludes = wildExcludes.isEmpty() ? null : wildExcludes;
+            this.matchAllTypes = matchAllTypes.isEmpty() ? null : matchAllTypes;
+            this.matchAll = matchAll;
         }
     
         public static ContainsExpr make(String strExpr) {
@@ -571,21 +584,48 @@ public class RenderTargetExpr implements Serializable {
         }
         
         private boolean matchesWild(String nameExpr) {
-            //////////////////////////////////////////////
-            // TODO: NOT IMPLEMENTED
-            //////////////////////////////////////////////
             if (wildIncludes != null) {
                 for(String match : wildIncludes) {
-                    char type = match.charAt(0);
-                    
+                    if (checkWildNameMatch(match, nameExpr)) {
+                        return true;
+                    }
                 }
             }
             if (wildExcludes != null) {
                 for(String match : wildExcludes) {
-                    
+                    if (checkWildNameMatch(match, nameExpr)) {
+                        return false;
+                    }
                 }
             }
+            if (matchAllTypes != null) {
+                char nameType = nameExpr.charAt(0);
+                Boolean matchExpl = matchAllTypes.get(nameType);
+                if (matchExpl != null) return matchExpl;
+            }
             return matchAll;
+        }
+        
+        private boolean checkWildNameMatch(String match, String name) {
+            if (match.charAt(0) == name.charAt(0)) { // same type
+                String pureName = name.substring(1);
+                if (match.charAt(match.length() - 1) == WILDCARD) {
+                    String part = match.substring(1, match.length() - 1);
+                    return pureName.startsWith(part);
+                } else if (match.charAt(1) == WILDCARD) {
+                    String part = match.substring(2);
+                    return pureName.endsWith(part);
+                } else {
+                    int wildIndex = match.lastIndexOf(WILDCARD);
+                    if (wildIndex < 1) {
+                        throw new IllegalStateException("Section contains-expression name has missing or unexpected wildcard: " + match);
+                    }
+                    String firstPart = match.substring(2, wildIndex);
+                    String lastPart = match.substring(wildIndex + 1, match.length());
+                    return pureName.startsWith(firstPart) && pureName.endsWith(lastPart);
+                }
+            }
+            return false;
         }
         
         public boolean matchesSecName(String sectionName) {

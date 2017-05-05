@@ -254,7 +254,8 @@ public class RenderTargetExpr implements Serializable {
         private ModelWidget matchedWidget = null;
         private boolean finished = false;
         private int matchDepth = 0;
-        private ModelScreenWidget.DecoratorScreen skippedDecorator = null;
+        // TODO? this is currently not really possible to exploit
+        //private ModelScreenWidget.DecoratorScreen skippedDecorator = null;
         
         private RenderTargetState(RenderTargetExpr expr) {
             this.expr = expr;
@@ -374,38 +375,65 @@ public class RenderTargetExpr implements Serializable {
                     } else {
 
                     }
-                } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
-                    // TODO
-                    ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
-                    if (type == '^' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) { // FIXME: does not support location compare
-                        matchDepth++;
-                        // SPECIAL: identify if this is decorator implementation to skip through
-                        String nextToken = getNextToken();
-                        if (nextToken != null && nextToken.charAt(0) == '!') {
-                            this.skippedDecorator = decorator;
-                        }
-                    } else if (type == '!') { // SPECIAL: identify if this is decorator implementation to skip through
-                        this.skippedDecorator = decorator;
-                    } else {
-                        
-                    }
-                } else if (widget instanceof ModelScreenWidget.DecoratorSectionInclude) {
-                    // TODO
-                    if (type == '@' && name.equals(widget.getName())) {
-                        matchDepth++;
-                    } else {
+                    
+              } else if (widget instanceof ModelScreenWidget.DecoratorSectionInclude) {
+                  // TODO
+                  if (type == '@' && name.equals(widget.getName())) {
+                      matchDepth++;
+                  } else {
 
-                    }
-                } else if (widget instanceof ModelScreenWidget.DecoratorSection) {
-                    // SPECIAL
-                    // TODO
-                    if (type == '!' && name.equals(widget.getName())) {
-                        matchDepth++;
-                    } else {
-                        
-                    }
+                  }
+                    
+            /* ***************************************************************************************
+                TODO?: REVIEW/FUTURE: it is currently impossible to skip decorator invocation in a useful way using 
+                the special "decorator-section" manipulation that was attempted below.
+                originally this selector/feature was meant to select a "decorator-section" without having
+                to know anything about the invoked decorator's implementation.
+                this would have been a bit like "copy pasting" the decorator-section contents and running them on
+                their own, but additional operations are required which make this unusable:
+                
+                SOLN 1: (safe, but non-optimizable) 
+                the essential decorator (global) actions and security checks can only be guaranteed by
+                entering the decorator and letting it run... but this means we have to
+                execute everything (all actions and enter all sections) in the decorator because it is 
+                computationally impossible to predict the element tree where the decorator-section-include (that names our target decorator-section)
+                will occur. so this feature - if implemented in a safe way - will prevent any optimization.
+                
+                SOLN 2: (security risk, functionality not guaranteed)
+                a completely different solution involves skipping the decorator execution entirely,
+                or trying to extract its actions (greater scope than this class)... but this is best-effort and likely to be full or errors, 
+                and it is a MAJOR security risk to allow bypassing execution from an AJAX request... 
+                essentially it can bypass the major permission checks,
+                which the controller (through view rendering) already relies on heavily.
+                there is no way to safely/assuredly reproduce the permission checks done by the decorators, making it a major security risk.
+                also it can't be guaranteed that the necessary global actions will be properly replicated either,
+                so even functionality is not assured.
+             * *************************************************************************************** */
+                    
+//                } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
+//                    ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
+//                    if (type == '%' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) { // FIXME: does not support location compare
+//                        matchDepth++;
+//                        // SPECIAL: identify if this is decorator implementation to skip through
+//                        String nextToken = getNextToken();
+//                        if (nextToken != null && nextToken.charAt(0) == '^') {
+//                            this.skippedDecorator = decorator;
+//                        }
+//                    } else if (type == '^') { // SPECIAL: identify if this is decorator implementation to skip through
+//                        this.skippedDecorator = decorator;
+//                    } else {
+//                        
+//                    }
+//                } else if (widget instanceof ModelScreenWidget.DecoratorSection) {
+//                    // SPECIAL
+//                    // TODO
+//                    if (type == '^' && name.equals(widget.getName())) {
+//                        matchDepth++;
+//                    } else {
+//                        
+//                    }
                 } else {
-                    return true;
+                    ;
                 }
                 
                 if (matchDepth >= expr.getNumTokens()) {

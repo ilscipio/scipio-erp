@@ -223,7 +223,11 @@ under the License.
                 <include-screen-actions name="GlobalTemplateActions" />
             </actions>
             <widgets>
-                <section>
+                <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
+                    when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
+                    in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
+                    note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -268,7 +272,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section>
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -330,7 +334,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section name="Global-Main-Nav-Close">
+                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -349,7 +353,7 @@ under the License.
                 </section>
                 <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                      include in <head></head>, but doesn't seem worth it for now -->
-                <section name="Global-Head-Scripts">
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -359,7 +363,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render content area -->
-                <section name="Global-Pre-Content">
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, *">
                     <widgets>
                         <decorator-section-include name="pre-content"/>
                     </widgets>
@@ -543,7 +547,7 @@ under the License.
                     </section>
                 </container>
                 <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <section name="Global-Foot-Scripts">
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -552,7 +556,7 @@ under the License.
                         </platform-specific>
                     </widgets>
                 </section>
-                <section>
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>

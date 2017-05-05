@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.MapStack;
 
@@ -111,7 +109,22 @@ class ContextHandler {
         return renderContext;
     }
     
+    /**
+     * Returns the most appropriate render context for macro rendering.
+     * <p>
+     * The returned context may have no relation to the passed <code>currentContext</code>, or
+     * it may be the same. It will be a context containing the major top-level variables such as
+     * request, response, locale, etc.
+     */
     public Map<String, Object> getRenderContext(Appendable writer, Map<String, Object> currentContext) throws IOException {
+        return lastRenderContext;
+    }
+    
+    /**
+     * NOTE: The other overload should be preferred when possible: {@link #getRenderContext(Appendable, Map)
+     * @see #getRenderContext(Appendable, Map)
+     */
+    public Map<String, Object> getRenderContext(Appendable writer) throws IOException {
         return lastRenderContext;
     }
     

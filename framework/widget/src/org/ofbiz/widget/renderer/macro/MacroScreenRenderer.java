@@ -65,6 +65,8 @@ import org.ofbiz.widget.model.ScreenFactory;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
+import org.ofbiz.widget.renderer.RenderTargetExpr;
+import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlScreenRenderer.ScreenletMenuRenderer;
@@ -151,6 +153,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     private void executeMacro(Appendable writer, String macro) throws IOException {
+        if (!shouldOutput(writer)) return; // SCIPIO: 2017-05-04: new, here as a failsafe (NOTE: not most efficient location for check)
+        
         try {
             Environment environment = getEnvironment(writer);
             Reader templateReader = new StringReader(macro);
@@ -166,6 +170,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> parameters) throws IOException {
+        if (!shouldOutput(writer)) return; // SCIPIO: 2017-05-04: new, here as a failsafe (NOTE: not most efficient location for check)
+        
         StringBuilder sb = new StringBuilder("<@");
         sb.append(macroName);
         if (parameters != null) {
@@ -196,6 +202,34 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         return environment;
     }
 
+    /**
+     * SCIPIO: Helper to get targeted rendering state from the implied context.
+     */
+    RenderTargetState getRenderTargetState(Appendable writer) throws IOException {
+        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer));
+    }
+    
+    /**
+     * SCIPIO: Returns true if should render out.
+     * <p>
+     * Currently, checks if targeted render is enabled and we are in outputting mode.
+     * NOTE: can add other non-targeted logic in this method later as well.
+     */
+    boolean shouldOutput(Appendable writer) throws IOException {
+        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer)).shouldOutput();
+    }
+    
+    /**
+     * SCIPIO: Returns true if should render out.
+     * <p>
+     * Currently, checks if targeted render is enabled and we are in outputting mode.
+     * NOTE: can add other non-targeted logic in this method later as well.
+     */
+    boolean shouldOutput(Appendable writer, Map<String, Object> context) throws IOException {
+        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer, context)).shouldOutput();
+    }
+    
+    
     public String getRendererName() {
         return rendererName;
     }
@@ -210,23 +244,16 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
-        // SCIPIO: 2017-05-03: special: always skip this if filtered render mode
-        if (ScreenRenderer.isTargetedRenderMode(context)) {
-            return;
-        }
         executeMacro(writer, "renderScreenBegin", null);
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
-        // SCIPIO: 2017-05-03: special: always skip this if filtered render mode
-        if (ScreenRenderer.isTargetedRenderMode(context)) {
-            return;
-        }
         executeMacro(writer, "renderScreenEnd", null);
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
         contextHandler.registerInitialContext(writer, context); // SCIPIO: NOTE: this may be needed in some non-widget rendering contexts
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         if (section.isMainSection()) {
             this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
         }
@@ -240,6 +267,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
     }
     public void renderSectionEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         if (this.widgetCommentsEnabled) {
             Map<String, Object> parameters = new HashMap<String, Object>();
             StringBuilder sb = new StringBuilder();
@@ -252,6 +280,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String containerId = container.getId(context);
         String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
         HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -274,10 +303,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         executeMacro(writer, "renderContainerEnd", null);
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("text", label.getText(context));
         parameters.put("id", label.getId(context));
@@ -286,6 +317,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("id", separator.getId(context));
         parameters.put("style", separator.getStyle(context));
@@ -312,6 +344,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
     
     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
 
@@ -407,6 +440,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         if (image == null)
             return ;
         String src = image.getSrc(context);
@@ -449,6 +483,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
          String editRequest = content.getEditRequest(context);
          String enableEditName = content.getEnableEditName(context);
          String enableEditValue = (String)context.get(enableEditName);
@@ -463,6 +498,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         Locale locale = UtilMisc.ensureLocale(context.get("locale"));
         //Boolean nullThruDatesOnly = Boolean.valueOf(false);
         String mimeTypeId = "text/html";
@@ -527,6 +563,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String expandedContentId = content.getContentId(context);
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
@@ -560,6 +597,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContentFrame(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String dataResourceId = content.getDataResourceId(context);
         String urlString = "/ViewSimpleContent?dataResourceId=" + dataResourceId;
         String fullUrlString = "";
@@ -580,9 +618,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderSubContentBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
+         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
          String enableEditName = content.getEnableEditName(context);
          String enableEditValue = (String)context.get(enableEditName);
-
+    
          Map<String, Object> parameters = new HashMap<String, Object>();
          parameters.put("editContainerStyle", content.getEditContainerStyle(context));
          parameters.put("editRequest", content.getEditRequest(context));
@@ -591,6 +630,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderSubContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
+         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
          Locale locale = UtilMisc.ensureLocale(context.get("locale"));
          String mimeTypeId = "text/html";
          String expandedContentId = content.getContentId(context);
@@ -639,6 +679,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderSubContentEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
+         if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
          String editMode = "Edit";
          String editRequest = content.getEditRequest(context);
          String enableEditName = content.getEnableEditName(context);
@@ -676,12 +717,17 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
 
     public void renderScreenletBegin(Appendable writer, Map<String, Object> context, boolean collapsed, ModelScreenWidget.Screenlet screenlet) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded NOTE: we're ok even though .renderWidgetString here because it's a menu (I think)
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
         if (tabMenu != null) {
-            tabMenu.renderWidgetString(writer, context, this);
+            try {
+                tabMenu.renderWidgetString(writer, context, this);
+            } catch (GeneralException e) { // SCIPIO: interface kludge
+                throw new IOException(e);
+            }
         }
 
         String title = screenlet.getTitle(context);
@@ -721,7 +767,11 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 Map<String, Object> menuRenderArgs = UtilMisc.getMapFromMap(context, "menuRenderArgs");
                 menuRenderArgs.put("inlineEntries", Boolean.TRUE);
                 menuRenderArgs.put("menuCtxRole", "screenlet-nav-menu");
-                navMenu.renderWidgetString(sb, context, this);
+                try {
+                    navMenu.renderWidgetString(sb, context, this);
+                } catch (GeneralException e) { // SCIPIO: interface kludge
+                    throw new IOException(e);
+                }
                 //context.put("menuStringRenderer", savedRenderer);
                 menuRole = "nav-menu";
             } else if (navForm != null) {
@@ -756,7 +806,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         executeMacro(writer, "renderScreenletBegin", parameters);
     }
 
-    public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
+    public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException {
+        //if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded // CANNOT due to .renderWidgetString logic done here
         if (subWidget.equals(screenlet.getNavigationForm())) {
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             HttpServletResponse response = (HttpServletResponse) context.get("response");
@@ -782,10 +833,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         executeMacro(writer, "renderScreenletEnd", null);
     }
 
     protected void renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         ModelForm modelForm;
@@ -914,6 +967,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPageBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String portalPageId = portalPage.getActualPortalPageId(context);
         String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String confMode = portalPage.getConfMode(context);
@@ -952,12 +1006,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPageEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageEnd/>");
         executeMacro(writer, sr.toString());
     }
 
     public void renderPortalPageColumnBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String portalPageId = portalPage.getActualPortalPageId(context);
         String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String columnSeqId = portalPageColumn.getString("columnSeqId");
@@ -1034,12 +1090,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }   
 
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         StringWriter sr = new StringWriter();
         sr.append("<@renderPortalPageColumnEnd/>");
         executeMacro(writer, sr.toString());
     }
 
     public void renderPortalPagePortletBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String portalPageId = portalPage.getActualPortalPageId(context);
         String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String portalPortletId = portalPortlet.getString("portalPortletId");
@@ -1129,6 +1187,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPagePortletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
+        if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded
         String confMode = portalPage.getConfMode(context);
 
         StringWriter sr = new StringWriter();
@@ -1140,6 +1199,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPagePortletBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
+        //if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded // CANNOT due to nested .renderScreenString logic here
         String portalPortletId = portalPortlet.getString("portalPortletId");
         String screenName = portalPortlet.getString("screenName");
         String screenLocation = portalPortlet.getString("screenLocation");
@@ -1167,6 +1227,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     @Override
     public void renderColumnContainer(Appendable writer, Map<String, Object> context, ColumnContainer columnContainer) throws IOException {
+        //if (!shouldOutput(writer, context)) return; // SCIPIO: 2017-05-04: optimization: avoid prep if unneeded // CANNOT due to nested .renderWidgetString logic here
         String id = columnContainer.getId(context);
         String style = columnContainer.getStyle(context);
         StringBuilder sb = new StringBuilder("<@renderColumnContainerBegin");

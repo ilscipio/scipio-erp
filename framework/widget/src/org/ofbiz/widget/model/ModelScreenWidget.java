@@ -57,6 +57,8 @@ import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
+import org.ofbiz.widget.renderer.RenderTargetExpr;
+import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -79,8 +81,46 @@ public abstract class ModelScreenWidget extends ModelWidget {
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
     }
 
-    public abstract void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException;
+    /**
+     * Renders the widget.
+     * SCIPIO: NOTE: As of 2017-05-04, all subclasses now override {@link #renderWidgetStringCore} instead of this.
+     * This separation allows us to insert logic at every element visit.
+     * <p>
+     * <strong>TARGETED RENDERING</strong><br/>
+     * This method now performs a targeted rendering applicability check, recorded through {@link RenderTargetState}.
+     * <p>
+     * If we haven't found the target element to render yet, we will for the most part
+     * enter into all elements here EXCEPT those that have been explicitly marked as not
+     * containing the target element, using section contains string such as: 
+     * {@code <section contains="!$My-Section">}.
+     * Those that are entered perform their actions as usual, but output is prevented where possible
+     * (FTL may cause issues with this).
+     * <p>
+     * If this widget is the target, we turn on the matched/rendering flag in the state, so that
+     * all children and their markup will render. When done, we mark finished.
+     * <p>
+     * Everything after return from target widget render is discarded.
+     */
+    public final void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        // SCIPIO: targeted rendering applicability check.
+        RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
+        if (!renderTargetState.updateShouldExecute(this, context)) {
+            return;
+        }
+        try {
+            renderWidgetStringCore(writer, context, screenStringRenderer);
+        } finally {
+            // SCIPIO: if this section was the render target, mark rendering finished at the end.
+            renderTargetState.checkMarkFinished(this);
+        }
+    }
 
+    /**
+     * SCIPIO: Widget render core implementation.
+     * As of 2017-05-04, all subclasses now override this instead of {@link #renderWidgetString} (they were all renamed).
+     */
+    protected abstract void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException;
+    
     protected static List<ModelScreenWidget> readSubWidgets(ModelScreen modelScreen, List<? extends Element> subElementList) {
         if (subElementList.isEmpty()) {
             return Collections.emptyList();
@@ -366,6 +406,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final boolean isMainSection;
         private final FlexibleStringExpander shareScopeExdr;
         private final boolean actionsOnly; // SCIPIO: extra flag hint
+        private final RenderTargetExpr.ContainsExpr contains; // SCIPIO: 2017-05-04: special contains expression
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -447,6 +488,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement && 
                     UtilValidate.isEmpty(subWidgets) && UtilValidate.isEmpty(failWidgets) &&
                     !(UtilValidate.isEmpty(this.actions) && hasWidgetsElement); // NOTE: the last is special case, ambiguous, but bias toward widgets
+            
+            // SCIPIO: new
+            this.contains = RenderTargetExpr.ContainsExpr.makeOrDefault(sectionElement.getAttribute("contains"));
         }
 
         /**
@@ -462,7 +506,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // SCIPIO: share-scope
             boolean protectScope = !shareScope(context);
             if (protectScope) {
@@ -585,7 +629,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             try {
                 screenStringRenderer.renderColumnContainer(writer, context, this);
             } catch (IOException e) {
@@ -698,7 +742,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             try {
                 screenStringRenderer.renderContainerBegin(writer, context, this);
 
@@ -836,7 +880,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             boolean collapsed = getInitiallyCollapsed(context);
             if (this.collapsible) {
                 String preferenceKey = getPreferenceKey(context) + "_collapsed";
@@ -967,7 +1011,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             screenStringRenderer.renderHorizontalSeparator(writer, context, this);
         }
 
@@ -1029,7 +1073,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // if we are not sharing the scope, protect it using the MapStack
             boolean protectScope = !shareScope(context);
             if (protectScope) {
@@ -1156,7 +1200,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
         @Override
         @SuppressWarnings("unchecked")
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
 
             SectionsRenderer prevSections = (SectionsRenderer) context.get("sections");
             // SCIPIO: filter the sections to render by the new use-when condition and overrides
@@ -1307,7 +1351,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
         
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
         }
@@ -1396,7 +1440,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             Map<String, ? extends Object> preRenderedContent = UtilGenerics.checkMap(context.get("preRenderedContent"));
             if (!(context instanceof MapStack<?>)) {
                 context = MapStack.create(context);
@@ -1459,7 +1503,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             try {
                 screenStringRenderer.renderLabel(writer, context, this);
             } catch (IOException e) {
@@ -1523,7 +1567,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             // Output format might not support forms, so make form rendering optional.
             FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
             if (formStringRenderer == null) {
@@ -1619,7 +1663,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             // Output format might not support forms, so make form rendering optional.
             FormStringRenderer formStringRenderer = (FormStringRenderer) context.get("formStringRenderer");
             if (formStringRenderer == null) {
@@ -1721,7 +1765,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // Output format might not support trees, so make tree rendering optional.
             TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
             if (treeStringRenderer == null) {
@@ -1823,7 +1867,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             ModelScreenWidget subWidget = null;
             subWidget = subWidgets.get(screenStringRenderer.getRendererName());
             if (subWidget == null) {
@@ -1883,7 +1927,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             try {
                 // pushing the contentId on the context as "contentId" is done
                 // because many times there will be embedded "subcontent" elements
@@ -2043,7 +2087,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             try {
                 screenStringRenderer.renderSubContentBegin(writer, context, this);
                 screenStringRenderer.renderSubContentBody(writer, context, this);
@@ -2110,7 +2154,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws IOException {
             // Output format might not support menus, so make menu rendering optional.
             MenuStringRenderer menuStringRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
             if (menuStringRenderer == null) {
@@ -2360,7 +2404,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             try {
                 screenStringRenderer.renderLink(writer, context, this);
             } catch (IOException e) {
@@ -2459,7 +2503,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             try {
                 screenStringRenderer.renderImage(writer, context, this);
             } catch (IOException e) {
@@ -2524,7 +2568,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             try {
                 Delegator delegator = (Delegator) context.get("delegator");
                 List<GenericValue> portalPageColumns = null;

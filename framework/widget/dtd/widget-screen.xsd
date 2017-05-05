@@ -257,16 +257,24 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="contains" default="*">
+            <xs:attribute type="xs:string" name="contains"><!-- default="*" -->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: Complex string describing the sections that this section
-                        may and may not contain. This is used for optimization, to avoid executing parts not needed.
-                        This is a shortcut to writing verbose conditions manually everywhere.
-                        May contain section names or the single wildcard "*". They can all be negated using "!".
-                        NOTE: The wildcard can only be used at the beginning or the end of a name.
+                        may and may not contain. 
+                        Used in conjunction with targeted rendering, to avoid executing parts not needed, for optimization.
+                        This is a shortcut to writing manual verbose conditions manual everywhere.
+                        
+                        May contain section names ($), element IDs (#) or the single wildcard "*". They can all be negated using "!".
+                        NOTE: At most one wildcard supported per name. Wildcards also produce slower code.
+                        
+                        Specificity: Most exact names first, and includes have priority over excludes.
+                        
+                        Default: "*" (matches all)
+                        
                         ex.: 
-                          "MySection1, !MySection2, *"
-                          "MySection1, !MySection-*, !*"
+                          "$MySection1, !$MySection2, !$MySection-*, *"
+                          "$MySection1, !$MySection-*, #my-container-1, !*"
+                          
                         Added 2017-05-04.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>

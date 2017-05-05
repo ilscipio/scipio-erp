@@ -76,6 +76,7 @@ public class UspsServices {
 
     public final static String module = UspsServices.class.getName();
     public final static String resourceError = "ProductUiLabels";
+    public final static String shipmentPropertiesFile = "shipment.properties";
 
     private static List<String> domesticCountries = FastList.newInstance();
     // Countries treated as domestic for rate enquiries
@@ -161,7 +162,7 @@ public class UspsServices {
         }
 
         // create the request document
-        Document requestDocument = createUspsRequestDocument("RateV2Request", true, delegator, shipmentGatewayConfigId, resource);
+        Document requestDocument = createUspsRequestDocument("RateV4Request", true, delegator, shipmentGatewayConfigId, resource);
 
         // TODO: 70 lb max is valid for Express, Priority and Parcel only - handle other methods
         BigDecimal maxWeight = new BigDecimal("70");
@@ -213,7 +214,9 @@ public class UspsServices {
             If you are wanting to get regular Express Mail rates, leave the <Container> tag empty, or do not include it in the request at all.
              */
             if ("Parcel".equalsIgnoreCase(serviceCode)) {
-                UtilXml.addChildElementValue(packageElement, "Container", "None", requestDocument);
+                UtilXml.addChildElementValue(packageElement, "Container", "Variable", requestDocument);
+            }else{
+                UtilXml.addChildElementValue(packageElement, "Container", "", requestDocument);
             }
             UtilXml.addChildElementValue(packageElement, "Size", "REGULAR", requestDocument);
             UtilXml.addChildElementValue(packageElement, "Machinable", "false", requestDocument);
@@ -222,7 +225,7 @@ public class UspsServices {
         // send the request
         Document responseDocument = null;
         try {
-            responseDocument = sendUspsRequest("RateV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
+            responseDocument = sendUspsRequest("RateV4", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
             // SCIPIO: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
@@ -230,7 +233,7 @@ public class UspsServices {
             } else {
                 Debug.logError(e, module);
             }
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentUspsRateDomesticSendingError", UtilMisc.toMap("errorString", e.getMessage()), locale));
         }
 
@@ -241,7 +244,7 @@ public class UspsServices {
 
         List<? extends Element> rates = UtilXml.childElementList(responseDocument.getDocumentElement(), "Package");
         if (UtilValidate.isEmpty(rates)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(resourceError, 
                     "FacilityShipmentRateNotAvailable", locale));
         }
 
@@ -382,7 +385,7 @@ public class UspsServices {
         // send the request
         Document responseDocument = null;
         try {
-            responseDocument = sendUspsRequest("IntlRate", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
+            responseDocument = sendUspsRequest("IntlRateV2", requestDocument, delegator, shipmentGatewayConfigId, resource, locale);
         } catch (UspsRequestException e) {
             // SCIPIO: Handle config errors more gracefully and use logError
             if (e instanceof UspsConfigurationException) {
@@ -1802,14 +1805,24 @@ public class UspsServices {
         try {
             responseDocument = UtilXml.readXmlDocument(responseString, false);
         } catch (Exception e) {
-            throw new UspsRequestException(UtilProperties.getMessage(resourceError, "FacilityShipmentUspsResponseError", UtilMisc.toMap("errorString", e.getMessage()), locale));
+            //throw new UspsRequestException(UtilProperties.getMessage(resourceError, "FacilityShipmentUspsResponseError", UtilMisc.toMap("errorString", e.getMessage()), locale));
+            if(Debug.isOn(Debug.VERBOSE)){
+                throw new UspsRequestException(UtilProperties.getMessage(resourceError, "FacilityShipmentUspsResponseError", UtilMisc.toMap("errorString", e.getMessage()), locale));
+            }else{
+                return null;
+            }
         }
 
         // If a top-level error document is returned, throw exception
         // Other request-level errors should be handled by the caller
         Element responseElement = responseDocument.getDocumentElement();
         if ("Error".equals(responseElement.getNodeName())) {
-            throw new UspsRequestException(UtilXml.childElementValue(responseElement, "Description"));
+            if(Debug.isOn(Debug.VERBOSE)){
+                throw new UspsRequestException(UtilXml.childElementValue(responseElement, "Description"));
+            }else{
+                return null;
+            }
+            
         }
 
         return responseDocument;
@@ -1830,6 +1843,7 @@ public class UspsServices {
     private static String getShipmentGatewayConfigValue(Delegator delegator, String shipmentGatewayConfigId, String shipmentGatewayConfigParameterName, 
             String resource, String parameterName) {
         String returnValue = "";
+        if(resource==null) resource=shipmentPropertiesFile;
         if (UtilValidate.isNotEmpty(shipmentGatewayConfigId)) {
             try {
                 GenericValue usps = EntityQuery.use(delegator).from("ShipmentGatewayUsps").where("shipmentGatewayConfigId", shipmentGatewayConfigId).queryOne();

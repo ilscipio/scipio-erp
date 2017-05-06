@@ -257,29 +257,58 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="contains"><!-- default="*" -->
-                <xs:annotation>
-                    <xs:documentation>SCIPIO: Complex string describing the sections that this section
-                        may and may not contain. 
-                        Used in conjunction with targeted rendering, to avoid executing parts not needed, for optimization.
-                        This is a shortcut to writing manual verbose conditions manual everywhere.
-                        
-                        May contain section names ($), element IDs (#) or the single wildcard "*". They can all be negated using "!".
-                        NOTE: At most one wildcard supported per name. Wildcards also produce slower code.
-                        
-                        Specificity: Most exact names first, and includes have priority over excludes.
-                        
-                        Default: "*" (matches all)
-                        
-                        ex.: 
-                          "$MySection1, !$MySection2, !$MySection-*, *"
-                          "$MySection1, !$MySection-*, #my-container-1, !*"
-                          
-                        Added 2017-05-04.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
+    <xs:attributeGroup name="attlist.generic-screen-widget-elem">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Generic attributes that can apply to any screen widget element definition.
+                Added 2017-05-06.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="contains"><!-- default="*" -->
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Complex expression describing the sections and elements that this element
+                    may and may not contain.
+                    Used in conjunction with targeted rendering, to avoid executing parts not needed, for optimization.
+                    This is a shortcut to writing manual verbose conditions manual everywhere.
+                    Usually used as blacklist.
+                    
+                    This uses close syntax to the targeted rendering "scpRenderTargetExpr" parameter,
+                    which may be passed to ajax render and other render modes.
+                    
+                    Format:
+                    Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
+                    Names may refer to element names, id values, or other.
+                    Spaces ignored, and no flexible expression support.
+                    Each name can be directly prefixed with a Matching Element Type character, which denotes
+                    what widget element or attribute value the name will match against.
+                    An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)
+                    of the name, in other words to denote that the element does not contain another.
+                    
+                    Matching Element Types:
+                    * "$" - "section" element "name" attribute value - considered GLOBAL in scope (across includes)
+                    * "#" - "container", "screenlet" element "id" attribute value - considered GLOBAL in scope (across includes)
+                    * "@" - "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                    NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
+
+                    Other Special Characters:
+                    * "*" - wilcard
+                    * "!" - exclude/negation
+
+                    Specificity: 
+                    Names without wildcards always match first, followed by partial wildcard, and finally full wildcard.
+                    On a given level, include has priority over exclude, but wildcard-less exclude has priority over wildcard include.
+                    
+                    Default: "*" (matches all)
+                    
+                    ex.: 
+                      "$MySection1, !$MySection2, !$MySection-*, *"
+                      "$MySection1, !$MySection-*, #my-container-1, !*"
+                      
+                    Added 2017-05-04.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 
     <!-- ================ CONDITIONS ================ -->
 
@@ -491,6 +520,7 @@ under the License.
                     <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
     <xs:element name="horizontal-separator" substitutionGroup="AllWidgets">
@@ -626,6 +656,7 @@ under the License.
                     <xs:documentation>Name of the screenlet include-menu sub element that will be used for the screenlet tab bar.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
 
@@ -795,6 +826,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
     <xs:element name="decorator-section-include" substitutionGroup="AllWidgets">

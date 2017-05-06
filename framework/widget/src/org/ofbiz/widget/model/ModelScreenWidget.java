@@ -74,11 +74,21 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public static final String module = ModelScreenWidget.class.getName();
 
     private final ModelScreen modelScreen;
+    /**
+     * SCIPIO: contains-expression, supported on any item for which the "contains" attribute is
+     * defined in widget-screen.xsd. Handled by {@link RenderTargetExpr.RenderTargetState}. Default is contains all.
+     * TODO: REVIEW: to simplify implementation, I have simply added this to all elements for now, even
+     * those that don't define it in widget-screen.xsd; maybe split up...
+     * Added 2017-05-04.
+     */
+    private final RenderTargetExpr.ContainsExpr containsExpr;
 
     public ModelScreenWidget(ModelScreen modelScreen, Element widgetElement) {
         super(widgetElement);
         this.modelScreen = modelScreen;
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
+        // SCIPIO: new
+        this.containsExpr = RenderTargetExpr.ContainsExpr.makeOrDefault(widgetElement.getAttribute("contains"));
     }
 
     /**
@@ -104,14 +114,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public final void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         // SCIPIO: targeted rendering applicability check.
         RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-        if (!renderTargetState.updateShouldExecute(this, context)) {
+        if (!renderTargetState.handleShouldExecute(this, context)) {
             return;
         }
+        boolean wasMatchRegistered = renderTargetState.wasMatchRegistered(); // SCIPIO: we have to save this as local var (kludge)
         try {
             renderWidgetStringCore(writer, context, screenStringRenderer);
         } finally {
-            // SCIPIO: if this section was the render target, mark rendering finished at the end.
-            renderTargetState.checkMarkFinished(this);
+            renderTargetState.handleFinished(this, context, wasMatchRegistered); // SCIPIO: return logic
         }
     }
 
@@ -146,6 +156,13 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
     public ModelScreen getModelScreen() {
         return this.modelScreen;
+    }
+    
+    /**
+     * SCIPIO: Returns the complex contains-expression. Never null.
+     */
+    public RenderTargetExpr.ContainsExpr getContainsExpr() {
+        return containsExpr;
     }
 
     public static final class SectionsRenderer implements org.ofbiz.webapp.renderer.BasicSectionsRenderer, Map<String, ModelScreenWidget> { // SCIPIO: new BasicSectionsRenderer interface
@@ -406,7 +423,6 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final boolean isMainSection;
         private final FlexibleStringExpander shareScopeExdr;
         private final boolean actionsOnly; // SCIPIO: extra flag hint
-        private final RenderTargetExpr.ContainsExpr contains; // SCIPIO: 2017-05-04: special contains expression
 
         public Section(ModelScreen modelScreen, Element sectionElement) {
             this(modelScreen, sectionElement, false);
@@ -488,9 +504,6 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.actionsOnly = hasActionsElement && condition == null && !hasFailWidgetsElement && 
                     UtilValidate.isEmpty(subWidgets) && UtilValidate.isEmpty(failWidgets) &&
                     !(UtilValidate.isEmpty(this.actions) && hasWidgetsElement); // NOTE: the last is special case, ambiguous, but bias toward widgets
-            
-            // SCIPIO: new
-            this.contains = RenderTargetExpr.ContainsExpr.makeOrDefault(sectionElement.getAttribute("contains"));
         }
 
         /**

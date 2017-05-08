@@ -98,6 +98,14 @@ public class RequestHandler {
         }
         return rh;
     }
+    
+    /**
+     * SCIPIO: Gets request handler for the ServletContext associated to current request.
+     * Added 2017-05-08.
+     */
+    public static RequestHandler getRequestHandler(HttpServletRequest request) {
+        return getRequestHandler(request.getServletContext()); // NOTE: requires servlet API 3.0+
+    }
 
     private RequestHandler(ServletContext context) {
         // init the ControllerConfig, but don't save it anywhere, just load it into the cache

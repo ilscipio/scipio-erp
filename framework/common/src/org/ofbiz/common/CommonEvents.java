@@ -303,10 +303,8 @@ public class CommonEvents {
      * NOTE: this is important for security reasons.
      */
     public static String jsonResponseFromRequestAttributesExplicit(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> attrMap = getRenderOutParamsOrNull(request);
-        if (attrMap != null) {
-            attrMap = UtilHttp.transformJSONAttributeMap(attrMap);
-        }
+        Map<String, Object> outAttrMap = getRenderOutParamsOrNull(request);
+        Map<String, Object> attrMap = (outAttrMap != null) ? UtilHttp.transformJSONAttributeMap(outAttrMap) : new HashMap<String, Object>();
         List<String> attrNames = getRenderOutAttrNamesOrNull(request);
         if (attrNames != null && attrNames.size() > 0) {
             // TODO: optimize
@@ -316,9 +314,6 @@ public class CommonEvents {
                     attrMap.put(attr, allAttrMap.get(attr));
                 }
             }
-        }
-        if (attrMap == null) {
-            attrMap = new HashMap<>();
         }
         try {
             JSON json = JSON.from(attrMap);

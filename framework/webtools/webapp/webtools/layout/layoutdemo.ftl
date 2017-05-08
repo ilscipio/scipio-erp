@@ -1172,7 +1172,10 @@
 <a name="ajax-render-test"></a>
 <@section title="AJAX Render Test">
   <@script>
-    function runAjaxRenderTest(params, outputElemId) {
+    function getAjaxRenderOut(renderOut) {
+        return renderOut;
+    }
+    function runAjaxRenderTest(params, outputElemId, renderOutProcessCb) {
         var outElem = jQuery('#'+outputElemId);
         outElem.val("(LOADING...)");
         
@@ -1182,20 +1185,21 @@
             data: params,
             success: function(data) {
                 var outElem = jQuery('#'+outputElemId);
+                var renderOut;
                 if (data.renderOut) {
-                    var renderOut = data.renderOut;
-                    outElem.val(renderOut);
+                    renderOut = renderOutProcessCb(data.renderOut);
                 } else if (data._ERROR_MESSAGE_) {
-                    outElem.val("ERROR: " + data._ERROR_MESSAGE_);
+                    renderOut = data._ERROR_MESSAGE_;
                 } else { // TODO: (data._ERROR_MESSAGE_LIST_) 
-                    outElem.val("GENERAL ERROR");
+                    renderOut = "GENERAL ERROR";
                 }
+                outElem.val(renderOut);
             }
         });
     };
   </@script>
   
-  <#macro ajaxRenderTest params={} extraMsg="" title="">
+  <#macro ajaxRenderTest params={} extraMsg="" title="" renderOutProcessCb="getAjaxRenderOut">
     <#local fieldRows = 30>
     <#local defaultMsg = "(click Run to execute test)">
     <#global ajaxRenderTestCount = (ajaxRenderTestCount!0) + 1>
@@ -1203,7 +1207,7 @@
       <@section title=title>
         <@script>
             function runAjaxRenderTest${ajaxRenderTestCount}() {
-                runAjaxRenderTest(<@objectAsScript lang="js" object=params/>, "${id}");
+                runAjaxRenderTest(<@objectAsScript lang="js" object=params/>, "${id}", ${renderOutProcessCb});
             }
         </@script>
         ${extraMsg}
@@ -1214,19 +1218,35 @@
       </@section>
   </#macro>
   
-  <@ajaxRenderTest title="Full page (OK)" params={
+  <@ajaxRenderTest title="Full page: runService" params={
     "view" : "runService"
   }/>
   
-  <@ajaxRenderTest title="Partial section WIP NON-WORKING BROKEN (TODO)" params={
+  <@ajaxRenderTest title="Partial page, widget section: runService -> $Global-Column-Main" params={
     "view" : "runService", 
     "scpRenderTargetExpr" : "$Global-Column-Main"
   }/>
   
-  <@ajaxRenderTest title="Partial section WIP NON-WORKING BROKEN (TODO)" params={
+  <@ajaxRenderTest title="Partial page, widget container, NON-optimized: runService -> #main-content (container)" params={
+    "view" : "runService", 
+    "scpRenderTargetExpr" : "#main-content"
+  }/>
+  
+  <@script>
+    function getAjaxRenderOutWithJQuerySub(renderOut) {
+        var sel = '#screenlet_1';
+        var out = jQuery(sel, jQuery(renderOut));
+        if (out.length) {
+            return out.html();
+        } else {
+            return "ERROR: element '" + sel + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
+        }
+    }
+  </@script>
+  <@ajaxRenderTest title="Partial page, widget container, plus jQuery sub-element extraction: runService -> $Global-Column-Main #main-content -> #screenlet_1" params={
     "view" : "runService", 
     "scpRenderTargetExpr" : "$Global-Column-Main #main-content"
-  }/>
+  } renderOutProcessCb="getAjaxRenderOutWithJQuerySub"/>
 
 </@section>
 </#if>

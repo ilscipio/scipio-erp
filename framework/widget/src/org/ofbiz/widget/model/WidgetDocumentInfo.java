@@ -17,6 +17,10 @@ public class WidgetDocumentInfo {
         return (WidgetDocumentInfo) document.getUserData(DOCUMENT_USER_DATA_KEY);
     }
     
+    public static WidgetDocumentInfo retrieve(Element element) {
+        return retrieve(element.getOwnerDocument());
+    }
+    
     public static WidgetDocumentInfo retrieveAlways(Document document) {
         WidgetDocumentInfo docInfo = retrieve(document);
         if (docInfo == null) {
@@ -38,4 +42,33 @@ public class WidgetDocumentInfo {
         this.resourceLocation = resourceLocation;
     }
 
+    public static String getResourceLocation(Element element) {
+        WidgetDocumentInfo docInfo = retrieve(element);
+        if (docInfo != null) {
+            return docInfo.getResourceLocation();
+        }
+        return null;
+    }
+    
+    /**
+     * Makes description for an element, including tag name, location, and column/line,
+     * for log/error messages.
+     * FIXME: seems redundant, there is another utility somewhere that does this?
+     */
+    public static String getElementDescriptor(Element element) {
+        String desc = "element: " + element.getTagName();
+        String location = getResourceLocation(element);
+        if (location != null) {
+            desc += ", location: " + location;
+        }
+        Integer startLine = (Integer) element.getUserData("startLine");
+        if (startLine != null) {
+            desc += ", line: " + startLine;
+        }
+        Integer startColumn = (Integer) element.getUserData("startColumn");
+        if (startColumn != null) {
+            desc += ", column: " + startColumn;
+        }
+        return desc;
+    }
 }

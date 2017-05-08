@@ -1222,6 +1222,11 @@
     "view" : "runService", 
     "scpRenderTargetExpr" : "$Global-Column-Main"
   }/>
+  
+  <@ajaxRenderTest title="Partial section WIP NON-WORKING BROKEN (TODO)" params={
+    "view" : "runService", 
+    "scpRenderTargetExpr" : "$Global-Column-Main #main-content"
+  }/>
 
 </@section>
 </#if>

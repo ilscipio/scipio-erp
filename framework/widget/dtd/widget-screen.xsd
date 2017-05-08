@@ -305,7 +305,40 @@ under the License.
                       "$MySection1, !$MySection2, !$MySection-*, *"
                       "$MySection1, !$MySection-*, #my-container-1, !*"
                       
+                    NOTE: These expressions are required for optimization, to be able to skip code execution not related
+                        to the target element.
+                        If the decorator does not blacklist anything, targeted rendering will still work, because
+                        the non-targeted output will still be prevented; but the renderer will still execute the data 
+                        preparation for all those null-output elements, which may (or may not) be expensive.
+                    
                     Added 2017-05-04.</xs:documentation>
+                    <!-- DEV NOTES:
+                      * Security: The decorators are responsible for implementing the majority of render-related security 
+                        checks. The controller heavily depends on the screens to perform their own security checks.
+                        Everything written above here, below, and in the java files must take into account the security checks.
+                      * TODO?: Automatic contains-expression generation: 
+                        There is a very limited possibility for automatic generation of contains-expressions by the renderer 
+                        in the future; e.g. it can try to work out some relations based on the screen's immediate definitions.
+                        However this becomes extremely complex and may require assumptions that will break decorators and screens.
+                        As general rule, it is physically impossible for the render to build these, because most of the
+                        elements targeted will cross decorator boundaries i.e. decorator-section-include elements.
+                        Only a limited set of other types of includes can be followed, because many are parametrized using
+                        flexible expressions and only resolved at runtime (e.g. location="${parameters.mainDecoratorLocation}").
+                        So only local definitions and hardcoded includes can be used, and it requires making the assumption
+                        that the definitions are exclusive to the screen, e.g. are not found in the decorator-section-includes,
+                        which would break composed decorators such as the shop decorator. 
+                        More generally there is a computational impossibility associated with trying to predict what code
+                        is going to do without actually running it. 
+                      * TODO?: Alternate targeted rendering widget extraction method:
+                        In targeted rendering, it is currently in most cases essential to execute all code in the decorators
+                        (except where explicitly blacklisted as non-relevant using contains-expression).
+                        i.e. it is currently dangerous and usually invalid to try to extract parts of a screen for standalone execution.
+                        This is primarily because the decorators implement most of the security checks, and also because
+                        many widgets rely on the global actions performed by the decorators.
+                        The only way this would be possible would be to in turn extract the security checks and global actions
+                        from the decorators to run them along with the extracted screen parts, but currently this is impossible,
+                        because there is no way or global pattern to identify the decorator code needed to extract (especially
+                        the security checks). Realistically this may never happen. -->
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>

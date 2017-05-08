@@ -858,6 +858,12 @@ public class ConfigXMLReader {
             }
         }
 
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        
+        public URL getUrl() {
+            return url;
+        }
+        
         /**
          * SCIPIO: Include with support for non-recursive.
          */
@@ -898,6 +904,24 @@ public class ConfigXMLReader {
                         throw new IllegalArgumentException("invalid controller include order value: " + name);
                     }
                 }
+            }
+            
+            // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+            
+            public URL getLocation() {
+                return location;
+            }
+
+            public boolean isRecursive() {
+                return recursive;
+            }
+
+            public boolean isOptional() {
+                return optional;
+            }
+
+            public Order getOrder() {
+                return order;
             }
         }
     }
@@ -950,6 +974,36 @@ public class ConfigXMLReader {
             this.transaction = transaction;
             this.abortTransaction = abortTransaction;
         }
+
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        
+        public String getType() {
+            return type;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getInvoke() {
+            return invoke;
+        }
+
+        public boolean isGlobalTransaction() {
+            return globalTransaction;
+        }
+
+        public Metrics getMetrics() {
+            return metrics;
+        }
+
+        public Boolean getTransaction() {
+            return transaction;
+        }
+
+        public String getAbortTransaction() {
+            return abortTransaction;
+        }
     }
 
     public static class RequestMap {
@@ -999,6 +1053,60 @@ public class ConfigXMLReader {
             if (metricsElement != null) {
                 this.metrics = MetricsFactory.getInstance(metricsElement);
             }
+        }
+
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        
+        public String getUri() {
+            return uri;
+        }
+
+        public boolean isEdit() {
+            return edit;
+        }
+
+        public boolean isTrackVisit() {
+            return trackVisit;
+        }
+
+        public boolean isTrackServerHit() {
+            return trackServerHit;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public Event getEvent() {
+            return event;
+        }
+
+        public boolean isSecurityHttps() {
+            return securityHttps;
+        }
+
+        public boolean isSecurityAuth() {
+            return securityAuth;
+        }
+
+        public boolean isSecurityCert() {
+            return securityCert;
+        }
+
+        public boolean isSecurityExternalView() {
+            return securityExternalView;
+        }
+
+        public boolean isSecurityDirectRequest() {
+            return securityDirectRequest;
+        }
+
+        public Map<String, RequestResponse> getRequestResponseMap() {
+            return requestResponseMap;
+        }
+
+        public Metrics getMetrics() {
+            return metrics;
         }
     }
 
@@ -1071,6 +1179,52 @@ public class ConfigXMLReader {
                 this.excludeParameterSet = Collections.unmodifiableSet(excludeParameterSet);
             }
         }
+
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        
+        public String getName() {
+            return name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getStatusCode() {
+            return statusCode;
+        }
+
+        public boolean isSaveLastView() {
+            return saveLastView;
+        }
+
+        public boolean isSaveCurrentView() {
+            return saveCurrentView;
+        }
+
+        public boolean isSaveHomeView() {
+            return saveHomeView;
+        }
+
+        public Map<String, String> getRedirectParameterMap() {
+            return redirectParameterMap;
+        }
+
+        public Map<String, String> getRedirectParameterValueMap() {
+            return redirectParameterValueMap;
+        }
+
+        public Set<String> getExcludeParameterSet() {
+            return excludeParameterSet;
+        }
+
+        public String getIncludeMode() {
+            return includeMode;
+        }
     }
 
     public static class ViewMap {
@@ -1096,6 +1250,44 @@ public class ConfigXMLReader {
             if (UtilValidate.isEmpty(this.page)) {
                 this.page = this.name;
             }
+        }
+
+        // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
+        
+        public String getViewMap() {
+            return viewMap;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPage() {
+            return page;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        public String getEncoding() {
+            return encoding;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean isNoCache() {
+            return noCache;
         }
     }
 }

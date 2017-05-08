@@ -60,10 +60,10 @@ public abstract class RenderEvents {
         String encoding = getStrParam(request, "encoding", RENDER_VIEW_ATTR_PREFIX);
         */
         String view = getStrParam(request, "view", RENDER_VIEW_ATTR_PREFIX);
-        String renderTargetExpr = getStrParam(request, "renderTargetExpr", RENDER_VIEW_ATTR_PREFIX);
-        if (renderTargetExpr != null) {
-            request.setAttribute("scpRenderTargetExpr", renderTargetExpr);
-        }
+        //String renderTargetExpr = getStrParam(request, "renderTargetExpr", RENDER_VIEW_ATTR_PREFIX);
+        //if (renderTargetExpr != null) {
+        //    request.setAttribute("scpRenderTargetExpr", renderTargetExpr);
+        //}
         
         HttpServletRequest req = request;
         HttpServletResponse resp = response;

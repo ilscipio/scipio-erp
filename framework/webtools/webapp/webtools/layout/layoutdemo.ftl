@@ -1171,82 +1171,161 @@
 <#if debugMode>
 <a name="ajax-render-test"></a>
 <@section title="AJAX Render Test">
+<#assign ajaxRenderTestPresets = {
+    "MANUAL": {
+        "title": "Manual",
+        "defaultPreset": true
+    },
+    "FULL1": { 
+        "title": "ajaxRender: Full page: runService",
+        "requestUri": "ajaxRender", 
+        "view": "runService" 
+    },
+    "PARTSECT1": {
+        "title": "ajaxRender: Partial page, widget section: runService -> $Global-Column-Main",
+        "requestUri": "ajaxRender", 
+        "view": "runService", 
+        "scpRenderTargetExpr": "$Global-Column-Main"
+    },  
+    "PARTCONTAINERNONOPT1": {
+        "title": "ajaxRender: Partial page, widget container, NON-optimized: runService -> #main-content (container)",
+        "requestUri": "ajaxRender",
+        "view": "runService",
+        "scpRenderTargetExpr": "#main-content"
+    },  
+    "PARTCONTAINERCOMPLEX1": {
+        "title": "ajaxRender: Partial page, widget container, with section execution optimization: runService -> $Global-Column-Main #main-content (container through section)",
+        "requestUri": "ajaxRender",
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
+    },  
+    "PARTCONTAINERCOMPLEXJS1": {
+        "title": "ajaxRender: Partial page, widget container, plus jQuery sub-element extraction: runService -> $Global-Column-Main #main-content -> #screenlet_1",
+        "requestUri": "ajaxRender",
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content",
+        "jQueryElemExpr": "#screenlet_1"
+    }
+}>
   <@script>
     function getAjaxRenderOut(renderOut) {
         return renderOut;
     }
-    function runAjaxRenderTest(params, outputElemId, renderOutProcessCb) {
+    function getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr) {
+        var out = jQuery(jQueryElemExpr, jQuery(renderOut));
+        if (out.length) {
+            return out.html();
+        } else {
+            return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
+        }
+    }
+    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb) {
         var outElem = jQuery('#'+outputElemId);
         outElem.val("(LOADING...)");
-        
         jQuery.ajax({
-            url: '<@ofbizUrl escapeAs="js">ajaxRender</@ofbizUrl>',
+            url: url,
             type: 'POST',
             data: params,
             success: function(data) {
                 var outElem = jQuery('#'+outputElemId);
                 var renderOut;
-                if (data.renderOut) {
+                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                    // TODO: (data._ERROR_MESSAGE_LIST_) 
+                    if (data._ERROR_MESSAGE_) {
+                        renderOut = data._ERROR_MESSAGE_;
+                    } else {
+                        renderOut = data._ERROR_MESSAGE_LIST_[0];
+                    }
+                } else if (data.renderOut) {
                     renderOut = renderOutProcessCb(data.renderOut);
-                } else if (data._ERROR_MESSAGE_) {
-                    renderOut = data._ERROR_MESSAGE_;
-                } else { // TODO: (data._ERROR_MESSAGE_LIST_) 
-                    renderOut = "GENERAL ERROR";
+                } else { 
+                    renderOut = "UNRECOGNIZED ERROR";
                 }
                 outElem.val(renderOut);
             }
         });
     };
-  </@script>
-  
-  <#macro ajaxRenderTest params={} extraMsg="" title="" renderOutProcessCb="getAjaxRenderOut">
-    <#local fieldRows = 30>
-    <#local defaultMsg = "(click Run to execute test)">
-    <#global ajaxRenderTestCount = (ajaxRenderTestCount!0) + 1>
-    <#local id = "ajax-render-test-${ajaxRenderTestCount}">
-      <@section title=title>
-        <@script>
-            function runAjaxRenderTest${ajaxRenderTestCount}() {
-                runAjaxRenderTest(<@objectAsScript lang="js" object=params/>, "${id}", ${renderOutProcessCb});
-            }
-        </@script>
-        ${extraMsg}
-        <@menu type="button">
-          <@menuitem type="link" href="javascript:runAjaxRenderTest${ajaxRenderTestCount}(); void(0);" text=uiLabelMap.CommonRun />
-        </@menu>
-        <@field type="textarea" id=id fieldsType="default-compact">${defaultMsg}</@field>
-      </@section>
-  </#macro>
-  
-  <@ajaxRenderTest title="Full page: runService" params={
-    "view" : "runService"
-  }/>
-  
-  <@ajaxRenderTest title="Partial page, widget section: runService -> $Global-Column-Main" params={
-    "view" : "runService", 
-    "scpRenderTargetExpr" : "$Global-Column-Main"
-  }/>
-  
-  <@ajaxRenderTest title="Partial page, widget container, NON-optimized: runService -> #main-content (container)" params={
-    "view" : "runService", 
-    "scpRenderTargetExpr" : "#main-content"
-  }/>
-  
-  <@script>
-    function getAjaxRenderOutWithJQuerySub(renderOut) {
-        var sel = '#screenlet_1';
-        var out = jQuery(sel, jQuery(renderOut));
-        if (out.length) {
-            return out.html();
-        } else {
-            return "ERROR: element '" + sel + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
+    
+    function runAjaxRenderTestFromForm(formId, outputElemId) {
+        var form = jQuery('#'+formId);
+        var requestUri = jQuery('select[name=requestUri]', form).val();
+        var url = "<@ofbizUrl escapeAs="js">ajaxRender</@ofbizUrl>"; // TODO
+        
+        var view = jQuery('select[name=view]', form).val();
+        if (requestUri === 'ajaxRender' && !view) {
+            alert("Please select a view");
+            return;
         }
+        
+        var scpRenderTargetExpr = jQuery('input[name=scpRenderTargetExpr]', form).val();
+        //var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
+        var jQueryElemExpr = jQuery('input[name=jQueryElemExpr]', form).val();
+        
+        var params = {};
+        params.view = view;
+        params.scpRenderTargetExpr = scpRenderTargetExpr;
+        var cb = getAjaxRenderOut;
+        if (jQueryElemExpr.trim().length) {
+            cb = function(renderOut) {
+                return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
+            }; 
+        }
+        
+        runAjaxRenderTest(url, params, outputElemId, cb);
+    }
+    
+    var ajaxRenderTestPresets = <@objectAsScript lang='js' object=ajaxRenderTestPresets />
+    function loadAjaxRenderTestPreset(selElem, formId) {
+        var preset = jQuery(selElem).val();
+        var values = {};
+        if (preset && ajaxRenderTestPresets[preset]) {
+            values = ajaxRenderTestPresets[preset]
+        }
+        setAjaxRenderTestFormInputs(formId, values);
+    }
+    function setAjaxRenderTestFormInputs(formId, values) {
+        var form = jQuery('#'+formId);
+        jQuery('select[name=requestUri]', form).val(values.requestUri || "");
+        jQuery('select[name=view]', form).val(values.view || "");
+        jQuery('input[name=scpRenderTargetExpr]', form).val(values.scpRenderTargetExpr || "");
+        jQuery('input[name=extraParams]', form).val(values.extraParams || "");
+        jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
     }
   </@script>
-  <@ajaxRenderTest title="Partial page, widget container, plus jQuery sub-element extraction: runService -> $Global-Column-Main #main-content -> #screenlet_1" params={
-    "view" : "runService", 
-    "scpRenderTargetExpr" : "$Global-Column-Main #main-content"
-  } renderOutProcessCb="getAjaxRenderOutWithJQuerySub"/>
+  
+  <@form id="ajax-render-test-form">
+    <@field type="select" label="Test Preset" onChange="loadAjaxRenderTestPreset(this, 'ajax-render-test-form');">
+      <#list ajaxRenderTestPresets?keys as preset>
+        <#assign presetValues = ajaxRenderTestPresets[preset]>
+        <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetValues.title!preset}</@field>
+      </#list>
+    </@field>
+    
+    <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
+    <#assign defaultRequestUri = "ajaxRender">
+    <@field type="select" name="requestUri" label="Request URI" value="" disabled=true><#-- TODO -->
+      <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
+      <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
+      <#list requestMapMap?keys as requestName>
+        <@field type="option" value=requestName selected=(defaultRequestUri==requestName)>${requestName}</@field>
+      </#list>
+    </@field>
+    <@field type="select" name="view" label="View Name" value="">
+      <@field type="option" selected=true value=""></@field>
+      <#assign viewMapMap = toSimpleMap(controllerConfig.getViewMapMap())>
+      <#list viewMapMap?keys as viewName>
+        <#assign viewMap = viewMapMap[viewName]>  
+        <@field type="option" value=viewName>${viewName} (${(viewMap.page)!""})</@field>
+      </#list>
+    </@field>
+    <@field type="input" name="scpRenderTargetExpr" label="Target Widget Element Expression" value=""/>
+    <@field type="input" name="extraParams" label="Extra Parameters (POST)" value="TODO" disabled=true/>
+    <@field type="input" name="jQueryElemExpr" label="Extra jQuery Filter" value=""/>
+
+    <@field type="submit" submitType="link" href="javascript:runAjaxRenderTestFromForm('ajax-render-test-form', 'ajax-render-test-out');" text=uiLabelMap.CommonRun/>
+  </@form>
+  
+  <@field type="textarea" id="ajax-render-test-out" fieldsType="default-compact" label="Output:" rows=60>(click Run to execute test)</@field>
 
 </@section>
 </#if>

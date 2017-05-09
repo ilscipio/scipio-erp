@@ -291,7 +291,7 @@ under the License.
                     Matching Element Types:
                     * "$" - "section" element "name" attribute value - considered GLOBAL in scope (across includes)
                     * "#" - "container", "screenlet" element "id" attribute value - considered GLOBAL in scope (across includes)
-                    * "@" - "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                    * "%" - "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
                     NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
 
                     Other Special Characters:

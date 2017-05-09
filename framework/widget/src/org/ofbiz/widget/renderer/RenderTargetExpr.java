@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  *     <container id="my-container">
  * "#my-screenlet": (id selector)
  *     <screenlet id="my-screenlet">
- * "@my-included-section": (bottom-up decorator-section-include directive selector NOTE: ONLY matches on the current decorator layer, not the next)
+ * "%my-included-section": (bottom-up decorator-section-include directive selector NOTE: ONLY matches on the current decorator layer, not the next)
  *     <decorator-section-include name="my-included-section"> 
  *
  * "$my-section #my-container": (descendent selector, CSS-like)
@@ -75,7 +75,7 @@ public class RenderTargetExpr implements Serializable {
     // Matching Element Type character prefixes
     public static final char MET_SECNAME = '$';
     public static final char MET_ELEMID = '#';
-    public static final char MET_DECSECINCL = '@';
+    public static final char MET_DECSECINCL = '%';
     /**
      * Matching Element Type character prefixes. Each of these matches a widget element tag OR a type of attribute.
      * NOTE: These are shared between {@link RenderTargetExpr} and {@link ContainsExpr} so the
@@ -443,7 +443,7 @@ public class RenderTargetExpr implements Serializable {
                         } else {
                             // SPECIAL: unlike most other widget, if the decorator-section name did not match, 
                             // we can safely exclude this element from rendering,
-                            // because the @ only works on current include/decorator level.
+                            // because the % only works on current include/decorator level.
                             shouldExecute = false;
                         }
                     }

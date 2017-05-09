@@ -279,11 +279,14 @@ under the License.
                     Format:
                     Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
                     Names may refer to element names, id values, or other.
-                    Spaces ignored, and no flexible expression support.
+                    Spaces are ignored, and has no flexible expression support.
                     Each name can be directly prefixed with a Matching Element Type character, which denotes
                     what widget element or attribute value the name will match against.
                     An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)
-                    of the name, in other words to denote that the element does not contain another.
+                    of the name instead of inclusion (whitelist), to denote that the element does not contain another.
+                    The last entry in the full expression (after a comma) should always be
+                    either match-all "*" or match-none "!*", to prevent ambiguity and to explicitly show to both
+                    users and renderer whether the intent was to write a blacklist or whitelist, respectively.
                     
                     Matching Element Types:
                     * "$" - "section" element "name" attribute value - considered GLOBAL in scope (across includes)
@@ -302,8 +305,8 @@ under the License.
                     Default: "*" (matches all)
                     
                     ex.: 
-                      "$MySection1, !$MySection2, !$MySection-*, *"
-                      "$MySection1, !$MySection-*, #my-container-1, !*"
+                      "!$MySection1, !$MySection2, !$MySection-*, *" (blacklist)
+                      "$MySection1, $MySection-*, #my-container-1, !*" (whitelist)
                       
                     NOTE: These expressions are required for optimization, to be able to skip code execution not related
                         to the target element.

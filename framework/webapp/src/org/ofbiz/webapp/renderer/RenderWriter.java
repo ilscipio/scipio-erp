@@ -28,6 +28,18 @@ public abstract class RenderWriter extends Writer {
     public void setOrigWriter(Writer origWriter) {
         this.origWriter = origWriter;
     }
+    
+    /**
+     * Returns true if the writer is currently discarding output.
+     */
+    public abstract boolean isDiscarding();
+    
+    /**
+     * Returns true if the writer is RenderWriter and currently discarding output.
+     */
+    public static boolean isDiscarding(Appendable writer) {
+        return (writer instanceof RenderWriter) && ((RenderWriter) writer).isDiscarding();
+    }
 
     /**
      * Delegates to another writer, while keeping a reference to an original writer.
@@ -52,6 +64,11 @@ public abstract class RenderWriter extends Writer {
         
         public static DelegRenderWriter getInstance(Writer targetWriter) {
             return new DelegRenderWriter(null, targetWriter);
+        }
+
+        @Override
+        public boolean isDiscarding() {
+            return (targetWriter instanceof DummyRenderWriter);
         }
 
         @Override
@@ -211,6 +228,11 @@ public abstract class RenderWriter extends Writer {
             return new DummyRenderWriter(origWriter);
         }
         
+        @Override
+        public boolean isDiscarding() {
+            return true;
+        }
+
         @Override
         public void write(int c) throws IOException {
         }

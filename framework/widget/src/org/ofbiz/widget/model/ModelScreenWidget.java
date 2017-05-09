@@ -88,7 +88,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         this.modelScreen = modelScreen;
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
         // SCIPIO: new
-        this.containsExpr = RenderTargetExpr.ContainsExpr.makeOrDefault(widgetElement.getAttribute("contains"));
+        this.containsExpr = RenderTargetExpr.ContainsExpr.makeOrDefault(widgetElement.getAttribute("contains"), widgetElement);
     }
 
     /**

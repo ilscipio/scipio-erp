@@ -19,6 +19,8 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelWidget;
+import org.ofbiz.widget.model.WidgetDocumentInfo;
+import org.w3c.dom.Element;
 
 /**
  * SCIPIO: Represents an expression describing screen widget element to target for rendering,
@@ -61,8 +63,8 @@ public class RenderTargetExpr implements Serializable {
 
     public static final String module = RenderTargetExpr.class.getName();
     
-    // WARN: this is public-facing so it must have limits. TODO: unhardcode
-    private static final UtilCache<String, RenderTargetExpr> cache = UtilCache.createUtilCache("renderer.targeted.expr", 1000, 0);
+    // WARN: this is public-facing so it must have size limits in cache.properties
+    private static final UtilCache<String, RenderTargetExpr> cache = UtilCache.createUtilCache("renderer.targeted.expr");
     
     /**
      * Separator pattern to split the names/tokens in a RenderTargetExpr input string.
@@ -116,7 +118,11 @@ public class RenderTargetExpr implements Serializable {
         this.tokens = tokens; // Collections.unmodifiableList(tokens);
     }
     
-    public static RenderTargetExpr fromString(String strExpr) {
+    /**
+     * New expression from string, null if empty, or IllegalArgumentException if invalid. Uses global cache.
+     */
+    public static RenderTargetExpr fromString(String strExpr) throws IllegalArgumentException {
+        if (strExpr == null || strExpr.isEmpty()) return null;
         RenderTargetExpr expr = cache.get(strExpr);
         if (expr == null) {
             expr = new RenderTargetExpr(strExpr);
@@ -125,14 +131,22 @@ public class RenderTargetExpr implements Serializable {
         return expr;
     }
     
-    public static RenderTargetExpr fromStringNew(String strExpr) { // force new instance
+    /**
+     * New expression from string, null if empty, or IllegalArgumentException if invalid. No cache.
+     */
+    public static RenderTargetExpr fromStringNew(String strExpr) throws IllegalArgumentException {
+        if (strExpr == null || strExpr.isEmpty()) return null;
         return new RenderTargetExpr(strExpr);
     }
 
+    /**
+     * Gets expression from object, either already RenderTargetExpr or string, null if empty,
+     * or IllegalArgumentException if unrecognized class or invalid. Uses global cache.
+     */
     public static RenderTargetExpr fromObject(Object expr) {
         if (expr == null) return null;
         if (expr instanceof RenderTargetExpr) return (RenderTargetExpr) expr;
-        else if (expr instanceof String && !((String) expr).isEmpty()) return fromString((String) expr);
+        else if (expr instanceof String) return fromString((String) expr);
         else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
     }
     
@@ -433,6 +447,34 @@ public class RenderTargetExpr implements Serializable {
                             shouldExecute = false;
                         }
                     }
+                } else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
+                    /* ***************************************************************************************
+                     * !!! FIXME !!!
+                     * this logic is a major flaw in the targetting.
+                     * we currently cannot control the Freemarker output at all, so we're
+                     * forced to do all-or-nothing: we cannot enter any Freemarker files until we have
+                     * already found the target and outputting is enabled.
+                     * this means we cannot have things like intermediate FTL files implementing the
+                     * decorator, even if the target is a widget included by the FTL.
+                     * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
+                     * 
+                     * the solution involves manipulating Environment.setOut to a dummy writer,
+                     * but it's complicated by the "screens", "sections", and other objects that hold references
+                     * to the writer, and various problems.
+                     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
+                     * only possible is converting macros from the standard API to java transforms to manipulate writer, 
+                     * but this is a nightmare)
+                     * 
+                     * to clarify, there are 2 scenarios:
+                     * 1) trying to target a widget element that is included through an FTL file, 
+                     *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
+                     *    -> FIXME A.S.A.P.
+                     * 2) trying to target an element (macro) defined in an FTL file itself
+                     *    -> realistically, this could be practically impossible or too damaging to our code to implement.
+                     */
+                    if (!shouldOutput()) {
+                        shouldExecute = false;
+                    }
                     
                 /* ***************************************************************************************
                    TODO? dedicated selector for include/decorator does not make much sense, because name even with location is an unreliable
@@ -601,9 +643,13 @@ public class RenderTargetExpr implements Serializable {
         private final boolean matchAll;
         
         public ContainsExpr(String strExpr) throws IllegalArgumentException {
+            this(strExpr, null);
+        }
+        
+        public ContainsExpr(String strExpr, Element widgetElement) throws IllegalArgumentException {
             this.strExpr = strExpr;
             String[] tokenArr = containsExprTokenSplitPat.split(strExpr.trim());
-            if (tokenArr.length <= 0) throw new IllegalArgumentException("Section contains-expression cannot be empty");
+            if (tokenArr.length <= 0) throw new IllegalArgumentException(makeErrorMsg("no names in expression", null, strExpr, widgetElement));
             
             // NOTE: these are layered by specificity from most exact to most generic
             Set<String> exactIncludes = new HashSet<>();
@@ -611,7 +657,7 @@ public class RenderTargetExpr implements Serializable {
             ArrayList<String> wildIncludes = new ArrayList<>();
             ArrayList<String> wildExcludes = new ArrayList<>();
             Map<Character, Boolean> matchAllTypes = new HashMap<>();
-            boolean matchAll = false;
+            Boolean matchAll = null;
             
             for(String fullToken : tokenArr) {
                 String token = fullToken;
@@ -622,20 +668,21 @@ public class RenderTargetExpr implements Serializable {
                     matchAll = !exclude;
                     continue;
                 } else if (token.isEmpty()) {
-                    throw new IllegalArgumentException("Section contains-expression has invalid name: " + fullToken);
+                    throw new IllegalArgumentException(makeErrorMsg("invalid or empty name", fullToken, strExpr, widgetElement));
                 }
                 
                 char type = token.charAt(0);
                 if (!MET_ALL.contains(type)) 
-                    throw new IllegalArgumentException("Section contains-expression has a name with missing"
-                            + " or invalid type specifier (should start with " + MET_ALL_STR + "): " + fullToken);
+                    throw new IllegalArgumentException(makeErrorMsg("name has missing"
+                            + " or invalid type specifier (should start with one of: " + MET_ALL_STR + ")", fullToken, strExpr, widgetElement));
                 String name = token.substring(1);
                 
                 if (name.equals(WILDCARD_STRING)) {
                     matchAllTypes.put(type, !exclude);
                 } else if (name.contains(WILDCARD_STRING)) {
-                    if (name.indexOf(WILDCARD) != name.lastIndexOf(WILDCARD)) { // TODO: support multiple wildcard
-                        throw new UnsupportedOperationException("Section contains-expression has a name with multiple wildcards, not supported: " + fullToken);
+                    if (name.indexOf(WILDCARD) != name.lastIndexOf(WILDCARD)) { // TODO?: support multiple wildcard
+                        throw new UnsupportedOperationException(makeErrorMsg("name has"
+                                + " with multiple wildcards, which is not supported", fullToken, strExpr, widgetElement));
                     }
                     if (exclude) {
                         wildExcludes.add(token);
@@ -658,22 +705,41 @@ public class RenderTargetExpr implements Serializable {
             wildExcludes.trimToSize();
             this.wildExcludes = wildExcludes.isEmpty() ? null : wildExcludes;
             this.matchAllTypes = matchAllTypes.isEmpty() ? null : matchAllTypes;
+            if (matchAll == null) {
+                Debug.logWarning(makeErrorMsg("missing match-all (\"*\") or match-none (\"!*\") wildcard entry;"
+                        + " cannot tell if blacklist or whitelist intended", null, strExpr, widgetElement), module);
+                matchAll = ContainsExpr.DEFAULT.matches("dummy"); // stay consistent with the default
+            }
             this.matchAll = matchAll;
         }
     
-        public static ContainsExpr make(String strExpr) {
+        private static String makeErrorMsg(String msg, String token, String strExpr, Element widgetElement) {
+            String str = "Widget element contains=\"...\" expression error: " + msg + ":";
+            if (token != null) {
+                str += " [name: \"" + token + "\"]";
+            }
+            if (strExpr != null) {
+                str += " [expression: \"" + strExpr + "\"]";
+            }
+            if (widgetElement != null) {
+                str += " [" + WidgetDocumentInfo.getElementDescriptor(widgetElement) + "]";
+            }
+            return str;
+        }
+        
+        public static ContainsExpr make(String strExpr, Element widgetElement) {
             if (strExpr == null) return null;
-            if (!strExpr.isEmpty()) return new ContainsExpr(strExpr);
+            if (!strExpr.isEmpty()) return new ContainsExpr(strExpr, widgetElement);
             else return null;
         }
         
-        public static ContainsExpr makeOrDefault(String strExpr, ContainsExpr defaultValue) {
-            ContainsExpr expr = make(strExpr);
+        public static ContainsExpr makeOrDefault(String strExpr, Element widgetElement, ContainsExpr defaultValue) {
+            ContainsExpr expr = make(strExpr, widgetElement);
             return expr != null ? expr : defaultValue;
         }
         
-        public static ContainsExpr makeOrDefault(String strExpr) {
-            return makeOrDefault(strExpr, DEFAULT);
+        public static ContainsExpr makeOrDefault(String strExpr, Element widgetElement) {
+            return makeOrDefault(strExpr, widgetElement, DEFAULT);
         }
         
         /**

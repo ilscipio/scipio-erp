@@ -33,11 +33,25 @@ public abstract class RenderWriter extends Writer {
      * Delegates to another writer, while keeping a reference to an original writer.
      * For reuse.
      */
-    public static abstract class DelegRenderWriter extends RenderWriter {
+    public static class DelegRenderWriter extends RenderWriter {
         protected Writer targetWriter; // effective writer, must be initialized by sub-class
 
         protected DelegRenderWriter(Writer origWriter) {
             super(origWriter);
+        }
+        
+        protected DelegRenderWriter(Writer origWriter, Writer targetWriter) {
+            super(origWriter);
+            this.targetWriter = targetWriter;
+        }
+        
+        public static DelegRenderWriter getInstance(Writer targetWriter, Writer origWriter) {
+            return new DelegRenderWriter(origWriter, 
+                    targetWriter != null ? targetWriter : origWriter);
+        }
+        
+        public static DelegRenderWriter getInstance(Writer targetWriter) {
+            return new DelegRenderWriter(null, targetWriter);
         }
 
         @Override

@@ -234,4 +234,28 @@ public abstract class ModelWidget implements Serializable {
         String getId(Map<String, Object> context);
     }
     
+    /**
+     * SCIPIO: Gets widget name, either flexible if available, or hardcoded if specified, or null.
+     */
+    public static String getName(ModelWidget widget, Map<String, Object> context) {
+        if (widget instanceof FlexibleNameAttrWidget) {
+            return ((FlexibleNameAttrWidget) widget).getName(context);
+        } else {
+            return widget.getName();
+        }
+    }
+    
+    /**
+     * SCIPIO: Gets widget id, either flexible if available, or hardcoded if available, or null.
+     */
+    public static String getId(ModelWidget widget, Map<String, Object> context) {
+        if (widget instanceof FlexibleIdAttrWidget) {
+            return ((FlexibleIdAttrWidget) widget).getId(context);
+        } else if (widget instanceof IdAttrWidget) {
+            return ((IdAttrWidget) widget).getId();
+        } else {
+            return null;
+        }
+    }
+    
 }

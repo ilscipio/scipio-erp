@@ -1325,7 +1325,7 @@
     <@field type="submit" submitType="link" href="javascript:runAjaxRenderTestFromForm('ajax-render-test-form', 'ajax-render-test-out');" text=uiLabelMap.CommonRun/>
   </@form>
   
-  <@field type="textarea" id="ajax-render-test-out" fieldsType="default-compact" label="Output:" rows=60>(click Run to execute test)</@field>
+  <@field type="textarea" id="ajax-render-test-out" fieldsType="default-compact" label="Output:" rows=20>(click Run to execute test)</@field>
 
 </@section>
 </#if>

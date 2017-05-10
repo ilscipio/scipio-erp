@@ -114,14 +114,14 @@ public abstract class ModelScreenWidget extends ModelWidget {
     public final void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         // SCIPIO: targeted rendering applicability check.
         RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-        if (!renderTargetState.handleShouldExecute(this, context)) {
+        RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        if (!execInfo.shouldExecute()) {
             return;
         }
-        boolean wasMatchRegistered = renderTargetState.wasMatchRegistered(); // SCIPIO: we have to save this as local var (kludge)
         try {
-            renderWidgetStringCore(writer, context, screenStringRenderer);
+            renderWidgetStringCore(execInfo.getWriterForElementRender(), context, screenStringRenderer);
         } finally {
-            renderTargetState.handleFinished(this, context, wasMatchRegistered); // SCIPIO: return logic
+            execInfo.handleFinished(context); // SCIPIO: return logic
         }
     }
 

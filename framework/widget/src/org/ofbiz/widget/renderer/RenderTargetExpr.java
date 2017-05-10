@@ -1,6 +1,7 @@
 package org.ofbiz.widget.renderer;
 
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.webapp.renderer.RenderWriter;
+import org.ofbiz.widget.model.HtmlWidget;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.WidgetDocumentInfo;
@@ -255,22 +258,6 @@ public class RenderTargetExpr implements Serializable {
             request.setAttribute("scpRenderTargetOn", state.isEnabled());
         }
     }
-
-    /**
-     * Call from ModelScreenWidget visiting code.
-     */
-    public static boolean updateShouldExecute(ModelWidget widget, Map<String, Object> context) {
-        RenderTargetState state = getRenderTargetState(context);
-        return (state == null || state.handleShouldExecute(widget, context));
-    }
-    
-    /**
-     * Call from ScreenStringRenderer implementations.
-     */
-    public static boolean shouldOutput(Map<String, Object> context) {
-        RenderTargetState state = getRenderTargetState(context);
-        return (state == null || state.shouldOutput());
-    }
     
     /**
      * Render Target State - Holds and manages the state information for targeted rendering.
@@ -288,11 +275,6 @@ public class RenderTargetExpr implements Serializable {
         private boolean targetMatched = false;
         private boolean finished = false;
         //private ModelScreenWidget.DecoratorScreen skippedDecorator = null; // TODO? can't exploit (see below)
-        
-        // SPECIAL booleans, these must be checked immediately after call to handleShouldExecute
-        // FIXME? very ugly, gets it done for now
-        private boolean matchRegistered = false;
-        private boolean shouldExecute = true;
         
         private RenderTargetState(RenderTargetExpr expr) {
             this.expr = expr;
@@ -365,21 +347,6 @@ public class RenderTargetExpr implements Serializable {
             return !finished && isTargetMatched();
         }
         
-        /**
-         * ONLY call immediately after {@link #handleShouldExecute(ModelWidget, Map)}.
-         */
-        public boolean wasShouldExecute() {
-            return shouldExecute;
-        }
-        
-        /**
-         * ONLY call immediately after {@link #handleShouldExecute(ModelWidget, Map)}.
-         * Should be passed back to {@link #handleFinished(ModelWidget, Map, boolean)} upon exec return.
-         */
-        public boolean wasMatchRegistered() {
-            return matchRegistered;
-        }
-        
         // STATE UPDATE
         
         /**
@@ -395,7 +362,6 @@ public class RenderTargetExpr implements Serializable {
                     + " after already found target match (should be read-only)");
             this.matchedWidgets.add(widget);
             this.targetMatched = this.isNumMatchedMax();
-            this.matchRegistered = true;
         }
         
         private void deregisterLastMatch() {
@@ -411,8 +377,10 @@ public class RenderTargetExpr implements Serializable {
          * it comes after us. But note, this execution/actions is decoupled from the need
          * to output markup/html.
          */
-        public boolean handleShouldExecute(ModelWidget widget, Map<String, Object> context) {
-            this.matchRegistered = false;
+        public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) {
+            Appendable writerForElementRender = writer;
+            boolean matchRegistered = false;
+            boolean shouldExecute;
             if (finished) {
                 shouldExecute = false;
             } else if (isTargetMatched()) {
@@ -426,20 +394,24 @@ public class RenderTargetExpr implements Serializable {
                 if (widget instanceof ModelScreenWidget.Section) {
                     if (type == MET_SECNAME && name.equals(widget.getName())) {
                         registerMatch(widget);
+                        matchRegistered = true;
                     }
                 } else if (widget instanceof ModelScreenWidget.Container) {
                     if (type == MET_ELEMID && name.equals(((ModelScreenWidget.Container) widget).getId(context))) {
                         registerMatch(widget);
+                        matchRegistered = true;
                     }
                 } else if (widget instanceof ModelScreenWidget.Screenlet) {
                     if (type == MET_ELEMID && name.equals(((ModelScreenWidget.Screenlet) widget).getId(context))) {
                         registerMatch(widget);
+                        matchRegistered = true;
                     }
                     
                 } else if (widget instanceof ModelScreenWidget.DecoratorSectionInclude) {
                     if (type == MET_DECSECINCL) {
                         if (name.equals(widget.getName())) {
                             registerMatch(widget);
+                            matchRegistered = true;
                         } else {
                             // SPECIAL: unlike most other widget, if the decorator-section name did not match, 
                             // we can safely exclude this element from rendering,
@@ -447,6 +419,7 @@ public class RenderTargetExpr implements Serializable {
                             shouldExecute = false;
                         }
                     }
+                    
                 } else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
                     /* ***************************************************************************************
                      * !!! FIXME !!!
@@ -484,11 +457,13 @@ public class RenderTargetExpr implements Serializable {
                     ModelScreenWidget.IncludeScreen include = (ModelScreenWidget.IncludeScreen) widget;
                     if (type == '%' && ("INCLUDE".equals(name) || name.equals(include.getName(context)))) {
                         registerMatch(widget);
+                        matchRegistered = true;
                     }
                 } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
                     ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
                     if (type == '%' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) {
                         registerMatch(widget);
+                        matchRegistered = true;
                     }
                 */
                 /* ***************************************************************************************
@@ -539,40 +514,98 @@ public class RenderTargetExpr implements Serializable {
                     ; // in all other cases, we have to assume the widget may contain our target.
                 }
                 
-                if (shouldExecute && !isTargetMatched() && (widget instanceof ModelScreenWidget)) {
-                    // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
-                    // skip executing sections/elements that we have been told do NOT contain the sections or 
-                    // elements we're after, in a blacklist-like fashion.
-                    // If ANY of the names are considered not contained (are blacklisted), 
-                    // we don't need to enter the widget.
-                    ContainsExpr containsExpr = ((ModelScreenWidget) widget).getContainsExpr();
-                    if (!containsExpr.matchesAllNames(getNextTokenAndChildren())) {
-                        shouldExecute = false;
+                if (shouldExecute) {
+                    if (isTargetMatched()) {
+                        // MATCHED!
+                        ;
+                        /* NOTE: the following code was a first alternative attempt to
+                            to solve FTL boundaries issues, but it's simply failing
+                            because there too many different writers created
+                        if (writer instanceof RenderWriter) {
+                            ...
+                        } else {
+                            Debug.logError("Targeted rendering error: reached target element,"
+                                    + " but the Writer is not a RenderWriter; cannot achieve targeted rendering,"
+                                    + " output may fail"
+                                    + " [writer class: " + writer.getClass().getName() 
+                                    + ", target expression: " + getExpr()
+                                    + "]", module);
+                        }
+                        */
+                    } else {
+                        if (widget instanceof ModelScreenWidget) {
+                            // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
+                            // skip executing sections/elements that we have been told do NOT contain the sections or 
+                            // elements we're after, in a blacklist-like fashion.
+                            // If ANY of the names are considered not contained (are blacklisted), 
+                            // we don't need to enter the widget.
+                            ContainsExpr containsExpr = ((ModelScreenWidget) widget).getContainsExpr();
+                            if (!containsExpr.matchesAllNames(getNextTokenAndChildren())) {
+                                shouldExecute = false;
+                            }
+                        }
                     }
                 }
             }
-            return shouldExecute;
+            return new ExecutionInfoImpl(widget, shouldExecute, matchRegistered, writerForElementRender);
         }
         
-        /**
-         * Must be called after return from executing the target widget.
-         * Behavior:
-         * <ul>
-         * <li>If this is the target widget, we mark finished and the state becomes read-only.
-         * <li>If we're returning from a matched widget, we pop it, so something else will get a chance
-         *     at the match entry.
-         * </ul>
-         */
-        public void handleFinished(ModelWidget widget, Map<String, Object> context, boolean wasRegisteredMatch) {
-            if (wasRegisteredMatch) {
-                if (this.isTargetMatched()) {
-                    this.finished = true;
-                } else {
-                    deregisterLastMatch();
+        public interface ExecutionInfo {
+            /**
+             * Returns true if the widget should be executed/rendered with actions.
+             * NOTE: this is separate from whether it should output.
+             */
+            boolean shouldExecute();
+            
+            /**
+             * Returns the writer that the element should use for its rendering.
+             * The state may decide a different one is needed.
+             */
+            Appendable getWriterForElementRender();
+            
+            /**
+             * Must be called after return from executing the target widget.
+             * Should be in a finally block.
+             * Behavior:
+             * <ul>
+             * <li>If this is the target widget, we mark finished and the state becomes read-only.
+             * <li>If we're returning from a matched widget, we pop it, so something else will get a chance
+             *     at the match entry.
+             * </ul>
+             */
+            void handleFinished(Map<String, Object> context);
+        }
+        
+        public class ExecutionInfoImpl implements ExecutionInfo {
+            final ModelWidget widget;
+            final boolean shouldExec;
+            final boolean matchReg;
+            final Appendable writerForElement;
+            
+            ExecutionInfoImpl(ModelWidget widget, boolean shouldExec,
+                    boolean matchReg, Appendable writerForElement) {
+                this.widget = widget;
+                this.shouldExec = shouldExec;
+                this.matchReg = matchReg;
+                this.writerForElement = writerForElement;
+            }
+            
+            @Override
+            public boolean shouldExecute() { return shouldExec; }
+            @Override
+            public Appendable getWriterForElementRender() { return writerForElement; }
+            @Override
+            public void handleFinished(Map<String, Object> context) {
+                if (matchReg) {
+                    if (isTargetMatched()) {
+                        finished = true;
+                    } else {
+                        deregisterLastMatch();
+                    }
                 }
             }
         }
-        
+
         public static final class DisabledRenderTargetState extends RenderTargetState {
             private DisabledRenderTargetState() { super(); }
             @Override
@@ -592,11 +625,20 @@ public class RenderTargetExpr implements Serializable {
             @Override
             public boolean shouldOutput() { return true; }
             @Override
-            public void handleFinished(ModelWidget widget, Map<String, Object> context, boolean wasRegisteredMatch) { ; }
-            @Override
             public void markFinished() { ; }
             @Override
-            public boolean handleShouldExecute(ModelWidget widget, Map<String, Object> context) { return true; }
+            public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) { return new DisabledExecutionInfoImpl(writer); }
+            
+            public static class DisabledExecutionInfoImpl implements ExecutionInfo {
+                final Appendable writer;
+                DisabledExecutionInfoImpl(Appendable writer) { this.writer = writer; }
+                @Override
+                public boolean shouldExecute() { return true; }
+                @Override
+                public void handleFinished(Map<String, Object> context) {}
+                @Override
+                public Appendable getWriterForElementRender() { return writer; }
+            }
         }
     }
 

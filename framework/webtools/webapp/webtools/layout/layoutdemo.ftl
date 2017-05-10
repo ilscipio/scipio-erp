@@ -1244,9 +1244,9 @@
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     // TODO: (data._ERROR_MESSAGE_LIST_) 
                     if (data._ERROR_MESSAGE_) {
-                        renderOut = data._ERROR_MESSAGE_;
+                        renderOut = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
                     } else {
-                        renderOut = data._ERROR_MESSAGE_LIST_[0];
+                        renderOut = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
                     }
                 } else if (data.renderOut) {
                     renderOut = renderOutProcessCb(data.renderOut);

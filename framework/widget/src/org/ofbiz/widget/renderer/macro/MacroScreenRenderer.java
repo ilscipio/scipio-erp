@@ -216,7 +216,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer) throws IOException {
-        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer)).shouldOutput();
+        return RenderTargetExpr.getRenderTargetState(contextHandler.getInitialContext(writer)).shouldOutput();
     }
     
     /**
@@ -226,7 +226,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer, Map<String, Object> context) throws IOException {
-        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer, context)).shouldOutput();
+        return RenderTargetExpr.getRenderTargetState(contextHandler.getInitialContext(writer, context)).shouldOutput();
     }
     
     

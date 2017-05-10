@@ -77,6 +77,15 @@ class ContextHandler {
         registerScreenRenderer(writer, context);
     }
     
+    public Map<String, Object> getInitialContext(Appendable writer, Map<String, Object> context) throws IOException {
+        return screenRenderer != null ? screenRenderer.initialContext : new HashMap<String, Object>();
+    }
+    
+    public Map<String, Object> getInitialContext(Appendable writer) throws IOException {
+        return screenRenderer != null ? screenRenderer.initialContext : new HashMap<String, Object>();
+    }
+    
+    
     /**
      * Creates a new context as source for data model for a new Environment, populated with given
      * initial values, in addition to anything we deem needed.

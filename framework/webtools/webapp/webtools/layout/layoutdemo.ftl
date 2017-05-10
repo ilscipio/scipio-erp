@@ -1211,6 +1211,12 @@
         "requestUri": "ajaxRender",
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
+    },
+    "PARTFTLBOUNDARY2": {
+        "title": "ajaxRender: Partial page, part-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3",
+        "requestUri": "ajaxRender",
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
     }
 }>
   <@script>

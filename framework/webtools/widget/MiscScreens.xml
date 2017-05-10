@@ -646,6 +646,7 @@ under the License.
     <screen name="TargetedRenderingTest">
         <section>
             <actions>
+                <set field="title" value="Targeted Rendering Test"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="LayoutDemo" />
                 <set field="activeSubMenuItem" value="${groovy: (context.debugMode ? 'LayoutDemoDebug' : 'LayoutDemo')}"/>
             </actions>
@@ -662,6 +663,15 @@ under the License.
                                         <html><html-template location="component://webtools/webapp/webtools/layout/targetedrenderingtest.ftl"/></html>
                                     </platform-specific>
                                 </container>
+                                <container id="tr-widget-container-2">
+                                    <decorator-screen name="TargetedRenderingTestSubDecorator">
+                                        <decorator-section name="body">
+                                            <container id="tr-widget-container-3">
+                                                <label text="Hello from sub-decorator body"/>
+                                            </container>
+                                        </decorator-section>
+                                    </decorator-screen>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsViewPermissionError}</label>
@@ -676,6 +686,37 @@ under the License.
     <screen name="TargetedRenderingTestDeepWidget1">
         <section name="TR-Widget-Deep-Section-2">
             <widgets><label text="Hello from widget within ftl file"/></widgets>
+        </section>
+    </screen>
+    
+    <screen name="TargetedRenderingTestSubDecorator">
+        <section>
+            <widgets>
+                <section name="TR-SubDec-Section-1">
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template><![CDATA[
+                                <div>
+                                    <p>We are inside sub decorator section 1</p>
+                                </div>
+                            ]]></html-template></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+                <section name="TR-SubDec-Section-2">
+                    <widgets>
+                        <screenlet>
+                            <platform-specific><html><html-template><![CDATA[
+                                <div>
+                                    <p>We are inside sub decorator section 2</p>
+                                    <@render type="section" name="body"/>
+                                    <p>We are inside sub decorator section 2</p>
+                                </div>
+                            ]]></html-template></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
         </section>
     </screen>
 

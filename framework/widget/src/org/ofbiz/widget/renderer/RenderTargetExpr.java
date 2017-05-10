@@ -19,7 +19,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.renderer.RenderWriter;
-import org.ofbiz.widget.model.HtmlWidget;
+import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.WidgetDocumentInfo;
@@ -260,6 +260,21 @@ public class RenderTargetExpr implements Serializable {
     }
     
     /**
+     * Returns true if target matched and currently outputting or if targeting disabled.
+     * <p>
+     * Currently (2017-05-09), this checks if writer is a RenderWriter; if so, returns true if
+     * is not discarding output. If not a RenderWriter, try to lookup the RenderTargetState
+     * in context and call {@link RenderTargetState#shouldOutput()}.
+     */
+    public static boolean shouldOutput(Appendable writer, Map<String, Object> context) {
+        if (writer instanceof RenderWriter) {
+            return !((RenderWriter) writer).isDiscarding();
+        } else {
+            return getRenderTargetState(context).shouldOutput();
+        }
+    }
+    
+    /**
      * Render Target State - Holds and manages the state information for targeted rendering.
      * <p>
      * NOTE: a reference is stored in both globalContext and request attributes,
@@ -342,6 +357,9 @@ public class RenderTargetExpr implements Serializable {
         
         /**
          * True if should output markup. This is only ever true if we matched the target.
+         * NOTE: Code in ofbiz source files should call
+         * {@link RenderTargetExpr#shouldOutput(Appendable, Map)} now instead in order to
+         * better centralize the logic.
          */
         public boolean shouldOutput() {
             return !finished && isTargetMatched();
@@ -371,6 +389,18 @@ public class RenderTargetExpr implements Serializable {
         }
         
         /**
+         * Sets up the Writer for targeted rendering if enabled and needed.
+         */
+        public Writer prepareWriter(Appendable writer, Map<String, Object> context) {
+            if (!(writer instanceof RenderWriter)) {
+                Writer w = (Writer) writer; // FIXME: currently assuming everything is a Writer, ofbiz utils already assume this
+                return SwitchRenderWriter.getInstance(w, false);
+            } else {
+                return (Writer) writer;
+            }
+        }
+        
+        /**
          * Checks if should execute and enter the widget, and updates state.
          * <p>
          * We ALWAYS have to go into the widget UNLESS it's explicitly skipped and unless
@@ -378,7 +408,7 @@ public class RenderTargetExpr implements Serializable {
          * to output markup/html.
          */
         public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) {
-            Appendable writerForElementRender = writer;
+            Appendable nextWriter = writer; 
             boolean matchRegistered = false;
             boolean shouldExecute;
             if (finished) {
@@ -387,6 +417,17 @@ public class RenderTargetExpr implements Serializable {
                 shouldExecute = true;
             } else {
                 shouldExecute = true; // by default, everything make contain our target(s).
+                
+                // SPECIAL: try to convert the writer, which may be either response.getWriter() or
+                // a StringWriter or something else, to a SwitchRenderWriter with outputting off.
+                // we do this check at EVERY element because there are numerous instances of Writer created
+                // everywhere; this is BEST-EFFORT attempt to intercept and convert them.
+                // WARN: TODO: REVIEW: not guaranteed to catch all... only time will tell...
+                if (!(nextWriter instanceof RenderWriter)) {
+                    Writer w = (Writer) nextWriter; // FIXME: currently assuming everything is a Writer, ofbiz utils already assume this
+                    nextWriter = SwitchRenderWriter.getInstance(w, false);
+                }
+
                 String token = getNextToken();
                 char type = token.charAt(0);
                 String name = token.substring(1);
@@ -420,34 +461,37 @@ public class RenderTargetExpr implements Serializable {
                         }
                     }
                     
-                } else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
-                    /* ***************************************************************************************
-                     * !!! FIXME !!!
-                     * this logic is a major flaw in the targetting.
-                     * we currently cannot control the Freemarker output at all, so we're
-                     * forced to do all-or-nothing: we cannot enter any Freemarker files until we have
-                     * already found the target and outputting is enabled.
-                     * this means we cannot have things like intermediate FTL files implementing the
-                     * decorator, even if the target is a widget included by the FTL.
-                     * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
-                     * 
-                     * the solution involves manipulating Environment.setOut to a dummy writer,
-                     * but it's complicated by the "screens", "sections", and other objects that hold references
-                     * to the writer, and various problems.
-                     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
-                     * only possible is converting macros from the standard API to java transforms to manipulate writer, 
-                     * but this is a nightmare)
-                     * 
-                     * to clarify, there are 2 scenarios:
-                     * 1) trying to target a widget element that is included through an FTL file, 
-                     *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
-                     *    -> FIXME A.S.A.P.
-                     * 2) trying to target an element (macro) defined in an FTL file itself
-                     *    -> realistically, this could be practically impossible or too damaging to our code to implement.
-                     */
-                    if (!shouldOutput()) {
-                        shouldExecute = false;
-                    }
+                    // NOTE: the following double-commented hack for PlatformSpecific
+                    // is being handled a different way to address point number 1.
+                    // comment is left for reference and because half the issues still apply:
+//                } else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
+//                    /* ***************************************************************************************
+//                     * !!! FIXME !!!
+//                     * this logic is a major flaw in the targetting.
+//                     * we currently cannot control the Freemarker output at all, so we're
+//                     * forced to do all-or-nothing: we cannot enter any Freemarker files until we have
+//                     * already found the target and outputting is enabled.
+//                     * this means we cannot have things like intermediate FTL files implementing the
+//                     * decorator, even if the target is a widget included by the FTL.
+//                     * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
+//                     * 
+//                     * the solution involves manipulating Environment.setOut to a dummy writer,
+//                     * but it's complicated by the "screens", "sections", and other objects that hold references
+//                     * to the writer, and various problems.
+//                     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
+//                     * only possible is converting macros from the standard API to java transforms to manipulate writer, 
+//                     * but this is a nightmare)
+//                     * 
+//                     * to clarify, there are 2 scenarios:
+//                     * 1) trying to target a widget element that is included through an FTL file, 
+//                     *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
+//                     *    -> FIXME A.S.A.P.
+//                     * 2) trying to target an element (macro) defined in an FTL file itself
+//                     *    -> realistically, this could be practically impossible or too damaging to our code to implement.
+//                     */
+//                    if (!shouldOutput()) {
+//                        shouldExecute = false;
+//                    }
                     
                 /* ***************************************************************************************
                    TODO? dedicated selector for include/decorator does not make much sense, because name even with location is an unreliable
@@ -517,10 +561,7 @@ public class RenderTargetExpr implements Serializable {
                 if (shouldExecute) {
                     if (isTargetMatched()) {
                         // MATCHED!
-                        ;
-                        /* NOTE: the following code was a first alternative attempt to
-                            to solve FTL boundaries issues, but it's simply failing
-                            because there too many different writers created
+                        /* we don't need to check because we just converted it above
                         if (writer instanceof RenderWriter) {
                             ...
                         } else {
@@ -532,6 +573,9 @@ public class RenderTargetExpr implements Serializable {
                                     + "]", module);
                         }
                         */
+                        // Turn on the switch and hope for the best
+                        SwitchRenderWriter switchWriter = (SwitchRenderWriter) nextWriter;
+                        switchWriter.useOrigWriter();
                     } else {
                         if (widget instanceof ModelScreenWidget) {
                             // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
@@ -547,7 +591,7 @@ public class RenderTargetExpr implements Serializable {
                     }
                 }
             }
-            return new ExecutionInfoImpl(widget, shouldExecute, matchRegistered, writerForElementRender);
+            return new ExecutionInfoImpl(widget, shouldExecute, matchRegistered, nextWriter);
         }
         
         public interface ExecutionInfo {
@@ -580,25 +624,31 @@ public class RenderTargetExpr implements Serializable {
             final ModelWidget widget;
             final boolean shouldExec;
             final boolean matchReg;
-            final Appendable writerForElement;
+            final Appendable writerForElem;
             
             ExecutionInfoImpl(ModelWidget widget, boolean shouldExec,
-                    boolean matchReg, Appendable writerForElement) {
+                    boolean matchReg, Appendable writerForElem) {
                 this.widget = widget;
                 this.shouldExec = shouldExec;
                 this.matchReg = matchReg;
-                this.writerForElement = writerForElement;
+                this.writerForElem = writerForElem;
             }
             
             @Override
             public boolean shouldExecute() { return shouldExec; }
             @Override
-            public Appendable getWriterForElementRender() { return writerForElement; }
+            public Appendable getWriterForElementRender() { return writerForElem; }
             @Override
             public void handleFinished(Map<String, Object> context) {
                 if (matchReg) {
                     if (isTargetMatched()) {
+                        // OUTPUTTING DONE
+                        // after this, assume the rest is not needed.
+                        // NOTE: there are still individual renderXxxEnd calls that happen
+                        // after this, and they are not filtered out by the handleShouldExecute call,
+                        // but rather they get stopped by SwitchRenderWriter or RenderTargetState.shouldOuput. 
                         finished = true;
+                        ((SwitchRenderWriter) writerForElem).useAltWriter();
                     } else {
                         deregisterLastMatch();
                     }
@@ -626,6 +676,8 @@ public class RenderTargetExpr implements Serializable {
             public boolean shouldOutput() { return true; }
             @Override
             public void markFinished() { ; }
+            @Override
+            public Writer prepareWriter(Appendable writer, Map<String, Object> context) { return (Writer) writer; }
             @Override
             public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) { return new DisabledExecutionInfoImpl(writer); }
             

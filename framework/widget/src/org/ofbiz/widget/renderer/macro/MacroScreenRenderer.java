@@ -202,12 +202,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         return environment;
     }
 
-    /**
-     * SCIPIO: Helper to get targeted rendering state from the implied context.
-     */
-    RenderTargetState getRenderTargetState(Appendable writer) throws IOException {
-        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer));
-    }
+//    /**
+//     * SCIPIO: Helper to get targeted rendering state from the implied context.
+//     */
+//    RenderTargetState getRenderTargetState(Appendable writer) throws IOException {
+//        return RenderTargetExpr.getRenderTargetState(contextHandler.getRenderContext(writer));
+//    }
     
     /**
      * SCIPIO: Returns true if should render out.
@@ -216,7 +216,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer) throws IOException {
-        return RenderTargetExpr.getRenderTargetState(contextHandler.getInitialContext(writer)).shouldOutput();
+        return RenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
     
     /**
@@ -226,7 +226,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer, Map<String, Object> context) throws IOException {
-        return RenderTargetExpr.getRenderTargetState(contextHandler.getInitialContext(writer, context)).shouldOutput();
+        // NOTE: explicitly using the initial context instead of passed one 
+        return RenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
     
     

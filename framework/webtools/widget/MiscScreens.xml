@@ -642,5 +642,41 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <screen name="TargetedRenderingTest">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="LayoutDemo" />
+                <set field="activeSubMenuItem" value="${groovy: (context.debugMode ? 'LayoutDemoDebug' : 'LayoutDemo')}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="TR-Widget-Section-1">
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <container id="tr-widget-container-1">
+                                    <platform-specific>
+                                        <html><html-template location="component://webtools/webapp/webtools/layout/targetedrenderingtest.ftl"/></html>
+                                    </platform-specific>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TargetedRenderingTestDeepWidget1">
+        <section name="TR-Widget-Deep-Section-2">
+            <widgets><label text="Hello from widget within ftl file"/></widgets>
+        </section>
+    </screen>
 
 </screens>

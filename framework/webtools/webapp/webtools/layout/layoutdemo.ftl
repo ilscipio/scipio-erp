@@ -1205,6 +1205,12 @@
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content",
         "jQueryElemExpr": "#screenlet_1"
+    },
+    "PARTFTLBOUNDARY1": {
+        "title": "ajaxRender: Partial page, non-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $TR-Widget-Deep-Section-2",
+        "requestUri": "ajaxRender",
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
     }
 }>
   <@script>

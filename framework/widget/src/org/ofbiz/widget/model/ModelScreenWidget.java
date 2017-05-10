@@ -731,7 +731,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Container extends ModelScreenWidget {
+    public static final class Container extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "container";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander styleExdr;
@@ -817,7 +817,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Screenlet extends ModelScreenWidget {
+    public static final class Screenlet extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "screenlet";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander titleExdr;
@@ -1012,7 +1012,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class HorizontalSeparator extends ModelScreenWidget {
+    public static final class HorizontalSeparator extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "horizontal-separator";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander styleExdr;
@@ -1070,7 +1070,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
     
-    public static final class IncludeScreen extends ModelScreenWidget {
+    public static final class IncludeScreen extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-screen";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -1166,7 +1166,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class DecoratorScreen extends ModelScreenWidget {
+    public static final class DecoratorScreen extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "decorator-screen";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -1494,7 +1494,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Label extends ModelScreenWidget {
+    public static final class Label extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "label";
         private final FlexibleStringExpander textExdr;
         private final FlexibleStringExpander idExdr;
@@ -1564,7 +1564,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Form extends ModelScreenWidget {
+    public static final class Form extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-form";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -1660,7 +1660,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Grid extends ModelScreenWidget {
+    public static final class Grid extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-grid";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -1762,7 +1762,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Tree extends ModelScreenWidget {
+    public static final class Tree extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-tree";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -2147,7 +2147,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class Menu extends ModelScreenWidget {
+    public static final class Menu extends ModelScreenWidget implements FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-menu";
         private final FlexibleStringExpander nameExdr;
         private final FlexibleStringExpander locationExdr;
@@ -2292,7 +2292,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class ScreenLink extends ModelScreenWidget {
+    public static final class ScreenLink extends ModelScreenWidget implements FlexibleIdAttrWidget, FlexibleNameAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "link";
         private final Link link;
         private final ScreenImage image;
@@ -2442,7 +2442,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class ScreenImage extends ModelScreenWidget {
+    public static final class ScreenImage extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "image";
         private final Image image;
 
@@ -2541,7 +2541,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         }
     }
 
-    public static final class PortalPage extends ModelScreenWidget {
+    public static final class PortalPage extends ModelScreenWidget implements FlexibleIdAttrWidget { // SCIPIO: interfaces
         public static final String TAG_NAME = "include-portal-page";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander confModeExdr;

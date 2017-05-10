@@ -181,9 +181,18 @@ public abstract class ModelWidget implements Serializable {
     public abstract String getContainerLocation();
     
     /**
-     * SCIPIO: Returns widget type, usually same as tag name (for post-construction logging).
+     * SCIPIO: Returns widget type, usually same as tag name 
+     * 
      */
     public abstract String getWidgetType();
+    
+    /**
+     * SCIPIO: Returns tag name, usually same as widget type 
+     * (for post-construction logging, dynamic queries, targeted rendering).
+     */
+    public String getTagName() {
+        return getWidgetType();
+    }
     
     /**
      * SCIPIO: Returns location#name widget string.
@@ -202,6 +211,27 @@ public abstract class ModelWidget implements Serializable {
      */
     public String getLogWidgetLocationString() {
         return " (" + getWidgetType() +" widget: " + getFullLocationAndName() + ")";
+    }
+    
+    /**
+     * SCIPIO: For any ModelWidget that supports a <code>id="..."</code> attribute.
+     */
+    public interface IdAttrWidget {
+        String getId();
+    }
+    
+    /**
+     * SCIPIO: For any ModelWidget that supports a flexible <code>name="..."</code> attribute.
+     */
+    public interface FlexibleNameAttrWidget {
+        String getName(Map<String, Object> context);
+    }
+
+    /**
+     * SCIPIO: For any ModelWidget that supports a flexible <code>id="..."</code> attribute.
+     */
+    public interface FlexibleIdAttrWidget { // no need yet: extends IdAttrWidget
+        String getId(Map<String, Object> context);
     }
     
 }

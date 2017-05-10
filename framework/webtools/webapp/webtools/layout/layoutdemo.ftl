@@ -1226,7 +1226,7 @@
     function getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr) {
         var out = jQuery(jQueryElemExpr, jQuery(renderOut));
         if (out.length) {
-            return out.html();
+            return out.wrap('<div/>').parent().html();
         } else {
             return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
         }

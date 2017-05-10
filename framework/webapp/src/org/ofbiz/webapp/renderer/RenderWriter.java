@@ -42,7 +42,7 @@ public abstract class RenderWriter extends Writer {
     }
 
     /**
-     * Delegates to another writer, while keeping a reference to an original writer.
+     * Delegates to another writer, while keeping an optional reference to an original writer.
      * For reuse.
      */
     public static class DelegRenderWriter extends RenderWriter {
@@ -154,27 +154,27 @@ public abstract class RenderWriter extends Writer {
         /**
          * Creates with explicit alt (off) writer and initial state.
          */
-        public static SwitchRenderWriter getInstance(Writer origWriter, Writer altWriter, boolean stateUseOrig) {
-            return new SwitchRenderWriter(origWriter, altWriter, stateUseOrig);
+        public static SwitchRenderWriter getInstance(Writer origWriter, Writer altWriter, boolean useOrigWriter) {
+            return new SwitchRenderWriter(origWriter, altWriter, useOrigWriter);
         }
         
         /**
          * Creates with dummy alt (off) writer and initial state.
          */
-        public static SwitchRenderWriter getInstance(Writer origWriter, boolean stateUseOrig) {
-            return new SwitchRenderWriter(origWriter, stateUseOrig);
+        public static SwitchRenderWriter getInstance(Writer origWriter, boolean useOrigWriter) {
+            return new SwitchRenderWriter(origWriter, useOrigWriter);
         }
         
-        public void setState(boolean useOrig) {
-            this.targetWriter = useOrig ? this.origWriter : this.altWriter;
+        public void setState(boolean useOrigWriter) {
+            this.targetWriter = useOrigWriter ? this.origWriter : this.altWriter;
         }
         
-        public void setUseOrig() {
+        public void useOrigWriter() {
             this.targetWriter = this.origWriter;
         }
         
-        public void setUseAlt() {
-            this.targetWriter = this.origWriter;
+        public void useAltWriter() {
+            this.targetWriter = this.altWriter;
         }
 
         public Writer getAltWriter() {

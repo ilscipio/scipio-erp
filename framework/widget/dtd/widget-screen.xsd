@@ -297,12 +297,16 @@ under the License.
                                 level that don't match the specified name.
                             NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
                     * "%" - generic widget element selector, matches the element tag name (most elements supported, not guaranteed all).
-                            optionally can add brackets "tagname[name=SomeName]" or "tagname[id='some-id']" to only match elements with given name or id.
+                            optionally can add brackets "%tagname[name=SomeName]" or "%tagname[id='some-id']" to only match elements with given name or id.
                             NOTE: only name and id attributes are supported, and support is best-effort.
                             NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
                             FIXME: the attributes in brackets will not work properly inside contains-expressions
                             FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
-                    * "@" - TODO: NOT IMPLEMENTED (currently not possible): generic FTL macro invocation selector
+                    * "@" - LIMITED eneric FTL directive invocation selector, matches @section and @container invocations
+                            supports "@macroname[id=some-id]" attribute (only ID).
+                            NOTE: it is usually better to use the #id selector instead of this; it will also match
+                                those few FTL directives.
+                            
                     NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
 
                     Other Special Characters:

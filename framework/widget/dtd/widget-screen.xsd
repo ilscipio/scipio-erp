@@ -290,22 +290,27 @@ under the License.
                     users and renderer whether the intent was to write a blacklist or whitelist, respectively.
                     
                     Matching Element Types:
-                    * "$" - matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
-                    * "#" - matches "container", "screenlet" elements "id" attribute value - considered GLOBAL in scope (across includes)
-                    * "~" - matches "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                    * "$" - specific, matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
+                            also matches FTL "@virtualSection" directive invocation "name" argument.
+                    * "#" - specific, matches "container", "screenlet" elements "id" attribute value - considered GLOBAL in scope (across includes)
+                            also matches some FTL directive invocations that support IDs (see below)
+                    * "~" - specific, matches "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
                             NOTE: this uses an optimization to automatically blacklist the decorator-section-include invocations on the current
                                 level that don't match the specified name.
                             NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
-                    * "%" - generic widget element selector, matches the element tag name (most elements supported, not guaranteed all).
+                    * "^" - specific, special 'skipping' decorator-section matcher
+                            TODO: NOT IMPLEMENTED
+                    * "%" - generic, widget element selector, matches the element tag name (most elements supported, not guaranteed all).
                             optionally can add brackets "%tagname[name=SomeName]" or "%tagname[id='some-id']" to only match elements with given name or id.
                             NOTE: only name and id attributes are supported, and support is best-effort.
                             NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
                             FIXME: the attributes in brackets will not work properly inside contains-expressions
                             FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
-                    * "@" - LIMITED eneric FTL directive invocation selector, matches @section and @container invocations
+                    * "@" - generic, LIMITED FTL directive invocation selector, matches "@section" and "@container" invocations
                             supports "@macroname[id=some-id]" attribute (only ID).
                             NOTE: it is usually better to use the #id selector instead of this; it will also match
                                 those few FTL directives.
+                            FIXME: the attributes in brackets will not work properly inside contains-expressions
                             
                     NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
 

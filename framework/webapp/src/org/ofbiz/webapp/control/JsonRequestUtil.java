@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 
 /**
@@ -20,9 +21,9 @@ public abstract class JsonRequestUtil {
 
     public static final String VIEWASJSON_REQPARAM = "scpViewAsJson";
     
-    private static final List<String> allowedOutParamNames = Collections.unmodifiableList(Arrays.asList(new String[] {
+    private static final List<String> allowedOutParamNames = UtilMisc.unmodifiableArrayList(
         "_ERROR_MESSAGE_", "_ERROR_MESSAGE_LIST_", "_EVENT_MESSAGE_", "_EVENT_MESSAGE_LIST_"
-    }));
+    );
     
     //private static final String defaultViewAsJsonRequestUri = "jsonExplicit";
     

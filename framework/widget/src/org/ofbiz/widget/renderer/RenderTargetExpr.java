@@ -18,13 +18,16 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelWidget;
-import org.ofbiz.widget.model.ModelWidgetVisitor;
 import org.ofbiz.widget.model.WidgetDocumentInfo;
+import org.ofbiz.widget.model.ftl.FtlWrapperWidget;
+import org.ofbiz.widget.model.ftl.ModelVirtualSectionFtlWidget;
+import org.ofbiz.widget.model.ftl.NonWidgetWrapperWidget;
 import org.w3c.dom.Element;
 
 /**
@@ -33,7 +36,8 @@ import org.w3c.dom.Element;
  * <p>
  * The query expression is usually passed as a string as the "scpRenderTargetExpr" request parameter. 
  * <p>
- * TODO: NOT WORKING, NOT IMPLEMENTED, WORK-IN-PROGRESS - DOCUMENTATION IS PLANNING UNTIL FURTHER NOTICE
+ * WARN: THIS FEATURE IS IN EARLY STAGES AND SUBJECT TO CHANGE.
+ * More documentation can be found in widget-screen.xsd, "contains" expression attribute.
  * <p>
  * In most case (by default) it is physically impossible for the renderer to know the path from top screen element to 
  * a deep-nested element and which elements it doesn't need to render. So the client may need to specify
@@ -48,6 +52,8 @@ import org.w3c.dom.Element;
  * <p>
  * WARN: There is limited support for wildcards in the query expression, and such wildcards cannot
  * be optimized, so they should be combined with exact-name sections preceding the wildcarded names.
+ * Wildcards and bracketed attributes should only be specified as the last entry in the query,
+ * and should not be the only entry; otherwise no optimization is possible.
  * <p>
  * Example expression strings:
  * <pre>
@@ -93,18 +99,20 @@ public class RenderTargetExpr implements Serializable {
     public static final char MET_SECNAME = '$';
     public static final char MET_ELEMID = '#';
     public static final char MET_DECSECINCL = '~';
+    public static final char MET_DECSEC = '^';
     public static final char MET_WIDGETELEM = '%';
-    public static final char MET_FTLELEM = '@'; // TODO: NOT IMPLEMENTED
+    public static final char MET_FTLELEM = '@'; // NOTE: limited implementation
+    
     /**
      * Matching Element Type character prefixes. Each of these matches a widget element tag OR a type of attribute.
      * NOTE: These are shared between {@link RenderTargetExpr} and {@link ContainsExpr} so the
      * language is recognizable and consistent.
      */
-    public static final Set<Character> MET_ALL = Collections.unmodifiableSet(new HashSet<Character>(Arrays.asList(new Character[] {
-            MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_WIDGETELEM, MET_FTLELEM
-    })));
+    public static final Set<Character> MET_ALL = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC, MET_WIDGETELEM, MET_FTLELEM);
     public static final String MET_ALL_STR = StringUtils.join(MET_ALL, ", "); // for log and exceptions
-
+    public static final Set<Character> MET_GENERIC = UtilMisc.unmodifiableHashSet(MET_WIDGETELEM, MET_FTLELEM);
+    public static final Set<Character> MET_SPECIFIC = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC);
+    
     public static final char WILDCARD = '*';
     public static final String WILDCARD_STRING = String.valueOf(WILDCARD);
     
@@ -349,6 +357,12 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static Token getInstance(String strExpr, char type, String name, Map<String, String> attrMap) throws IllegalArgumentException {
+            // FIXME: we will deny attributes on anything that isn't generic matcher for now
+            // this will prevent more obscure errors until we fix the comparison code
+            if (!MET_GENERIC.contains(type) && !attrMap.isEmpty())
+                throw new IllegalArgumentException("Render target expression has bracketed attributes"
+                        + " - this is currently only supported for prefix types \"" 
+                        + MET_WIDGETELEM + "\" and \"" + MET_FTLELEM + "\"");
             Token token;
             switch(type) {
             case MET_SECNAME:
@@ -443,14 +457,14 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static class WidgetSectionMatcher extends Token {
-            public WidgetSectionMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+            protected WidgetSectionMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
             }
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
-                if (widget instanceof ModelScreenWidget.Section && 
+                if ((widget instanceof ModelScreenWidget.Section || widget instanceof ModelVirtualSectionFtlWidget) && 
                     matchesWidget(widget, context, null, idAttr, name)) {
                     state.registerMatch(widget);
                     execInfo.matchRegistered = true;
@@ -459,7 +473,7 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static class IdMatcher extends Token {
-            public IdMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+            protected IdMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
             }
 
@@ -474,7 +488,7 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static class DecoratorSectionIncludeMatcher extends Token {
-            public DecoratorSectionIncludeMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+            protected DecoratorSectionIncludeMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
             }
 
@@ -496,7 +510,7 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static class GenericWidgetElementMatcher extends Token {
-            public GenericWidgetElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+            protected GenericWidgetElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
             }
 
@@ -511,7 +525,7 @@ public class RenderTargetExpr implements Serializable {
         }
         
         public static class GenericFtlElementMatcher extends Token {
-            public GenericFtlElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+            protected GenericFtlElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
             }
 
@@ -1307,65 +1321,6 @@ public class RenderTargetExpr implements Serializable {
             public boolean matchesAllNames(List<String> nameExprList) { return false; }
             @Override
             public boolean matchesAllNameTokens(List<Token> nameTokenList) { return false; }
-        }
-        
-    }
-    
-    /******************************************************/
-    /* Widget Helpers */
-    /******************************************************/
-    
-    /**
-     * Identifies a ModelWidget adapter that doesn't actually represent a widget language XML element.
-     */
-    public interface NonWidgetWrapperWidget {
-    }
-    
-    /**
-     * Identifies a ModelWidget adapter that doesn't actually represent a widget language XML element
-     * but a Freemarker language element instead.
-     */
-    public interface FtlWrapperWidget extends NonWidgetWrapperWidget{
-    }
-    
-    /**
-     * TODO: Special wrapper for FTL elements to pass off as widgets.
-     * Currently useless, no support for FTL matching and support uncertain.
-     */
-    public static class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, ModelWidget.IdAttrWidget {
-        private final String dirType;
-        private final String location;
-        private final String id;
-        
-        public ModelFtlWidget(String name, String dirType, String location, String id) {
-            super(name);
-            this.dirType = dirType;
-            this.location = location;
-            this.id = id;
-        }
-
-        @Override
-        public void accept(ModelWidgetVisitor visitor) throws Exception {
-        }
-
-        @Override
-        public String getContainerLocation() {
-            return location;
-        }
-
-        @Override
-        public String getWidgetType() {
-            return "ftl-" + dirType;
-        }
-        
-        @Override
-        public String getTagName() {
-            return dirType;
-        }
-
-        @Override
-        public String getId() {
-            return id;
         }
         
     }

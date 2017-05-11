@@ -51,6 +51,7 @@ to this one.
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.container_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+<@renderTarget dirType="container" dirArgs=args>
   <#if open>
     <#local attribs = makeAttribMapFromArgMap(args)>
     <#if !elem?has_content || elem == "container">
@@ -77,6 +78,7 @@ to this one.
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
   </#if>
+</@renderTarget>
 </#macro>
 
 <#--
@@ -818,7 +820,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 <#macro section args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.section_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-
+<@renderTarget dirType="section" dirArgs=args>
   <#if open>
     <#if !type?has_content>
       <#local type = "default">
@@ -835,6 +837,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     containerClass=containerClass containerId=containerId containerStyle=containerStyle contentClass=contentClass contentStyle=contentStyle
     attribs=attribs containerAttribs=containerAttribs contentAttribs=contentAttribs
     open=open close=close passArgs=passArgs><#nested /></@section_core>
+</@renderTarget>
 </#macro>
 
 <#-- Core implementation of @section. 

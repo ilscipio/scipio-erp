@@ -275,6 +275,7 @@ under the License.
                     
                     This uses close syntax to the targeted rendering "scpRenderTargetExpr" parameter,
                     which may be passed to ajax render and other render modes.
+                    This documentation also describes some of the features of the query parameter.
                     
                     Format:
                     Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
@@ -289,14 +290,26 @@ under the License.
                     users and renderer whether the intent was to write a blacklist or whitelist, respectively.
                     
                     Matching Element Types:
-                    * "$" - "section" element "name" attribute value - considered GLOBAL in scope (across includes)
-                    * "#" - "container", "screenlet" element "id" attribute value - considered GLOBAL in scope (across includes)
-                    * "%" - "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                    * "$" - matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
+                    * "#" - matches "container", "screenlet" elements "id" attribute value - considered GLOBAL in scope (across includes)
+                    * "~" - matches "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                            NOTE: this uses an optimization to automatically blacklist the decorator-section-include invocations on the current
+                                level that don't match the specified name.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                    * "%" - generic widget element selector, matches the element tag name (most elements supported, not guaranteed all).
+                            optionally can add brackets "tagname[name=SomeName]" or "tagname[id='some-id']" to only match elements with given name or id.
+                            NOTE: only name and id attributes are supported, and support is best-effort.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                            FIXME: the attributes in brackets will not work properly inside contains-expressions
+                            FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
+                    * "@" - TODO: NOT IMPLEMENTED (currently not possible): generic FTL macro invocation selector
                     NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
 
                     Other Special Characters:
                     * "*" - wilcard
+                            WARN: limited support in scpRenderTargetExpr parameter; may prevent optimizations with contains-expression interaction.
                     * "!" - exclude/negation
+                            NOTE: not supported in scpRenderTargetExpr parameter
 
                     Specificity: 
                     Names without wildcards always match first, followed by partial wildcard, and finally full wildcard.

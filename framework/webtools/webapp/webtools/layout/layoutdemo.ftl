@@ -1217,6 +1217,12 @@
         "requestUri": "ajaxRender",
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
+    },
+    "PARTFTLSEL1": {
+        "title": "ajaxRender: Partial page, LIMITED FTL macro selection test: TargetedRenderingTest -> $Global-Column-Main $TR-Widget-Section-1 @section #tr-ftl-container-1",
+        "requestUri": "ajaxRender",
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
     }
 }>
   <@script>

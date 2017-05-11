@@ -947,4 +947,21 @@ public class UtilMisc {
         return res != null ? res : defaultValue;
     }
 
+    /**
+     * SCIPIO: Returns an unmodifiable hash set.
+     * we use this pattern constantly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> unmodifiableHashSet(T... elems) {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(elems)));
+    }
+    
+    /**
+     * SCIPIO: Returns an unmodifiable array list
+     * we use this pattern constantly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> unmodifiableArrayList(T... elems) {
+        return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(elems)));
+    }
 }

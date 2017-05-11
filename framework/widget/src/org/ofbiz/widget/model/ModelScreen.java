@@ -252,7 +252,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             return;
         }
         try {
-            renderScreenStringCore(writer, context, screenStringRenderer);
+            renderScreenStringCore(execInfo.getWriterForElementRender(), context, screenStringRenderer);
         } finally {
             execInfo.handleFinished(context); // SCIPIO: return logic
         }

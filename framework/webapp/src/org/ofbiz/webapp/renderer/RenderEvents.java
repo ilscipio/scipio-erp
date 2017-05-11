@@ -18,6 +18,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.webapp.control.JsonRequestUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerException;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
@@ -34,11 +35,7 @@ public abstract class RenderEvents {
     public static final String module = RenderEvents.class.getName();
     
     public static final String RENDER_VIEW_ATTR_PREFIX = "renderView_";
-    
-    public static final List<String> allowedOutParamNames = Collections.unmodifiableList(Arrays.asList(new String[] {
-        "_ERROR_MESSAGE_", "_ERROR_MESSAGE_LIST_", "_EVENT_MESSAGE_", "_EVENT_MESSAGE_LIST_"
-    }));
-    
+
     protected RenderEvents() {
     }
 
@@ -74,7 +71,6 @@ public abstract class RenderEvents {
             
             RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
             ViewFactory viewFactory = rh.getViewFactory();
-            StringWriter sw = new StringWriter();
             
             // SCIPIO: FIXME?: DUPLICATED FROM RequestHandler.renderView - should de-duplicate
             
@@ -139,12 +135,11 @@ public abstract class RenderEvents {
 
             if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType, module);
 
-            // TODO: REVIEW
-//            boolean viewNoCache = viewMap.noCache;
-//            if (viewNoCache) {
-//               UtilHttp.setResponseBrowserProxyNoCache(resp);
-//               if (Debug.verboseOn()) Debug.logVerbose("Sending no-cache headers for view [" + nextPage + "]", module);
-//            }
+            boolean viewNoCache = viewMap.noCache;
+            if (viewNoCache) {
+               UtilHttp.setResponseBrowserProxyNoCache(resp);
+               if (Debug.verboseOn()) Debug.logVerbose("Sending no-cache headers for view [" + nextPage + "]", module);
+            }
 
             try {
                 if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
@@ -153,7 +148,12 @@ public abstract class RenderEvents {
                 // SCIPIO: custom
                 if (vh instanceof ViewHandlerExt) {
                     ViewHandlerExt vhe = (ViewHandlerExt) vh;
-                    vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
+                    StringWriter sw = new StringWriter();
+                    try {
+                        vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
+                    } finally {
+                        JsonRequestUtil.getRenderOutParams(request).put("renderOut", sw.toString());
+                    }
                 } else {
                     throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
                 }
@@ -163,7 +163,6 @@ public abstract class RenderEvents {
                 throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
             }
             
-            getRenderOutParams(request).put("renderOut", sw.toString());
             // NOTE: extra params may be in scipioOutParams req attr map or named in scipioOutAttrNames req attr list
         } catch(RequestHandlerException e) {
             Debug.logError(e, "Request handler error while rendering view: " + view, module);
@@ -174,14 +173,10 @@ public abstract class RenderEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
             return "error";
         } finally {
-            getRenderOutAttrNames(request).addAll(getAllowedOutParamNames(request));
+            JsonRequestUtil.getRenderOutAttrNames(request).addAll(JsonRequestUtil.getDefaultAllowedParamNames(request));
         }
         
         return "success";
-    }
-
-    public static List<String> getAllowedOutParamNames(HttpServletRequest request) {
-        return allowedOutParamNames;
     }
     
     private static String getStrParam(HttpServletRequest request, String name, String attrPrefix) {
@@ -192,24 +187,5 @@ public abstract class RenderEvents {
             return request.getParameter(name);
         }
     }
-    
-    // FIXME: duplicated from CommonEvents due to build problems
-    private static Map<String, Object> getRenderOutParams(HttpServletRequest request) { // SCIPIO
-        Map<String, Object> outParams = UtilGenerics.checkMap(request.getAttribute("scipioOutParams"));
-        if (outParams == null) {
-            outParams = new HashMap<>();
-        }
-        request.setAttribute("scipioOutParams", outParams);
-        return outParams;
-    }
-    // FIXME: duplicated from CommonEvents due to build problems
-    private static List<String> getRenderOutAttrNames(HttpServletRequest request) { // SCIPIO
-        List<String> outAttrNames = UtilGenerics.checkList(request.getAttribute("scipioOutAttrNames"));
-        if (outAttrNames == null) {
-            outAttrNames = new ArrayList<>();
-        }
-        request.setAttribute("scipioOutAttrNames", outAttrNames);
-        return outAttrNames;
-    }
-
+  
 }

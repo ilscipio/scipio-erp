@@ -59,6 +59,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
+import org.ofbiz.webapp.control.JsonRequestUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 
 /**
@@ -303,18 +304,7 @@ public class CommonEvents {
      * NOTE: this is important for security reasons.
      */
     public static String jsonResponseFromRequestAttributesExplicit(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> outAttrMap = getRenderOutParamsOrNull(request);
-        Map<String, Object> attrMap = (outAttrMap != null) ? UtilHttp.transformJSONAttributeMap(outAttrMap) : new HashMap<String, Object>();
-        List<String> attrNames = getRenderOutAttrNamesOrNull(request);
-        if (attrNames != null && attrNames.size() > 0) {
-            // TODO: optimize
-            Map<String, Object> allAttrMap = UtilHttp.getJSONAttributeMap(request);
-            for (String attr : attrNames) {
-                if (allAttrMap.containsKey(attr)) {
-                    attrMap.put(attr, allAttrMap.get(attr));
-                }
-            }
-        }
+        Map<String, Object> attrMap = JsonRequestUtil.collectRenderOutAttributes(request);
         try {
             JSON json = JSON.from(attrMap);
             writeJSONtoResponse(json, request.getMethod(), response);
@@ -322,32 +312,6 @@ public class CommonEvents {
             return "error";
         }
         return "success";
-    }
-    
-    public static Map<String, Object> getRenderOutParams(HttpServletRequest request) { // SCIPIO
-        Map<String, Object> outParams = UtilGenerics.checkMap(request.getAttribute("scipioOutParams"));
-        if (outParams == null) {
-            outParams = new HashMap<>();
-        }
-        request.setAttribute("scipioOutParams", outParams);
-        return outParams;
-    }
-    
-    public static Map<String, Object> getRenderOutParamsOrNull(HttpServletRequest request) { // SCIPIO
-        return UtilGenerics.checkMap(request.getAttribute("scipioOutParams"));
-    }
-    
-    public static List<String> getRenderOutAttrNames(HttpServletRequest request) { // SCIPIO
-        List<String> outAttrNames = UtilGenerics.checkList(request.getAttribute("scipioOutAttrNames"));
-        if (outAttrNames == null) {
-            outAttrNames = new ArrayList<>();
-        }
-        request.setAttribute("scipioOutAttrNames", outAttrNames);
-        return outAttrNames;
-    }
-    
-    public static List<String> getRenderOutAttrNamesOrNull(HttpServletRequest request) { // SCIPIO
-        return UtilGenerics.checkList(request.getAttribute("scipioOutAttrNames"));
     }
 
     private static void writeJSONtoResponse(JSON json, String httpMethod, HttpServletResponse response) throws UnsupportedEncodingException {

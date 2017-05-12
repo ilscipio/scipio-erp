@@ -67,4 +67,22 @@ public abstract class RequestUtil {
         return msg;
     }
     
+    public static String getGenericErrorMessage(Locale locale) {
+        String msg = null;
+        try {
+            msg = UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", locale);
+        } catch(Throwable t) {
+            ;
+            //Debug.logError(t, module);
+        }
+        if (UtilValidate.isEmpty(msg)) {
+            msg = GENERICERRMSG_EN_FALLBACK;
+        }
+        return msg;
+    }
+    
+    public static String getGenericErrorMessage() {
+        return getGenericErrorMessage(Locale.ENGLISH);
+    }
+    
 }

@@ -71,7 +71,7 @@ import bsh.Interpreter;
  * @see <code>widget-form.xsd</code>
  */
 @SuppressWarnings("serial")
-public abstract class ModelForm extends ModelWidget {
+public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAttrWidget { // SCIPIO: interfaces
 
     /*
      * ----------------------------------------------------------------------- *
@@ -1112,6 +1112,11 @@ public abstract class ModelForm extends ModelWidget {
         }
     }
 
+    @Override
+    public String getId() { // SCIPIO: new
+        return getContainerId();
+    }
+    
     public String getContainerStyle() {
         return this.containerStyle;
     }

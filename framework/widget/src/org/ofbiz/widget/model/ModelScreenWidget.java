@@ -1599,8 +1599,18 @@ public abstract class ModelScreenWidget extends ModelWidget {
 
             try {
                 ModelForm modelForm = getModelForm(context);
-                FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
-                renderer.render(writer, context);
+                // SCIPIO: targeted rendering applicability check.
+                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
+                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                if (!execInfo.shouldExecute()) {
+                    return;
+                }
+                try {
+                    FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
+                    renderer.render(writer, context);
+                } finally {
+                    execInfo.handleFinished(context); // SCIPIO: return logic
+                }
             } catch (Exception e) {
                 String errMsg = "Error rendering included form named [" + getName() + "] at location [" + this.getLocation(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -1693,10 +1703,20 @@ public abstract class ModelScreenWidget extends ModelWidget {
             
             AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
 
-            ModelForm modelForm = getModelForm(context);
-            FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
             try {
-                renderer.render(writer, context);
+                ModelForm modelForm = getModelForm(context);
+                // SCIPIO: targeted rendering applicability check.
+                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
+                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                if (!execInfo.shouldExecute()) {
+                    return;
+                }
+                try {
+                    FormRenderer renderer = new FormRenderer(modelForm, formStringRenderer);
+                    renderer.render(writer, context);
+                } finally {
+                    execInfo.handleFinished(context); // SCIPIO: return logic
+                }
             } catch (Exception e) {
                 String errMsg = "Error rendering included grid named [" + getName() + "] at location [" + this.getLocation(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);

@@ -175,7 +175,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             </@cell>
                             <@cell columns=6>
                                 <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                                <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">                                
+                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                
                                     <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                     <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                       <input type="hidden" name="orderId" value="${orderId}" />
@@ -214,7 +214,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                         <@cell columns=6>
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                            <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">                            
+                            <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                            
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                   <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />
@@ -280,7 +280,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                         <@cell columns=6>
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                                <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">                                
+                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                
                                     <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                     <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                       <input type="hidden" name="orderId" value="${orderId}" />
@@ -348,7 +348,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                           <@cell columns=6>
                                 
                                 <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                                   <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">                                   
+                                   <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                   
                                       <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                       <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                         <input type="hidden" name="orderId" value="${orderId}" />
@@ -404,7 +404,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                         <@cell columns=6>
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                               <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">                               
+                               <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                               
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                   <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />
@@ -461,8 +461,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                         <@cell columns=6>
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                               <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-                               F
+                               <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">
                                   <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                   <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                     <input type="hidden" name="orderId" value="${orderId}" />

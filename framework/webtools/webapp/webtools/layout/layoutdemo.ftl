@@ -1293,11 +1293,10 @@
                 alert("Please select a view");
                 return;
             }
+            params.view = view;
         } else {
             params.scpViewAsJson = 'true';
         }
-        
-        params.view = view;
         params.scpRenderTargetExpr = scpRenderTargetExpr;
         var cb = getAjaxRenderOut;
         if (jQueryElemExpr.trim().length) {
@@ -1325,7 +1324,19 @@
         jQuery('input[name=scpRenderTargetExpr]', form).val(values.scpRenderTargetExpr || "");
         jQuery('input[name=extraParams]', form).val(values.extraParams || "");
         jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
+        ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
     }
+    function ajaxRenderRequestUriOnChange(selElem) {
+        selElem = jQuery(selElem);
+        if (selElem.val().indexOf('ajaxRender') !== -1) {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', false);
+        } else {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', true);
+        }
+    }
+    jQuery(document).ready(function() {
+        ajaxRenderRequestUriOnChange(jQuery('#ajax-render-test-form select[name=requestUri]'));
+    });
   </@script>
   
   <@form id="ajax-render-test-form">
@@ -1338,7 +1349,7 @@
     
     <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
     <#assign defaultRequestUri = "ajaxRender">
-    <@field type="select" name="requestUri" label="Request URI" value="">
+    <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">
       <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
       <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
       <#list requestMapMap?keys as requestName>

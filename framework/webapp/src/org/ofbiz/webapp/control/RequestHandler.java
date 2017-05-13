@@ -22,6 +22,7 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,9 +65,9 @@ import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
+import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
-import org.python.modules.re;
 import org.xml.sax.SAXException;
 
 /**
@@ -1041,7 +1042,7 @@ public class RequestHandler {
             throw new RequestHandlerException(ise.getMessage(), ise);
         }
     }
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, boolean viewAsJson) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1077,31 +1078,33 @@ public class RequestHandler {
         // before mapping the view, set a request attribute so we know where we are
         req.setAttribute("_CURRENT_VIEW_", view);
 
-        // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
-        Map<String, Object> paramMap = UtilHttp.getParameterMap(req);
-        // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
-        paramMap.putAll(UtilHttp.getAttributeMap(req));
-        UtilMisc.makeMapSerializable(paramMap);
-        if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
-            req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
-        } else {
-            req.getSession().setAttribute("_LAST_VIEW_NAME_", view);
-        }
-        req.getSession().setAttribute("_LAST_VIEW_PARAMS_", paramMap);
-
-        if ("SAVED".equals(saveName)) {
-            //Debug.logInfo("======save current view: " + view);
-            req.getSession().setAttribute("_SAVED_VIEW_NAME_", view);
-            req.getSession().setAttribute("_SAVED_VIEW_PARAMS_", paramMap);
-        }
-
-        if ("HOME".equals(saveName)) {
-            //Debug.logInfo("======save home view: " + view);
-            req.getSession().setAttribute("_HOME_VIEW_NAME_", view);
-            req.getSession().setAttribute("_HOME_VIEW_PARAMS_", paramMap);
-            // clear other saved views
-            req.getSession().removeAttribute("_SAVED_VIEW_NAME_");
-            req.getSession().removeAttribute("_SAVED_VIEW_PARAMS_");
+        if (!viewAsJson || JsonRequestUtil.isViewAsJsonUpdateSession(req)) {
+            // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
+            Map<String, Object> paramMap = UtilHttp.getParameterMap(req);
+            // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
+            paramMap.putAll(UtilHttp.getAttributeMap(req));
+            UtilMisc.makeMapSerializable(paramMap);
+            if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
+                req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
+            } else {
+                req.getSession().setAttribute("_LAST_VIEW_NAME_", view);
+            }
+            req.getSession().setAttribute("_LAST_VIEW_PARAMS_", paramMap);
+    
+            if ("SAVED".equals(saveName)) {
+                //Debug.logInfo("======save current view: " + view);
+                req.getSession().setAttribute("_SAVED_VIEW_NAME_", view);
+                req.getSession().setAttribute("_SAVED_VIEW_PARAMS_", paramMap);
+            }
+    
+            if ("HOME".equals(saveName)) {
+                //Debug.logInfo("======save home view: " + view);
+                req.getSession().setAttribute("_HOME_VIEW_NAME_", view);
+                req.getSession().setAttribute("_HOME_VIEW_PARAMS_", paramMap);
+                // clear other saved views
+                req.getSession().removeAttribute("_SAVED_VIEW_NAME_");
+                req.getSession().removeAttribute("_SAVED_VIEW_PARAMS_");
+            }
         }
 
         ConfigXMLReader.ViewMap viewMap = null;
@@ -1118,7 +1121,7 @@ public class RequestHandler {
         String nextPage;
 
         if (viewMap.page == null) {
-            if (!allowExtView) {
+            if (!allowExtView || viewAsJson) { // SCIPIO: NOTE: 2017-05-12: don't allow weird nextPage stuff for json for now - implications unclear
                 throw new RequestHandlerException("No view to render.");
             } else {
                 nextPage = "/" + oldView;
@@ -1132,12 +1135,20 @@ public class RequestHandler {
         long viewStartTime = System.currentTimeMillis();
 
         // setup character encoding and content type
-        String charset = UtilFormatOut.checkEmpty(this.charset, req.getCharacterEncoding(), "UTF-8");
-
-        String viewCharset = viewMap.encoding;
-        //NOTE: if the viewCharset is "none" then no charset will be used
-        if (UtilValidate.isNotEmpty(viewCharset)) {
-            charset = viewCharset;
+        String charset;
+        if (viewAsJson) {
+            // SCIPIO: NOTE: we hardcode UTF-8 because JSON requests will be like this
+            charset = "UTF-8";
+        } else {
+            charset = UtilFormatOut.checkEmpty(this.charset, req.getCharacterEncoding(), "UTF-8");
+        }
+        
+        if (!viewAsJson) {
+            String viewCharset = viewMap.encoding;
+            //NOTE: if the viewCharset is "none" then no charset will be used
+            if (UtilValidate.isNotEmpty(viewCharset)) {
+                charset = viewCharset;
+            }
         }
 
         if (!"none".equals(charset)) {
@@ -1157,10 +1168,12 @@ public class RequestHandler {
             contentType = viewContentType;
         }
 
-        if (charset.length() > 0 && !"none".equals(charset)) {
-            resp.setContentType(contentType + "; charset=" + charset);
-        } else {
-            resp.setContentType(contentType);
+        if (!viewAsJson) {
+            if (charset.length() > 0 && !"none".equals(charset)) {
+                resp.setContentType(contentType + "; charset=" + charset);
+            } else {
+                resp.setContentType(contentType);
+            }
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType, module);
@@ -1174,13 +1187,34 @@ public class RequestHandler {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewMap.type);
-            vh.render(view, nextPage, viewMap.info, contentType, charset, req, resp);
+            if (viewAsJson) {
+                // SCIPIO
+                if (vh instanceof ViewHandlerExt) {
+                    ViewHandlerExt vhe = (ViewHandlerExt) vh;
+                    StringWriter sw = new StringWriter();
+                    try {
+                        vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
+                    } finally {
+                        JsonRequestUtil.getRenderOutParams(req).put("renderOut", sw.toString());
+                    }
+                } else {
+                    throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
+                }
+            } else {
+                vh.render(view, nextPage, viewMap.info, contentType, charset, req, resp);
+            }
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 
             throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
         }
 
+        if (viewAsJson) {
+            // SCIPIO: NOTE: we go to handler URI so potentially a webapp can tweak json output behavior.
+            JsonRequestUtil.addAllDefaultAllowedParamNames(req);
+            doRequest(req, resp, JsonRequestUtil.getViewAsJsonRequestUri(req, getControllerConfig()), userLogin, (Delegator) req.getAttribute("delegator"));
+        }
+        
         // before getting the view generation time flush the response output to get more consistent results
         try {
             resp.flushBuffer();
@@ -1200,6 +1234,11 @@ public class RequestHandler {
         }
     }
 
+    // SCIPIO: overload with viewAsJson gotten from request
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+        renderView(view, allowExtView, req, resp, saveName, JsonRequestUtil.isViewAsJson(req));
+    }
+    
     /**
      * Returns a URL String that contains only the scheme and host parts. This method
      * should not be used because it ignores settings in the WebSite entity.

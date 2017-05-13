@@ -2,19 +2,11 @@ package org.ofbiz.webapp.renderer;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
@@ -101,39 +93,35 @@ public abstract class RenderEvents {
             //long viewStartTime = System.currentTimeMillis();
 
             // setup character encoding and content type
-            String charset = UtilFormatOut.checkEmpty(rh.getCharset(), req.getCharacterEncoding(), "UTF-8");
+            // SCIPIO: NOTE: we hardcode UTF-8 because JSON requests will be like this
+            String charset = "UTF-8";
 
-            String viewCharset = viewMap.encoding;
-            //NOTE: if the viewCharset is "none" then no charset will be used
-            if (UtilValidate.isNotEmpty(viewCharset)) {
-                charset = viewCharset;
-            }
-
-            if (!"none".equals(charset)) {
-                try {
-                    req.setCharacterEncoding(charset);
-                } catch (UnsupportedEncodingException e) {
-                    throw new RequestHandlerException("Could not set character encoding to " + charset, e);
-                } catch (IllegalStateException e) {
-                    Debug.logInfo(e, "Could not set character encoding to " + charset + ", something has probably already committed the stream", module);
-                }
+            try {
+                req.setCharacterEncoding(charset);
+            } catch (UnsupportedEncodingException e) {
+                throw new RequestHandlerException("Could not set character encoding to " + charset, e);
+            } catch (IllegalStateException e) {
+                Debug.logInfo(e, "Could not set character encoding to " + charset + ", something has probably already committed the stream", module);
             }
 
             // setup content type
+            // SCIPIO: NOTE: this does NOT get set in the HTML header, it's just to pass to the view handler
+            // which _should_ not need to be aware this is application/x-json or application/json
+            // TODO: REVIEW: possible this matters for view handler in future...
             String contentType = "text/html";
             String viewContentType = viewMap.contentType;
             if (UtilValidate.isNotEmpty(viewContentType)) {
                 contentType = viewContentType;
             }
 
-            // TODO: REVIEW
+            // this is done later by the json event
 //            if (charset.length() > 0 && !"none".equals(charset)) {
 //                resp.setContentType(contentType + "; charset=" + charset);
 //            } else {
 //                resp.setContentType(contentType);
 //            }
 
-            if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType, module);
+//            if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType, module);
 
             boolean viewNoCache = viewMap.noCache;
             if (viewNoCache) {
@@ -173,7 +161,7 @@ public abstract class RenderEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
             return "error";
         } finally {
-            JsonRequestUtil.getRenderOutAttrNames(request).addAll(JsonRequestUtil.getDefaultAllowedParamNames(request));
+            JsonRequestUtil.addAllDefaultAllowedParamNames(request);
         }
         
         return "success";

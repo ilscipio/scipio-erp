@@ -1178,57 +1178,63 @@
     },
     "FULL1": { 
         "title": "ajaxRender: Full page: runService",
-        "requestUri": "ajaxRender", 
+        "requestUri": makeOfbizUrl("ajaxRender"), 
         "view": "runService" 
     },
     "PARTSECT1": {
         "title": "ajaxRender: Partial page, widget section: runService -> $Global-Column-Main",
-        "requestUri": "ajaxRender", 
+        "requestUri": makeOfbizUrl("ajaxRender"), 
         "view": "runService", 
         "scpRenderTargetExpr": "$Global-Column-Main"
     },  
     "PARTCONTAINERNONOPT1": {
         "title": "ajaxRender: Partial page, widget container, NON-optimized: runService -> #main-content (container)",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "#main-content"
     },  
     "PARTCONTAINERCOMPLEX1": {
         "title": "ajaxRender: Partial page, widget container, with section execution optimization: runService -> $Global-Column-Main #main-content (container through section)",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
     },  
     "PARTCONTAINERCOMPLEXJS1": {
         "title": "ajaxRender: Partial page, widget container, plus jQuery sub-element extraction: runService -> $Global-Column-Main #main-content -> #screenlet_1",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content",
         "jQueryElemExpr": "#screenlet_1"
     },
     "PARTFTLBOUNDARY1": {
         "title": "ajaxRender: Partial page, non-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $TR-Widget-Deep-Section-2",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
     },
     "PARTFTLBOUNDARY2": {
         "title": "ajaxRender: Partial page, part-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
     },
     "PARTFTLSEL1": {
         "title": "ajaxRender: Partial page, LIMITED FTL macro selection test: TargetedRenderingTest -> $Global-Column-Main $TR-Widget-Section-1 @section #tr-ftl-container-1",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
     },
     "PARTFTLSEL2": {
         "title": "ajaxRender: Partial page, LIMITED FTL macro selection test: TargetedRenderingTest -> $Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1",
-        "requestUri": "ajaxRender",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
+    },
+    "PARTREQURI1": {
+        "title": "TargetedRenderingTest: Partial page, request URI test: TargetedRenderingTest -> $Global-Column-Main",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main" 
     }
 }>
   <@script>
@@ -1273,19 +1279,24 @@
     function runAjaxRenderTestFromForm(formId, outputElemId) {
         var form = jQuery('#'+formId);
         var requestUri = jQuery('select[name=requestUri]', form).val();
-        var url = "<@ofbizUrl escapeAs="js">ajaxRender</@ofbizUrl>"; // TODO
+        var url = requestUri;
         
         var view = jQuery('select[name=view]', form).val();
-        if (requestUri === 'ajaxRender' && !view) {
-            alert("Please select a view");
-            return;
-        }
-        
+
         var scpRenderTargetExpr = jQuery('input[name=scpRenderTargetExpr]', form).val();
         //var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
         var jQueryElemExpr = jQuery('input[name=jQueryElemExpr]', form).val();
         
         var params = {};
+        if (requestUri.indexOf('/ajaxRender') !== -1) {
+            if (!view) {
+                alert("Please select a view");
+                return;
+            }
+        } else {
+            params.scpViewAsJson = 'true';
+        }
+        
         params.view = view;
         params.scpRenderTargetExpr = scpRenderTargetExpr;
         var cb = getAjaxRenderOut;
@@ -1327,11 +1338,11 @@
     
     <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
     <#assign defaultRequestUri = "ajaxRender">
-    <@field type="select" name="requestUri" label="Request URI" value="" disabled=true><#-- TODO -->
+    <@field type="select" name="requestUri" label="Request URI" value="">
       <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
       <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
       <#list requestMapMap?keys as requestName>
-        <@field type="option" value=requestName selected=(defaultRequestUri==requestName)>${requestName}</@field>
+        <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
       </#list>
     </@field>
     <@field type="select" name="view" label="View Name" value="">

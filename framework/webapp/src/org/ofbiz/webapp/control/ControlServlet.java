@@ -242,6 +242,13 @@ public class ControlServlet extends HttpServlet {
 
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
+                // SCIPIO: 2017-05-15: special case for targeted rendering of error page
+                Object scpErrorRenderTargetExpr = request.getAttribute("scpErrorRenderTargetExpr");
+                if (scpErrorRenderTargetExpr == null) scpErrorRenderTargetExpr = request.getParameter("scpErrorRenderTargetExpr");
+                if (scpErrorRenderTargetExpr != null) {
+                    request.setAttribute("scpRenderTargetExpr", scpErrorRenderTargetExpr);
+                }
+                
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
                 Debug.logError("Including errorPage: " + errorPage, module);
 

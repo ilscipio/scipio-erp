@@ -104,7 +104,7 @@
         var openDef = {
             "separator_before": false,
             "separator_after": false,
-            "label": labelOpen,
+            "label": "Open",
             "action":function (obj) {
                 document.location.href = makeEditPageUrl($node);
             }

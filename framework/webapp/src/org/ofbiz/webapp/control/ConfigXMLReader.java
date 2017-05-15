@@ -42,6 +42,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -221,7 +222,8 @@ public class ConfigXMLReader {
         private Map<String, String> viewHandlerMap = new HashMap<String, String>();
         private Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
         private Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
-
+        private ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+        
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
             Element rootElement = loadDocument(url);
@@ -736,6 +738,44 @@ public class ConfigXMLReader {
             return result;
         }
 
+        /**
+         * SCIPIO: returns view-as-json configuration, corresponding to site-conf.xsd view-as-json element.
+         */
+        public ViewAsJsonConfig getViewAsJsonConfig() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    ViewAsJsonConfig viewAsJsonConfig;
+                    if (include.recursive) {
+                        viewAsJsonConfig = controllerConfig.getViewAsJsonConfig();
+                    } else {
+                        viewAsJsonConfig = controllerConfig.viewAsJsonConfig;
+                    }
+                    if (viewAsJsonConfig != null) {
+                        return viewAsJsonConfig;
+                    }
+                }
+            }
+            if (viewAsJsonConfig != null) {
+                return viewAsJsonConfig;
+            }
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    ViewAsJsonConfig viewAsJsonConfig;
+                    if (include.recursive) {
+                        viewAsJsonConfig = controllerConfig.getViewAsJsonConfig();
+                    } else {
+                        viewAsJsonConfig = controllerConfig.viewAsJsonConfig;
+                    }
+                    if (viewAsJsonConfig != null) {
+                        return viewAsJsonConfig;
+                    }
+                }
+            }
+            return new ViewAsJsonConfig();
+        }
+        
         private void loadGeneralConfig(Element rootElement) {
             this.errorpage = UtilXml.childElementValue(rootElement, "errorpage");
             this.statusCode = UtilXml.childElementValue(rootElement, "status-code");
@@ -804,8 +844,15 @@ public class ConfigXMLReader {
                     this.beforeLogoutEventList.put(eventName, new Event(eventElement));
                 }
             }
+            // SCIPIO: new
+            Element viewAsJsonElement = UtilXml.firstChildElement(rootElement, "view-as-json");
+            if (viewAsJsonElement != null) {
+                this.viewAsJsonConfig = new ViewAsJsonConfig(viewAsJsonElement);
+            } else {
+                this.viewAsJsonConfig = null;
+            }
         }
-
+        
         private void loadHandlerMap(Element rootElement) {
             for (Element handlerElement : UtilXml.childElementList(rootElement, "handler")) {
                 String name = handlerElement.getAttribute("name");
@@ -1288,6 +1335,46 @@ public class ConfigXMLReader {
 
         public boolean isNoCache() {
             return noCache;
+        }
+    }
+    
+    /**
+     * SCIPIO: Implements "view-as-json" element in site-conf.xsd.
+     * Added 2017-05-15.
+     */
+    public static class ViewAsJsonConfig {
+        public boolean enabled;
+        public boolean updateSession;
+        public boolean regularLogin;
+        public String jsonRequestUri;
+        
+        public ViewAsJsonConfig(Element element) {
+            this.enabled = UtilMisc.booleanValue(element.getAttribute("enabled"), false);
+            this.updateSession = UtilMisc.booleanValue(element.getAttribute("update-session"), false);
+            this.regularLogin = UtilMisc.booleanValue(element.getAttribute("regular-login"), false);
+            this.jsonRequestUri = element.getAttribute("json-request-uri");
+            if (jsonRequestUri.isEmpty()) this.jsonRequestUri = null;
+        }
+        
+        public ViewAsJsonConfig() {
+            // all false/null by default
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+        public boolean isUpdateSession() {
+            return updateSession;
+        }
+        public boolean isRegularLogin() {
+            return regularLogin;
+        }
+        public String getJsonRequestUri() {
+            return jsonRequestUri;
+        }
+        public String getJsonRequestUriAlways() throws WebAppConfigurationException {
+            if (jsonRequestUri == null) throw new WebAppConfigurationException(new IllegalStateException("Cannot forward view-as-json: missing json-request-uri configuration"));
+            return jsonRequestUri;
         }
     }
 }

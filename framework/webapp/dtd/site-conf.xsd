@@ -34,6 +34,7 @@ under the License.
                 <xs:element minOccurs="0" ref="after-login"/>
                 <xs:element minOccurs="0" ref="before-logout"/>
                 <xs:element minOccurs="0" ref="default-request"/>
+                <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="request-map"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-map"/>
             </xs:sequence>
@@ -233,6 +234,77 @@ under the License.
     </xs:element>
     <xs:attributeGroup name="attlist.default-request">
         <xs:attribute type="xs:string" name="request-uri" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="view-as-json">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Configures view-as-json rendering.
+                This allows any rendered view to be returned as a json data object
+                entry along with potentially other entries, for any request that receives
+                the request parameter "scpViewAsJson=true".
+                Added 2017-05-15.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.view-as-json"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.view-as-json">
+        <xs:attribute name="enabled" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to true, view-as-json will run for any request that receives
+                    the request parameter "scpViewAsJson=true".
+                    If set to false, view-as-json will never execute for this webapp.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="json-request-uri" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The request URI we should use to generate the JSON response.
+                    It should be a secure one, such as the provided "jsonExplicit" in common controllers.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="update-session" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to true, by default, view-as-json renders will still update
+                    session such as view-last logic.
+                    If set to false, this will try to prevent (where applicable/possible) session
+                    data such as view-last logic. 
+                    NOTE: 2017-05-15: when false, this is currently not guaranteed to prevent all
+                        session writes, but at least prevents updating the view-last/view-home/etc. attributes.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="regular-login" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to true, the regular login view will be used when not logged in.
+                    If set to false, the special ajaxLogin view will be used when not logged in.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="request-map">
         <xs:annotation>

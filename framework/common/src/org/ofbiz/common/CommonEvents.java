@@ -59,7 +59,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
-import org.ofbiz.webapp.control.JsonRequestUtil;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 
 /**
@@ -300,11 +300,12 @@ public class CommonEvents {
     
     /**
      * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that will only output 
-     * attributes specifically requested in "scipioOutParams" map or "scipioOutAttrNames" list.
+     * attributes specifically requested in "scpOutParams" map or "scpOutAttrNames" list,
+     * or the names otherwise listed in AjaxRequestUtil.
      * NOTE: this is important for security reasons.
      */
     public static String jsonResponseFromRequestAttributesExplicit(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> attrMap = JsonRequestUtil.collectRenderOutAttributes(request);
+        Map<String, Object> attrMap = ViewAsJsonUtil.collectRenderOutAttributes(request);
         try {
             JSON json = JSON.from(attrMap);
             writeJSONtoResponse(json, request.getMethod(), response);

@@ -58,6 +58,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -459,6 +460,15 @@ public class RequestHandler {
         if (Debug.verboseOn()) Debug.logVerbose("[Processing Request]: " + requestMap.uri + " sessionId=" + UtilHttp.getSessionId(request), module);
         request.setAttribute("thisRequestUri", requestMap.uri); // store the actual request URI
 
+        // SCIPIO
+        ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig;
+        try {
+            viewAsJsonConfig = controllerConfig.getViewAsJsonConfig();
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            throw new RequestHandlerException(e);
+        }
+        boolean viewAsJson = ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig);
 
         // Perform security check.
         if (requestMap.securityAuth) {
@@ -480,9 +490,29 @@ public class RequestHandler {
                 if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
                     requestMap = requestMapMap.get("checkLogin");
                 } else {
-                    requestMap = requestMapMap.get("ajaxCheckLogin");
+                    // SCIPIO: 2017-05-15: for viewAsJson we have to check if we should
+                    // use the regular or not
+                    if (viewAsJson) {
+                        if (ViewAsJsonUtil.isViewAsJsonRegularLogin(request, viewAsJsonConfig)) {
+                            requestMap = requestMapMap.get("checkLogin");
+                        } else {
+                            // SCIPIO: If not using the regular login, we have to discard the render target expression, if any
+                            requestMap = requestMapMap.get("ajaxCheckLogin");
+                        }
+                    } else {
+                        requestMap = requestMapMap.get("ajaxCheckLogin");
+                    }
+                }
+                
+                // SCIPIO: if we require login, we may need to support an alternate render expr to handle login case
+                Object scpLoginRenderTargetExpr = request.getAttribute("scpLoginRenderTargetExpr");
+                if (scpLoginRenderTargetExpr == null) scpLoginRenderTargetExpr = request.getParameter("scpLoginRenderTargetExpr");
+                if (scpLoginRenderTargetExpr != null) {
+                    request.setAttribute("scpRenderTargetExpr", scpLoginRenderTargetExpr);
                 }
             }
+            // SCIPIO: we have to mark a flag to say if was logged in for viewAsJson
+            ViewAsJsonUtil.setRenderOutParam(request, ViewAsJsonUtil.LOGGEDIN_OUTPARAM, "success".equalsIgnoreCase(checkLoginReturnString));
         }
 
         // after security check but before running the event, see if a post-login redirect has completed and we have data from the pre-login request form to use now
@@ -761,7 +791,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson);
             } else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -797,7 +827,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -819,7 +849,7 @@ public class RequestHandler {
                      Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
                      throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
             } else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -842,7 +872,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
             } else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + " sessionId=" + UtilHttp.getSessionId(request), module);
@@ -1042,7 +1072,7 @@ public class RequestHandler {
             throw new RequestHandlerException(ise.getMessage(), ise);
         }
     }
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, boolean viewAsJson) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1078,7 +1108,7 @@ public class RequestHandler {
         // before mapping the view, set a request attribute so we know where we are
         req.setAttribute("_CURRENT_VIEW_", view);
 
-        if (!viewAsJson || JsonRequestUtil.isViewAsJsonUpdateSession(req)) {
+        if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig)) {
             // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
             Map<String, Object> paramMap = UtilHttp.getParameterMap(req);
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
@@ -1192,10 +1222,13 @@ public class RequestHandler {
                 if (vh instanceof ViewHandlerExt) {
                     ViewHandlerExt vhe = (ViewHandlerExt) vh;
                     StringWriter sw = new StringWriter();
+                    // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
+                    Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
                     try {
                         vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
                     } finally {
-                        JsonRequestUtil.getRenderOutParams(req).put("renderOut", sw.toString());
+                        ViewAsJsonUtil.setRenderOutParam(req, ViewAsJsonUtil.RENDEROUT_OUTPARAM, sw.toString());
+                        ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
                     }
                 } else {
                     throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
@@ -1211,8 +1244,15 @@ public class RequestHandler {
 
         if (viewAsJson) {
             // SCIPIO: NOTE: we go to handler URI so potentially a webapp can tweak json output behavior.
-            JsonRequestUtil.addAllDefaultAllowedParamNames(req);
-            doRequest(req, resp, JsonRequestUtil.getViewAsJsonRequestUri(req, getControllerConfig()), userLogin, (Delegator) req.getAttribute("delegator"));
+            ViewAsJsonUtil.addDefaultRenderOutAttrNames(req);
+            String jsonRequestUri;
+            try {
+                jsonRequestUri = ViewAsJsonUtil.getViewAsJsonRequestUri(req, viewAsJsonConfig);
+            } catch (WebAppConfigurationException e) {
+                Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                throw new RequestHandlerException(e);
+            }
+            doRequest(req, resp, jsonRequestUri, userLogin, (Delegator) req.getAttribute("delegator"));
         }
         
         // before getting the view generation time flush the response output to get more consistent results
@@ -1232,11 +1272,6 @@ public class RequestHandler {
             ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
                 System.currentTimeMillis() - viewStartTime, userLogin);
         }
-    }
-
-    // SCIPIO: overload with viewAsJson gotten from request
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
-        renderView(view, allowExtView, req, resp, saveName, JsonRequestUtil.isViewAsJson(req));
     }
     
     /**

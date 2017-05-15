@@ -2,6 +2,7 @@ package org.ofbiz.webapp.renderer;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
-import org.ofbiz.webapp.control.JsonRequestUtil;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerException;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
@@ -137,10 +138,13 @@ public abstract class RenderEvents {
                 if (vh instanceof ViewHandlerExt) {
                     ViewHandlerExt vhe = (ViewHandlerExt) vh;
                     StringWriter sw = new StringWriter();
+                    // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
+                    Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
                     try {
                         vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
                     } finally {
-                        JsonRequestUtil.getRenderOutParams(request).put("renderOut", sw.toString());
+                        ViewAsJsonUtil.setRenderOutParam(req, ViewAsJsonUtil.RENDEROUT_OUTPARAM, sw.toString());
+                        ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
                     }
                 } else {
                     throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
@@ -151,7 +155,7 @@ public abstract class RenderEvents {
                 throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
             }
             
-            // NOTE: extra params may be in scipioOutParams req attr map or named in scipioOutAttrNames req attr list
+            // NOTE: extra params may be in scpOutParams req attr map or named in scipioOutAttrNames req attr list
         } catch(RequestHandlerException e) {
             Debug.logError(e, "Request handler error while rendering view: " + view, module);
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
@@ -161,7 +165,7 @@ public abstract class RenderEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Error rendering view with name [" + view + "]");
             return "error";
         } finally {
-            JsonRequestUtil.addAllDefaultAllowedParamNames(request);
+            ViewAsJsonUtil.addDefaultRenderOutAttrNames(request);
         }
         
         return "success";

@@ -1235,6 +1235,31 @@
         "requestUri": makeOfbizUrl("TargetedRenderingTest"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main" 
+    },
+    "PARTREQURI2": {
+        "title": "TargetedRenderingTest: Partial page, request URI test, but NO partial for login or error pages (test): TargetedRenderingTest -> $Global-Column-Main",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTREQURI3": {
+        "title": "TargetedRenderingTest: Partial page, request URI test, but NO partial for login or error pages (test), and test event throws exception (NOTE: does NOT give error page): TargetedRenderingTest -> $Global-Column-Main",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen",  <#-- get the full error page -->
+        "extraParams": "testEventResult=exception"
+    },
+    "PARTREQURI4": {
+        "title": "TargetedRenderingTestInvalid: Partial page, request URI test, but NO partial for login or error pages (test), and we call invalid request which gives error page",
+        "requestUri": "TargetedRenderingTestInvalid",
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
     }
 }>
   <@script>
@@ -1266,6 +1291,10 @@
                     } else {
                         renderOut = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
                     }
+                    if (data.renderOut) {
+                        renderOut += "\n\n---------------------------------------------------------------\n\n";
+                        renderOut += renderOutProcessCb(data.renderOut);
+                    }
                 } else if (data.renderOut) {
                     renderOut = renderOutProcessCb(data.renderOut);
                 } else { 
@@ -1284,7 +1313,9 @@
         var view = jQuery('select[name=view]', form).val();
 
         var scpRenderTargetExpr = jQuery('input[name=scpRenderTargetExpr]', form).val();
-        //var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
+        var scpLoginRenderTargetExpr = jQuery('input[name=scpLoginRenderTargetExpr]', form).val();
+        var scpErrorRenderTargetExpr = jQuery('input[name=scpErrorRenderTargetExpr]', form).val();
+        var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
         var jQueryElemExpr = jQuery('input[name=jQueryElemExpr]', form).val();
         
         var params = {};
@@ -1298,6 +1329,17 @@
             params.scpViewAsJson = 'true';
         }
         params.scpRenderTargetExpr = scpRenderTargetExpr;
+        if (scpLoginRenderTargetExpr) {
+            params.scpLoginRenderTargetExpr = scpLoginRenderTargetExpr;
+        }
+        if (scpErrorRenderTargetExpr) {
+            params.scpErrorRenderTargetExpr = scpErrorRenderTargetExpr;
+        }
+        if (extraParams) {
+            var ep = JSON.parse('{"' + extraParams.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+            params = jQuery.extend({}, params, ep);
+        }
+        
         var cb = getAjaxRenderOut;
         if (jQueryElemExpr.trim().length) {
             cb = function(renderOut) {
@@ -1322,6 +1364,8 @@
         jQuery('select[name=requestUri]', form).val(values.requestUri || "");
         jQuery('select[name=view]', form).val(values.view || "");
         jQuery('input[name=scpRenderTargetExpr]', form).val(values.scpRenderTargetExpr || "");
+        jQuery('input[name=scpLoginRenderTargetExpr]', form).val(values.scpLoginRenderTargetExpr || "");
+        jQuery('input[name=scpErrorRenderTargetExpr]', form).val(values.scpErrorRenderTargetExpr || "");
         jQuery('input[name=extraParams]', form).val(values.extraParams || "");
         jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
         ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
@@ -1355,6 +1399,7 @@
       <#list requestMapMap?keys as requestName>
         <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
       </#list>
+        <@field type="option" value="TargetedRenderingTestInvalid" selected=("TargetedRenderingTestInvalid"?contains(defaultRequestUri))>TargetedRenderingTestInvalid</@field>
     </@field>
     <@field type="select" name="view" label="View Name" value="">
       <@field type="option" selected=true value=""></@field>
@@ -1365,7 +1410,10 @@
       </#list>
     </@field>
     <@field type="input" name="scpRenderTargetExpr" label="Target Widget Element Expression" value=""/>
-    <@field type="input" name="extraParams" label="Extra Parameters (POST)" value="TODO" disabled=true/>
+    <@field type="input" name="scpLoginRenderTargetExpr" label="Expression for Login page" value=""/>
+    <@field type="input" name="scpErrorRenderTargetExpr" label="Expression for Error page" value=""
+        tooltip="NOTE: this is only used when the errorpage is shown - NOT when an event returns error"/>
+    <@field type="input" name="extraParams" label="Extra Parameters (POST)" value=""/>
     <@field type="input" name="jQueryElemExpr" label="Extra jQuery Filter" value=""/>
 
     <@field type="submit" submitType="link" href="javascript:runAjaxRenderTestFromForm('ajax-render-test-form', 'ajax-render-test-out');" text=uiLabelMap.CommonRun/>

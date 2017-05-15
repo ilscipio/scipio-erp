@@ -621,7 +621,9 @@ under the License.
     </request-map>
     <request-map uri="TargetedRenderingTest">
         <security https="true" auth="true"/>
+        <event type="java" invoke="testEvent" path="com.ilscipio.scipio.webtools.TargetedRenderingTestEvents" />
         <response name="success" type="view" value="TargetedRenderingTest"/>
+        <response name="error" type="view" value="TargetedRenderingTest"/>
     </request-map>
     
     <!-- SCIPIO: EntityUtilityServices -->

@@ -33,7 +33,11 @@ under the License.
                         <html-template location="component://common/webcommon/includes/htmlheader-for-ajax.ftl" />
                     </html>
                 </platform-specific>
-                <decorator-section-include name="body" />
+                <section name="Global-Column-Main">
+                    <widgets>
+                        <decorator-section-include name="body" />
+                    </widgets>
+                </section>
                 <platform-specific>
                     <html>
                         <html-template location="component://common/webcommon/includes/htmlfooter-for-ajax.ftl" />

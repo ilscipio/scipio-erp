@@ -182,9 +182,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final Map<String, ModelScreenWidget> prevSectionMap; // Need separate from prevSections so can filter further
         private final SectionsRenderer prevSections;
         private final boolean includePrevSections;
+        private final DecoratorScreen sourceDecoratorScreen; // SCIPIO: remembers which DecoratorScreen created this object
 
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
-                ScreenStringRenderer screenStringRenderer) {
+                ScreenStringRenderer screenStringRenderer, DecoratorScreen sourceDecoratorScreen) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             localMap.putAll(sectionMap);
             this.sectionMap = Collections.unmodifiableMap(localMap);
@@ -195,11 +196,12 @@ public abstract class ModelScreenWidget extends ModelWidget {
             this.localSectionMap = this.sectionMap;
             this.prevSectionMap = null;
             this.prevSections = null;
+            this.sourceDecoratorScreen = sourceDecoratorScreen;
         }
         
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
                 ScreenStringRenderer screenStringRenderer, 
-                SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections) {
+                SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections, DecoratorScreen sourceDecoratorScreen) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             if (includePrevSections && prevSections != null && prevSectionMap != null) {
                 localMap.putAll(prevSectionMap);
@@ -228,6 +230,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 this.prevSectionMap = null;
             }
             this.prevSections = prevSections;
+            this.sourceDecoratorScreen = sourceDecoratorScreen;
         }
 
         /** 
@@ -342,7 +345,11 @@ public abstract class ModelScreenWidget extends ModelWidget {
         public MapStack<String> getContext() { // SCIPIO
             return contextFetcher.getContext();
         }
-        
+
+        public DecoratorScreen getSourceDecoratorScreen() { // SCIPIO
+            return sourceDecoratorScreen;
+        }
+
         @Override
         public int size() {
             return sectionMap.size();
@@ -1278,10 +1285,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
             
             SectionsRenderer sections;
             if (!filteredPrevSectionMap.isEmpty()) {
-                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, prevSections, filteredPrevSectionMap, true);
+                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, prevSections, filteredPrevSectionMap, true, this);
             }
             else {
-                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer);
+                sections = new SectionsRenderer(filteredSectionMap, contextFetcher, screenStringRenderer, this);
             }
             
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack

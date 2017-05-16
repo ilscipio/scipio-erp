@@ -1173,13 +1173,14 @@ to indicate the value null.
 *************
 * virtualSection
 ************
-Defines a virtual section that produces no markup (used in targeted rendering).
+Defines a virtual section that produces no markup (used in targeted rendering),
+with a name of global scope.
 This is equivalent to defining a {{{<section>}}} widget element 
 (whereas @section is equivalent to {{{<screenlet>}}} widget element).
 
 This is required to be able to re-implement some widgets screens and decorators as FTL.
 
-See widget-screen.xsd "contains" expression attribute definition for more information.
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
 
 NOTE: this implicitly defines a @renderTarget.
 
@@ -1200,9 +1201,13 @@ NOTE: this implicitly defines a @renderTarget.
 ************
 Used within a standard library macro definition to implemented targeted rendering for the directive.
 
-See widget-screen.xsd "contains" expression attribute definition for more information.
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
 
-FIXME: some of the behavior is currently hardcoded inside the renderTarget implementation.
+NOTE: Due to possible performance concerns, only a few of the scipio standard Freemarker API currently support this:
+    @container, @section, @form, @table.
+    They are mostly meant to work with the {{{scpRenderTargetExpr}}} ID selector ({{{#}}}).
+
+FIXME: Some of the behavior is currently hardcoded inside the renderTarget implementation.
 
   * Parameters *
     dirName                 = Name of the containing directive

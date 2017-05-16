@@ -178,8 +178,31 @@ under the License.
     <!-- SCIPIO: specific view render request that outputs page output to json -->
     <request-map uri="ajaxRender">
         <security https="true" auth="true"/>
-        <!-- TODO? this is as a separate event, but at best can only emulate controller, with duplication,
-            so maybe should try to integrate further into controller so gives exact same behavior... -->
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <!-- COPY THESE into your webapp controller if your webapp requires https="false" or auth="false" support
+    <request-map uri="ajaxRenderPlainNoAuth">
+        <security https="false" auth="false"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <request-map uri="ajaxRenderPlainAuth">
+        <security https="false" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <request-map uri="ajaxRenderSecureNoAuth">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>-->
+    <request-map uri="ajaxRenderSecureAuth">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
         <response name="error"  type="request" value="jsonExplicit"/>
         <response name="success"  type="request" value="jsonExplicit"/>

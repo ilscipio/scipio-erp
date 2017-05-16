@@ -291,7 +291,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                     context.put("scpCurrentSections", this);
                     section.renderWidgetString(writer, context, this.screenStringRenderer);
                 } finally {
-                    context.put("scpCurrentSections", prevSections);
+                    if (prevSections != null) context.put("scpCurrentSections", prevSections);
                 }
             } else {
                 context.push();

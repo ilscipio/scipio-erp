@@ -1177,86 +1177,100 @@
         "defaultPreset": true
     },
     "FULL1": { 
-        "title": "ajaxRender: Full page: runService",
+        "title": "Full page",
         "requestUri": makeOfbizUrl("ajaxRender"), 
         "view": "runService" 
     },
     "PARTSECT1": {
-        "title": "ajaxRender: Partial page, widget section: runService -> $Global-Column-Main",
+        "title": "Partial page, widget section",
         "requestUri": makeOfbizUrl("ajaxRender"), 
         "view": "runService", 
         "scpRenderTargetExpr": "$Global-Column-Main"
     },  
     "PARTCONTAINERNONOPT1": {
-        "title": "ajaxRender: Partial page, widget container, NON-optimized: runService -> #main-content (container)",
+        "title": "Partial page, widget container, NON-optimized",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "#main-content"
     },  
     "PARTCONTAINERCOMPLEX1": {
-        "title": "ajaxRender: Partial page, widget container, with section execution optimization: runService -> $Global-Column-Main #main-content (container through section)",
+        "title": "Partial page, widget container, with section execution optimization",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
     },  
     "PARTCONTAINERCOMPLEXJS1": {
-        "title": "ajaxRender: Partial page, widget container, plus jQuery sub-element extraction: runService -> $Global-Column-Main #main-content -> #screenlet_1",
+        "title": "Partial page, widget container, plus jQuery sub-element extraction",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content",
         "jQueryElemExpr": "#screenlet_1"
     },
     "PARTFTLBOUNDARY1": {
-        "title": "ajaxRender: Partial page, non-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $TR-Widget-Deep-Section-2",
+        "title": "Partial page, non-optimized, deep section across FTL boundary test",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
     },
     "PARTFTLBOUNDARY2": {
-        "title": "ajaxRender: Partial page, part-optimized, deep section across FTL boundary test: TargetedRenderingTest -> $Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3",
+        "title": "Partial page, part-optimized, deep section across FTL boundary test",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
     },
     "PARTFTLSEL1": {
-        "title": "ajaxRender: Partial page, LIMITED FTL macro selection test: TargetedRenderingTest -> $Global-Column-Main $TR-Widget-Section-1 @section #tr-ftl-container-1",
+        "title": "Partial page, LIMITED FTL macro selection test (@container)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
     },
     "PARTFTLSEL2": {
-        "title": "ajaxRender: Partial page, LIMITED FTL macro selection test: TargetedRenderingTest -> $Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1",
+        "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
     },
-    "PARTREQURI1": {
-        "title": "TargetedRenderingTest: Partial page, request URI test: TargetedRenderingTest -> $Global-Column-Main",
-        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+    "PARTFTLSEL3": {
+        "title": "Partial page, LIMITED FTL macro selection test (@form)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-form-1" 
+    },
+    "PARTFTLSEL4": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget form within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestForm1" 
+    },
+    "PARTFTLSEL5": {
+        "title": "Partial page, LIMITED FTL macro selection test (@table)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
+    },
+    "PARTREQURI1": {
+        "title": "Request URI test, partial page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
         "scpRenderTargetExpr": "$Global-Column-Main" 
     },
     "PARTREQURI2": {
-        "title": "TargetedRenderingTest: Partial page, request URI test, but NO partial for login or error pages (test): TargetedRenderingTest -> $Global-Column-Main",
+        "title": "Request URI test, partial page, but FULL page for login and error pages",
         "requestUri": makeOfbizUrl("TargetedRenderingTest"),
-        "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
     },
     "PARTREQURI3": {
-        "title": "TargetedRenderingTest: Partial page, request URI test, but NO partial for login or error pages (test), and test event throws exception (NOTE: does NOT give error page): TargetedRenderingTest -> $Global-Column-Main",
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and test event throws exception (NOTE: does NOT give error page)",
         "requestUri": makeOfbizUrl("TargetedRenderingTest"),
-        "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen",  <#-- get the full error page -->
         "extraParams": "testEventResult=exception"
     },
     "PARTREQURI4": {
-        "title": "TargetedRenderingTestInvalid: Partial page, request URI test, but NO partial for login or error pages (test), and we call invalid request which gives error page",
-        "requestUri": "TargetedRenderingTestInvalid",
-        "view": "TargetedRenderingTest",
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and we call invalid request which gives error page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest"),
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
@@ -1384,26 +1398,52 @@
   </@script>
   
   <@form id="ajax-render-test-form">
+    <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
+    <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
+    <#assign viewMapMap = toSimpleMap(controllerConfig.getViewMapMap())>
+    
     <@field type="select" label="Test Preset" onChange="loadAjaxRenderTestPreset(this, 'ajax-render-test-form');">
       <#list ajaxRenderTestPresets?keys as preset>
         <#assign presetValues = ajaxRenderTestPresets[preset]>
-        <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetValues.title!preset}</@field>
+        
+        <#assign presetTitle = presetValues.title!preset>
+        <#assign presetArgStr = "">
+        <#assign requestName = presetValues.requestUri!>
+        <#if requestName?has_content>
+          <#if (requestName?index_of("/control/") >= 0)><#-- FIXME: horrible kludge -->
+            <#assign requestName = requestName?substring(requestName?index_of("/control/") + "/control/"?length)>
+          </#if>
+        </#if>
+        <#if requestName?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "uri: " + requestName>
+        </#if>
+        <#if presetValues.view?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "view: " + presetValues.view>
+        </#if>
+        <#if presetValues.scpRenderTargetExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "expr: " + presetValues.scpRenderTargetExpr>
+        </#if>
+        <#if presetValues.jQueryElemExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "jQuery: " + presetValues.jQueryElemExpr>
+        </#if>
+        <#if presetArgStr?has_content>
+          <#assign presetTitle = presetTitle + " [" + presetArgStr + "]">
+        </#if>
+
+        <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetTitle}</@field>
       </#list>
     </@field>
     
-    <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
     <#assign defaultRequestUri = "ajaxRender">
     <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">
       <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
-      <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
       <#list requestMapMap?keys as requestName>
         <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
       </#list>
-        <@field type="option" value="TargetedRenderingTestInvalid" selected=("TargetedRenderingTestInvalid"?contains(defaultRequestUri))>TargetedRenderingTestInvalid</@field>
+        <@field type="option" value=makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest") selected=(defaultRequestUri?contains("TargetedRenderingInvalidRequestTest"))>TargetedRenderingInvalidRequestTest</@field>
     </@field>
     <@field type="select" name="view" label="View Name" value="">
       <@field type="option" selected=true value=""></@field>
-      <#assign viewMapMap = toSimpleMap(controllerConfig.getViewMapMap())>
       <#list viewMapMap?keys as viewName>
         <#assign viewMap = viewMapMap[viewName]>  
         <@field type="option" value=viewName>${viewName} (${(viewMap.page)!""})</@field>

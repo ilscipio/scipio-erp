@@ -275,7 +275,13 @@ ToDo: Update menu with Authorize and Capture transaction actions
                             <div>&nbsp;<#if orderPaymentPreference.authRefNum??>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
                             -->
                         <#else>
-                            <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+                            <#assign paymentTotal = 0.00 />
+                            <#list paymentList as payment>
+                                <#assign paymentTotal = paymentTotal + payment.amount />
+                            </#list>
+                            <#if paymentTotal &lt; orderPaymentPreference.maxAmount?default(0.00)>
+                                <a href="<@ofbizUrl>receivepayment?${rawString(paramString)}</@ofbizUrl>">${uiLabelMap.AccountingReceivePayment}</a>
+                            </#if>
                         </#if>
                         </@cell>
                         <@cell columns=6>

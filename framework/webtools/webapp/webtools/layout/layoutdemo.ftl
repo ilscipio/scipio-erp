@@ -1248,6 +1248,18 @@
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
     },
+    "PARTDECSEL1": {
+        "title": "Partial page, special decorator selection test 1",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen $Global-Column-Main ^/body" 
+    },
+    "PARTDECSEL2": {
+        "title": "Partial page, special decorator selection test 2 (complex)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen[name=CommonWebtoolsAppDecorator] ^decorator-screen[name=main-decorator] $Global-Column-Main ^/body ^/body ^decorator-screen[name=TargetedRenderingTestSubDecorator] ^/body #tr-widget-container-3" 
+    },
     "PARTREQURI1": {
         "title": "Request URI test, partial page",
         "requestUri": makeOfbizUrl("TargetedRenderingTest"),

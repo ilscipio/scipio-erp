@@ -284,15 +284,21 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 if (ctxVars != null && !ctxVars.isEmpty()) {
                     context.putAll(ctxVars);
                 }
-                section.renderWidgetString(writer, context, this.screenStringRenderer);
+                Object prevSections = context.get("scpCurrentSections");
+                try {
+                    // SCIPIO: 2017-05-16: we have to set this section renderer in the target context
+                    // so that targeted rendering can pick it up
+                    context.put("scpCurrentSections", this);
+                    section.renderWidgetString(writer, context, this.screenStringRenderer);
+                } finally {
+                    context.put("scpCurrentSections", prevSections);
+                }
             } else {
                 context.push();
                 try {
                     if (ctxVars != null && !ctxVars.isEmpty()) {
                         context.putAll(ctxVars);
                     }
-                    // SCIPIO: 2017-05-16: we have to set this section renderer in the target context
-                    // so that targeted rendering can pick it up
                     context.put("scpCurrentSections", this);
                     section.renderWidgetString(writer, context, this.screenStringRenderer);
                 } finally {

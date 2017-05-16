@@ -107,9 +107,9 @@ under the License.
                                                     </form>
                                                     <br/>
                                                 <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                                                    <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod", false)!>
+                                                    <#assign paymentMethod = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethod", false)!>
                                                     <#if !paymentMethod?has_content>
-                                                        <#assign paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType", false)>            
+                                                        <#assign paymentMethodType = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethodType", false)>            
                                                         <a href="javascript:document.OrderCancelOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderCancelSelectedItems}</a>
                                                         <form name="OrderCancelOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                             <input type="hidden" name="statusId" value="ITEM_CANCELLED"/>

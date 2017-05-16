@@ -23,6 +23,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
 import org.ofbiz.widget.model.ModelScreenWidget;
+import org.ofbiz.widget.model.ModelScreenWidget.SectionsRenderer;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.WidgetDocumentInfo;
 import org.ofbiz.widget.model.ftl.FtlWrapperWidget;
@@ -100,6 +101,7 @@ public class RenderTargetExpr implements Serializable {
     public static final char MET_ELEMID = '#';
     public static final char MET_DECSECINCL = '~';
     public static final char MET_DECSEC = '^';
+    public static final char MET_DECSEC_RECALL = '/';
     public static final char MET_WIDGETELEM = '%';
     public static final char MET_FTLELEM = '@'; // NOTE: limited implementation
     
@@ -144,7 +146,8 @@ public class RenderTargetExpr implements Serializable {
         //    tokens = new ArrayList<>(Arrays.asList(tokenArr).subList(0, tokenArr.length - 1));
         //} else {
         for(String tokenStr : tokenArr) {
-            tokens.add(Token.interpret(tokenStr));
+            Token token = Token.interpret(tokenStr);
+            tokens.add(token);
         }
         //}
         if (tokens.size() < 1) {
@@ -359,7 +362,7 @@ public class RenderTargetExpr implements Serializable {
         public static Token getInstance(String strExpr, char type, String name, Map<String, String> attrMap) throws IllegalArgumentException {
             // FIXME: we will deny attributes on anything that isn't generic matcher for now
             // this will prevent more obscure errors until we fix the comparison code
-            if (!MET_GENERIC.contains(type) && !attrMap.isEmpty())
+            if (!(MET_GENERIC.contains(type) || MET_DECSEC == type) && !attrMap.isEmpty())
                 throw new IllegalArgumentException("Render target expression has bracketed attributes"
                         + " - this is currently only supported for prefix types \"" 
                         + MET_WIDGETELEM + "\" and \"" + MET_FTLELEM + "\"");
@@ -380,6 +383,13 @@ public class RenderTargetExpr implements Serializable {
             case MET_FTLELEM:
                 token = new GenericFtlElementMatcher(strExpr, type, name, attrMap);
                 break;
+            case MET_DECSEC:
+                if (name.charAt(0) == MET_DECSEC_RECALL) {
+                    token = new DecoratorScreenSectionRecallMatcher(strExpr, type, name.substring(1), attrMap);
+                } else {
+                    token = new DecoratorScreenSectionEarlyMatcher(strExpr, type, name, attrMap);
+                }
+                break;    
             default:
                 throw new IllegalArgumentException("Invalid render target expression token/name type"
                         + " character prefix (should be one one: " + MET_ALL_STR + "): " + strExpr);
@@ -438,6 +448,15 @@ public class RenderTargetExpr implements Serializable {
         protected abstract void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                 RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo);
         
+        // turns out this is not needed for the time being. this was called as special case from 
+//        /**
+//         * Called back after a delayed (future) match comes back to us.
+//         * Only some matcher types support this.
+//         */
+//        protected void handleShouldExecuteDelayed(ModelWidget widget, Map<String, Object> context,
+//                RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+//            throw new UnsupportedOperationException("Internal error: Token/Matcher type does not support delayed widget matching: " + this.getClass().getName());
+//        }
         
         /**
          * Current common implementation, this may get further split up or ruined later.
@@ -466,8 +485,7 @@ public class RenderTargetExpr implements Serializable {
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
                 if ((widget instanceof ModelScreenWidget.Section || widget instanceof ModelVirtualSectionFtlWidget) && 
                     matchesWidget(widget, context, null, idAttr, name)) {
-                    state.registerMatch(widget);
-                    execInfo.matchRegistered = true;
+                    state.registerMatch(widget, execInfo, this);
                 }
             }
         }
@@ -481,8 +499,7 @@ public class RenderTargetExpr implements Serializable {
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
                 if (matchesWidget(widget, context, null, name, nameAttr)) {
-                    state.registerMatch(widget);
-                    execInfo.matchRegistered = true;
+                    state.registerMatch(widget, execInfo, this);
                 }
             }
         }
@@ -497,13 +514,54 @@ public class RenderTargetExpr implements Serializable {
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof ModelScreenWidget.DecoratorSectionInclude) {
                     if (name.matches(widget.getName())) {
-                        state.registerMatch(widget);
-                        execInfo.matchRegistered = true;
+                        state.registerMatch(widget, execInfo, this);
                     } else {
                         // SPECIAL: unlike most other widget, if the decorator-section name did not match, 
                         // we can safely exclude this element from rendering,
                         // because the selector only works on current include/decorator level.
                         execInfo.shouldExecute = false;
+                    }
+                }
+            }
+        }
+        
+        public static class DecoratorScreenSectionEarlyMatcher extends Token {
+            protected DecoratorScreenSectionEarlyMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+                super(strExpr, type, name, attrMap);
+            }
+
+            @Override
+            protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
+                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                if (widget instanceof ModelScreenWidget.DecoratorScreen && matchesWidget(widget, context, name, idAttr, nameAttr)) {
+                    ModelScreenWidget.DecoratorScreen decWidget = (ModelScreenWidget.DecoratorScreen) widget;
+                    state.registerMatch(decWidget, execInfo, this);
+                }
+            }
+        }
+        
+        public static class DecoratorScreenSectionRecallMatcher extends Token {
+            protected DecoratorScreenSectionRecallMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+                super(strExpr, type, name, attrMap);
+            }
+
+            @Override
+            protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
+                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                if (widget instanceof ModelScreenWidget.DecoratorSection) {
+                    Object sectionsObj = context.get("scpCurrentSections");
+                    if (sectionsObj instanceof SectionsRenderer) {
+                        SectionsRenderer sections = (SectionsRenderer) sectionsObj;
+                        Token earlyMatcher = state.matchedWidgets.get(sections.getSourceDecoratorScreen());
+                        if (earlyMatcher instanceof DecoratorScreenSectionEarlyMatcher) {
+                            if (getName().matches(ModelWidget.getName(widget, context))) {
+                                state.registerMatch(widget, execInfo, this);
+                            }
+                        }
+                    } else {
+                        Debug.logError("Targeted rendering: \"scpCurrentSections\" missing from"
+                                + " or unexpected type in context when trying to match: " + this.toString()
+                                + " (full: " + state.getExpr().toString() + ")", module);
                     }
                 }
             }
@@ -518,8 +576,7 @@ public class RenderTargetExpr implements Serializable {
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
                 if (!(widget instanceof NonWidgetWrapperWidget) && matchesWidget(widget, context, name, idAttr, nameAttr)) {
-                    state.registerMatch(widget);
-                    execInfo.matchRegistered = true;
+                    state.registerMatch(widget, execInfo, this);
                 }
             }
         }
@@ -533,8 +590,7 @@ public class RenderTargetExpr implements Serializable {
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof FtlWrapperWidget && matchesWidget(widget, context, name, idAttr, nameAttr)) {
-                    state.registerMatch(widget);
-                    execInfo.matchRegistered = true;
+                    state.registerMatch(widget, execInfo, this);
                 }
             }
         }
@@ -567,6 +623,10 @@ public class RenderTargetExpr implements Serializable {
         } else {
             return null;
         }
+    }
+    
+    public Token getLastToken() {
+        return tokens.get(tokens.size() - 1);
     }
     
 //    public boolean isUseChildContent() {
@@ -673,14 +733,23 @@ public class RenderTargetExpr implements Serializable {
         public static final String module = RenderTargetState.class.getName();
         
         private final RenderTargetExpr expr;
-        private List<ModelWidget> matchedWidgets;
-        private boolean targetMatched = false;
-        private boolean finished = false;
-        //private ModelScreenWidget.DecoratorScreen skippedDecorator = null; // TODO? can't exploit (see below)
+        // TODO? turns out not yet needed, may need soon or later...
+        //private Set<Token> fullMatchedTokens; // when size of this is equal to number of tokens, target is found
+        private int nextTokenIndex;
         
+        private Map<ModelWidget, Token> matchedWidgets;
+        
+        private boolean targetMatched;
+        private boolean finished;
+        //private ModelScreenWidget.DecoratorScreen skippedDecorator = null; // TODO? can't exploit (see below)
+
         private RenderTargetState(RenderTargetExpr expr) {
             this.expr = expr;
-            this.matchedWidgets = new ArrayList<>(expr.getNumTokens());
+            //this.fullMatchedTokens = new HashSet<>();
+            this.nextTokenIndex = 0;
+            this.matchedWidgets = new HashMap<>(); // TODO?: not yet needed: new LinkedHashMap<>();
+            this.targetMatched = false;
+            this.finished = false;      
         }
         
         private RenderTargetState() {
@@ -704,30 +773,10 @@ public class RenderTargetExpr implements Serializable {
         public boolean isTargetMatched() {
             return targetMatched;
         }
-
-        public ModelWidget getTargetMatchedWidget() {
-            return isTargetMatched() ? matchedWidgets.get(matchedWidgets.size() - 1) : null;
-        }
         
-        public ModelWidget getLastMatchedWidget() {
-            int numMatched = matchedWidgets.size();
-            return (numMatched > 0) ? matchedWidgets.get(numMatched - 1) : null;
-        }
-        
-        public List<ModelWidget> getMatchedWidgets() {
-            return Collections.unmodifiableList(matchedWidgets);
-        }
-        
-        public int getNumMatched() {
-            return matchedWidgets.size();
-        }
-        
-        public int getMaxMatched() {
-            return expr.tokens.size();
-        }
-        
-        public boolean isNumMatchedMax() {
-            return matchedWidgets.size() >= expr.tokens.size();
+        protected boolean isAllTokensFullMatched() {
+            //return fullMatchedTokens.size() >= expr.getNumTokens();
+            return nextTokenIndex >= expr.getNumTokens();
         }
 
         public RenderTargetExpr getExpr() {
@@ -735,11 +784,11 @@ public class RenderTargetExpr implements Serializable {
         }
 
         public Token getNextToken() {
-            return expr.getToken(getNumMatched());
+            return expr.getToken(nextTokenIndex);
         }
         
         public List<Token> getNextTokenAndChildren() {
-            return expr.tokens.subList(getNumMatched(), expr.tokens.size());
+            return expr.tokens.subList(nextTokenIndex, expr.tokens.size());
         }
         
         /**
@@ -762,17 +811,33 @@ public class RenderTargetExpr implements Serializable {
             this.finished = true;
         }
 
-        private void registerMatch(ModelWidget widget) {
+        // not doing this yet, will cause problems for the deregistering
+//        private void markFullMatched(Token matcher) {
+//            this.fullMatchedTokens.add(matcher);
+//            this.targetMatched = isAllTokensFullMatched();
+//        }
+        
+        /**
+         * NOTE: in the future could be need for parameters such as: boolean fullMatched, boolean consumeToken
+         * but for now, trying to keep syntax straightforward enough so that 1 token ~= 1 full match.
+         */
+        private void registerMatch(ModelWidget widget, ExecutionInfoImpl execInfo, Token matcher) {
             if (isTargetMatched()) throw new IllegalStateException("Tried to modify RenderTargetState matches (register match)"
                     + " after already found target match (should be read-only)");
-            this.matchedWidgets.add(widget);
-            this.targetMatched = this.isNumMatchedMax();
+            this.matchedWidgets.put(widget, matcher);
+            //this.fullMatchedTokens.add(matcher);
+            this.nextTokenIndex++;
+            this.targetMatched = isAllTokensFullMatched();
+            execInfo.matchRegistered = true;
         }
         
-        private void deregisterLastMatch() {
+        private void deregisterMatch(ModelWidget widget, ExecutionInfoImpl execInfo) {
             if (isTargetMatched()) throw new IllegalStateException("Tried to modify RenderTargetState matches (deregister match)"
                     + " after already found target match (should be read-only)");
-            this.matchedWidgets.remove(this.matchedWidgets.size() - 1);
+            //Token matcher = this.matchedWidgets.remove(widget);
+            //this.fullMatchedTokens.remove(matcher);
+            this.matchedWidgets.remove(widget);
+            this.nextTokenIndex--;
         }
         
         /**
@@ -796,7 +861,7 @@ public class RenderTargetExpr implements Serializable {
          */
         public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) {
             // NOTE: by default, shouldExecute = true, because everything may contain our target(s).
-            ExecutionInfoImpl execInfo = new ExecutionInfoImpl(widget, true, false, writer);
+            ExecutionInfoImpl execInfo = new ExecutionInfoImpl(widget, true, writer);
             if (finished) {
                 execInfo.shouldExecute = false;
             } else if (isTargetMatched()) {
@@ -813,6 +878,13 @@ public class RenderTargetExpr implements Serializable {
                     execInfo.writerForElem = SwitchRenderWriter.getInstance(w, false);
                 }
 
+                // not needed for now: turns out not needed for the complex selectors... yet
+//                // SPECIAL CASE: check for delayed matches - these are pre-allowed
+//                Token delayedMatchToken = this.delayedMatches.get(widget);
+//                if (delayedMatchToken != null) {
+//                    delayedMatchToken.delayedMatches(widget, context, this, execInfo);
+//                } else {
+                
                 // Compare the widget against the current token in the expression, stored in the state
                 // results are marked in execInfo
                 Token token = this.getNextToken();
@@ -971,15 +1043,14 @@ public class RenderTargetExpr implements Serializable {
         public class ExecutionInfoImpl implements ExecutionInfo {
             ModelWidget widget;
             boolean shouldExecute;
-            boolean matchRegistered;
             Appendable writerForElem;
+            boolean matchRegistered;
             
-            ExecutionInfoImpl(ModelWidget widget, boolean shouldExecute,
-                    boolean matchRegistered, Appendable writerForElem) {
+            ExecutionInfoImpl(ModelWidget widget, boolean shouldExecute, Appendable writerForElem) {
                 this.widget = widget;
                 this.shouldExecute = shouldExecute;
-                this.matchRegistered = matchRegistered;
                 this.writerForElem = writerForElem;
+                this.matchRegistered = false;
             }
             
             @Override
@@ -998,9 +1069,9 @@ public class RenderTargetExpr implements Serializable {
                         finished = true;
                         ((SwitchRenderWriter) writerForElem).useAltWriter();
                     } else {
-                        deregisterLastMatch();
+                        deregisterMatch(widget, this);
                     }
-                }
+                } 
             }
         }
 
@@ -1012,10 +1083,6 @@ public class RenderTargetExpr implements Serializable {
             public boolean isFinished() { return false; }
             @Override
             public boolean isTargetMatched() { return false; }
-            @Override
-            public ModelWidget getTargetMatchedWidget() { return null; }
-            @Override
-            public int getNumMatched() { return 0; }
             @Override
             public RenderTargetExpr getExpr() { return null; }
             @Override

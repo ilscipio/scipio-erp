@@ -773,7 +773,15 @@ public class ConfigXMLReader {
                     }
                 }
             }
-            return new ViewAsJsonConfig();
+            return null;
+        }
+        
+        /**
+         * SCIPIO: returns view-as-json configuration, corresponding to site-conf.xsd view-as-json element.
+         */
+        public ViewAsJsonConfig getViewAsJsonConfigOrDefault() throws WebAppConfigurationException {
+            ViewAsJsonConfig config = getViewAsJsonConfig();
+            return config != null ? config : new ViewAsJsonConfig();
         }
         
         private void loadGeneralConfig(Element rootElement) {

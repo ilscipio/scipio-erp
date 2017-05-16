@@ -240,7 +240,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       form["${escapeVal(focusFieldName, 'js')}"].focus();
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
-      if (jQuery(form).find(".required").size() > 0) {
+      if (jQuery(form).find(".required").length > 0) {
         jQuery(form).validate();
       }
     </@script><#lt/>

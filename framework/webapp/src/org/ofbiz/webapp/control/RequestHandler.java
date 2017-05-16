@@ -463,7 +463,7 @@ public class RequestHandler {
         // SCIPIO
         ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig;
         try {
-            viewAsJsonConfig = controllerConfig.getViewAsJsonConfig();
+            viewAsJsonConfig = controllerConfig.getViewAsJsonConfigOrDefault();
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
             throw new RequestHandlerException(e);

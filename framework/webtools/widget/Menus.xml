@@ -432,8 +432,7 @@ under the License.
     </menu>
     
     <menu name="geoManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}"
-        widget-style="+these-classes-manually-added ${styles.menu_sidebar_itemactive} ${styles.menu_sidebar_itemactivetarget}">
+        menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="FindGeo" title="${uiLabelMap.WebtoolsGeosFind}">
             <link target="FindGeo"/>            
         </menu-item>

@@ -364,8 +364,7 @@ under the License.
         <include-elements menu-name="RequirementTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-    widget-style="+these-classes-manually-added ${styles.menu_sidebar_itemactive} ${styles.menu_sidebar_itemactivetarget}">    
+    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">    
         <menu-item name="ViewQuote" title="${uiLabelMap.CommonSummary}">
             <condition>
                 <not><if-empty field="quoteId"/></not>

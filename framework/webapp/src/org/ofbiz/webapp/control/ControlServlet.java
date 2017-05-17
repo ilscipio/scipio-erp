@@ -35,6 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
@@ -218,7 +219,7 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
                 Debug.logError(throwable, "Error in request handler: ", module);
-                request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(throwable.toString()));
+                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, throwable));
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
          } catch (RequestHandlerExceptionAllowExternalRequests e) {
@@ -226,7 +227,7 @@ public class ControlServlet extends HttpServlet {
               Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
-            request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(e.toString()));
+            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, e));
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
 
@@ -241,6 +242,13 @@ public class ControlServlet extends HttpServlet {
 
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
+                // SCIPIO: 2017-05-15: special case for targeted rendering of error page
+                Object scpErrorRenderTargetExpr = request.getAttribute("scpErrorRenderTargetExpr");
+                if (scpErrorRenderTargetExpr == null) scpErrorRenderTargetExpr = request.getParameter("scpErrorRenderTargetExpr");
+                if (scpErrorRenderTargetExpr != null) {
+                    request.setAttribute("scpRenderTargetExpr", scpErrorRenderTargetExpr);
+                }
+                
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
                 Debug.logError("Including errorPage: " + errorPage, module);
 
@@ -267,7 +275,7 @@ public class ControlServlet extends HttpServlet {
                         }
                     } else {
                         // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
-                        final String genericErrorMessage = "An error occurred. Please contact support.";
+                        final String genericErrorMessage = RequestUtil.getGenericErrorMessage();
                         try {
                             response.getWriter().print(genericErrorMessage);
                         } catch (Throwable t2) {
@@ -333,7 +341,7 @@ public class ControlServlet extends HttpServlet {
         GenericDelegator.clearUserIdentifierStack();
         GenericDelegator.clearSessionIdentifierStack();
     }
-
+    
     /**
      * @see javax.servlet.Servlet#destroy()
      */

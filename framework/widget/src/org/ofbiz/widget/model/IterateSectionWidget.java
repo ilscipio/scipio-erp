@@ -110,7 +110,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
     }
 
     @Override
-    public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+    public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         int viewIndex = 0;
         int viewSize = this.viewSize;
         int lowIndex = -1;

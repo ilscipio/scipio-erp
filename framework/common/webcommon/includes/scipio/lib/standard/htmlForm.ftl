@@ -61,7 +61,7 @@ Defines a form. Analogous to <form> HTML element.
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
-
+<@renderTarget dirName="form" dirArgs=args>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("scipioFormInfoStack", formInfo)>
@@ -79,6 +79,7 @@ Defines a form. Analogous to <form> HTML element.
   <#if close>
     <#local dummy = popRequestStack("scipioFormInfoStack")>
   </#if>
+</@renderTarget>
 </#macro>
 
 <#-- @form main markup - theme override -->
@@ -1745,6 +1746,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#-- auto value integration -->
   <#if !autoValue?is_boolean>
     <#local autoValue = scpAutoVal!false>
+    <#if !autoValue?is_boolean><#-- TODO: REVIEW: without this there was a crash. probably shouldn't happen -->
+      <#local autoValue = false>
+    </#if>
   </#if>
   <#if autoValue>
     <#if type == "checkbox" || type == "radio">

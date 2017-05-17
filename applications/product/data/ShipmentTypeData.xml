@@ -128,7 +128,7 @@ under the License.
     
     <ShipmentGatewayConfigType shipmentGatewayConfTypeId="USPS" hasTable="N" description="USPS Shipment Gateway"/>
     <ShipmentGatewayConfig shipmentGatewayConfigId="USPS_CONFIG" shipmentGatewayConfTypeId="USPS" description="USPS Config"/>
-    <ShipmentGatewayUsps shipmentGatewayConfigId="USPS_CONFIG" connectUrl="http://production.shippingapis.com/ShippingAPITest.dll" connectUrlLabels="http://production.shippingapis.com/ShippingAPITest.dll" connectTimeout="60" accessUserId="000000000000" accessPassword="999999999999" maxEstimateWeight="70" test="N"/>
+    <ShipmentGatewayUsps shipmentGatewayConfigId="USPS_CONFIG" connectUrl="http://production.shippingapis.com/ShippingAPI.dll" connectUrlLabels="http://production.shippingapis.com/ShippingAPI.dll" connectTimeout="60" accessUserId="000000000000" accessPassword="999999999999" maxEstimateWeight="70" test="N"/>
     
     <!-- Shipment Gateway custom methods by type -->
     <CustomMethodType customMethodTypeId="SHIP_EST" parentTypeId="" hasTable="N" description="Shipment Gateway rate estimate methods"/>

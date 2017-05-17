@@ -2334,7 +2334,7 @@ under the License.
                      <!-- 
                     <if-not-empty field="taxAuthorityGlAccount">
                      -->
-                        <set field="creditEntry.glAccountId" from-field="taxRateProduct.taxGlAccountId"/>
+                    <set field="creditEntry.glAccountId" from-field="glAccountId"/>    
                     <!-- 
                         <else>
                             <set field="creditEntry.glAccountTypeId" value="TAX_ACCOUNT"/>

@@ -395,7 +395,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
-
+<@renderTarget dirName="table" dirArgs=args>
   <#if open>
     <#local tableIdNum = getRequestVar("scipioTableIdNum")!0>
     <#local tableIdNum = tableIdNum + 1 />
@@ -555,6 +555,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("scipioCurrentTableLastRowAlt", prevLastRowAlt)>
   </#if>
   <#local dummy = setRequestVar("scipioLastTableInfo", tableInfo)>
+</@renderTarget>
 </#macro>
 
 <#-- @table main markup - theme override -->

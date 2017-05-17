@@ -619,6 +619,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
+    <request-map uri="TargetedRenderingTest">
+        <security https="true" auth="true"/>
+        <event type="java" invoke="testEvent" path="com.ilscipio.scipio.webtools.TargetedRenderingTestEvents" />
+        <response name="success" type="view" value="TargetedRenderingTest"/>
+        <response name="error" type="view" value="TargetedRenderingTest"/>
+    </request-map>
     
     <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">
@@ -757,7 +763,7 @@ under the License.
     <view-map name="LookupGeo" type="screen" page="component://webtools/widget/GeoManagementScreens.xml#LookupGeo"/>    
     
     <view-map name="WebtoolsLayoutDemo" page="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo" type="screen"/>
-    
+    <view-map name="TargetedRenderingTest" page="component://webtools/widget/MiscScreens.xml#TargetedRenderingTest" type="screen"/>
     
     <view-map name="EntityUtilityServices" type="screen" page="component://webtools/widget/EntityScreens.xml#EntityUtilityServices"/>
     <!-- SCIPIO: Demo data generator -->    

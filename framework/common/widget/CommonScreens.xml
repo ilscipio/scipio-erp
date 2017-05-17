@@ -33,7 +33,11 @@ under the License.
                         <html-template location="component://common/webcommon/includes/htmlheader-for-ajax.ftl" />
                     </html>
                 </platform-specific>
-                <decorator-section-include name="body" />
+                <section name="Global-Column-Main">
+                    <widgets>
+                        <decorator-section-include name="body" />
+                    </widgets>
+                </section>
                 <platform-specific>
                     <html>
                         <html-template location="component://common/webcommon/includes/htmlfooter-for-ajax.ftl" />
@@ -223,7 +227,11 @@ under the License.
                 <include-screen-actions name="GlobalTemplateActions" />
             </actions>
             <widgets>
-                <section>
+                <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
+                    when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
+                    in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
+                    note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -235,13 +243,17 @@ under the License.
                             </html>
                         </platform-specific>
                         <!-- render header -->
-                        <platform-specific>
-                            <html>
-                                <html-template location="${headerTemplateLocation}" />
-                            </html>
-                        </platform-specific>
+                        <section name="Global-Head-Header">
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${headerTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
                         <!-- render appbar or its opening part -->
-                        <section name="Render-Main-Nav">
+                        <section name="Global-Main-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="appbarOpenTemplateLocation" />
@@ -264,7 +276,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section>
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -273,7 +285,7 @@ under the License.
                     </condition>
                     <widgets>
                         <!-- render appheader: both menu widget style and ftl template style menus are supported -->
-                        <section name="Render-App-Nav">
+                        <section name="Global-App-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="userLogin" />
@@ -326,7 +338,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section>
+                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -345,13 +357,21 @@ under the License.
                 </section>
                 <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                      include in <head></head>, but doesn't seem worth it for now -->
-                <platform-specific>
-                    <html>
-                        <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
-                    </html>
-                </platform-specific>
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
                 <!-- render content area -->
-                <decorator-section-include name="pre-content"/>
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, *">
+                    <widgets>
+                        <decorator-section-include name="pre-content"/>
+                    </widgets>
+                </section>
                 <container style="${styles.grid_theme}" id="content-main-section">
                     <section>
                         <condition>
@@ -359,14 +379,18 @@ under the License.
                                 <if-empty-section section-name="content-full-screen"/>
                             </not>
                         </condition>
-                        <widgets>                    
-                           <decorator-section-include name="content-full-screen"/>
+                        <widgets>
+                            <section name="Global-Content-Full">
+                                <widgets>
+                                    <decorator-section-include name="content-full-screen"/>
+                                </widgets>
+                            </section>      
                         </widgets>
                         <fail-widgets>
                         <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
                             
                             <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
-                            <section>
+                            <section name="Global-Content-Main">
                                 <condition>
                                     <if-true field="customSideBar" />
                                 </condition>
@@ -527,18 +551,22 @@ under the License.
                     </section>
                 </container>
                 <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <platform-specific>
-                    <html>
-                        <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
-                    </html>
-                </platform-specific>
-                <section>
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                <section contains="!$Global-Column-Main, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
                     <widgets>
                         <!-- render footer -->
-                        <section name="Render-Footer">
+                        <section name="Global-Footer">
                             <condition>
                                 <if-empty field="applicationFooterTemplate" />
                             </condition>
@@ -611,10 +639,10 @@ under the License.
                                 <not><if-empty-section section-name="body"/></not>
                             </condition>
                             <widgets>
-                                    <container id="content-main-body">
-                                        <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
-                                        <decorator-section-include name="body"/>
-                                    </container>
+                                <container id="content-main-body">
+                                    <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
@@ -715,7 +743,7 @@ under the License.
     
     <!-- Common Widgets -->
     <screen name="column-left">
-        <section>
+        <section name="Global-Column-Left">
             <widgets>
                 <container style="${columnLeftStyle}" id="left-sidebar">
                     <container style="sidebar">
@@ -728,7 +756,7 @@ under the License.
     </screen>
     
     <screen name="column-right">
-        <section>
+        <section name="Global-Column-Right">
             <widgets>
                 <container style="${columnRightStyle}" id="right-sidebar">
                     <container style="sidebar">
@@ -740,31 +768,39 @@ under the License.
     </screen>
     
     <screen name="column-main">
-        <section>
+        <section name="Global-Column-Main">
             <condition>
                 <if-empty field="noTitle"/>
             </condition>
             <widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <label style="h1" text="${headerTitle}"/>
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <label style="h1" text="${headerTitle}"/>
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </widgets>
             <fail-widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </fail-widgets>
         </section>            

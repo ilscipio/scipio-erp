@@ -1171,6 +1171,61 @@ to indicate the value null.
 
 <#-- 
 *************
+* virtualSection
+************
+Defines a virtual section that produces no markup (used in targeted rendering),
+with a name of global scope.
+This is equivalent to defining a {{{<section>}}} widget element 
+(whereas @section is equivalent to {{{<screenlet>}}} widget element).
+
+This is required to be able to re-implement some widgets screens and decorators as FTL.
+
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
+
+NOTE: this implicitly defines a @renderTarget.
+
+  * Parameters *
+    name                    = Virtual section name (global scope)
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro virtualSection name="">
+</#macro>
+-->
+
+<#-- 
+*************
+* renderTarget
+************
+Used within a standard library macro definition to implemented targeted rendering for the directive.
+
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
+
+NOTE: Due to possible performance concerns, only a few of the scipio standard Freemarker API currently support this:
+    @container, @section, @form, @table.
+    They are mostly meant to work with the {{{scpRenderTargetExpr}}} ID selector ({{{#}}}).
+
+FIXME: Some of the behavior is currently hardcoded inside the renderTarget implementation.
+
+  * Parameters *
+    dirName                 = Name of the containing directive
+    dirArgs                 = ((map)) Map of arguments that were passed to the directive
+                              The implementation may extract name and ID.
+    id                      = id, ONLY used if dirArgs omitted                          
+    name                    = name, ONLY used if dirArgs omitted          
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro renderTarget dirName="" dirArgs={} id="" name="">
+</#macro>
+-->
+
+<#-- 
+*************
 * getLabel
 ************
 Returns label from global label map or resource, or empty string if no label is found,

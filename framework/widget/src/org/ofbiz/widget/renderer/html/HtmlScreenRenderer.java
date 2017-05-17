@@ -173,7 +173,11 @@ public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStri
         boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         Menu tabMenu = screenlet.getTabMenu();
         if (tabMenu != null) {
-            tabMenu.renderWidgetString(writer, context, this);
+            try {
+                tabMenu.renderWidgetString(writer, context, this);
+            } catch (GeneralException e) { // SCIPIO: interface kludge
+                throw new IOException(e);
+            }
         }
         writer.append("<div class=\"screenlet\"");
         String id = screenlet.getId(context);
@@ -245,7 +249,11 @@ public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStri
                     MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
                     MenuStringRenderer renderer = new ScreenletMenuRenderer(request, response);
                     context.put("menuStringRenderer", renderer);
-                    navMenu.renderWidgetString(writer, context, this);
+                    try {
+                        navMenu.renderWidgetString(writer, context, this);
+                    } catch (GeneralException e) { // SCIPIO: interface kludge
+                        throw new IOException(e);
+                    }
                     context.put("menuStringRenderer", savedRenderer);
                 } else if (navForm != null) {
                     renderScreenletPaginateMenu(writer, context, navForm);

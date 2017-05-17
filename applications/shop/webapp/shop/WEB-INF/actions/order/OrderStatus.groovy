@@ -125,8 +125,8 @@ if (orderHeader) {
     orderShippingTotal = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
     orderShippingTotal = orderShippingTotal.add(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
 
-    orderTaxTotal = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
-    orderTaxTotal = orderTaxTotal.add(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false));
+    Map<String, Object> taxByAuthority = OrderReadHelper.getOrderTaxByTaxAuthGeoAndParty(orderReadHelper.getAdjustments());
+    orderTaxTotal = taxByAuthority.get("taxGrandTotal");
 
     placingCustomerOrderRole = from("OrderRole").where("orderId", orderId, "roleTypeId", roleTypeId).queryFirst();
     placingCustomerPerson = placingCustomerOrderRole == null ? null : from("Person").where("partyId", placingCustomerOrderRole.partyId).queryOne();

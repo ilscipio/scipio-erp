@@ -239,7 +239,13 @@ under the License.
                 <xs:element minOccurs="0" ref="widgets" />
                 <xs:element minOccurs="0" ref="fail-widgets" />
             </xs:sequence>
-            <xs:attribute type="xs:string" name="name" />
+            <xs:attribute type="xs:string" name="name">
+                <xs:annotation>
+                    <xs:documentation>Optional section name.
+                        SCIPIO: NOTE: This name may now be used for functional purposes, to designate
+                        code sections (2017-05-04).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="share-scope"><!-- default="true" -->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: New share-scope on inlined sections. Default: true.</xs:documentation>
@@ -251,8 +257,122 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
+    <xs:attributeGroup name="attlist.generic-screen-widget-elem">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Generic attributes that can apply to any screen widget element definition.
+                Added 2017-05-06.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="contains"><!-- default="*" -->
+            <xs:annotation>
+                <xs:documentation>SCIPIO: Complex expression describing the sections and elements that this element
+                    may and may not contain.
+                    Used in conjunction with targeted rendering, to avoid executing parts not needed, for optimization.
+                    This is a shortcut to writing manual verbose conditions manual everywhere.
+                    Usually used as blacklist.
+                    
+                    This uses close syntax to the targeted rendering "scpRenderTargetExpr" parameter,
+                    which may be passed to ajax render and other render modes.
+                    This documentation also describes some of the features of the query parameter.
+                    
+                    Format:
+                    Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
+                    Names may refer to element names, id values, or other.
+                    Spaces are ignored, and has no flexible expression support.
+                    Each name can be directly prefixed with a Matching Element Type character, which denotes
+                    what widget element or attribute value the name will match against.
+                    An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)
+                    of the name instead of inclusion (whitelist), to denote that the element does not contain another.
+                    The last entry in the full expression (after a comma) should always be
+                    either match-all "*" or match-none "!*", to prevent ambiguity and to explicitly show to both
+                    users and renderer whether the intent was to write a blacklist or whitelist, respectively.
+                    
+                    Matching Element Types:
+                    * "$" - specific, matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
+                            also matches FTL "@virtualSection" directive invocation "name" argument.
+                    * "#" - specific, matches "container", "screenlet" elements "id" attribute value - considered GLOBAL in scope (across includes)
+                            also matches some FTL directive invocations that support IDs (see below)
+                    * "~" - specific, matches "decorator-section-include" element "name" attribute value - considered LOCAL in scope (to current decorator layer)
+                            NOTE: only works on "current" decorator level.
+                            NOTE: this uses an optimization to automatically blacklist the decorator-section-include invocations on the current
+                                level that don't match the specified name.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                    * "^" - specific, special 'recalling' decorator-section matcher, very confusing.
+                            This first token matches a decorator-screen element (similar to %) and the second matches a section in the remembered decorator.
+                            It uses an internal memory/stack.
+                            The complicated syntax is as follows:
+                              "^decorator-screen ^/decoratorsectionname"
+                            Extra tokens can go in between and after:
+                              "^decorator-screen #some-id-inside-the-decorator-impl ^/decoratorsectionname #some-nested-id"
+                    * "%" - generic, widget element selector, matches the element tag name (most elements supported, not guaranteed all).
+                            optionally can add brackets "%tagname[name=SomeName]" or "%tagname[id='some-id']" to only match elements with given name or id.
+                            NOTE: only name and id attributes are supported, and support is best-effort.
+                            NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
+                            FIXME: the attributes in brackets will not work properly inside contains-expressions
+                            FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
+                    * "@" - generic, LIMITED FTL directive invocation selector, matches "@section" and "@container" invocations
+                            supports "@macroname[id=some-id]" attribute (only ID).
+                            NOTE: it is usually better to use the #id selector instead of this; it will also match
+                                those few FTL directives.
+                            FIXME: the attributes in brackets will not work properly inside contains-expressions
+                            
+                    NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
+
+                    Other Special Characters:
+                    * "*" - wilcard
+                            WARN: limited support in scpRenderTargetExpr parameter; may prevent optimizations with contains-expression interaction.
+                    * "!" - exclude/negation
+                            NOTE: not supported in scpRenderTargetExpr parameter
+
+                    Specificity: 
+                    Names without wildcards always match first, followed by partial wildcard, and finally full wildcard.
+                    On a given level, include has priority over exclude, but wildcard-less exclude has priority over wildcard include.
+                    
+                    Default: "*" (matches all)
+                    
+                    ex.: 
+                      "!$MySection1, !$MySection2, !$MySection-*, *" (blacklist)
+                      "$MySection1, $MySection-*, #my-container-1, !*" (whitelist)
+                      
+                    NOTE: These expressions are required for optimization, to be able to skip code execution not related
+                        to the target element.
+                        If the decorator does not blacklist anything, targeted rendering will still work, because
+                        the non-targeted output will still be prevented; but the renderer will still execute the data 
+                        preparation for all those null-output elements, which may (or may not) be expensive.
+                    
+                    Added 2017-05-04.</xs:documentation>
+                    <!-- DEV NOTES:
+                      * Security: The decorators are responsible for implementing the majority of render-related security 
+                        checks. The controller heavily depends on the screens to perform their own security checks.
+                        Everything written above here, below, and in the java files must take into account the security checks.
+                      * TODO?: Automatic contains-expression generation: 
+                        There is a very limited possibility for automatic generation of contains-expressions by the renderer 
+                        in the future; e.g. it can try to work out some relations based on the screen's immediate definitions.
+                        However this becomes extremely complex and may require assumptions that will break decorators and screens.
+                        As general rule, it is physically impossible for the render to build these, because most of the
+                        elements targeted will cross decorator boundaries i.e. decorator-section-include elements.
+                        Only a limited set of other types of includes can be followed, because many are parametrized using
+                        flexible expressions and only resolved at runtime (e.g. location="${parameters.mainDecoratorLocation}").
+                        So only local definitions and hardcoded includes can be used, and it requires making the assumption
+                        that the definitions are exclusive to the screen, e.g. are not found in the decorator-section-includes,
+                        which would break composed decorators such as the shop decorator. 
+                        More generally there is a computational impossibility associated with trying to predict what code
+                        is going to do without actually running it. 
+                      * TODO?: Alternate targeted rendering widget extraction method:
+                        In targeted rendering, it is currently in most cases essential to execute all code in the decorators
+                        (except where explicitly blacklisted as non-relevant using contains-expression).
+                        i.e. it is currently dangerous and usually invalid to try to extract parts of a screen for standalone execution.
+                        This is primarily because the decorators implement most of the security checks, and also because
+                        many widgets rely on the global actions performed by the decorators.
+                        The only way this would be possible would be to in turn extract the security checks and global actions
+                        from the decorators to run them along with the extracted screen parts, but currently this is impossible,
+                        because there is no way or global pattern to identify the decorator code needed to extract (especially
+                        the security checks). Realistically this may never happen. -->
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 
     <!-- ================ CONDITIONS ================ -->
 
@@ -464,6 +584,7 @@ under the License.
                     <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
     <xs:element name="horizontal-separator" substitutionGroup="AllWidgets">
@@ -599,6 +720,7 @@ under the License.
                     <xs:documentation>Name of the screenlet include-menu sub element that will be used for the screenlet tab bar.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
 
@@ -768,6 +890,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attributeGroup ref="attlist.generic-screen-widget-elem"/><!-- SCIPIO: Added 2017-05-06 -->
         </xs:complexType>
     </xs:element>
     <xs:element name="decorator-section-include" substitutionGroup="AllWidgets">

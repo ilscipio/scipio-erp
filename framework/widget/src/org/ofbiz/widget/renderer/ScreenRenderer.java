@@ -108,8 +108,10 @@ public class ScreenRenderer implements RenderContextFetcher {
     }
 
     /**
-     * SCIPIO: creates a renderer that uses FtlContextFetcher to get the writer,
-     * which prevents errors in template usage of screens.render (known ofbiz flaw).
+     * SCIPIO: creates a renderer that uses FtlContextFetcher to get the output writer,
+     * in other words gets the writer from the currently executing FTL environment if there is one,
+     * or using the passed writer otherwise.
+     * This prevents errors in template usage of screens.render (known ofbiz flaw).
      * FIXME: CURRENTLY ONLY SUPPORT FTL ENV.
      */
     public static ScreenRenderer makeWithEnvAwareFetching(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
@@ -581,6 +583,11 @@ public class ScreenRenderer implements RenderContextFetcher {
 
         // SCIPIO: set the request method for easy access. it is UPPERCASE.
         context.put("requestMethod", request.getMethod().toUpperCase());
+        
+        // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
+        Object scpRenderTargetExpr = request.getAttribute("scpRenderTargetExpr");
+        if (scpRenderTargetExpr == null) scpRenderTargetExpr = request.getParameter("scpRenderTargetExpr");
+        RenderTargetExpr.setRenderTargetVars(context, RenderTargetExpr.fromObject(scpRenderTargetExpr));
         
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);

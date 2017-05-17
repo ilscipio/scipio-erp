@@ -252,7 +252,7 @@ public class CommonServices {
      */
     public static Map<String, Object> clearFileCaches(DispatchContext dctx, Map<String, ?> context) {
         try {
-            if(Boolean.valueOf(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"))){
+            if(UtilMisc.booleanValue(UtilProperties.getPropertyValue("cache", "cache.fileupdate.enable","true"), true)){
                 String cacheName = (String) context.get("cacheName");
                 String fileType = (String) context.get("fileType");
                 String fileLocation = (String) context.get("fileLocation");

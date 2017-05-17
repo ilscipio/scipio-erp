@@ -1169,6 +1169,314 @@
 </#if>
 
 <#if debugMode>
+<a name="ajax-render-test"></a>
+<@section title="AJAX Render Test">
+<#assign ajaxRenderTestPresets = {
+    "MANUAL": {
+        "title": "Manual",
+        "defaultPreset": true
+    },
+    "FULL1": { 
+        "title": "Full page",
+        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "view": "runService" 
+    },
+    "PARTSECT1": {
+        "title": "Partial page, widget section",
+        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "view": "runService", 
+        "scpRenderTargetExpr": "$Global-Column-Main"
+    },  
+    "PARTCONTAINERNONOPT1": {
+        "title": "Partial page, widget container, NON-optimized",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "#main-content"
+    },  
+    "PARTCONTAINERCOMPLEX1": {
+        "title": "Partial page, widget container, with section execution optimization",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
+    },  
+    "PARTCONTAINERCOMPLEXJS1": {
+        "title": "Partial page, widget container, plus jQuery sub-element extraction",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content",
+        "jQueryElemExpr": "#screenlet_1"
+    },
+    "PARTFTLBOUNDARY1": {
+        "title": "Partial page, non-optimized, deep section across FTL boundary test",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
+    },
+    "PARTFTLBOUNDARY2": {
+        "title": "Partial page, part-optimized, deep section across FTL boundary test",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
+    },
+    "PARTFTLSEL1": {
+        "title": "Partial page, LIMITED FTL macro selection test (@container)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
+    },
+    "PARTFTLSEL2": {
+        "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
+    },
+    "PARTFTLSEL3": {
+        "title": "Partial page, LIMITED FTL macro selection test (@form)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-form-1" 
+    },
+    "PARTFTLSEL4": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget form within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestForm1" 
+    },
+    "PARTFTLSEL5": {
+        "title": "Partial page, LIMITED FTL macro selection test (@table)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
+    },
+    "PARTDECSEL1": {
+        "title": "Partial page, special decorator selection test 1",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen $Global-Column-Main ^/body" 
+    },
+    "PARTDECSEL2": {
+        "title": "Partial page, special decorator selection test 2 (complex)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen[name=CommonWebtoolsAppDecorator] ^decorator-screen[name=main-decorator] $Global-Column-Main ^/body ^/body ^decorator-screen[name=TargetedRenderingTestSubDecorator] ^/body #tr-widget-container-3" 
+    },
+    "PARTREQURI1": {
+        "title": "Request URI test, partial page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main" 
+    },
+    "PARTREQURI2": {
+        "title": "Request URI test, partial page, but FULL page for login and error pages",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTREQURI3": {
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and test event throws exception (NOTE: does NOT give error page)",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen",  <#-- get the full error page -->
+        "extraParams": "testEventResult=exception"
+    },
+    "PARTREQURI4": {
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and we call invalid request which gives error page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    }
+}>
+  <@script>
+    function getAjaxRenderOut(renderOut) {
+        return renderOut;
+    }
+    function getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr) {
+        var out = jQuery(jQueryElemExpr, jQuery(renderOut));
+        if (out.length) {
+            return out.wrap('<div/>').parent().html();
+        } else {
+            return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
+        }
+    }
+    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb) {
+        var outElem = jQuery('#'+outputElemId);
+        outElem.val("(LOADING...)");
+        jQuery.ajax({
+            url: url,
+            type: 'POST',
+            data: params,
+            success: function(data) {
+                var outElem = jQuery('#'+outputElemId);
+                var renderOut;
+                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                    // TODO: (data._ERROR_MESSAGE_LIST_) 
+                    if (data._ERROR_MESSAGE_) {
+                        renderOut = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
+                    } else {
+                        renderOut = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
+                    }
+                    if (data.renderOut) {
+                        renderOut += "\n\n---------------------------------------------------------------\n\n";
+                        renderOut += renderOutProcessCb(data.renderOut);
+                    }
+                } else if (data.renderOut) {
+                    renderOut = renderOutProcessCb(data.renderOut);
+                } else { 
+                    renderOut = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
+                }
+                outElem.val(renderOut);
+            }
+        });
+    };
+    
+    function runAjaxRenderTestFromForm(formId, outputElemId) {
+        var form = jQuery('#'+formId);
+        var requestUri = jQuery('select[name=requestUri]', form).val();
+        var url = requestUri;
+        
+        var view = jQuery('select[name=view]', form).val();
+
+        var scpRenderTargetExpr = jQuery('input[name=scpRenderTargetExpr]', form).val();
+        var scpLoginRenderTargetExpr = jQuery('input[name=scpLoginRenderTargetExpr]', form).val();
+        var scpErrorRenderTargetExpr = jQuery('input[name=scpErrorRenderTargetExpr]', form).val();
+        var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
+        var jQueryElemExpr = jQuery('input[name=jQueryElemExpr]', form).val();
+        
+        var params = {};
+        if (requestUri.indexOf('/ajaxRender') !== -1) {
+            if (!view) {
+                alert("Please select a view");
+                return;
+            }
+            params.view = view;
+        } else {
+            params.scpViewAsJson = 'true';
+        }
+        params.scpRenderTargetExpr = scpRenderTargetExpr;
+        if (scpLoginRenderTargetExpr) {
+            params.scpLoginRenderTargetExpr = scpLoginRenderTargetExpr;
+        }
+        if (scpErrorRenderTargetExpr) {
+            params.scpErrorRenderTargetExpr = scpErrorRenderTargetExpr;
+        }
+        if (extraParams) {
+            var ep = JSON.parse('{"' + extraParams.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+            params = jQuery.extend({}, params, ep);
+        }
+        
+        var cb = getAjaxRenderOut;
+        if (jQueryElemExpr.trim().length) {
+            cb = function(renderOut) {
+                return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
+            }; 
+        }
+        
+        runAjaxRenderTest(url, params, outputElemId, cb);
+    }
+    
+    var ajaxRenderTestPresets = <@objectAsScript lang='js' object=ajaxRenderTestPresets />
+    function loadAjaxRenderTestPreset(selElem, formId) {
+        var preset = jQuery(selElem).val();
+        var values = {};
+        if (preset && ajaxRenderTestPresets[preset]) {
+            values = ajaxRenderTestPresets[preset]
+        }
+        setAjaxRenderTestFormInputs(formId, values);
+    }
+    function setAjaxRenderTestFormInputs(formId, values) {
+        var form = jQuery('#'+formId);
+        jQuery('select[name=requestUri]', form).val(values.requestUri || "");
+        jQuery('select[name=view]', form).val(values.view || "");
+        jQuery('input[name=scpRenderTargetExpr]', form).val(values.scpRenderTargetExpr || "");
+        jQuery('input[name=scpLoginRenderTargetExpr]', form).val(values.scpLoginRenderTargetExpr || "");
+        jQuery('input[name=scpErrorRenderTargetExpr]', form).val(values.scpErrorRenderTargetExpr || "");
+        jQuery('input[name=extraParams]', form).val(values.extraParams || "");
+        jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
+        ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
+    }
+    function ajaxRenderRequestUriOnChange(selElem) {
+        selElem = jQuery(selElem);
+        if (selElem.val().indexOf('ajaxRender') !== -1) {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', false);
+        } else {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', true);
+        }
+    }
+    jQuery(document).ready(function() {
+        ajaxRenderRequestUriOnChange(jQuery('#ajax-render-test-form select[name=requestUri]'));
+    });
+  </@script>
+  
+  <@form id="ajax-render-test-form">
+    <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
+    <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
+    <#assign viewMapMap = toSimpleMap(controllerConfig.getViewMapMap())>
+    
+    <@field type="select" label="Test Preset" onChange="loadAjaxRenderTestPreset(this, 'ajax-render-test-form');">
+      <#list ajaxRenderTestPresets?keys as preset>
+        <#assign presetValues = ajaxRenderTestPresets[preset]>
+        
+        <#assign presetTitle = presetValues.title!preset>
+        <#assign presetArgStr = "">
+        <#assign requestName = presetValues.requestUri!>
+        <#if requestName?has_content>
+          <#if (requestName?index_of("/control/") >= 0)><#-- FIXME: horrible kludge -->
+            <#assign requestName = requestName?substring(requestName?index_of("/control/") + "/control/"?length)>
+          </#if>
+        </#if>
+        <#if requestName?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "uri: " + requestName>
+        </#if>
+        <#if presetValues.view?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "view: " + presetValues.view>
+        </#if>
+        <#if presetValues.scpRenderTargetExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "expr: " + presetValues.scpRenderTargetExpr>
+        </#if>
+        <#if presetValues.jQueryElemExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "jQuery: " + presetValues.jQueryElemExpr>
+        </#if>
+        <#if presetArgStr?has_content>
+          <#assign presetTitle = presetTitle + " [" + presetArgStr + "]">
+        </#if>
+
+        <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetTitle}</@field>
+      </#list>
+    </@field>
+    
+    <#assign defaultRequestUri = "ajaxRender">
+    <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">
+      <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
+      <#list requestMapMap?keys as requestName>
+        <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
+      </#list>
+        <@field type="option" value=makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest") selected=(defaultRequestUri?contains("TargetedRenderingInvalidRequestTest"))>TargetedRenderingInvalidRequestTest</@field>
+    </@field>
+    <@field type="select" name="view" label="View Name" value="">
+      <@field type="option" selected=true value=""></@field>
+      <#list viewMapMap?keys as viewName>
+        <#assign viewMap = viewMapMap[viewName]>  
+        <@field type="option" value=viewName>${viewName} (${(viewMap.page)!""})</@field>
+      </#list>
+    </@field>
+    <@field type="input" name="scpRenderTargetExpr" label="Target Widget Element Expression" value=""/>
+    <@field type="input" name="scpLoginRenderTargetExpr" label="Expression for Login page" value=""/>
+    <@field type="input" name="scpErrorRenderTargetExpr" label="Expression for Error page" value=""
+        tooltip="NOTE: this is only used when the errorpage is shown - NOT when an event returns error"/>
+    <@field type="input" name="extraParams" label="Extra Parameters (POST)" value=""/>
+    <@field type="input" name="jQueryElemExpr" label="Extra jQuery Filter" value=""/>
+
+    <@field type="submit" submitType="link" href="javascript:runAjaxRenderTestFromForm('ajax-render-test-form', 'ajax-render-test-out');" text=uiLabelMap.CommonRun/>
+  </@form>
+  
+  <@field type="textarea" id="ajax-render-test-out" fieldsType="default-compact" label="Output:" rows=20>(click Run to execute test)</@field>
+
+</@section>
+</#if>
+
+<#if debugMode>
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>

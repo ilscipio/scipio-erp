@@ -112,7 +112,7 @@ public class HtmlWidget extends ModelScreenWidget {
     }
 
     @Override
-    public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+    public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         for (ModelScreenWidget subWidget : subWidgets) {
             subWidget.renderWidgetString(writer, context, screenStringRenderer);
         }
@@ -281,7 +281,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             renderHtmlTemplate(writer, this.locationExdr, context);
         }
 
@@ -324,7 +324,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             renderHtmlTemplate(writer, this.templateBody, this.lang, this.templateId, context);
         }
 
@@ -364,7 +364,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
             // isolate the scope
             MapStack<String> contextMs;
             if (!(context instanceof MapStack<?>)) {
@@ -379,7 +379,7 @@ public class HtmlWidget extends ModelScreenWidget {
             // SCIPIO: 2017-03-09: workaround for context fetching problems
             RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
             standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, contextFetcher, screenStringRenderer);
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, contextFetcher, screenStringRenderer, this);
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
@@ -418,7 +418,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
 
         @Override
-        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
+        public void renderWidgetStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
         }

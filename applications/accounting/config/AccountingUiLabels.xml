@@ -2270,7 +2270,7 @@
     </property>
     <property key="AccountingBillingAddress">
         <value xml:lang="ar">عنوان الفوترة</value>
-        <value xml:lang="de">Rechnugsadresse</value>
+        <value xml:lang="de">Rechnugnsadresse</value>
         <value xml:lang="en">Billing Address</value>
         <value xml:lang="es">Dirección de facturación</value>
         <value xml:lang="fr">Adresse de facturation</value>

@@ -1608,6 +1608,11 @@
             <link target="FindPaymentGroup" />
         </menu-item>-->
         <menu-item name="PaymentGroupOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup} ${uiLabelMap.AccountingPaymentTabOverview}">
+            <condition>
+                <not>
+                    <if-empty field="paymentGroup.paymentGroupId" />
+                </not>
+            </condition>
             <link target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId" from-field="paymentGroup.paymentGroupId" />
             </link>

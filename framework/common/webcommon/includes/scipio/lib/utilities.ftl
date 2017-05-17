@@ -1213,12 +1213,14 @@ FIXME: Some of the behavior is currently hardcoded inside the renderTarget imple
     dirName                 = Name of the containing directive
     dirArgs                 = ((map)) Map of arguments that were passed to the directive
                               The implementation may extract name and ID.
-
+    id                      = id, ONLY used if dirArgs omitted                          
+    name                    = name, ONLY used if dirArgs omitted          
+    
   * History *
     Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro renderTarget dirName="" dirArgs={}>
+<#macro renderTarget dirName="" dirArgs={} id="" name="">
 </#macro>
 -->
 

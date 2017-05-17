@@ -182,10 +182,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
         private final Map<String, ModelScreenWidget> prevSectionMap; // Need separate from prevSections so can filter further
         private final SectionsRenderer prevSections;
         private final boolean includePrevSections;
-        private final DecoratorScreen sourceDecoratorScreen; // SCIPIO: remembers which DecoratorScreen created this object
+        private final ModelScreenWidget sourceDecoratorScreen; // SCIPIO: remembers which DecoratorScreen created this object
 
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
-                ScreenStringRenderer screenStringRenderer, DecoratorScreen sourceDecoratorScreen) {
+                ScreenStringRenderer screenStringRenderer, ModelScreenWidget sourceDecoratorScreen) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             localMap.putAll(sectionMap);
             this.sectionMap = Collections.unmodifiableMap(localMap);
@@ -201,7 +201,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
         
         public SectionsRenderer(Map<String, ModelScreenWidget> sectionMap, RenderContextFetcher contextFetcher,
                 ScreenStringRenderer screenStringRenderer, 
-                SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections, DecoratorScreen sourceDecoratorScreen) {
+                SectionsRenderer prevSections, Map<String, ModelScreenWidget> prevSectionMap, boolean includePrevSections, ModelScreenWidget sourceDecoratorScreen) {
             Map<String, ModelScreenWidget> localMap = new HashMap<String, ModelScreenWidget>();
             if (includePrevSections && prevSections != null && prevSectionMap != null) {
                 localMap.putAll(prevSectionMap);
@@ -355,7 +355,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
             return contextFetcher.getContext();
         }
 
-        public DecoratorScreen getSourceDecoratorScreen() { // SCIPIO
+        public ModelScreenWidget getSourceDecoratorScreen() { // SCIPIO
             return sourceDecoratorScreen;
         }
 

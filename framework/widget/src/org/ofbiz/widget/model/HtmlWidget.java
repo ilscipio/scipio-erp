@@ -379,7 +379,7 @@ public class HtmlWidget extends ModelScreenWidget {
             // SCIPIO: 2017-03-09: workaround for context fetching problems
             RenderContextFetcher contextFetcher = ScreenRenderer.makeEnvAwareContextFetcher(writer, standAloneStack);
             standAloneStack.put("screens", new ScreenRenderer(contextFetcher, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, contextFetcher, screenStringRenderer);
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, contextFetcher, screenStringRenderer, this);
 
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();

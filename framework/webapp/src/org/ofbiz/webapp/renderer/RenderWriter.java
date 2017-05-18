@@ -25,14 +25,19 @@ public abstract class RenderWriter extends Writer {
         return origWriter;
     }
 
-    public void setOrigWriter(Writer origWriter) {
-        this.origWriter = origWriter;
-    }
+//    public void setOrigWriter(Writer origWriter) {
+//        this.origWriter = origWriter;
+//    }
     
     /**
      * Returns true if the writer is currently discarding output.
      */
     public abstract boolean isDiscarding();
+    
+    public abstract void beginSection(String name, String delimInfo) throws IOException;
+    
+    public abstract void endSection(String name, String delimInfo) throws IOException;
+    
     
     /**
      * Returns true if the writer is RenderWriter and currently discarding output.
@@ -45,7 +50,7 @@ public abstract class RenderWriter extends Writer {
      * Delegates to another writer, while keeping an optional reference to an original writer.
      * For reuse.
      */
-    public static class DelegRenderWriter extends RenderWriter {
+    public static abstract class DelegRenderWriter extends RenderWriter {
         protected Writer targetWriter; // effective writer, must be initialized by sub-class
 
         protected DelegRenderWriter(Writer origWriter) {
@@ -57,14 +62,14 @@ public abstract class RenderWriter extends Writer {
             this.targetWriter = targetWriter;
         }
         
-        public static DelegRenderWriter getInstance(Writer targetWriter, Writer origWriter) {
-            return new DelegRenderWriter(origWriter, 
-                    targetWriter != null ? targetWriter : origWriter);
-        }
-        
-        public static DelegRenderWriter getInstance(Writer targetWriter) {
-            return new DelegRenderWriter(null, targetWriter);
-        }
+//        public static DelegRenderWriter getInstance(Writer targetWriter, Writer origWriter) {
+//            return new DelegRenderWriter(origWriter, 
+//                    targetWriter != null ? targetWriter : origWriter);
+//        }
+//        
+//        public static DelegRenderWriter getInstance(Writer targetWriter) {
+//            return new DelegRenderWriter(null, targetWriter);
+//        }
 
         @Override
         public boolean isDiscarding() {
@@ -135,34 +140,40 @@ public abstract class RenderWriter extends Writer {
      * on state flag. If not specified, the alt writer is set to a dummy writer that does nothing.
      * SPECIAL CASE: the {@link SwitchRenderWriter#flush()} and 
      * {@link SwitchRenderWriter#close()} methods delegate BOTH writers.
+     * 
+     * TODO: may want a fast multi-switch writer via begin/endSection calls to implement
+     * {@link org.ofbiz.webapp.control.ViewAsJsonUtil#VIEWASJSONSPLITMODE_REQPARAM}.
      */
     public static class SwitchRenderWriter extends DelegRenderWriter {
         private Writer altWriter;
+        private boolean master;
         
-        protected SwitchRenderWriter(Writer origWriter, Writer altWriter, boolean stateUseOrig) {
+        protected SwitchRenderWriter(Writer origWriter, Writer altWriter, boolean stateUseOrig, boolean master) {
             super(origWriter);
             this.altWriter = altWriter;
             this.setState(stateUseOrig);
+            this.master = master;
         }
         
-        protected SwitchRenderWriter(Writer origWriter, boolean stateUseOrig) {
+        protected SwitchRenderWriter(Writer origWriter, boolean stateUseOrig, boolean master) {
             super(origWriter);
             this.altWriter = DummyRenderWriter.getDefaultInstance();
             this.setState(stateUseOrig);
+            this.master = master;
         }
         
         /**
          * Creates with explicit alt (off) writer and initial state.
          */
-        public static SwitchRenderWriter getInstance(Writer origWriter, Writer altWriter, boolean useOrigWriter) {
-            return new SwitchRenderWriter(origWriter, altWriter, useOrigWriter);
+        public static SwitchRenderWriter getInstance(Writer origWriter, Writer altWriter, boolean useOrigWriter, boolean master) {
+            return new SwitchRenderWriter(origWriter, altWriter, useOrigWriter, master);
         }
         
         /**
          * Creates with dummy alt (off) writer and initial state.
          */
-        public static SwitchRenderWriter getInstance(Writer origWriter, boolean useOrigWriter) {
-            return new SwitchRenderWriter(origWriter, useOrigWriter);
+        public static SwitchRenderWriter getInstance(Writer origWriter, boolean useOrigWriter, boolean master) {
+            return new SwitchRenderWriter(origWriter, useOrigWriter, master);
         }
         
         public void setState(boolean useOrigWriter) {
@@ -181,10 +192,14 @@ public abstract class RenderWriter extends Writer {
             return altWriter;
         }
 
-        public void setAltWriter(Writer altWriter) {
-            this.altWriter = altWriter;
-        }
+//        public void setAltWriter(Writer altWriter) {
+//            this.altWriter = altWriter;
+//        }
         
+        public boolean isMaster() {
+            return master;
+        }
+
         @Override
         public void flush() throws IOException {    
             // SPECIAL: applies to both writers.
@@ -197,6 +212,26 @@ public abstract class RenderWriter extends Writer {
             // SPECIAL: applies to both writers.
             origWriter.close();
             altWriter.close();
+        }
+
+        @Override
+        public void beginSection(String name, String delimInfo) throws IOException {
+//            if (master) {
+//                // TODO: fast mode: switch the target writer based on name
+//                // NOT IMPLEMENTED: fast mode not yet implemented because it is more likely to fail.
+//            } else {
+            RenderTargetUtil.makeMultiTargetDelimOpen(targetWriter, name, delimInfo);
+//            }
+        }
+
+        @Override
+        public void endSection(String name, String delimInfo) throws IOException {
+//            if (master) {
+//                // TODO: fast mode: switch the target writer based on name
+//                // NOT IMPLEMENTED: fast mode not yet implemented because it is more likely to fail.
+//            } else {
+            RenderTargetUtil.makeMultiTargetDelimClose(targetWriter, name, delimInfo);
+//            }
         }
     }
     
@@ -281,10 +316,18 @@ public abstract class RenderWriter extends Writer {
                 super();
             }
 
-            @Override
-            public void setOrigWriter(Writer origWriter) {
-                throw new UnsupportedOperationException("cannot modify orig writer on ImmutableDummyRenderWriter");
-            }
+//            @Override
+//            public void setOrigWriter(Writer origWriter) {
+//                throw new UnsupportedOperationException("cannot modify orig writer on ImmutableDummyRenderWriter");
+//            }
+        }
+
+        @Override
+        public void beginSection(String name, String delimInfo) throws IOException {
+        }
+
+        @Override
+        public void endSection(String name, String delimInfo) throws IOException {
         }
     }
     

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,10 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.ScreenRenderException;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.w3c.dom.Element;
 
 /**
@@ -242,19 +243,28 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     }
 
     /**
-     * SCIPIO: New wrapper around *Core method for targetting rendering.
+     * SCIPIO: New wrapper around *Core method for targeted rendering.
      */
     public final void renderScreenString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws ScreenRenderException {
         // SCIPIO: targeted rendering applicability check.
-        RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-        RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+        WidgetRenderTargetState.ExecutionInfo execInfo;
+        try {
+            execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        } catch (IOException e) {
+            throw new ScreenRenderException(e);
+        }
         if (!execInfo.shouldExecute()) {
             return;
         }
         try {
             renderScreenStringCore(execInfo.getWriterForElementRender(), context, screenStringRenderer);
         } finally {
-            execInfo.handleFinished(context); // SCIPIO: return logic
+            try {
+                execInfo.handleFinished(context); // SCIPIO: return logic
+            } catch (IOException e) {
+                throw new ScreenRenderException(e);
+            }
         }
     }
     

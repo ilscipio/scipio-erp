@@ -1,35 +1,40 @@
 package org.ofbiz.widget.renderer;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.webapp.renderer.RenderTargetExpr;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
+import org.ofbiz.widget.model.ContainsExpr;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelScreenWidget.SectionsRenderer;
 import org.ofbiz.widget.model.ModelWidget;
-import org.ofbiz.widget.model.WidgetDocumentInfo;
 import org.ofbiz.widget.model.ftl.FtlWrapperWidget;
 import org.ofbiz.widget.model.ftl.ModelVirtualSectionFtlWidget;
 import org.ofbiz.widget.model.ftl.NonWidgetWrapperWidget;
-import org.w3c.dom.Element;
 
 /**
  * SCIPIO: Represents an expression describing screen widget element to target for rendering,
@@ -78,14 +83,12 @@ import org.w3c.dom.Element;
  * </pre>
  */
 @SuppressWarnings("serial")
-public class RenderTargetExpr implements Serializable {
+public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implements RenderTargetExpr, Serializable {
 
-    public static final String module = RenderTargetExpr.class.getName();
+    public static final String module = WidgetRenderTargetExpr.class.getName();
     
     // WARN: this is public-facing so it must have size limits in cache.properties
-    private static final UtilCache<String, RenderTargetExpr> cache = UtilCache.createUtilCache("renderer.targeted.expr");
-    
-    private static final boolean DEBUG = false || Debug.verboseOn();
+    private static final UtilCache<String, WidgetRenderTargetExpr> cache = UtilCache.createUtilCache("renderer.targeted.expr");
     
     /**
      * Separator pattern to split the names/tokens in a RenderTargetExpr input string.
@@ -107,7 +110,7 @@ public class RenderTargetExpr implements Serializable {
     
     /**
      * Matching Element Type character prefixes. Each of these matches a widget element tag OR a type of attribute.
-     * NOTE: These are shared between {@link RenderTargetExpr} and {@link ContainsExpr} so the
+     * NOTE: These are shared between {@link WidgetRenderTargetExpr} and {@link ContainsExpr} so the
      * language is recognizable and consistent.
      */
     public static final Set<Character> MET_ALL = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC, MET_WIDGETELEM, MET_FTLELEM);
@@ -131,7 +134,7 @@ public class RenderTargetExpr implements Serializable {
     /* Constructors */
     /******************************************************/
     
-    protected RenderTargetExpr(String strExpr) {
+    protected WidgetRenderTargetExpr(String strExpr) {
         this.strExpr = strExpr;
         
         String[] tokenArr = targetExprTokenSeparatorPat.split(strExpr.trim());
@@ -160,11 +163,11 @@ public class RenderTargetExpr implements Serializable {
     /**
      * New expression from string, null if empty, or IllegalArgumentException if invalid. Uses global cache.
      */
-    public static RenderTargetExpr fromString(String strExpr) throws IllegalArgumentException {
+    public static WidgetRenderTargetExpr fromString(String strExpr) throws IllegalArgumentException {
         if (strExpr == null || strExpr.isEmpty()) return null;
-        RenderTargetExpr expr = cache.get(strExpr);
+        WidgetRenderTargetExpr expr = cache.get(strExpr);
         if (expr == null) {
-            expr = new RenderTargetExpr(strExpr);
+            expr = new WidgetRenderTargetExpr(strExpr);
             cache.put(strExpr, expr); // no sync needed
         }
         return expr;
@@ -173,21 +176,124 @@ public class RenderTargetExpr implements Serializable {
     /**
      * New expression from string, null if empty, or IllegalArgumentException if invalid. No cache.
      */
-    public static RenderTargetExpr fromStringNew(String strExpr) throws IllegalArgumentException {
+    public static WidgetRenderTargetExpr fromStringNew(String strExpr) throws IllegalArgumentException {
+        // DEV NOTE: keep this logic in sync with RenderTargetUtil.isRenderTargetExprOn
         if (strExpr == null || strExpr.isEmpty()) return null;
-        return new RenderTargetExpr(strExpr);
+        return new WidgetRenderTargetExpr(strExpr);
     }
 
     /**
      * Gets expression from object, either already RenderTargetExpr or string, null if empty,
      * or IllegalArgumentException if unrecognized class or invalid. Uses global cache.
      */
-    public static RenderTargetExpr fromObject(Object expr) {
+    public static WidgetRenderTargetExpr fromObject(Object expr) {
         if (expr == null) return null;
-        if (expr instanceof RenderTargetExpr) return (RenderTargetExpr) expr;
+        if (expr instanceof WidgetRenderTargetExpr) return (WidgetRenderTargetExpr) expr;
         else if (expr instanceof String) return fromString((String) expr);
         else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
     }
+    
+    /**
+     * Gets expression from object, either already RenderTargetExpr or string, null if empty,
+     * or IllegalArgumentException if unrecognized class or invalid. Uses global cache.
+     */
+    @SuppressWarnings("unchecked")
+    public static WidgetRenderTargetExprBase fromObjectOrMulti(Object expr) {
+        if (expr == null) return null;
+        if (expr instanceof WidgetRenderTargetExpr) return (WidgetRenderTargetExpr) expr;
+        else if (expr instanceof WidgetMultiRenderTargetExpr) return (WidgetMultiRenderTargetExpr) expr;
+        else if (expr instanceof String) return fromString((String) expr);
+        else if (expr instanceof Map) return WidgetMultiRenderTargetExpr.fromMultiMap((Map<String, Object>) expr);
+        else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
+    }
+    
+    /******************************************************/
+    /* Special Multi class */
+    /******************************************************/
+    
+    // this serves as a flag to say the multi was "compiled"
+    public static class WidgetMultiRenderTargetExpr extends WidgetRenderTargetExprBase implements MultiRenderTargetExpr<WidgetRenderTargetExpr>, Serializable {
+        private final Map<String, WidgetRenderTargetExpr> map = new HashMap<>();
+        
+        public WidgetMultiRenderTargetExpr() {
+            super();
+        }
+
+        public WidgetMultiRenderTargetExpr(Map<? extends String, ? extends RenderTargetExpr> m) {
+            this.map.putAll(map);
+        }
+        
+        public static WidgetMultiRenderTargetExpr fromMultiMap(Map<String, Object> map) throws IllegalArgumentException {
+            WidgetMultiRenderTargetExpr multiExpr = new WidgetMultiRenderTargetExpr();
+            for(Map.Entry<String, Object> entry : map.entrySet()) {
+                multiExpr.put(entry.getKey(), WidgetRenderTargetExpr.fromObject(entry.getValue()));
+            }
+            return multiExpr;
+        }
+        
+        public static WidgetMultiRenderTargetExpr fromSingle(WidgetRenderTargetExpr expr) {
+            WidgetMultiRenderTargetExpr multiExpr = new WidgetMultiRenderTargetExpr();
+            multiExpr.put(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, expr);
+            return multiExpr;
+        }
+
+        public int size() {
+            return map.size();
+        }
+
+        public boolean isEmpty() {
+            return map.isEmpty();
+        }
+
+        public boolean containsKey(Object key) {
+            return map.containsKey(key);
+        }
+
+        public boolean containsValue(Object value) {
+            return map.containsValue(value);
+        }
+
+        public WidgetRenderTargetExpr get(Object key) {
+            return map.get(key);
+        }
+
+        public WidgetRenderTargetExpr put(String key, WidgetRenderTargetExpr value) {
+            return map.put(key, value);
+        }
+
+        public WidgetRenderTargetExpr remove(Object key) {
+            return map.remove(key);
+        }
+
+        public void putAll(Map<? extends String, ? extends WidgetRenderTargetExpr> m) {
+            map.putAll(m);
+        }
+
+        public void clear() {
+            map.clear();
+        }
+
+        public Set<String> keySet() {
+            return map.keySet();
+        }
+
+        public Collection<WidgetRenderTargetExpr> values() {
+            return map.values();
+        }
+
+        public Set<java.util.Map.Entry<String, WidgetRenderTargetExpr>> entrySet() {
+            return map.entrySet();
+        }
+
+        public boolean equals(Object o) {
+            return map.equals(o);
+        }
+
+        public int hashCode() {
+            return map.hashCode();
+        }
+    }
+    
     
     /******************************************************/
     /* Token and name representations */
@@ -442,11 +548,11 @@ public class RenderTargetExpr implements Serializable {
         }
 
         /**
-         * Core comparison implementation for {@link RenderTargetState#handleShouldExecute}.
+         * Core comparison implementation for {@link WidgetRenderTargetState#handleShouldExecute}.
          * flawed design but works better for now.
          */
         protected abstract void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo);
+                WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo);
         
         // turns out this is not needed for the time being. this was called as special case from 
 //        /**
@@ -482,7 +588,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if ((widget instanceof ModelScreenWidget.Section || widget instanceof ModelVirtualSectionFtlWidget) && 
                     matchesWidget(widget, context, null, idAttr, name)) {
                     state.registerMatch(widget, execInfo, this);
@@ -497,7 +603,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (matchesWidget(widget, context, null, name, nameAttr)) {
                     state.registerMatch(widget, execInfo, this);
                 }
@@ -511,7 +617,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof ModelScreenWidget.DecoratorSectionInclude) {
                     if (name.matches(widget.getName())) {
                         state.registerMatch(widget, execInfo, this);
@@ -519,7 +625,7 @@ public class RenderTargetExpr implements Serializable {
                         // SPECIAL: unlike most other widget, if the decorator-section name did not match, 
                         // we can safely exclude this element from rendering,
                         // because the selector only works on current include/decorator level.
-                        execInfo.shouldExecute = false;
+                        execInfo.shouldExecuteCurrentExpr = false;
                     }
                 }
             }
@@ -532,7 +638,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof ModelScreenWidget.DecoratorScreen && matchesWidget(widget, context, name, idAttr, nameAttr)) {
                     ModelScreenWidget.DecoratorScreen decWidget = (ModelScreenWidget.DecoratorScreen) widget;
                     state.registerMatch(decWidget, execInfo, this);
@@ -547,7 +653,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof ModelScreenWidget.DecoratorSection) {
                     Object sectionsObj = context.get("scpCurrentSections");
                     if (sectionsObj instanceof SectionsRenderer) {
@@ -574,7 +680,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (!(widget instanceof NonWidgetWrapperWidget) && matchesWidget(widget, context, name, idAttr, nameAttr)) {
                     state.registerMatch(widget, execInfo, this);
                 }
@@ -588,7 +694,7 @@ public class RenderTargetExpr implements Serializable {
 
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    RenderTargetState state, RenderTargetState.ExecutionInfoImpl execInfo) {
+                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
                 if (widget instanceof FtlWrapperWidget && matchesWidget(widget, context, name, idAttr, nameAttr)) {
                     state.registerMatch(widget, execInfo, this);
                 }
@@ -642,25 +748,25 @@ public class RenderTargetExpr implements Serializable {
      * <p>
      * NOTE: this is best-effort, tries to avoid too many lookups too.
      * 
-     * @return the RenderTargetState instance, or the {@link RenderTargetState#DISABLED} instance if none found
+     * @return the RenderTargetState instance, or the {@link WidgetRenderTargetState#DISABLED} instance if none found
      */
-    public static RenderTargetState getRenderTargetState(Map<String, Object> context) {
-        RenderTargetState state = (RenderTargetState) context.get("scpRenderTargetState");
+    public static WidgetRenderTargetState getRenderTargetState(Map<String, Object> context) {
+        WidgetRenderTargetState state = (WidgetRenderTargetState) context.get(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
         if (state != null) return state;
         else {
             ServletRequest request = (ServletRequest) context.get("request");
             if (request != null) {
-                state = (RenderTargetState) request.getAttribute("scpRenderTargetState");
+                state = (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
                 if (state != null) return state;
             }
-            return RenderTargetState.DISABLED;
+            return WidgetRenderTargetState.DISABLED;
         }
     }
     
-    public static RenderTargetState getRenderTargetState(ServletRequest request) {
-        RenderTargetState state = (RenderTargetState) request.getAttribute("scpRenderTargetState");
+    public static WidgetRenderTargetState getRenderTargetState(ServletRequest request) {
+        WidgetRenderTargetState state = (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
         if (state != null) return state;
-        return RenderTargetState.DISABLED;
+        return WidgetRenderTargetState.DISABLED;
     }
     
     /**
@@ -668,18 +774,18 @@ public class RenderTargetExpr implements Serializable {
      * <p>
      * NOTE: this is best-effort, tries to avoid too many lookups too.
      */
-    public static RenderTargetState getRenderTargetStateOrNull(Map<String, Object> context) {
-        RenderTargetState state = (RenderTargetState) context.get("scpRenderTargetState");
+    public static WidgetRenderTargetState getRenderTargetStateOrNull(Map<String, Object> context) {
+        WidgetRenderTargetState state = (WidgetRenderTargetState) context.get(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
         if (state != null) return state;
         else {
             ServletRequest request = (ServletRequest) context.get("request");
-            if (request != null) return (RenderTargetState) request.getAttribute("scpRenderTargetState");
+            if (request != null) return (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
             return null;
         }
     }
     
-    public static RenderTargetState getRenderTargetStateOrNull(ServletRequest request) {
-        return (RenderTargetState) request.getAttribute("scpRenderTargetState");
+    public static WidgetRenderTargetState getRenderTargetStateOrNull(ServletRequest request) {
+        return (WidgetRenderTargetState) request.getAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR);
     }
     
     /**
@@ -687,22 +793,40 @@ public class RenderTargetExpr implements Serializable {
      * scpRenderTargetState - RenderTargetState instance
      * scpRenderTargetOn - convenience boolean (NOTE: should NOT be used internally - use <code>scpRenderTargetState.isEnabled()</code>)
      */
-    public static void setRenderTargetVars(Map<String, Object> context, RenderTargetExpr expr) {
+    public static void setRenderTargetVars(Map<String, Object> context, WidgetRenderTargetExprBase expr) {
         if (context == null) {
             if (expr != null) {
                 Debug.logWarning("Targeted rendering: unable to set render target state - context is null", module);
             }
         }
-        RenderTargetState state = RenderTargetState.fromExprOrDisabled(expr);
         Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
-        if (globalContext != null) {
-            globalContext.put("scpRenderTargetState", state);
-            globalContext.put("scpRenderTargetOn", state.isEnabled());
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        
+        WidgetRenderTargetState state = WidgetRenderTargetState.fromExprOrDisabled(expr);
+        String multiPrefix = null;
+        boolean multi = state.isEnabled() && state.isMulti();
+        if (multi && request != null) {
+            // NOTE: this prefix may already be set OR we have to generate and store a new one here; 
+            // the method does it all except globalContext
+            multiPrefix = RenderTargetUtil.getOrGenerateSetMultiTargetDelimiterPrefix(request);
+            state.setMultiPrefix(multiPrefix);
         }
-        ServletRequest request = (ServletRequest) context.get("request");
+        
+        if (globalContext != null) {
+            globalContext.put(RenderTargetUtil.RENDERTARGETSTATE_ATTR, state);
+            globalContext.put(RenderTargetUtil.RENDERTARGETON_ATTR, state.isEnabled());
+            if (multi) {
+                globalContext.put(RenderTargetUtil.MULTITARGET_DELIM_PREFIX_ATTR, multiPrefix);
+            }
+        }
+        
         if (request != null) {
-            request.setAttribute("scpRenderTargetState", state);
-            request.setAttribute("scpRenderTargetOn", state.isEnabled());
+            request.setAttribute(RenderTargetUtil.RENDERTARGETSTATE_ATTR, state);
+            request.setAttribute(RenderTargetUtil.RENDERTARGETON_ATTR, state.isEnabled());
+            // already done by method
+//            if (multi) {
+//                request.setAttribute(RenderTargetUtil.MULTITARGET_DELIM_PREFIX_ATTR, multiPrefix);
+//            }
         }
     }
     
@@ -711,7 +835,7 @@ public class RenderTargetExpr implements Serializable {
      * <p>
      * Currently (2017-05-09), this checks if writer is a RenderWriter; if so, returns true if
      * is not discarding output. If not a RenderWriter, try to lookup the RenderTargetState
-     * in context and call {@link RenderTargetState#shouldOutput()}.
+     * in context and call {@link WidgetRenderTargetState#shouldOutput()}.
      */
     public static boolean shouldOutput(Appendable writer, Map<String, Object> context) {
         if (writer instanceof RenderWriter) {
@@ -727,37 +851,106 @@ public class RenderTargetExpr implements Serializable {
      * NOTE: a reference is stored in both globalContext and request attributes,
      * so it should be accessible from most anywhere, as long as they aren't lost.
      */
-    public static class RenderTargetState implements Serializable {
-        public static final RenderTargetState DISABLED = new DisabledRenderTargetState();
+    public static class WidgetRenderTargetState implements RenderTargetState, Serializable {
+        public static final WidgetRenderTargetState DISABLED = new DisabledWidgetRenderTargetState();
         
-        public static final String module = RenderTargetState.class.getName();
+        public static final String module = WidgetRenderTargetState.class.getName();
         
-        private final RenderTargetExpr expr;
-        // TODO? turns out not yet needed, may need soon or later...
-        //private Set<Token> fullMatchedTokens; // when size of this is equal to number of tokens, target is found
-        private int nextTokenIndex;
+        private final WidgetRenderTargetExprBase expr;
         
-        private Map<ModelWidget, Token> matchedWidgets;
-        
-        private boolean targetMatched;
-        private boolean finished;
         //private ModelScreenWidget.DecoratorScreen skippedDecorator = null; // TODO? can't exploit (see below)
+        private String multiPrefix = null;
+        
+        private Map<String, ExprStateInfo> exprStateMap;
+        
+        private Set<ExprStateInfo> activeTargets; // targets currently matching NOTE: due to nesting, it's possible for this to contain more than one at a time
+        private Set<ExprStateInfo> unmatchedTargets; // targets never fully matched
+        private Set<ExprStateInfo> finishedTargets; // targets completely done
+        private boolean finished = false; // explicit finished flag, usually true once finishedTargets.size() == exprStates.size()
+        
+        class ExprStateInfo {
+            private String name;
+            private WidgetRenderTargetExpr expr;
+            private boolean targetMatched = false;
+            private int nextTokenIndex = 0;
+            private Map<ModelWidget, Token> matchedWidgets = new HashMap<>();
+            
+            public ExprStateInfo(String name, WidgetRenderTargetExpr expr) {
+                this.name = name;
+                this.expr = expr;
+            }
 
-        private RenderTargetState(RenderTargetExpr expr) {
-            this.expr = expr;
-            //this.fullMatchedTokens = new HashSet<>();
-            this.nextTokenIndex = 0;
-            this.matchedWidgets = new HashMap<>(); // TODO?: not yet needed: new LinkedHashMap<>();
-            this.targetMatched = false;
-            this.finished = false;      
+            public String getName() { return name; }
+            public WidgetRenderTargetExpr getExpr() { return expr; }
+            public Token getNextToken() { return expr.getToken(nextTokenIndex); }
+            public List<Token> getNextTokenAndChildren() { return expr.tokens.subList(nextTokenIndex, expr.tokens.size()); }
+            
+            /**
+             * NOTE: in the future could be need for parameters such as: boolean fullMatched, boolean consumeToken
+             * but for now, trying to keep syntax straightforward enough so that 1 token ~= 1 full match.
+             */
+            void registerMatch(ModelWidget widget, ExecutionInfoImpl execInfo, Token matcher) {
+                if (targetMatched) throw new IllegalStateException("Tried to modify RenderTargetState matches (register match)"
+                        + " after already found target match (should be read-only)");
+                this.matchedWidgets.put(widget, matcher);
+                this.nextTokenIndex++;
+                execInfo.registerExprTokenMatchedWidget(this);
+                if (nextTokenIndex >= expr.getNumTokens()) {
+                    this.targetMatched = true;
+                    unmatchedTargets.remove(this);
+                    activeTargets.add(this);
+                }
+            }
+            
+            void deregisterMatch(ModelWidget widget, ExecutionInfoImpl execInfo) {
+                if (this.targetMatched) {
+                    // if we were matched, we do not need to modify our own state.
+                    activeTargets.remove(this);
+                    finishedTargets.add(this);
+                } else {
+                    // never happens
+                    //if (targetMatched) throw new IllegalStateException("Tried to modify RenderTargetState matches (deregister match)"
+                    //        + " after already found target match (should be read-only)");
+                    this.matchedWidgets.remove(widget);
+                    this.nextTokenIndex--;
+                }
+            }
         }
         
-        private RenderTargetState() {
+        private WidgetRenderTargetState(WidgetMultiRenderTargetExpr expr) {
+            this.expr = expr;
+            this.exprStateMap = new HashMap<>();
+            for(Map.Entry<String, WidgetRenderTargetExpr> entry : expr.entrySet()) {
+                this.exprStateMap.put(entry.getKey(), 
+                        new ExprStateInfo(entry.getKey(), entry.getValue()));
+            }
+            this.unmatchedTargets = new HashSet<>(this.exprStateMap.values());
+            this.activeTargets = new HashSet<>();
+            this.finishedTargets = new HashSet<>();
+        }
+        
+        private WidgetRenderTargetState(WidgetRenderTargetExpr expr) {
+            this.expr = expr;
+            this.exprStateMap = new HashMap<>();
+            this.exprStateMap.put(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, 
+                    new ExprStateInfo(RenderTargetUtil.RENDERTARGETEXPR_MULTI_DEFAULT, expr));
+            this.unmatchedTargets = new HashSet<>(this.exprStateMap.values());
+            this.activeTargets = new HashSet<>();
+            this.finishedTargets = new HashSet<>();
+        }
+        
+        private WidgetRenderTargetState() {
             this.expr = null;
         }
         
-        public static RenderTargetState fromExprOrDisabled(RenderTargetExpr expr) {
-            return expr != null ? new RenderTargetState(expr) : DISABLED;
+        public static WidgetRenderTargetState fromExprOrDisabled(WidgetRenderTargetExprBase expr) {
+            if (expr instanceof WidgetRenderTargetExpr) {
+                return new WidgetRenderTargetState((WidgetRenderTargetExpr) expr);
+            } else if (expr instanceof WidgetMultiRenderTargetExpr) {
+                return new WidgetRenderTargetState((WidgetMultiRenderTargetExpr) expr);
+            } else {
+                return DISABLED;
+            }
         }
 
         // INFORMATION
@@ -769,36 +962,23 @@ public class RenderTargetExpr implements Serializable {
         public boolean isFinished() {
             return finished;
         }
-        
-        public boolean isTargetMatched() {
-            return targetMatched;
-        }
-        
-        protected boolean isAllTokensFullMatched() {
-            //return fullMatchedTokens.size() >= expr.getNumTokens();
-            return nextTokenIndex >= expr.getNumTokens();
-        }
 
-        public RenderTargetExpr getExpr() {
+        public WidgetRenderTargetExprBase getExpr() {
             return expr;
-        }
-
-        public Token getNextToken() {
-            return expr.getToken(nextTokenIndex);
-        }
-        
-        public List<Token> getNextTokenAndChildren() {
-            return expr.tokens.subList(nextTokenIndex, expr.tokens.size());
         }
         
         /**
          * True if should output markup. This is only ever true if we matched the target.
          * NOTE: Code in ofbiz source files should call
-         * {@link RenderTargetExpr#shouldOutput(Appendable, Map)} now instead in order to
+         * {@link WidgetRenderTargetExpr#shouldOutput(Appendable, Map)} now instead in order to
          * better centralize the logic.
          */
         public boolean shouldOutput() {
             return !finished && isTargetMatched();
+        }
+        
+        public boolean isTargetMatched() {
+            return activeTargets.size() > 0;
         }
         
         // STATE UPDATE
@@ -810,34 +990,17 @@ public class RenderTargetExpr implements Serializable {
         public void markFinished() {
             this.finished = true;
         }
-
-        // not doing this yet, will cause problems for the deregistering
-//        private void markFullMatched(Token matcher) {
-//            this.fullMatchedTokens.add(matcher);
-//            this.targetMatched = isAllTokensFullMatched();
-//        }
         
-        /**
-         * NOTE: in the future could be need for parameters such as: boolean fullMatched, boolean consumeToken
-         * but for now, trying to keep syntax straightforward enough so that 1 token ~= 1 full match.
-         */
-        private void registerMatch(ModelWidget widget, ExecutionInfoImpl execInfo, Token matcher) {
-            if (isTargetMatched()) throw new IllegalStateException("Tried to modify RenderTargetState matches (register match)"
-                    + " after already found target match (should be read-only)");
-            this.matchedWidgets.put(widget, matcher);
-            //this.fullMatchedTokens.add(matcher);
-            this.nextTokenIndex++;
-            this.targetMatched = isAllTokensFullMatched();
-            execInfo.matchRegistered = true;
+        public boolean isMulti() {
+            return (expr instanceof WidgetMultiRenderTargetExpr);
         }
         
-        private void deregisterMatch(ModelWidget widget, ExecutionInfoImpl execInfo) {
-            if (isTargetMatched()) throw new IllegalStateException("Tried to modify RenderTargetState matches (deregister match)"
-                    + " after already found target match (should be read-only)");
-            //Token matcher = this.matchedWidgets.remove(widget);
-            //this.fullMatchedTokens.remove(matcher);
-            this.matchedWidgets.remove(widget);
-            this.nextTokenIndex--;
+        public String getMultiPrefix() {
+            return multiPrefix;
+        }
+
+        public void setMultiPrefix(String multiPrefix) {
+            this.multiPrefix = multiPrefix;
         }
         
         /**
@@ -846,7 +1009,7 @@ public class RenderTargetExpr implements Serializable {
         public Writer prepareWriter(Appendable writer, Map<String, Object> context) {
             if (!(writer instanceof RenderWriter)) {
                 Writer w = (Writer) writer; // FIXME: currently assuming everything is a Writer, ofbiz utils already assume this
-                return SwitchRenderWriter.getInstance(w, false);
+                return SwitchRenderWriter.getInstance(w, false, false);
             } else {
                 return (Writer) writer;
             }
@@ -859,13 +1022,11 @@ public class RenderTargetExpr implements Serializable {
          * it comes after the target. But note, this execution/actions is decoupled from the need
          * to output markup/html.
          */
-        public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) {
+        public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) throws IOException {
             // NOTE: by default, shouldExecute = true, because everything may contain our target(s).
             ExecutionInfoImpl execInfo = new ExecutionInfoImpl(widget, true, writer);
             if (finished) {
                 execInfo.shouldExecute = false;
-            } else if (isTargetMatched()) {
-                ;
             } else {
                 // SPECIAL: initialize/intercept writer, BEST-EFFORT 
                 // try to convert the writer, which may be either response.getWriter() or
@@ -875,143 +1036,64 @@ public class RenderTargetExpr implements Serializable {
                 // WARN: TODO: REVIEW: not guaranteed to catch all... only time will tell...
                 if (!(writer instanceof RenderWriter)) {
                     Writer w = (Writer) writer; // FIXME: currently assuming everything is a Writer, ofbiz utils already assume this
-                    execInfo.writerForElem = SwitchRenderWriter.getInstance(w, false);
+                    execInfo.writerForElem = SwitchRenderWriter.getInstance(w, false, false);
                 }
 
-                // not needed for now: turns out not needed for the complex selectors... yet
-//                // SPECIAL CASE: check for delayed matches - these are pre-allowed
-//                Token delayedMatchToken = this.delayedMatches.get(widget);
-//                if (delayedMatchToken != null) {
-//                    delayedMatchToken.delayedMatches(widget, context, this, execInfo);
-//                } else {
-                
-                // Compare the widget against the current token in the expression, stored in the state
-                // results are marked in execInfo
-                Token token = this.getNextToken();
-                token.handleShouldExecute(widget, context, this, execInfo);
-                
-                // Finalize
-                if (execInfo.shouldExecute) {
-                    if (isTargetMatched()) {
-                        // MATCHED!
-                        // Turn on the switch and hope for the best
-                        SwitchRenderWriter switchWriter = (SwitchRenderWriter) execInfo.writerForElem;
-                        switchWriter.useOrigWriter();
-                    } else {
-                        if (widget instanceof ModelScreenWidget) {
-                            // Blacklist support, for execution optimization:
-                            // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
-                            // skip executing sections/elements that we have been told do NOT contain the sections or 
-                            // elements we're after, in a blacklist-like fashion.
-                            // If ANY of the names are considered not contained (are blacklisted), 
-                            // we don't need to enter the widget.
-                            ContainsExpr containsExpr = ((ModelScreenWidget) widget).getContainsExpr();
-                            if (!containsExpr.matchesAllNameTokens(getNextTokenAndChildren())) {
-                                execInfo.shouldExecute = false;
-                                if (DEBUG) {
-                                    Debug.logInfo("Targeted rendering: contains-expression optimization filtered out execution of widget element"
-                                            + widget.getLogWidgetLocationString(), module);
+                if (unmatchedTargets.size() > 0) {
+                    execInfo.shouldExecute = false; 
+                    for(ExprStateInfo exprState : new ArrayList<>(unmatchedTargets)) { // FIXME: COPY required to fix concurrent mod
+                        execInfo.shouldExecuteCurrentExpr = true;
+                        
+                        // not needed for now: turns out not needed for the complex selectors... yet
+//                      // SPECIAL CASE: check for delayed matches - these are pre-allowed
+//                      Token delayedMatchToken = this.delayedMatches.get(widget);
+//                      if (delayedMatchToken != null) {
+//                          delayedMatchToken.delayedMatches(widget, context, this, execInfo);
+//                      } else {
+
+                        // Compare the widget against the current token in the expression, stored in the state
+                        // results are marked in execInfo
+                        Token token = exprState.getNextToken();
+                        token.handleShouldExecute(widget, context, exprState, execInfo);
+                        
+                        // Finalize
+                        if (execInfo.shouldExecuteCurrentExpr) {
+                            if (exprState.targetMatched) {
+                                // MATCHED!
+                                // Turn on the switch and hope for the best
+                                SwitchRenderWriter switchWriter = (SwitchRenderWriter) execInfo.writerForElem;
+                                switchWriter.useOrigWriter();
+                                if (isMulti()) {
+                                    switchWriter.beginSection(exprState.getName(), getMultiPrefix());
                                 }
+                            } else {
+                                if (widget instanceof ContainsExpr.ContainsExprAttrWidget) {
+                                    // Blacklist support, for execution optimization:
+                                    // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
+                                    // skip executing sections/elements that we have been told do NOT contain the sections or 
+                                    // elements we're after, in a blacklist-like fashion.
+                                    // If ANY of the names are considered not contained (are blacklisted), 
+                                    // we don't need to enter the widget.
+                                    ContainsExpr containsExpr = ((ContainsExpr.ContainsExprAttrWidget) widget).getContainsExpr();
+                                    if (!containsExpr.matchesAllNameTokens(exprState.getNextTokenAndChildren())) {
+                                        execInfo.shouldExecuteCurrentExpr = false;
+                                        if (RenderTargetUtil.DEBUG) {
+                                            Debug.logInfo("Targeted rendering: contains-expression optimization filtered out execution of widget element"
+                                                    + widget.getLogWidgetLocationString(), module);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // for the widget to NOT execute, ALL of the shouldExecuteCurrentExpr must be false.
+                            if (execInfo.shouldExecuteCurrentExpr) {
+                                execInfo.shouldExecute = true;
                             }
                         }
                     }
                 }
             }
             return execInfo;
-            
-            // OLD COMMENTS
-            
-            // NOTE: the following double-commented hack for PlatformSpecific
-            // is being handled a different way to address point number 1.
-            // comment is left for reference and because half the issues still apply:
-//        } else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
-//            /* ***************************************************************************************
-//             * !!! FIXME !!!
-//             * this logic is a major flaw in the targetting.
-//             * we currently cannot control the Freemarker output at all, so we're
-//             * forced to do all-or-nothing: we cannot enter any Freemarker files until we have
-//             * already found the target and outputting is enabled.
-//             * this means we cannot have things like intermediate FTL files implementing the
-//             * decorator, even if the target is a widget included by the FTL.
-//             * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
-//             * 
-//             * the solution involves manipulating Environment.setOut to a dummy writer,
-//             * but it's complicated by the "screens", "sections", and other objects that hold references
-//             * to the writer, and various problems.
-//             * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
-//             * only possible is converting macros from the standard API to java transforms to manipulate writer, 
-//             * but this is a nightmare)
-//             * 
-//             * to clarify, there are 2 scenarios:
-//             * 1) trying to target a widget element that is included through an FTL file, 
-//             *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
-//             *    -> FIXME A.S.A.P.
-//             * 2) trying to target an element (macro) defined in an FTL file itself
-//             *    -> realistically, this could be practically impossible or too damaging to our code to implement.
-//             */
-//            if (!shouldOutput()) {
-//                shouldExecute = false;
-//            }
-        /* ***************************************************************************************
-           TODO? dedicated selector for include/decorator does not make much sense, because name even with location is an unreliable
-           way to identify node (non-unique)
-         * ***************************************************************************************
-        } else if (widget instanceof ModelScreenWidget.IncludeScreen) {
-            ModelScreenWidget.IncludeScreen include = (ModelScreenWidget.IncludeScreen) widget;
-            if (type == '~' && ("INCLUDE".equals(name) || name.equals(include.getName(context)))) {
-                registerMatch(widget);
-                matchRegistered = true;
-            }
-        } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
-            ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
-            if (type == '~' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) {
-                registerMatch(widget);
-                matchRegistered = true;
-            }
-        */
-        /* ***************************************************************************************
-            TODO?: REVIEW/FUTURE: it is currently impossible to skip decorator invocation in a useful way using 
-            the special "decorator-section" manipulation that was attempted below.
-            originally this selector/feature was meant to select a "decorator-section" without having
-            to know anything about the invoked decorator's implementation.
-            this would have been a bit like "copy pasting" the decorator-section contents and running them on
-            their own, but additional operations are required which make this unusable:
-            
-            SOLN 1: (safe, but non-optimizable) 
-            the essential decorator (global) actions and security checks can only be guaranteed by
-            entering the decorator and letting it run... but this means we have to
-            execute everything (all actions and enter all sections) in the decorator because it is 
-            computationally impossible to predict the element tree where the decorator-section-include (that names our target decorator-section)
-            will occur. so this feature - if implemented in a safe way - will prevent any optimization.
-            
-            SOLN 2: (security risk, functionality not guaranteed)
-            a completely different solution involves skipping the decorator execution entirely,
-            or trying to extract its actions (greater scope than this class)... but this is best-effort and likely to be full or errors, 
-            and it is a MAJOR security risk to allow bypassing execution from an AJAX request... 
-            essentially it can bypass the major permission checks,
-            which the controller (through view rendering) already relies on heavily.
-            there is no way to safely/assuredly reproduce the permission checks done by the decorators, making it a major security risk.
-            also it can't be guaranteed that the necessary global actions will be properly replicated either,
-            so even functionality is not assured.
-         * ***************************************************************************************
-        } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
-            ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
-            if (type == '~' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) { // FIXME: does not support location compare
-                matchDepth++;
-                // SPECIAL: identify if this is decorator implementation to skip through
-                String nextToken = getNextToken();
-                if (nextToken != null && nextToken.charAt(0) == '^') {
-                    this.skippedDecorator = decorator;
-                }
-            } else if (type == '^') { // SPECIAL: identify if this is decorator implementation to skip through
-                this.skippedDecorator = decorator;
-            }
-        } else if (widget instanceof ModelScreenWidget.DecoratorSection) {
-            // SPECIAL
-            if (type == '^' && name.equals(widget.getName())) {
-                matchDepth++;
-            }
-        */
         }
         
         public interface ExecutionInfo {
@@ -1037,20 +1119,30 @@ public class RenderTargetExpr implements Serializable {
              *     at the match entry.
              * </ul>
              */
-            void handleFinished(Map<String, Object> context);
+            void handleFinished(Map<String, Object> context) throws IOException;
         }
         
         public class ExecutionInfoImpl implements ExecutionInfo {
             ModelWidget widget;
-            boolean shouldExecute;
+            boolean shouldExecute; // the whole node
+            boolean shouldExecuteCurrentExpr; // the current expression
             Appendable writerForElem;
-            boolean matchRegistered;
+
+            /**
+             * any token matched in any expr that matched the widget will generate an entry in this.
+             */
+            List<ExprStateInfo> exprTokenMatchedWidget;
             
             ExecutionInfoImpl(ModelWidget widget, boolean shouldExecute, Appendable writerForElem) {
                 this.widget = widget;
                 this.shouldExecute = shouldExecute;
+                this.shouldExecuteCurrentExpr = shouldExecute;
                 this.writerForElem = writerForElem;
-                this.matchRegistered = false;
+            }
+            
+            public void registerExprTokenMatchedWidget(ExprStateInfo state) {
+                if (exprTokenMatchedWidget == null) exprTokenMatchedWidget = new ArrayList<>();
+                exprTokenMatchedWidget.add(state);
             }
             
             @Override
@@ -1058,25 +1150,30 @@ public class RenderTargetExpr implements Serializable {
             @Override
             public Appendable getWriterForElementRender() { return writerForElem; }
             @Override
-            public void handleFinished(Map<String, Object> context) {
-                if (matchRegistered) {
-                    if (isTargetMatched()) {
-                        // OUTPUTTING DONE
-                        // after this, assume the rest is not needed.
-                        // NOTE: there are still individual renderXxxEnd calls that happen
-                        // after this, and they are not filtered out by the handleShouldExecute call,
-                        // but rather they get stopped by SwitchRenderWriter or RenderTargetState.shouldOuput. 
+            public void handleFinished(Map<String, Object> context) throws IOException  {
+                if (exprTokenMatchedWidget != null) {
+                    ListIterator<ExprStateInfo> li = exprTokenMatchedWidget.listIterator(exprTokenMatchedWidget.size());
+                    while(li.hasPrevious()) {
+                        ExprStateInfo state = li.previous();
+                        SwitchRenderWriter switchWriter = (SwitchRenderWriter) writerForElem;
+                        if (isMulti()) {
+                            switchWriter.endSection(state.getName(), getMultiPrefix());
+                        }
+                        state.deregisterMatch(widget, this);
+                    }
+                    // if we just finished OR we are in between expressions, switch to dummy writer
+                    if (finishedTargets.size() >= exprStateMap.size()) {
                         finished = true;
                         ((SwitchRenderWriter) writerForElem).useAltWriter();
-                    } else {
-                        deregisterMatch(widget, this);
+                    } else if (activeTargets.size() == 0) {
+                        ((SwitchRenderWriter) writerForElem).useAltWriter();
                     }
                 } 
             }
         }
 
-        public static final class DisabledRenderTargetState extends RenderTargetState {
-            private DisabledRenderTargetState() { super(); }
+        public static final class DisabledWidgetRenderTargetState extends WidgetRenderTargetState {
+            private DisabledWidgetRenderTargetState() { super(); }
             @Override
             public boolean isEnabled() { return false; }
             @Override
@@ -1084,9 +1181,7 @@ public class RenderTargetExpr implements Serializable {
             @Override
             public boolean isTargetMatched() { return false; }
             @Override
-            public RenderTargetExpr getExpr() { return null; }
-            @Override
-            public Token getNextToken() { return null; }
+            public WidgetRenderTargetExpr getExpr() { return null; }
             @Override
             public boolean shouldOutput() { return true; }
             @Override
@@ -1095,7 +1190,13 @@ public class RenderTargetExpr implements Serializable {
             public Writer prepareWriter(Appendable writer, Map<String, Object> context) { return (Writer) writer; }
             @Override
             public ExecutionInfo handleShouldExecute(ModelWidget widget, Appendable writer, Map<String, Object> context, Object stringRenderer) { return new DisabledExecutionInfoImpl(writer); }
-            
+            @Override
+            public String getMultiPrefix() { return null; }
+            @Override
+            public void setMultiPrefix(String multiPrefix) { ; }
+            @Override
+            public boolean isMulti() { return false; }
+
             public static class DisabledExecutionInfoImpl implements ExecutionInfo {
                 final Appendable writer;
                 DisabledExecutionInfoImpl(Appendable writer) { this.writer = writer; }
@@ -1108,287 +1209,104 @@ public class RenderTargetExpr implements Serializable {
             }
         }
     }
-
-    /**
-     * Widget section contains-expression - special expression that instructs renderer which sections 
-     * contain or don't contain which other sections and elements.
-     * <p>
-     * See widget-screen.xsd "attlist.generic-screen-widget-elem" "contains" attribute for details.
-     * <p>
-     * In targeted rendering, this is used by widget renderer to determine which sections can be skipped entirely (their
-     * full execution including actions, not just output).
-     * <p>
-     * Usually functions in blacklist fashion ("!"), so that by default all sections are said to possibly contain
-     * all others.
-     * <p>
-     * ex:
-     * <pre>{@code
-     * "$MySection1, !$MySection2, !$MySections-*, #MyContainerId, !#myContainerId2, *"
-     * }</pre>
-     */
-    public static class ContainsExpr implements Serializable {
-        public static final String module = ContainsExpr.class.getName();
-
-        // entries are comma-separated
-        private static final Pattern containsExprTokenSplitPat = Pattern.compile("\\s*,\\s*");
- 
-        // general language
-        public static final char EXCLUDE = '!';
-
-        // pre-build expressions
-        public static final ContainsExpr MATCH_ALL = new MatchAllContainsExpr();
-        public static final ContainsExpr MATCH_NONE = new MatchNoneContainsExpr();
-        public static final ContainsExpr DEFAULT = MATCH_ALL;
-        
-        /* 
-         * FIXME:
-         * this whole class needs to be updated to support the Token expressions.
-         * currently the "%" type and bracket attributes won't work properly.
-         * I have not figured out the way to implement the comparison logic.
-         * the current comparison logic is "dumb".
-         */
-        
-        // NOTE: these follow natural specificity
-        private final String strExpr;
-        private final Set<String> exactIncludes;
-        private final Set<String> exactExcludes;
-        private final List<String> wildIncludes; // TODO: find way to optimize
-        private final List<String> wildExcludes; // TODO: find way to optimize
-        private final Map<Character, Boolean> matchAllTypes;
-        private final boolean matchAll;
-        
-        public ContainsExpr(String strExpr) throws IllegalArgumentException {
-            this(strExpr, null);
-        }
-        
-        public ContainsExpr(String strExpr, Element widgetElement) throws IllegalArgumentException {
-            this.strExpr = strExpr;
-            String[] tokenArr = containsExprTokenSplitPat.split(strExpr.trim());
-            if (tokenArr.length <= 0) throw new IllegalArgumentException(makeErrorMsg("no names in expression", null, strExpr, widgetElement));
-            
-            // NOTE: these are layered by specificity from most exact to most generic
-            Set<String> exactIncludes = new HashSet<>();
-            Set<String> exactExcludes = new HashSet<>();
-            ArrayList<String> wildIncludes = new ArrayList<>();
-            ArrayList<String> wildExcludes = new ArrayList<>();
-            Map<Character, Boolean> matchAllTypes = new HashMap<>();
-            Boolean matchAll = null;
-            
-            // FIXME: this does not properly compare supported Tokens
-            // nor does it recognized the bracketed attributes 
-            
-            for(String fullToken : tokenArr) {
-                String token = fullToken;
-                boolean exclude = (token.charAt(0) == EXCLUDE);
-                if (exclude) token = token.substring(1);
     
-                if (WILDCARD_STRING.equals(token)) { // special case
-                    matchAll = !exclude;
-                    continue;
-                } else if (token.isEmpty()) {
-                    throw new IllegalArgumentException(makeErrorMsg("invalid or empty name", fullToken, strExpr, widgetElement));
-                }
-                
-                char type = token.charAt(0);
-                if (!MET_ALL.contains(type)) 
-                    throw new IllegalArgumentException(makeErrorMsg("name has missing"
-                            + " or invalid type specifier (should start with one of: " + MET_ALL_STR + ")", fullToken, strExpr, widgetElement));
-                String name = token.substring(1);
-                
-                if (name.equals(WILDCARD_STRING)) {
-                    matchAllTypes.put(type, !exclude);
-                } else if (name.contains(WILDCARD_STRING)) {
-                    if (name.indexOf(WILDCARD) != name.lastIndexOf(WILDCARD)) { // TODO?: support multiple wildcard
-                        throw new UnsupportedOperationException(makeErrorMsg("name has"
-                                + " with multiple wildcards, which is not supported", fullToken, strExpr, widgetElement));
-                    }
-                    if (exclude) {
-                        wildExcludes.add(token);
-                    } else {
-                        wildIncludes.add(token);
-                    }
-                } else {
-                    if (exclude) {
-                        exactExcludes.add(token);
-                    } else {
-                        exactIncludes.add(token);
-                    }
-                }
-            }
-            
-            this.exactIncludes = exactIncludes.isEmpty() ? Collections.<String> emptySet() : exactIncludes;
-            this.exactExcludes = exactExcludes.isEmpty() ? Collections.<String> emptySet() : exactExcludes;
-            wildIncludes.trimToSize();
-            this.wildIncludes = wildIncludes.isEmpty() ? null : wildIncludes;
-            wildExcludes.trimToSize();
-            this.wildExcludes = wildExcludes.isEmpty() ? null : wildExcludes;
-            this.matchAllTypes = matchAllTypes.isEmpty() ? null : matchAllTypes;
-            if (matchAll == null) {
-                Debug.logWarning(makeErrorMsg("missing match-all (\"*\") or match-none (\"!*\") wildcard entry;"
-                        + " cannot tell if blacklist or whitelist intended", null, strExpr, widgetElement), module);
-                matchAll = ContainsExpr.DEFAULT.matches("dummy"); // stay consistent with the default
-            }
-            this.matchAll = matchAll;
-        }
+    /******************************************************/
+    /* Old comments  */
+    /******************************************************/
     
-        private static String makeErrorMsg(String msg, String token, String strExpr, Element widgetElement) {
-            String str = "Widget element contains=\"...\" expression error: " + msg + ":";
-            if (token != null) {
-                str += " [name: \"" + token + "\"]";
+    // OLD COMMENTS
+    // This code was previously in the state handleShouldExecute, it still contains
+    // some explanations are to why things are but this hasn't been updated in awhile.
+    
+    // NOTE: the following double-commented hack for PlatformSpecific
+    // is being handled a different way to address point number 1.
+    // comment is left for reference and because half the issues still apply:
+    //} else if (widget instanceof ModelScreenWidget.PlatformSpecific) {
+    //    /* ***************************************************************************************
+    //     * !!! FIXME !!!
+    //     * this logic is a major flaw in the targetting.
+    //     * we currently cannot control the Freemarker output at all, so we're
+    //     * forced to do all-or-nothing: we cannot enter any Freemarker files until we have
+    //     * already found the target and outputting is enabled.
+    //     * this means we cannot have things like intermediate FTL files implementing the
+    //     * decorator, even if the target is a widget included by the FTL.
+    //     * (if the target is a html or macro in the FTL file, it is even less likely to be possible).
+    //     * 
+    //     * the solution involves manipulating Environment.setOut to a dummy writer,
+    //     * but it's complicated by the "screens", "sections", and other objects that hold references
+    //     * to the writer, and various problems.
+    //     * (for trying to target macros by ID, i.e. future improvement, this appears almost impossible - 
+    //     * only possible is converting macros from the standard API to java transforms to manipulate writer, 
+    //     * but this is a nightmare)
+    //     * 
+    //     * to clarify, there are 2 scenarios:
+    //     * 1) trying to target a widget element that is included through an FTL file, 
+    //     *    in other words supporting FTL boundaries, in other words support FTL-implemented decorators
+    //     *    -> FIXME A.S.A.P.
+    //     * 2) trying to target an element (macro) defined in an FTL file itself
+    //     *    -> realistically, this could be practically impossible or too damaging to our code to implement.
+    //     */
+    //    if (!shouldOutput()) {
+    //        shouldExecute = false;
+    //    }
+    /* ***************************************************************************************
+       TODO? dedicated selector for include/decorator does not make much sense, because name even with location is an unreliable
+       way to identify node (non-unique)
+     * ***************************************************************************************
+    } else if (widget instanceof ModelScreenWidget.IncludeScreen) {
+        ModelScreenWidget.IncludeScreen include = (ModelScreenWidget.IncludeScreen) widget;
+        if (type == '~' && ("INCLUDE".equals(name) || name.equals(include.getName(context)))) {
+            registerMatch(widget);
+            matchRegistered = true;
+        }
+    } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
+        ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
+        if (type == '~' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) {
+            registerMatch(widget);
+            matchRegistered = true;
+        }
+    */
+    /* ***************************************************************************************
+        TODO?: REVIEW/FUTURE: it is currently impossible to skip decorator invocation in a useful way using 
+        the special "decorator-section" manipulation that was attempted below.
+        originally this selector/feature was meant to select a "decorator-section" without having
+        to know anything about the invoked decorator's implementation.
+        this would have been a bit like "copy pasting" the decorator-section contents and running them on
+        their own, but additional operations are required which make this unusable:
+        
+        SOLN 1: (safe, but non-optimizable) 
+        the essential decorator (global) actions and security checks can only be guaranteed by
+        entering the decorator and letting it run... but this means we have to
+        execute everything (all actions and enter all sections) in the decorator because it is 
+        computationally impossible to predict the element tree where the decorator-section-include (that names our target decorator-section)
+        will occur. so this feature - if implemented in a safe way - will prevent any optimization.
+        
+        SOLN 2: (security risk, functionality not guaranteed)
+        a completely different solution involves skipping the decorator execution entirely,
+        or trying to extract its actions (greater scope than this class)... but this is best-effort and likely to be full or errors, 
+        and it is a MAJOR security risk to allow bypassing execution from an AJAX request... 
+        essentially it can bypass the major permission checks,
+        which the controller (through view rendering) already relies on heavily.
+        there is no way to safely/assuredly reproduce the permission checks done by the decorators, making it a major security risk.
+        also it can't be guaranteed that the necessary global actions will be properly replicated either,
+        so even functionality is not assured.
+     * ***************************************************************************************
+    } else if (widget instanceof ModelScreenWidget.DecoratorScreen) {
+        ModelScreenWidget.DecoratorScreen decorator = (ModelScreenWidget.DecoratorScreen) widget;
+        if (type == '~' && ("INCLUDE".equals(name) || name.equals(decorator.getName(context)))) { // FIXME: does not support location compare
+            matchDepth++;
+            // SPECIAL: identify if this is decorator implementation to skip through
+            String nextToken = getNextToken();
+            if (nextToken != null && nextToken.charAt(0) == '^') {
+                this.skippedDecorator = decorator;
             }
-            if (strExpr != null) {
-                str += " [expression: \"" + strExpr + "\"]";
-            }
-            if (widgetElement != null) {
-                str += " [" + WidgetDocumentInfo.getElementDescriptor(widgetElement) + "]";
-            }
-            return str;
+        } else if (type == '^') { // SPECIAL: identify if this is decorator implementation to skip through
+            this.skippedDecorator = decorator;
         }
-        
-        public static ContainsExpr make(String strExpr, Element widgetElement) {
-            if (strExpr == null) return null;
-            if (!strExpr.isEmpty()) return new ContainsExpr(strExpr, widgetElement);
-            else return null;
+    } else if (widget instanceof ModelScreenWidget.DecoratorSection) {
+        // SPECIAL
+        if (type == '^' && name.equals(widget.getName())) {
+            matchDepth++;
         }
-        
-        public static ContainsExpr makeOrDefault(String strExpr, Element widgetElement, ContainsExpr defaultValue) {
-            ContainsExpr expr = make(strExpr, widgetElement);
-            return expr != null ? expr : defaultValue;
-        }
-        
-        public static ContainsExpr makeOrDefault(String strExpr, Element widgetElement) {
-            return makeOrDefault(strExpr, widgetElement, DEFAULT);
-        }
-        
-        /**
-         * Checks if name expression matches this contains expression.
-         * Name MUST be prefixed by one of the characters defined in
-         * {@link RenderTargetExpr#MET_ALL}.
-         * NOTE: this specific method ONLY supports an exact name (no wildcards) 
-         * and no bracketed attributes and will never support more.
-         */
-        public boolean matches(String nameExpr) {
-            if (exactIncludes.contains(nameExpr)) return true;
-            else if (exactExcludes.contains(nameExpr)) return false;
-            else return matchesWild(nameExpr);
-        }
-        
-        /**
-         * Returns true if and only if ALL of the names match.
-         * So one false prevents match.
-         * If no names, also returns true.
-         * NOTE: this specific method ONLY supports an exact name (no wildcards) 
-         * and no bracketed attributes and will never support more.
-         */
-        public boolean matchesAllNames(List<String> nameExprList) {
-            for(String nameExpr : nameExprList) {
-                if (!matches(nameExpr)) return false;
-            }
-            return true;
-        }
-        
-        /**
-         * Returns true if and only if ALL of the tokens match.
-         * So one false prevents match.
-         * If no names, also returns true.
-         * FIXME: currently this is not able to handle wildcard tokens or bracketed attributes.
-         * It will only recognize exact names and may ignore entries altogether (treated as matched). 
-         * The comparison logic needed to resolve this is extremely complex.
-         */
-        public boolean matchesAllNameTokens(List<Token> nameTokenList) {
-            // FIXME: this does not properly compare supported Tokens
-            // for now we'll just get the original expression as a string and compare that directly,
-            // BUT we cannot do this for the bracketed attributes
-            for(Token nameExpr : nameTokenList) {
-                if (nameExpr.hasAttr()) {
-                    // FIXME: no wildcards for bracketed attributes because current code will mess it up
-                    if (!matchesExact(nameExpr.getStringExpr())) return false;
-                } else {
-                    if (!matches(nameExpr.getStringExpr())) return false;
-                }
-            }
-            return true;
-        }
-        
-        private boolean matchesExact(String nameExpr) {
-            if (exactIncludes.contains(nameExpr)) return true;
-            else if (exactExcludes.contains(nameExpr)) return false;
-            else return matchAll;
-        }
-        
-        private boolean matchesWild(String nameExpr) {
-            if (wildIncludes != null) {
-                for(String match : wildIncludes) {
-                    if (checkWildNameMatch(match, nameExpr)) {
-                        return true;
-                    }
-                }
-            }
-            if (wildExcludes != null) {
-                for(String match : wildExcludes) {
-                    if (checkWildNameMatch(match, nameExpr)) {
-                        return false;
-                    }
-                }
-            }
-            if (matchAllTypes != null) {
-                char nameType = nameExpr.charAt(0);
-                Boolean matchExpl = matchAllTypes.get(nameType);
-                if (matchExpl != null) return matchExpl;
-            }
-            return matchAll;
-        }
-        
-        private boolean checkWildNameMatch(String match, String name) {
-            if (match.charAt(0) == name.charAt(0)) { // same type
-                String pureName = name.substring(1);
-                if (match.charAt(match.length() - 1) == WILDCARD) {
-                    String part = match.substring(1, match.length() - 1);
-                    return pureName.startsWith(part);
-                } else if (match.charAt(1) == WILDCARD) {
-                    String part = match.substring(2);
-                    return pureName.endsWith(part);
-                } else {
-                    int wildIndex = match.lastIndexOf(WILDCARD);
-                    if (wildIndex < 1) {
-                        throw new IllegalStateException("Section contains-expression name has missing or unexpected wildcard: " + match);
-                    }
-                    String firstPart = match.substring(2, wildIndex);
-                    String lastPart = match.substring(wildIndex + 1, match.length());
-                    return pureName.startsWith(firstPart) && pureName.endsWith(lastPart);
-                }
-            }
-            return false;
-        }
-        
-        public String getStrExpr() {
-            return strExpr;
-        }
-        
-        @Override
-        public String toString() {
-            return strExpr;
-        }
-        
-        public static final class MatchAllContainsExpr extends ContainsExpr {
-            private MatchAllContainsExpr() throws IllegalArgumentException { super("*"); }
-            @Override
-            public boolean matches(String nameExpr) { return true; }
-            @Override
-            public boolean matchesAllNames(List<String> nameExprList) { return true; }
-            @Override
-            public boolean matchesAllNameTokens(List<Token> nameTokenList) { return true; }
-        }
-        
-        public static final class MatchNoneContainsExpr extends ContainsExpr {
-            private MatchNoneContainsExpr() throws IllegalArgumentException { super("!*"); }
-            @Override
-            public boolean matches(String nameExpr) { return false; }
-            @Override
-            public boolean matchesAllNames(List<String> nameExprList) { return false; }
-            @Override
-            public boolean matchesAllNameTokens(List<Token> nameTokenList) { return false; }
-        }
-        
-    }
+    */
 }

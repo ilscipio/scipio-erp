@@ -57,8 +57,8 @@ import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -70,25 +70,25 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  */
 @SuppressWarnings("serial")
-public abstract class ModelScreenWidget extends ModelWidget {
+public abstract class ModelScreenWidget extends ModelWidget implements ContainsExpr.ContainsExprAttrWidget {
     public static final String module = ModelScreenWidget.class.getName();
 
     private final ModelScreen modelScreen;
     /**
      * SCIPIO: contains-expression, supported on any item for which the "contains" attribute is
-     * defined in widget-screen.xsd. Handled by {@link RenderTargetExpr.RenderTargetState}. Default is contains all.
+     * defined in widget-screen.xsd. Handled by {@link WidgetRenderTargetExpr.WidgetRenderTargetState}. Default is contains all.
      * TODO: REVIEW: to simplify implementation, I have simply added this to all elements for now, even
      * those that don't define it in widget-screen.xsd; maybe split up...
      * Added 2017-05-04.
      */
-    private final RenderTargetExpr.ContainsExpr containsExpr;
+    private final ContainsExpr containsExpr;
 
     public ModelScreenWidget(ModelScreen modelScreen, Element widgetElement) {
         super(widgetElement);
         this.modelScreen = modelScreen;
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
         // SCIPIO: new
-        this.containsExpr = RenderTargetExpr.ContainsExpr.makeOrDefault(widgetElement.getAttribute("contains"), widgetElement);
+        this.containsExpr = ContainsExpr.getInstanceOrDefault(widgetElement.getAttribute("contains"), widgetElement);
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
      * This separation allows us to insert logic at every element visit.
      * <p>
      * <strong>TARGETED RENDERING</strong><br/>
-     * This method now performs a targeted rendering applicability check, recorded through {@link RenderTargetState}.
+     * This method now performs a targeted rendering applicability check, recorded through {@link WidgetRenderTargetState}.
      * <p>
      * If we haven't found the target element to render yet, we will for the most part
      * enter into all elements here EXCEPT those that have been explicitly marked as not
@@ -113,8 +113,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
      */
     public final void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         // SCIPIO: targeted rendering applicability check.
-        RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-        RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+        WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
         if (!execInfo.shouldExecute()) {
             return;
         }
@@ -161,7 +161,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
     /**
      * SCIPIO: Returns the complex contains-expression. Never null.
      */
-    public RenderTargetExpr.ContainsExpr getContainsExpr() {
+    @Override
+    public ContainsExpr getContainsExpr() {
         return containsExpr;
     }
 
@@ -1616,8 +1617,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
             try {
                 ModelForm modelForm = getModelForm(context);
                 // SCIPIO: targeted rendering applicability check.
-                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }
@@ -1722,8 +1723,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
             try {
                 ModelForm modelForm = getModelForm(context);
                 // SCIPIO: targeted rendering applicability check.
-                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }

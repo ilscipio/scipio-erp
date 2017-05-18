@@ -45,7 +45,7 @@ import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -155,7 +155,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
             
             // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.
-            writer = RenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
+            writer = WidgetRenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
             
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
             ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);

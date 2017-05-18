@@ -7,8 +7,8 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.widget.model.ftl.ModelFtlWidget;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
@@ -46,7 +46,7 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
         // if not, don't even bother trying.
         if (writer instanceof RenderWriter) {
             Map<String, Object> context = ContextFtlUtil.getContext(env);
-            RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
+            WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
             if (renderTargetState.isEnabled()) {
                 String dirName = TransformUtil.getStringArg(params, "dirName");
                 TemplateHashModel dirArgs = (TemplateHashModel) params.get("dirArgs");
@@ -75,7 +75,7 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
                 String location = "unknown-location"; // FIXME
                 ModelFtlWidget widget = new ModelFtlWidget(name, dirName, location, id);
                 
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(widget, writer, context, null);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(widget, writer, context, null);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }

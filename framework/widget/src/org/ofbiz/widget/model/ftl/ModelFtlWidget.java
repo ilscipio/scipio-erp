@@ -1,16 +1,15 @@
 package org.ofbiz.widget.model.ftl;
 
+import org.ofbiz.widget.model.ContainsExpr;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.ModelWidgetVisitor;
-import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
-import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.ContainsExpr;
 
 /**
  * TODO: Special wrapper for FTL elements to pass off as widgets.
  * Currently useless, no support for FTL matching and support uncertain.
  */
 @SuppressWarnings("serial")
-public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, ModelWidget.IdAttrWidget {
+public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, ModelWidget.IdAttrWidget, ContainsExpr.ContainsExprAttrWidget {
     private final String dirName;
     private final String location;
     private final String id;
@@ -21,7 +20,7 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
         this.dirName = dirName;
         this.location = location;
         this.id = id;
-        this.containsExpr = WidgetRenderTargetExpr.ContainsExpr.makeOrDefault(containsExpr, null);
+        this.containsExpr = ContainsExpr.getInstanceOrDefault(containsExpr, null);
     }
     
     public ModelFtlWidget(String name, String dirName, String location, String id) {
@@ -53,6 +52,7 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
         return id;
     }
 
+    @Override
     public ContainsExpr getContainsExpr() {
         return containsExpr;
     }

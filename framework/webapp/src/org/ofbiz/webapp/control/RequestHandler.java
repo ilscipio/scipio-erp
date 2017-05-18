@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.X509Certificate;
@@ -62,6 +63,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
@@ -505,10 +507,9 @@ public class RequestHandler {
                 }
                 
                 // SCIPIO: if we require login, we may need to support an alternate render expr to handle login case
-                Object scpLoginRenderTargetExpr = request.getAttribute("scpLoginRenderTargetExpr");
-                if (scpLoginRenderTargetExpr == null) scpLoginRenderTargetExpr = request.getParameter("scpLoginRenderTargetExpr");
+                Object scpLoginRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.LOGINRENDERTARGETEXPR_PARAMNAME);
                 if (scpLoginRenderTargetExpr != null) {
-                    request.setAttribute("scpRenderTargetExpr", scpLoginRenderTargetExpr);
+                    RenderTargetUtil.setRawRenderTargetExpr(request, scpLoginRenderTargetExpr);
                 }
             }
             // SCIPIO: we have to mark a flag to say if was logged in for viewAsJson
@@ -1218,21 +1219,7 @@ public class RequestHandler {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewMap.type);
             if (viewAsJson) {
-                // SCIPIO
-                if (vh instanceof ViewHandlerExt) {
-                    ViewHandlerExt vhe = (ViewHandlerExt) vh;
-                    StringWriter sw = new StringWriter();
-                    // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
-                    Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
-                    try {
-                        vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
-                    } finally {
-                        ViewAsJsonUtil.setRenderOutParam(req, ViewAsJsonUtil.RENDEROUT_OUTPARAM, sw.toString());
-                        ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
-                    }
-                } else {
-                    throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
-                }
+                invokeViewHandlerAsJson(vh, viewAsJsonConfig, view, nextPage, viewMap.info, contentType, charset, req, resp);
             } else {
                 vh.render(view, nextPage, viewMap.info, contentType, charset, req, resp);
             }
@@ -1271,6 +1258,26 @@ public class RequestHandler {
         if (this.trackStats(req) && vname != null) {
             ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
                 System.currentTimeMillis() - viewStartTime, userLogin);
+        }
+    }
+    
+    /**
+     * SCIPIO: factored out viewAsJson view handler render wrapper code.
+     */
+    public static void invokeViewHandlerAsJson(ViewHandler vh, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, String view, String nextPage, String info, String contentType, String charset, HttpServletRequest req, HttpServletResponse resp) throws ViewHandlerException {
+        if (vh instanceof ViewHandlerExt) {
+            ViewHandlerExt vhe = (ViewHandlerExt) vh;
+            // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
+            Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
+            Writer sw = ViewAsJsonUtil.prepareWriterAndMode(req, viewAsJsonConfig);
+            try {
+                vhe.render(view, nextPage, info, contentType, charset, req, resp, sw);
+            } finally {
+                ViewAsJsonUtil.setRenderOutParamFromWriter(req, sw);
+                ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
+            }
+        } else {
+            throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
         }
     }
     

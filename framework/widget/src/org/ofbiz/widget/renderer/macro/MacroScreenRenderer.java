@@ -65,8 +65,8 @@ import org.ofbiz.widget.model.ScreenFactory;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.Paginator;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.html.HtmlScreenRenderer.ScreenletMenuRenderer;
@@ -216,7 +216,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * NOTE: can add other non-targeted logic in this method later as well.
      */
     boolean shouldOutput(Appendable writer) throws IOException {
-        return RenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
+        return WidgetRenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
     
     /**
@@ -227,7 +227,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      */
     boolean shouldOutput(Appendable writer, Map<String, Object> context) throws IOException {
         // NOTE: explicitly using the initial context instead of passed one 
-        return RenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
+        return WidgetRenderTargetExpr.shouldOutput(writer, contextHandler.getInitialContext(writer));
     }
     
     

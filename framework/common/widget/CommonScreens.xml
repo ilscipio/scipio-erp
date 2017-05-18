@@ -231,7 +231,7 @@ under the License.
                     when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
                     in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
                     note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
-                <section contains="!$Global-Column-Main, *">
+                <section contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: metro theme prevents optimization: !$Global-Column-Left,  -->
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -243,7 +243,7 @@ under the License.
                             </html>
                         </platform-specific>
                         <!-- render header -->
-                        <section name="Global-Head-Header">
+                        <section name="Global-Head-Header" contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: metro theme prevents optimization: !$Global-Column-Left,  -->
                             <widgets>
                                 <platform-specific>
                                     <html>
@@ -253,7 +253,7 @@ under the License.
                             </widgets>
                         </section>
                         <!-- render appbar or its opening part -->
-                        <section name="Global-Main-Nav">
+                        <section name="Global-Main-Nav" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                             <condition>
                                 <not>
                                     <if-empty field="appbarOpenTemplateLocation" />
@@ -276,7 +276,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section contains="!$Global-Column-Main, *">
+                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -338,7 +338,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, *">
+                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: ignite theme prevents optimization: !$Global-Column-Left,  -->
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -357,7 +357,7 @@ under the License.
                 </section>
                 <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                      include in <head></head>, but doesn't seem worth it for now -->
-                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, *">
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -367,7 +367,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render content area -->
-                <section name="Global-Pre-Content" contains="!$Global-Column-Main, *">
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <decorator-section-include name="pre-content"/>
                     </widgets>
@@ -551,7 +551,7 @@ under the License.
                     </section>
                 </container>
                 <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, *">
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -560,7 +560,7 @@ under the License.
                         </platform-specific>
                     </widgets>
                 </section>
-                <section contains="!$Global-Column-Main, *">
+                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -743,7 +743,7 @@ under the License.
     
     <!-- Common Widgets -->
     <screen name="column-left">
-        <section name="Global-Column-Left">
+        <section name="Global-Column-Left" contains="!$Global-Column-Main, !$Global-Column-Right, *">
             <widgets>
                 <container style="${columnLeftStyle}" id="left-sidebar">
                     <container style="sidebar">
@@ -756,7 +756,7 @@ under the License.
     </screen>
     
     <screen name="column-right">
-        <section name="Global-Column-Right">
+        <section name="Global-Column-Right" contains="!$Global-Column-Main, !$Global-Column-Left, *">
             <widgets>
                 <container style="${columnRightStyle}" id="right-sidebar">
                     <container style="sidebar">
@@ -768,7 +768,7 @@ under the License.
     </screen>
     
     <screen name="column-main">
-        <section name="Global-Column-Main">
+        <section name="Global-Column-Main" contains="!$Global-Column-Left, !$Global-Column-Right, *">
             <condition>
                 <if-empty field="noTitle"/>
             </condition>

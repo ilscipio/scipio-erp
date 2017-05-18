@@ -244,7 +244,7 @@ public class ControlServlet extends HttpServlet {
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
                 // SCIPIO: 2017-05-15: special case for targeted rendering of error page
-                Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_PARAMNAME);
+                Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_REQPARAM);
                 if (scpErrorRenderTargetExpr != null) {
                     RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
                 }

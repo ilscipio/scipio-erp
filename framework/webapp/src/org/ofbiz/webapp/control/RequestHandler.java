@@ -507,7 +507,7 @@ public class RequestHandler {
                 }
                 
                 // SCIPIO: if we require login, we may need to support an alternate render expr to handle login case
-                Object scpLoginRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.LOGINRENDERTARGETEXPR_PARAMNAME);
+                Object scpLoginRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.LOGINRENDERTARGETEXPR_REQPARAM);
                 if (scpLoginRenderTargetExpr != null) {
                     RenderTargetUtil.setRawRenderTargetExpr(request, scpLoginRenderTargetExpr);
                 }
@@ -686,8 +686,11 @@ public class RequestHandler {
             String lastViewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
             // Do not save the view if the last view is the same as the current view and saveCurrentView is false
             if (!(!nextRequestResponse.saveCurrentView && "view".equals(nextRequestResponse.type) && nextRequestResponseValue.equals(lastViewName))) {
-                session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
-                session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
+                // SCIPIO: don't save for viewAsJson unless enabled
+                if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
+                    session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
+                    session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
+                }
             }
         }
         String saveName = null;
@@ -1111,7 +1114,7 @@ public class RequestHandler {
 
         if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig)) {
             // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
-            Map<String, Object> paramMap = UtilHttp.getParameterMap(req);
+            Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
             paramMap.putAll(UtilHttp.getAttributeMap(req));
             UtilMisc.makeMapSerializable(paramMap);

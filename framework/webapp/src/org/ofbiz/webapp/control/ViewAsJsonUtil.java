@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -55,6 +57,15 @@ public abstract class ViewAsJsonUtil {
     @Deprecated
     public static final String VIEWASJSONSPLITMODE_REQPARAM = "scpViewAsJsonSplitMode";
 
+    public static final Set<String> VIEWASJSON_REQPARAM_ALL = UtilMisc.unmodifiableHashSet(VIEWASJSON_REQPARAM, VIEWASJSONUSESESSION_REQPARAM, VIEWASJSONREGLOGIN_REQPARAM, VIEWASJSONSPLITMODE_REQPARAM);
+    public static final Set<String> VIEWASJSON_RENDERTARGET_REQPARAM_ALL;
+    static {
+        Set<String> set = new HashSet<>();
+        set.addAll(VIEWASJSON_REQPARAM_ALL);
+        set.addAll(RenderTargetUtil.RENDERTARGET_REQPARAM_ALL);
+        VIEWASJSON_RENDERTARGET_REQPARAM_ALL = Collections.unmodifiableSet(set);
+    }
+    
     /**
      * Name of request attribute for a map containing explicit values to output via json.
      */
@@ -157,6 +168,16 @@ public abstract class ViewAsJsonUtil {
             }
         }
         return attrMap;
+    }
+    
+    public static ViewAsJsonConfig getViewAsJsonConfigOrDefault(HttpServletRequest request) {
+        try {
+            RequestHandler rh = RequestHandler.getRequestHandler(request);
+            return rh.getControllerConfig().getViewAsJsonConfigOrDefault();
+        } catch (Exception e) {
+            Debug.logError(e, "Could not get ViewAsJsonConfig", module);
+            return new ConfigXMLReader.ViewAsJsonConfig();
+        }
     }
     
     /**

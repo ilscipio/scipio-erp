@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.renderer.RenderTargetExpr.MultiRenderTargetExpr;
 import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
 
@@ -25,10 +26,13 @@ public abstract class RenderTargetUtil {
 
     public static final String module = RenderTargetUtil.class.getName();
     
-    public static final String RENDERTARGETEXPR_PARAMNAME = "scpRenderTargetExpr";
-    public static final String ERRORRENDERTARGETEXPR_PARAMNAME = "scpErrorRenderTargetExpr";
-    public static final String LOGINRENDERTARGETEXPR_PARAMNAME = "scpLoginRenderTargetExpr";
+    public static final String RENDERTARGETEXPR_REQPARAM = "scpRenderTargetExpr";
+    public static final String ERRORRENDERTARGETEXPR_REQPARAM = "scpErrorRenderTargetExpr";
+    public static final String LOGINRENDERTARGETEXPR_REQPARAM = "scpLoginRenderTargetExpr";
 
+    public static final Set<String> RENDERTARGET_REQPARAM_ALL = UtilMisc.unmodifiableHashSet(RENDERTARGETEXPR_REQPARAM,
+            ERRORRENDERTARGETEXPR_REQPARAM, LOGINRENDERTARGETEXPR_REQPARAM);
+    
     public static final String RENDERTARGETSTATE_ATTR = "scpRenderTargetState";
     public static final String RENDERTARGETON_ATTR = "scpRenderTargetOn";
 
@@ -95,7 +99,7 @@ public abstract class RenderTargetUtil {
     }
     
     public static Object getRawRenderTargetExpr(HttpServletRequest request) {
-        return getRawRenderTargetExpr(request, RENDERTARGETEXPR_PARAMNAME);
+        return getRawRenderTargetExpr(request, RENDERTARGETEXPR_REQPARAM);
     }
     
     public static void setRawRenderTargetExpr(HttpServletRequest request, String paramName, Object expr) {
@@ -103,7 +107,7 @@ public abstract class RenderTargetUtil {
     }
     
     public static void setRawRenderTargetExpr(HttpServletRequest request, Object expr) {
-        setRawRenderTargetExpr(request, RENDERTARGETEXPR_PARAMNAME, expr);
+        setRawRenderTargetExpr(request, RENDERTARGETEXPR_REQPARAM, expr);
     }
     
     /**

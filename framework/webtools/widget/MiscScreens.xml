@@ -690,28 +690,32 @@ under the License.
     </screen>
     
     <screen name="TargetedRenderingTestSubDecorator">
-        <section>
+        <section name="TR-SubDec-Section-Top">
             <widgets>
                 <section name="TR-SubDec-Section-1">
                     <widgets>
-                        <screenlet>
+                        <screenlet id="tr-subdec-screenlet-1">
                             <platform-specific><html><html-template><![CDATA[
+                            <@virtualSection name="tr-subdec-ftl-virtual-1">
                                 <div>
                                     <p>We are inside sub decorator section 1</p>
                                 </div>
+                            </@virtualSection>
                             ]]></html-template></html></platform-specific>
                         </screenlet>
                     </widgets>
                 </section>
                 <section name="TR-SubDec-Section-2">
                     <widgets>
-                        <screenlet>
+                        <screenlet id="tr-subdec-screenlet-2">
                             <platform-specific><html><html-template><![CDATA[
+                            <@virtualSection name="tr-subdec-ftl-virtual-2">
                                 <div>
                                     <p>We are inside sub decorator section 2</p>
                                     <@render type="section" name="body"/>
                                     <p>We are inside sub decorator section 2</p>
                                 </div>
+                            </@virtualSection>
                             ]]></html-template></html></platform-specific>
                         </screenlet>
                     </widgets>

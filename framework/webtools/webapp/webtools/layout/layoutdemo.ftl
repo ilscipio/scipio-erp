@@ -1286,6 +1286,18 @@
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTMULTI1": {
+        "title": "Partial page, multi-select test 1",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
+    },
+    "PARTMULTI2": {
+        "title": "Partial page, multi-select test 2 (nesting test)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi: parent-container: $TR-SubDec-Section-Top, sub-container-1 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-1, sub-container-2 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-2" 
     }
 }>
   <@script>
@@ -1300,6 +1312,7 @@
             return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
         }
     }
+    
     function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb) {
         var outElem = jQuery('#'+outputElemId);
         outElem.val("(LOADING...)");
@@ -1309,24 +1322,43 @@
             data: params,
             success: function(data) {
                 var outElem = jQuery('#'+outputElemId);
-                var renderOut;
+                
+                var processRenderOut = function(renderOut) {
+                    if (jQuery.type(renderOut) === 'object') {
+                        if (jQuery.isEmptyObject(renderOut)) {
+                            return "NOTHING MATCHED OR UNRECOGNIZED ERROR: MULTI RENDEROUT OBJECT WAS EMPTY";
+                        }
+                        var out = "";
+                        jQuery.each(renderOut, function(k, v) {
+                            out += "\n\n---------------------------------------------------------------\n";
+                            out += "MULTI TARGET MATCH: " + k + "\n";
+                            out += "---------------------------------------------------------------\n";
+                            out += renderOutProcessCb(v);
+                        });
+                        return out;
+                    } else {
+                        return renderOutProcessCb(renderOut);
+                    }
+                };
+
+                var out = "";
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     // TODO: (data._ERROR_MESSAGE_LIST_) 
                     if (data._ERROR_MESSAGE_) {
-                        renderOut = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
+                        out = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
                     } else {
-                        renderOut = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
+                        out = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
                     }
                     if (data.renderOut) {
-                        renderOut += "\n\n---------------------------------------------------------------\n\n";
-                        renderOut += renderOutProcessCb(data.renderOut);
+                        out += "\n\n---------------------------------------------------------------\n\n";
+                        out += processRenderOut(data.renderOut);
                     }
                 } else if (data.renderOut) {
-                    renderOut = renderOutProcessCb(data.renderOut);
+                    out = processRenderOut(data.renderOut);
                 } else { 
-                    renderOut = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
+                    out = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
                 }
-                outElem.val(renderOut);
+                outElem.val(out);
             }
         });
     };

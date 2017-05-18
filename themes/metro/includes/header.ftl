@@ -309,9 +309,11 @@ under the License.
                         <!-- Menu sidebar begin-->
                         <#-- NOTE: side-nav is on the child ul -->
                         <div class="side-nav-area">
+                      <@virtualSection name="Global-Column-Left">
                         <#if userLogin??>  
                             <@sideBarMenu/> 
-                        </#if>                
+                        </#if>   
+                      </@virtualSection>
                         </div>
                         
                     </nav>

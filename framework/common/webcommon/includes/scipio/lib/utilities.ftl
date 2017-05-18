@@ -1186,12 +1186,14 @@ NOTE: this implicitly defines a @renderTarget.
 
   * Parameters *
     name                    = Virtual section name (global scope)
+    contains                = contains-expression
+                              See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
     
   * History *
     Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro virtualSection name="">
+<#macro virtualSection name="" contains="*">
 </#macro>
 -->
 

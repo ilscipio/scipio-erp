@@ -88,8 +88,9 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static final String module = WidgetRenderTargetExpr.class.getName();
     
     // WARN: this is public-facing so it must have size limits in cache.properties
-    private static final UtilCache<String, WidgetRenderTargetExpr> cache = UtilCache.createUtilCache("renderer.targeted.expr");
-    
+    private static final UtilCache<String, WidgetRenderTargetExpr> cache = UtilCache.createUtilCache("widget.renderer.targeted.expr");
+    private static final UtilCache<String, WidgetMultiRenderTargetExpr> multiCache = UtilCache.createUtilCache("widget.renderer.targeted.multiexpr");
+
     /**
      * Separator pattern to split the names/tokens in a RenderTargetExpr input string.
      * currently only support descendent selector, so spaces only.
@@ -202,7 +203,14 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         if (expr == null) return null;
         if (expr instanceof WidgetRenderTargetExpr) return (WidgetRenderTargetExpr) expr;
         else if (expr instanceof WidgetMultiRenderTargetExpr) return (WidgetMultiRenderTargetExpr) expr;
-        else if (expr instanceof String) return fromString((String) expr);
+        else if (expr instanceof String) {
+            String strExpr = (String) expr;
+            if (strExpr.startsWith(RenderTargetUtil.RENDERTARGETEXPR_RAW_MULTI_PREFIX)) {
+                return WidgetMultiRenderTargetExpr.fromExprListString(strExpr.substring(RenderTargetUtil.RENDERTARGETEXPR_RAW_MULTI_PREFIX.length()));
+            } else {
+                return fromString(strExpr);
+            }
+        }
         else if (expr instanceof Map) return WidgetMultiRenderTargetExpr.fromMultiMap((Map<String, Object>) expr);
         else throw new IllegalArgumentException("Cannot create RenderTargetExpr from type: " + expr.getClass());
     }
@@ -213,22 +221,45 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     
     // this serves as a flag to say the multi was "compiled"
     public static class WidgetMultiRenderTargetExpr extends WidgetRenderTargetExprBase implements MultiRenderTargetExpr<WidgetRenderTargetExpr>, Serializable {
-        private final Map<String, WidgetRenderTargetExpr> map = new HashMap<>();
+        private final Map<String, WidgetRenderTargetExpr> map; // NOTE: immutable after create
         
-        public WidgetMultiRenderTargetExpr() {
-            super();
+        protected WidgetMultiRenderTargetExpr() {
+            this.map = new HashMap<>();
         }
 
-        public WidgetMultiRenderTargetExpr(Map<? extends String, ? extends RenderTargetExpr> m) {
-            this.map.putAll(map);
+        protected WidgetMultiRenderTargetExpr(Map<? extends String, ? extends Object> m) {
+            Map<String, WidgetRenderTargetExpr> map = new HashMap<>();
+            for(Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+                map.put(entry.getKey(), WidgetRenderTargetExpr.fromObject(entry.getValue()));
+            }
+            this.map = map;
+        }
+        
+        protected WidgetMultiRenderTargetExpr(String strExpr) {
+            Map<String, WidgetRenderTargetExpr> map = new HashMap<>();
+            String[] pairs = StringUtils.split(strExpr, ",");
+            for(String pair : pairs) {
+                String[] parts = StringUtils.split(pair, ":", 2);
+                if (parts.length != 2) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + strExpr);
+                String name = parts[0].trim();
+                String subStrExpr = parts[1].trim();
+                if (name.isEmpty() || subStrExpr.isEmpty()) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + strExpr);
+                map.put(name, WidgetRenderTargetExpr.fromString(subStrExpr));
+            }
+            this.map = map;
+        }
+        
+        public static WidgetMultiRenderTargetExpr fromExprListString(String strExpr) throws IllegalArgumentException {
+            WidgetMultiRenderTargetExpr expr = multiCache.get(strExpr);
+            if (expr == null) {
+                expr = new WidgetMultiRenderTargetExpr(strExpr);
+                multiCache.put(strExpr, expr);
+            }
+            return expr;
         }
         
         public static WidgetMultiRenderTargetExpr fromMultiMap(Map<String, Object> map) throws IllegalArgumentException {
-            WidgetMultiRenderTargetExpr multiExpr = new WidgetMultiRenderTargetExpr();
-            for(Map.Entry<String, Object> entry : map.entrySet()) {
-                multiExpr.put(entry.getKey(), WidgetRenderTargetExpr.fromObject(entry.getValue()));
-            }
-            return multiExpr;
+            return new WidgetMultiRenderTargetExpr(map);
         }
         
         public static WidgetMultiRenderTargetExpr fromSingle(WidgetRenderTargetExpr expr) {
@@ -258,19 +289,19 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         }
 
         public WidgetRenderTargetExpr put(String key, WidgetRenderTargetExpr value) {
-            return map.put(key, value);
+            throw new UnsupportedOperationException();
         }
 
         public WidgetRenderTargetExpr remove(Object key) {
-            return map.remove(key);
+            throw new UnsupportedOperationException();
         }
 
         public void putAll(Map<? extends String, ? extends WidgetRenderTargetExpr> m) {
-            map.putAll(m);
+            throw new UnsupportedOperationException();
         }
 
         public void clear() {
-            map.clear();
+            throw new UnsupportedOperationException();
         }
 
         public Set<String> keySet() {
@@ -282,7 +313,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         }
 
         public Set<java.util.Map.Entry<String, WidgetRenderTargetExpr>> entrySet() {
-            return map.entrySet();
+            return map.entrySet(); // FIXME: prevent setValue
         }
 
         public boolean equals(Object o) {

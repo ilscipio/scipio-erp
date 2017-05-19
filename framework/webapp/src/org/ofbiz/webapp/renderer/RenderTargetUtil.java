@@ -70,33 +70,23 @@ public abstract class RenderTargetUtil {
     public static Object getRawRenderTargetExpr(HttpServletRequest request, String paramName) {
         Object scpRenderTargetExpr = request.getAttribute(paramName);
         if (scpRenderTargetExpr != null) return scpRenderTargetExpr;
-        else {
-            String strExpr = request.getParameter(paramName);
-            if (strExpr != null) {
-                if (strExpr.startsWith(RENDERTARGETEXPR_RAW_MULTI_PREFIX)) {
-                    Map<String, Object> exprMap = splitMultiExprToMap(strExpr.substring(RENDERTARGETEXPR_RAW_MULTI_PREFIX.length()));
-                    return exprMap.isEmpty() ? RENDERTARGETEXPR_RAW_EMPTY : exprMap;
-                } else {
-                    return strExpr;
-                }
-            }
-        }
-        return null;
+        else return request.getParameter(paramName);
     }
     
-    public static Map<String, Object> splitMultiExprToMap(String expr) {
-        Map<String, Object> exprMap = new HashMap<>();
-        String[] pairs = StringUtils.split(expr, ",");
-        for(String pair : pairs) {
-            String[] parts = StringUtils.split(pair, ":", 2);
-            if (parts.length != 2) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + expr);
-            String name = parts[0].trim();
-            String strExpr = parts[1].trim();
-            if (name.isEmpty() || strExpr.isEmpty()) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + expr);
-            exprMap.put(name, strExpr);
-        }
-        return exprMap;
-    }
+    // now taken care of in WidgetMultiRenderTargetExpr, so that it's faster and cacheable
+//    public static Map<String, Object> splitMultiExprToMap(String expr) {
+//        Map<String, Object> exprMap = new HashMap<>();
+//        String[] pairs = StringUtils.split(expr, ",");
+//        for(String pair : pairs) {
+//            String[] parts = StringUtils.split(pair, ":", 2);
+//            if (parts.length != 2) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + expr);
+//            String name = parts[0].trim();
+//            String strExpr = parts[1].trim();
+//            if (name.isEmpty() || strExpr.isEmpty()) throw new IllegalArgumentException("targeted rendering multi expression is invalid: " + expr);
+//            exprMap.put(name, strExpr);
+//        }
+//        return exprMap;
+//    }
     
     public static Object getRawRenderTargetExpr(HttpServletRequest request) {
         return getRawRenderTargetExpr(request, RENDERTARGETEXPR_REQPARAM);
@@ -127,7 +117,8 @@ public abstract class RenderTargetUtil {
     }
     
     public static boolean isRenderTargetExprMulti(Object expr) {
-        return (expr instanceof MultiRenderTargetExpr || expr instanceof Map);
+        return (expr instanceof MultiRenderTargetExpr || expr instanceof Map 
+                || (expr instanceof String && ((String) expr).startsWith(RENDERTARGETEXPR_RAW_MULTI_PREFIX)));
     }
     
     public static String generateMultiTargetDelimiterPrefix(HttpServletRequest request) {

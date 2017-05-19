@@ -1098,20 +1098,16 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                                     switchWriter.beginSection(exprState.getName(), getMultiPrefix());
                                 }
                             } else {
-                                if (widget instanceof ContainsExpr.ContainsExprAttrWidget) {
+                                if (widget instanceof ContainsExpr.FlexibleContainsExprAttrWidget) {
                                     // Blacklist support, for execution optimization:
                                     // SPECIAL: <[section/element] contains="[expr]"> expression means we can potentially
                                     // skip executing sections/elements that we have been told do NOT contain the sections or 
                                     // elements we're after, in a blacklist-like fashion.
                                     // If ANY of the names are considered not contained (are blacklisted), 
                                     // we don't need to enter the widget.
-                                    ContainsExpr containsExpr = ((ContainsExpr.ContainsExprAttrWidget) widget).getContainsExpr();
+                                    ContainsExpr containsExpr = ((ContainsExpr.FlexibleContainsExprAttrWidget) widget).getContainsExpr(context);
                                     if (!containsExpr.matchesAllNameTokens(exprState.getNextTokenAndChildren())) {
                                         execInfo.shouldExecuteCurrentExpr = false;
-                                        if (RenderTargetUtil.DEBUG) {
-                                            Debug.logInfo("Targeted rendering: contains-expression optimization filtered out execution of widget element"
-                                                    + widget.getLogWidgetLocationString(), module);
-                                        }
                                     }
                                 }
                             }
@@ -1121,6 +1117,10 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                                 execInfo.shouldExecute = true;
                             }
                         }
+                    }
+                    if (RenderTargetUtil.DEBUG && !execInfo.shouldExecute) {
+                        Debug.logInfo("Targeted rendering: filtered out execution of widget element"
+                                + widget.getLogWidgetLocationString(), module);
                     }
                 }
             }

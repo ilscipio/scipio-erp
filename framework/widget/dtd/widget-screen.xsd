@@ -280,7 +280,9 @@ under the License.
                     Format:
                     Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
                     Names may refer to element names, id values, or other.
-                    Spaces are ignored, and has no flexible expression support.
+                    Spaces are ignored.
+                    Flexible expressions (${...}) can be specified, BUT it is highly recommended to use
+                    separate variables instead of inlining, because syntax clash is possible.
                     Each name can be directly prefixed with a Matching Element Type character, which denotes
                     what widget element or attribute value the name will match against.
                     An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)

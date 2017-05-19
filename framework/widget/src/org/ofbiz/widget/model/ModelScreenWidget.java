@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  */
 @SuppressWarnings("serial")
-public abstract class ModelScreenWidget extends ModelWidget implements ContainsExpr.ContainsExprAttrWidget {
+public abstract class ModelScreenWidget extends ModelWidget implements ContainsExpr.FlexibleContainsExprAttrWidget {
     public static final String module = ModelScreenWidget.class.getName();
 
     private final ModelScreen modelScreen;
@@ -81,14 +81,14 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
      * those that don't define it in widget-screen.xsd; maybe split up...
      * Added 2017-05-04.
      */
-    private final ContainsExpr containsExpr;
+    private final ContainsExpr.ContainsExprHolder containsExpr;
 
     public ModelScreenWidget(ModelScreen modelScreen, Element widgetElement) {
         super(widgetElement);
         this.modelScreen = modelScreen;
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
         // SCIPIO: new
-        this.containsExpr = ContainsExpr.getInstanceOrDefault(widgetElement.getAttribute("contains"), widgetElement);
+        this.containsExpr = ContainsExpr.ContainsExprHolder.getInstanceOrDefault(widgetElement.getAttribute("contains"), widgetElement);
     }
 
     /**
@@ -162,8 +162,8 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
      * SCIPIO: Returns the complex contains-expression. Never null.
      */
     @Override
-    public ContainsExpr getContainsExpr() {
-        return containsExpr;
+    public ContainsExpr getContainsExpr(Map<String, Object> context) {
+        return containsExpr.getContainsExpr(context);
     }
 
     public static final class SectionsRenderer implements org.ofbiz.webapp.renderer.BasicSectionsRenderer, Map<String, ModelScreenWidget> { // SCIPIO: new BasicSectionsRenderer interface

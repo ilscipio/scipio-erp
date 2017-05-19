@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.Token;
 import org.w3c.dom.Element;
@@ -49,6 +50,12 @@ public class ContainsExpr implements Serializable {
     public static final ContainsExpr MATCH_ALL = new MatchAllContainsExpr();
     public static final ContainsExpr MATCH_NONE = new MatchNoneContainsExpr();
     public static final ContainsExpr DEFAULT = MATCH_ALL;
+    static {
+        // SPECIAL: pre-cache the default instances so they'll always be the ones looked up
+        cache.put(MATCH_ALL.getStrExpr(), MATCH_ALL);
+        cache.put(MATCH_NONE.getStrExpr(), MATCH_NONE);
+        //cache.put(DEFAULT.getStrExpr(), DEFAULT);
+    }
     
     /* 
      * FIXME:
@@ -180,6 +187,10 @@ public class ContainsExpr implements Serializable {
         return getInstanceOrDefault(strExpr, widgetElement, DEFAULT);
     }
     
+    public static ContainsExpr getInstanceOrDefault(String strExpr) {
+        return getInstanceOrDefault(strExpr, null, DEFAULT);
+    }
+    
     
     /**
      * Always creates new instance.
@@ -309,6 +320,11 @@ public class ContainsExpr implements Serializable {
         return strExpr;
     }
     
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof ContainsExpr) && this.strExpr.equals(((ContainsExpr) other).strExpr);
+    }
+    
     public static final class MatchAllContainsExpr extends ContainsExpr {
         private MatchAllContainsExpr() throws IllegalArgumentException { super("*"); }
         @Override
@@ -329,11 +345,71 @@ public class ContainsExpr implements Serializable {
         public boolean matchesAllNameTokens(List<Token> nameTokenList) { return false; }
     }
     
-
     /**
      * SCIPIO: For any ModelWidget that supports a contains-expression.
      */
-    public interface ContainsExprAttrWidget {
-        ContainsExpr getContainsExpr();
+    public interface FlexibleContainsExprAttrWidget {
+        ContainsExpr getContainsExpr(Map<String, Object> context);
     }
+    
+    /**
+     * SCIPIO: Special holder that allows to manage Flexible expressions automatically
+     * and prevent creating unnecessary ones.
+     */
+    public static abstract class ContainsExprHolder implements FlexibleContainsExprAttrWidget, Serializable {
+        
+        public static ContainsExprHolder getInstanceOrDefault(String strExpr, Element widgetElement) {
+            FlexibleStringExpander exdr = FlexibleStringExpander.getInstance(strExpr);
+            if (FlexibleStringExpander.containsExpression(exdr)) {
+                return new FlexibleContainsExprHolder(exdr);
+            } else {
+                ContainsExpr expr = ContainsExpr.getInstanceOrDefault(strExpr, widgetElement);
+                if (ContainsExpr.DEFAULT.equals(expr)) {
+                    return getDefaultInstance();
+                } else {
+                    return new SimpleContainsExprHolder(expr);
+                }
+            }
+        }
+
+        public static DefaultContainsExprHolder getDefaultInstance() { return DefaultContainsExprHolder.INSTANCE; }
+
+        public static class DefaultContainsExprHolder extends ContainsExprHolder {
+            private static final DefaultContainsExprHolder INSTANCE = new DefaultContainsExprHolder();
+            private DefaultContainsExprHolder() {}
+            @Override
+            public ContainsExpr getContainsExpr(Map<String, Object> context) {
+                return ContainsExpr.DEFAULT;
+            }
+        }
+        
+        public static class SimpleContainsExprHolder extends ContainsExprHolder {
+            private final ContainsExpr containsExpr;
+
+            public SimpleContainsExprHolder(ContainsExpr containsExpr) {
+                super();
+                this.containsExpr = containsExpr;
+            }
+
+            @Override
+            public ContainsExpr getContainsExpr(Map<String, Object> context) {
+                return containsExpr;
+            }
+        }
+        
+        public static class FlexibleContainsExprHolder extends ContainsExprHolder {
+            private final FlexibleStringExpander containsExprExdr;
+
+            public FlexibleContainsExprHolder(FlexibleStringExpander containsExprExdr) {
+                super();
+                this.containsExprExdr = containsExprExdr;
+            }
+
+            @Override
+            public ContainsExpr getContainsExpr(Map<String, Object> context) {
+                return ContainsExpr.getInstanceOrDefault(containsExprExdr.expandString(context));
+            }
+        }
+    }
+    
 }

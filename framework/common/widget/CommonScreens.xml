@@ -207,6 +207,14 @@ under the License.
             <set field="headerTitle" from-field="resolvedTitle"/>
 
             <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
+            
+            <!-- 2017-05-19: output the public-facing parts of layoutSettings when in viewAsJson mode
+                WARN: these are returned without ofbizContentUrl wrapping; caller must handle
+                NOTE: DO NOT output the full layoutSettings here, because it contains internal paths that _could_ be considered
+                    security risk on some production systems. -->
+            <set field="scpOutParams.layoutSettings.javaScripts" from-field="layoutSettings.javaScripts" global="true"/>
+            <set field="scpOutParams.layoutSettings.javaScriptsFooter" from-field="layoutSettings.javaScriptsFooter" global="true"/>
+            <set field="scpOutParams.layoutSettings.styleSheets" from-field="layoutSettings.styleSheets" global="true"/>
         </actions>
     </screen>
 

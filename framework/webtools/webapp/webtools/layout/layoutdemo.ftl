@@ -1220,15 +1220,22 @@
     },
     "PARTFTLSEL1": {
         "title": "Partial page, LIMITED FTL macro selection test (@container)",
+        "description": "NOTE: %screenlet[id=tr-ftl-section-2] also matches Freemarker @section invocations (platform-agnostic)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
-        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %screenlet[id=tr-ftl-section-2] #tr-ftl-container-1" 
     },
     "PARTFTLSEL2": {
         "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
+    },
+    "PARTFTLSEL2b": {
+        "title": "Partial page, LIMITED FTL macro selection test 2 (@virtualSection)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %section[name='TR-FTL-VirtualSection-1']" 
     },
     "PARTFTLSEL3": {
         "title": "Partial page, LIMITED FTL macro selection test (@form)",
@@ -1306,12 +1313,12 @@
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
     },
     "PARTMULTI2": {
-        <#-- DEV NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
-            because metro theme includes it TWICE causing duplicate ID!!! -->
         "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "description": "NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
+            because metro theme includes it TWICE causing duplicate ID!!!",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
-        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left %menu"
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column-menu:$Global-Column-Left %menu"
     },
     "PARTMULTI3": {
         "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",
@@ -1471,6 +1478,7 @@
         jQuery('input[name=scpLoginRenderTargetExpr]', form).val(values.scpLoginRenderTargetExpr || "");
         jQuery('input[name=scpErrorRenderTargetExpr]', form).val(values.scpErrorRenderTargetExpr || "");
         jQuery('input[name=extraParams]', form).val(values.extraParams || "");
+        jQuery('input[name=description]', form).val(values.description || "");
         jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
         ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
     }
@@ -1523,6 +1531,8 @@
         <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetTitle}</@field>
       </#list>
     </@field>
+    
+    <@field type="input" name="description" label="Notes" value=""/>
     
     <#assign defaultRequestUri = "ajaxRender">
     <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">

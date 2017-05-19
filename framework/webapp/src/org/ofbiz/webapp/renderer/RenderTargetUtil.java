@@ -35,7 +35,7 @@ public abstract class RenderTargetUtil {
     public static final String RENDERTARGETSTATE_ATTR = "scpRenderTargetState";
     public static final String RENDERTARGETON_ATTR = "scpRenderTargetOn";
 
-    public static final boolean DEBUG = true || Debug.verboseOn();
+    public static final boolean DEBUG = false || Debug.verboseOn();
     
     /**
      * for an expr in the format:

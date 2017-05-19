@@ -104,6 +104,17 @@ public abstract class ViewAsJsonUtil {
         return defaultRenderOutAttrNames;
     }
 
+    public static void initRenderOutVars(HttpServletRequest request) {
+        getRenderOutParams(request);
+        getRenderOutAttrNames(request);
+    }
+    
+    public static void copyRenderOutVarsToCtx(HttpServletRequest request, Map<String, Object> context) {
+        Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
+        globalContext.put(RENDEROUTPARAMS_ATTR, getRenderOutParams(request));
+        globalContext.put(RENDEROUTATTRNAMES_ATTR, getRenderOutAttrNames(request));
+    }
+    
     public static Map<String, Object> getRenderOutParams(HttpServletRequest request) {
         Map<String, Object> outParams = UtilGenerics.checkMap(request.getAttribute(RENDEROUTPARAMS_ATTR));
         if (outParams == null) {
@@ -256,6 +267,9 @@ public abstract class ViewAsJsonUtil {
     }
     
     public static Writer prepareWriterAndMode(HttpServletRequest request, ViewAsJsonConfig config) {
+        // PRE-INITIALIZE the out params map and names list, so that screens can more easily access and so we pre-share the instances
+        initRenderOutVars(request);
+        
         // TODO: REVIEW/MOVE: SPECIAL TARGETED RENDERING LOGIC NEEDED FOR MULTI-TARGET SUPPORT
         Object expr = RenderTargetUtil.getSetRawRenderTargetExpr(request);
         if (RenderTargetUtil.isRenderTargetExprOn(request, expr)) {

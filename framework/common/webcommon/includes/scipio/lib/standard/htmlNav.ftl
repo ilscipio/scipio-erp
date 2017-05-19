@@ -375,7 +375,6 @@ The submenu's main class may be set as altnested in global styles.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
   
-<@renderTarget dirName="menu" dirArgs=args>
   <#local menuIdNum = getRequestVar("scipioMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("scipioMenuIdNum", menuIdNum)>
@@ -389,6 +388,8 @@ The submenu's main class may be set as altnested in global styles.
     <#-- rudimentary check for parent menu -->
     <#local isNestedMenu = (prevMenuInfo.type)??>
   </#if>
+  
+<@renderTarget dirName=isNestedMenu?string("sub-menu", "menu") id=id name=name dirArgs=args>
   <#if !menuLevel?is_number>
     <#-- 2017-04-25: DO NOT use physical stack size for menu level - we need to keep relative increases
     <#local menuLevel = (getRequestStackSize("scipioMenuStack")!0) + 1>-->

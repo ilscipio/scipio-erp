@@ -395,7 +395,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
-<@renderTarget dirName="table" dirArgs=args>
+<@renderTarget dirName="table" id=id dirArgs=args>
   <#if open>
     <#local tableIdNum = getRequestVar("scipioTableIdNum")!0>
     <#local tableIdNum = tableIdNum + 1 />

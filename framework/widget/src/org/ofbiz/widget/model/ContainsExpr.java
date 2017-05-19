@@ -96,45 +96,69 @@ public class ContainsExpr implements Serializable {
         ArrayList<String> wildExcludes = new ArrayList<>();
         Map<Character, Boolean> matchAllTypes = new HashMap<>();
         Boolean matchAll = null;
-        
-        // FIXME: this does not properly compare supported Tokens
-        // nor does it recognized the bracketed attributes 
-        
-        for(String fullToken : tokenArr) {
-            String token = fullToken;
-            boolean exclude = (token.charAt(0) == EXCLUDE);
-            if (exclude) token = token.substring(1);
 
-            if (WidgetRenderTargetExpr.WILDCARD_STRING.equals(token)) { // special case
+        for(String fullToken : tokenArr) {
+            String tokenStr = fullToken;
+            boolean exclude = (tokenStr.charAt(0) == EXCLUDE);
+            if (exclude) tokenStr = tokenStr.substring(1);
+
+            if (WidgetRenderTargetExpr.WILDCARD_STRING.equals(tokenStr)) { // special case
                 matchAll = !exclude;
                 continue;
-            } else if (token.isEmpty()) {
+            } else if (tokenStr.isEmpty()) {
                 throw new IllegalArgumentException(makeErrorMsg("invalid or empty name", fullToken, strExpr, widgetElement));
             }
+
+            // OLD - this did not extract the attributes
+//            char type = tokenStr.charAt(0);
+//            if (!WidgetRenderTargetExpr.MET_ALL.contains(type)) 
+//                throw new IllegalArgumentException(makeErrorMsg("name has missing"
+//                        + " or invalid type specifier (should start with one of: " + WidgetRenderTargetExpr.MET_ALL_STR + ")", fullToken, strExpr, widgetElement));
+//            String name = tokenStr.substring(1);
             
-            char type = token.charAt(0);
-            if (!WidgetRenderTargetExpr.MET_ALL.contains(type)) 
-                throw new IllegalArgumentException(makeErrorMsg("name has missing"
-                        + " or invalid type specifier (should start with one of: " + WidgetRenderTargetExpr.MET_ALL_STR + ")", fullToken, strExpr, widgetElement));
-            String name = token.substring(1);
+            Token token;
+            try {
+                token = Token.interpret(tokenStr);
+            } catch(Exception e) {
+                throw new IllegalArgumentException(makeErrorMsg(e.getMessage(), fullToken, strExpr, widgetElement));
+            }
+            String name = token.getName().toString();
+            char type = token.getType();
+            String normTokenStr = token.getCmpNormStringExpr();
+            
+            // FIXME: this does not properly compare supported Tokens
+            // nor does it recognized the bracketed attributes 
+            // because we are ditching the Token instances
             
             if (name.equals(WidgetRenderTargetExpr.WILDCARD_STRING)) {
+                // FIXME: missing attribute support - we are ditching attributes!
+                if (token.hasAttr()) {
+                    Debug.logWarning(makeErrorMsg("token wildcard expression has attributes; attributes not yet supported here; attributes ignored!", fullToken, strExpr, widgetElement), module);
+                }
                 matchAllTypes.put(type, !exclude);
             } else if (name.contains(WidgetRenderTargetExpr.WILDCARD_STRING)) {
                 if (name.indexOf(WidgetRenderTargetExpr.WILDCARD) != name.lastIndexOf(WidgetRenderTargetExpr.WILDCARD)) { // TODO?: support multiple wildcard
                     throw new UnsupportedOperationException(makeErrorMsg("name has"
                             + " with multiple wildcards, which is not supported", fullToken, strExpr, widgetElement));
                 }
+                // FIXME: missing attribute support - we are ditching attributes!
+                if (token.hasAttr()) {
+                    Debug.logWarning(makeErrorMsg("token wildcard expression has attributes; attributes not yet supported here; attributes ignored!", fullToken, strExpr, widgetElement), module);
+                }
                 if (exclude) {
-                    wildExcludes.add(token);
+                    wildExcludes.add(type + name);
                 } else {
-                    wildIncludes.add(token);
+                    wildIncludes.add(type + name);
                 }
             } else {
+                if (token.hasAttr()) {
+                    Debug.logWarning(makeErrorMsg("token expression has attributes; not fully supported here; may not work as expected", fullToken, strExpr, widgetElement), module);
+                }
+                // FIXME: we lose Token instance here
                 if (exclude) {
-                    exactExcludes.add(token);
+                    exactExcludes.add(normTokenStr);
                 } else {
-                    exactIncludes.add(token);
+                    exactIncludes.add(normTokenStr);
                 }
             }
         }
@@ -264,9 +288,9 @@ public class ContainsExpr implements Serializable {
         for(Token nameExpr : nameTokenList) {
             if (nameExpr.hasAttr()) {
                 // FIXME: no wildcards for bracketed attributes because current code will mess it up
-                if (!matchesExact(nameExpr.getStringExpr())) return false;
+                if (!matchesExact(nameExpr.getCmpNormStringExpr())) return false;
             } else {
-                if (!matches(nameExpr.getStringExpr())) return false;
+                if (!matches(nameExpr.getCmpNormStringExpr())) return false;
             }
         }
         return true;

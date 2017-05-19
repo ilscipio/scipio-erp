@@ -32,9 +32,9 @@ import org.ofbiz.widget.model.ContainsExpr;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelScreenWidget.SectionsRenderer;
 import org.ofbiz.widget.model.ModelWidget;
-import org.ofbiz.widget.model.ftl.FtlWrapperWidget;
 import org.ofbiz.widget.model.ftl.ModelVirtualSectionFtlWidget;
-import org.ofbiz.widget.model.ftl.NonWidgetWrapperWidget;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState.ExecutionInfoImpl;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState.ExprStateInfo;
 
 /**
  * SCIPIO: Represents an expression describing screen widget element to target for rendering,
@@ -72,7 +72,7 @@ import org.ofbiz.widget.model.ftl.NonWidgetWrapperWidget;
  *     <screenlet id="my-screenlet">
  * "~my-included-section": (bottom-up decorator-section-include directive selector NOTE: ONLY matches on the current decorator layer, not the next)
  *     <decorator-section-include name="my-included-section">
- * "%container[id=my-container]": (generic widget tag/element matching support, with limited attribute support (name, id))
+ * "%container[id=my-container]": (generic widget tag/element AND Freemarker macro invocation matching support, with limited attribute support (name, id))
  *     <container id="my-container">
  *
  * "$my-section #my-container": (descendent selector, CSS-like)
@@ -106,17 +106,18 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static final char MET_DECSECINCL = '~';
     public static final char MET_DECSEC = '^';
     public static final char MET_DECSEC_RECALL = '/';
-    public static final char MET_WIDGETELEM = '%';
-    public static final char MET_FTLELEM = '@'; // NOTE: limited implementation
+    public static final char MET_ELEM = '%';
+    // REMOVED: this is now integrated into the widget elem selector
+    //public static final char MET_FTLELEM = '@'; // NOTE: limited implementation
     
     /**
      * Matching Element Type character prefixes. Each of these matches a widget element tag OR a type of attribute.
      * NOTE: These are shared between {@link WidgetRenderTargetExpr} and {@link ContainsExpr} so the
      * language is recognizable and consistent.
      */
-    public static final Set<Character> MET_ALL = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC, MET_WIDGETELEM, MET_FTLELEM);
+    public static final Set<Character> MET_ALL = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC, MET_ELEM);
     public static final String MET_ALL_STR = StringUtils.join(MET_ALL, ", "); // for log and exceptions
-    public static final Set<Character> MET_GENERIC = UtilMisc.unmodifiableHashSet(MET_WIDGETELEM, MET_FTLELEM);
+    public static final Set<Character> MET_GENERIC = UtilMisc.unmodifiableHashSet(MET_ELEM);
     public static final Set<Character> MET_SPECIFIC = UtilMisc.unmodifiableHashSet(MET_SECNAME, MET_ELEMID, MET_DECSECINCL, MET_DECSEC);
     
     public static final char WILDCARD = '*';
@@ -126,6 +127,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static final char ATTR_CLOSE = ']';
     public static final char ATTR_EQUALS = '=';
     public static final char ATTR_SEP = ',';
+    public static final List<String> ATTR_NAMES = UtilMisc.unmodifiableArrayList("id", "name");
     
     private final String strExpr;
     private final List<Token> tokens;
@@ -316,13 +318,14 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return map.entrySet(); // FIXME: prevent setValue
         }
 
-        public boolean equals(Object o) {
-            return map.equals(o);
-        }
-
-        public int hashCode() {
-            return map.hashCode();
-        }
+        // TODO: REVIEW
+//        public boolean equals(Object o) {
+//            return map.equals(o);
+//        }
+//
+//        public int hashCode() {
+//            return map.hashCode();
+//        }
     }
     
     
@@ -455,7 +458,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
      */
     public abstract static class Token {
         protected final String strExpr;
-        protected final char type;
+//        protected final char type;
         protected final Name name; // this is the name following the type prefix, it's not necessarily "name" attribute
         
         // NO NEED for this, because we'll only ever support name and id, so use those instead for optimize
@@ -463,18 +466,60 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         protected final Name nameAttr;
         protected final Name idAttr;
         
+        protected final String normStrExpr;
+        
         // private, may split into subclasses later
         protected Token(String strExpr, char type, String name, Map<String, String> attrMap) {
             this.strExpr = strExpr;
-            this.type = type;
+//            this.type = type;
             this.name = Name.interpret(name);
             
             // OPTIMIZATION: no need to keep map for these, we only support two attributes
             this.nameAttr = Name.interpretIfNotNull(attrMap.get("name"));
             this.idAttr = Name.interpretIfNotNull(attrMap.get("id"));
+            
+            this.normStrExpr = makeNormStrExpr(type, this.name, idAttr, nameAttr); // FIXME: this is anti-polymorphism
+        }
+        
+        /**
+         * TODO: this is INCOMPLETE, it does not convert in-between types properly!
+         * for now we're keeping the base name as the only real comparison part,
+         * because ContainsExpr can't really compare attributes and it's very slow.
+         */
+        protected static String makeNormStrExpr(char type, Name name, Name idAttr, Name nameAttr) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(type);
+            if (type == MET_DECSEC_RECALL) {
+                sb.append("/");
+            } 
+            sb.append(name.toString());
+            makeNormAttrStr(sb, idAttr, nameAttr);
+            return sb.toString();
+        }
+        
+        protected static void makeNormAttrStr(StringBuilder sb, Name... attrs) {
+            boolean opened = false;
+            for(int i=0; i < attrs.length; i++) {
+                Name attr = attrs[i];
+                if (attr != null) {
+                    if (!opened) {
+                        sb.append(ATTR_OPEN);
+                        opened = true;
+                    }
+                    sb.append(ATTR_NAMES.get(i));
+                    sb.append(ATTR_EQUALS);
+                    sb.append(attr.toString());
+                }
+            }
+            if (opened) {
+                sb.append(ATTR_CLOSE);
+            }
         }
         
         public static Token interpret(String strExpr) throws IllegalArgumentException {
+            if (WILDCARD_STRING.equals(strExpr)) {
+                return AllMatcher.getInstance();
+            }
             if (strExpr == null || strExpr.length() < 2) 
                 throw new IllegalArgumentException("Empty or invalid render target expression token/name: " + strExpr);
             char type = strExpr.charAt(0);
@@ -502,7 +547,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             if (!(MET_GENERIC.contains(type) || MET_DECSEC == type) && !attrMap.isEmpty())
                 throw new IllegalArgumentException("Render target expression has bracketed attributes"
                         + " - this is currently only supported for prefix types \"" 
-                        + MET_WIDGETELEM + "\" and \"" + MET_FTLELEM + "\"");
+                        + MET_ELEM + "\" and \"" + MET_DECSEC + "\"");
             Token token;
             switch(type) {
             case MET_SECNAME:
@@ -514,19 +559,23 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             case MET_DECSECINCL:
                 token = new DecoratorSectionIncludeMatcher(strExpr, type, name, attrMap);
                 break;
-            case MET_WIDGETELEM:
+            case MET_ELEM:
                 token = new GenericWidgetElementMatcher(strExpr, type, name, attrMap);
                 break;
-            case MET_FTLELEM:
-                token = new GenericFtlElementMatcher(strExpr, type, name, attrMap);
-                break;
+//            case MET_FTLELEM:
+//                token = new GenericFtlElementMatcher(strExpr, type, name, attrMap);
+//                break;
             case MET_DECSEC:
                 if (name.charAt(0) == MET_DECSEC_RECALL) {
                     token = new DecoratorScreenSectionRecallMatcher(strExpr, type, name.substring(1), attrMap);
                 } else {
                     token = new DecoratorScreenSectionEarlyMatcher(strExpr, type, name, attrMap);
                 }
-                break;    
+                break;  
+            case WILDCARD:
+                throw new IllegalArgumentException("Invalid render target expression token/name type"
+                        + " character prefix (should be one one: " + MET_ALL_STR + "), found wildcard: " + strExpr
+                        + " NOTE: if you tried to define attributes on a catch-all wildcard with no type, this is currently not supported");
             default:
                 throw new IllegalArgumentException("Invalid render target expression token/name type"
                         + " character prefix (should be one one: " + MET_ALL_STR + "): " + strExpr);
@@ -554,12 +603,39 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             return attrMap;
         }
         
+        /**
+         * Returns the original full expression.
+         */
         public String getStringExpr() {
             return strExpr;
         }
+        
+        /**
+         * Returns a normalized expression of the original.
+         * 
+         * TODO: NOT IMPLEMENTED IN GENERAL
+         */
+        public String getNormStringExpr() {
+            return normStrExpr;
+        }
+        
+        /**
+         * Returns a normalized expression specifically for comparison purposes,
+         * for use with {@link org.ofbiz.widget.model.ContainsExpr}.
+         * may CHANGE the expression.
+         * 
+         * TODO: NOT IMPLEMENTED IN GENERAL
+         */
+        public String getCmpNormStringExpr() {
+            return strExpr;
+        }
 
+//        public char getType() {
+//            return type;
+//        }
+        
         public char getType() {
-            return type;
+            return strExpr.charAt(0);
         }
 
         public Name getName() {
@@ -569,6 +645,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         public boolean hasAttr() {
             return idAttr != null || nameAttr != null;
         }
+        
 //        public Map<String, String> getAttrMap() {
 //            return attrMap;
 //        }
@@ -610,6 +687,32 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                 return false;
             }
             return true;
+        }
+        
+        public static class AllMatcher extends Token {
+            private static final AllMatcher INSTANCE = new AllMatcher();
+            
+            protected AllMatcher() {
+                super(WILDCARD_STRING, WILDCARD, WILDCARD_STRING, null);
+            }
+            
+            public static AllMatcher getInstance() { return INSTANCE; }
+
+            @Override
+            protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context, ExprStateInfo state,
+                    ExecutionInfoImpl execInfo) {
+                state.registerMatch(widget, execInfo, this);
+            }
+            @Override
+            public String getStringExpr() { return WILDCARD_STRING; }
+            @Override
+            public String getNormStringExpr() { return WILDCARD_STRING; }
+            @Override
+            public String getCmpNormStringExpr() { return WILDCARD_STRING; }
+            @Override
+            public char getType() { return WILDCARD; }
+            @Override
+            public boolean hasAttr() { return false; };
         }
         
         public static class WidgetSectionMatcher extends Token {
@@ -663,8 +766,15 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
         }
         
         public static class DecoratorScreenSectionEarlyMatcher extends Token {
+            private final String normCmpStrExpr;
+            
             protected DecoratorScreenSectionEarlyMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
+                // SPECIAL: to prevent issues for now, force the name to be "decorator-screen"
+                if (!"decorator-screen".equals(name)) {
+                    throw new IllegalArgumentException("Invalid render target expression token/name: invalid decorator-screen selection expression: " + strExpr);
+                }
+                this.normCmpStrExpr = MET_ELEM + getNormStringExpr().substring(1);
             }
 
             @Override
@@ -675,11 +785,19 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     state.registerMatch(decWidget, execInfo, this);
                 }
             }
+            
+            @Override
+            public String getCmpNormStringExpr() {
+                return normCmpStrExpr;
+            }
         }
         
         public static class DecoratorScreenSectionRecallMatcher extends Token {
+            private final String normCmpStrExpr;
+            
             protected DecoratorScreenSectionRecallMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
                 super(strExpr, type, name, attrMap);
+                this.normCmpStrExpr = MET_ELEM + "decorator-section[name='" + name + "']";
             }
 
             @Override
@@ -702,6 +820,11 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
                     }
                 }
             }
+            
+            @Override
+            public String getCmpNormStringExpr() {
+                return normCmpStrExpr;
+            }
         }
         
         public static class GenericWidgetElementMatcher extends Token {
@@ -712,25 +835,25 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
             @Override
             protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
                     WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
-                if (!(widget instanceof NonWidgetWrapperWidget) && matchesWidget(widget, context, name, idAttr, nameAttr)) {
+                if (matchesWidget(widget, context, name, idAttr, nameAttr)) {
                     state.registerMatch(widget, execInfo, this);
                 }
             }
         }
         
-        public static class GenericFtlElementMatcher extends Token {
-            protected GenericFtlElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
-                super(strExpr, type, name, attrMap);
-            }
-
-            @Override
-            protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
-                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
-                if (widget instanceof FtlWrapperWidget && matchesWidget(widget, context, name, idAttr, nameAttr)) {
-                    state.registerMatch(widget, execInfo, this);
-                }
-            }
-        }
+//        public static class GenericFtlElementMatcher extends Token {
+//            protected GenericFtlElementMatcher(String strExpr, char type, String name, Map<String, String> attrMap) {
+//                super(strExpr, type, name, attrMap);
+//            }
+//
+//            @Override
+//            protected void handleShouldExecute(ModelWidget widget, Map<String, Object> context,
+//                    WidgetRenderTargetState.ExprStateInfo state, WidgetRenderTargetState.ExecutionInfoImpl execInfo) {
+//                if (widget instanceof FtlWrapperWidget && matchesWidget(widget, context, name, idAttr, nameAttr)) {
+//                    state.registerMatch(widget, execInfo, this);
+//                }
+//            }
+//        }
     }
 
     /******************************************************/
@@ -882,7 +1005,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
      * NOTE: a reference is stored in both globalContext and request attributes,
      * so it should be accessible from most anywhere, as long as they aren't lost.
      */
-    public static class WidgetRenderTargetState implements RenderTargetState, Serializable {
+    public static class WidgetRenderTargetState implements RenderTargetExpr.RenderTargetState, Serializable {
         public static final WidgetRenderTargetState DISABLED = new DisabledWidgetRenderTargetState();
         
         public static final String module = WidgetRenderTargetState.class.getName();

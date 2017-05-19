@@ -61,7 +61,7 @@ Defines a form. Analogous to <form> HTML element.
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
-<@renderTarget dirName="form" dirArgs=args>
+<@renderTarget dirName="form" id=id dirArgs=args>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("scipioFormInfoStack", formInfo)>

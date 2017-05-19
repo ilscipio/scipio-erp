@@ -8,6 +8,6 @@ package org.ofbiz.widget.model.ftl;
 @SuppressWarnings("serial")
 public class ModelVirtualSectionFtlWidget extends ModelFtlWidget {
     public ModelVirtualSectionFtlWidget(String name, String location, String containsExpr) {
-        super(name, "virtualSection", location, null, containsExpr);
+        super(name, "section", location, null, containsExpr);
     }
 }

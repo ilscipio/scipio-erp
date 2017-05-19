@@ -49,28 +49,29 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
             WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
             if (renderTargetState.isEnabled()) {
                 String dirName = TransformUtil.getStringArg(params, "dirName");
-                TemplateHashModel dirArgs = (TemplateHashModel) params.get("dirArgs");
+                //TemplateHashModel dirArgs = (TemplateHashModel) params.get("dirArgs");
                 
                 String id = null;
                 String name = null; // TODO?: this may not work as expected if we do this...
-                if (dirArgs != null) {
-                    TemplateScalarModel idModel = (TemplateScalarModel) dirArgs.get("id");
-                    if (idModel != null) {
-                        id = LangFtlUtil.getAsStringNonEscaping(idModel);
-                        if ("section".equals(dirName)) {
-                            TemplateScalarModel containerIdModel = (TemplateScalarModel) dirArgs.get("containerId");
-                            if (containerIdModel != null) {
-                                String containerId = LangFtlUtil.getAsStringNonEscaping(containerIdModel);
-                                if (UtilValidate.isNotEmpty(containerId)) {
-                                    id = containerId;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    id = TransformUtil.getStringNonEscapingArg(params, "id");
-                    name = TransformUtil.getStringNonEscapingArg(params, "name");
-                }
+                // TODO: review
+//                if (dirArgs != null) {
+//                    TemplateScalarModel idModel = (TemplateScalarModel) dirArgs.get("id");
+//                    if (idModel != null) {
+//                        id = LangFtlUtil.getAsStringNonEscaping(idModel);
+//                        if ("section".equals(dirName)) {
+//                            TemplateScalarModel containerIdModel = (TemplateScalarModel) dirArgs.get("containerId");
+//                            if (containerIdModel != null) {
+//                                String containerId = LangFtlUtil.getAsStringNonEscaping(containerIdModel);
+//                                if (UtilValidate.isNotEmpty(containerId)) {
+//                                    id = containerId;
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
+                id = TransformUtil.getStringNonEscapingArg(params, "id");
+                name = TransformUtil.getStringNonEscapingArg(params, "name");
+//                }
 
                 String location = "unknown-location"; // FIXME
                 ModelFtlWidget widget = new ModelFtlWidget(name, dirName, location, id);
@@ -87,8 +88,6 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
                     execInfo.handleFinished(context); // SCIPIO: return logic
                 }
                 return;
-                    
-
             }
         }
         

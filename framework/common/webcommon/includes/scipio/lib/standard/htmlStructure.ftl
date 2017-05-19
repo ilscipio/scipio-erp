@@ -51,7 +51,7 @@ to this one.
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.container_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-<@renderTarget dirName="container" dirArgs=args>
+<@renderTarget dirName="container" id=id dirArgs=args>
   <#if open>
     <#local attribs = makeAttribMapFromArgMap(args)>
     <#if !elem?has_content || elem == "container">
@@ -820,7 +820,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 <#macro section args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.section_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-<@renderTarget dirName="section" dirArgs=args>
+<#-- NOTE: this is registered as SCREENLET element so we can have equivalence with widget elements -->
+<@renderTarget dirName="screenlet" id=containerId?has_content?string(containerId, id) dirArgs=args>
   <#if open>
     <#if !type?has_content>
       <#local type = "default">

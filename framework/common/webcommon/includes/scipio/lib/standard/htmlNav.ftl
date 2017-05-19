@@ -374,7 +374,8 @@ The submenu's main class may be set as altnested in global styles.
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
-
+  
+<@renderTarget dirName="menu" dirArgs=args>
   <#local menuIdNum = getRequestVar("scipioMenuIdNum")!0>
   <#local menuIdNum = menuIdNum + 1 />
   <#local dummy = setRequestVar("scipioMenuIdNum", menuIdNum)>
@@ -556,6 +557,7 @@ The submenu's main class may be set as altnested in global styles.
   <#local dummy = popRequestStack("scipioMenuStack")>
   <#local dummy = setRequestVar("scipioCurrentMenuItemIndex", prevMenuItemIndex)>
   <#local dummy = setRequestVar("scipioLastMenuInfo", menuInfo)>
+</@renderTarget>
 </#macro>
 
 <#function menuAppendActiveStyle class styleName propBasePrefix active activeTarget>

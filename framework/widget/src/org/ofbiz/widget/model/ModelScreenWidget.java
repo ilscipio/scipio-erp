@@ -2212,46 +2212,57 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                 return;
             }
             
-            // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
-            Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
-            
-            // SCIPIO: added scope protect
-            boolean protectScope = !shareScope(context);
-            if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
-                UtilGenerics.<MapStack<String>>cast(context).push();
-            }
-            
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
             ModelMenu modelMenu = getModelMenu(context);
             
-            // SCIPIO: new render state to carry around max depth
-            // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
-            MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
-            if (prevRenderState != null) {
-                Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
-                    + "a new menu render was started", module);
+            // SCIPIO: targeted rendering applicability check.
+            WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+            WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelMenu, writer, context, screenStringRenderer);
+            if (!execInfo.shouldExecute()) {
+                return;
             }
             try {
-                MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
-                if (menuRenderArgs != null) {
-                    renderState.putAll(menuRenderArgs); // keep same names
-                }
-                renderState.setMaxDepth(getMaxDepth(context));
-                renderState.setSubMenuFilter(getSubMenuFilter(context));
-                
-                modelMenu.renderMenuString(writer, context, menuStringRenderer);
-            } finally {
-                // SCIPIO: restore the previous render state just in case
-                MenuRenderState.store(context, prevRenderState);
-            }
             
-            // SCIPIO: added scope protect
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+                // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
+                Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
+                
+                // SCIPIO: added scope protect
+                boolean protectScope = !shareScope(context);
+                if (protectScope) {
+                    if (!(context instanceof MapStack<?>)) {
+                        context = MapStack.create(context);
+                    }
+                    UtilGenerics.<MapStack<String>>cast(context).push();
+                }
+                
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+    
+                // SCIPIO: new render state to carry around max depth
+                // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
+                MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
+                if (prevRenderState != null) {
+                    Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
+                        + "a new menu render was started", module);
+                }
+                try {
+                    MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
+                    if (menuRenderArgs != null) {
+                        renderState.putAll(menuRenderArgs); // keep same names
+                    }
+                    renderState.setMaxDepth(getMaxDepth(context));
+                    renderState.setSubMenuFilter(getSubMenuFilter(context));
+                    
+                    modelMenu.renderMenuString(writer, context, menuStringRenderer);
+                } finally {
+                    // SCIPIO: restore the previous render state just in case
+                    MenuRenderState.store(context, prevRenderState);
+                }
+                
+                // SCIPIO: added scope protect
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
+            } finally {
+                execInfo.handleFinished(context); // SCIPIO: return logic
             }
         }
 

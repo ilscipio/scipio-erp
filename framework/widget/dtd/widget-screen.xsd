@@ -291,6 +291,8 @@ under the License.
                     either match-all "*" or match-none "!*", to prevent ambiguity and to explicitly show to both
                     users and renderer whether the intent was to write a blacklist or whitelist, respectively.
                     
+                    WARN: some of these descriptions have more to do with the targeted rendering query expressions than the contains-expression itself.
+                    
                     Matching Element Types:
                     * "$" - specific, matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
                             also matches FTL "@virtualSection" directive invocation "name" argument.

@@ -1248,6 +1248,18 @@
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
     },
+    "PARTFTLSEL6": {
+        "title": "Partial page, LIMITED FTL macro selection test (@menu)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-menu-1" 
+    },
+    "PARTFTLSEL7": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget menu within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestMenu1" 
+    },
     "PARTDECSEL1": {
         "title": "Partial page, special decorator selection test 1",
         "requestUri": makeOfbizUrl("ajaxRender"),
@@ -1288,13 +1300,28 @@
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
     },
     "PARTMULTI1": {
-        "title": "Partial page, multi-select test 1",
+        "title": "Partial page, multi-select test: left & main columns",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
     },
     "PARTMULTI2": {
-        "title": "Partial page, multi-select test 2 (nesting test)",
+        <#-- DEV NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
+            because metro theme includes it TWICE causing duplicate ID!!! -->
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left %menu"
+    },
+    "PARTMULTI3": {
+        "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left",
+        "jQueryElemExpr": "+multi:left-column:ul.menu-level-1"
+    },
+    "PARTMULTI4": {
+        "title": "Partial page, multi-select test: nesting support",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi: parent-container: $TR-SubDec-Section-Top, sub-container-1 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-1, sub-container-2 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-2" 
@@ -1313,7 +1340,7 @@
         }
     }
     
-    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb) {
+    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb, renderOutProcessCbMap) {
         var outElem = jQuery('#'+outputElemId);
         outElem.val("(LOADING...)");
         jQuery.ajax({
@@ -1328,12 +1355,18 @@
                         if (jQuery.isEmptyObject(renderOut)) {
                             return "NOTHING MATCHED OR UNRECOGNIZED ERROR: MULTI RENDEROUT OBJECT WAS EMPTY";
                         }
-                        var out = "";
+                        var out = "MULTI TARGET MATCH STATUS: " + Object.keys(renderOut).length + " matching targets found.";
+                        var count = 1;
                         jQuery.each(renderOut, function(k, v) {
                             out += "\n\n---------------------------------------------------------------\n";
-                            out += "MULTI TARGET MATCH: " + k + "\n";
+                            out += "MULTI TARGET MATCH " + count + ": " + k + "\n";
                             out += "---------------------------------------------------------------\n";
-                            out += renderOutProcessCb(v);
+                            if (renderOutProcessCbMap && typeof renderOutProcessCbMap[k] !== 'undefined') {
+                                out += renderOutProcessCbMap[k](v);
+                            } else {
+                                out += renderOutProcessCb(v);
+                            }
+                            count++;
                         });
                         return out;
                     } else {
@@ -1399,13 +1432,26 @@
         }
         
         var cb = getAjaxRenderOut;
+        var cbmap = null;
         if (jQueryElemExpr.trim().length) {
-            cb = function(renderOut) {
-                return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
-            }; 
+            if (jQueryElemExpr.startsWith('+multi:')) {
+                var jsex = jQueryElemExpr.substring('+multi:'.length);
+                cbmap = {};
+                var spl = jsex.split(',');
+                jQuery.each(spl, function(i, e) {
+                    var parts = e.trim().split(':', 2);
+                    cbmap[parts[0].trim()] = function(renderOut) {
+                        return getAjaxRenderOutWithJQuerySub(renderOut, parts[1].trim());
+                    };
+                });
+            } else {
+                cb = function(renderOut) {
+                    return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
+                };
+            }
         }
         
-        runAjaxRenderTest(url, params, outputElemId, cb);
+        runAjaxRenderTest(url, params, outputElemId, cb, cbmap);
     }
     
     var ajaxRenderTestPresets = <@objectAsScript lang='js' object=ajaxRenderTestPresets />

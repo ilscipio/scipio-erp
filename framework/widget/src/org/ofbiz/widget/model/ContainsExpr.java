@@ -29,6 +29,12 @@ import org.w3c.dom.Element;
  * Usually functions in blacklist fashion ("!"), so that by default all sections are said to possibly contain
  * all others.
  * <p>
+ * TODO: currently this is unable to consolidate the ^ and % operators, or any other operators
+ * for that matter. attributes and wildcards won't work as expected.
+ * STILL NEED TO IMPLEMENT WidgetRenderTargetExpr NORMALIZATION AND HANDLING
+ * FROM ContainsExpr SO THAT EXCLUDE OPTIMIZATIONS ARE FULLY HONORED.
+ * Currently, only some simple exclusions based on $ and # operators work at all.
+ * <p>
  * ex:
  * <pre>{@code
  * "$MySection1, !$MySection2, !$MySections-*, #MyContainerId, !#myContainerId2, *"
@@ -241,9 +247,15 @@ public class ContainsExpr implements Serializable {
      * Returns true if and only if ALL of the tokens match.
      * So one false prevents match.
      * If no names, also returns true.
+     * <p>
      * FIXME: currently this is not able to handle wildcard tokens or bracketed attributes.
      * It will only recognize exact names and may ignore entries altogether (treated as matched). 
      * The comparison logic needed to resolve this is extremely complex.
+     * <p>
+     * TODO: currently this is unable to consolidate the ^ and % operators, or any other operators
+     * for that matter. STILL NEED TO IMPLEMENT WidgetRenderTargetExpr NORMALIZATION AND HANDLING
+     * FROM ContainsExpr SO THAT EXCLUDE OPTIMIZATIONS ARE FULLY HONORED.
+     * Currently, only some simple exclusions based on $ and # operators work at all.
      */
     public boolean matchesAllNameTokens(List<Token> nameTokenList) {
         // FIXME: this does not properly compare supported Tokens

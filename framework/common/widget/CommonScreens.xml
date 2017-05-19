@@ -225,13 +225,26 @@ under the License.
             <actions>
                 <include-screen-actions name="GlobalActions" />
                 <include-screen-actions name="GlobalTemplateActions" />
+                
+                <!-- 2017-05-19: SPECIAL: contains-expressions for header depends on whether
+                    customSideBar is set or not. if the theme does its own sidebar then we cannot
+                    optimize the left column; the theme has to do it with ftl @virtualSection directives -->
+                <if>
+                    <condition><if-true field="customSideBar" /></condition>
+                    <then>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Right"/>
+                    </then>
+                    <else>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right"/>
+                    </else>
+                </if>
             </actions>
             <widgets>
                 <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
                     when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
                     in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
                     note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
-                <section contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: metro theme prevents optimization: !$Global-Column-Left,  -->
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -243,7 +256,7 @@ under the License.
                             </html>
                         </platform-specific>
                         <!-- render header -->
-                        <section name="Global-Head-Header" contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: metro theme prevents optimization: !$Global-Column-Left,  -->
+                        <section name="Global-Head-Header">
                             <widgets>
                                 <platform-specific>
                                     <html>
@@ -253,7 +266,7 @@ under the License.
                             </widgets>
                         </section>
                         <!-- render appbar or its opening part -->
-                        <section name="Global-Main-Nav" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                        <section name="Global-Main-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="appbarOpenTemplateLocation" />
@@ -276,7 +289,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -338,7 +351,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, !$Global-Column-Right, *"><!-- FIXME: ignite theme prevents optimization: !$Global-Column-Left,  -->
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />

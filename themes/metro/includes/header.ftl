@@ -24,31 +24,6 @@ under the License.
 ********************
 
  -->
-<#-- Variables -->
-<#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
-<#if externalLoginKey??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
-<#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
-<#assign contextPath = request.getContextPath()>
-<#if userLogin?has_content>
-    <#assign displayApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "main")>
-    <#assign displaySecondaryApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")>
-    <#assign appModelMenu = Static["org.ofbiz.widget.model.MenuFactory"].getMenuFromLocation(applicationMenuLocation,applicationMenuName)>
-</#if>
-<#if person?has_content>
-  <#assign userName = person.firstName!"" + " " + person.middleName!"" + " " + person.lastName!"">
-<#elseif partyGroup?has_content>
-  <#assign userName = partyGroup.groupName!>
-<#elseif userLogin??>
-  <#assign userName = userLogin.userLoginId>
-<#else>
-  <#assign userName = "">
-</#if>
-<#if defaultOrganizationPartyGroupName?has_content>
-  <#assign orgName = " - " + defaultOrganizationPartyGroupName!>
-<#else>
-  <#assign orgName = "">
-</#if>
-
 <#-- Macro for rendering the general menu (userprofile etc.) -->
 <#macro generalMenu>
     <#if userLogin??>
@@ -193,6 +168,33 @@ under the License.
     </#if>
 </#macro>
 
+<@virtualSection name="Global-Header-Metro" contains="!$Global-Column-Left, *">
+
+<#-- Variables -->
+<#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
+<#if externalLoginKey??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
+<#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
+<#assign contextPath = request.getContextPath()>
+<#if userLogin?has_content>
+    <#assign displayApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "main")>
+    <#assign displaySecondaryApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")>
+    <#assign appModelMenu = Static["org.ofbiz.widget.model.MenuFactory"].getMenuFromLocation(applicationMenuLocation,applicationMenuName)>
+</#if>
+<#if person?has_content>
+  <#assign userName = person.firstName!"" + " " + person.middleName!"" + " " + person.lastName!"">
+<#elseif partyGroup?has_content>
+  <#assign userName = partyGroup.groupName!>
+<#elseif userLogin??>
+  <#assign userName = userLogin.userLoginId>
+<#else>
+  <#assign userName = "">
+</#if>
+<#if defaultOrganizationPartyGroupName?has_content>
+  <#assign orgName = " - " + defaultOrganizationPartyGroupName!>
+<#else>
+  <#assign orgName = "">
+</#if>
+
   <@scripts output=true> <#-- ensure @script elems here will always output -->
 
     <title>${layoutSettings.companyName}<#if title?has_content>: ${title}<#elseif titleProperty?has_content>: ${uiLabelMap[titleProperty]}</#if></title>
@@ -309,11 +311,17 @@ under the License.
                         <!-- Menu sidebar begin-->
                         <#-- NOTE: side-nav is on the child ul -->
                         <div class="side-nav-area">
-                      <@virtualSection name="Global-Column-Left">
+</@virtualSection>
+              
                         <#if userLogin??>  
-                            <@sideBarMenu/> 
-                        </#if>   
-                      </@virtualSection>
+                          <@virtualSection name="Global-Column-Left">
+                            <@virtualSection name="Global-Column-Left-Large">
+                              <@sideBarMenu/>
+                            </@virtualSection>
+                          </@virtualSection>
+                        </#if>
+                      
+<@virtualSection name="Global-Header-Post-Metro" contains="!$Global-Column-Left, *">
                         </div>
                         
                     </nav>
@@ -388,11 +396,13 @@ under the License.
                     
                     <#if userLogin??>  
                     <aside class="left-off-canvas-menu">
+                      <@virtualSection name="Global-Column-Left-Small">
                       <ul class="off-canvas-list">
                           <@sideBarMenu/> 
                           <@primaryAppsMenu/>
                           <@secondaryAppsMenu/>
-                       </ul>
+                      </ul>
+                      </@virtualSection>
                     </aside>
                     </#if>
                 
@@ -409,3 +419,4 @@ under the License.
                             <a class="right-off-canvas-toggle menu-icon"><span></span></a>
                         </section>
                     </nav>
+</@virtualSection>

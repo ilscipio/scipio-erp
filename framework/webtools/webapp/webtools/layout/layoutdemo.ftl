@@ -1313,12 +1313,18 @@
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
     },
     "PARTMULTI2": {
-        "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by CommonSideBarMenu section name",
         "description": "NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
             because metro theme includes it TWICE causing duplicate ID!!!",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
-        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column-menu:$Global-Column-Left %menu"
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu"
+    },
+    "PARTMULTI2b": {
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu %menu"
     },
     "PARTMULTI3": {
         "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",

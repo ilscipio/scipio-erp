@@ -1704,7 +1704,7 @@ under the License.
         * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
     -->
     <screen name="CommonSideBarMenu">
-        <section>
+        <section name="Global-CommonSideBarMenu">
             <actions>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
             </actions>

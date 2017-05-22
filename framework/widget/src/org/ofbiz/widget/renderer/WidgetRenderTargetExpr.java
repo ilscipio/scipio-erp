@@ -947,14 +947,28 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
      * scpRenderTargetState - RenderTargetState instance
      * scpRenderTargetOn - convenience boolean (NOTE: should NOT be used internally - use <code>scpRenderTargetState.isEnabled()</code>)
      */
-    public static void setRenderTargetVars(Map<String, Object> context, WidgetRenderTargetExprBase expr) {
-        if (context == null) {
-            if (expr != null) {
-                Debug.logWarning("Targeted rendering: unable to set render target state - context is null", module);
-            }
-        }
-        Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
+    public static void populateRenderTargetVars(Map<String, Object> context) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
+        Object scpRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request);
+        populateRenderTargetVars(context, request, WidgetRenderTargetExpr.fromObjectOrMulti(scpRenderTargetExpr));
+    }
+    
+    /**
+     * Sets the following global context vars AND request attributes:
+     * scpRenderTargetState - RenderTargetState instance
+     * scpRenderTargetOn - convenience boolean (NOTE: should NOT be used internally - use <code>scpRenderTargetState.isEnabled()</code>)
+     */
+    public static void populateRenderTargetVars(Map<String, Object> context, WidgetRenderTargetExprBase expr) {
+        populateRenderTargetVars(context, (HttpServletRequest) context.get("request"), expr);
+    }
+    
+    /**
+     * Sets the following global context vars AND request attributes:
+     * scpRenderTargetState - RenderTargetState instance
+     * scpRenderTargetOn - convenience boolean (NOTE: should NOT be used internally - use <code>scpRenderTargetState.isEnabled()</code>)
+     */
+    public static void populateRenderTargetVars(Map<String, Object> context, HttpServletRequest request, WidgetRenderTargetExprBase expr) {
+        Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
         
         WidgetRenderTargetState state = WidgetRenderTargetState.fromExprOrDisabled(expr);
         String multiPrefix = null;

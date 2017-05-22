@@ -587,8 +587,7 @@ public class ScreenRenderer implements RenderContextFetcher {
         context.put("requestMethod", request.getMethod().toUpperCase());
         
         // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
-        Object scpRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request);
-        WidgetRenderTargetExpr.setRenderTargetVars(context, WidgetRenderTargetExpr.fromObjectOrMulti(scpRenderTargetExpr));
+        WidgetRenderTargetExpr.populateRenderTargetVars(context);
         
         // SCIPIO: 2017-05-19: some new special request parameters/attributes for potential use by renderers
         ViewAsJsonUtil.copyRenderOutVarsToCtx(request, context);

@@ -9663,6 +9663,14 @@
         <value xml:lang="zh">编辑产品特征</value>
         <value xml:lang="zh_TW">修改產品特性</value>
     </property>
+    <property key="ProductProductFeatures"><!-- SCIPIO: TODO: Localize -->
+        <value xml:lang="de">Produktmerkmale</value>
+        <value xml:lang="en">Product Features</value>
+        <value xml:lang="es">Características de un Producto</value>
+        <value xml:lang="fr">Caractéristiques d'articles</value>
+        <value xml:lang="it">Caratteristiche prodotto</value>
+        <value xml:lang="ro">Caracteristici Produs</value>
+    </property>
     <property key="PageTitleEditProductGeos">
         <value xml:lang="de">Produkt Geo bearbeiten</value>
         <value xml:lang="en">Edit Product Geos</value>

@@ -393,6 +393,22 @@ under the License.
         </section>
     </screen>
     
+    <!-- SCIPIO: 2017-05-22: new decorator for product features list screen(s) -->
+    <screen name="CommonProductFeaturesDecorator">
+        <section>
+            <actions>
+                <!-- SCIPIO: 2017-05-22: it turns out, the features sub-menu SHOULD always expand... 
+                    this is because -->
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://product/widget/catalog/CatalogMenus.xml#Features" />
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CommonPromoDecorator">
         <section>
             <actions>

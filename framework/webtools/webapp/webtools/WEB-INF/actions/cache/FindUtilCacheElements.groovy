@@ -42,6 +42,7 @@ if (cacheName) {
             totalSize += it.lineSize;
             it.lineSize = UtilFormatOut.formatQuantity(it.lineSize);
         }
+        context.cache = utilCache; // SCIPIO
     }
 }
 context.totalSize = UtilFormatOut.formatQuantity(totalSize);

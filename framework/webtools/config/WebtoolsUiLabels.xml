@@ -573,13 +573,13 @@
         <value xml:lang="zh_TW">查詢入口網頁</value>
     </property>
     <property key="PageTitleFindUtilCache">
-        <value xml:lang="de">Cache Wartungsseite</value>
-        <value xml:lang="en">Cache Maintenance Page</value>
-        <value xml:lang="fr">Page de maintenance des caches</value>
+        <value xml:lang="de">Cache Wartungs</value>
+        <value xml:lang="en">Cache Maintenance</value>
+        <value xml:lang="fr">Maintenance des caches</value>
         <value xml:lang="it">Manutenzione cache</value>
         <value xml:lang="ja">キャッシュメンテナンスページ</value>
-        <value xml:lang="pt">Cache da PÃ¡gina de ManutenÃ§Ã£o</value>
-        <value xml:lang="ro">Pagina Intretinere Cache</value>
+        <value xml:lang="pt">Cache de ManutenÃ§Ã£o</value>
+        <value xml:lang="ro">Intretinere Cache</value>
         <value xml:lang="th">หน้าของการดูแลรักษา</value>
         <value xml:lang="vi">Trang quản trị bộ Đệm</value>
         <value xml:lang="zh">缓存维护页面</value>
@@ -587,12 +587,12 @@
     </property>
     <property key="PageTitleFindUtilCacheElements">
         <value xml:lang="de">Cache Elemente Wartungsseite</value>
-        <value xml:lang="en">Cache Element Maintenance Page</value>
-        <value xml:lang="fr">Page d'entretien d'éléments des caches</value>
-        <value xml:lang="it">Pagina manutenzione elementi cache</value>
+        <value xml:lang="en">Cache Element Maintenance</value>
+        <value xml:lang="fr">Entretien d'éléments des caches</value>
+        <value xml:lang="it">Manutenzione elementi cache</value>
         <value xml:lang="ja">キャッシュ要素メンテナンスページ</value>
-        <value xml:lang="pt">Elemento de Cache da PÃ¡gina de ManutenÃ§Ã£o</value>
-        <value xml:lang="ro">Pagina Intretinere Elemente Cache</value>
+        <value xml:lang="pt">Elemento de Cache de ManutenÃ§Ã£o</value>
+        <value xml:lang="ro">Intretinere Elemente Cache</value>
         <value xml:lang="th">หน้าของการดูแลรักษาอย่างละเอียด</value>
         <value xml:lang="vi">Trang quản trị phần tử bộ Đệm</value>
         <value xml:lang="zh">缓存元素维护页面</value>

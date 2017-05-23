@@ -1220,15 +1220,22 @@
     },
     "PARTFTLSEL1": {
         "title": "Partial page, LIMITED FTL macro selection test (@container)",
+        "description": "NOTE: %screenlet[id=tr-ftl-section-2] also matches Freemarker @section invocations (platform-agnostic)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
-        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 @section[id=tr-ftl-section-2] #tr-ftl-container-1" 
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %screenlet[id=tr-ftl-section-2] #tr-ftl-container-1" 
     },
     "PARTFTLSEL2": {
         "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
+    },
+    "PARTFTLSEL2b": {
+        "title": "Partial page, LIMITED FTL macro selection test 2 (@virtualSection)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %section[name='TR-FTL-VirtualSection-1']" 
     },
     "PARTFTLSEL3": {
         "title": "Partial page, LIMITED FTL macro selection test (@form)",
@@ -1247,6 +1254,18 @@
         "requestUri": makeOfbizUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
+    },
+    "PARTFTLSEL6": {
+        "title": "Partial page, LIMITED FTL macro selection test (@menu)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-menu-1" 
+    },
+    "PARTFTLSEL7": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget menu within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestMenu1" 
     },
     "PARTDECSEL1": {
         "title": "Partial page, special decorator selection test 1",
@@ -1286,6 +1305,39 @@
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTMULTI1": {
+        "title": "Partial page, multi-select test: left & main columns",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
+    },
+    "PARTMULTI2": {
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by CommonSideBarMenu section name",
+        "description": "NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
+            because metro theme includes it TWICE causing duplicate ID!!!",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu"
+    },
+    "PARTMULTI2b": {
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu %menu"
+    },
+    "PARTMULTI3": {
+        "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left",
+        "jQueryElemExpr": "+multi:left-column:ul.menu-level-1"
+    },
+    "PARTMULTI4": {
+        "title": "Partial page, multi-select test: nesting support",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi: parent-container: $TR-SubDec-Section-Top, sub-container-1 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-1, sub-container-2 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-2" 
     }
 }>
   <@script>
@@ -1300,7 +1352,8 @@
             return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
         }
     }
-    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb) {
+    
+    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb, renderOutProcessCbMap) {
         var outElem = jQuery('#'+outputElemId);
         outElem.val("(LOADING...)");
         jQuery.ajax({
@@ -1309,24 +1362,49 @@
             data: params,
             success: function(data) {
                 var outElem = jQuery('#'+outputElemId);
-                var renderOut;
+                
+                var processRenderOut = function(renderOut) {
+                    if (jQuery.type(renderOut) === 'object') {
+                        if (jQuery.isEmptyObject(renderOut)) {
+                            return "NOTHING MATCHED OR UNRECOGNIZED ERROR: MULTI RENDEROUT OBJECT WAS EMPTY";
+                        }
+                        var out = "MULTI TARGET MATCH STATUS: " + Object.keys(renderOut).length + " matching targets found.";
+                        var count = 1;
+                        jQuery.each(renderOut, function(k, v) {
+                            out += "\n\n---------------------------------------------------------------\n";
+                            out += "MULTI TARGET MATCH " + count + ": " + k + "\n";
+                            out += "---------------------------------------------------------------\n";
+                            if (renderOutProcessCbMap && typeof renderOutProcessCbMap[k] !== 'undefined') {
+                                out += renderOutProcessCbMap[k](v);
+                            } else {
+                                out += renderOutProcessCb(v);
+                            }
+                            count++;
+                        });
+                        return out;
+                    } else {
+                        return renderOutProcessCb(renderOut);
+                    }
+                };
+
+                var out = "";
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     // TODO: (data._ERROR_MESSAGE_LIST_) 
                     if (data._ERROR_MESSAGE_) {
-                        renderOut = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
+                        out = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
                     } else {
-                        renderOut = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
+                        out = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
                     }
                     if (data.renderOut) {
-                        renderOut += "\n\n---------------------------------------------------------------\n\n";
-                        renderOut += renderOutProcessCb(data.renderOut);
+                        out += "\n\n---------------------------------------------------------------\n\n";
+                        out += processRenderOut(data.renderOut);
                     }
                 } else if (data.renderOut) {
-                    renderOut = renderOutProcessCb(data.renderOut);
+                    out = processRenderOut(data.renderOut);
                 } else { 
-                    renderOut = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
+                    out = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
                 }
-                outElem.val(renderOut);
+                outElem.val(out);
             }
         });
     };
@@ -1367,13 +1445,26 @@
         }
         
         var cb = getAjaxRenderOut;
+        var cbmap = null;
         if (jQueryElemExpr.trim().length) {
-            cb = function(renderOut) {
-                return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
-            }; 
+            if (jQueryElemExpr.startsWith('+multi:')) {
+                var jsex = jQueryElemExpr.substring('+multi:'.length);
+                cbmap = {};
+                var spl = jsex.split(',');
+                jQuery.each(spl, function(i, e) {
+                    var parts = e.trim().split(':', 2);
+                    cbmap[parts[0].trim()] = function(renderOut) {
+                        return getAjaxRenderOutWithJQuerySub(renderOut, parts[1].trim());
+                    };
+                });
+            } else {
+                cb = function(renderOut) {
+                    return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
+                };
+            }
         }
         
-        runAjaxRenderTest(url, params, outputElemId, cb);
+        runAjaxRenderTest(url, params, outputElemId, cb, cbmap);
     }
     
     var ajaxRenderTestPresets = <@objectAsScript lang='js' object=ajaxRenderTestPresets />
@@ -1393,6 +1484,7 @@
         jQuery('input[name=scpLoginRenderTargetExpr]', form).val(values.scpLoginRenderTargetExpr || "");
         jQuery('input[name=scpErrorRenderTargetExpr]', form).val(values.scpErrorRenderTargetExpr || "");
         jQuery('input[name=extraParams]', form).val(values.extraParams || "");
+        jQuery('input[name=description]', form).val(values.description || "");
         jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
         ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
     }
@@ -1445,6 +1537,8 @@
         <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetTitle}</@field>
       </#list>
     </@field>
+    
+    <@field type="input" name="description" label="Notes" value=""/>
     
     <#assign defaultRequestUri = "ajaxRender">
     <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">

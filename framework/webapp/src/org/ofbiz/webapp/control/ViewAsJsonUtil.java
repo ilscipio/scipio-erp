@@ -1,7 +1,10 @@
 package org.ofbiz.webapp.control;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,10 +12,12 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 
 /**
  * SCIPIO: helper for viewAsJson mode.
@@ -21,6 +26,8 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
  */
 public abstract class ViewAsJsonUtil {
 
+    public static final String module = ViewAsJsonUtil.class.getName();
+    
     /**
      * Name of the request parameter/attribute checked for true/false for viewAsJson on/off
      * (default: false).
@@ -37,7 +44,28 @@ public abstract class ViewAsJsonUtil {
      * Also see {@link #VIEWASJSONREGLOGIN_REQPARAM}.
      */
     public static final String VIEWASJSONREGLOGIN_REQPARAM = "scpViewAsJsonRegLogin";
+    /**
+     * Name of the request parameter/attribute checked for whether should use
+     * default split mode ("default") or unreliable fast split mode ("fast").
+     * 
+     * TODO: NOT IMPLEMENTED: fast mode not yet implemented because it is more likely to fail
+     * than the default one.
+     * This will require a special new version of {@link org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter}
+     * and in current ofbiz code such writer is NOT guaranteed to work because such writer can't cross
+     * intermediate StringWriter boundaries.
+     */
+    @Deprecated
+    public static final String VIEWASJSONSPLITMODE_REQPARAM = "scpViewAsJsonSplitMode";
 
+    public static final Set<String> VIEWASJSON_REQPARAM_ALL = UtilMisc.unmodifiableHashSet(VIEWASJSON_REQPARAM, VIEWASJSONUSESESSION_REQPARAM, VIEWASJSONREGLOGIN_REQPARAM, VIEWASJSONSPLITMODE_REQPARAM);
+    public static final Set<String> VIEWASJSON_RENDERTARGET_REQPARAM_ALL;
+    static {
+        Set<String> set = new HashSet<>();
+        set.addAll(VIEWASJSON_REQPARAM_ALL);
+        set.addAll(RenderTargetUtil.RENDERTARGET_REQPARAM_ALL);
+        VIEWASJSON_RENDERTARGET_REQPARAM_ALL = Collections.unmodifiableSet(set);
+    }
+    
     /**
      * Name of request attribute for a map containing explicit values to output via json.
      */
@@ -76,6 +104,17 @@ public abstract class ViewAsJsonUtil {
         return defaultRenderOutAttrNames;
     }
 
+    public static void initRenderOutVars(HttpServletRequest request) {
+        getRenderOutParams(request);
+        getRenderOutAttrNames(request);
+    }
+    
+    public static void copyRenderOutVarsToCtx(HttpServletRequest request, Map<String, Object> context) {
+        Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
+        globalContext.put(RENDEROUTPARAMS_ATTR, getRenderOutParams(request));
+        globalContext.put(RENDEROUTATTRNAMES_ATTR, getRenderOutAttrNames(request));
+    }
+    
     public static Map<String, Object> getRenderOutParams(HttpServletRequest request) {
         Map<String, Object> outParams = UtilGenerics.checkMap(request.getAttribute(RENDEROUTPARAMS_ATTR));
         if (outParams == null) {
@@ -142,6 +181,16 @@ public abstract class ViewAsJsonUtil {
         return attrMap;
     }
     
+    public static ViewAsJsonConfig getViewAsJsonConfigOrDefault(HttpServletRequest request) {
+        try {
+            RequestHandler rh = RequestHandler.getRequestHandler(request);
+            return rh.getControllerConfig().getViewAsJsonConfigOrDefault();
+        } catch (Exception e) {
+            Debug.logError(e, "Could not get ViewAsJsonConfig", module);
+            return new ConfigXMLReader.ViewAsJsonConfig();
+        }
+    }
+    
     /**
      * Checks if viewAsJson is enabled in the system && this webapp.
      * WARN: does NOT check if enabled in the request (use {@link #isViewAsJson(HttpServletRequest)}).
@@ -173,8 +222,8 @@ public abstract class ViewAsJsonUtil {
      * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest)}).
      */
     public static boolean isViewAsJsonUpdateSession(HttpServletRequest request, ViewAsJsonConfig config) {
-        Boolean viewAsJson = (Boolean) request.getAttribute(VIEWASJSONUSESESSION_REQPARAM);
-        if (viewAsJson != null) return viewAsJson;
+        Boolean updateSession = (Boolean) request.getAttribute(VIEWASJSONUSESESSION_REQPARAM);
+        if (updateSession != null) return updateSession;
         else return UtilMisc.booleanValue(request.getParameter(VIEWASJSONUSESESSION_REQPARAM), config.isUpdateSession());
     }
     
@@ -183,9 +232,15 @@ public abstract class ViewAsJsonUtil {
      * WARN: does NOT check if viewAsJson is on; caller should have already checked (use {@link #isViewAsJson(HttpServletRequest)}).
      */
     public static boolean isViewAsJsonRegularLogin(HttpServletRequest request, ViewAsJsonConfig config) {
-        Boolean viewAsJson = (Boolean) request.getAttribute(VIEWASJSONREGLOGIN_REQPARAM);
-        if (viewAsJson != null) return viewAsJson;
+        Boolean regLogin = (Boolean) request.getAttribute(VIEWASJSONREGLOGIN_REQPARAM);
+        if (regLogin != null) return regLogin;
         else return UtilMisc.booleanValue(request.getParameter(VIEWASJSONREGLOGIN_REQPARAM), config.isRegularLogin());
+    }
+    
+    public static boolean isViewAsJsonSplitModeFast(HttpServletRequest request, ViewAsJsonConfig config) {
+        String mode = (String) request.getAttribute(VIEWASJSONSPLITMODE_REQPARAM);
+        if (mode != null) return "fast".equals(mode);
+        else return "fast".equals(request.getParameter(VIEWASJSONSPLITMODE_REQPARAM));
     }
     
     public static String getViewAsJsonRequestUri(HttpServletRequest request, ViewAsJsonConfig config) throws WebAppConfigurationException {
@@ -209,5 +264,54 @@ public abstract class ViewAsJsonUtil {
                 request.setAttribute(entry.getKey(), entry.getValue());
             }
         }
+    }
+    
+    public static Writer prepareWriterAndMode(HttpServletRequest request, ViewAsJsonConfig config) {
+        // PRE-INITIALIZE the out params map and names list, so that screens can more easily access and so we pre-share the instances
+        initRenderOutVars(request);
+        
+        // TODO: REVIEW/MOVE: SPECIAL TARGETED RENDERING LOGIC NEEDED FOR MULTI-TARGET SUPPORT
+        Object expr = RenderTargetUtil.getSetRawRenderTargetExpr(request);
+        if (RenderTargetUtil.isRenderTargetExprOn(request, expr)) {
+            if (RenderTargetUtil.isRenderTargetExprMulti(expr)) {
+                RenderTargetUtil.generateSetMultiTargetDelimiterPrefix(request);
+                // TODO: NOT IMPLEMENTED: fast mode not yet implemented because it is more likely to fail.
+//                if (isViewAsJsonSplitModeFast(request, config)) {
+//                    // TODO: this requires something else
+//                    return new StringWriter();
+//                } else {
+//                    return new StringWriter();
+//                }
+                return new StringWriter();
+            } else {
+                return new StringWriter();
+            }
+        } else {
+            return new StringWriter();
+        }
+    }
+    
+    public static Object makeRenderOutParamValueFromWriter(HttpServletRequest request, Writer writer) {
+        Object expr = RenderTargetUtil.getRawRenderTargetExpr(request);
+        if (RenderTargetUtil.isRenderTargetExprOn(request, expr) && RenderTargetUtil.isRenderTargetExprMulti(expr)) {
+            String delimPrefix = (String) request.getAttribute(RenderTargetUtil.MULTITARGET_DELIM_PREFIX_ATTR);
+            if (delimPrefix != null && !delimPrefix.isEmpty()) {
+                return RenderTargetUtil.extractMultiTargetOutputs(writer, delimPrefix);
+            } else {
+                throw new IllegalStateException("viewAsJson: targeted rendering failed to set a " 
+                        + RenderTargetUtil.MULTITARGET_DELIM_PREFIX_ATTR + " request attribute");
+            }
+        } else {
+            if (writer instanceof StringWriter) {
+                StringWriter sw = (StringWriter) writer;
+                return sw.toString();
+            } else {
+                throw new IllegalArgumentException("Unsupported writer class for viewAsJson: " + writer.getClass().getName());
+            }
+        }
+    }
+    
+    public static void setRenderOutParamFromWriter(HttpServletRequest request, Writer writer) {
+        ViewAsJsonUtil.setRenderOutParam(request, ViewAsJsonUtil.RENDEROUT_OUTPARAM, makeRenderOutParamValueFromWriter(request, writer));
     }
 }

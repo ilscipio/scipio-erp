@@ -280,7 +280,9 @@ under the License.
                     Format:
                     Consists of a comma-separated list of names that may include wildcards "*" (max one per name).
                     Names may refer to element names, id values, or other.
-                    Spaces are ignored, and has no flexible expression support.
+                    Spaces are ignored.
+                    Flexible expressions (${...}) can be specified, BUT it is highly recommended to use
+                    separate variables instead of inlining, because syntax clash is possible.
                     Each name can be directly prefixed with a Matching Element Type character, which denotes
                     what widget element or attribute value the name will match against.
                     An exclusion/negation "!" character may be prefixed before the type character to cause exclusion (blacklist)
@@ -288,6 +290,8 @@ under the License.
                     The last entry in the full expression (after a comma) should always be
                     either match-all "*" or match-none "!*", to prevent ambiguity and to explicitly show to both
                     users and renderer whether the intent was to write a blacklist or whitelist, respectively.
+                    
+                    WARN: some of these descriptions have more to do with the targeted rendering query expressions than the contains-expression itself.
                     
                     Matching Element Types:
                     * "$" - specific, matches "section" element "name" attribute value - considered GLOBAL in scope (across includes)
@@ -306,18 +310,18 @@ under the License.
                               "^decorator-screen ^/decoratorsectionname"
                             Extra tokens can go in between and after:
                               "^decorator-screen #some-id-inside-the-decorator-impl ^/decoratorsectionname #some-nested-id"
-                    * "%" - generic, widget element selector, matches the element tag name (most elements supported, not guaranteed all).
+                            NOTE: The first ^ token's name should always be "^decorator-screen"; only the attributes are optional.
+                    * "%" - generic widget element AND Freemarker macro invocation selector, matches the element tag name (most elements supported, not guaranteed all).
                             optionally can add brackets "%tagname[name=SomeName]" or "%tagname[id='some-id']" to only match elements with given name or id.
+                            NOTE: 2017-05-19: this now matches BOTH widget and freemarker elements; 
+                                e.g. "%screenlet" matches either widget "screenlet" element or ftl "@section" invocation.
+                                (whereas "section" element is equivalent to ftl "@virtualSection" invocation).
+                                This is intentionally designed so that selection expressions will be more platform-agnostic.
                             NOTE: only name and id attributes are supported, and support is best-effort.
                             NOTE: this selector is mostly useful for scpRenderTargetExpr parameter rather than contains-expression.
                             FIXME: the attributes in brackets will not work properly inside contains-expressions
                             FIXME: this selector may currently bypass optimizations, so it should only be used in queries as the last entry.
-                    * "@" - generic, LIMITED FTL directive invocation selector, matches "@section" and "@container" invocations
-                            supports "@macroname[id=some-id]" attribute (only ID).
-                            NOTE: it is usually better to use the #id selector instead of this; it will also match
-                                those few FTL directives.
-                            FIXME: the attributes in brackets will not work properly inside contains-expressions
-                            
+
                     NOTE: These are the same types supported by the scpRenderTargetExpr targeted rendering parameter.
 
                     Other Special Characters:

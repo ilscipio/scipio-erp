@@ -59,8 +59,10 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.renderer.FtlContextFetcher;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.renderer.SimpleContextFetcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.WidgetWorker;
@@ -585,9 +587,10 @@ public class ScreenRenderer implements RenderContextFetcher {
         context.put("requestMethod", request.getMethod().toUpperCase());
         
         // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
-        Object scpRenderTargetExpr = request.getAttribute("scpRenderTargetExpr");
-        if (scpRenderTargetExpr == null) scpRenderTargetExpr = request.getParameter("scpRenderTargetExpr");
-        RenderTargetExpr.setRenderTargetVars(context, RenderTargetExpr.fromObject(scpRenderTargetExpr));
+        WidgetRenderTargetExpr.populateRenderTargetVars(context);
+        
+        // SCIPIO: 2017-05-19: some new special request parameters/attributes for potential use by renderers
+        ViewAsJsonUtil.copyRenderOutVarsToCtx(request, context);
         
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);

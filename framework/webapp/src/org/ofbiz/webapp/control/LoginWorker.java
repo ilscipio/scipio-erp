@@ -25,10 +25,12 @@ import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -76,6 +78,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
 import org.ofbiz.webapp.stats.VisitHandler;
 
 /**
@@ -333,18 +336,29 @@ public class LoginWorker {
                 // make sure this attribute is not in the request; this avoids infinite recursion when a login by less stringent criteria (like not checkout the hasLoggedOut field) passes; this is not a normal circumstance but can happen with custom code or in funny error situations when the userLogin service gets the userLogin object but runs into another problem and fails to return an error
                 request.removeAttribute("_LOGIN_PASSED_");
 
-                // keep the previous request name in the session
-                session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
-
-                // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
-                // keep 2 maps: one for URL parameters and one for form parameters
-                Map<String, Object> urlParams = UtilHttp.getUrlOnlyParameterMap(request);
-                if (UtilValidate.isNotEmpty(urlParams)) {
-                    session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
-                }
-                Map<String, Object> formParams = UtilHttp.getParameterMap(request, urlParams.keySet(), false);
-                if (UtilValidate.isNotEmpty(formParams)) {
-                    session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
+                // SCIPIO: don't modify session for viewAsJson unless requested; also always exclude a few notable parameters
+                ViewAsJsonConfig viewAsJsonConfig = ViewAsJsonUtil.getViewAsJsonConfigOrDefault(request);
+                if (!ViewAsJsonUtil.isViewAsJson(request, viewAsJsonConfig) || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
+                    // keep the previous request name in the session
+                    session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
+    
+                    // NOTE: not using the old _PREVIOUS_PARAMS_ attribute at all because it was a security hole as it was used to put data in the URL (never encrypted) that was originally in a form field that may have been encrypted
+                    // keep 2 maps: one for URL parameters and one for form parameters
+                    Map<String, Object> urlParams = UtilHttp.getUrlOnlyParameterMap(request);
+                    if (UtilValidate.isNotEmpty(urlParams)) {
+                        // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
+                        for(String name : ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL) {
+                            urlParams.remove(name);
+                        }
+                        session.setAttribute("_PREVIOUS_PARAM_MAP_URL_", urlParams);
+                    }
+                    Set<String> excludes = new HashSet<>();
+                    excludes.addAll(urlParams.keySet());
+                    excludes.addAll(ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
+                    Map<String, Object> formParams = UtilHttp.getParameterMap(request, excludes, false);
+                    if (UtilValidate.isNotEmpty(formParams)) {
+                        session.setAttribute("_PREVIOUS_PARAM_MAP_FORM_", formParams);
+                    }
                 }
 
                 //if (Debug.infoOn()) Debug.logInfo("checkLogin: PathInfo=" + request.getPathInfo(), module);

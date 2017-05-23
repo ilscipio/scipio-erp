@@ -59,6 +59,7 @@ under the License.
     <screen name="FindUtilCacheElements">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleFindUtilCacheElements"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/FindUtilCacheElements.groovy"/>
@@ -73,10 +74,19 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet>
-                                    <label>${uiLabelMap.WebtoolsCacheName} ${cacheName} (${now}) ${uiLabelMap.WebtoolsSizeTotal} ${totalSize} ${uiLabelMap.WebtoolsBytes}</label>
+                                    <label>${uiLabelMap.WebtoolsCacheName}: ${cacheName} (${now}), ${uiLabelMap.WebtoolsSizeTotal}: ${totalSize} ${uiLabelMap.WebtoolsBytes}</label>
                                     <include-menu name="CacheElements" location="component://webtools/widget/Menus.xml"/>
-                                    <include-form name="ListCacheElements" location="component://webtools/widget/CacheForms.xml"/>
-                                    <include-menu name="CacheElements" location="component://webtools/widget/Menus.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="cache"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ListCacheElements" location="component://webtools/widget/CacheForms.xml"/>
+                                        </widgets>
+                                        <fail-widgets>
+                                            <label style="common-msg-error">${groovy:org.ofbiz.base.util.UtilProperties.getMessage('WebtoolsErrorUiLabels', 'utilCache.cacheNotFound', [name:context.cacheName], context.locale)}</label>
+                                        </fail-widgets>
+                                    </section>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -92,6 +102,7 @@ under the License.
     <screen name="EditUtilCache">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
                 <set field="activeSubMenuItem" value="cache"/>
                 <set field="titleProperty" value="PageTitleEditUtilCache"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/EditUtilCache.groovy"/>
@@ -105,10 +116,19 @@ under the License.
                                 <if-has-permission permission="UTIL_CACHE" action="_EDIT"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                    <include-menu name="EditCache" location="component://webtools/widget/Menus.xml"/>
-                                    <include-form name="EditCache" location="component://webtools/widget/CacheForms.xml"/>
-                                </screenlet>
+                                <include-menu name="EditCache" location="component://webtools/widget/Menus.xml"/>
+                                <section>
+                                    <!-- do check for UTIL_CACHE, _EDIT permission -->
+                                    <condition>
+                                        <not><if-empty field="cache"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <include-form name="EditCache" location="component://webtools/widget/CacheForms.xml"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="common-msg-error">${groovy:org.ofbiz.base.util.UtilProperties.getMessage('WebtoolsErrorUiLabels', 'utilCache.cacheNotFound', [name:context.cacheName], context.locale)}</label>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>

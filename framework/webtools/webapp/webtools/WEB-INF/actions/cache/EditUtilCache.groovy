@@ -38,10 +38,11 @@ if (cacheName) {
         cache.missCountSoftRef = UtilFormatOut.formatQuantity(utilCache.getMissCountSoftRef());
         cache.removeHitCount = UtilFormatOut.formatQuantity(utilCache.getRemoveHitCount());
         cache.removeMissCount = UtilFormatOut.formatQuantity(utilCache.getRemoveMissCount());
-        cache.maxInMemory = UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
-        cache.expireTime = UtilFormatOut.formatQuantity(utilCache.getExpireTime());
+        cache.maxInMemory = utilCache.getMaxInMemory(); // SCIPIO: this causes issues: UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
+        cache.expireTime = utilCache.getExpireTime(); // SCIPIO: this causes issues: UtilFormatOut.formatQuantity(utilCache.getExpireTime());
         cache.useSoftReference = utilCache.getUseSoftReference().toString();
         cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
+        cache.sizeLimit = utilCache.getSizeLimit(); // SCIPIO: added 2017-05-23
 
         exp = utilCache.getExpireTime();
         hrs = Math.floor(exp / (60 * 60 * 1000));

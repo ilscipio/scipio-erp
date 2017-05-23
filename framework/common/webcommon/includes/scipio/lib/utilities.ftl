@@ -1186,12 +1186,14 @@ NOTE: this implicitly defines a @renderTarget.
 
   * Parameters *
     name                    = Virtual section name (global scope)
+    contains                = contains-expression
+                              See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
     
   * History *
     Added for 1.14.3.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro virtualSection name="">
+<#macro virtualSection name="" contains="*">
 </#macro>
 -->
 
@@ -1204,7 +1206,7 @@ Used within a standard library macro definition to implemented targeted renderin
 See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
 
 NOTE: Due to possible performance concerns, only a few of the scipio standard Freemarker API currently support this:
-    @container, @section, @form, @table.
+    @container, @form, @table, @section (NOTE: @section actually matches as "screenlet" element name with % selector).
     They are mostly meant to work with the {{{scpRenderTargetExpr}}} ID selector ({{{#}}}).
 
 FIXME: Some of the behavior is currently hardcoded inside the renderTarget implementation.
@@ -1212,9 +1214,10 @@ FIXME: Some of the behavior is currently hardcoded inside the renderTarget imple
   * Parameters *
     dirName                 = Name of the containing directive
     dirArgs                 = ((map)) Map of arguments that were passed to the directive
-                              The implementation may extract name and ID.
-    id                      = id, ONLY used if dirArgs omitted                          
-    name                    = name, ONLY used if dirArgs omitted          
+                              The implementation may extract name and ID OR it may do nothing.
+                              TODO: clarify
+    id                      = id                
+    name                    = name        
     
   * History *
     Added for 1.14.3.

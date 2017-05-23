@@ -276,7 +276,7 @@
         <value xml:lang="fr">Tous les caches de nom ${name} ont été purgés</value>
         <value xml:lang="it">Pulita cache con nome: ${name}</value>
         <value xml:lang="ja">キャッシュがクリアされました: ${name}</value>
-        <value xml:lang="pt">Os seguinte cache foi limpo: $ {nome}</value>
+        <value xml:lang="pt">Os seguinte cache foi limpo: ${name}</value>
         <value xml:lang="ro">Curatire cache cu nume: ${name}</value>
         <value xml:lang="th">เคลียร์หน่วยความจำด้วยชื่อ: ${name}</value>
         <value xml:lang="zh">已清除缓存：${name}</value>
@@ -298,7 +298,7 @@
         <value xml:lang="fr">Impossible de vider le cache, aucun cache trouvé ayant comme nom ${name}</value>
         <value xml:lang="it">Non è possibile pulire la cache, cache non trovata con nome: ${name}</value>
         <value xml:lang="ja">キャッシュが見つからないため、クリアできませんでした: ${name}</value>
-        <value xml:lang="pt">NÃ£o foi possÃ­vel limpar o cache, nenhum cache foi encontrado com o nome: ${nome}</value>
+        <value xml:lang="pt">NÃ£o foi possÃ­vel limpar o cache, nenhum cache foi encontrado com o nome: ${name}</value>
         <value xml:lang="ro">Nu este posibila curatirea cache,nu gaseste nume cache: ${name}</value>
         <value xml:lang="th">ไม่สามารถเคลียร์หน่วยความจำ , ไม่พบหน่วยความจำด้วยชื่อ: ${name}</value>
         <value xml:lang="zh">无法清除缓存，没有找到缓存：${name}</value>
@@ -309,7 +309,7 @@
         <value xml:lang="fr">Impossible de supprimer l'élément du cache, aucun cache trouvé ayant comme nom ${name}</value>
         <value xml:lang="it">Non è possibile rimuovere l'elemento della cache, cache non trovata con nome: ${name}</value>
         <value xml:lang="ja">キャッシュが見つからないため、キャッシュの要素を削除できませんでした: ${name}</value>
-        <value xml:lang="pt">NÃ£o foi possÃ­vel remover o elemento de cache, nenhum cache foi encontrado com o nome: ${nome}</value>
+        <value xml:lang="pt">NÃ£o foi possÃ­vel remover o elemento de cache, nenhum cache foi encontrado com o nome: ${name}</value>
         <value xml:lang="ro">Nu este posibila stergerea elementului din chash, nu gaseste chash cu nume: ${name}</value>
         <value xml:lang="th">ไม่สามารถย้ายองค์ประกอบจากหน่วยความจำ, ไม่พบหน่วยความจำด้วยชื่อ: ${name}</value>
         <value xml:lang="zh">无法删除缓存元素，没有找到名称为 ${name} 的缓存</value>
@@ -380,5 +380,16 @@
         <value xml:lang="th">คุณไม่มีการอนุญาตถึงการทำงานการดำเนินการนี้, UTIL_CACHE_EDIT ต้องการ</value>
         <value xml:lang="zh">你没有执行这个操作的权限，需要UTIL_CACHE_EDIT</value>
         <value xml:lang="zh_TW">你沒有執行這個操作的權限,需要UTIL_CACHE_EDIT</value>
+    </property>
+    <property key="utilCache.cacheNotFound"><!-- SCIPIO -->
+        <value xml:lang="en">Cache not found with name: ${name}</value>
+        <value xml:lang="fr">Aucun cache trouvé ayant comme nom ${name}</value>
+        <value xml:lang="it">Cache non trovata con nome: ${name}</value>
+        <value xml:lang="ja">キャッシュの要素を削除できませんでした: ${name}</value>
+        <value xml:lang="pt">Nenhum cache foi encontrado com o nome: ${name}</value>
+        <value xml:lang="ro">Nu gaseste chash cu nume: ${name}</value>
+        <value xml:lang="th">ไม่พบหน่วยความจำด้วยชื่อ: ${name}</value>
+        <value xml:lang="zh">没有找到名称为 ${name} 的缓存</value>
+        <value xml:lang="zh_TW">沒有找到名稱為 ${name} 的快取</value>
     </property>
 </resource>

@@ -57,8 +57,8 @@ import org.ofbiz.widget.portal.PortalPageWorker;
 import org.ofbiz.widget.renderer.FormRenderer;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -70,25 +70,25 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  */
 @SuppressWarnings("serial")
-public abstract class ModelScreenWidget extends ModelWidget {
+public abstract class ModelScreenWidget extends ModelWidget implements ContainsExpr.FlexibleContainsExprAttrWidget {
     public static final String module = ModelScreenWidget.class.getName();
 
     private final ModelScreen modelScreen;
     /**
      * SCIPIO: contains-expression, supported on any item for which the "contains" attribute is
-     * defined in widget-screen.xsd. Handled by {@link RenderTargetExpr.RenderTargetState}. Default is contains all.
+     * defined in widget-screen.xsd. Handled by {@link WidgetRenderTargetExpr.WidgetRenderTargetState}. Default is contains all.
      * TODO: REVIEW: to simplify implementation, I have simply added this to all elements for now, even
      * those that don't define it in widget-screen.xsd; maybe split up...
      * Added 2017-05-04.
      */
-    private final RenderTargetExpr.ContainsExpr containsExpr;
+    private final ContainsExpr.ContainsExprHolder containsExpr;
 
     public ModelScreenWidget(ModelScreen modelScreen, Element widgetElement) {
         super(widgetElement);
         this.modelScreen = modelScreen;
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
         // SCIPIO: new
-        this.containsExpr = RenderTargetExpr.ContainsExpr.makeOrDefault(widgetElement.getAttribute("contains"), widgetElement);
+        this.containsExpr = ContainsExpr.ContainsExprHolder.getInstanceOrDefault(widgetElement.getAttribute("contains"), widgetElement);
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
      * This separation allows us to insert logic at every element visit.
      * <p>
      * <strong>TARGETED RENDERING</strong><br/>
-     * This method now performs a targeted rendering applicability check, recorded through {@link RenderTargetState}.
+     * This method now performs a targeted rendering applicability check, recorded through {@link WidgetRenderTargetState}.
      * <p>
      * If we haven't found the target element to render yet, we will for the most part
      * enter into all elements here EXCEPT those that have been explicitly marked as not
@@ -113,8 +113,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
      */
     public final void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws GeneralException, IOException {
         // SCIPIO: targeted rendering applicability check.
-        RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-        RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+        WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
         if (!execInfo.shouldExecute()) {
             return;
         }
@@ -161,8 +161,9 @@ public abstract class ModelScreenWidget extends ModelWidget {
     /**
      * SCIPIO: Returns the complex contains-expression. Never null.
      */
-    public RenderTargetExpr.ContainsExpr getContainsExpr() {
-        return containsExpr;
+    @Override
+    public ContainsExpr getContainsExpr(Map<String, Object> context) {
+        return containsExpr.getContainsExpr(context);
     }
 
     public static final class SectionsRenderer implements org.ofbiz.webapp.renderer.BasicSectionsRenderer, Map<String, ModelScreenWidget> { // SCIPIO: new BasicSectionsRenderer interface
@@ -1616,8 +1617,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
             try {
                 ModelForm modelForm = getModelForm(context);
                 // SCIPIO: targeted rendering applicability check.
-                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }
@@ -1722,8 +1723,8 @@ public abstract class ModelScreenWidget extends ModelWidget {
             try {
                 ModelForm modelForm = getModelForm(context);
                 // SCIPIO: targeted rendering applicability check.
-                RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
+                WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelForm, writer, context, screenStringRenderer);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }
@@ -2211,46 +2212,57 @@ public abstract class ModelScreenWidget extends ModelWidget {
                 return;
             }
             
-            // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
-            Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
-            
-            // SCIPIO: added scope protect
-            boolean protectScope = !shareScope(context);
-            if (protectScope) {
-                if (!(context instanceof MapStack<?>)) {
-                    context = MapStack.create(context);
-                }
-                UtilGenerics.<MapStack<String>>cast(context).push();
-            }
-            
-            AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
-
             ModelMenu modelMenu = getModelMenu(context);
             
-            // SCIPIO: new render state to carry around max depth
-            // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
-            MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
-            if (prevRenderState != null) {
-                Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
-                    + "a new menu render was started", module);
+            // SCIPIO: targeted rendering applicability check.
+            WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+            WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(modelMenu, writer, context, screenStringRenderer);
+            if (!execInfo.shouldExecute()) {
+                return;
             }
             try {
-                MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
-                if (menuRenderArgs != null) {
-                    renderState.putAll(menuRenderArgs); // keep same names
-                }
-                renderState.setMaxDepth(getMaxDepth(context));
-                renderState.setSubMenuFilter(getSubMenuFilter(context));
-                
-                modelMenu.renderMenuString(writer, context, menuStringRenderer);
-            } finally {
-                // SCIPIO: restore the previous render state just in case
-                MenuRenderState.store(context, prevRenderState);
-            }
             
-            // SCIPIO: added scope protect
-            if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+                // SCIPIO: caller may have set these. Remove and transfer them to MenuRenderState
+                Map<String, Object> menuRenderArgs = UtilGenerics.checkMap(context.remove("menuRenderArgs"));
+                
+                // SCIPIO: added scope protect
+                boolean protectScope = !shareScope(context);
+                if (protectScope) {
+                    if (!(context instanceof MapStack<?>)) {
+                        context = MapStack.create(context);
+                    }
+                    UtilGenerics.<MapStack<String>>cast(context).push();
+                }
+                
+                AbstractModelAction.runSubActions(this.actions, context); // SCIPIO: 2017-05-01: new post-context-stack-push actions
+    
+                // SCIPIO: new render state to carry around max depth
+                // NOTE: we'll manually save/restore the previous one in case share-scope is not enabled
+                MenuRenderState prevRenderState = MenuRenderState.retrieve(context);
+                if (prevRenderState != null) {
+                    Debug.logWarning("include-menu: Rendering: A MenuRenderState was already in context at the time "
+                        + "a new menu render was started", module);
+                }
+                try {
+                    MenuRenderState renderState = MenuRenderState.createAndStore(context, modelMenu);
+                    if (menuRenderArgs != null) {
+                        renderState.putAll(menuRenderArgs); // keep same names
+                    }
+                    renderState.setMaxDepth(getMaxDepth(context));
+                    renderState.setSubMenuFilter(getSubMenuFilter(context));
+                    
+                    modelMenu.renderMenuString(writer, context, menuStringRenderer);
+                } finally {
+                    // SCIPIO: restore the previous render state just in case
+                    MenuRenderState.store(context, prevRenderState);
+                }
+                
+                // SCIPIO: added scope protect
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
+            } finally {
+                execInfo.handleFinished(context); // SCIPIO: return logic
             }
         }
 

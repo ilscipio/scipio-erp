@@ -417,17 +417,36 @@ under the License.
         <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
             <link target="FindUtilCache"/>
         </menu-item>
+        <menu-item name="edit" title="${uiLabelMap.PageTitleEditUtilCache}"><!-- SCIPIO -->
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
+            <link target="EditUtilCache">
+                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="EditCache" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
+            <link target="FindUtilCache"/>
+        </menu-item>
         <menu-item name="clear" title="${uiLabelMap.WebtoolsClearThisCache}">
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
             <link target="EditUtilCacheClear">
                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
                <parameter param-name="type" from-field="parameters.type"/>
             </link>
         </menu-item>
-        <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
-            <link target="FindUtilCache"/>
+        <menu-item name="elements" title="${uiLabelMap.WebtoolsElements}"><!-- SCIPIO -->
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
+            <link target="FindUtilCacheElements">
+                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
+            </link>
         </menu-item>
     </menu>
     

@@ -1,8 +1,6 @@
 package org.ofbiz.webapp.renderer;
 
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,14 +9,15 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.ConfigXMLReader.ViewAsJsonConfig;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerException;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
-import org.ofbiz.webapp.view.ViewHandlerExt;
 
 /**
  * SCIPIO: Special events that can be invoked that provide renderer and view handling emulation.
@@ -64,12 +63,14 @@ public abstract class RenderEvents {
             
             RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
             ViewFactory viewFactory = rh.getViewFactory();
+            ControllerConfig config = rh.getControllerConfig();
+            ViewAsJsonConfig viewAsJsonConfig = config.getViewAsJsonConfigOrDefault();
             
             // SCIPIO: FIXME?: DUPLICATED FROM RequestHandler.renderView - should de-duplicate
             
             ConfigXMLReader.ViewMap viewMap = null;
             try {
-                viewMap = (view == null ? null : rh.getControllerConfig().getViewMapMap().get(view));
+                viewMap = (view == null ? null : config.getViewMapMap().get(view));
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
@@ -133,22 +134,7 @@ public abstract class RenderEvents {
             try {
                 if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
                 ViewHandler vh = viewFactory.getViewHandler(viewMap.type);
-                
-                // SCIPIO: custom
-                if (vh instanceof ViewHandlerExt) {
-                    ViewHandlerExt vhe = (ViewHandlerExt) vh;
-                    StringWriter sw = new StringWriter();
-                    // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
-                    Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
-                    try {
-                        vhe.render(view, nextPage, viewMap.info, contentType, charset, req, resp, sw);
-                    } finally {
-                        ViewAsJsonUtil.setRenderOutParam(req, ViewAsJsonUtil.RENDEROUT_OUTPARAM, sw.toString());
-                        ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
-                    }
-                } else {
-                    throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
-                }
+                RequestHandler.invokeViewHandlerAsJson(vh, viewAsJsonConfig, view, nextPage, viewMap.info, contentType, charset, req, resp);
             } catch (ViewHandlerException e) {
                 Throwable throwable = e.getNested() != null ? e.getNested() : e;
 

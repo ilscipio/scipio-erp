@@ -7,8 +7,8 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.widget.model.ftl.ModelFtlWidget;
-import org.ofbiz.widget.renderer.RenderTargetExpr;
-import org.ofbiz.widget.renderer.RenderTargetExpr.RenderTargetState;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
@@ -46,36 +46,37 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
         // if not, don't even bother trying.
         if (writer instanceof RenderWriter) {
             Map<String, Object> context = ContextFtlUtil.getContext(env);
-            RenderTargetState renderTargetState = RenderTargetExpr.getRenderTargetState(context);
+            WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
             if (renderTargetState.isEnabled()) {
                 String dirName = TransformUtil.getStringArg(params, "dirName");
-                TemplateHashModel dirArgs = (TemplateHashModel) params.get("dirArgs");
+                //TemplateHashModel dirArgs = (TemplateHashModel) params.get("dirArgs");
                 
                 String id = null;
                 String name = null; // TODO?: this may not work as expected if we do this...
-                if (dirArgs != null) {
-                    TemplateScalarModel idModel = (TemplateScalarModel) dirArgs.get("id");
-                    if (idModel != null) {
-                        id = LangFtlUtil.getAsStringNonEscaping(idModel);
-                        if ("section".equals(dirName)) {
-                            TemplateScalarModel containerIdModel = (TemplateScalarModel) dirArgs.get("containerId");
-                            if (containerIdModel != null) {
-                                String containerId = LangFtlUtil.getAsStringNonEscaping(containerIdModel);
-                                if (UtilValidate.isNotEmpty(containerId)) {
-                                    id = containerId;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    id = TransformUtil.getStringNonEscapingArg(params, "id");
-                    name = TransformUtil.getStringNonEscapingArg(params, "name");
-                }
+                // TODO: review
+//                if (dirArgs != null) {
+//                    TemplateScalarModel idModel = (TemplateScalarModel) dirArgs.get("id");
+//                    if (idModel != null) {
+//                        id = LangFtlUtil.getAsStringNonEscaping(idModel);
+//                        if ("section".equals(dirName)) {
+//                            TemplateScalarModel containerIdModel = (TemplateScalarModel) dirArgs.get("containerId");
+//                            if (containerIdModel != null) {
+//                                String containerId = LangFtlUtil.getAsStringNonEscaping(containerIdModel);
+//                                if (UtilValidate.isNotEmpty(containerId)) {
+//                                    id = containerId;
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
+                id = TransformUtil.getStringNonEscapingArg(params, "id");
+                name = TransformUtil.getStringNonEscapingArg(params, "name");
+//                }
 
                 String location = "unknown-location"; // FIXME
                 ModelFtlWidget widget = new ModelFtlWidget(name, dirName, location, id);
                 
-                RenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(widget, writer, context, null);
+                WidgetRenderTargetState.ExecutionInfo execInfo = renderTargetState.handleShouldExecute(widget, writer, context, null);
                 if (!execInfo.shouldExecute()) {
                     return;
                 }
@@ -87,8 +88,6 @@ public class RenderTargetDirective implements TemplateDirectiveModel {
                     execInfo.handleFinished(context); // SCIPIO: return logic
                 }
                 return;
-                    
-
             }
         }
         

@@ -53,7 +53,7 @@ import org.w3c.dom.NamedNodeMap;
  * @see <code>widget-menu.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with sub-menu
+public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidget { // SCIPIO: new comon base class to share with sub-menu
 
     /*
      * ----------------------------------------------------------------------- *

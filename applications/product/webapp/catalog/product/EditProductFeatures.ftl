@@ -18,7 +18,13 @@ under the License.
 -->
 <#if productId??>
 
-<@section title=uiLabelMap.PageTitleEditProductFeatures>
+<#-- SCIPIO: 2017-05-22: added link to new feature -->
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makeOfbizUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.PageTitleEditProductFeatures menuContent=menuContent>
   <#if productFeatureAndAppls?has_content>
     <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
     <@fields type="default-manual-widgetonly">

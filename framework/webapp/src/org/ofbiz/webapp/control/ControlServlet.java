@@ -48,6 +48,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.stats.VisitHandler;
 
@@ -243,10 +244,9 @@ public class ControlServlet extends HttpServlet {
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
                 // SCIPIO: 2017-05-15: special case for targeted rendering of error page
-                Object scpErrorRenderTargetExpr = request.getAttribute("scpErrorRenderTargetExpr");
-                if (scpErrorRenderTargetExpr == null) scpErrorRenderTargetExpr = request.getParameter("scpErrorRenderTargetExpr");
+                Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_REQPARAM);
                 if (scpErrorRenderTargetExpr != null) {
-                    request.setAttribute("scpRenderTargetExpr", scpErrorRenderTargetExpr);
+                    RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
                 }
                 
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);

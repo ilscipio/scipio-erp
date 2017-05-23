@@ -44,4 +44,13 @@
       </@tr>
     </@tbody>
   </@table>
+  
+  <@menu type="button-dropdown" title="Single dropdown button menu" id="tr-ftl-menu-1">
+    <@menuitem type="link" text="Menu Button 1" />
+    <@menuitem type="link" text="Menu Button 2" />
+    <@menuitem type="link" text="Menu Button 3" />
+  </@menu>
+  
+  <@render type="menu" resource="component://webtools/widget/MiscMenus.xml" name="TargetedRenderingTestMenu1" />
+
 </@virtualSection>

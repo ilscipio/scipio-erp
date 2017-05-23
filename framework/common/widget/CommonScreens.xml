@@ -207,6 +207,14 @@ under the License.
             <set field="headerTitle" from-field="resolvedTitle"/>
 
             <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
+            
+            <!-- 2017-05-19: output the public-facing parts of layoutSettings when in viewAsJson mode
+                WARN: these are returned without ofbizContentUrl wrapping; caller must handle
+                NOTE: DO NOT output the full layoutSettings here, because it contains internal paths that _could_ be considered
+                    security risk on some production systems. -->
+            <set field="scpOutParams.layoutSettings.javaScripts" from-field="layoutSettings.javaScripts" global="true"/>
+            <set field="scpOutParams.layoutSettings.javaScriptsFooter" from-field="layoutSettings.javaScriptsFooter" global="true"/>
+            <set field="scpOutParams.layoutSettings.styleSheets" from-field="layoutSettings.styleSheets" global="true"/>
         </actions>
     </screen>
 
@@ -225,13 +233,26 @@ under the License.
             <actions>
                 <include-screen-actions name="GlobalActions" />
                 <include-screen-actions name="GlobalTemplateActions" />
+                
+                <!-- 2017-05-19: SPECIAL: contains-expressions for header depends on whether
+                    customSideBar is set or not. if the theme does its own sidebar then we cannot
+                    optimize the left column; the theme has to do it with ftl @virtualSection directives -->
+                <if>
+                    <condition><if-true field="customSideBar" /></condition>
+                    <then>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Right"/>
+                    </then>
+                    <else>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right"/>
+                    </else>
+                </if>
             </actions>
             <widgets>
                 <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
                     when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
                     in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
                     note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
-                <section contains="!$Global-Column-Main, *">
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -276,7 +297,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section contains="!$Global-Column-Main, *">
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -338,7 +359,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section name="Global-Main-Nav-Close" contains="!$Global-Column-Main, *">
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -357,7 +378,7 @@ under the License.
                 </section>
                 <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                      include in <head></head>, but doesn't seem worth it for now -->
-                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, *">
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -367,7 +388,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render content area -->
-                <section name="Global-Pre-Content" contains="!$Global-Column-Main, *">
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <decorator-section-include name="pre-content"/>
                     </widgets>
@@ -551,7 +572,7 @@ under the License.
                     </section>
                 </container>
                 <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, *">
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <widgets>
                         <platform-specific>
                             <html>
@@ -560,7 +581,7 @@ under the License.
                         </platform-specific>
                     </widgets>
                 </section>
-                <section contains="!$Global-Column-Main, *">
+                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -743,7 +764,7 @@ under the License.
     
     <!-- Common Widgets -->
     <screen name="column-left">
-        <section name="Global-Column-Left">
+        <section name="Global-Column-Left" contains="!$Global-Column-Main, !$Global-Column-Right, *">
             <widgets>
                 <container style="${columnLeftStyle}" id="left-sidebar">
                     <container style="sidebar">
@@ -756,7 +777,7 @@ under the License.
     </screen>
     
     <screen name="column-right">
-        <section name="Global-Column-Right">
+        <section name="Global-Column-Right" contains="!$Global-Column-Main, !$Global-Column-Left, *">
             <widgets>
                 <container style="${columnRightStyle}" id="right-sidebar">
                     <container style="sidebar">
@@ -768,7 +789,7 @@ under the License.
     </screen>
     
     <screen name="column-main">
-        <section name="Global-Column-Main">
+        <section name="Global-Column-Main" contains="!$Global-Column-Left, !$Global-Column-Right, *">
             <condition>
                 <if-empty field="noTitle"/>
             </condition>
@@ -1683,7 +1704,7 @@ under the License.
         * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
     -->
     <screen name="CommonSideBarMenu">
-        <section>
+        <section name="Global-CommonSideBarMenu">
             <actions>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
             </actions>

@@ -1,5 +1,8 @@
 package org.ofbiz.widget.model.ftl;
 
+import java.util.Map;
+
+import org.ofbiz.widget.model.ContainsExpr;
 import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.ModelWidgetVisitor;
 
@@ -8,16 +11,22 @@ import org.ofbiz.widget.model.ModelWidgetVisitor;
  * Currently useless, no support for FTL matching and support uncertain.
  */
 @SuppressWarnings("serial")
-public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, ModelWidget.IdAttrWidget {
+public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, ModelWidget.IdAttrWidget, ContainsExpr.FlexibleContainsExprAttrWidget {
     private final String dirName;
     private final String location;
     private final String id;
+    private final ContainsExpr containsExpr;
     
-    public ModelFtlWidget(String name, String dirName, String location, String id) {
+    public ModelFtlWidget(String name, String dirName, String location, String id, String containsExpr) {
         super(name != null ? name : "");
         this.dirName = dirName;
         this.location = location;
         this.id = id;
+        this.containsExpr = ContainsExpr.getInstanceOrDefault(containsExpr);
+    }
+    
+    public ModelFtlWidget(String name, String dirName, String location, String id) {
+        this(name, dirName, location, id, null);
     }
 
     @Override
@@ -43,5 +52,10 @@ public class ModelFtlWidget extends ModelWidget implements FtlWrapperWidget, Mod
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public ContainsExpr getContainsExpr(Map<String, Object> context) {
+        return containsExpr;
     }
 }

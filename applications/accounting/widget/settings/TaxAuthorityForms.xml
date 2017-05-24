@@ -252,25 +252,8 @@ under the License.
     <form name="AddTaxAuthorityAssoc" type="single" target="createTaxAuthorityAssoc" title="" default-map-name="taxAuthorityAssoc"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
-            <!-- SCIPIO: new; TODO?: factor out for reuse -->
-            <entity-condition entity-name="TaxAuthority" list="taxAuthorityList">
-                <order-by field-name="taxAuthPartyId"/>
-                <order-by field-name="taxAuthGeoId"/>
-            </entity-condition>
-            <script lang="groovy"><![CDATA[
-                infoList = [];
-                if (context.taxAuthorityList) {
-                    for(taxAuthority in context.taxAuthorityList) {
-                        def info = [:];
-                        info.putAll(taxAuthority);
-                        info.taxAuthCombinedId = taxAuthority.taxAuthPartyId + "::" + taxAuthority.taxAuthGeoId;
-                        info.party = from("PartyNameView").where("partyId", taxAuthority.taxAuthPartyId).queryOne();
-                        info.geo = from("Geo").where("geoId", taxAuthority.taxAuthGeoId).queryOne();
-                        infoList.add(info);
-                    }
-                }
-                context.taxAuthorityInfoList = infoList;
-            ]]></script>
+            <!-- SCIPIO: new -->
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/tax/GetTaxAuthorityListForDisplay.groovy"/>
         </actions>
         <page-script><![CDATA[
         if (typeof changeToTaxAuthCombinedId === 'undefined') {

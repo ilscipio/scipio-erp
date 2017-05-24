@@ -190,6 +190,36 @@
     <!-- ProductPrice -->
     <form name="AddProductPrice" type="single" target="createProductPrice" title="" header-row-style="header-row"
        > <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <!-- SCIPIO: new -->
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/tax/GetTaxAuthorityListForDisplay.groovy"/>
+        </actions>
+        <!-- SCIPIO: TODO: factor out -->
+        <page-script><![CDATA[
+        if (typeof AddProductPrice_changeTaxAuthCombinedId === 'undefined') {
+            function AddProductPrice_changeTaxAuthCombinedId(combinedInput) {
+                var form = jQuery(combinedInput).closest('form'),
+                    partyId = '', geoId = '', id = jQuery(combinedInput).val();
+                if (id) { 
+                    id = id.split('::');
+                    partyId = id.length ? id[0] : '';
+                    geoId = id.length ? id[1] : '';
+                }
+                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
+                jQuery('input[name=taxAuthGeoId]', form).val(geoId);
+            }
+            
+            jQuery(document).ready(function() {
+                var inputs = jQuery('select.AddProductPrice_taxAuthCombinedId_field, .AddProductPrice_taxAuthCombinedId_field select');
+                inputs.each(function() {
+                    AddProductPrice_changeTaxAuthCombinedId(this);
+                });
+                inputs.on('change', function() {
+                    AddProductPrice_changeTaxAuthCombinedId(this);
+                });
+            });
+        }
+        ]]></page-script>
         <field name="productId">
             <hidden />
         </field>
@@ -222,15 +252,27 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
             <date-time type="date" />
         </field>
+        <!-- SCIPIO: 2017-05-23: combined into single input to help user enter only valid tax authorities
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonGeo}"><text/></field>
-        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}" position="2"><text/></field>
-        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}" position="2"><text/></field>-->
+        <field name="taxAuthPartyId"><hidden value=""/></field>
+        <field name="taxAuthGeoId"><hidden value=""/></field>
+        <field name="taxAuthCombinedId" title="${uiLabelMap.AccountingTaxAuthority}" 
+            widget-style="+AddProductPrice_taxAuthCombinedId_field">
+            <drop-down allow-empty="true">
+                <list-options key-name="taxAuthCombinedId" list-name="taxAuthorityInfoList" 
+                    description="${party.groupName} ${party.firstName} ${party.lastName} [${taxAuthPartyId}] / ${geo.geoName} [${taxAuthGeoId}]"/>
+            </drop-down>
+        </field>
+        
         <field name="taxInPrice" position="2">
             <drop-down allow-empty="true">
                 <option description="${uiLabelMap.CommonNo}" key="N"/>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
+        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
+        
         <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}" position="2">
             <drop-down allow-empty="false" no-current-selected-key="_NA_">
                 <entity-options entity-name="ProductStoreGroup" description="${productStoreGroupName}">
@@ -261,6 +303,36 @@
     </form>
     <form name="UpdateProductPrice" type="list" target="updateProductPrice" title="" list-name="productPrices" odd-row-style="alternate-row"
         paginate-target="EditProductPrices"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <!-- SCIPIO: new -->
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/tax/GetTaxAuthorityListForDisplay.groovy"/>
+        </actions>
+        <!-- SCIPIO: TODO: factor out -->
+        <page-script><![CDATA[
+        if (typeof UpdateProductPrice_changeTaxAuthCombinedId === 'undefined') {
+            function UpdateProductPrice_changeTaxAuthCombinedId(combinedInput) {
+                var form = jQuery(combinedInput).closest('tr'),
+                    partyId = '', geoId = '', id = jQuery(combinedInput).val();
+                if (id) { 
+                    id = id.split('::');
+                    partyId = id.length ? id[0] : '';
+                    geoId = id.length ? id[1] : '';
+                }
+                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
+                jQuery('input[name=taxAuthGeoId]', form).val(geoId);
+            }
+            
+            jQuery(document).ready(function() {
+                var inputs = jQuery('select.UpdateProductPrice_taxAuthCombinedId_field, .UpdateProductPrice_taxAuthCombinedId_field select');
+                inputs.each(function() {
+                    UpdateProductPrice_changeTaxAuthCombinedId(this);
+                });
+                inputs.on('change', function() {
+                    UpdateProductPrice_changeTaxAuthCombinedId(this);
+                });
+            });
+        }
+        ]]></page-script>
         <field name="productId">
             <hidden />
         </field>
@@ -283,15 +355,28 @@
             <date-time type="date" />
         </field>
         <field name="price" required-field="true"><text/></field>
+        
+        <!-- SCIPIO: 2017-05-23: combined into single input to help user enter only valid tax authorities
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonGeo}"><text/></field>
-        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}"><text/></field>
-        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}"><text/></field>-->
+        <field name="taxAuthPartyId"><hidden/></field>
+        <field name="taxAuthGeoId"><hidden/></field>
+        <!-- SCIPIO: TODO: REVIEW: the entry-name expression is extremely cryptic and something looks wrong about it, but it's working... -->
+        <field name="taxAuthCombinedId" title="${uiLabelMap.AccountingTaxAuthority}" entry-name="'${taxAuthPartyId}::${taxAuthGeoId}'"
+            widget-style="+UpdateProductPrice_taxAuthCombinedId_field" >
+            <drop-down allow-empty="true" current="selected">
+                <list-options key-name="taxAuthCombinedId" list-name="taxAuthorityInfoList" 
+                    description="${party.groupName} ${party.firstName} ${party.lastName} [${taxAuthPartyId}] / ${geo.geoName} [${taxAuthGeoId}]"/>
+            </drop-down>
+        </field>
+
         <field name="taxInPrice">
             <drop-down allow-empty="true">
                 <option description="${uiLabelMap.CommonNo}" key="N"/>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
+        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
         <field name="termUomId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" key-field-name="uomId"

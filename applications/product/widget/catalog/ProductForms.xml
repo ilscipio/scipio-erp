@@ -222,7 +222,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
             <date-time type="date" />
         </field>
-        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><text/></field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonGeo}"><text/></field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}" position="2"><text/></field>
         <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
         <field name="taxInPrice" position="2">
@@ -283,7 +283,7 @@
             <date-time type="date" />
         </field>
         <field name="price" required-field="true"><text/></field>
-        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><text/></field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonGeo}"><text/></field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}"><text/></field>
         <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
         <field name="taxInPrice">

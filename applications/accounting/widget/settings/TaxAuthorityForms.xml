@@ -263,11 +263,11 @@ under the License.
                     partyId = '', geoId = '', id = jQuery(combinedInput).val();
                 if (id) { 
                     id = id.split('::');
-                    partyId = id.length ? id[0] : '';
-                    geoId = id.length ? id[1] : '';
+                    geoId = id.length ? id[0] : '';
+                    partyId = id.length ? id[1] : '';
                 }
-                jQuery('input[name=toTaxAuthPartyId]', form).val(partyId); 
                 jQuery('input[name=toTaxAuthGeoId]', form).val(geoId);
+                jQuery('input[name=toTaxAuthPartyId]', form).val(partyId); 
             }
             
             jQuery(document).ready(function() {

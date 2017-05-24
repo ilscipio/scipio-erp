@@ -202,11 +202,11 @@
                     partyId = '', geoId = '', id = jQuery(combinedInput).val();
                 if (id) { 
                     id = id.split('::');
-                    partyId = id.length ? id[0] : '';
-                    geoId = id.length ? id[1] : '';
+                    geoId = id.length ? id[0] : '';
+                    partyId = id.length ? id[1] : '';
                 }
-                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
                 jQuery('input[name=taxAuthGeoId]', form).val(geoId);
+                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
             }
             
             jQuery(document).ready(function() {
@@ -315,11 +315,11 @@
                     partyId = '', geoId = '', id = jQuery(combinedInput).val();
                 if (id) { 
                     id = id.split('::');
-                    partyId = id.length ? id[0] : '';
-                    geoId = id.length ? id[1] : '';
+                    geoId = id.length ? id[0] : '';
+                    partyId = id.length ? id[1] : '';
                 }
-                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
                 jQuery('input[name=taxAuthGeoId]', form).val(geoId);
+                jQuery('input[name=taxAuthPartyId]', form).val(partyId); 
             }
             
             jQuery(document).ready(function() {
@@ -362,7 +362,7 @@
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
         <!-- SCIPIO: TODO: REVIEW: the entry-name expression is extremely cryptic and something looks wrong about it, but it's working... -->
-        <field name="taxAuthCombinedId" title="${uiLabelMap.AccountingTaxAuthority}" entry-name="'${taxAuthPartyId}::${taxAuthGeoId}'"
+        <field name="taxAuthCombinedId" title="${uiLabelMap.AccountingTaxAuthority}" entry-name="'${taxAuthGeoId}::${taxAuthPartyId}'"
             widget-style="+UpdateProductPrice_taxAuthCombinedId_field" >
             <drop-down allow-empty="true" current="selected">
                 <list-options key-name="taxAuthCombinedId" list-name="taxAuthorityInfoList" 

@@ -138,7 +138,8 @@ $sidebar-width: 200px;
     }
     
     &.scipio-nav-actions-menu-item{
-        background-color: rgba($white-smoke,0.2);
+        //background-color: rgba($white-smoke,0.2);
+        background-color: rgba($white-smoke,0.125);
         //margin-bottom:2px;             
         a {
             //color: $jet;

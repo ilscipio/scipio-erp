@@ -255,6 +255,7 @@ under the License.
             <!-- SCIPIO: new -->
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/tax/GetTaxAuthorityListForDisplay.groovy"/>
         </actions>
+        <!-- SCIPIO: TODO: factor out -->
         <page-script><![CDATA[
         if (typeof changeToTaxAuthCombinedId === 'undefined') {
             function changeToTaxAuthCombinedId(combinedInput) {

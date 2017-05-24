@@ -273,7 +273,7 @@ under the License.
             jQuery(document).ready(function() {
                 var inputs = jQuery('select.AddTaxAuthorityAssoc_toTaxAuthCombinedId_field, .AddTaxAuthorityAssoc_toTaxAuthCombinedId_field select');
                 inputs.each(function() {
-                    changeToTaxAuthCombinedId(jQuery(this));
+                    changeToTaxAuthCombinedId(this);
                 });
                 inputs.on('change', function() {
                     changeToTaxAuthCombinedId(this);

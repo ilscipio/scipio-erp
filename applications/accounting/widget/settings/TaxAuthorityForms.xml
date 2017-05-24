@@ -259,10 +259,13 @@ under the License.
         <page-script><![CDATA[
         if (typeof changeToTaxAuthCombinedId === 'undefined') {
             function changeToTaxAuthCombinedId(combinedInput) {
-                var form=jQuery(combinedInput).closest('form'),
-                    id=jQuery(combinedInput).val().split('::'), 
-                    partyId = id.length ? id[0] : '',
+                var form = jQuery(combinedInput).closest('form'),
+                    partyId = '', geoId = '', id = jQuery(combinedInput).val();
+                if (id) { 
+                    id = id.split('::');
+                    partyId = id.length ? id[0] : '';
                     geoId = id.length ? id[1] : '';
+                }
                 jQuery('input[name=toTaxAuthPartyId]', form).val(partyId); 
                 jQuery('input[name=toTaxAuthGeoId]', form).val(geoId);
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://SCIPIO -.apache.org/dtds/SCIPIO -properties.xsd">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="DemoSuiteApplication">
         <value xml:lang="en">DemoSuite Application</value>
         <value xml:lang="zh">DemoSuite应用程序</value>

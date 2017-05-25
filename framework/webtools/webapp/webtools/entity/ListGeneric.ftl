@@ -38,7 +38,21 @@ under the License.
                         <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
                     </@td>
                     <#list fieldList as field>
-                        <@td>${record.fields.get(field.name)!?string}</@td>
+                        <@td>
+                            <#-- FIXME: Maybe this may cause unexpected issue so let's keep an eye on it -->
+                            <#if record.fields?has_content && record.fields.get(field.name)?has_content>
+                                <#assign fieldValue = record.fields.get(field.name) />
+                                <#if (!fieldValue?has_content) || 
+                                    (fieldValue?has_content && ( isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean ))>
+                                    ${record.fields.get(field.name)!""?string}
+                                <#else>
+                                    <strong>WARN: Field value can't be represented as string</strong> 
+                                </#if>
+                            <#else>
+                                <#-- ${Static["org.ofbiz.base.util.Debug"].log("field name [" + field.name + "] is not present")} -->
+                            </#if>
+                
+                        </@td>
                     </#list>
                     <@td>
                     <#if hasDeletePermission == 'Y'>

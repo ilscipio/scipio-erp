@@ -39,19 +39,16 @@ under the License.
                     </@td>
                     <#list fieldList as field>
                         <@td>
-                            <#-- FIXME: Maybe this may cause unexpected issue so let's keep an eye on it -->
-                            <#if record.fields?has_content && record.fields.get(field.name)?has_content>
-                                <#assign fieldValue = record.fields.get(field.name) />
-                                <#if (!fieldValue?has_content) || 
-                                    (fieldValue?has_content && ( isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean ))>
-                                    ${record.fields.get(field.name)!""?string}
+                            <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it 
+                               2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
+                            <#assign fieldValue = (record.fields[rawString(field.name)])! />
+                            <#if fieldValue?has_content>
+                                <#if (isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean)>
+                                    ${fieldValue?string}
                                 <#else>
-                                    <strong>WARN: Field value can't be represented as string</strong> 
+                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em> 
                                 </#if>
-                            <#else>
-                                <#-- ${Static["org.ofbiz.base.util.Debug"].log("field name [" + field.name + "] is not present")} -->
                             </#if>
-                
                         </@td>
                     </#list>
                     <@td>

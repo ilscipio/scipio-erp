@@ -191,7 +191,8 @@ public class ConfigXMLReader {
         } catch (java.io.FileNotFoundException e) { // SCIPIO: special case: let caller log this one, IF necessary
             throw new WebAppConfigurationException(e);
         } catch (Exception e) {
-            Debug.logError(e, module);
+            //Scipio: not all components have a WebApp, so this should not be logged as an error.
+            // Debug.logError(e, module);
             throw new WebAppConfigurationException(e);
         }
     }

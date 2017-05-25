@@ -20464,7 +20464,7 @@
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
     
-    <!-- Scipio: New Billing Account labels -->
+    <!-- SCIPIO: New Billing Account labels -->
     <property key="PageTitleListBillingAccountRoles">
         <value xml:lang="en">Billing Account Role List</value>
     </property>

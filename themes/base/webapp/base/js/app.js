@@ -312,7 +312,7 @@ function ScipioUploadProgress(options) {
         return jQuery(this.formSel);
     };
     
-    this.processUploadComplete = function(uploadInfo) {
+    this.processUploadComplete = function(uploadInfo, successMessage, successWrapper) {
         var error = false;
         if (this.resultContentReplace) {
             var iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find(this.resultContentContainerSel);
@@ -322,6 +322,14 @@ function ScipioUploadProgress(options) {
                 // to the page content container
                 var contentContainer = jQuery(this.contentContainerSel);
                 if (contentContainer.length > 0) {
+                	 if (this.msgContainerId) {
+                         if (successWrapper) {
+                             jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'info">' + successMessage + "</div>");
+                         }
+                         else {
+                             jQuery("#"+this.msgContainerId).html(successMessage);
+                         }
+                     }
                     contentContainer.html(iframeContent.html());
                 }
                 else {
@@ -417,10 +425,11 @@ function ScipioUploadProgress(options) {
                 
                 if (!uploadInfo.finished) {
                     iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.expectedResultContainerSel);
+                    iframeSuccessContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.successResultContainerSel);
                     if (iframeContent.length > 0) {
                         uploadInfo.finished = true;
                         timerId.stop();
-                        prog.processUploadComplete(uploadInfo);
+                        prog.processUploadComplete(uploadInfo, iframeSuccessContent.html(), prog.successResultAddWrapper);
                     }
                 }
                 

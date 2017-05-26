@@ -18,7 +18,7 @@ under the License.
 -->
 <#if tobrowser?? && tobrowser>
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
-<p>${WebtoolsXmlExportFuncDesc}</p>
+<p>${WebtoolsXMLExportSingleInfo}</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@menu type="button">

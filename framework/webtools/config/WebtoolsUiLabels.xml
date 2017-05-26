@@ -5900,6 +5900,15 @@
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh_TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
     </property>
+    <property key="WebtoolsXMLExportSingleInfo"><!-- SCIPIO: TODO: Localize -->
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
+    </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="en">This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</value>
@@ -6010,9 +6019,5 @@
         <value xml:lang="vi">Nhập khẩu dữ liệu</value>
         <value xml:lang="zh">数据导入</value>
         <value xml:lang="zh_TW">資料匯入</value>
-    </property>
-    <property key="WebtoolsXmlExportFuncDesc">
-        <value xml:lang="de">Diese Seite kann verwendet werden, um Daten aus der Datenbank zu exportieren. Die exportierten Dokumente haben ein Wurzel-Tag von "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
     </property>
 </resource>

@@ -220,6 +220,8 @@ public class HtmlWidget extends ModelScreenWidget {
             } catch (IOException e) {
             }
         } else {
+            // TODO: REVIEW: we should be throwing the same exception types as
+            // org.ofbiz.widget.renderer.macro.MacroScreenRenderer.handleError(Appendable, Map<String, Object>, Throwable)
             throw new RuntimeException(ex);
         }
     }

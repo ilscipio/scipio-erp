@@ -1149,7 +1149,7 @@ context.styles = [
     "field_generic_tooltip" : "has-tip field-tooltip-wrap",
     
     /* default, for all fields */
-    "field_default_tooltip" : "has-tip tip-right",
+    "field_default_tooltip" : "has-tip tip-top",
     "field_default_tooltip_attribs" : [
       "data-tooltip" : "_NO_VALUE_",
       "aria-haspopup" : "true",

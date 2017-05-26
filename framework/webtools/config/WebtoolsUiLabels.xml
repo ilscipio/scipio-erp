@@ -5977,4 +5977,12 @@
         <value xml:lang="de">Templating Toolkit Dokumentation</value>
         <value xml:lang="en">Templating Toolkit Documentation</value>
     </property>
+    <property key="WebtoolsFieldValueNoStringRepr">
+        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
+        <value xml:lang="en">Field value can't be represented as string</value>
+    </property>
+    <property key="WebtoolsNoStringRepr">
+        <value xml:lang="de">Keine Stringdarstellung</value>
+        <value xml:lang="en">No string representation</value>
+    </property>
 </resource>

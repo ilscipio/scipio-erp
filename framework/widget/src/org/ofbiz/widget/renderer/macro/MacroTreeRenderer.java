@@ -116,11 +116,20 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering tree thru ftl", module);
+            handleError(writer, e); // SCIPIO
         } catch (IOException e) {
             Debug.logError(e, "Error rendering tree thru ftl", module);
+            handleError(writer, e); // SCIPIO
         }
     }
  
+    /**
+     * SCIPIO: makes exception handling decision for executeMacro exceptions.
+     */
+    private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
+        MacroScreenRenderer.handleError(writer, contextHandler.getInitialContext(writer), t);
+    }
+    
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {

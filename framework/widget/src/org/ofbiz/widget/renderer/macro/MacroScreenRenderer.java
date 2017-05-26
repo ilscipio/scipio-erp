@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
@@ -164,8 +165,38 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen macro [" + macro + "] thru ftl", module);
+            handleError(writer, e); // SCIPIO
         } catch (IOException e) {
             Debug.logError(e, "Error rendering screen macro [" + macro + "] thru ftl", module);
+            handleError(writer, e); // SCIPIO
+        }
+    }
+
+    /**
+     * SCIPIO: makes exception handling decision for executeMacro exceptions.
+     */
+    private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
+        handleError(writer, contextHandler.getInitialContext(writer), t);
+    }
+    
+    /**
+     * SCIPIO: makes exception handling decision for executeMacro exceptions.
+     */
+    static void handleError(Appendable writer, Map<String, Object> context, Throwable t) throws IOException, RuntimeException {
+        if (UtilRender.getRenderExceptionMode(context) == UtilRender.RenderExceptionMode.DEBUG) {
+            ; // do nothing - stock ofbiz behavior
+        } else {
+            // in live mode, rethrow so that security can handle this.
+            if (t instanceof IOException) {
+                throw (IOException) t;
+            } else if (t instanceof TemplateException) {
+                // TODO: REVIEW: this wrap _might_ in loss of template error info, unclear
+                // for now we are doing the same as
+                // org.ofbiz.widget.model.HtmlWidget.writeError(Appendable, String, Throwable, Map<String, ?>)
+                throw new RuntimeException(t);
+            } else {
+                throw new RuntimeException(t);
+            }
         }
     }
 
@@ -339,7 +370,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             ContextFtlUtil.setRequestVar("renderLinkUniqueItemIdNum", renderLinkUniqueItemIdNum, (HttpServletRequest) context.get("request"), context);
             return renderLinkUniqueItemIdNum;
         } catch (Exception e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "Widget renderer: Could not get next unique item name id num: " + e.getMessage(), module);
+            if (UtilRender.getRenderExceptionMode(context) != UtilRender.RenderExceptionMode.DEBUG) {
+                throw new IllegalStateException("Widget renderer: Could not get next unique item name id num: " + e.getMessage(), e);
+            }
             return 0;
         }
     }
@@ -556,10 +590,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
             Debug.logError(e, errMsg, module);
             //throw new RuntimeException(errMsg);
+            handleError(writer, e); // SCIPIO
         } catch (IOException e2) {
             String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
             Debug.logError(e2, errMsg, module);
             //throw new RuntimeException(errMsg);
+            handleError(writer, e2); // SCIPIO
         }
     }
 
@@ -672,10 +708,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
              String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
              Debug.logError(e, errMsg, module);
              //throw new RuntimeException(errMsg);
+             handleError(writer, e); // SCIPIO
          } catch (IOException e2) {
              String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e2.toString();
              Debug.logError(e2, errMsg, module);
              //throw new RuntimeException(errMsg);
+             handleError(writer, e2); // SCIPIO
          }
     }
 
@@ -823,6 +861,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                     renderer = new MacroFormRenderer(formrendererName, formrenderer, request, response); // SCIPIO: modified for name
                 } catch (TemplateException e) {
                     Debug.logError("Not rendering content, error on MacroFormRenderer creation.", module);
+                    handleError(writer, e); // SCIPIO
                 }
                 renderer.setRenderPagination(false);
                 context.put("formStringRenderer", renderer);
@@ -1212,15 +1251,18 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             } catch (IOException e) {
                 String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+                //throw new RuntimeException(errMsg);
+                handleError(writer, e); // SCIPIO
             } catch (SAXException e) {
                 String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+                //throw new RuntimeException(errMsg);
+                handleError(writer, e); // SCIPIO
             } catch (ParserConfigurationException e) {
                 String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+                //throw new RuntimeException(errMsg);
+                handleError(writer, e); // SCIPIO
             }
         }
         modelScreen.renderScreenString(writer, context, this);

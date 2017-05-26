@@ -40,9 +40,6 @@ components.each { component ->
          componentMap.webAppName = webApp.getName();
          componentMap.contextRoot = webApp.getContextRoot();
          componentMap.location = webApp.getLocation();
-         componentMap.webAppName = webApp.getName();
-         componentMap.contextRoot = webApp.getContextRoot();
-         componentMap.location = webApp.getLocation();
          componentList.add(componentMap);
      }
      if (UtilValidate.isEmpty(webApps)) {
@@ -51,9 +48,6 @@ components.each { component ->
          componentMap.rootLocation =  component.getRootLocation();
          componentMap.enabled = (component.enabled() == true? "Y" : "N");
          componentList.add(componentMap);
-         componentMap.webAppName = "";
-         componentMap.contextRoot = "";
-         componentMap.location = "";
          componentMap.webAppName = "";
          componentMap.contextRoot = "";
          componentMap.location = "";

@@ -183,11 +183,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
             FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen thru ftl macro: " + macro, module);
+            handleError(writer, e); // SCIPIO
         } catch (IOException e) {
             Debug.logError(e, "Error rendering screen thru ftl, macro: " + macro, module);
+            handleError(writer, e); // SCIPIO
         }
     }
 
+    /**
+     * SCIPIO: makes exception handling decision for executeMacro exceptions.
+     */
+    private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
+        MacroScreenRenderer.handleError(writer, contextHandler.getInitialContext(writer), t);
+    }
+    
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -241,6 +250,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 size = Integer.parseInt(displayField.getSize());
             } catch (NumberFormatException nfe) {
                 Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+                handleError(writer, nfe); // SCIPIO
             }
         }
         ModelFormField.InPlaceEditor inPlaceEditor = displayField.getInPlaceEditor();
@@ -801,6 +811,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 textSize = Integer.parseInt(dropDownField.getTextSize());
             } catch (NumberFormatException nfe) {
                 Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), module);
+                handleError(writer, nfe); // SCIPIO
             }
             if (textSize > 0 && UtilValidate.isNotEmpty(currentValue) && currentValue.length() > textSize) {
                 currentValue = currentValue.substring(0, textSize - 8) + "..." + currentValue.substring(currentValue.length() - 5);

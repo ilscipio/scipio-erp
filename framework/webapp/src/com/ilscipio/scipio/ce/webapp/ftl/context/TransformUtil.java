@@ -3,6 +3,7 @@ package com.ilscipio.scipio.ce.webapp.ftl.context;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
@@ -11,6 +12,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import freemarker.core.Environment;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDateModel;
+import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateNumberModel;
@@ -210,6 +212,37 @@ public abstract class TransformUtil {
 
     }
 
+    /**
+     * Gets a deep-unwrapped map.
+     * FIXME: nonEscaping bool is currently not handled... it may bypass escaping in some cases but not others...
+     */
+    public static <K,V> Map<K, V> getMapArg(TemplateModel obj, Map<K, V> defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        if (!nonEscaping) {
+            throw new UnsupportedOperationException("getMapArg currently only supports escaping-bypassing (nonEscaping true)");
+        }
+        Map<K, V> result = null;
+        if (obj instanceof TemplateHashModel) {
+            result = UtilGenerics.checkMap(LangFtlUtil.unwrapAlways(obj));
+        } else if (obj == null) {
+            return defaultValue;
+        } else {
+            throw new TemplateModelException("Expected hash/map model or something coercible to map, but got a " +
+                    obj.getClass() + " instead");
+        }
+        if (useDefaultWhenEmpty && result.isEmpty()) {
+            return defaultValue;
+        }
+        return result;
+    }
+    
+    /**
+     * Gets a deep-unwrapped map.
+     * FIXME: nonEscaping bool is currently not handled... it may bypass escaping in some cases but not others...
+     */
+    public static <K,V> Map<K, V> getMapArg(Map<?, ?> args, String key, Map<K, V> defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        return getMapArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
+    }
+    
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
     }

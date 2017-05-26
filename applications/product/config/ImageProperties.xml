@@ -24,20 +24,20 @@ under the License.
 -->
 <imageSize xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <size name="small">
-        <dimension name="height" value="50"/>
-        <dimension name="width" value="50"/>
+        <dimension name="height" value="256"/>
+        <dimension name="width" value="256"/>
     </size>
     <size name="medium">
-        <dimension name="height" value="100"/>
-        <dimension name="width" value="100"/>
+        <dimension name="height" value="640"/>
+        <dimension name="width" value="480"/>
     </size>
     <size name="large">
-        <dimension name="height" value="200"/>
-        <dimension name="width" value="200"/>
+        <dimension name="height" value="1024"/>
+        <dimension name="width" value="768"/>
     </size>
     <size name="detail">
-        <dimension name="height" value="600"/>
-        <dimension name="width" value="600"/>
+        <dimension name="height" value="1440"/>
+        <dimension name="width" value="900"/>
     </size>
     <size name="100x75">
         <dimension name="height" value="75"/>

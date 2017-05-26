@@ -205,6 +205,7 @@ under the License.
             <set field="globalTitle" from-field="resolvedTitle" global="true"/>
 
             <set field="headerTitle" from-field="resolvedTitle"/>
+            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO" global="true"/>
 
             <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
             

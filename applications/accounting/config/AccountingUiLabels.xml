@@ -5576,7 +5576,7 @@
         <value xml:lang="zh_TW">尋找應收支付</value>
     </property>
     <property key="AccountingFindBudgets">
-        <value xml:lang="en">Budgets suchen</value>
+        <value xml:lang="de">Budgets suchen</value>
         <value xml:lang="en">Find Budgets</value>
     </property>
     <property key="AccountingFindDepositSlip">
@@ -20464,7 +20464,7 @@
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
     
-    <!-- Scipio: New Billing Account labels -->
+    <!-- SCIPIO: New Billing Account labels -->
     <property key="PageTitleListBillingAccountRoles">
         <value xml:lang="en">Billing Account Role List</value>
     </property>

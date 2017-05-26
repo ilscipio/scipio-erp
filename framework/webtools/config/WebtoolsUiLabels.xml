@@ -5985,4 +5985,34 @@
         <value xml:lang="de">Keine Stringdarstellung</value>
         <value xml:lang="en">No string representation</value>
     </property>
+    <property key="WebtoolsDataExport">
+        <value xml:lang="de">Daten exportieren</value>
+        <value xml:lang="en">Data Export</value>
+        <value xml:lang="fr">Export de données</value>
+        <value xml:lang="it">Esporta dati</value>
+        <value xml:lang="ja">データエクスポート</value>
+        <value xml:lang="pt">ExportaÃ§Ã£o de dados</value>
+        <value xml:lang="ro">Exporta Date</value>
+        <value xml:lang="th">ส่งออกข้อมูล</value>
+        <value xml:lang="vi">Kết xuất dữ liệu</value>
+        <value xml:lang="zh">数据导出</value>
+        <value xml:lang="zh_TW">資料匯出</value>
+    </property>
+    <property key="WebtoolsDataImport">
+        <value xml:lang="de">Daten importieren</value>
+        <value xml:lang="en">Data Import</value>
+        <value xml:lang="fr">Import de données</value>
+        <value xml:lang="it">Importa dati da</value>
+        <value xml:lang="ja">XMLデータインポート</value>
+        <value xml:lang="pt">Importar dados</value>
+        <value xml:lang="ro">Importa Datele</value>
+        <value xml:lang="th">นำเข้าข้อมูล</value>
+        <value xml:lang="vi">Nhập khẩu dữ liệu</value>
+        <value xml:lang="zh">数据导入</value>
+        <value xml:lang="zh_TW">資料匯入</value>
+    </property>
+    <property key="WebtoolsXmlExportFuncDesc">
+        <value xml:lang="de">Diese Seite kann verwendet werden, um Daten aus der Datenbank zu exportieren. Die exportierten Dokumente haben ein Wurzel-Tag von "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+    </property>
 </resource>

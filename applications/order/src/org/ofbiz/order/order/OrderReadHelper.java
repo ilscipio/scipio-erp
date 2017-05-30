@@ -3245,7 +3245,7 @@ public class OrderReadHelper {
         }
         return totalReceived;
     }
-
+    
     /**
      * SCIPIO: Retrieve all subscription of the entire order
      * 
@@ -3254,16 +3254,12 @@ public class OrderReadHelper {
      */
     public Map<GenericValue, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
         for (GenericValue orderItem : orderItems) {
-            try {
-                List<GenericValue> productSubscriptions = getItemSubscriptions(orderItem);
-                for (GenericValue productSubscription : productSubscriptions) {
-                    Debug.log("Found orderItem [" + orderItem.getString("orderId") + "#" + orderItem.getString("productId") + "] with subscription id ["
-                            + productSubscription.getString("subscriptionResourceId") + "]");
-                }
-                return this.orderSubscriptionItems;
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem getting ProductSubscriptionResources from order", module);
+            List<GenericValue> productSubscriptions = getItemSubscriptions(orderItem);
+            for (GenericValue productSubscription : productSubscriptions) {
+                Debug.log("Found orderItem [" + orderItem.getString("orderId") + "#" + orderItem.getString("productId") + "] with subscription id ["
+                        + productSubscription.getString("subscriptionResourceId") + "]");
             }
+            return this.orderSubscriptionItems;
         }
         return null;
     }
@@ -3276,19 +3272,13 @@ public class OrderReadHelper {
      */
     public List<GenericValue> getItemSubscriptions(GenericValue orderItem) throws GenericEntityException {
         Delegator delegator = orderItem.getDelegator();
+        if (this.orderSubscriptionItems == null)
+            this.orderSubscriptionItems = FastMap.newInstance();
 
-        try {
-            List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
-                    .where("productId", orderItem.getString("productId")).cache(true).filterByDate().queryList();
-            this.orderSubscriptionItems.put(orderItem, productSubscriptionResources);
-
-            return productSubscriptionResources;
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting ProductSubscriptionResource from order", module);
-
-        }
-
-        return null;
+        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
+                .where("productId", orderItem.getString("productId")).cache(true).filterByDate().queryList();
+        this.orderSubscriptionItems.put(orderItem, productSubscriptionResources);
+        return productSubscriptionResources;
     }
 
     /**
@@ -3299,7 +3289,14 @@ public class OrderReadHelper {
      * @throws GenericEntityException
      */
     public boolean hasSubscriptions() {
-        return UtilValidate.isEmpty(this.orderSubscriptionItems);
+        if (UtilValidate.isEmpty(this.orderSubscriptionItems)) {
+            try {
+                getItemSubscriptions();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+        return UtilValidate.isNotEmpty(this.orderSubscriptionItems);
     }
 
     /**
@@ -3310,7 +3307,14 @@ public class OrderReadHelper {
      * @throws GenericEntityException
      */
     public boolean hasSubscriptions(GenericValue orderItem) {
-        return UtilValidate.isEmpty(this.orderSubscriptionItems.get(orderItem));
+        if (UtilValidate.isEmpty(this.orderSubscriptionItems)) {
+            try {
+                getItemSubscriptions(orderItem);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+        return UtilValidate.isNotEmpty(this.orderSubscriptionItems.get(orderItem));
     }
 
 }

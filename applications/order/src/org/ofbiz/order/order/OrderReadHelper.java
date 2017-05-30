@@ -3245,7 +3245,7 @@ public class OrderReadHelper {
         }
         return totalReceived;
     }
-    
+
     /**
      * SCIPIO: Retrieve all subscription of the entire order
      * 
@@ -3315,6 +3315,23 @@ public class OrderReadHelper {
             }
         }
         return UtilValidate.isNotEmpty(this.orderSubscriptionItems.get(orderItem));
+    }
+
+    /**
+     * SCIPIO: Check if the order contains only subscription items
+     * 
+     * @return boolean
+     */
+    public boolean orderContainsSubscriptionItemsOnly() {
+        if (orderItems != null && orderSubscriptionItems != null) {
+            for (GenericValue orderItem : orderItems) {
+                if (orderSubscriptionItems.containsKey(orderItem))
+                    return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
 }

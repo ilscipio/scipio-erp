@@ -5876,7 +5876,7 @@
         <value xml:lang="zh_TW">把${numberWritten}個記錄寫到XML檔${parameters.filename}.</value>
     </property>
     <property key="WebtoolsWroteXMLForAllDataIn">
-        <value xml:lang="de">Es wurde XML für alle Daten in ${numberofEntities} Entitäten geschrieben.</value>
+        <value xml:lang="de">Es wurde XML für alle Daten in ${numberOfEntities} Entitäten geschrieben.</value>
         <value xml:lang="en">Wrote XML for all data in ${numberOfEntities} entities.</value>
         <value xml:lang="fr">Ecrire XML pour toute les donnée inclues ${numberOfEntities} Entités.</value>
         <value xml:lang="it">Scritti XML per tutti i dati in ${numberOfEntities} entità.</value>

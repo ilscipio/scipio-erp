@@ -12,15 +12,15 @@
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       <#else>
         <@th width="45%">${uiLabelMap.OrderProduct}</@th>
-        <@th></@th>
-        <@th></@th>
-        <@th></@th>
+        <@th width="25%" colspan="3">${uiLabelMap.EcommerceSubscriptionDetails}</@th>        
         <@th width="15%">${uiLabelMap.CommonQuantity}</@th><#--${uiLabelMap.OrderQtyOrdered}-->
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       </#if>
       <@th width="15%">${uiLabelMap.OrderAdjustments}</@th>
       <@th width="15%">${uiLabelMap.EcommerceItemTotal}</@th><#--${uiLabelMap.CommonSubtotal}-->
-      
+      <#if orderHeader?has_content && orderHeader.statusId == "ORDER_CREATED">
+        <@th width="15%">${uiLabelMap.EcommerceAuthSubscription}</@th>
+      </#if>
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
         <@th colspan="3"></@th>
       <#else>
@@ -31,8 +31,10 @@
     </@tr>
     </@thead>
     <@tbody>
-         <#list orderItems as orderItem>
-      <#if localOrderReadHelper.hasSubscriptions(orderItem)>
+         <#list subscriptionItems.keySet() as orderItem>      
+            <#assign producSubscriptionResources = subscriptionItems.get(orderItem)>
+      
+      
       <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
       <#assign rentalQuantity = 1> <#-- no change if no rental item -->
       <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM" && workEfforts??>
@@ -78,7 +80,6 @@
             <#-- SCIPIO: Extra hidden input to help with hide/show logic -->
             <input type="hidden" name="cancelitem_${orderItem.orderItemSeqId}" value="Y"/>
         </#macro>
-
         <#macro cancelLinkContent>
           <#-- SCIPIO: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
           <a href="javascript:jQuery('#row_orderitem_cancel_${orderItem.orderItemSeqId}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
@@ -89,6 +90,22 @@
           </@modal>-->
         </#macro>
         <#assign mayCancelItem = false>
+        
+        <#macro subscriptionLinkContent productSubscriptionResource index>
+          <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>          
+          <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${rawString(subscriptionResource.description)}]">
+            <@section title="${rawString(subscriptionResource.description)}: ${rawString(orderItem.itemDescription!)}">
+                Max Time: ${productSubscriptionResource.get("maxLifeTime")!} ${productSubscriptionResource.get("maxLifeTimeUomId")!} <br/>
+                Available Time: ${productSubscriptionResource.availableTime!} ${productSubscriptionResource.availableTime!} <br/>
+                Use Count Limit: ${productSubscriptionResource.useCountLimit!} <br/>
+                Use Time: ${productSubscriptionResource.useTime!} ${productSubscriptionResource.useTimeUomId!} <br/>
+                Automatic Extend: ${productSubscriptionResource.automaticExtend!} <br/>
+                Cancel Automatic Extended Time: ${productSubscriptionResource.canclAutmExtTime!} ${productSubscriptionResource.canclAutmExtTimeUomId!} <br/>
+                Period On Expiry: ${productSubscriptionResource.gracePeriodOnExpiry!} ${productSubscriptionResource.gracePeriodOnExpiryUomId!} <br/>               
+            </@section>
+          </@modal>
+        </#macro>
+        
         <#if maySelect>
           <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
           <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
@@ -179,7 +196,16 @@
             <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
           </@td>
           <#if !(maySelect)>
-            <@td></@td>
+            <@td>
+                <ul>
+                <#list producSubscriptionResources as productSubscriptionResource>
+                    ${Static["org.ofbiz.base.util.Debug"].log("productSubscriptionResource ===> " + productSubscriptionResource.subscriptionResourceId)}
+                    <li>
+                        <@subscriptionLinkContent productSubscriptionResource productSubscriptionResource_index/>
+                    </li>
+                </#list>
+                </ul>
+            </@td>
             <@td></@td>
             <@td></@td>
           </#if>
@@ -219,6 +245,13 @@
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
+
+          <#if orderHeader?has_content && orderHeader.statusId == "ORDER_COMPLETED">
+            <@td>
+                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateOrderSubscriptionItem')?js_string}';document.activateOrderSubscriptionItem.submit()" 
+                class="${styles.link_run_sys!} ${styles.action_terminate!}" text="Activate Subscription"  />  
+            </@td>
+          </#if>
        
           <#if maySelect && (roleTypeId!) == "PLACING_CUSTOMER">
             <@td></@td>
@@ -328,7 +361,7 @@
           </@tr>
         </#list>
       </#if>
-        </#if>
+        
     </#list>
 
     </@tbody>

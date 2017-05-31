@@ -3246,6 +3246,8 @@ public class OrderReadHelper {
         return totalReceived;
     }
 
+    // ================= Order Subscriptions =================
+
     /**
      * SCIPIO: Retrieve all subscription of the entire order
      * 
@@ -3256,7 +3258,7 @@ public class OrderReadHelper {
         for (GenericValue orderItem : orderItems) {
             List<GenericValue> productSubscriptions = getItemSubscriptions(orderItem);
             for (GenericValue productSubscription : productSubscriptions) {
-                Debug.log("Found orderItem [" + orderItem.getString("orderId") + "#" + orderItem.getString("productId") + "] with subscription id ["
+                Debug.log("Found orderItem [" + orderItem.getString("orderItemSeqId") + "#" + orderItem.getString("productId") + "] with subscription id ["
                         + productSubscription.getString("subscriptionResourceId") + "]");
             }
             return this.orderSubscriptionItems;
@@ -3277,7 +3279,8 @@ public class OrderReadHelper {
 
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
                 .where("productId", orderItem.getString("productId")).cache(true).filterByDate().queryList();
-        this.orderSubscriptionItems.put(orderItem, productSubscriptionResources);
+        if (UtilValidate.isNotEmpty(productSubscriptionResources))
+            this.orderSubscriptionItems.put(orderItem, productSubscriptionResources);
         return productSubscriptionResources;
     }
 
@@ -3289,13 +3292,6 @@ public class OrderReadHelper {
      * @throws GenericEntityException
      */
     public boolean hasSubscriptions() {
-        if (UtilValidate.isEmpty(this.orderSubscriptionItems)) {
-            try {
-                getItemSubscriptions();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            }
-        }
         return UtilValidate.isNotEmpty(this.orderSubscriptionItems);
     }
 
@@ -3307,14 +3303,7 @@ public class OrderReadHelper {
      * @throws GenericEntityException
      */
     public boolean hasSubscriptions(GenericValue orderItem) {
-        if (UtilValidate.isEmpty(this.orderSubscriptionItems)) {
-            try {
-                getItemSubscriptions(orderItem);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            }
-        }
-        return UtilValidate.isNotEmpty(this.orderSubscriptionItems.get(orderItem));
+        return UtilValidate.isNotEmpty(this.orderSubscriptionItems) && this.orderSubscriptionItems.containsKey(orderItem);
     }
 
     /**
@@ -3325,7 +3314,7 @@ public class OrderReadHelper {
     public boolean orderContainsSubscriptionItemsOnly() {
         if (orderItems != null && orderSubscriptionItems != null) {
             for (GenericValue orderItem : orderItems) {
-                if (orderSubscriptionItems.containsKey(orderItem))
+                if (!orderSubscriptionItems.containsKey(orderItem))
                     return false;
             }
         } else {

@@ -34,6 +34,7 @@ under the License.
 </@script>
 
 <#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
+<#if validPaymentMethodTypeForSubscriptions && subscriptions><@alert type="warning">Your order contains subscriptions and each subscription payment through PayPal must be authorized separately. Therefore you can activate them once the order is created.</@alert></#if>
 
 <#if cart?? && (0 < cart.size())>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />

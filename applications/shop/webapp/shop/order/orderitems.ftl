@@ -18,13 +18,6 @@ under the License.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
-<#-- SCIPIO: Check if the order has underlying subscriptions -->
-<#assign subscriptions = false>
-<#if localOrderReadHelper.hasSubscriptions()>
-    ${Static["org.ofbiz.base.util.Debug"].log("order HAS SUBSCRIPTIONS")}
-    <#assign subscriptions = true>
-</#if>
-
 <#-- SCIPIO: TODO?: Create shopping list from order (commented) -->
 <#-- SCIPIO: TODO: This is unable to list selected config product options (harder than showcart) -->
 
@@ -41,6 +34,7 @@ under the License.
 
 <#assign maySelect = ((maySelectItems!"N") == "Y")>
 <#assign printable = printable!false>
+${Static["org.ofbiz.base.util.Debug"].log("maySelect ========> " + maySelect?string)}
 
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
@@ -64,7 +58,14 @@ under the License.
       </#if>
     </@menu>
 </#macro>
-<#if localOrderReadHelper.orderContainsSubscriptionItemsOnly>
+${Static["org.ofbiz.base.util.Debug"].log("validPaymentMethodTypeForSubscriptions ==========> " + validPaymentMethodTypeForSubscriptions?string('yes', 'no') + "  orderContainsSubscriptionItemsOnly ===========>  " +  localOrderReadHelper.orderContainsSubscriptionItemsOnly()?string('yes', 'no'))}
+
+<#--SCIPIO: For now render the subscription items table when subscriptions are in place and paymentMethodTypeId == PAYPAL -->
+<#if subscriptions>
+    <#include "component://shop/webapp/shop/order/ordersubscriptionsitems.ftl">
+</#if>
+<#--SCIPIO: For now render the default order items table even for subscriptions when paymentMethodTypeId != PAYPAL if the order contains only subscriptions -->
+<#if (!orderContainsSubscriptionItemsOnly) || (orderContainsSubscriptionItemsOnly && !validPaymentMethodTypeForSubscriptions)>
     <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
       <@table type="data-complex" class="+order-detail-items">
         <@thead>
@@ -120,7 +121,7 @@ under the License.
           </#if>
     
           <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->
-    
+          <#if !localOrderReadHelper.hasSubscriptions(orderItem)>
           <@tr>
             <#-- SCIPIO: Workaround for access from macros -->
             <#assign orderItem = orderItem>
@@ -392,7 +393,8 @@ under the License.
                 <@td colspan="${numColumns - 2}"></@td>
               </@tr>
             </#list>
-          </#if>      
+          </#if>     
+        </#if> 
         </#list>
         <#if orderItems?size == 0 || !orderItems?has_content>
           <@tr type="meta"><@td colspan="${numColumns}"><@commonMsg type="error">${uiLabelMap.OrderSalesOrderLookupFailed}</@commonMsg></@td></@tr>
@@ -486,7 +488,4 @@ under the License.
         </@tbody>
       </@table>
     </@section>
-</#if>
-<#if subscriptions>
-    <#include "component://shop/webapp/shop/order/ordersubscriptionsitems.ftl">
 </#if>

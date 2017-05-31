@@ -140,4 +140,10 @@ context.orderEmailList = cart.getOrderEmailList();
 // SCIPIO: exact payment amounts for all pay types
 context.paymentMethodAmountMap = cart.getPaymentAmountsByIdOrType();
 
-
+// SCIPIO: Subscriptions
+// SCIPIO: Check if the order has underlying subscriptions
+context.subscriptionItems = orh.getItemSubscriptions();
+context.subscriptions = orh.hasSubscriptions();
+// SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
+context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
+context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();

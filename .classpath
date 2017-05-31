@@ -89,6 +89,7 @@
     <classpathentry kind="lib" path="framework/base/lib/scripting/groovy-all-2.4.5.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/jakarta-oro-2.0.8.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/ecj-4.5.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-catalina-ha.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-catalina-tribes.jar"/>
@@ -117,7 +118,6 @@
     <classpathentry kind="lib" path="framework/webapp/lib/ezmorph-0.9.1.jar"/>
     <classpathentry kind="lib" path="framework/webapp/lib/iText-2.1.7.jar"/>
     <classpathentry kind="lib" path="framework/webapp/lib/rome-0.9.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry excluding="org/ofbiz/accounting/thirdparty/cybersource/**|org/ofbiz/accounting/thirdparty/verisign/**|org/ofbiz/accounting/thirdparty/paypal/PayPalServices.java|org/ofbiz/accounting/thirdparty/orbital/**|org/ofbiz/accounting/thirdparty/securepay/**|org/ofbiz/accounting/thirdparty/ideal/**" kind="src" path="applications/accounting/src"/>
     <classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>
     <classpathentry kind="src" path="applications/manufacturing/src"/>

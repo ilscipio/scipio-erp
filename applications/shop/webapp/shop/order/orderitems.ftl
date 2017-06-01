@@ -58,7 +58,6 @@ ${Static["org.ofbiz.base.util.Debug"].log("maySelect ========> " + maySelect?str
       </#if>
     </@menu>
 </#macro>
-${Static["org.ofbiz.base.util.Debug"].log("validPaymentMethodTypeForSubscriptions ==========> " + validPaymentMethodTypeForSubscriptions?string('yes', 'no') + "  orderContainsSubscriptionItemsOnly ===========>  " +  localOrderReadHelper.orderContainsSubscriptionItemsOnly()?string('yes', 'no'))}
 
 <#--SCIPIO: For now render the subscription items table when subscriptions are in place and paymentMethodTypeId == PAYPAL -->
 <#if subscriptions>
@@ -120,8 +119,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("validPaymentMethodTypeForSubscription
             </#if>
           </#if>
     
-          <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->
-          <#if !localOrderReadHelper.hasSubscriptions(orderItem)>
+          <#--<@tr><@td colspan="${numColumns}"></@td></@tr>-->          
           <@tr>
             <#-- SCIPIO: Workaround for access from macros -->
             <#assign orderItem = orderItem>
@@ -393,8 +391,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("validPaymentMethodTypeForSubscription
                 <@td colspan="${numColumns - 2}"></@td>
               </@tr>
             </#list>
-          </#if>     
-        </#if> 
+          </#if>
         </#list>
         <#if orderItems?size == 0 || !orderItems?has_content>
           <@tr type="meta"><@td colspan="${numColumns}"><@commonMsg type="error">${uiLabelMap.OrderSalesOrderLookupFailed}</@commonMsg></@td></@tr>

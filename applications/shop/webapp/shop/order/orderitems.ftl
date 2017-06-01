@@ -60,7 +60,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("maySelect ========> " + maySelect?str
 </#macro>
 
 <#--SCIPIO: For now render the subscription items table when subscriptions are in place and paymentMethodTypeId == PAYPAL -->
-<#if subscriptions>
+<#if subscriptions && validPaymentMethodTypeForSubscriptions>
     <#include "component://shop/webapp/shop/order/ordersubscriptionsitems.ftl">
 </#if>
 <#--SCIPIO: For now render the default order items table even for subscriptions when paymentMethodTypeId != PAYPAL if the order contains only subscriptions -->

@@ -3255,13 +3255,17 @@ public class OrderReadHelper {
      * @throws GenericEntityException
      */
     public Map<GenericValue, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
-        for (GenericValue orderItem : orderItems) {
-            List<GenericValue> productSubscriptions = getItemSubscriptions(orderItem);
-            for (GenericValue productSubscription : productSubscriptions) {
-                Debug.log("Found orderItem [" + orderItem.getString("orderItemSeqId") + "#" + orderItem.getString("productId") + "] with subscription id ["
-                        + productSubscription.getString("subscriptionResourceId") + "]");
+        if (orderItems == null)
+            getValidOrderItems();
+        if (orderItems != null) {
+            for (GenericValue orderItem : orderItems) {
+                List<GenericValue> productSubscriptions = getItemSubscriptions(orderItem);
+                for (GenericValue productSubscription : productSubscriptions) {
+                    Debug.log("Found orderItem [" + orderItem.getString("orderItemSeqId") + "#" + orderItem.getString("productId") + "] with subscription id ["
+                            + productSubscription.getString("subscriptionResourceId") + "]");
+                }
+                return this.orderSubscriptionItems;
             }
-            return this.orderSubscriptionItems;
         }
         return null;
     }

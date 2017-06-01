@@ -17,19 +17,18 @@
  * under the License.
  */
 
-import java.io.ObjectOutputStream.DebugTraceInfoStack
-import java.lang.*;
+import org.ofbiz.accounting.payment.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-import com.paypal.api.payments.CartBase
+import javolution.util.FastList
+import javolution.util.FastMap
 
 cart = session.getAttribute("shoppingCart");
 context.cart = cart;
@@ -57,11 +56,23 @@ context.subscriptions = orh.hasSubscriptions();
 context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
 context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
 Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  orh.orderContainsSubscriptionItemsOnly() + "   subscriptions =======> " + context.subscriptions);
+
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
-    for (GenericValue subscription : context.subscriptionItems.keySet()) {        
+    Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
+    for (GenericValue subscription : context.subscriptionItems.keySet()) {
+        List<GenericValue> subscriptionAdjustments = FastList.newInstance();
         orderItemRemoved = orderItems.remove(subscription);
+        for (GenericValue orderAdjustment : orderAdjustments) {            
+            Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+            if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
+                orderAdjustments.remove(orderAdjustment);
+                subscriptionAdjustments.add(orderAdjustment);
+            }            
+        }
+        orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
         Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
     }
+    context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
 }
 
 workEfforts = cart.makeWorkEfforts();   // if required make workefforts for rental fixed assets too.
@@ -139,6 +150,7 @@ if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     context.orderVATTaxTotal = cart.getTotalVATTax();
     context.orderGrandTotal = cart.getGrandTotal();
 }
+Debug.log("orderShippingTotal ===> " + context.orderShippingTotal + "   orderTaxTotal ===> " + context.orderTaxTotal + "   orderVATTaxTotal ===> " + context.orderVATTaxTotal + "  orderGrandTotal ===> " +  context.orderGrandTotal);
 
 context.orderItems = orderItems;
 context.orderAdjustments = orderAdjustments;

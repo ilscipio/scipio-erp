@@ -17,16 +17,18 @@
  * under the License.
  */
 
-import java.math.BigDecimal;
+import org.ofbiz.accounting.payment.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
-import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
+
+import javolution.util.FastList
+import javolution.util.FastMap
 
 
 orderId = parameters.orderId;
@@ -117,6 +119,35 @@ if (orderHeader) {
     orderReadHelper = new OrderReadHelper(orderHeader);
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
+    
+    // SCIPIO: Subscriptions
+    // SCIPIO: Check if the order has underlying subscriptions
+    context.subscriptionItems = orderReadHelper.getItemSubscriptions();
+    context.subscriptions = orderReadHelper.hasSubscriptions();
+    // SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
+    Map<String, BigDecimal> paymentTotalsByPaymentMethod = orderReadHelper.getReceivedPaymentTotalsByPaymentMethod();
+    context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(paymentTotalsByPaymentMethod) && paymentTotalsByPaymentMethod.keySet().contains("EXT_PAYPAL"));
+    context.orderContainsSubscriptionItemsOnly = orderReadHelper.orderContainsSubscriptionItemsOnly();
+    Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  orderReadHelper.orderContainsSubscriptionItemsOnly() + "   subscriptions =======> " + context.subscriptions);
+    
+    if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
+        Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
+        for (GenericValue subscription : context.subscriptionItems.keySet()) {
+            List<GenericValue> subscriptionAdjustments = FastList.newInstance();
+            orderItemRemoved = orderItems.remove(subscription);
+            for (GenericValue orderAdjustment : orderAdjustments) {
+                Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+                if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
+                    orderAdjustments.remove(orderAdjustment);
+                    subscriptionAdjustments.add(orderAdjustment);
+                }
+            }
+            orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
+            Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
+        }
+        context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
+    }
+    
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
     orderItemShipGroups = orderReadHelper.getOrderItemShipGroups();

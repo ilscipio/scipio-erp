@@ -1065,6 +1065,18 @@
         <value xml:lang="zh">检查全部</value>
         <value xml:lang="zh_TW">檢查全部</value>
     </property>
+    <property key="WebtoolsCheckAllPlain"><!-- SCIPIO: need one without the "(not views)" -->
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh_TW">檢查全部</value>
+    </property>
     <property key="WebtoolsCheckDataOnly">
         <value xml:lang="de">Nur Datencheck (keine Änderungen in der Datenbank)</value>
         <value xml:lang="en">Check Data Only (nothing changed in database)</value>

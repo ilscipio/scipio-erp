@@ -55,7 +55,7 @@ context.subscriptions = orh.hasSubscriptions();
 // SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
 context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
 context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
-Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  orh.orderContainsSubscriptionItemsOnly() + "   subscriptions =======> " + context.subscriptions);
+Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  context.orderContainsSubscriptionItemsOnly + "   subscriptions =======> " + context.subscriptions);
 
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();

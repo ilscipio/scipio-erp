@@ -118,11 +118,13 @@ under the License.
         <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
         <attribute name="orderCreatedDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="quantity" type="Integer" mode="IN" optional="false"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="processExtendSubscriptionByOrder" engine="java" auth="true"
         location="org.ofbiz.product.subscription.SubscriptionServices" invoke="processExtendSubscriptionByOrder">
         <description>Creates or updates Subscription record</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updateSubscriptionAttribute" default-entity-name="SubscriptionAttribute" auth="true" engine="simple"
         location="component://product/script/org/ofbiz/product/subscription/SubscriptionServices.xml" invoke="updateSubscriptionAttribute">

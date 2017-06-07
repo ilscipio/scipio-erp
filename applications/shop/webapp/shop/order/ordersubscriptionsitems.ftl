@@ -90,7 +90,6 @@
           </@modal>-->
         </#macro>
         <#assign mayCancelItem = false>
-        
         <#macro subscriptionLinkContent productSubscriptionResource index>
           <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>          
           <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${rawString(subscriptionResource.description)}]">
@@ -198,8 +197,7 @@
           <#if !(maySelect)>
             <@td>
                 <ul>
-                <#list producSubscriptionResources as productSubscriptionResource>
-                    ${Static["org.ofbiz.base.util.Debug"].log("productSubscriptionResource ===> " + productSubscriptionResource.subscriptionResourceId)}
+                <#list producSubscriptionResources as productSubscriptionResource>                    
                     <li>
                         <@subscriptionLinkContent productSubscriptionResource productSubscriptionResource_index/>
                     </li>
@@ -245,11 +243,13 @@
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
-
-          <#if orderHeader?has_content && orderHeader.statusId == "ORDER_COMPLETED">
+		  <#-- FIXME: Perhaps this should be only available if statusId == "ORDER_APPROVED" -->
+          <#if orderHeader?has_content && (orderHeader.statusId == "ORDER_COMPLETED" || orderHeader.statusId == "ORDER_APPROVED")>
             <@td>
-                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateOrderSubscriptionItem')?js_string}';document.activateOrderSubscriptionItem.submit()" 
-                class="${styles.link_run_sys!} ${styles.action_terminate!}" text="Activate Subscription"  />  
+                <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value"${orderItem.subscriptionId!}"/>
+                <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/> 
+                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateBillingPlan')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}='Y';document.addCommonToCartForm.submit();" 
+                class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />  
             </@td>
           </#if>
        

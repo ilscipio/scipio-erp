@@ -243,12 +243,12 @@
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
-		  <#-- FIXME: Perhaps this should be only available if statusId == "ORDER_APPROVED" -->
+          <#-- FIXME: Perhaps this should be only available if statusId == "ORDER_APPROVED" -->
           <#if orderHeader?has_content && (orderHeader.statusId == "ORDER_COMPLETED" || orderHeader.statusId == "ORDER_APPROVED")>
             <@td>
-                <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value"${orderItem.subscriptionId!}"/>
+                <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value="${orderItem.subscriptionId!}"/>
                 <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/> 
-                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateBillingPlan')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}='Y';document.addCommonToCartForm.submit();" 
+                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateBillingPlan')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                 class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />  
             </@td>
           </#if>

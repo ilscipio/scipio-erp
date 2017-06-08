@@ -18,14 +18,14 @@ under the License.
 -->
 <#if tobrowser?? && tobrowser>
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
-<p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
+<p>${WebtoolsXMLExportSingleInfo}</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@menu type="button">
     <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
-  <@commonMsg type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@commonMsg>
+  <@commonMsg type="error">${uiLabelMap.WebtoolsPermissionMaint}</@commonMsg>
 </#if>
 <#else>
 <#macro displayButtonBar>

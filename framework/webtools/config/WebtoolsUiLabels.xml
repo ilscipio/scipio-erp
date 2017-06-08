@@ -1065,6 +1065,18 @@
         <value xml:lang="zh">检查全部</value>
         <value xml:lang="zh_TW">檢查全部</value>
     </property>
+    <property key="WebtoolsCheckAllPlain"><!-- SCIPIO: need one without the "(not views)" -->
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh_TW">檢查全部</value>
+    </property>
     <property key="WebtoolsCheckDataOnly">
         <value xml:lang="de">Nur Datencheck (keine Änderungen in der Datenbank)</value>
         <value xml:lang="en">Check Data Only (nothing changed in database)</value>
@@ -5876,7 +5888,7 @@
         <value xml:lang="zh_TW">把${numberWritten}個記錄寫到XML檔${parameters.filename}.</value>
     </property>
     <property key="WebtoolsWroteXMLForAllDataIn">
-        <value xml:lang="de">Es wurde XML für alle Daten in ${numberofEntities} Entitäten geschrieben.</value>
+        <value xml:lang="de">Es wurde XML für alle Daten in ${numberOfEntities} Entitäten geschrieben.</value>
         <value xml:lang="en">Wrote XML for all data in ${numberOfEntities} entities.</value>
         <value xml:lang="fr">Ecrire XML pour toute les donnée inclues ${numberOfEntities} Entités.</value>
         <value xml:lang="it">Scritti XML per tutti i dati in ${numberOfEntities} entità.</value>
@@ -5899,6 +5911,15 @@
         <value xml:lang="vi">Giao diện bạn đang sử dụng cung cấp chức năng Kết xuất dữ liệu từ Cơ sở dữ liệu. Các tài liệu kết xuất sẽ có thẻ gốc "&lt;entity-engine-xml&gt;"( có 01 Tập tin với mỗi Thực thể của Ứng dụng này)</value>
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh_TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
+    </property>
+    <property key="WebtoolsXMLExportSingleInfo"><!-- SCIPIO: TODO: Localize -->
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
     </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
@@ -5984,5 +6005,31 @@
     <property key="WebtoolsNoStringRepr">
         <value xml:lang="de">Keine Stringdarstellung</value>
         <value xml:lang="en">No string representation</value>
+    </property>
+    <property key="WebtoolsDataExport">
+        <value xml:lang="de">Daten exportieren</value>
+        <value xml:lang="en">Data Export</value>
+        <value xml:lang="fr">Export de données</value>
+        <value xml:lang="it">Esporta dati</value>
+        <value xml:lang="ja">データエクスポート</value>
+        <value xml:lang="pt">ExportaÃ§Ã£o de dados</value>
+        <value xml:lang="ro">Exporta Date</value>
+        <value xml:lang="th">ส่งออกข้อมูล</value>
+        <value xml:lang="vi">Kết xuất dữ liệu</value>
+        <value xml:lang="zh">数据导出</value>
+        <value xml:lang="zh_TW">資料匯出</value>
+    </property>
+    <property key="WebtoolsDataImport">
+        <value xml:lang="de">Daten importieren</value>
+        <value xml:lang="en">Data Import</value>
+        <value xml:lang="fr">Import de données</value>
+        <value xml:lang="it">Importa dati da</value>
+        <value xml:lang="ja">XMLデータインポート</value>
+        <value xml:lang="pt">Importar dados</value>
+        <value xml:lang="ro">Importa Datele</value>
+        <value xml:lang="th">นำเข้าข้อมูล</value>
+        <value xml:lang="vi">Nhập khẩu dữ liệu</value>
+        <value xml:lang="zh">数据导入</value>
+        <value xml:lang="zh_TW">資料匯入</value>
     </property>
 </resource>

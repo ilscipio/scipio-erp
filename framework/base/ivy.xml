@@ -84,6 +84,7 @@
         <dependency org="org.jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
         <dependency org="org.apache.ws.commons" name="ws-commons-java5" rev="1.0.1" transitive="false" conf="base->default"/>
         <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" transitive="false" conf="base->default"/>
+        <dependency org="joda-time" name="joda-time" rev="2.9.9" transitive="false" conf="base->default" />
         <!-- FIXME: version not available
         <dependency org="?" name="batik-all" rev="1.7" transitive="false" conf="base->default"/>-->
         <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz

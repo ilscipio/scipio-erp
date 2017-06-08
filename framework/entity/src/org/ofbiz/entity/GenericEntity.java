@@ -1124,8 +1124,19 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     /** Writes XML text with an attribute or CDATA element for each field of the entity
      *@param writer A PrintWriter to write to
      *@param prefix A prefix to put in front of the entity name in the tag name
+     *@param alwaysCdataFields Names of fields which should always be printed as CDATA blocks
      */
     public void writeXmlText(PrintWriter writer, String prefix) {
+        writeXmlText(writer, prefix, null);
+    }
+    
+    /** Writes XML text with an attribute or CDATA element for each field of the entity
+     * SCIPIO: 2017-05-30: modified to support alwaysCdataFields.
+     *@param writer A PrintWriter to write to
+     *@param prefix A prefix to put in front of the entity name in the tag name
+     *@param alwaysCdataFields Names of fields which should always be printed as CDATA blocks
+     */
+    public void writeXmlText(PrintWriter writer, String prefix, java.util.Set<String> alwaysCdataFields) {
         int indent = 4;
         StringBuilder indentStrBuf = new StringBuilder();
         for (int i = 0; i < indent; i++) indentStrBuf.append(' ');
@@ -1164,72 +1175,77 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
                     StringBuilder value = new StringBuilder(valueStr);
                     boolean needsCdata = false;
 
-                    // check each character, if line-feed or carriage-return is found set needsCdata to true; also look for invalid characters
-                    for (int i = 0; i < value.length(); i++) {
-                        char curChar = value.charAt(i);
-                        /*
-                         * Some common character for these invalid values, have seen these are mostly from MS Word, but may be part of some standard:
-                         * 5 = ... 18 = apostrophe 19 = left quotation mark 20 = right quotation mark 22 = – 23 = - 25 = tm
-                         */
-
-                        switch (curChar) {
-                        case '\'':
-                            value.replace(i, i+1, "&apos;");
-                            break;
-                        case '"':
-                            value.replace(i, i+1, "&quot;");
-                            break;
-                        case '&':
-                            value.replace(i, i+1, "&amp;");
-                            break;
-                        case '<':
-                            value.replace(i, i+1, "&lt;");
-                            break;
-                        case '>':
-                            value.replace(i, i+1, "&gt;");
-                            break;
-                        case 0xA: // newline, \n
-                            needsCdata = true;
-                            break;
-                        case 0xD: // carriage return, \r
-                            needsCdata = true;
-                            break;
-                        case 0x9: // tab
-                            // do nothing, just catch here so it doesn't get into the default
-                            break;
-                        case 0x5: // elipses (...)
-                            value.replace(i, i+1, "...");
-                            break;
-                        case 0x12: // apostrophe
-                            value.replace(i, i+1, "&apos;");
-                            break;
-                        case 0x13: // left quote
-                            value.replace(i, i+1, "&quot;");
-                            break;
-                        case 0x14: // right quote
-                            value.replace(i, i+1, "&quot;");
-                            break;
-                        case 0x16: // big(?) dash -
-                            value.replace(i, i+1, "-");
-                            break;
-                        case 0x17: // dash -
-                            value.replace(i, i+1, "-");
-                            break;
-                        case 0x19: // tm
-                            value.replace(i, i+1, "tm");
-                            break;
-                        default:
-                            if (curChar < 0x20) {
-                                // if it is less that 0x20 at this point it is invalid because the only valid values < 0x20 are 0x9, 0xA, 0xD as caught above
-                                Debug.logInfo("Removing invalid character [" + curChar + "] numeric value [" + (int) curChar + "] for field " + name + " of entity with PK: " + this.getPrimaryKey().toString(), module);
-                                value.deleteCharAt(i);
-                            } else if (curChar > 0x7F) {
-                                // Replace each char which is out of the ASCII range with a XML entity
-                                String replacement = "&#" + (int) curChar + ";";
-                                if (Debug.verboseOn()) {
-                                    Debug.logVerbose("Entity: " + this.getEntityName() + ", PK: " + this.getPrimaryKey().toString() + " -> char [" + curChar + "] replaced with [" + replacement + "]", module);
+                    // SCIPIO: 2017-05-30: can now force specific fields to always print as cdata
+                    if (alwaysCdataFields != null && alwaysCdataFields.contains(name)) {
+                        needsCdata = true;
+                    } else {
+                        // check each character, if line-feed or carriage-return is found set needsCdata to true; also look for invalid characters
+                        for (int i = 0; i < value.length(); i++) {
+                            char curChar = value.charAt(i);
+                            /*
+                             * Some common character for these invalid values, have seen these are mostly from MS Word, but may be part of some standard:
+                             * 5 = ... 18 = apostrophe 19 = left quotation mark 20 = right quotation mark 22 = – 23 = - 25 = tm
+                             */
+    
+                            switch (curChar) {
+                            case '\'':
+                                value.replace(i, i+1, "&apos;");
+                                break;
+                            case '"':
+                                value.replace(i, i+1, "&quot;");
+                                break;
+                            case '&':
+                                value.replace(i, i+1, "&amp;");
+                                break;
+                            case '<':
+                                value.replace(i, i+1, "&lt;");
+                                break;
+                            case '>':
+                                value.replace(i, i+1, "&gt;");
+                                break;
+                            case 0xA: // newline, \n
+                                needsCdata = true;
+                                break;
+                            case 0xD: // carriage return, \r
+                                needsCdata = true;
+                                break;
+                            case 0x9: // tab
+                                // do nothing, just catch here so it doesn't get into the default
+                                break;
+                            case 0x5: // elipses (...)
+                                value.replace(i, i+1, "...");
+                                break;
+                            case 0x12: // apostrophe
+                                value.replace(i, i+1, "&apos;");
+                                break;
+                            case 0x13: // left quote
+                                value.replace(i, i+1, "&quot;");
+                                break;
+                            case 0x14: // right quote
+                                value.replace(i, i+1, "&quot;");
+                                break;
+                            case 0x16: // big(?) dash -
+                                value.replace(i, i+1, "-");
+                                break;
+                            case 0x17: // dash -
+                                value.replace(i, i+1, "-");
+                                break;
+                            case 0x19: // tm
+                                value.replace(i, i+1, "tm");
+                                break;
+                            default:
+                                if (curChar < 0x20) {
+                                    // if it is less that 0x20 at this point it is invalid because the only valid values < 0x20 are 0x9, 0xA, 0xD as caught above
+                                    Debug.logInfo("Removing invalid character [" + curChar + "] numeric value [" + (int) curChar + "] for field " + name + " of entity with PK: " + this.getPrimaryKey().toString(), module);
+                                    value.deleteCharAt(i);
+                                } else if (curChar > 0x7F) {
+                                    // Replace each char which is out of the ASCII range with a XML entity
+                                    String replacement = "&#" + (int) curChar + ";";
+                                    if (Debug.verboseOn()) {
+                                        Debug.logVerbose("Entity: " + this.getEntityName() + ", PK: " + this.getPrimaryKey().toString() + " -> char [" + curChar + "] replaced with [" + replacement + "]", module);
+                                    }
+                                    value.replace(i, i+1, replacement);
                                 }
-                                value.replace(i, i+1, replacement);
                             }
                         }
                     }

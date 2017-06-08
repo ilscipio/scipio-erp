@@ -17,25 +17,27 @@
  * under the License.
  */
 
-import java.lang.*;
+import org.ofbiz.accounting.payment.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.accounting.payment.*;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
+import javolution.util.FastList
+import javolution.util.FastMap
+
 cart = session.getAttribute("shoppingCart");
 context.cart = cart;
 
 orderItems = cart.makeOrderItems();
-context.orderItems = orderItems;
-
 orderAdjustments = cart.makeAllAdjustments();
 
+// SCIPIO: Instancing here the OrderReadHelper so it is available for the entire script 
+orh = new OrderReadHelper(orderAdjustments, orderItems);
 orderItemShipGroupInfo = cart.makeAllShipGroupInfos();
 if (orderItemShipGroupInfo) {
     orderItemShipGroupInfo.each { valueObj ->
@@ -45,7 +47,33 @@ if (orderItemShipGroupInfo) {
         }
     }
 }
-context.orderAdjustments = orderAdjustments;
+
+// SCIPIO: Subscriptions
+// SCIPIO: Check if the order has underlying subscriptions
+context.subscriptionItems = orh.getItemSubscriptions();
+context.subscriptions = orh.hasSubscriptions();
+// SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
+context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
+context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
+Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  context.orderContainsSubscriptionItemsOnly + "   subscriptions =======> " + context.subscriptions);
+
+if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
+    Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
+    for (GenericValue subscription : context.subscriptionItems.keySet()) {
+        List<GenericValue> subscriptionAdjustments = FastList.newInstance();
+        orderItemRemoved = orderItems.remove(subscription);
+        for (GenericValue orderAdjustment : orderAdjustments) {            
+            Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+            if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
+                orderAdjustments.remove(orderAdjustment);
+                subscriptionAdjustments.add(orderAdjustment);
+            }            
+        }
+        orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
+        Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
+    }
+    context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
+}
 
 workEfforts = cart.makeWorkEfforts();   // if required make workefforts for rental fixed assets too.
 context.workEfforts = workEfforts;
@@ -54,8 +82,9 @@ orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustme
 context.orderHeaderAdjustments = orderHeaderAdjustments;
 context.orderItemShipGroups = cart.getShipGroups();
 context.headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);
-
 orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments, workEfforts);
+Debug.log("orderSubTotal =============> " + orderSubTotal);
+
 context.orderSubTotal = orderSubTotal;
 context.placingCustomerPerson = userLogin?.getRelatedOne("Person", false);
 context.paymentMethods = cart.getPaymentMethods();
@@ -108,12 +137,23 @@ context.currencyUomId = cart.getCurrency();
 shipmentMethodType = from("ShipmentMethodType").where("shipmentMethodTypeId", cart.getShipmentMethodTypeId()).queryOne();
 if (shipmentMethodType) context.shipMethDescription = shipmentMethodType.description;
 
-orh = new OrderReadHelper(orderAdjustments, orderItems);
+// SCIPIO: FIXME: Wouldn't make more sense to use always OrderReadHelper
 context.localOrderReadHelper = orh;
-context.orderShippingTotal = cart.getTotalShipping();
-context.orderTaxTotal = cart.getTotalSalesTax();
-context.orderVATTaxTotal = cart.getTotalVATTax();
-context.orderGrandTotal = cart.getGrandTotal();
+if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
+    context.orderShippingTotal = orh.getShippingTotal();
+    context.orderTaxTotal = orh.getTotalTax(orderAdjustments);
+    context.orderVATTaxTotal = orh.getTotalVATTax(orderAdjustments);
+    context.orderGrandTotal = orh.getOrderGrandTotal();    
+} else {
+    context.orderShippingTotal = cart.getTotalShipping();
+    context.orderTaxTotal = cart.getTotalSalesTax();
+    context.orderVATTaxTotal = cart.getTotalVATTax();
+    context.orderGrandTotal = cart.getGrandTotal();
+}
+Debug.log("orderShippingTotal ===> " + context.orderShippingTotal + "   orderTaxTotal ===> " + context.orderTaxTotal + "   orderVATTaxTotal ===> " + context.orderVATTaxTotal + "  orderGrandTotal ===> " +  context.orderGrandTotal);
+
+context.orderItems = orderItems;
+context.orderAdjustments = orderAdjustments;
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
@@ -139,5 +179,3 @@ context.orderEmailList = cart.getOrderEmailList();
 
 // SCIPIO: exact payment amounts for all pay types
 context.paymentMethodAmountMap = cart.getPaymentAmountsByIdOrType();
-
-

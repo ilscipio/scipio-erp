@@ -32,7 +32,16 @@ under the License.
 </#if>
 
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
+  <#if subscriptions && validPaymentMethodTypeForSubscriptions> 
+    <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
+        <input type="hidden" name="add_all" value="false" />
+        <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
+  </#if>       
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
+  <#if subscriptions && validPaymentMethodTypeForSubscriptions> 
+    </form>
+  </#if>
+  
   <#if !printable>
     <@menu type="button">
       <@menuitem type="link" href=makeOfbizUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />

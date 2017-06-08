@@ -1,4 +1,4 @@
-<@section title=uiLabelMap.OrderOrderSubscriptionItems menuContent=menuContent>
+<@section title=uiLabelMap.ShopOrderSubscriptionItems menuContent=menuContent>
   <@table type="data-complex" class="+order-detail-items">
     <@thead>
     <@tr>
@@ -22,10 +22,10 @@
         <@th width="15%">${uiLabelMap.EcommerceAuthSubscription}</@th>
       </#if>
       <#if (maySelect) && ((roleTypeId!) == "PLACING_CUSTOMER")>
-        <@th colspan="3"></@th>
+        <@th colspan="4"></@th>
       <#else>
         <#-- SCIPIO: even if maySelect false, add extra column to standardize look -->
-        <@th>&nbsp;</@th>
+        <@th colspan="2">&nbsp;</@th>
       </#if>
       
     </@tr>
@@ -243,13 +243,18 @@
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/>
             </#if>
           </@td>
-          <#-- FIXME: Perhaps this should be only available if statusId == "ORDER_APPROVED" -->
-          <#if orderHeader?has_content && (orderHeader.statusId == "ORDER_COMPLETED" || orderHeader.statusId == "ORDER_APPROVED")>
+          
+          <#if orderItem.statusId != "ITEM_CREATED">
             <@td>
                 <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value="${orderItem.subscriptionId!}"/>
-                <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/> 
-                <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateBillingPlan')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
-                class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />  
+                <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/>
+                <#if orderItem.statusId == "ITEM_APPROVED">                 
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('activateBillingPlan')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />
+                <#elseif orderItem.statusId == "ITEM_COMPLETED">
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingPlan')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopCancelSubscription}" />
+                </#if>
             </@td>
           </#if>
        

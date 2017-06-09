@@ -28,9 +28,9 @@
                 <@tbody>
                     <#list productCategoryRollupList as productCategoryRollup>
                         <#if productCategoryAssociationMode == "child">
-                            <#assign productCategory = (productCategoryRollup.getRelatedOne("ParentProductCategory", false))!>
-                        <#elseif productCategoryAssociationMode == "parent">
                             <#assign productCategory = (productCategoryRollup.getRelatedOne("CurrentProductCategory", false))!>
+                        <#elseif productCategoryAssociationMode == "parent">
+                            <#assign productCategory = (productCategoryRollup.getRelatedOne("ParentProductCategory", false))!>                            
                         </#if>
                         <@tr>
                             <@td>
@@ -39,7 +39,7 @@
                                   <input name="parentProductCategoryId_o_${productCategoryRollup_index}" type="hidden" value="${productCategoryRollup.parentProductCategoryId}"/>
                                   <input name="fromDate_o_${productCategoryRollup_index}" type="hidden" value="${productCategoryRollup.fromDate}"/>                                  
                                   <input id="_rowSubmit_o_${productCategoryRollup_index}" name="_rowSubmit_o_${productCategoryRollup_index}" type="hidden" value="N"/>
-                                  <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryRollup.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_name_long}">
+                                  <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_name_long}">
                                       ${((productCategory.categoryName)!)} [${productCategory.productCategoryId}] 
                                   </a>
                             </@td>

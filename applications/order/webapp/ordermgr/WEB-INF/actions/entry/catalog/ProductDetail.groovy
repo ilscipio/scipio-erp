@@ -36,6 +36,7 @@ import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.webapp.ftl.OfbizCurrencyTransform
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
@@ -307,7 +308,7 @@ if (product) {
                 } else {
                     variantTreeMap = runService('getProductVariantTree', [productId : productId, featureOrder : featureSet, productStoreId : productStoreId]);
                 }
-                variantTree = variantTreeMap.variantTree;
+                variantTree = variantTreeMap.variantTree;                
                 imageMap = variantTreeMap.variantSample;
                 virtualVariant = variantTreeMap.virtualVariant;
                 context.virtualVariant = virtualVariant;
@@ -395,6 +396,7 @@ if (product) {
                             variantProductInfo.requireAmount = (variant.requireAmount ?: "N");
                             if (variantPriceMap && variantPriceMap.basePrice) {
                                 variantProductInfo.price = variantPriceMap.basePrice;
+                                variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                             }
                             variantProductInfoMap[variant.productId] = variantProductInfo;
                             
@@ -439,6 +441,7 @@ if (product) {
                                         variantProductInfo.putAll(virtual);
                                         //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // SCIPIO: This doesn't apply for virtuals
                                         variantProductInfo.price = variantPriceMap.basePrice;
+                                        variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     } else {
                                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
@@ -446,7 +449,8 @@ if (product) {
                                         variantProductInfo = [:];
                                         variantProductInfo.putAll(virtual);
                                         //variantProductInfo.requireAmount = (virtual.requireAmount ?: "N"); // SCIPIO: This doesn't apply for virtuals
-                                        variantProductInfo.price = variantPriceMap.price;
+                                        variantProductInfo.price = variantPriceMap.price;                                        
+                                        variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
                                     }
                                 }

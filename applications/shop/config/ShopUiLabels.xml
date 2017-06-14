@@ -65,5 +65,19 @@ ALL NEW SHOP LABELS SHOULD GO HERE
     <property key="ShopDownloadsAvailableOnceOrderCompleted">
         <value xml:lang="de">Downloads verfügbar sein, sobald der Auftrag abgeschlossen ist.</value>
         <value xml:lang="en">Downloads will be available once the order is completed.</value>
+    </property>
+    
+    <!-- SCIPIO: Subscriptions -->
+    <property key="ShopAuthorizeSubscription">
+        <value xml:lang="de">Abonnement berechtigen</value>
+        <value xml:lang="en">Authorize subscription</value>
     </property>  
+    <property key="ShopCancelSubscription">
+        <value xml:lang="de">Abonnement beenden</value>
+        <value xml:lang="en">Cancel subscription</value>
+    </property>
+    <property key="ShopOrderSubscriptionItems">
+        <value xml:lang="de">Abonnements</value>
+        <value xml:lang="en">Subscriptions</value>
+    </property>
 </resource>

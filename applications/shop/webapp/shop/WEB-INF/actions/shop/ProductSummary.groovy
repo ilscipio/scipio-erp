@@ -25,12 +25,12 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
-import org.ofbiz.service.*;
-import org.ofbiz.product.product.ProductContentWrapper;
-import org.ofbiz.product.config.ProductConfigWorker;
-import org.ofbiz.product.catalog.*;
-import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.config.ProductConfigWorker;
+import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.store.*;
+import org.ofbiz.service.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
 
@@ -141,7 +141,7 @@ if (product) {
     }
 
     // get the product review(s)
-    reviews = product.getRelatedCache("ProductReview", null, ["-postedDateTime"]);
+    reviews = product.getRelated("ProductReview", null, ["-postedDateTime"], false);
 }
 
 // get the average rating

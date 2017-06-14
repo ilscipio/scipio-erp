@@ -560,6 +560,15 @@
         <value xml:lang="de">Erweiterte Suche</value>
         <value xml:lang="en">Advanced Search</value>
     </property>
+    <property key="CommonAdvanced"><!-- SCIPIO: TODO: localize -->
+        <value xml:lang="de">Erweiterte</value>
+        <value xml:lang="en">Advanced</value>
+        <value xml:lang="es">Avanzada</value>
+        <value xml:lang="fr">Avancé</value>
+        <value xml:lang="it">Avanzata</value>
+        <value xml:lang="pt_BR">Avançada</value>
+        <value xml:lang="ro">Avansata</value>
+    </property>
     <property key="CommonAll">
         <value xml:lang="ar">الكل</value>
         <value xml:lang="cs">Všechny</value>

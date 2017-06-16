@@ -1959,21 +1959,7 @@ under the License.
     <!-- ================================================================== -->
     <!--    Ivy targets, more info at  http://ant.apache.org/ivy/  -->
     <!-- ================================================================== -->
-    <target name="clean-ivy" description="Clean Ivy local cache">
-        <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
-            99% of the time, emptying the repository cache is a giant waste of time, so don't do it
-            by default. -->
-        <if>
-            <equals arg1="${lib.clean.cache.repo}" arg2="true"/>
-            <then>
-                <ivy:cleancache/>
-            </then>
-            <else><!-- lib.clean.cache.resolve -->
-                <delete dir="ivy/resolutionCache"/>
-            </else>
-        </if>
-    </target>
-
+    
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
     <target name="init-lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
@@ -2107,13 +2093,13 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
     </target>
     
-    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean, global">
+    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
             <not><equals arg1="${lib.clean.cache}" arg2="false"/></not>
             <then>
-                <antcall target="clean-ivy" inheritrefs="true"/>
+                <antcall target="init-lib-clean-cache" inheritrefs="true"/>
             </then>
         </if>
         <if>
@@ -2126,7 +2112,31 @@ under the License.
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
     
-    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not the library cache)">
+    <target name="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
+        <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
+            99% of the time, emptying the repository cache is a giant waste of time, so don't do it
+            by default. -->
+        <if>
+            <equals arg1="${lib.clean.cache.repo}" arg2="true"/>
+            <then>
+                <ivy:cleancache/>
+            </then>
+            <else><!-- lib.clean.cache.resolve -->
+                <delete dir="ivy/resolutionCache"/>
+            </else>
+        </if>
+    </target>
+    <target name="init-lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
+    </target>
+    
+    <target name="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
+        <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
+        <ivy:cleancache/>
+    </target>
+    <target name="init-lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
+    </target>
+    
+    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>

@@ -60,6 +60,8 @@ public class FileUtil {
                 Debug.logError(e, module);
                 return null;
             }
+        } else if (path.startsWith("file://")) { // SCIPIO: 2017-06-15: new workaround to allow URL file paths through this method (but strict)
+            path = path.substring("file://".length());
         }
         return new File(root, localizePath(path));
     }

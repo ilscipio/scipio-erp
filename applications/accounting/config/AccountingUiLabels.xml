@@ -723,7 +723,7 @@
         <value xml:lang="zh_TW">合約識別</value>
     </property>
     <property key="AccountingAgreementInformation">
-        <value xml:lang="de">Vereinbarungsinformation</value>
+        <value xml:lang="de">Details zur Vereinbarung</value>
         <value xml:lang="en">Agreement Information</value>
         <value xml:lang="fr">Information sur l'accord commercial</value>
         <value xml:lang="hi_IN">अनुबंध जानकारी</value>

@@ -115,7 +115,9 @@ public class WebToolsServices {
         String filename = (String)context.get("filename");
         String fmfilename = (String)context.get("fmfilename");
         String fulltext = (String)context.get("fulltext");
-        boolean isUrl = (String)context.get("isUrl") != null;
+        // SCIPIO: 2017-06-15: fixup the isUrl handling: needs explicit values, and if not explicitly set, we automatically deduce.
+        //boolean isUrl = (String)context.get("isUrl") != null;
+        Boolean isUrl = UtilMisc.booleanValueVersatile(context.get("isUrl"));
         String mostlyInserts = (String)context.get("mostlyInserts");
         String maintainTimeStamps = (String)context.get("maintainTimeStamps");
         String createDummyFks = (String)context.get("createDummyFks");
@@ -128,12 +130,29 @@ public class WebToolsServices {
         }
         URL url = null;
 
+        // SCIPIO: 2017-06-15: now supports uploaded file instead of filename or inline text
+        java.nio.ByteBuffer uploadedFileBuffer = (java.nio.ByteBuffer) context.get("uploadedFile");
+        //String uploadedFileName = (String) context.get("_uploadedFile_fileName");
+        //String uploadedFileContentType = (String) context.get("_uploadedFile_contentType");
+        if (uploadedFileBuffer != null) {
+            // FIXME?: this is forcing the whole file in-memory (possibly even multiple copies - ?), 
+            // but the changes needed to get around this were too many, so I ditched them for now.
+            // The right way around this would be to modify parseEntityXmlFile to accept an InputStream,
+            // but to get the InputStream may have to modify ServiceEventHandler to pass
+            // the FileItem for its getInputStream method... but this is too invasive for now.
+            fulltext = java.nio.charset.StandardCharsets.UTF_8.decode(uploadedFileBuffer).toString();
+        }
+        
+        // SCIPIO: 2017-06-15: we can automatically deduce whether isUrl is needed... no need for flag...
+        
         // #############################
         // The filename to parse is prepared
         // #############################
         if (UtilValidate.isNotEmpty(filename)) {
             try {
-                url = isUrl?FlexibleLocation.resolveLocation(filename):UtilURL.fromFilename(filename);
+                // SCIPIO: 2017-06-15: use centralized method
+                //url = isUrl?FlexibleLocation.resolveLocation(filename):UtilURL.fromFilename(filename);
+                url = FlexibleLocation.resolveLocationAsUrlOrFilename(filename, isUrl);
             } catch (MalformedURLException mue) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsInvalidFileName", UtilMisc.toMap("filename", filename, "errorString", mue.getMessage()), locale));
             } catch (Exception exc) {

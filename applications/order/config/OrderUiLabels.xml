@@ -15220,7 +15220,7 @@
         <value xml:lang="en">Confirm Order</value>
     </property>
     <property key="OrderCart">
-        <value xml:lang="de">Karte</value>
+        <value xml:lang="de">Warenkorb</value>
         <value xml:lang="en">Cart</value>
     </property>
     <property key="OrderOrderItemCancelled">

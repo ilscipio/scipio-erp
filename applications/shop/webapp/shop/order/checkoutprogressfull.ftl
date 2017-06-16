@@ -21,23 +21,23 @@ under the License.
 <@section>
 <#if checkoutMode == "primary">
     <@nav type="steps" activeElem=(activeStep!"cart")>
-        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.OrderCart}</@step>
+        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.PageTitleShoppingCart}</@step>
         <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>${uiLabelMap.OrderShippingAddress}</@step>
-        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>${uiLabelMap.PageTitleShippingOptions}</@step>
-        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>${uiLabelMap.AccountingBilling}</@step>
-        <@step name="orderReview" icon="fa fa-info" href=makeOfbizUrl("checkoutreview")>${uiLabelMap.OrderConfirmOrder}</@step>
+        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>${uiLabelMap.EcommerceShippingOptions}</@step>
+        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>${uiLabelMap.EcommercePaymentOptions}</@step>
+        <@step name="orderReview" icon="fa fa-info" href=makeOfbizUrl("checkoutreview")>${uiLabelMap.EcommerceOrderConfirmation}</@step>
     </@nav>
 <#else>
     <#-- SCIPIO: Migrated from anonymousCheckoutLinks.ftl -->
     <@nav type="steps" activeElem=(activeStep!"cart")>
-        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>Cart</@step>
-        <@step name="customer" icon="fa fa-user" href=makeOfbizUrl("setCustomer")>Personal Information</@step>
-        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>Shipping Address</@step>
-        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("setShipOptions")>Shipping Options</@step>
-        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentOption")>Billing</@step>
+        <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.PageTitleShoppingCart}</@step>
+        <@step name="customer" icon="fa fa-user" href=makeOfbizUrl("setCustomer")>Personal Info</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>${uiLabelMap.OrderShippingAddress}</@step>
+        <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("setShipOptions")>${uiLabelMap.EcommerceShippingOptions}</@step>
+        <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentOption")>${uiLabelMap.EcommercePaymentOptions}</@step>
         <#-- SCIPIO: TODO? Merge with billing? -->
-        <@step name="billingInfo" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}")>Billing Information</@step>
-        <@step name="orderReview" icon="fa fa-info">Confirm Order</@step>
+        <@step name="billingInfo" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}")>Billing Info</@step>
+        <@step name="orderReview" icon="fa fa-info">${uiLabelMap.EcommerceOrderConfirmation}</@step>
     </@nav>
 </#if>
 </@section>

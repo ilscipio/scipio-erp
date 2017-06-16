@@ -31,6 +31,7 @@
     </property>
     <property key="EcommerceAccountInformation">
         <value xml:lang="da">Konto information</value>
+        <value xml:lang="de">Konto Informationen</value>
         <value xml:lang="en">Account Information</value>
         <value xml:lang="fr">Information sur le compte</value>
         <value xml:lang="it">Informazioni utente</value>

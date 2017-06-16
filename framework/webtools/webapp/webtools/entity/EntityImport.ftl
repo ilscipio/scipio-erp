@@ -17,10 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#-- SCIPIO: 2017-06-15: extra template configuration -->
-<#assign entityImportActionUri = entityImportActionUri!"entityImport">
-<#assign entityImportAllowServerLocs = entityImportAllowServerLocs!true><#-- if false, no file locations allowed -->
+<#assign eiActionUri = eiActionUri!"entityImport">
+<#assign eiAllowServerLocs = eiAllowServerLocs!true><#-- if false, no file locations allowed -->
+<#assign eiInfoMsg = eiInfoMsg!(uiLabelMap.WebtoolsXMLImportInfo)>
+<#assign eiShowMsgs = eiShowMsgs!true>
 
-  <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
+  <#if eiInfoMsg?has_content>
+    <p>${eiInfoMsg}</p>
+  </#if>
 
   <#-- SCIPIO: 2017-06-15: Improved source selection -->
   <@script>
@@ -40,7 +44,7 @@ under the License.
         {"value":"upload", "description":uiLabelMap.WebtoolsUploadXmlFile}
         {"value":"inline", "description":uiLabelMap.WebtoolsCompleteXMLDocument}
       ]>
-      <#if entityImportAllowServerLocs>
+      <#if eiAllowServerLocs>
         <#assign importSrcTypeItems = importSrcTypeItems + [
           {"value":"location", "description":uiLabelMap.WebtoolsAbsoluteFileNameOrUrl}
         ]>
@@ -54,11 +58,11 @@ under the License.
 
   <#macro entityImportForm srcType enctype="" submitText="">
     <#if limitStrValToItems(srcType, importSrcTypeItems)??><#-- only show forms for available items -->
-      <form method="post" action="<@ofbizUrl uri=entityImportActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
+      <form method="post" action="<@ofbizUrl uri=eiActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
          <#lt/> id="entityimport-${srcType}-form" class="entityimport-form entityimport-${srcType}-form"<#if srcType != importSrcType> style="display:none;"</#if>>
         <@field type="hidden" name="importSrcType" value=srcType/>
         <#nested>
-      <#if entityImportAllowServerLocs>
+      <#if eiAllowServerLocs>
         <#-- SCIPIO: NOTE: 2017-06-15: fmfilename can be combined with any data source -->
         <@field type="input" size="40" name="fmfilename" value=(fmfilename!) label=uiLabelMap.WebtoolsAbsoluteFTLFilename/>
       </#if>
@@ -85,7 +89,7 @@ under the License.
     <@field type="checkbox" name="isUrl" checked=isUrl?? label=uiLabelMap.WebtoolsIsURL/>
   </@entityImportForm>
 
-  <#if messages??>
+  <#if eiShowMsgs && messages??>
     <@section title="${rawLabel('WebtoolsResults')}:">
       <#list messages as message>
           <p>${message}</p>

@@ -112,8 +112,12 @@ public class WebToolsServices {
         Locale locale = (Locale) context.get("locale");
         List<String> messages = FastList.newInstance();
 
-        String filename = (String)context.get("filename");
-        String fmfilename = (String)context.get("fmfilename");
+        String filename = null;
+        String fmfilename = null;
+        if (!Boolean.FALSE.equals(context.get("allowLocations"))) { // SCIPIO: 2017-06-15: new flag, intentionally NOT part of entityImport service interface!
+            filename = (String)context.get("filename");
+            fmfilename = (String)context.get("fmfilename");
+        }
         String fulltext = (String)context.get("fulltext");
         // SCIPIO: 2017-06-15: fixup the isUrl handling: needs explicit values, and if not explicitly set, we automatically deduce.
         //boolean isUrl = (String)context.get("isUrl") != null;
@@ -123,6 +127,7 @@ public class WebToolsServices {
         String createDummyFks = (String)context.get("createDummyFks");
         String checkDataOnly = (String) context.get("checkDataOnly");
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
+        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: new 2017-06-15
 
         Integer txTimeout = (Integer)context.get("txTimeout");
         if (txTimeout == null) {
@@ -213,6 +218,7 @@ public class WebToolsServices {
                                               "maintainTimeStamps", maintainTimeStamps,
                                               "txTimeout", txTimeout,
                                               "placeholderValues", placeholderValues,
+                                              "allowedEntityNames", allowedEntityNames, // SCIPIO
                                               "userLogin", userLogin);
                 if (fulltext != null) {
                     inputMap.put("xmltext", fulltext);
@@ -237,7 +243,7 @@ public class WebToolsServices {
         Map<String, Object> resp = UtilMisc.toMap("messages", (Object) messages);
         return resp;
     }
-
+    
     public static Map<String, Object> entityImportDir(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -466,6 +472,7 @@ public class WebToolsServices {
         boolean createDummyFks = (String) context.get("createDummyFks") != null;
         boolean checkDataOnly = (String) context.get("checkDataOnly") != null;
         Integer txTimeout = (Integer) context.get("txTimeout");
+        Set<String> allowedEntityNames = UtilGenerics.checkSet(context.get("allowedEntityNames")); // SCIPIO: 2017-06-15
         Map<String, Object> placeholderValues = UtilGenerics.checkMap(context.get("placeholderValues"));
 
         if (txTimeout == null) {
@@ -481,6 +488,7 @@ public class WebToolsServices {
             reader.setCreateDummyFks(createDummyFks);
             reader.setCheckDataOnly(checkDataOnly);
             reader.setPlaceholderValues(placeholderValues);
+            reader.setAllowedEntityNames(allowedEntityNames);
 
             long numberRead = (url != null ? reader.parse(url) : reader.parse(xmltext));
             rowProcessed = numberRead;

@@ -38,6 +38,7 @@ under the License.
         <attribute name="createDummyFks" type="String" mode="IN" optional="true"/>
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="rowProcessed" type="Long" mode="OUT" optional="false"/>
     </service>
     <service name="entityImport" engine="java"
@@ -55,6 +56,7 @@ under the License.
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="txTimeout" type="Integer" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="messages" type="List" mode="OUT" optional="false"/>
     </service>    
     <service name="entityImportDir" engine="java"

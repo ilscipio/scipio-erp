@@ -3853,7 +3853,7 @@
     <property key="CommonExpire">
         <value xml:lang="ar">إنهاء الصلاحية</value>
         <value xml:lang="cs">Expirovat</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -3874,7 +3874,7 @@
     <property key="CommonExpireAll">
         <value xml:lang="ar">إنهاء الصلاحية للكل</value>
         <value xml:lang="cs">Expirovat vše</value>
-        <value xml:lang="de">Alle ablaufen</value>
+        <value xml:lang="de">Alle ablaufen lassen</value>
         <value xml:lang="en">Expire All</value>
         <value xml:lang="es">Expirar todos</value>
         <value xml:lang="fr">Tout invalider</value>
@@ -3916,7 +3916,7 @@
     <property key="CommonExpires">
         <value xml:lang="ar">تتنتهى صلاحيته</value>
         <value xml:lang="cs">Uplyne</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Läuft ab</value>
         <value xml:lang="en">Expires</value>
         <value xml:lang="es">Expirados</value>
         <value xml:lang="fr">Invalider</value>
@@ -12270,7 +12270,7 @@
     <property key="CommonUpdate">
         <value xml:lang="ar">تحديث</value>
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="de">aktualisieren</value>
+        <value xml:lang="de">Aktualisieren</value>
         <value xml:lang="en">Update</value>
         <value xml:lang="es">Actualizar</value>
         <value xml:lang="fr">Màj</value>
@@ -13923,7 +13923,7 @@
     <property key="FormFieldTitle_expireButton">
         <value xml:lang="ar">نهاية الصلاحية</value>
         <value xml:lang="cs">Zneplatnit</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -15764,7 +15764,7 @@
     <property key="FormFieldTitle_expireAction">
         <value xml:lang="ar">إنهاء الصلاحية</value>
         <value xml:lang="cs">Expirovat</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -16046,7 +16046,7 @@
     <property key="FormFieldTitle_updateAction">
         <value xml:lang="ar">تحديث</value>
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="de">aktualisieren</value>
+        <value xml:lang="de">Aktualisieren</value>
         <value xml:lang="en">Update</value>
         <value xml:lang="es">Actualizar</value>
         <value xml:lang="fr">Màj</value>

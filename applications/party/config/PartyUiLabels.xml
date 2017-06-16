@@ -4645,7 +4645,7 @@
     </property>
     <property key="PartyContactInformation">
         <value xml:lang="cs">Kontaktní informace</value>
-        <value xml:lang="de">Kontaktinformation</value>
+        <value xml:lang="de">Kontakt Informationen</value>
         <value xml:lang="en">Contact Information</value>
         <value xml:lang="es">Información de Contacto</value>
         <value xml:lang="fr">Coordonnées</value>

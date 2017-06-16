@@ -22,7 +22,7 @@ under the License.
 <#if checkoutMode == "primary">
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.PageTitleShoppingCart}</@step>
-        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>${uiLabelMap.OrderShippingAddress}</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("checkoutshippingaddress")>${uiLabelMap.OrderAddress}</@step>
         <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("checkoutshippingoptions")>${uiLabelMap.EcommerceShippingOptions}</@step>
         <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("checkoutpayment")>${uiLabelMap.EcommercePaymentOptions}</@step>
         <@step name="orderReview" icon="fa fa-info" href=makeOfbizUrl("checkoutreview")>${uiLabelMap.EcommerceOrderConfirmation}</@step>
@@ -32,7 +32,7 @@ under the License.
     <@nav type="steps" activeElem=(activeStep!"cart")>
         <@step name="cart" icon="fa fa-cart-arrow-down" href=makeOfbizUrl("showcart")>${uiLabelMap.PageTitleShoppingCart}</@step>
         <@step name="customer" icon="fa fa-user" href=makeOfbizUrl("setCustomer")>Personal Info</@step>
-        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>${uiLabelMap.OrderShippingAddress}</@step>
+        <@step name="shippingAddress" icon="fa fa-building" href=makeOfbizUrl("setShipping")>${uiLabelMap.OrderAddress}</@step>
         <@step name="shippingOptions" icon="fa fa-truck" href=makeOfbizUrl("setShipOptions")>${uiLabelMap.EcommerceShippingOptions}</@step>
         <@step name="billing" icon="fa fa-credit-card" href=makeOfbizUrl("setPaymentOption")>${uiLabelMap.EcommercePaymentOptions}</@step>
         <#-- SCIPIO: TODO? Merge with billing? -->

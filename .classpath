@@ -5,9 +5,9 @@
     <classpathentry kind="lib" path="applications/content/lib/jempbox-1.7.1.jar"/>
     <classpathentry kind="lib" path="applications/content/lib/pdfbox-1.7.1.jar"/>
     <classpathentry kind="lib" path="applications/content/lib/dom4j-1.6.1.jar"/>
-    <classpathentry kind="lib" path="applications/content/lib/poi-3.13.jar"/>
-    <classpathentry kind="lib" path="applications/content/lib/tika-core-1.7.jar"/>
-    <classpathentry kind="lib" path="applications/content/lib/tika-parsers-1.7.jar"/>
+    <classpathentry kind="lib" path="applications/content/lib/poi-3.14.jar"/>
+    <classpathentry kind="lib" path="applications/content/lib/tika-core-1.12.jar"/>
+    <classpathentry kind="lib" path="applications/content/lib/tika-parsers-1.12.jar"/>
     <classpathentry kind="lib" path="applications/product/lib/watermarker-0.0.4.jar"/>
     <classpathentry kind="lib" path="applications/product/lib/dozer-4.2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-junit.jar"/>
@@ -26,7 +26,7 @@
     <classpathentry kind="lib" path="framework/base/lib/httpcore-4.3.3.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpunit-1.7.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ical4j-1.0-rc2.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/icu4j-52_1.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/icu4j-57.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ivy-2.4.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jackson-annotations-2.4.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jackson-core-2.4.2.jar"/>
@@ -91,17 +91,17 @@
     <classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/ecj-4.5.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-catalina-ha.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-catalina-tribes.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-catalina.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-jasper.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-tomcat-api.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-tomcat-coyote.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-tomcat-jni.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-tomcat-util-scan.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.33-tomcat-util.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli-adapters.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina-ha.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina-tribes.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-jasper.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-api.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-coyote.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-jni.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-util-scan.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-util.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.42-tomcat-juli-adapters.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.42-tomcat-juli.jar"/>
     <classpathentry kind="lib" path="framework/entity/lib/commons-dbcp2-2.1.jar"/>
     <classpathentry kind="lib" path="framework/geronimo/lib/geronimo-transaction-3.1.1.jar"/>
     <classpathentry kind="lib" path="framework/service/lib/wsdl4j-1.6.2.jar"/>

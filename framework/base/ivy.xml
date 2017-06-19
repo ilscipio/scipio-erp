@@ -49,7 +49,7 @@
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base->default"/>
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.3.3" transitive="false" conf="base->default"/>
         <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base->default"/>
-        <dependency org="com.ibm.icu" name="icu4j" rev="52.1" transitive="false" conf="base->default"/>
+        <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base->default"/>
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base->default"/>
         <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base->default"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base->default"/>

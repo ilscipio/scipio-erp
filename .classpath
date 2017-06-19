@@ -92,17 +92,17 @@
     <classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/ecj-4.5.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina-ha.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina-tribes.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-catalina.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-jasper.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-api.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-coyote.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-jni.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-util-scan.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.42-tomcat-util.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.42-tomcat-juli-adapters.jar"/>
-    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.42-tomcat-juli.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-catalina-ha.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-catalina-tribes.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-catalina.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-jasper.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-tomcat-api.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-tomcat-coyote.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-tomcat-jni.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-tomcat-util-scan.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-tomcat-util.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.44-tomcat-juli-adapters.jar"/>
+    <classpathentry kind="lib" path="framework/catalina/lib/tomcat-extras-8.0.44-tomcat-juli.jar"/>
     <classpathentry kind="lib" path="framework/entity/lib/commons-dbcp2-2.1.jar"/>
     <classpathentry kind="lib" path="framework/geronimo/lib/geronimo-transaction-3.1.1.jar"/>
     <classpathentry kind="lib" path="framework/service/lib/wsdl4j-1.6.2.jar"/>

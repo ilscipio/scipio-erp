@@ -41,10 +41,10 @@ under the License.
 
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
-  <#if parameters.filename?has_content && (numberOfEntities?number > 0)>
+  <#if parameters.filename?has_content && (numberOfEntities?has_content && numberOfEntities?number > 0)>
     <p>${uiLabelMap.WebtoolsWroteXMLForAllDataIn}</p>
     <p>${uiLabelMap.WebtoolsWroteNRecordsToXMLFile}</p>
-  <#elseif parameters.outpath?has_content && (numberOfEntities?number > 0)>
+  <#elseif parameters.outpath?has_content && (numberOfEntities?has_content && numberOfEntities?number > 0)>
     <#list results as result>
       <p>${result}</p>
     </#list>

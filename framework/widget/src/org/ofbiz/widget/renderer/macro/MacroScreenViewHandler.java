@@ -42,8 +42,10 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.view.AbstractViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
+import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.TreeStringRenderer;
@@ -53,7 +55,7 @@ import org.xml.sax.SAXException;
 import freemarker.template.TemplateException;
 import freemarker.template.utility.StandardCompress;
 
-public class MacroScreenViewHandler extends AbstractViewHandler {
+public class MacroScreenViewHandler extends AbstractViewHandler implements ViewHandlerExt {
 
     public static final String module = MacroScreenViewHandler.class.getName();
 
@@ -63,15 +65,18 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         this.servletContext = context;
     }
 
-    private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
-            Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
+    /**
+     * SCIPIO: Reusable version of the original ofbiz loadRenderers method.
+     */
+    public static ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
+            String name, Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
         // SCIPIO: need this name early, check if html
-        String screenRendererName = UtilProperties.getPropertyValue("widget", getName() + ".name");
+        String screenRendererName = UtilProperties.getPropertyValue("widget", name + ".name");
         
-        String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".screenrenderer");
-        String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".formrenderer");
-        String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".treerenderer");
-        String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", getName() + ".menurenderer");
+        String screenMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".screenrenderer");
+        String formMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".formrenderer");
+        String treeMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".treerenderer");
+        String menuMacroLibraryPath = UtilProperties.getPropertyValue("widget", name + ".menurenderer");
         
         Map<String, List<String>> themeResources = VisualThemeWorker.getVisualThemeResources(context);
         if (themeResources != null) {
@@ -115,14 +120,19 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
         if (!menuMacroLibraryPath.isEmpty()) {
             MenuStringRenderer menuStringRenderer = new MacroMenuRenderer(screenRendererName, menuMacroLibraryPath, request, response);
             context.put("menuStringRenderer", menuStringRenderer);
-            request.setAttribute("screenStringRenderer", screenStringRenderer);
+            request.setAttribute("menuStringRenderer", menuStringRenderer);
         }
         return screenStringRenderer;
     }
+    
+    private ScreenStringRenderer loadRenderers(HttpServletRequest request, HttpServletResponse response,
+            Map<String, Object> context, Writer writer) throws GeneralException, TemplateException, IOException {
+        return loadRenderers(request, response, getName(), context, writer);
+    }
 
-    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    // SCIPIO: 2017-05-01: factored out Writer for reuse
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
         try {
-            Writer writer = response.getWriter();
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             // compress output if configured to do so
             if (UtilValidate.isEmpty(encoding)) {
@@ -140,10 +150,15 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
                 // to speed up output.
                 writer = new StandardCompress().getWriter(writer, null);
             }
+            
             MapStack<String> context = MapStack.create();
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
+            
+            // SCIPIO: 2017-05-09: targeted rendering prep. NOTE: populateContextForRequest call set up the RenderTargetState object.
+            writer = WidgetRenderTargetExpr.getRenderTargetState(context).prepareWriter(writer, context);
+            
             ScreenStringRenderer screenStringRenderer = loadRenderers(request, response, context, writer);
-            ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
+            ScreenRenderer screens = ScreenRenderer.makeWithEnvAwareFetching(writer, context, screenStringRenderer);
             context.put("screens", screens);
             // SCIPIO: 2016-09-15: in addition, dump the screens renderer into the request attributes,
             // for some cases where only request is available
@@ -168,6 +183,17 @@ public class MacroScreenViewHandler extends AbstractViewHandler {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
+        }
+    }
+
+    // SCIPIO: added 2017-05-01
+    @Override
+    public void render(String name, String page, String info, String contentType, String encoding,
+            HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+        try {
+            this.render(name, page, info, contentType, encoding, request, response, response.getWriter());
+        } catch (IOException e) {
+            throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
         }
     }
 }

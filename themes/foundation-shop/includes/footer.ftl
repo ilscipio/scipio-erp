@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "common.ftl">
 
 </div><#-- /<div class="off-canvas-wrap" data-offcanvas id="body-content"> -->
 </div><#-- /<div class="inner-wrap"> -->

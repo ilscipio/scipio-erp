@@ -4610,7 +4610,7 @@
         <value xml:lang="zh_TW">傳真號碼</value>
     </property>
     <property key="PartyContactInfo">
-        <value xml:lang="de">Kontaktinformation</value>
+        <value xml:lang="de">Kontakt Informationen</value>
         <value xml:lang="en">Contact Info</value>
         <value xml:lang="es">Informacion dé contacto</value>
         <value xml:lang="fr">Source du contact</value>
@@ -4645,7 +4645,7 @@
     </property>
     <property key="PartyContactInformation">
         <value xml:lang="cs">Kontaktní informace</value>
-        <value xml:lang="de">Kontaktinformation</value>
+        <value xml:lang="de">Kontakt Informationen</value>
         <value xml:lang="en">Contact Information</value>
         <value xml:lang="es">Información de Contacto</value>
         <value xml:lang="fr">Coordonnées</value>
@@ -10194,7 +10194,7 @@
     </property>
     <property key="PartyPersonalInformation">
         <value xml:lang="cs">Osobní informace</value>
-        <value xml:lang="de">Persönliche Information</value>
+        <value xml:lang="de">Persönliche Informationen</value>
         <value xml:lang="en">Personal Information</value>
         <value xml:lang="es">Información Personal</value>
         <value xml:lang="fr">Information personnelle</value>

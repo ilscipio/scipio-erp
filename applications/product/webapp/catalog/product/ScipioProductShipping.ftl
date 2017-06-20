@@ -27,7 +27,7 @@ under the License.
               <@td class="${styles.grid_large!}2">${uiLabelMap.ProductQuantityIncluded}
               </@td>
                 <@td colspan="3">${product.quantityIncluded!""}
-                                 <#if product.weightUomId?has_content>
+                                 <#if product.quantityUomId?has_content>
                                     <#assign measurementUom = product.getRelatedOne("QuantityUom", true)/>
                                     ${(measurementUom.get("abbreviation",locale))!}
                                  </#if>

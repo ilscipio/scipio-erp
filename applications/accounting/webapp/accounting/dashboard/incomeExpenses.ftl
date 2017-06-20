@@ -1,6 +1,7 @@
 <#assign chartType=chartType!"bar"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
-<#assign datasets=chartDatasets?number!1 />
+<#assign datasets=(chartDatasets!1)?number />
+<#assign totalMap=rewrapMap(totalMap!{}, "raw-simple")>
 
 <#if totalMap?has_content> 
     <#if chartType == "line" || chartType == "bar">
@@ -10,9 +11,9 @@
                 <#assign currData = totalMap[key] />
                 <#if currData?has_content>
                     <#if datasets == 1>
-                        <@chartdata value="${currData['income']!0}" title=key/>
+                        <@chartdata value=(currData['income']!0) title=key/>
                     <#elseif datasets == 2>                    
-                        <@chartdata value="${currData['income']!0}" value2="${currData['expense']!0}" title=key/>
+                        <@chartdata value=(currData['income']!0) value2=(currData['expense']!0) title=key/>
                     </#if>
                 </#if>
             </#list>

@@ -1,12 +1,29 @@
 {
   "name": "codemirror",
+  "main": [
+    "lib/codemirror.js",
+    "lib/codemirror.css"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bin",
+    "demo",
+    "doc",
+    "test",
+    "index.html",
+    "package.json",
+    "mode/*/*test.js",
+    "mode/*/*.html"
+  ],
   "homepage": "https://github.com/components/codemirror",
-  "version": "5.21.0",
-  "_release": "5.21.0",
+  "version": "5.24.2",
+  "_release": "5.24.2",
   "_resolution": {
     "type": "version",
-    "tag": "5.21.0",
-    "commit": "009e0453b0999ceb755af40024618b555c3187d9"
+    "tag": "5.24.2",
+    "commit": "908e41189d1540afbd4f16e72ba9107602040d28"
   },
   "_source": "https://github.com/components/codemirror.git",
   "_target": "~5",

@@ -59,6 +59,11 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
+import org.ofbiz.webapp.renderer.FtlContextFetcher;
+import org.ofbiz.webapp.renderer.RenderContextFetcher;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
+import org.ofbiz.webapp.renderer.SimpleContextFetcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.WidgetWorker;
 import org.ofbiz.widget.cache.GenericWidgetOutput;
@@ -68,8 +73,6 @@ import org.ofbiz.widget.model.AbstractModelAction;
 import org.ofbiz.widget.model.ModelAction;
 import org.ofbiz.widget.model.ModelLocation;
 import org.ofbiz.widget.model.ModelScreen;
-import org.ofbiz.widget.model.ModelScreenSettings;
-import org.ofbiz.widget.model.ModelScreens;
 import org.ofbiz.widget.model.ScreenFactory;
 import org.xml.sax.SAXException;
 
@@ -81,7 +84,7 @@ import freemarker.ext.servlet.ServletContextHashModel;
 /**
  * Widget Library - Screen model class
  */
-public class ScreenRenderer {
+public class ScreenRenderer implements RenderContextFetcher {
 
     public static final String module = ScreenRenderer.class.getName();
 
@@ -89,18 +92,39 @@ public class ScreenRenderer {
     public static final String WEBAPP_RENDER_INIT_GUARD = "_scpRdrInitWebappRun"; // stored as Boolean
     public static final String LOCAL_RENDER_INIT_GUARDS = "_scpRdrInitLocalRuns"; // stored as a Set
     
-    protected Appendable writer;
-    protected MapStack<String> context;
+    protected RenderContextFetcher contextFetcher; // SCIPIO: 2017-03-09: NEW: this can now attempt to fetch context and writer dynamically, if programmed
     protected ScreenStringRenderer screenStringRenderer;
     protected int renderFormSeqNumber = 0;
 
     public ScreenRenderer(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
-        this.writer = writer;
-        this.context = context;
-        if (this.context == null) this.context = MapStack.create();
+        this.contextFetcher = new SimpleContextFetcher(writer, context);
+        this.screenStringRenderer = screenStringRenderer;
+    }
+    
+    /**
+     * SCIPIO: new constructor that fetches context dynamically.
+     */
+    public ScreenRenderer(RenderContextFetcher contextFetcher, ScreenStringRenderer screenStringRenderer) {
+        this.contextFetcher = contextFetcher;
         this.screenStringRenderer = screenStringRenderer;
     }
 
+    /**
+     * SCIPIO: creates a renderer that uses FtlContextFetcher to get the output writer,
+     * in other words gets the writer from the currently executing FTL environment if there is one,
+     * or using the passed writer otherwise.
+     * This prevents errors in template usage of screens.render (known ofbiz flaw).
+     * FIXME: CURRENTLY ONLY SUPPORT FTL ENV.
+     */
+    public static ScreenRenderer makeWithEnvAwareFetching(Appendable writer, MapStack<String> context, ScreenStringRenderer screenStringRenderer) {
+        return new ScreenRenderer(new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context), screenStringRenderer);
+    }
+    
+    public static RenderContextFetcher makeEnvAwareContextFetcher(Appendable writer, MapStack<String> context) {
+        // FIXME: CURRENTLY ONLY SUPPORT FTL ENV
+        return new FtlContextFetcher.FtlWriterOnlyFetcher(writer, context);
+    }
+    
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
@@ -116,7 +140,15 @@ public class ScreenRenderer {
         String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
         String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
         // SCIPIO: return proper
-        return this.render(resourceName, screenName, asString);
+        return this.render(resourceName, screenName, asString, getContext(), getWriter());
+        //return "";
+    }
+    
+    protected String render(String combinedName, boolean asString, MapStack<String> context, Appendable writer) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
+        String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
+        // SCIPIO: return proper
+        return this.render(resourceName, screenName, asString, context, writer);
         //return "";
     }
     
@@ -183,7 +215,7 @@ public class ScreenRenderer {
     public String renderAsString(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return render(resourceName, screenName, true);
     }
-        
+       
     /**
      * Renders the named screen using the render environment configured when this ScreenRenderer was created.
      * <p>
@@ -197,6 +229,22 @@ public class ScreenRenderer {
      * @throws ParserConfigurationException
      */
     public String render(String resourceName, String screenName, boolean asString) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return render(resourceName, screenName, asString, getContext(), getWriter());
+    }
+    
+    /**
+     * Renders the named screen using the render environment configured when this ScreenRenderer was created.
+     * <p>
+     * SCIPIO: modified for asString boolean which returns as string instead of going straight to writer.
+     *
+     * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
+     * @param screenName The name of the screen within the XML file specified by the resourceName.
+     * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    protected String render(String resourceName, String screenName, boolean asString, MapStack<String> context, Appendable writer) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
         if (modelScreen.getUseCache()) {
             // if in the screen definition use-cache is set to true
@@ -211,7 +259,7 @@ public class ScreenRenderer {
             ScreenCache screenCache = new ScreenCache();
             GenericWidgetOutput gwo = screenCache.get(screenCombinedName, wcck);
             if (gwo == null) {
-                checkRunRenderInit(resourceName); // SCIPIO: new hooks
+                checkRunRenderInit(resourceName, context); // SCIPIO: new hooks
                 Writer sw = new StringWriter();
                 modelScreen.renderScreenString(sw, context, screenStringRenderer);
                 gwo = new GenericWidgetOutput(sw.toString());
@@ -231,7 +279,7 @@ public class ScreenRenderer {
                 }
             }
         } else {
-            checkRunRenderInit(resourceName); // SCIPIO: new hooks
+            checkRunRenderInit(resourceName, context); // SCIPIO: new hooks
             context.put("renderFormSeqNumber", String.valueOf(renderFormSeqNumber));
             // SCIPIO: may render to string
             if (asString) {
@@ -255,33 +303,45 @@ public class ScreenRenderer {
      * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
      * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
      * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
-     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param ctxVars variables to dump into the context after it is pushed
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         if (asString == null) {
             asString = Boolean.FALSE;
         }
+        MapStack<String> context = getContext();
         if (!Boolean.TRUE.equals(shareScope)) { // default is FALSE for this method (only!)
             context.push();
+            if (ctxVars != null) {
+                context.putAll(ctxVars);
+            }
             try {
                 if (UtilValidate.isNotEmpty(screenName)) {
-                    return render(resourceName, screenName, asString);
+                    return render(resourceName, screenName, asString, context, getWriter());
                 } else {
-                    return render(resourceName, asString);
+                    return render(resourceName, asString, context, getWriter());
                 }
             } finally {
                 context.pop();
             }
         } else { // if (shareScope == Boolean.TRUE)
+            if (ctxVars != null) {
+                context.putAll(ctxVars);
+            }
             if (UtilValidate.isNotEmpty(screenName)) {
-                return render(resourceName, screenName, asString);
+                return render(resourceName, screenName, asString, context, getWriter());
             } else {
-                return render(resourceName, asString);
+                return render(resourceName, asString, context, getWriter());
             }
         }
+    }
+    
+    public String renderScoped(String resourceName, String screenName, Boolean asString, Boolean shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, asString, shareScope, null);
     }
     
     /**
@@ -296,11 +356,16 @@ public class ScreenRenderer {
      * @param resourceName The name/location of the resource to use, can use "component://[component-name]/" and "ofbiz://" and other special OFBiz style URLs
      * @param screenName The name of the screen within the XML file specified by the resourceName. THIS METHOD ONLY: if empty, extracts it from resource
      * @param asString If true, returns content as string; otherwise goes direct to writer (stock behavior)
-     * @parma shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param shareScope If false (default for this method - only), protects scope by pushing the context stack
+     * @param ctxVars variables to dump into the context after it is pushed
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
      */
+    public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope, Map<String, ?> ctxVars) throws GeneralException, IOException, SAXException, ParserConfigurationException {
+        return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope), ctxVars);
+    }
+    
     public String renderScopedGen(String resourceName, String screenName, Object asString, Object shareScope) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         return renderScoped(resourceName, screenName, UtilMisc.booleanValue(asString), UtilMisc.booleanValue(shareScope));
     }
@@ -312,6 +377,16 @@ public class ScreenRenderer {
      * render is about to start.
      */
     public void checkRunRenderInit(String resourceName) {
+        checkRunRenderInit(resourceName, getContext());
+    }
+    
+    /**
+     * SCIPIO: SPECIAL INITIAL/TOP SCREEN INITIALIZATION. 
+     * <p>
+     * Should be run at the beginning of every screen render, just at the moment the top screen
+     * render is about to start.
+     */
+    protected void checkRunRenderInit(String resourceName, MapStack<String> context) {
         if (!Boolean.TRUE.equals(context.get(WEBAPP_RENDER_INIT_GUARD))) {
             // run webapp init first (more general)
             runWebappRenderInitActions(context, resourceName);
@@ -342,6 +417,11 @@ public class ScreenRenderer {
     }
 
     public void populateBasicContext(Map<String, Object> parameters, Delegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
+        populateBasicContext(getContext(), this, parameters, delegator, dispatcher, security, locale, userLogin);
+    }
+    
+    // SCIPIO: new overload
+    protected void populateBasicContext(MapStack<String> context, Map<String, Object> parameters, Delegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
         populateBasicContext(context, this, parameters, delegator, dispatcher, security, locale, userLogin);
     }
 
@@ -380,7 +460,7 @@ public class ScreenRenderer {
      * @param servletContext
      */
     public void populateContextForRequest(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
-        populateContextForRequest(context, this, request, response, servletContext);
+        populateContextForRequest(getContext(), this, request, response, servletContext);
     }
 
     @SuppressWarnings("rawtypes")
@@ -506,6 +586,12 @@ public class ScreenRenderer {
         // SCIPIO: set the request method for easy access. it is UPPERCASE.
         context.put("requestMethod", request.getMethod().toUpperCase());
         
+        // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
+        WidgetRenderTargetExpr.populateRenderTargetVars(context);
+        
+        // SCIPIO: 2017-05-19: some new special request parameters/attributes for potential use by renderers
+        ViewAsJsonUtil.copyRenderOutVarsToCtx(request, context);
+        
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
         VisualThemeWorker.getVisualThemeResources(context);
         
@@ -517,12 +603,36 @@ public class ScreenRenderer {
         context.push();
     }
     
-    public Map<String, Object> getContext() {
-        return context;
+    public MapStack<String> getContext() {
+        return contextFetcher.getContext(); // SCIPIO: now dynamic
+    }
+    
+    /**
+     * SCIPIO: returns the writer used when asString is false in render calls.
+     */
+    public Appendable getWriter() {
+        return contextFetcher.getWriter();
+    }
+
+    /**
+     * SCIPIO: returns the ContextFetcher in use.
+     */
+    public RenderContextFetcher getContextFetcher() {
+        return contextFetcher;
+    }
+
+    /**
+     * SCIPIO: sets a new ContextFetcher.
+     * WARN: ADVANCED USAGE ONLY.
+     */
+    public void setContextFetcher(RenderContextFetcher contextFetcher) {
+        this.contextFetcher = contextFetcher;
     }
 
     public void populateContextForService(DispatchContext dctx, Map<String, Object> serviceContext) {
-        this.populateBasicContext(serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
+        MapStack<String> context = getContext();
+        
+        this.populateBasicContext(context, serviceContext, dctx.getDelegator(), dctx.getDispatcher(),
                 dctx.getSecurity(), (Locale) serviceContext.get("locale"), (GenericValue) serviceContext.get("userLogin"));
         
         // SCIPIO: ensure rendererVisualThemeResources has been set (only other central place for this call would be render() method)
@@ -688,4 +798,5 @@ public class ScreenRenderer {
             }
         }
     }
+
 }

@@ -22,9 +22,13 @@ under the License.
     xmlns:ivy="antlib:org.apache.ivy.ant"
     xmlns:sonar="antlib:org.sonar.ant:sonar">
 
+    <!-- SCIPIO: NOTE: 2017-02-02: the framework/base/lib libraries are not automatically
+        on the classpath (this is now enforced). Any needed libraries must be specified
+        explicitly, including for the <junit/> task. -->
+    
     <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml">
         <classpath>
-            <pathelement location="framework/base/lib/ivy-2.2.0.jar"/>
+            <pathelement location="framework/base/lib/ivy-2.4.0.jar"/>
         </classpath>
     </taskdef>
 
@@ -34,13 +38,40 @@ under the License.
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
 
+    <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
+        you may specify some default properties -->
+    <property file="build.local.properties"/>
+    
+    <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
+        automatic lib update check upon build and other target invocations
+        2017-02-03: Ivy now enabled by default (bypass false) -->
+    <property name="lib.update.bypass" value="false"/>
+    <!-- IVY AUTO MODE: set this to either "global" (runs all lib updates globally, before global build) 
+        or "component" (runs per-component, before each component) -->
+    <property name="lib.update.hook.mode" value="component"/>
+    
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />
     <property name="specialpurpose.dir" value="specialpurpose" />
+    <property name="themes.dir" value="themes" />
     <property name="addons.dir" value="addons" />
     <property name="hotdeploy.dir" value="hot-deploy" />
     
+    <!-- Top-level component directories, in their generally-expect build and load order 
+        NOTE: 2017-01-31: build order is for now rectified to framework->themes->... in order for the build order
+            to be consistent with the component load order (as defined in stock ofbiz) -->
+    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy" />
+    
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
+    
+    <!-- 2017-02-01: Names of properties (such as those defined above) that should always be passed 
+        to sub-project builds by subant. mainly used by externalsubant and iterate in macros.xml -->
+    <propertyset id="ofbiz.subbuild.props.pass">
+        <propertyref name="ofbiz.home.dir"/>
+        <propertyref name="ofbiz.component.dirs"/>
+        <propertyref regex="lib\.update\..*"/>
+        <propertyref regex="lib\.clean\..*"/>
+    </propertyset>
     
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
         a file named "build-main-early.xml" in its folder, which will be imported into
@@ -108,7 +139,7 @@ under the License.
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="ofbiz-init" depends="dir-init">
+    <target name="ofbiz-init" depends="dir-init,ivy-init">
         <property environment="env"/>
     </target>
 
@@ -129,8 +160,12 @@ under the License.
     <target name="copy-derby-props" if="isMac">
         <copy file="runtime/data/derby.properties" todir="runtime/data/derby"/>
     </target>
-
-    <target name="sonar-init">
+    
+    <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
+        <!-- (nothing to do for now; taskdef already defined) -->
+    </target>
+    
+    <target name="sonar-init" depends="ivy-init">
         <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml">
             <classpath>
                 <pathelement location="framework/base/lib/sonar-ant-task-1.3.jar" />
@@ -155,6 +190,14 @@ under the License.
         <invokehook target="pre-clean-all" />
         
         <antcall target="clean-ivy"/>
+        <if><!-- SCIPIO: NOTE: 2017-04-11: we'll now clear out the deploy folders here by default, because the clean-downloads
+                call below which we just removed was already doing this, and it doesn't look like it was causing issues for anyone
+            <equals arg1="${lib.clean.deployed}" arg2="true"/>-->
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+            </then>
+        </if>
         <antcall target="clean-data"/>
         <antcall target="clean-logs"/>
         <antcall target="clean-output"/>
@@ -163,7 +206,10 @@ under the License.
         <antcall target="clean-cache"/>
         <antcall target="clean-tempfiles"/>
         <antcall target="clean-search-indexes"/>
-        <antcall target="clean-downloads"/>
+        <!-- SCIPIO: 2017-04-11: do NOT run clean-downloads on clean-all - you must run 
+            clean-downloads explicitly to remove those - and they are currently do not represent
+            all supported JDBC drivers but only the legacy ofbiz download targets (TODO: clarify the legacy download targets)
+        <antcall target="clean-downloads"/>-->
         <antcall target="clean-uploads"/>
         <antcall target="clean"/>
         
@@ -173,7 +219,7 @@ under the License.
     </target>
 
     <target name="clean-downloads"
-          description="Clean all downloaded files">
+          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use init-lib-clean instead)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-downloads" />
@@ -182,10 +228,18 @@ under the License.
             <fileset dir="framework/base/lib" includes="cobertura-*.jar"/>
             <fileset dir="framework/base/lib" includes="sonar-*.jar"/>
             <fileset dir="framework/base/lib" includes="activemq-*.jar"/>
+            <!-- SCIPIO: 2017-04-11: for this to be consistent we have to remove all except derby
             <fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/>
-            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>
+            <fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/>-->
+            <fileset dir="framework/entity/lib/jdbc" includes="*.jar" excludes="derby-*.jar"/>
         </delete>
         <antcall target="clean-ivy"/>
+        <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+            </then>
+        </if>
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-downloads" />
@@ -349,7 +403,7 @@ under the License.
         
     </target>
 
-    <target name="clean">
+    <target name="clean" depends="ivy-init,build-scipio-build-tools">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean" />
@@ -361,6 +415,10 @@ under the License.
         
         <antcall target="clean-specialpurpose"/>
         <antcall target="clean-applications"/>
+        
+        <!-- SCIPIO: 2017-01-19: added clean task for themes (not invoked stock ofbiz); 2017-01-31: rectified build order -->
+        <dep-subant dir="${basedir}/themes" target="clean"/>
+        
         <antcall target="clean-framework"/>
         <delete file="ofbiz.jar"/>
         
@@ -603,6 +661,7 @@ under the License.
         <invokehook target="pre-build-test" />
         
         <subant inheritall="false" target="prepare-to-build-test" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
@@ -622,6 +681,7 @@ under the License.
         <invokehook target="pre-build-qa" />
             
         <subant inheritall="false" target="prepare-to-build-qa" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
@@ -641,6 +701,7 @@ under the License.
         <invokehook target="pre-build-production" />
         
         <subant inheritall="false" target="prepare-to-build-production" failonerror="true">
+            <propertyset refid="ofbiz.subbuild.props.pass"/><!-- SCIPIO: new 2017-02-01 -->
             <fileset dir="${basedir}/hot-deploy" casesensitive="no">
                 <exclude name="disabled/**"/>
                 <include name="*/build.xml"/>
@@ -657,7 +718,7 @@ under the License.
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init">
+    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-init-lib-update">
         <echo message="[build] ========== Start Building (Compile) =========="/>
         
         <!-- SCIPIO: hooks -->
@@ -666,14 +727,19 @@ under the License.
         <antcall target="build-dev"/>
 
         <antcall target="build-framework"/>
-        <antcall target="build-applications"/>
-        <antcall target="build-specialpurpose"/>
+        
+        <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
         <externalsubant>
             <fileset dir="${basedir}/themes">
                 <include name="*/build.xml" />
             </fileset>
-        </externalsubant>
+        </externalsubant>-->
+        <!-- SCIPIO: 2017-01-31: rectified build order, framework->themes->..., to match component load order -->
+        <dep-subant dir="${basedir}/themes"/>
 
+        <antcall target="build-applications"/>
+        <antcall target="build-specialpurpose"/>
+        
         <!-- SCIPIO: addons dir -->
         <addonsant/>
         
@@ -714,17 +780,12 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <externalsubant target="@{target}">
-              <fileset dir="${basedir}/hot-deploy" casesensitive="no">
-                <exclude name="disabled/**"/>
-                <include name="*/build.xml"/>
-              </fileset>
-            </externalsubant>
+            <dep-subant dir="${basedir}/hot-deploy" target="@{target}" />
           </else>
         </if>
       </sequential>
     </macrodef>
-
+    
     <!-- ================================================================== -->
     <!-- Build JavaDocs                                                     -->
     <!-- ================================================================== -->
@@ -1643,7 +1704,7 @@ under the License.
     </target>
     <target name="create-admin-user-login"
             description="Prompt for a user name, then create a user login with admin privileges and a temporary password equal to 'scipio'. After a successful login the user will be prompted for a new password. Note: this uses load-admin-user-login target">
-        <input addproperty="userLoginId" message="Enter user name (log in with the temporary password 'scipio'):"/>
+        <input addproperty="userLoginId" message="Enter user name (default: 'admin') (log in with the temporary password 'scipio'):" defaultvalue="admin"/>
         <antcall target="load-admin-user-login"/>
     </target>
 
@@ -1898,9 +1959,216 @@ under the License.
     <!-- ================================================================== -->
     <!--    Ivy targets, more info at  http://ant.apache.org/ivy/  -->
     <!-- ================================================================== -->
-    <target name="clean-ivy" description="Clean Ivy local cache">
+    
+    <!-- SCIPIO: 2017-01-30: New ivy download targets -->
+    
+    <target name="init-lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
+        <stopwatch name="lib.update.stopwatch" action="start"/>
+        <!--
+        <tstamp>
+             <format property="lib.update.start.time" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>
+        <antcall target="reset-lib-update-status"/>
+        -->
+        
+        <antcall target="framework-lib-update"/>
+        <antcall target="themes-lib-update"/>
+        <antcall target="applications-lib-update"/>
+        <antcall target="specialpurpose-lib-update"/>
+        <antcall target="addons-lib-update"/>
+        <antcall target="hotdeploy-lib-update"/>
+        
+        <!-- Removed - not really useful
+        <tstamp>
+             <format property="lib.update.finish.time" pattern="yyyy-MM-dd HH:mm:ss"/>
+        </tstamp>
+        <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="ivy/ivy-status.txt" />
+        -->
+        <stopwatch name="lib.update.stopwatch" action="total"/>
+    </target>
+    
+    <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
+        <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
+        <if>
+            <not><equals arg1="${lib.update.hook.mode}" arg2="global"/></not>
+            <then>
+                <echo level="verbose" message="Skipping global lib updates (not using global mode)"/>
+            </then>
+            <elseif>
+                <equals arg1="${lib.update.bypass}" arg2="true"/>
+                <then>
+                    <echo message="Skipping lib updates (bypassed)"/>
+                </then>
+            </elseif>
+            <elseif>
+                <or>
+                    <equals arg1="${lib.update.force}" arg2="true"/>
+                    <equals arg1="${lib.update.force.deploy}" arg2="true"/>
+                </or>
+                <then>
+                    <echo message="Lib updates check forced - starting..."/>
+                    <antcall target="init-lib-update"/>
+                </then>
+            </elseif>
+            <else>
+                <echo message="Lib updates check starting..."/>
+                <antcall target="init-lib-update"/>
+                <!-- Removed - turns out this check is useless to deal with changes or anything after 
+                    the initial download... too simplistic
+                <if>
+                    <equals arg1="${lib.update.last.status}" arg2="SUCCESS"/>
+                    <then>
+                        <if>
+                            <equals arg1="${lib.update.majorlibs.present}" arg2="true"/>
+                            <then>
+                                <echo message="Last successful lib download: ${lib.update.last.finishTime} (SUCCESS, not re-running; use -Dlib.update.force=true to force)"/>
+                            </then>
+                            <else>
+                                <echo level="error" message="Lib download: SANITY CHECK FAILED: missing major libraries despite last run status marked success!"/>
+                                <echo message="Lib download required (sanity check failed) - starting..."/>
+                                <antcall target="init-lib-update"/>
+                            </else>
+                        </if>
+                    </then>
+                    <else>
+                        <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
+                        <antcall target="init-lib-update"/>
+                    </else>
+                </if>-->
+            </else>
+        </if>
+    </target>
+    
+    <!-- Removed - not really useful
+    <target name="reset-lib-update-status">
+        <delete file="ivy/ivy-status.txt"/>
+    </target>
+    
+    <target name="get-lib-update-status">
+        <property file="ivy/ivy-status.txt" prefix="lib.update.last" />
+        <if>
+            <isset property="lib.update.last.status"/>
+            <then>
+                <echo level="verbose" message="Library download status: ${lib.update.last.status}"/>
+            </then>
+            <else>
+                <echo level="verbose" message="Library download status: UNKNOWN (requires run)"/>
+            </else>
+        </if>
+        <!- Sanity check: test if some of the major libraries are present ->
+        <condition property="lib.update.majorlibs.present" value="true" else="false">
+            <and>
+                <resourcecount when="greater" count="0">
+                    <fileset file="framework/base/lib/freemarker-*.jar"/>
+                </resourcecount>
+                <resourcecount when="greater" count="0">
+                    <fileset file="framework/catalina/lib/tomcat-*.jar"/>
+                </resourcecount>
+            </and>
+        </condition>
+    </target>
+    -->
+
+    <target name="framework-lib-update">
+        <iterate target="init-lib-update" filelist="framework-builds"/>
+    </target>
+
+    <target name="applications-lib-update" if="${applications.present}">
+        <iterate target="init-lib-update" filelist="application-builds"/>
+    </target>
+
+    <target name="specialpurpose-lib-update" if="${specialpurpose.present}">
+        <iterate target="init-lib-update" filelist="specialpurpose-builds"/>
+    </target>
+    
+    <target name="addons-lib-update">
+        <addonsant target="init-lib-update"/>
+    </target>
+    
+    <target name="hotdeploy-lib-update">
+        <hotdeployant target="init-lib-update"/>
+    </target>
+    
+    <target name="themes-lib-update">
+        <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
+    </target>
+    
+    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs">
+        <stopwatch name="lib.clean.stopwatch" action="start"/>
+
+        <if>
+            <not><equals arg1="${lib.clean.cache}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-cache" inheritrefs="true"/>
+            </then>
+        </if>
+        <if>
+            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+            <then>
+                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+            </then>
+        </if>
+
+        <stopwatch name="lib.clean.stopwatch" action="total"/>
+    </target>
+    
+    <target name="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
+        <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
+            99% of the time, emptying the repository cache is a giant waste of time, so don't do it
+            by default. -->
+        <if>
+            <equals arg1="${lib.clean.cache.repo}" arg2="true"/>
+            <then>
+                <ivy:cleancache/>
+            </then>
+            <else><!-- lib.clean.cache.resolve -->
+                <delete dir="ivy/resolutionCache"/>
+            </else>
+        </if>
+    </target>
+    <target name="init-lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
+    </target>
+    
+    <target name="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
+        <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
         <ivy:cleancache/>
     </target>
+    <target name="init-lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
+    </target>
+    
+    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+        <antcall target="framework-lib-clean"/>
+        <antcall target="themes-lib-clean"/>
+        <antcall target="applications-lib-clean"/>
+        <antcall target="specialpurpose-lib-clean"/>
+        <antcall target="addons-lib-clean"/>
+        <antcall target="hotdeploy-lib-clean"/>
+    </target>
+    
+    <target name="framework-lib-clean">
+        <iterate target="init-lib-clean" filelist="framework-builds"/>
+    </target>
+
+    <target name="applications-lib-clean" if="${applications.present}">
+        <iterate target="init-lib-clean" filelist="application-builds"/>
+    </target>
+
+    <target name="specialpurpose-lib-clean" if="${specialpurpose.present}">
+        <iterate target="init-lib-clean" filelist="specialpurpose-builds"/>
+    </target>
+    
+    <target name="addons-lib-clean">
+        <addonsant target="init-lib-clean"/>
+    </target>
+    
+    <target name="hotdeploy-lib-clean">
+        <hotdeployant target="init-lib-clean"/>
+    </target>
+    
+    <target name="themes-lib-clean">
+        <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
+    </target>
+    
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
         <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
@@ -1970,7 +2238,7 @@ under the License.
                 <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
-      <fail message="Resource name is mandatory">
+        <fail message="Resource name is mandatory">
             <condition>
                 <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
@@ -1985,7 +2253,7 @@ under the License.
                 <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
-      <filterset id="replacePlaceholders">
+        <filterset id="replacePlaceholders">
             <filter token="component-name" value="${component-name}"/>
             <filter token="component-resource-name" value="${component-resource-name}"/>
             <filter token="base-permission" value="${base-permission}"/>
@@ -2250,15 +2518,16 @@ under the License.
             </externalsubant>
           </then>
           <else>
-            <externalsubant target="@{target}">
-              <fileset dir="${basedir}/addons" casesensitive="no">
-                <exclude name="disabled/**"/>
-                <include name="*/build.xml"/>
-              </fileset>
-            </externalsubant>
+            <dep-subant dir="${basedir}/addons" target="@{target}" />
           </else>
         </if>
       </sequential>
     </macrodef>
+    
+    <target name="build-scipio-build-tools" description="Builds standalone Scipio setup/build tools">
+        <filelist id="scipio.build.tools.buildfile" dir="." files="framework/base/build-scipio-build-tools.xml"/>
+        <iterate target="jar" filelist="scipio.build.tools.buildfile"/>
+        <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
+    </target>
     
 </project>

@@ -253,6 +253,27 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="CommonFixedAssetsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="FixedAssetMaint" />
+                <!--<set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListFixedAssetMaints"/>-->
+                <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
+                    <and>
+                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                        <!-- SCIPIO: don't do this for now... prevents browsing some fixed asset maint screens... TODO: REVIEW
+                        <not><if-empty field="maintHistSeqId"/></not> -->
+                    </and>
+                </condition-to-field>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
     
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">

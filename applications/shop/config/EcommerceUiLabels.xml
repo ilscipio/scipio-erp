@@ -31,6 +31,7 @@
     </property>
     <property key="EcommerceAccountInformation">
         <value xml:lang="da">Konto information</value>
+        <value xml:lang="de">Konto Informationen</value>
         <value xml:lang="en">Account Information</value>
         <value xml:lang="fr">Information sur le compte</value>
         <value xml:lang="it">Informazioni utente</value>
@@ -132,6 +133,28 @@
         <value xml:lang="vi">Thêm địa chỉ mới</value>
         <value xml:lang="zh">添加新地址</value>
         <value xml:lang="zh_TW">增加新的位址</value>
+    </property>
+    <property key="EcommerceShippingOptions">
+        <value xml:lang="de">Versand</value>
+        <value xml:lang="en">Shipping</value>
+        <value xml:lang="es">Envío</value>
+        <value xml:lang="fr">Livraison</value>
+        <value xml:lang="hi_IN">शिपिंग</value>
+        <value xml:lang="it">Spedizione</value>
+        <value xml:lang="nl">Verzendopties</value>
+        <value xml:lang="zh">航运</value>
+        <value xml:lang="zh_TW">航運</value>
+    </property>
+    <property key="EcommercePaymentOptions">
+        <value xml:lang="de">Zahlung</value>
+        <value xml:lang="en">Payment</value>
+        <value xml:lang="es">Pago</value>
+        <value xml:lang="fr">Paiement</value>
+        <value xml:lang="hi_IN">भुगतान</value>
+        <value xml:lang="it">Pagamento</value>
+        <value xml:lang="nl">Betaling</value>
+        <value xml:lang="zh">付款</value>
+        <value xml:lang="zh_TW">付款</value>
     </property>
     <property key="EcommerceAddNewDigitalProduct">
         <value xml:lang="da">Tilføj nyt digitalt produkt</value>
@@ -3290,7 +3313,7 @@
     </property>
     <property key="EcommerceSetDefault">
         <value xml:lang="da">Vælg standard</value>
-        <value xml:lang="de">als Standard wählen</value>
+        <value xml:lang="de">Vorauswählen</value>
         <value xml:lang="en">Set Default</value>
         <value xml:lang="es">por Defecto</value>
         <value xml:lang="fr">Choisir comme valeur par défaut</value>

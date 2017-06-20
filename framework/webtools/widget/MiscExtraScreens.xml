@@ -104,7 +104,25 @@ under the License.
                 <set field="testtest" value="This screen is invalid should generate a log error; section condition is for widgets screens, not actions-only screens"/>
             </actions>
         </section>
-        
+    </screen>
+    
+    <screen name="DemoSimpleLabelWidget">
+        <section>
+            <widgets>
+                <label text="This is a simple label widget."/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="DemoLabelWidgetWithVars">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "executing-include"); ]]></script>
+            </actions>
+            <widgets>
+                <label text="Hello from included widget. mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+            </widgets>
+        </section>
     </screen>
     
 </screens>

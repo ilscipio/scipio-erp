@@ -16,23 +16,19 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCodec;
-import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
-import org.ofbiz.webapp.ftl.EscapingModel;
-import org.ofbiz.webapp.ftl.EscapingObjectWrapper;
-import org.ofbiz.webapp.ftl.ExtendedWrapper;
-
-import com.ilscipio.scipio.ce.webapp.ftl.lang.WrappingOptions.RewrapMode;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.EscapingModel;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBeansWrapper;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
-import freemarker.template.AdapterTemplateModel;
 import freemarker.template.DefaultArrayAdapter;
 import freemarker.template.DefaultListAdapter;
 import freemarker.template.DefaultMapAdapter;
@@ -53,6 +49,7 @@ import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import freemarker.template.utility.DeepUnwrap;
+import freemarker.template.utility.ObjectWrapperWithAPISupport;
 import freemarker.template.utility.RichObjectWrapper;
 
 /**
@@ -76,6 +73,7 @@ public abstract class LangFtlUtil {
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
     private static Template stringBuiltInCall = null;
     private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
+    private static final Map<String, Template> macroCalls = new ConcurrentHashMap<>();
 
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
@@ -183,7 +181,7 @@ public abstract class LangFtlUtil {
      * returns a non-escaping one.
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(ObjectWrapper objectWrapper) {
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -196,7 +194,7 @@ public abstract class LangFtlUtil {
      */
     public static ObjectWrapper getNonEscapingObjectWrapper(Environment env) {
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -210,7 +208,7 @@ public abstract class LangFtlUtil {
     public static ObjectWrapper getNonEscapingObjectWrapper() {
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         ObjectWrapper objectWrapper = env.getObjectWrapper();
-        if (objectWrapper instanceof EscapingObjectWrapper) {
+        if (objectWrapper instanceof ScipioExtendedObjectWrapper) {
             return FreeMarkerWorker.getDefaultOfbizWrapper();
         } else {
             return objectWrapper;
@@ -925,9 +923,9 @@ public abstract class LangFtlUtil {
     /**
      * Converts map to a simple wrapper, if applicable. Currently only applies to complex maps.
      * <p>
-     * If the specified ObjectWrapper is a BeansWrapper, this forces rewrapping as a SimpleMapModel.
-     * If it isn't we assume caller specified an objectWrapper that will rewrap the map with
-     * a simple model (we have no way of knowing).
+     * 2017-01-26: This has been changed so that it will by default try to wrap everything
+     * with DefaultMapAdapter (or SimpleMapModel for BeansWrapper compatibility), which will always work as long as
+     * the ObjectWrapper implements ObjectWrapperWithAPISupport.
      * <p>
      * WARN: Bypasses auto-escaping for complex maps; caller must decide how to handle
      * (e.g. the object wrapper used to rewrap the result).
@@ -938,24 +936,49 @@ public abstract class LangFtlUtil {
             // WARN: bypasses auto-escaping
             Map<?, ?> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             if (Boolean.TRUE.equals(copy)) {
-                return new SimpleHash(wrappedObject, objectWrapper);
+                return makeSimpleMapCopy(wrappedObject, objectWrapper);
             } else {
-                if (objectWrapper instanceof BeansWrapper) {
-                    // Bypass the beanswrapper wrap method and always make simple wrapper
-                    return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
-                } else {
-                    // If anything other than BeansWrapper for some reason, assume caller is aware and his wrapper will create a simple map
-                    return (TemplateHashModel) objectWrapper.wrap(wrappedObject);
-                }
+                return makeSimpleMapAdapter(wrappedObject, objectWrapper, true);
             }
-        }
-        else if (object instanceof TemplateHashModel) {
+        } else if (object instanceof TemplateHashModel) {
             return (TemplateHashModel) object;
-        }
-        else {
+        } else {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
+    
+    public static TemplateHashModelEx makeSimpleMapCopy(Map<?, ?> map, ObjectWrapper objectWrapper) throws TemplateModelException {
+        return new SimpleHash(map, objectWrapper);
+    }
+    
+    /**
+     * Adapts a map to a TemplateHashModelEx using an appropriate simple adapter, normally 
+     * DefaultMapAdapter (or SimpleMapModel for BeansWrapper compatibility).
+     * <p>
+     * The ObjectWrapper is expected to implement at least ObjectWrapperWithAPISupport.
+     * <p>
+     * WARN: If impossible, it will duplicate the map using SimpleHash; but because this may result
+     * in loss of ordering, a log warning will be printed.
+     */
+    public static TemplateHashModelEx makeSimpleMapAdapter(Map<?, ?> map, ObjectWrapper objectWrapper, boolean permissive) throws TemplateModelException {
+        // COMPATIBILITY MODE: check if exactly BeansWrapper, or a class that we know extends it WITHOUT extending DefaultObjectWrapper
+        if (objectWrapper instanceof ScipioBeansWrapper || BeansWrapper.class.equals(objectWrapper.getClass())) {
+            return new SimpleMapModel(map, (BeansWrapper) objectWrapper);
+        } else if (objectWrapper instanceof ObjectWrapperWithAPISupport) {
+            return DefaultMapAdapter.adapt(map, (ObjectWrapperWithAPISupport) objectWrapper);
+        } else {
+            if (permissive) {
+                Debug.logWarning("Scipio: adaptSimpleMap: Unsupported Freemarker object wrapper (expected to implement ObjectWrapperWithAPISupport or BeansWrapper); forced to adapt map"
+                        + " using SimpleHash; this could cause loss of map insertion ordering; please switch renderer setup to a different ObjectWrapper", module);
+                return new SimpleHash(map, objectWrapper);
+            } else {
+                throw new TemplateModelException("Tried to wrap a Map using an adapter class,"
+                        + " but our ObjectWrapper does not implement ObjectWrapperWithAPISupport or BeansWrapper"
+                        + "; please switch renderer setup to a different ObjectWrapper");
+            }
+        }
+    }
+    
     
     /**
      * Converts map to a simple wrapper, if applicable, by rewrapping
@@ -1150,6 +1173,26 @@ public abstract class LangFtlUtil {
             dest.put(key, source.get(key));
         }
     }
+    
+    /**
+     * Adds the still-wrapped TemplateModels in hash to a java Map.
+     * <p>
+     * <em>WARN</em>: This is not BeanModel-aware (complex map).
+     */    
+    public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModelEx source) throws TemplateModelException {
+        TemplateCollectionModel keysModel = source.keys();
+        TemplateModelIterator modelIt = keysModel.iterator();
+        while(modelIt.hasNext()) {
+            String key = getAsStringNonEscaping((TemplateScalarModel) modelIt.next());
+            dest.put(key, source.get(key));
+        }
+    }
+    
+    public static void addModelsToMap(Map<String, ? super TemplateModel> dest, TemplateHashModel source, Set<String> keys) throws TemplateModelException {
+        for(String key : keys) {
+            dest.put(key, source.get(key));
+        }
+    }
 
     /**
      * Makes a simple hash from source map; only specified keys.
@@ -1172,6 +1215,18 @@ public abstract class LangFtlUtil {
         SimpleHash res = new SimpleHash(objectWrapper);
         addToSimpleMap(res, map, LangFtlUtil.toStringSet(keys));
         return res;
+    }
+    
+    public static Map<String, TemplateModel> makeModelMap(TemplateHashModelEx source) throws TemplateModelException {
+        Map<String, TemplateModel> map = new HashMap<>();
+        addModelsToMap(map, source);
+        return map;
+    }
+    
+    public static Map<String, Object> makeModelObjectMap(TemplateHashModelEx source) throws TemplateModelException {
+        Map<String, Object> map = new HashMap<>();
+        addModelsToMap(map, source);
+        return map;
     }
 
     /**
@@ -1700,6 +1755,59 @@ public abstract class LangFtlUtil {
     
     
     /**
+     * Executes an arbitrary FTL macro.
+     */
+    public static void execMacro(String macroName, Map<String, TemplateModel> args, Environment env) throws TemplateModelException {
+        execMacro(getMacroCall(macroName, (args != null ? args.keySet() : null), env), args, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro.
+     */
+    public static void execMacro(String macroName, Environment env) throws TemplateModelException {
+        execMacro(getMacroCall(macroName, null, env), null, env);
+    }
+    
+    /**
+     * Gets an arbitrary FTL macro call - non-abstracted version (for optimization only!).
+     */
+    public static Template getMacroCall(String macroName, Collection<String> argNames, Environment env) throws TemplateModelException {
+        final String cacheKey = macroName + (argNames != null ? ":" + StringUtils.join(argNames, ":") : "");
+        Template macroCall = macroCalls.get(cacheKey);
+        if (macroCall == null) {
+            String argVarsStr = "";
+            if (argNames != null) {
+                for(String argName : argNames) {
+                    argVarsStr += " " + argName + "=_scpEfnArg_"+argName;
+                }
+            }
+            macroCall = makeFtlCodeTemplate("<@" + macroName + argVarsStr + "/>");
+            macroCalls.put(cacheKey, macroCall);
+        }
+        return macroCall;
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
+     */
+    public static void execMacro(Template macroCall, Map<String, TemplateModel> args, Environment env) throws TemplateModelException {
+        if (args != null) {
+            for(Map.Entry<String, TemplateModel> entry : args.entrySet()) {
+                env.setVariable("_scpEfnArg_"+entry.getKey(), entry.getValue());
+            }
+        }
+        execFtlCode(macroCall, env);
+    }
+    
+    /**
+     * Executes an arbitrary FTL macro - non-abstracted version (for optimization only!).
+     */
+    public static void execMacro(Template macroCall, Environment env) throws TemplateModelException {
+        execMacro(macroCall, null, env);
+    }
+    
+    
+    /**
      * Gets a var from main namespace with fallback on globals/data-model, or null if doesn't exit or null.
      * <p>
      * Avoids local variables and emulates a simple Freemarker var read in the main namespace.
@@ -1766,4 +1874,5 @@ public abstract class LangFtlUtil {
         }
         return new SimpleScalar(sb.toString());
     }
+    
 }

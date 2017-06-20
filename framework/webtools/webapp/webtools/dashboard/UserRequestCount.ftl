@@ -1,6 +1,7 @@
 <#assign chartType=chartType!"bar"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
-<#assign datasets=chartDatasets?number!1 />
+<#assign datasets=(chartDatasets!1)?number />
+<#assign userRequestCount=rewrapMap(userRequestCount, "raw-simple")>
 
 <#if userRequestCount?has_content> 
     <#if chartType == "line" || chartType == "bar">
@@ -9,7 +10,7 @@
                 <#assign currData = userRequestCount[key] />
                 <#if currData?has_content>
                     <#if datasets == 1>
-                        <@chartdata value="${currData!0}" title=key/>
+                        <@chartdata value=(currData!0) title=key/>
                     </#if>                
                 </#if>
             </#list>

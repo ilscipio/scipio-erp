@@ -1,12 +1,23 @@
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
-import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityUtilProperties;
 
+import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.common.uom.UomWorker;
+import org.ofbiz.common.uom.SimpleUomRateConverter;
+
+// NOTE: See SalesChart.groovy for more complete comments
+
+// FIXME: revisit reuse pattern
+asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
+// also works here:
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil.setBinding(binding);
 
 //// use this helper to build a List of visits, orders, order totals, and conversion rates
 //trackingCodeVisitAndOrders = ReportHelper.calcConversionRates(visits, orders, "trackingCodeId");
@@ -19,88 +30,94 @@ currentYearEndText = sdf.format(currentYearEnd);
 cacheId = "marketingTracking_" + currentYearBeginText + "-" + currentYearEndText;
 
 Map processResults() {
-    Map resultMap = [:];
-        
+    final def module = "TrackingCodeChart.groovy";
+    asutil.readDebugMode();
+    asutil.readZeroEntriesParams();
+     
     trackingCodeId = parameters.trackingCodeId;
     marketingCampaignId = parameters.marketingCampaignId;
-    
-    int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : -1;
-    String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
-    
-    // Check and sanitize fromDate/thruDate params
-    fromDate = parameters.fromDate;
-    thruDate = parameters.thruDate;
-    Timestamp fromDateTimestamp = null;
-    Timestamp thruDateTimestamp = null;
-    if (fromDate)
-        fromDateTimestamp = UtilDateTime.stringToTimeStamp(fromDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);    
-    if (thruDate)
-        thruDateTimestamp = UtilDateTime.stringToTimeStamp(thruDate, "yyyy-MM-dd HH:mm:ss", context.timeZone, context.locale);           
-    if (fromDateTimestamp && fromDateTimestamp < thruDateTimestamp) {
-        fromDate = null;
-        thruDate = null;
-    }  
-    if (!fromDateTimestamp) {
-        iCount = UtilDateTime.getIntervalDefaultCount(iScope);        
-        fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);        
-    }
 
-    if (iScope.equals("quarter")) iCount = Math.round(iCount / 3);
-    if (iScope.equals("semester")) iCount = Math.round(iCount / 6);
-   
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);        
-    if (thruDateTimestamp && dateIntervals["dateEnd"] < thruDateTimestamp)
-        dateIntervals["dateEnd"] = thruDateTimestamp;
+    //asutil.readProductStoreParams();
+    //asutil.readCurrencyUomParams();
+    asutil.readChartTimeParams();
+    asutil.readDateIntervalsFormatter();
         
-    exprList = [];
+    Map resultMap = new LinkedHashMap<String, Object>();
+    
+    // Do main queries
+    // FIXME: QUERY AND RESULT PROCESSING NON-FUNCTIONAL
+    
+    trackCondList = [];
     if (marketingCampaignId && !trackingCodeId) {
         trackingCodeList = select("trackingCodeId").from("TrackingCode").where(["marketingCampaignId" : marketingCampaignId]).queryList();
         trackingCodes = [];
-        for (trackingCode in trackingCodeList) 
+        for (trackingCode in trackingCodeList)
             trackingCodes += trackingCode.trackingCodeId;
         if (trackingCodes)
-            exprList.add(EntityCondition.makeCondition("trackingCodeId", EntityOperator.IN, trackingCodes));        
+            trackCondList.add(EntityCondition.makeCondition("trackingCodeId", EntityOperator.IN, trackingCodes));
     } else if (trackingCodeId) {
-        exprList.add(EntityCondition.makeCondition("trackingCodeId", EntityOperator.EQUALS, trackingCodeId));
+        trackCondList.add(EntityCondition.makeCondition("trackingCodeId", EntityOperator.EQUALS, trackingCodeId));
+    } else {
+        return null;
     }
-     
-    if ((marketingCampaignId || trackingCodeId) && exprList) {
-        
-        for (int i = 0; i < iCount; i++) {            
-            int totalVisits = 0;
-            int totalOrders = 0;
-            conditionList = [];
-            
-            // Get visits
-            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, 
-                EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()),
-                EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd())], EntityJoinOperator.AND));            
-            visitList = select("visitId").from("TrackingCodeAndVisit").where(conditionList).queryList();
-            for (v in visitList)
-                totalVisits += v.visitId;                
-            // Get orders
-            conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(exprList), EntityJoinOperator.AND, 
-                    EntityCondition.makeCondition([EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()),
-                    EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd())], EntityJoinOperator.AND));
-            orderList = select("orderId").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
-            for (o in orderList) {
-                totalOrders += o.orderId;
-            }
-            
-            dateBeginFormatted = dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin());           
-            Map newMap = [:];
-            newMap.put("totalOrders", totalOrders);                
-            newMap.put("totalVisits", totalVisits);
-            resultMap.put(dateBeginFormatted, newMap);
-            
-            dateEnd = dateIntervals.getDateEnd();
-            if (thruDateTimestamp && dateIntervals.getDateEnd() < thruDateTimestamp)
-                dateEnd = thruDateTimestamp;
-            dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateEnd, context.locale, context.timeZone);
-        }
-    }
-    return resultMap;
+
+    //asutil.checkCreateZeroEntries(resultMap, ["totalOrders": 0, "totalVisits": 0]);
     
+    def trackingStats = [ "totalOrders": 0, "totalVisits": 0];
+    
+    def dateIntv = dateIntervals;
+    // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive)
+    int i = 0;
+    while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntv.getDateBegin().after(thruDateTimestamp))) {
+        dateEnd = dateIntv.getDateEnd();
+        if (thruDateTimestamp && thruDateTimestamp.before(dateIntv.getDateEnd()))
+            dateEnd = thruDateTimestamp;
+        
+        int totalVisits = 0;
+        int totalOrders = 0;
+        conditionList = [];
+        
+        // Get visits
+        conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(trackCondList), EntityJoinOperator.AND,
+            EntityCondition.makeCondition([EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntv.getDateBegin()),
+            EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, dateEnd)], EntityJoinOperator.AND));
+        visitList = select("visitId").from("TrackingCodeAndVisit").where(conditionList).queryList();
+        for (v in visitList)
+            totalVisits += v.visitId;
+        // Get orders
+        conditionList = EntityCondition.makeCondition(EntityCondition.makeCondition(trackCondList), EntityJoinOperator.AND,
+                EntityCondition.makeCondition([EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntv.getDateBegin()),
+                EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, dateEnd)], EntityJoinOperator.AND));
+        orderList = select("orderId").from("TrackingCodeAndOrderHeader").where(conditionList).queryList();
+        for (o in orderList) {
+            totalOrders += o.orderId;
+        }
+        
+        dateBeginFormatted = dateFormatter.format(dateIntv.getDateBegin());
+        Map newMap = [:];
+        newMap.put("totalOrders", totalOrders);
+        newMap.put("totalVisits", totalVisits);
+        newMap.put("pos", totalVisits);
+        resultMap.put(dateBeginFormatted, newMap);
+        
+        trackingStats.totalOrders += totalOrders;
+        trackingStats.totalVisits += totalVisits;
+        
+        dateIntv = UtilDateTime.getPeriodIntervalAndFormatter(iScope, 1, dateIntv.getDateBegin(), context.locale, context.timeZone);
+        i++;
+    }
+    
+    if (debugMode) {
+        Debug.logInfo("Number of results: " + resultMap.size(), module);
+    }
+    
+    context.trackingStats = trackingStats;
+    
+    //asutil.storeProductStoreParams();
+    //asutil.storeCurrencyUomParams();
+    
+    return resultMap;
 }
+
 result = processResults();
 context.result = result;

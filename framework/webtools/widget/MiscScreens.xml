@@ -172,6 +172,15 @@ under the License.
                 <!-- dynamic form -->
                 <set field="miscMenusLocation" value="component://webtools/widget/MiscMenus.xml"/>
                 <include-menu-actions name="WebtoolsMenuActionsDemo4" location="${miscMenusLocation}"/>
+                
+                <!-- Test for inline scripts (new in Scipio) and GroovyBaseScript extension for inline scripts (new in Scipio, 2017-01-27) -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    productStores = select("productStoreId").from("ProductStore").orderBy("productStoreId").cache(true).queryList().collect { it.productStoreId };
+                    Debug.logInfo("Product stores in system (cached): " + productStores, "InlineDemoScript.groovy");
+                ]]></script>
+                <!-- NOTE: in the following, we cannot use the nice groovy collect() method with closure, because syntax doesn't support nested brackets... -->
+                <set field="dummy" value="${groovy: import org.ofbiz.base.util.*; Debug.logInfo('WebSite records in system (cached): ' + UtilMisc.collectMapValuesForKey(from('WebSite').orderBy('webSiteId').cache(true).queryList(), 'webSiteId'), 'InlineDemoAssignScript.groovy'); '';}"/>
             </actions>
             <widgets>
                 <!-- 
@@ -488,6 +497,49 @@ under the License.
                         </section>
                     </screenlet>
                     
+                    <screenlet title="New include directive actions (post-context-stack-push)">
+                        <section share-scope="false">
+                            <actions>
+                                <set field="mySimpleVar1" value="OutsideValue"/>
+                                <script lang="groovy"><![CDATA[
+                                    public class TestUtil {
+                                        def logVars(context, label) {
+                                            org.ofbiz.base.util.Debug.logInfo(label + ": mySimpleVar1: " + context.mySimpleVar1
+                                                + "; mySimpleVar2: " + context.mySimpleVar2, "IncludeActionsTestGroovy");
+                                        }
+                                    }
+                                    context.testUtil = new TestUtil();
+                                    context.remove("mySimpleVar2");
+                                ]]></script>
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <actions>
+                                        <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "pre-include, pre-stack-push"); ]]></script>
+                                    </actions>
+                                    <widgets>
+                                        <label text="Hello from before include directive. mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+                                        <include-screen name="DemoLabelWidgetWithVars">
+                                            <actions>
+                                                <set field="mySimpleVar1" value="InnerStackValue"/>
+                                                <set field="mySimpleVar2" value="InnerStackValue"/>
+                                                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "pre-include, post-stack-push"); ]]></script>
+                                            </actions>
+                                        </include-screen>
+                                        <section>
+                                            <actions>
+                                                <script lang="groovy"><![CDATA[ context.testUtil.logVars(context, "post-include, post-stack-pop"); ]]></script>
+                                            </actions>
+                                            <widgets>
+                                                <label text="Hello from after include directive (stack popped). mySimpleVar1: ${groovy: context.mySimpleVar1 ?: 'missing'}. mySimpleVar2: ${groovy: context.mySimpleVar2 ?: 'missing'}."/>
+                                            </widgets>
+                                        </section>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </screenlet>
+                    
                     <screenlet title="New conditional element tests (if, if-widget)">
                         <section>
                             <actions>
@@ -587,6 +639,87 @@ under the License.
                         </section>
                     </screenlet>
                 </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TargetedRenderingTest">
+        <section>
+            <actions>
+                <set field="title" value="Targeted Rendering Test"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="LayoutDemo" />
+                <set field="activeSubMenuItem" value="${groovy: (context.debugMode ? 'LayoutDemoDebug' : 'LayoutDemo')}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="TR-Widget-Section-1">
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <container id="tr-widget-container-1">
+                                    <platform-specific>
+                                        <html><html-template location="component://webtools/webapp/webtools/layout/targetedrenderingtest.ftl"/></html>
+                                    </platform-specific>
+                                </container>
+                                <container id="tr-widget-container-2">
+                                    <decorator-screen name="TargetedRenderingTestSubDecorator">
+                                        <decorator-section name="body">
+                                            <container id="tr-widget-container-3">
+                                                <label text="Hello from sub-decorator body"/>
+                                            </container>
+                                        </decorator-section>
+                                    </decorator-screen>
+                                </container>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="TargetedRenderingTestDeepWidget1">
+        <section name="TR-Widget-Deep-Section-2">
+            <widgets><label text="Hello from widget within ftl file"/></widgets>
+        </section>
+    </screen>
+    
+    <screen name="TargetedRenderingTestSubDecorator">
+        <section name="TR-SubDec-Section-Top">
+            <widgets>
+                <section name="TR-SubDec-Section-1">
+                    <widgets>
+                        <screenlet id="tr-subdec-screenlet-1">
+                            <platform-specific><html><html-template><![CDATA[
+                            <@virtualSection name="tr-subdec-ftl-virtual-1">
+                                <div>
+                                    <p>We are inside sub decorator section 1</p>
+                                </div>
+                            </@virtualSection>
+                            ]]></html-template></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
+                <section name="TR-SubDec-Section-2">
+                    <widgets>
+                        <screenlet id="tr-subdec-screenlet-2">
+                            <platform-specific><html><html-template><![CDATA[
+                            <@virtualSection name="tr-subdec-ftl-virtual-2">
+                                <div>
+                                    <p>We are inside sub decorator section 2</p>
+                                    <@render type="section" name="body"/>
+                                    <p>We are inside sub decorator section 2</p>
+                                </div>
+                            </@virtualSection>
+                            ]]></html-template></html></platform-specific>
+                        </screenlet>
+                    </widgets>
+                </section>
             </widgets>
         </section>
     </screen>

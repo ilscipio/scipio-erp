@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#-- SCIPIO: TODO: reorganize the code sharing with productdetail, very similar -->
 <#-- SCIPIO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->
@@ -613,34 +613,35 @@ ${virtualJavaScript!}
 
 
 <@section>
-
     <#assign prodLongDescr = escapeVal(productContentWrapper.get("LONG_DESCRIPTION")!, 'htmlmarkup', {"allow":"internal"})/>
     <#if !prodLongDescr?has_content>
       <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
     <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
-
-    <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
-
-      <#-- "Configuration" is too weird for an iitem like a pizza: ${uiLabelMap.CommonConfiguration} -->
-      <li class="tab-title"><a href="#panel31"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.CommonOptions}</a></li>
-    </ul>
-    <div class="tabs-content">
-        <div class="content active" id="panel11">
-            <@productDetailLongDescContent />
-        </div>
-            
-        <div class="content" id="panel21">
-            <@productDetailProductAttribContent />
-        </div>
-        
-        <div class="content" id="panel31">
-            <@productConfigurator />
-        </div>
-    </div>
-
+    
+    <#assign productDetailLongDescContentString><@productDetailLongDescContent /></#assign>
+    <#assign productDetailProductAttribContentString><@productDetailProductAttribContent /></#assign>
+    <#assign productConfiguratorString><@productConfigurator /></#assign>
+    
+    <#if productDetailLongDescContentString?has_content || productDetailProductAttribContentString?has_content || productConfiguratorString?has_content>
+        <@tabs>
+            <#if productDetailLongDescContentString?has_content>
+                <@tab title=uiLabelMap.CommonOverview>
+                    ${productDetailLongDescContentString}
+                </@tab>
+            </#if>
+            <#if productDetailProductAttribContentString?has_content>
+                <@tab title=uiLabelMap.CommonSpecifications>
+                    ${productDetailProductAttribContentString}
+                </@tab>
+            </#if>
+            <#if productConfiguratorString?has_content>
+                <@tab title=uiLabelMap.CommonOptions>
+                    ${productConfiguratorString}
+                </@tab>
+            </#if>
+        </@tabs>
+    </#if>
 </@section>
 
   <#-- SCIPIO: Not for now

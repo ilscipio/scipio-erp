@@ -122,8 +122,7 @@ under the License.
         <menu-item name="solrAdmin"/>
     </menu>
 
-    <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="tempexpr" title="${uiLabelMap.WebtoolsTemporalExpression}">
             <link target="findTemporalExpression"/>
         </menu-item>
@@ -131,13 +130,11 @@ under the License.
             <link target="myCertificates"/>
         </menu-item>
     </menu>
-    <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="configurationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="configurationTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="importExportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="importExportTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="data" title="${uiLabelMap.WebtoolsDataFileTools}">
             <link target="viewdatafile"/>
         </menu-item>
@@ -166,13 +163,11 @@ under the License.
             <link target="EntityImportReaders"/>
         </menu-item>
     </menu>
-    <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="importExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="importExportTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="serviceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="serviceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="serviceList" title="${uiLabelMap.WebtoolsServiceReference}">
             <link target="ServiceList"/>
         </menu-item>
@@ -194,8 +189,7 @@ under the License.
             <link target="runService"/>
         </menu-item>
     </menu>
-    <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="page.activeSubMenuItem">
+    <menu name="serviceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="serviceTabBar" recursive="includes-only" />
     </menu>
 
@@ -221,6 +215,7 @@ under the License.
         </menu-item>
         <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
             <link target="myCertificates"/>
+            <sub-menu name="configuration" include="configurationSideBar"/>
         </menu-item>
     </menu>
 
@@ -274,11 +269,13 @@ under the License.
         <include-elements menu-name="labelTabBar" recursive="includes-only" />
     </menu>
     
+    <!-- SCIPIO: TODO?: child sidebar instead, maybe... and/or parent could link to edit instead of find when temporalExpression not empty... -->
     <menu name="TempExprTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabMenuItem">
         <menu-item name="findExpression" title="${uiLabelMap.CommonFind}">
             <link target="findTemporalExpression"/>
         </menu-item>
+        <!-- SCIPIO: this appears redundant. show create instead.
         <menu-item name="editExpression" title="${uiLabelMap.CommonEdit}">
             <condition>
                 <not><if-empty field="temporalExpression"/></not>
@@ -286,6 +283,9 @@ under the License.
             <link target="editTemporalExpression">
                 <parameter param-name="tempExprId" from-field="temporalExpression.tempExprId"/>
             </link>
+        </menu-item>-->
+        <menu-item name="createExpression" title="${uiLabelMap.CommonCreate}">
+            <link target="editTemporalExpression"/>
         </menu-item>
     </menu>
 
@@ -417,17 +417,36 @@ under the License.
         <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
             <link target="FindUtilCache"/>
         </menu-item>
+        <menu-item name="edit" title="${uiLabelMap.PageTitleEditUtilCache}"><!-- SCIPIO -->
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
+            <link target="EditUtilCache">
+                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="EditCache" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
+            <link target="FindUtilCache"/>
+        </menu-item>
         <menu-item name="clear" title="${uiLabelMap.WebtoolsClearThisCache}">
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
             <link target="EditUtilCacheClear">
                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
                <parameter param-name="type" from-field="parameters.type"/>
             </link>
         </menu-item>
-        <menu-item name="back" title="${uiLabelMap.WebtoolsBackToCacheMaintenance}">
-            <link target="FindUtilCache"/>
+        <menu-item name="elements" title="${uiLabelMap.WebtoolsElements}"><!-- SCIPIO -->
+            <condition>
+                <not><if-empty field="cache"/></not>
+            </condition>
+            <link target="FindUtilCacheElements">
+                <parameter param-name="UTIL_CACHE_NAME" from-field="cacheName"/>
+            </link>
         </menu-item>
     </menu>
     
@@ -447,7 +466,7 @@ under the License.
             </link>
         </menu-item>
     </menu>    
-    <menu name="geoManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="geoManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="geoManagementTabBar" recursive="includes-only" />
     </menu>
     

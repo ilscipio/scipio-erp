@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#assign cart = sessionAttributes.shoppingCart!>
 

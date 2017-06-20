@@ -23,11 +23,11 @@ under the License.
 
     <ContactList contactListId="9000" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="EMAIL_ADDRESS" marketingCampaignId="9000"
         contactListName="New Product Announcements" description="New Product Announcements Mailing List (email)" comments="" isPublic="Y" ownerPartyId="Company"
-        verifyEmailFrom="ofbiztest@example.com" verifyEmailScreen="component://shop/widget/EmailContactListScreens.xml#ContactListVerifyEmail"
+        verifyEmailFrom="test@scipioerp.com" verifyEmailScreen="component://shop/widget/EmailContactListScreens.xml#ContactListVerifyEmail"
         verifyEmailSubject="Subscription Verify Email" verifyEmailWebSiteId="ScipioWebStore"/>
     <ContactList contactListId="9010" contactListTypeId="NEWSLETTER" contactMechTypeId="EMAIL_ADDRESS" marketingCampaignId="9000"
         contactListName="Product Tips Newsletter" description="Product Tips Newsletter Mailing List (email)" comments="" isPublic="Y" ownerPartyId="Company"
-        verifyEmailFrom="ofbiztest@example.com" verifyEmailScreen="component://shop/widget/EmailContactListScreens.xml#ContactListVerifyEmail"
+        verifyEmailFrom="test@scipioerp.com" verifyEmailScreen="component://shop/widget/EmailContactListScreens.xml#ContactListVerifyEmail"
         verifyEmailSubject="Subscription Verify Email" verifyEmailWebSiteId="ScipioWebStore"/>
 
     <ContactListParty contactListId="9000" partyId="DemoCustCompany" preferredContactMechId="9021" statusId="CLPT_ACCEPTED" fromDate="2001-05-13 00:00:00"/>

@@ -340,6 +340,21 @@ under the License.
                 </menu-item>
             </sub-menu>
         </menu-item>
+        <menu-item name="myMenuPassedVar1" title="${groovy: context.myMenuPassedVar1 ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="myMenuPassedGlobalVar1" title="${groovy: context.myMenuPassedGlobalVar1 ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
+        <menu-item name="myMenuPassedReqAttrib1" title="${groovy: request.getAttribute('myMenuPassedReqAttrib1') ?: 'missing'}">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+            </link>
+        </menu-item>
     </menu>
     
     <menu name="WebtoolsPlainSiteMapDemo" selected-menu-context-field-name="activeMainMenu" selected-menuitem-context-field-name="activeMainMenuItem">
@@ -423,6 +438,23 @@ under the License.
             <include-menu-actions name="WebtoolsMenuActionsDemo3"/><!-- DYNAMIC, non-textual include -->
             <set field="commonActionField9" value="This value 9 was set in WebtoolsMenuActionsDemo4. [SUCCESS]"/>
         </actions>
+    </menu>
+    
+    <menu name="TargetedRenderingTestMenu1" id="TargetedRenderingTestMenu1">
+        <menu-item name="item1" title="Inline-Section Menu Item 1">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+        <menu-item name="item2" title="Inline-Section Menu Item 2">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
     </menu> 
 
 </menus>

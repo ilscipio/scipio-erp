@@ -22,31 +22,35 @@ under the License.
             slidesToShow: ${viewCluster!4},
             slidesToScroll: ${viewScrollCluster!4},
             dots: true,
+            respondTo : 'window',
+            mobileFirst : false,
             focusOnSelect: true,
-            adaptiveHeight: true,
+            lazyLoad: 'progressive',
+            adaptiveHeight: false,
+            useTransform:false,
+            variableWidth:false,
              responsive: [
                 {
-                  breakpoint: 1024,
+                  breakpoint: 992,
                   settings: {
                     slidesToShow: 3,
                     slidesToScroll: 3,
                     infinite: true,
-                    dots: true
+                    dots: true,
+                    variableWidth:false
                   }
                 },
                 {
-                  breakpoint: 600,
+                  breakpoint: 768,
                   settings: {
                     slidesToShow: 2,
-                    slidesToScroll: 2
+                    slidesToScroll: 2,
+                    variableWidth:false
                   }
                 },
                 {
-                  breakpoint: 480,
-                  settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                  }
+                  breakpoint: 544,
+                  settings: 'unslick'
                 }]
         </#assign>
         <@slider library="slick" jsOptions=jsOptions class="slider slides-${viewCluster!4}"> <#-- Relying on Slick Slider here - requires additional seed data.-->

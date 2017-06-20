@@ -354,6 +354,11 @@
         <value xml:lang="zh">添加分类总账账户</value>
         <value xml:lang="zh_TW">增加總帳科目分類</value>
     </property>
+    <!-- SCIPIO -->
+    <property key="AccountingCustomTimePeriod">
+        <value xml:lang="de">Individuelle Zeiträume</value>
+        <value xml:lang="en">Custom Time Period</value>
+    </property>
     <property key="AccountingAddCustomTimePeriod">
         <value xml:lang="de">Individueller Zeitraum hinzufügen</value>
         <value xml:lang="en">Add Custom Time Period</value>
@@ -718,7 +723,7 @@
         <value xml:lang="zh_TW">合約識別</value>
     </property>
     <property key="AccountingAgreementInformation">
-        <value xml:lang="de">Vereinbarungsinformation</value>
+        <value xml:lang="de">Details zur Vereinbarung</value>
         <value xml:lang="en">Agreement Information</value>
         <value xml:lang="fr">Information sur l'accord commercial</value>
         <value xml:lang="hi_IN">अनुबंध जानकारी</value>
@@ -2265,7 +2270,7 @@
     </property>
     <property key="AccountingBillingAddress">
         <value xml:lang="ar">عنوان الفوترة</value>
-        <value xml:lang="de">Rechnugsadresse</value>
+        <value xml:lang="de">Rechnugnsadresse</value>
         <value xml:lang="en">Billing Address</value>
         <value xml:lang="es">Dirección de facturación</value>
         <value xml:lang="fr">Adresse de facturation</value>
@@ -2841,7 +2846,7 @@
     <property key="AccountingChartOfAcctsMenu">
         <value xml:lang="ar">بيان الحسابات</value>
         <value xml:lang="cs">Účtová osnova</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen</value>
         <value xml:lang="en">Chart of Accounts</value>
         <value xml:lang="es">Carta de cuentas</value>
         <value xml:lang="fr">Plan comptable</value>
@@ -4738,6 +4743,9 @@
         <value xml:lang="zh_TW">修改信用卡</value>
     </property>
     <property key="AccountingEditCustomTimePeriods">
+        <value xml:lang="en">Custom Time Periods</value>
+    </property>
+    <property key="AccountingEditCustomTimePeriods">
         <value xml:lang="de">Individuelle Zeiträume bearbeiten</value>
         <value xml:lang="en">Edit Custom Time Periods</value>
         <value xml:lang="fr">Modifier les périodes de temps</value>
@@ -5568,7 +5576,7 @@
         <value xml:lang="zh_TW">尋找應收支付</value>
     </property>
     <property key="AccountingFindBudgets">
-        <value xml:lang="en">Budgets suchen</value>
+        <value xml:lang="de">Budgets suchen</value>
         <value xml:lang="en">Find Budgets</value>
     </property>
     <property key="AccountingFindDepositSlip">
@@ -7078,7 +7086,7 @@
     <property key="AccountingGlAccountDefault">
         <value xml:lang="ar">القيم الإفتراضية للحساب المحاسبي</value>
         <value xml:lang="de">HB Standard Konto</value>
-        <value xml:lang="en">GL Account defaults</value>
+        <value xml:lang="en">GL Account Defaults</value>
         <value xml:lang="es">Valores predeterminados de cuentas de LM</value>
         <value xml:lang="fr">Comptes par défaut</value>
         <value xml:lang="hi_IN">जीएल(GL) खाता डिफ़ॉल्ट्स</value>
@@ -15807,7 +15815,7 @@
     <property key="AcctgChartOfAcctsTabMenu">
         <value xml:lang="ar">بيان الحسابات</value>
         <value xml:lang="cs">Účtová osnova</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen</value>
         <value xml:lang="en">Chart of Accounts</value>
         <value xml:lang="es">Carta de cuentas</value>
         <value xml:lang="fr">Plan comptable</value>
@@ -15991,7 +15999,7 @@
     </property>
     <property key="AcctgNavigateAccts">
         <value xml:lang="ar">إستكشاف الحسابات</value>
-        <value xml:lang="de">Kontenübersicht</value>
+        <value xml:lang="de">Kontenrahmen (Baum)</value>
         <value xml:lang="en">Navigate Accounts</value>
         <value xml:lang="es">Navegación de cuentas</value>
         <value xml:lang="fr">Naviguer dans les comptes</value>
@@ -20456,7 +20464,7 @@
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
     
-    <!-- Scipio: New Billing Account labels -->
+    <!-- SCIPIO: New Billing Account labels -->
     <property key="PageTitleListBillingAccountRoles">
         <value xml:lang="en">Billing Account Role List</value>
     </property>
@@ -22389,6 +22397,14 @@
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
     <!-- SCIPIO: TODO: Localize -->
+    <property key="AccountingContracts">
+        <value xml:lang="de">Verträge</value>
+        <value xml:lang="en">Contracts</value>
+    </property>
+    <property key="AccountingControlling">
+        <value xml:lang="de">Controlling</value>
+        <value xml:lang="en">Controlling</value>
+    </property>
     <property key="AccountingMaintenanceJobs">
         <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>
@@ -22421,5 +22437,28 @@
     <property key="AccountingPaymentNotFound">
         <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
         <value xml:lang="en">Payment ${paymentId} not found...</value>
+    </property>
+    <!-- SCIPIO -->
+    <property key="AccountingCreditors">
+        <value xml:lang="de">Kreditoren</value>
+        <value xml:lang="en">Creditors</value>
+    </property>
+    <property key="AccountingCreditor">
+        <value xml:lang="de">Kreditor</value>
+        <value xml:lang="en">Creditor</value>
+    </property>
+    <property key="AccountingDebtors">
+        <value xml:lang="de">Debitoren</value>
+        <value xml:lang="en">Debtors</value>
+    </property>
+    <property key="AccountingDebtor">
+        <value xml:lang="de">Debitor</value>
+        <value xml:lang="en">Debtor</value>
+    </property>
+    <property key="PageTitleNewTaxAuthorityPartyInfo">
+        <value xml:lang="de">Neue Informationen der Steuerbehörde</value>
+        <value xml:lang="en">New Tax Authority Party Info</value>
+        <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
+        <value xml:lang="fr">Ajouter informations d'une administration fiscale</value>
     </property>
 </resource>

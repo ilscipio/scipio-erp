@@ -161,19 +161,36 @@ public class GroovyUtil {
         }
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> loadClass(String path) throws ClassNotFoundException {
         return new GroovyClassLoader().loadClass(path);
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> parseClass(InputStream in, String location) throws IOException {
         return new GroovyClassLoader().parseClass(UtilIO.readString(in), location);
     }
+    
     public static Class<?> parseClass(InputStream in, String location, GroovyClassLoader groovyClassLoader) throws IOException {
         return groovyClassLoader.parseClass(UtilIO.readString(in), location);
     }
 
+    /**
+     * @deprecated SCIPIO: 2017-01-30: ambiguous; method specifying an explicit ClassLoader should be used instead, to ensure library loading consistency.
+     */
+    @Deprecated
     public static Class<?> parseClass(String text) {
         return new GroovyClassLoader().parseClass(text);
+    }
+    
+    public static Class<?> parseClass(String text, GroovyClassLoader groovyClassLoader) { // SCIPIO: added 2017-01-27
+        return groovyClassLoader.parseClass(text);
     }
 
     public static Object runScriptAtLocation(String location, String methodName, Map<String, Object> context) throws GeneralException {
@@ -203,6 +220,48 @@ public class GroovyUtil {
         runScriptAtLocation(location, methodName, context);
         return context;
     }
-
+    
+    /**
+     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
+     * initialized with the given {@link groovy.lang.Binding}.
+     * <p>
+     * Similar to calling (in Groovy code):
+     * <pre>
+     * {@code
+     * def inst = GroovyUtil.getScriptClassFromLocation(location).newInstance();
+     * inst.setBinding(binding);
+     * }
+     * </pre>
+     * <p>
+     * NOTE: Although this can handle groovy classes that do not extend <code>groovy.lang.Script</code>,
+     * in such cases you may want to call {@link #getScriptClassFromLocation}
+     * together with <code>.newInstance()</code> instead of this.
+     * <p>
+     * Added 2017-01-26.
+     * @see #getScriptClassFromLocation
+     */
+    public static Script getScriptFromLocation(String location, Binding binding) throws GeneralException {
+        return InvokerHelper.createScript(getScriptClassFromLocation(location), binding);
+    }
+    
+    /**
+     * SCIPIO: Returns a {@link groovy.lang.Script} instance for the script groovy class at the given location,
+     * initialized with binding built from the given context.
+     * <p>
+     * Added 2017-01-26.
+     * @see #getScriptFromLocation(String, Binding)
+     */
+    public static Script getScriptFromLocation(String location, Map<String, Object> context) throws GeneralException {
+        return InvokerHelper.createScript(getScriptClassFromLocation(location), getBinding(context));
+    }
+    
+    /**
+     * SCIPIO: Returns the static <code>GroovyClassLoader</code> instance, configured
+     * for Ofbiz script base class and other settings.
+     */
+    public static GroovyClassLoader getGroovyScriptClassLoader() {
+        return groovyScriptClassLoader;
+    }
+    
     private GroovyUtil() {}
 }

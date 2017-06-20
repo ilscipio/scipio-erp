@@ -41,18 +41,48 @@ under the License.
     <service name="getSystemInfoNotes" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoNotes">
         <description>Get system notes for the logged on party</description>
+                <!-- view and page fields -->
+        <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
+        <attribute name="viewSize" type="Integer" mode="INOUT" optional="true"/>
+        <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
+        
         <attribute name="systemInfoNotes" type="List" mode="OUT" optional="true"/>
     </service>
+    <!-- SCIPIO: Deprecated
     <service name="getLastSystemInfoNote" engine="simple" auth="false"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getLastSystemInfoNote">
         <description>Get last system note for the logged on party</description>
         <attribute name="lastSystemInfoNote1" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote2" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="lastSystemInfoNote3" type="GenericValue" mode="OUT" optional="true"/>
-    </service>
+    </service> 
+    -->
     <service name="getSystemInfoStatus" engine="simple" auth="true"
         location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemInfoStatus">
         <description>Get system status for the logged on party</description>
         <attribute name="systemInfoStatus" type="List" mode="OUT" optional="true"/>
+    </service>
+    
+    <!-- SCIPIO -->
+    <service name="getSystemMessages" engine="simple" auth="true"
+        location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="getSystemMessages">
+        <description>Get system messages for an authenticated party</description>
+        
+        <attribute name="toPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="typeId" type="String" mode="IN" optional="true"/>
+        
+        <!-- view and page fields -->
+        <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
+        <attribute name="viewSize" type="Integer" mode="INOUT" optional="true"/>
+        <attribute name="showAll" type="String" mode="INOUT" optional="true"/>
+        
+        <attribute name="messages" type="List" mode="OUT" optional="true"/>
+        <attribute name="count" type="Long" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="convertSystemMessageFromNoteData" engine="simple" auth="true"
+        location="component://commonext/script/org/ofbiz/SystemInfoServices.xml" invoke="convertSystemMessageFromNoteData">
+        <description>Get system messages for an authenticated party</description>
+        <auto-attributes mode="IN" entity-name="NoteData" include="all" optional="true"/>        
     </service>
 </services>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to Ilscipio Gmbh (ILSCIPIO) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ -->
+<ivy-module version="2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info module="base" organisation="com.ilscipio.scipio.ce"/>
+    <configurations>
+        <!-- configurations for initial download/build -->
+        <conf name="application" description="download all jars required for build"/>
+
+        <conf name="base" description="download all base root jars required for build"/>
+        <conf name="ant" description="download all ant jars required for build"/>
+        <conf name="commons" description="download all commons jars required for build"/>
+        <conf name="j2eespecs" description="download all j2eespecs jars required for build"/>
+        <conf name="scripting" description="download all scripting jars required for build"/>
+        
+        <!-- TODO?: these are from the root /ivy.xml...
+        <conf name="activemq" description="downloads the ActiveMQ jars"/>
+        <conf name="cobertura" description="downloads cobertura 1.9.4.1 (GPL2.0) http://cobertura.sourceforge.net/"/>
+        <conf name="sonar-ant-task" description="downloads the ant sonar task (need sonar>=2.8)
+            http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Ant+Task"/>
+        -->
+    </configurations>
+
+    <dependencies>
+        <!-- dependencies for initial/build downloads -->
+        <!-- re base root -->
+        <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.xmlgraphics" name="fop" rev="1.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base->default"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base->default"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.3.3" transitive="false" conf="base->default"/>
+        <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base->default"/>
+        <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base->default"/>
+        <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base->default"/>
+        <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base->default"/>
+        <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base->default"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.4" conf="base->default"/>
+        <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base->default"/>
+        <dependency org="org.freemarker" name="freemarker" rev="2.3.22" transitive="false" conf="base->default"/>
+        <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="base->default"/>
+        <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" transitive="false" conf="base->default"/>
+        <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" transitive="false" conf="base->default"/>
+        <dependency org="jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.3" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.3" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.3" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.3" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.3" transitive="false" conf="base->default"/>
+        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" transitive="false" conf="base->default"/>
+        <dependency org="xerces" name="xercesImpl" rev="2.11.0" transitive="false" conf="base->default"/>
+        <dependency org="xml-apis" name="xml-apis" rev="1.4.01" transitive="false" conf="base->default"/>
+        <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="1.5" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.2" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-common" rev="3.1.2" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.2" transitive="false" conf="base->default"/>
+        <dependency org="xpp3" name="xpp3" rev="1.1.4c" transitive="false" conf="base->default"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base->default"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base->default"/>
+        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0" transitive="false" conf="base->default"/>
+        <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" transitive="false" conf="base->default"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.0" transitive="false" conf="base->default"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" transitive="false" conf="base->default"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2" transitive="false" conf="base->default"/>
+        <dependency org="org.jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.ws.commons" name="ws-commons-java5" rev="1.0.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" transitive="false" conf="base->default"/>
+        <dependency org="joda-time" name="joda-time" rev="2.9.9" transitive="false" conf="base->default" />
+        <!-- FIXME: version not available
+        <dependency org="?" name="batik-all" rev="1.7" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz
+        <dependency org="jdbm" name="jdbm" rev="1.0" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: this version is only in Adobe 3rd-party repo
+        <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: the specific version we need, 1.2, is not in central; only 1.3 is
+        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.2" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: not in any repo
+        <dependency org="?" name="jpim" rev="0.1" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: 4.2.0 only available in third-party repo
+        <dependency org="avalon-framework" name="avalon-framework" rev="4.2.0" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: only available in third-party repo
+        <dependency org="org.apache.xerces" name="serializer" rev="2.9.1" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: not in any repo
+        <dependency org="?" name="jpim" rev="0.1" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: only in 3rd-party repo
+        <dependency org="org.apache.xerces" name="resolver" rev="2.9.1" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: this appears to be a custom package
+        <dependency org="?" name="bsh-engine-modified" rev="?" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: this appears to be a custom package
+        <dependency org="?" name="bsh-engine-modified" rev="?" transitive="false" conf="base->default"/>-->
+        <!-- FIXME: nowhere to be found
+        <dependency org="?" name="clhm-release" rev="1.0-lru" transitive="false" conf="base->default"/>-->
+        <!-- TODO?: Handle sonar here, instead of dedicated download task?
+        <dependency org="?" name="sonar" rev="?" transitive="false" conf="base->default"/>-->
+         
+        <!-- re Ant -->
+        <!-- Update process relies on ant-contrib, can't update in-place reliably
+        <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" transitive="false" conf="ant->default"/>-->
+
+        <!-- re Commons -->
+        <dependency org="commons-beanutils" name="commons-beanutils-core" rev="1.8.3" transitive="false" conf="commons->default"/>
+        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="commons->default"/>
+        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="commons->default"/>
+        <dependency org="org.apache.commons" name="commons-collections4" rev="4.1" transitive="false" conf="commons->default"/>
+        <dependency org="org.apache.commons" name="commons-compress" rev="1.9" transitive="false" conf="commons->default"/>
+        <dependency org="commons-el" name="commons-el" rev="1.0" transitive="false" conf="commons->default"/>
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.1" transitive="false" conf="commons->default"/>
+        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="commons->default"/>
+        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="commons->default"/>
+        <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="commons->default"/>
+        <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="commons->default"/>
+        <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="commons->default"/>
+        <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="commons->default"/>
+        <dependency org="org.apache.commons" name="commons-csv" rev="1.1" transitive="false" conf="commons->default"/>
+
+        <!-- re j2eespecs -->
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="j2eespecs->default"/>
+
+        <!-- NOTE: Ofbiz used the API jars from Tomcat instead of the official javax.servlet ones...
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs->default"/>
+        <dependency org="javax.?" name="annotations-api" rev="3.0" transitive="false" conf="j2eespecs->default"/>-->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.1 -->
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 2.3 -->
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
+
+        <!-- re scripting -->
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting->default"/>
+        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting->default"/>
+        <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="scripting->default"/>
+        <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="scripting->default"/>
+        <!-- FIXME: despite the version looking correct, classes in public repo are different than lib from ofbiz trunk!
+        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting->default"/>-->
+        <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="scripting->default"/>
+        <!-- FIXME: can't figure out the public name or a version for this
+        <dependency org="?" name="jython-nooro" rev="?" transitive="false" conf="scripting->default"/>-->
+        
+        <!-- TODO?: these are from the root /ivy.xml (also see build.xml)...
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.4.2" conf="activemq->default"/>
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura->default"/>
+        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.3" conf="sonar-ant-task->default"/>
+
+        <!-Exclusions for cobertura->
+        <exclude module="log4j" conf="cobertura"/>
+        <exclude module="ant" conf="cobertura"/>
+        <exclude module="asm" conf="cobertura"/>
+        <exclude module="oro" conf="cobertura"/>
+        -->
+        
+    </dependencies>
+</ivy-module>

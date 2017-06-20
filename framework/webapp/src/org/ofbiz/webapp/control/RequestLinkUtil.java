@@ -1,6 +1,8 @@
 package org.ofbiz.webapp.control;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -77,9 +80,13 @@ public abstract class RequestLinkUtil {
     }
     
     public static String checkAddExternalLoginKey(String url, HttpServletRequest request, boolean escaped) {
+        return checkAddExternalLoginKey(url, request, escaped ? "&amp;" : "&");
+    }
+    
+    public static String checkAddExternalLoginKey(String url, HttpServletRequest request, String paramDelim) {
         String extLoginKey = (String) request.getAttribute("externalLoginKey");
         if (extLoginKey != null && !extLoginKey.isEmpty()) { 
-            url = url + (url.contains("?") ? (escaped ? "&amp;" : "&") : "?") + "externalLoginKey=" + extLoginKey;
+            url = url + (url.contains("?") ? paramDelim : "?") + "externalLoginKey=" + extLoginKey;
         }
         return url;
     }
@@ -96,6 +103,40 @@ public abstract class RequestLinkUtil {
         }
         else {
             return res;
+        }
+    }
+    
+    /**
+     * Makes param string (no starting delimiter); intended specifically for new Scipio 
+     * link-building facilities, and may slightly differ from stock Ofbiz ones.
+     */
+    public static String makeParamString(Map<String, Object> params, String delim) {
+        StringBuilder sb = new StringBuilder("");
+        for(Map.Entry<String, Object> entry : params.entrySet()) {
+            appendToParamString(sb, entry.getKey(), entry.getValue(), delim);
+        }
+        if (sb.length() >= delim.length()) {
+            sb.delete(0, delim.length());
+        }
+        return sb.toString();
+    }
+    
+    public static void appendToParamString(StringBuilder sb, String name, Object val, String delim) {
+        if (val instanceof Collection) { // param with multiple values (rare)
+            for(Object subVal : UtilGenerics.checkCollection(val)) {
+                appendToParamStringAsString(sb, name, subVal, delim);
+            }
+        } else {
+            appendToParamStringAsString(sb, name, val, delim);
+        }
+    }
+    
+    public static void appendToParamStringAsString(StringBuilder sb, String name, Object val, String delim) {
+        sb.append(delim);
+        sb.append(name);
+        sb.append("=");
+        if (val != null) {
+            sb.append(val.toString());
         }
     }
     

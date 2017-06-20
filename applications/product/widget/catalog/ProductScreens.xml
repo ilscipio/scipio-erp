@@ -850,7 +850,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonProductFeaturesDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <platform-specific>

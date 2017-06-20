@@ -470,4 +470,25 @@ under the License.
     <eca service="updateShipGroupShipInfo" event="commit">
         <action service="resetGrandTotal" mode="sync"/>
     </eca>
+    
+    
+    <!-- SCIPIO Notification Services -->
+    <eca service="changeOrderStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="ORDER_CANCELLED"/>
+        <set field-name="noteParty" value="admin"/>
+        <set field-name="noteInfo" value="An order has been cancelled"/>
+        <set field-name="moreInfoItemName" value="orderId"/>
+        <set field-name="moreInfoItemId" env-name="orderId"/>
+        <set field-name="moreInfoUrl" value="/ordermgr/control/orderview"/>
+        <action service="createSystemInfoNote" mode="sync"/>
+    </eca>
+    <eca service="updateReturnHeader" event="commit">
+        <condition field-name="statusId" operator="equals" value="RETURN_REQUESTED"/>
+        <set field-name="noteParty" value="admin"/>
+        <set field-name="noteInfo" value="A return has been requested"/>
+        <set field-name="moreInfoItemName" value="returnId"/>
+        <set field-name="moreInfoItemId" env-name="returnId"/>
+        <set field-name="moreInfoUrl" value="/ordermgr/control/returnMain"/>
+        <action service="createSystemInfoNote" mode="sync"/>
+    </eca>
 </service-eca>

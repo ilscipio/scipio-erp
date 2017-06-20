@@ -47,6 +47,8 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}" />
             </radio>
         </field>
+        <field name="myFormPassedVar1" title="myFormPassedVar1"><display description="${groovy: context.myFormPassedVar1 ?: 'missing'}"/></field>
+        <field name="myFormPassedGlobalVar1" title="myFormPassedGlobalVar1"><display description="${groovy: context.myFormPassedGlobalVar1 ?: 'missing'}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${demoTargetUrl}" description="${uiLabelMap.CommonCancel}"></hyperlink>
@@ -89,4 +91,9 @@ under the License.
         </actions>
     </form>
     
+    <!-- NOTE: we can omit this, it's automatically gotten from name: id="TargetedRenderingTestForm1" -->
+    <form name="TargetedRenderingTestForm1" type="single" target="TargetedRenderingTest">
+        <field name="testinput1" title="Input 1"><text /></field>
+        <field name="testinput1" title="Input 2"><text /></field>
+    </form>
 </forms>

@@ -28,7 +28,8 @@ SET TOP=%~dp0
 SET LAUNCHER_JAR=
 SET BASE_LIB=%TOP%\framework\base\lib
 SET ANT_LIB=%BASE_LIB%\ant
-FOR %%G IN (%BASE_LIB%\ant-*-ant-launcher.jar) DO SET LAUNCHER_JAR=%%G
+REM SCIPIO: NOTE: 2017-02-02: launcher is now under ant subfolder
+FOR %%G IN (%ANT_LIB%\ant-*-ant-launcher.jar) DO SET LAUNCHER_JAR=%%G
 REM ECHO %LAUNCHER_JAR%
 IF [%LAUNCHER_JAR%] == [] (
   ECHO "Couldn't find ant-launcher.jar"

@@ -78,7 +78,8 @@ under the License.
         invoke="addToSolr" debug="true" validate="true">
         <description>Adds product to solr, with product denoted by productId field in instance attribute
             - intended for use with ECAs/SECAs</description>
-        <attribute mode="IN" name="instance" optional="false" type="org.ofbiz.entity.GenericValue" />
+        <!-- NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity -->
+        <attribute mode="IN" name="instance" optional="false" type="org.ofbiz.entity.GenericEntity" />
     </service>
 
     <service name="addToSolrIndex" engine="java"

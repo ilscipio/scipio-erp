@@ -1132,7 +1132,7 @@ under the License.
         <field name="relevancyWeight" title="${uiLabelMap.ProductWeight}"><text size="5"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
-    <form name="ListWorkEffortKeywords" type="list" target="" list-name="listWorkEffortKeywords"
+    <form name="ListWorkEffortKeywords" type="list" target="" list-name="workEffortkeywords"
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortKeyword" use-cache="true" list="workEffortkeywords">

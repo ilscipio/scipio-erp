@@ -34,6 +34,7 @@ under the License.
         <fileset dir="../base/lib" includes="*.jar"/>
         <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../base/lib/commons" includes="*.jar"/>
+        <fileset dir="../base/lib/ant" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
@@ -46,5 +47,14 @@ under the License.
     <path id="runtime.class.path">
         <fileset dir="${build.dir}/lib" includes="*.jar"/>
     </path>    
+    
+    <!-- SCIPIO: FIXME: the spring-core and spring-test libraries of current needed version are
+        not available, so must be committed to trunk... -->
+    <selector id="lib.update.manual.files">
+        <or>
+            <filename name="spring-core-*.jar"/>
+            <filename name="spring-test-*.jar"/>
+        </or>
+    </selector>
     
 </project>

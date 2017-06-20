@@ -25,9 +25,13 @@ under the License.
     </#if>
 </#macro>
 
+
+
 <ul>
     <li>Month: ${month}/${year}</li>
-    <li>Root Category: ${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(rootProductCategory, "CATEGORY_NAME", locale, dispatcher, "html"))!} [${rootProductCategoryId}]</li>
+    <#if rootProductCategory?has_content>    
+        <li>Root Category: ${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(rootProductCategory, "CATEGORY_NAME", locale, dispatcher, "html"))!} [${rootProductCategoryId}]</li>
+    </#if>
     <li>Organization: ${(organizationPartyName.groupName)!} [${organizationPartyId?default("No Organization Specified")}]</li>
     <li>Currency: ${(currencyUom.description)!} [${currencyUomId?default("No Currency Specified")}]</li>
 </ul>

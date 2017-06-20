@@ -39,7 +39,16 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         int orderItemCount = UtilRandom.getRandomInt(1,3);
         BigDecimal remainingSubTotal = new BigDecimal(0.00);
         BigDecimal grandTotal = new BigDecimal(0.00);
-
+        
+        String prodCatalogId = context.prodCatalogId ?: "DemoCatalog";
+        String productStoreId = context.productStoreId ?: null;
+        if (!productStoreId) {
+            List productStoreCatalogs = EntityUtil.filterByDate(from("ProductStoreCatalog").where("prodCatalogId", prodCatalogId).queryList());
+            if (productStoreCatalogs) {
+                productStoreId = productStoreCatalogs[0].productStoreId;
+            }
+        }
+        
         for (int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++) {
             EntityFindOptions efo = new EntityFindOptions();
             efo.setMaxRows(1);
@@ -58,7 +67,6 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
                 }
 
                 String productId = product.productId;
-                String prodCatalogId= "DemoCatalog";
                 BigDecimal quantity = new BigDecimal(UtilRandom.getRandomInt(0,10));
                 BigDecimal unitPrice= new BigDecimal(defaultPrice);
                 BigDecimal unitListPrice= new BigDecimal(listPrice);
@@ -88,7 +96,8 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
         Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
                 orderSalesChannel.enumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
-                "currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal);
+                "currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal,
+                "productStoreId", productStoreId);
 
         GenericValue orderHeader = delegator.makeValue("OrderHeader", fields);
         toBeStored.add(orderHeader);

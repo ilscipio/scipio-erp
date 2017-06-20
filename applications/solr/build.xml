@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="SCIPIO ERP - Solr Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - Solr Component" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -79,4 +79,30 @@ under the License.
         <delete dir="${build.dir}"/>
         <antcall target="clean-uiloginservice"/>
     </target>
+    
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
+        <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
+    </target>
+    
+    <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <antcall target="common-lib-clean" inheritrefs="true"/>
+        <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
+    </target>
+    
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed)
+    <selector id="lib.update.manual.files">
+        <or>
+            <filename name="xxxx-*.jar"/>
+        </or>
+    </selector>-->
+    <selector id="lib.update.manual.files.solr.webapp">
+        <or>
+            <!-- FIXME: these are not in central -->
+            <filename name="org.restlet*.jar"/>
+        </or>
+    </selector>
+    
 </project>

@@ -604,9 +604,13 @@ public class CategoryServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
         } else if (mode.equals("category")) {
-
+            /**
+             * TODO: Complete for other modes
+             * */
         } else if (mode.equals("product")) {
-
+            /**
+             * TODO: Complete for other modes
+             * */
         }
 
         result.put("treeList", resultList);

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "customercommon.ftl">
+<#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <#if party??>
 <#-- Main Heading -->
@@ -55,17 +55,10 @@ under the License.
 <@render resource="component://common/widget/CommonScreens.xml#listLocalesCompact" />
 <#-- ============================================================= -->
 
-<ul class="tabs" data-tab>
-  <li class="tab-title active"><a href="#panel1"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyPersonalInformation}</a></li>
-  <li class="tab-title"><a href="#panel2"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.EcommerceAccountInformation}</a></li><#--${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}-->
-  <li class="tab-title"><a href="#panel3"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.PartyContactInformation}</a></li>
-  <li class="tab-title"><a href="#panel4"><i class="${styles.icon!} ${styles.icon_prefix}wrench"></i> ${uiLabelMap.AccountingPaymentMethodInformation}</a></li>
-  <li class="tab-title"><a href="#panel5"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.EcommerceDefaultShipmentMethod}</a></li>
-</ul>
-<div class="tabs-content">
-    
-     <#-- Personal information -->
-     <div class="content active" id="panel1">
+
+<@tabs>
+    <#-- Party Personal Info Tab -->
+    <@tab title=uiLabelMap.PartyPersonalInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <#if person??>
@@ -96,10 +89,10 @@ under the License.
               <@commonMsg type="result-norecord">${uiLabelMap.PartyPersonalInformationNotFound}</@commonMsg>
             </#if>
         </@section>
-     </div>
-
-    <#-- ============================================================= -->
-    <div class="content" id="panel2">
+    </@tab>
+    
+    <#-- Account Info Tab -->
+    <@tab title=uiLabelMap.EcommerceAccountInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("changepassword") text=uiLabelMap.PartyChangePassword />
@@ -117,10 +110,10 @@ under the License.
               </@field>
             <@field type="display" label=uiLabelMap.CommonUsername>${userLogin.userLoginId}</@field>
         </@section>
-    </div>
+    </@tab>
     
-    <#-- Contact Information -->
-    <div class="content" id="panel3">
+    <#-- Party Contact Tab -->
+    <@tab title=uiLabelMap.PartyContactInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcontactmech") text=uiLabelMap.CommonCreateNew />
@@ -168,14 +161,14 @@ under the License.
                         <div>
                           <#if postalAddress?has_content>
                             <@formattedAddress address=postalAddress emphasis=false />
-                            <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
+                            <#-- <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
                               <#assign addr1 = postalAddress.address1!?string />
                               <#if (addr1?index_of(" ") > 0)>
                                 <#assign addressNum = addr1?substring(0, addr1?index_of(" ")) />
                                 <#assign addressOther = addr1?substring(addr1?index_of(" ")+1) />
                                 <br/><a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav_inline!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                               </#if>
-                            </#if>
+                            </#if> -->
                           <#else>
                             ${uiLabelMap.PartyPostalInformationNotFound}.
                           </#if>
@@ -187,10 +180,11 @@ under the License.
                           ${telecomNumber.countryCode!}
                           <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                           <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
+                          <#-- 
                           <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode == "011")>
                             <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
                             <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
-                          </#if>
+                          </#if>-->
                         <#else>
                           ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
                         </#if>
@@ -233,7 +227,7 @@ under the License.
                                 <input type="hidden" name="productStoreId" value="${productStoreId}" />
                                 <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                                 <input type="hidden" name="partyId" value="${party.partyId}" />
-                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault} ${uiLabelMap.OrderShippingAddress}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
                               </form>
                             </@menuitem>
                           </#if>
@@ -254,10 +248,10 @@ under the License.
             <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
           </#if>
         </@section>
-    </div>
+    </@tab>
     
-    <#-- Payment -->
-    <div class="content" id="panel4">
+    <#-- Payment Method Tab -->
+    <@tab title=uiLabelMap.AccountingPaymentMethodInformation>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
                 <@menuitem type="link" href=makeOfbizUrl("editcreditcard") text=uiLabelMap.PartyCreateNewCreditCard />
@@ -326,10 +320,11 @@ under the License.
           <#else>
             <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoPaymentMethodInformation}</@commonMsg>
           </#if>
-        </@section>    
-    </div>
-    <#-- Shipping info -->
-    <div class="content" id="panel5">
+        </@section>
+    </@tab>
+    
+    <#-- Shipping Info Tab -->
+    <@tab title=uiLabelMap.EcommerceDefaultShipmentMethod>
         <#macro menuContent menuArgs={}>
             <@menu args=menuArgs>
             <#-- SCIPIO: this isn't a link, it's a form submit, put it at bottom so not mistakable
@@ -357,8 +352,10 @@ under the License.
           </@fields>
           </form>
         </@section>
-    </div>
-</div>
+    </@tab>
+
+
+</@tabs>
 
 <#-- ============================================================= -->
 <#-- SCIPIO: TODO?

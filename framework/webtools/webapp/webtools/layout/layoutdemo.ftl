@@ -62,6 +62,11 @@
 
 </@section>
 
+<!-- 
+<@section title="Special title classes" titleClass="div:+divclass;heading:+extraheadingclass">
+</@section>
+ -->
+
 <@section id="another-section-id-this-time-used-on-container-and-content">
   <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
   <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
@@ -159,8 +164,10 @@
 <@heading relLevel=+1>Colors</@heading>
 <a href="#" class="${styles.button!} ${styles.button_color_default}">Default Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_success!}">Success Button</a>
-<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Secondary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_primary!}">Primary Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_secondary!}">Secondary Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_alert!}">Alert Button</a>
+<a href="#" class="${styles.button!} ${styles.button_color_warning!}">Warning Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_info!}">Info Button</a>
 <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
 
@@ -544,6 +551,25 @@
   </#if>
 </@section>
 
+<@section title="Tabs">
+    <@row>
+        <@cell columns="6">
+            <@tabs type="vertical" title="Horizontal">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+        <@cell columns="6">
+            <@tabs type="horizontal" title="Vertical">
+                <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
+                <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
+                <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
+            </@tabs>
+        </@cell>
+    </@row>
+</@section>
+
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,
      usually don't need in @section macro. See outputted markup for results. -->
 <#if debugMode>
@@ -781,9 +807,9 @@
         {"value":"val5", "description":"Value 5", "selected":true}
       ]>
       <@field type="select" items=items name="select1" label="Select 4 (multiple)" currentValue="val3" multiple=true />
-      <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple=true asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
-      <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple=true 
-        asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
+      <@field type="select" items=items name="select1" label="Select 4 (multiple - dynamic select - default)" currentValue="val3" multiple=true dynSelectArgs={"enabled":true} title="Multiple values to choose from"/>
+      <@field type="select" items=items name="select1" label="Select 4 (multiple - dynamic select - custom - sortable)" currentValue="val3" multiple=true 
+        dynSelectArgs={"enabled":true, "title":"Select one of these custom values", "sortable":true}/>
      
       <@field type="display" label="Display Field 1" tooltip="This is a tooltip text" formatText=true>
         This 
@@ -1143,6 +1169,408 @@
 </#if>
 
 <#if debugMode>
+<a name="ajax-render-test"></a>
+<@section title="AJAX Render Test">
+<#assign ajaxRenderTestPresets = {
+    "MANUAL": {
+        "title": "Manual",
+        "defaultPreset": true
+    },
+    "FULL1": { 
+        "title": "Full page",
+        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "view": "runService" 
+    },
+    "PARTSECT1": {
+        "title": "Partial page, widget section",
+        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "view": "runService", 
+        "scpRenderTargetExpr": "$Global-Column-Main"
+    },  
+    "PARTCONTAINERNONOPT1": {
+        "title": "Partial page, widget container, NON-optimized",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "#main-content"
+    },  
+    "PARTCONTAINERCOMPLEX1": {
+        "title": "Partial page, widget container, with section execution optimization",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
+    },  
+    "PARTCONTAINERCOMPLEXJS1": {
+        "title": "Partial page, widget container, plus jQuery sub-element extraction",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "runService",
+        "scpRenderTargetExpr": "$Global-Column-Main #main-content",
+        "jQueryElemExpr": "#screenlet_1"
+    },
+    "PARTFTLBOUNDARY1": {
+        "title": "Partial page, non-optimized, deep section across FTL boundary test",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
+    },
+    "PARTFTLBOUNDARY2": {
+        "title": "Partial page, part-optimized, deep section across FTL boundary test",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
+    },
+    "PARTFTLSEL1": {
+        "title": "Partial page, LIMITED FTL macro selection test (@container)",
+        "description": "NOTE: %screenlet[id=tr-ftl-section-2] also matches Freemarker @section invocations (platform-agnostic)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %screenlet[id=tr-ftl-section-2] #tr-ftl-container-1" 
+    },
+    "PARTFTLSEL2": {
+        "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
+    },
+    "PARTFTLSEL2b": {
+        "title": "Partial page, LIMITED FTL macro selection test 2 (@virtualSection)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %section[name='TR-FTL-VirtualSection-1']" 
+    },
+    "PARTFTLSEL3": {
+        "title": "Partial page, LIMITED FTL macro selection test (@form)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-form-1" 
+    },
+    "PARTFTLSEL4": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget form within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestForm1" 
+    },
+    "PARTFTLSEL5": {
+        "title": "Partial page, LIMITED FTL macro selection test (@table)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
+    },
+    "PARTFTLSEL6": {
+        "title": "Partial page, LIMITED FTL macro selection test (@menu)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-menu-1" 
+    },
+    "PARTFTLSEL7": {
+        "title": "Partial page, LIMITED FTL macro selection test (widget menu within FTL)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestMenu1" 
+    },
+    "PARTDECSEL1": {
+        "title": "Partial page, special decorator selection test 1",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen $Global-Column-Main ^/body" 
+    },
+    "PARTDECSEL2": {
+        "title": "Partial page, special decorator selection test 2 (complex)",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "^decorator-screen[name=CommonWebtoolsAppDecorator] ^decorator-screen[name=main-decorator] $Global-Column-Main ^/body ^/body ^decorator-screen[name=TargetedRenderingTestSubDecorator] ^/body #tr-widget-container-3" 
+    },
+    "PARTREQURI1": {
+        "title": "Request URI test, partial page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main" 
+    },
+    "PARTREQURI2": {
+        "title": "Request URI test, partial page, but FULL page for login and error pages",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTREQURI3": {
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and test event throws exception (NOTE: does NOT give error page)",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen",  <#-- get the full error page -->
+        "extraParams": "testEventResult=exception"
+    },
+    "PARTREQURI4": {
+        "title": "Request URI test, partial page, but FULL page for login or error pages, and we call invalid request which gives error page",
+        "requestUri": makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest"),
+        "scpRenderTargetExpr": "$Global-Column-Main",
+        "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
+        "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
+    },
+    "PARTMULTI1": {
+        "title": "Partial page, multi-select test: left & main columns",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
+    },
+    "PARTMULTI2": {
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by CommonSideBarMenu section name",
+        "description": "NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
+            because metro theme includes it TWICE causing duplicate ID!!!",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu"
+    },
+    "PARTMULTI2b": {
+        "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu %menu"
+    },
+    "PARTMULTI3": {
+        "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left",
+        "jQueryElemExpr": "+multi:left-column:ul.menu-level-1"
+    },
+    "PARTMULTI4": {
+        "title": "Partial page, multi-select test: nesting support",
+        "requestUri": makeOfbizUrl("ajaxRender"),
+        "view": "TargetedRenderingTest",
+        "scpRenderTargetExpr": "+multi: parent-container: $TR-SubDec-Section-Top, sub-container-1 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-1, sub-container-2 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-2" 
+    }
+}>
+  <@script>
+    function getAjaxRenderOut(renderOut) {
+        return renderOut;
+    }
+    function getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr) {
+        var out = jQuery(jQueryElemExpr, jQuery(renderOut));
+        if (out.length) {
+            return out.wrap('<div/>').parent().html();
+        } else {
+            return "ERROR: element '" + jQueryElemExpr + "' not found.\n\n-------------------------------\nReturned output:\n-------------------------------\n" + renderOut;
+        }
+    }
+    
+    function runAjaxRenderTest(url, params, outputElemId, renderOutProcessCb, renderOutProcessCbMap) {
+        var outElem = jQuery('#'+outputElemId);
+        outElem.val("(LOADING...)");
+        jQuery.ajax({
+            url: url,
+            type: 'POST',
+            data: params,
+            success: function(data) {
+                var outElem = jQuery('#'+outputElemId);
+                
+                var processRenderOut = function(renderOut) {
+                    if (jQuery.type(renderOut) === 'object') {
+                        if (jQuery.isEmptyObject(renderOut)) {
+                            return "NOTHING MATCHED OR UNRECOGNIZED ERROR: MULTI RENDEROUT OBJECT WAS EMPTY";
+                        }
+                        var out = "MULTI TARGET MATCH STATUS: " + Object.keys(renderOut).length + " matching targets found.";
+                        var count = 1;
+                        jQuery.each(renderOut, function(k, v) {
+                            out += "\n\n---------------------------------------------------------------\n";
+                            out += "MULTI TARGET MATCH " + count + ": " + k + "\n";
+                            out += "---------------------------------------------------------------\n";
+                            if (renderOutProcessCbMap && typeof renderOutProcessCbMap[k] !== 'undefined') {
+                                out += renderOutProcessCbMap[k](v);
+                            } else {
+                                out += renderOutProcessCb(v);
+                            }
+                            count++;
+                        });
+                        return out;
+                    } else {
+                        return renderOutProcessCb(renderOut);
+                    }
+                };
+
+                var out = "";
+                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                    // TODO: (data._ERROR_MESSAGE_LIST_) 
+                    if (data._ERROR_MESSAGE_) {
+                        out = "ERROR MESSAGE: " + data._ERROR_MESSAGE_;
+                    } else {
+                        out = "ERROR MESSAGE (first from list): " + data._ERROR_MESSAGE_LIST_[0];
+                    }
+                    if (data.renderOut) {
+                        out += "\n\n---------------------------------------------------------------\n\n";
+                        out += processRenderOut(data.renderOut);
+                    }
+                } else if (data.renderOut) {
+                    out = processRenderOut(data.renderOut);
+                } else { 
+                    out = "NOTHING MATCHED OR UNRECOGNIZED ERROR";
+                }
+                outElem.val(out);
+            }
+        });
+    };
+    
+    function runAjaxRenderTestFromForm(formId, outputElemId) {
+        var form = jQuery('#'+formId);
+        var requestUri = jQuery('select[name=requestUri]', form).val();
+        var url = requestUri;
+        
+        var view = jQuery('select[name=view]', form).val();
+
+        var scpRenderTargetExpr = jQuery('input[name=scpRenderTargetExpr]', form).val();
+        var scpLoginRenderTargetExpr = jQuery('input[name=scpLoginRenderTargetExpr]', form).val();
+        var scpErrorRenderTargetExpr = jQuery('input[name=scpErrorRenderTargetExpr]', form).val();
+        var extraParams = jQuery('input[name=extraParams]', form).val(); // TODO
+        var jQueryElemExpr = jQuery('input[name=jQueryElemExpr]', form).val();
+        
+        var params = {};
+        if (requestUri.indexOf('/ajaxRender') !== -1) {
+            if (!view) {
+                alert("Please select a view");
+                return;
+            }
+            params.view = view;
+        } else {
+            params.scpViewAsJson = 'true';
+        }
+        params.scpRenderTargetExpr = scpRenderTargetExpr;
+        if (scpLoginRenderTargetExpr) {
+            params.scpLoginRenderTargetExpr = scpLoginRenderTargetExpr;
+        }
+        if (scpErrorRenderTargetExpr) {
+            params.scpErrorRenderTargetExpr = scpErrorRenderTargetExpr;
+        }
+        if (extraParams) {
+            var ep = JSON.parse('{"' + extraParams.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+            params = jQuery.extend({}, params, ep);
+        }
+        
+        var cb = getAjaxRenderOut;
+        var cbmap = null;
+        if (jQueryElemExpr.trim().length) {
+            if (jQueryElemExpr.startsWith('+multi:')) {
+                var jsex = jQueryElemExpr.substring('+multi:'.length);
+                cbmap = {};
+                var spl = jsex.split(',');
+                jQuery.each(spl, function(i, e) {
+                    var parts = e.trim().split(':', 2);
+                    cbmap[parts[0].trim()] = function(renderOut) {
+                        return getAjaxRenderOutWithJQuerySub(renderOut, parts[1].trim());
+                    };
+                });
+            } else {
+                cb = function(renderOut) {
+                    return getAjaxRenderOutWithJQuerySub(renderOut, jQueryElemExpr);
+                };
+            }
+        }
+        
+        runAjaxRenderTest(url, params, outputElemId, cb, cbmap);
+    }
+    
+    var ajaxRenderTestPresets = <@objectAsScript lang='js' object=ajaxRenderTestPresets />
+    function loadAjaxRenderTestPreset(selElem, formId) {
+        var preset = jQuery(selElem).val();
+        var values = {};
+        if (preset && ajaxRenderTestPresets[preset]) {
+            values = ajaxRenderTestPresets[preset]
+        }
+        setAjaxRenderTestFormInputs(formId, values);
+    }
+    function setAjaxRenderTestFormInputs(formId, values) {
+        var form = jQuery('#'+formId);
+        jQuery('select[name=requestUri]', form).val(values.requestUri || "");
+        jQuery('select[name=view]', form).val(values.view || "");
+        jQuery('input[name=scpRenderTargetExpr]', form).val(values.scpRenderTargetExpr || "");
+        jQuery('input[name=scpLoginRenderTargetExpr]', form).val(values.scpLoginRenderTargetExpr || "");
+        jQuery('input[name=scpErrorRenderTargetExpr]', form).val(values.scpErrorRenderTargetExpr || "");
+        jQuery('input[name=extraParams]', form).val(values.extraParams || "");
+        jQuery('input[name=description]', form).val(values.description || "");
+        jQuery('input[name=jQueryElemExpr]', form).val(values.jQueryElemExpr || "");
+        ajaxRenderRequestUriOnChange(jQuery('select[name=requestUri]', form));
+    }
+    function ajaxRenderRequestUriOnChange(selElem) {
+        selElem = jQuery(selElem);
+        if (selElem.val().indexOf('ajaxRender') !== -1) {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', false);
+        } else {
+            jQuery('select[name=view]', selElem.closest('form')).prop('disabled', true);
+        }
+    }
+    jQuery(document).ready(function() {
+        ajaxRenderRequestUriOnChange(jQuery('#ajax-render-test-form select[name=requestUri]'));
+    });
+  </@script>
+  
+  <@form id="ajax-render-test-form">
+    <#assign controllerConfig = Static["org.ofbiz.webapp.control.RequestHandler"].getRequestHandler(request).getControllerConfig()>
+    <#assign requestMapMap = toSimpleMap(controllerConfig.getRequestMapMap())>
+    <#assign viewMapMap = toSimpleMap(controllerConfig.getViewMapMap())>
+    
+    <@field type="select" label="Test Preset" onChange="loadAjaxRenderTestPreset(this, 'ajax-render-test-form');">
+      <#list ajaxRenderTestPresets?keys as preset>
+        <#assign presetValues = ajaxRenderTestPresets[preset]>
+        
+        <#assign presetTitle = presetValues.title!preset>
+        <#assign presetArgStr = "">
+        <#assign requestName = presetValues.requestUri!>
+        <#if requestName?has_content>
+          <#if (requestName?index_of("/control/") >= 0)><#-- FIXME: horrible kludge -->
+            <#assign requestName = requestName?substring(requestName?index_of("/control/") + "/control/"?length)>
+          </#if>
+        </#if>
+        <#if requestName?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "uri: " + requestName>
+        </#if>
+        <#if presetValues.view?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "view: " + presetValues.view>
+        </#if>
+        <#if presetValues.scpRenderTargetExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "expr: " + presetValues.scpRenderTargetExpr>
+        </#if>
+        <#if presetValues.jQueryElemExpr?has_content>
+          <#assign presetArgStr = presetArgStr + (presetArgStr?has_content?string(", ", "")) + "jQuery: " + presetValues.jQueryElemExpr>
+        </#if>
+        <#if presetArgStr?has_content>
+          <#assign presetTitle = presetTitle + " [" + presetArgStr + "]">
+        </#if>
+
+        <@field type="option" selected=(presetValues.defaultPreset!false) value=preset>${presetTitle}</@field>
+      </#list>
+    </@field>
+    
+    <@field type="input" name="description" label="Notes" value=""/>
+    
+    <#assign defaultRequestUri = "ajaxRender">
+    <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">
+      <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
+      <#list requestMapMap?keys as requestName>
+        <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
+      </#list>
+        <@field type="option" value=makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest") selected=(defaultRequestUri?contains("TargetedRenderingInvalidRequestTest"))>TargetedRenderingInvalidRequestTest</@field>
+    </@field>
+    <@field type="select" name="view" label="View Name" value="">
+      <@field type="option" selected=true value=""></@field>
+      <#list viewMapMap?keys as viewName>
+        <#assign viewMap = viewMapMap[viewName]>  
+        <@field type="option" value=viewName>${viewName} (${(viewMap.page)!""})</@field>
+      </#list>
+    </@field>
+    <@field type="input" name="scpRenderTargetExpr" label="Target Widget Element Expression" value=""/>
+    <@field type="input" name="scpLoginRenderTargetExpr" label="Expression for Login page" value=""/>
+    <@field type="input" name="scpErrorRenderTargetExpr" label="Expression for Error page" value=""
+        tooltip="NOTE: this is only used when the errorpage is shown - NOT when an event returns error"/>
+    <@field type="input" name="extraParams" label="Extra Parameters (POST)" value=""/>
+    <@field type="input" name="jQueryElemExpr" label="Extra jQuery Filter" value=""/>
+
+    <@field type="submit" submitType="link" href="javascript:runAjaxRenderTestFromForm('ajax-render-test-form', 'ajax-render-test-out');" text=uiLabelMap.CommonRun/>
+  </@form>
+  
+  <@field type="textarea" id="ajax-render-test-out" fieldsType="default-compact" label="Output:" rows=20>(click Run to execute test)</@field>
+
+</@section>
+</#if>
+
+<#if debugMode>
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>
@@ -1446,6 +1874,13 @@
       <li>${addExtLoginKey("main")}</li>
     </ul>
   </@section>
+  
+  <@section title="Freemarker built-in ?url escaping (NOTE: escapeVal and escapeFullUrl are preferred in Scipio)">
+    <ul>
+      <li>Explicit encoding: someUri?param1=${"start''#%'end"?url("UTF-8")}</li>
+      <li>Implicit encoding (added 2017-01-27): someUri?param1=${"start''#%'end"?url}</li>
+    </ul>
+  </@section>
 </@section>
 
 <@section title="Escaping">
@@ -1714,6 +2149,88 @@
 
 </@section>
 
+
+<#-- NOTE: the rewrapString are just here to test the escape bypass -->
+<@section title="FTL template interpret (#interpretStd)">
+  <#assign dummy = setContextField("parentContextMyVar1", "parent context var")>
+  <#assign parentFtlVar1 = "parent ftl var">
+
+  <@section title="#interpretStd inline, defaults, as scalar">
+    <#assign compiledTmpl = interpretStd(r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (good)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}")>
+    ${compiledTmpl}
+  </@section>
+    
+  <@section title="#interpretStd from location, as directive (mimic ?interpret, but standalone render)">
+    <#assign compiledTmpl = interpretStd({
+        "location": rewrapString("component://webtools/webapp/webtools/showDateTime.ftl"),
+        "model": "directive"
+    })>
+    <@compiledTmpl/>
+  </@section>
+  
+  <@section title="#interpretStd inline, as hybrid (mimic ?interpret), with nested render (implicit ScipioObjectWrapper test)">
+    <#assign dummy = setContextField("nestedCompiledTmpl", compiledTmpl)>
+    <#assign compiledTmpl = interpretStd({
+        "body": r"<@heading level=6>Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em></@heading> with extra context vars. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. nestedCompiledTmpl: <@nestedCompiledTmpl/>",
+        "model": "hybrid",
+        "ctxVars": {"myVar":"my variable"}
+    })>
+    <@section title="As string:">
+      ${compiledTmpl?string}
+    </@section>
+    <@section title="As directive:">
+      <@compiledTmpl/>
+    </@section>
+  </@section>
+  
+  <@section title="#interpretStd, non-standard context">
+    <p><em>NOTE: Custom context object means most API don't work in this example.</em></p>
+    <#assign compiledTmpl = interpretStd({
+        "body": rewrapString(r"[#ftl][@heading level=6]Hello from <em>interpreted ${myVar!'missing var (ERROR)'}</em>[/@heading] with non-standard context (non-inherited). parentContextMyVar1: ${parentContextMyVar1!'missing (good)'}. http://www.ilscipio.com"),
+        "model": "scalar",
+        "invokeCtx": {"myVar":"my variable"}
+    })>
+    ${compiledTmpl}
+  </@section>
+    
+  <@section title="?interpret (ftl built-in, reference)">
+    <p><em>NOTE: For reference only. This builtin is usually inappropriate for use in Scipio, 
+        because it runs from parent environment (instead of standalone/isolated), 
+        bypasses ofbiz caching, and requires special syntax to evaluate the template. 
+        The #interpretStd function will solve these issues and more.</em></p>
+    <#assign compiledTmpl = r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (ERROR)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}"?interpret>
+    <@compiledTmpl/>
+  </@section>
+    
+</@section>
+
+<@section title="makeSectionsRenderer">
+    <@section title="ftl">
+      <#macro ftlSectionTestMacro>
+        <p>hello from test macro!</p>
+      </#macro>
+      <#assign ftlSections = makeSectionsRenderer("ftl", {
+        "left-column" : interpretStd('<p>hello from test interpretStd!</p>'),
+        "right-column" : ftlSectionTestMacro,
+        "main-column" : "<p>hello from test string!</p>",
+        "top-column" : "<p>hello from test ?interpret</p>"?interpret
+      })>
+      
+      <@section title="Regular output:">
+        ${ftlSections.render("left-column")}
+        ${ftlSections.render("right-column")}
+        ${ftlSections.render("main-column")}
+        ${ftlSections.render("top-column")}
+      </@section>
+      <@section title="asString output:">
+        ${rawString(ftlSections.render("left-column", true))}
+        ${rawString(ftlSections.render("right-column", true))}
+        ${rawString(ftlSections.render("main-column", true))}
+        ${rawString(ftlSections.render("top-column", true))}
+      </@section>
+    </@section>
+</@section>
+
 <#-- NOTE: keep last -->
 <hr />
 <#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
@@ -1721,17 +2238,71 @@
   <@render resource=ofbizWidgetsLayoutScreenLocation />
 
   <@section title="Direct inclusions">
-    <p>Button Menu</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2" />
-    <p>Button Menu (sub-menus filtered out)</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
-
-    <p>Test form</p>
-    <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" />
-    <p>Max depth arg test</p>
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
-    <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" />
-    <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none" />
+    <@section title="Button Menu">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2" />
+    </@section>
+    <@section title="Button Menu (sub-menus filtered out)">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoButton2NoSubMenus" />
+    </@section>
+    <@section title="Test form">
+      <@render type="form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm"
+        ctxVars={"myFormPassedVar1":"Hello from a scope-protected context var"}
+        globalCtxVars={"myFormPassedGlobalVar1":"Hello from a scope-protected global context var"}/>
+    </@section>
+    <@section title="Test form (alt include method)">
+      <@render type="include-form" resource="component://webtools/widget/MiscForms.xml" name="LayoutDemoForm" 
+        ctxVars={"myFormPassedVar1":"Hello from a scope-protected context var (alt)"}
+        globalCtxVars={"myFormPassedGlobalVar1":"Hello from a scope-protected global context var (alt)"}/>
+      <p>globalContext.myFormPassedGlobalVar1 (this should say 'missing', should have been automatically unset): ${globalContext.myFormPassedGlobalVar1!"missing"} ${context.myFormPassedGlobalVar1!"missing"}</p>
+    </@section>
+    
+    <@section title="Max depth arg test">
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" />
+      <@render type="menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" maxDepth="1" 
+          ctxVars={"myMenuPassedVar1":"PassedScopedContextVar"}
+          globalCtxVars={"myMenuPassedGlobalVar1":"PassedGlobalContextVar"}
+          reqAttribs={"myMenuPassedReqAttrib1":"PassedReqAttrib"} />
+      <@render type="include-menu" resource="component://webtools/widget/MiscMenus.xml#LayoutDemoTest3" subMenus="none"
+          ctxVars={"myMenuPassedVar1":"PassedScopedContextVar (alt)"}
+          globalCtxVars={"myMenuPassedGlobalVar1":"PassedGlobalContextVar (alt)"}
+          reqAttribs={"myMenuPassedReqAttrib1":"PassedReqAttrib (alt)"} />
+      <p>globalContext.myMenuPassedGlobalVar1 (this should say 'missing', should have been automatically unset): ${globalContext.myMenuPassedGlobalVar1!"missing"} ${context.myMenuPassedGlobalVar1!"missing"}</p>
+      <p>myMenuPassedReqAttrib1 (this should say 'missing', should have been automatically unset): ${request.getAttribute("myMenuPassedReqAttrib1")!"missing"}</p>
+    </@section>
+    
+    <@section title="Standalone (isolated) FTL include">
+      <@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" ctxVars={"layoutdemoftltestvar1":"and hello from layout demo passed var"}/>
+      <p>layoutdemoftltestvar1 (should say "missing"): ${layoutdemoftltestvar1!"missing"}</p>
+    </@section>
+    
+    <@section title="Render nothing (empty)">
+      <@render resource="" name="" />
+    </@section>
+    
+    <#assign captureWarn><em>NOTE: 2017-03-10: This code is considered <strong>EXPERIMENTAL</strong> for Scipio - 
+        stock Ofbiz facilities do not support capturing properly. If you must capture a @render call in production code,
+        always pass <code>@render asString=true</code>. The tests below attempt to capture without
+        <code>asString=true</code>, which is currently not guaranteed to work in all cases.</em><br/></#assign>
+    <@section title="Simple Widget CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="screen" resource="component://webtools/widget/MiscScreens.xml#DemoSimpleLabelWidget" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test1.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Render nothing (empty) CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render resource="" name="" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
+    <@section title="Standalone (isolated) FTL include with nested @render CAPTURED">
+      ${captureWarn}
+      <#assign capturedInclude><@render type="ftl" resource="component://webtools/webapp/webtools/layout/layoutdemo_test2.ftl" /></#assign>
+      Captured: "${capturedInclude}"
+    </@section>
   </@section>
 
   <@section title="Admin plain site-map/tree">

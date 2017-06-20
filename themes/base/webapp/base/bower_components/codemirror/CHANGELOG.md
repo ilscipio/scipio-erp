@@ -1,3 +1,93 @@
+## 5.24.2 (2017-02-22)
+
+### Bug fixes
+
+[javascript mode](http://codemirror.net/mode/javascript/): Support computed class method names.
+
+[merge addon](http://codemirror.net/doc/manual.html#addon_merge): Improve aligning of unchanged code in the presence of marks and line widgets.
+
+## 5.24.0 (2017-02-20)
+
+### Bug fixes
+
+A cursor directly before a line-wrapping break is now drawn before or after the line break depending on which direction you arrived from.
+
+Visual cursor motion in line-wrapped right-to-left text should be much more correct.
+
+Fix bug in handling of read-only marked text.
+
+[shell mode](http://codemirror.net/mode/shell/): Properly tokenize nested parentheses.
+
+[python mode](http://codemirror.net/mode/python/): Support underscores in number literals.
+
+[sass mode](http://codemirror.net/mode/sass/): Uses the full list of CSS properties and keywords from the CSS mode, rather than defining its own incomplete subset.
+
+[css mode](http://codemirror.net/mode/css/): Expose `lineComment` property for LESS and SCSS dialects. Recognize vendor prefixes on pseudo-elements.
+
+[julia mode](http://codemirror.net/mode/julia/): Properly indent `elseif` lines.
+
+[markdown mode](http://codemirror.net/mode/markdown/): Properly recognize the end of fenced code blocks when inside other markup.
+
+[scala mode](http://codemirror.net/mode/clike/): Improve handling of operators containing <code>#</code>, <code>@</code>, and <code>:</code> chars.
+
+[xml mode](http://codemirror.net/mode/xml/): Allow dashes in HTML tag names.
+
+[javascript mode](http://codemirror.net/mode/javascript/): Improve parsing of async methods, TypeScript-style comma-separated superclass lists.
+
+[indent-fold addon](http://codemirror.net/demo/folding.html): Ignore comment lines.
+
+### New features
+
+Positions now support a `sticky` property which determines whether they should be associated with the character before (value `"before"`) or after (value `"after"`) them.
+
+[vim bindings](http://codemirror.net/mode/demo/vim.html): Make it possible to remove built-in bindings through the API.
+
+[comment addon](http://codemirror.net/doc/manual.html#addon_comment): Support a per-mode <code>useInnerComments</code> option to optionally suppress descending to the inner modes to get comment strings.
+
+### Breaking changes
+
+The [sass mode](http://codemirror.net/mode/sass/) now depends on the [css mode](http://codemirror.net/mode/css/).
+
+## 5.23.0 (2017-01-19)
+
+### Bug fixes
+
+Presentation-related elements DOM elements are now marked as such to help screen readers.
+
+[markdown mode](http://codemirror.net/mode/markdown/): Be more picky about what HTML tags look like to avoid false positives.
+
+### New features
+
+`findModeByMIME` now understands `+json` and `+xml` MIME suffixes.
+
+[closebrackets addon](http://codemirror.net/doc/manual.html#addon_closebrackets): Add support for an `override` option to ignore language-specific defaults.
+
+[panel addon](http://codemirror.net/doc/manual.html#addon_panel): Add a `stable` option that auto-scrolls the content to keep it in the same place when inserting/removing a panel.
+
+## 5.22.2 (2017-01-12)
+
+### Bug fixes
+
+Include rollup.config.js in NPM package, so that it can be used to build from source.
+
+## 5.22.0 (2016-12-20)
+
+### Bug fixes
+
+[sublime bindings](http://codemirror.net/demo/sublime.html): Make `selectBetweenBrackets` work with multiple cursors.
+
+[javascript mode](http://codemirror.net/mode/javascript/): Fix issues with parsing complex TypeScript types, imports, and exports.
+
+A contentEditable editor instance with autofocus enabled no longer crashes during initializing.
+
+### New features
+
+[emacs bindings](http://codemirror.net/demo/emacs.html): Export `CodeMirror.emacs` to allow other addons to hook into Emacs-style functionality.
+
+[active-line addon](http://codemirror.net/doc/manual.html#addon_active-line): Add `nonEmpty` option.
+
+New event: [`optionChange`](http://codemirror.net/doc/manual.html#event_optionChange).
+
 ## 5.21.0 (2016-11-21)
 
 ### Bug fixes

@@ -1,4 +1,4 @@
 
 <#-- SCIPIO: common shop customer definitions and macros -->
 
-<#include "../common/common.ftl">
+<#include "component://shop/webapp/shop/common/common.ftl">

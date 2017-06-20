@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Base64;
@@ -112,6 +113,8 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
     protected Document documentForTemplate = null;
     protected Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
 
+    protected Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
+    
     protected EntitySaxReader() {}
 
     public EntitySaxReader(Delegator delegator, int transactionTimeout) {
@@ -228,6 +231,23 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
     public Action getAction() {
         return this.currentAction;
+    }
+
+    /**
+     * SCIPIO: Specifies the entity names allowed to be parsed, or null to remove limit.
+     * If violation occurs, an exception is generated.
+     * Added 2017-06-15.
+     */
+    public void setAllowedEntityNames(Set<String> allowedEntityNames) {
+        this.allowedEntityNames = allowedEntityNames;
+    }
+    
+    /**
+     * SCIPIO: Returns the entity names allowed to be parsed.
+     * Added 2017-06-15.
+     */
+    public Set<String> getAllowedEntityNames() {
+        return allowedEntityNames;
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -638,6 +658,11 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                 entityName = entityName.substring(entityName.indexOf(':') + 1);
             }
 
+            // SCIPIO: 2017-06-15: ensure entity name allowed
+            if (allowedEntityNames != null && !allowedEntityNames.contains(entityName)) {
+                throw new org.xml.sax.SAXParseException(null, locator, new IllegalArgumentException("Entity name not allowed for this reader: " + entityName));
+            }
+            
             try {
                 currentValue = delegator.makeValue(entityName);
                 // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set

@@ -69,6 +69,10 @@ NOTE: 2016-11-14: Scope handling is revamped for consistency.
     and sections in ftl files (their XML equivalents perform stack pushing), though it rarely manifests as
     an issue due to the ftl bindings being copies from context.
 
+NOTE: 2017-09-10: If both {{{resource}}} and {{{name}}} are empty, this macro simply returns nothing, without
+    producing any error. This is to make it more friendly to template code, so that surrounding #if statements
+    can be safely omitted.
+
 TODO: Reimplement as transform.
 
   * Parameters *
@@ -79,20 +83,35 @@ TODO: Reimplement as transform.
                                   "component://common/widget/CommonScreens.xml"
     name                    = ((string)) A resource name part, if not already included in the resource
                               If there is no path for the type or path is optional, then name alone should be specified.
-    type                    = (screen|menu|form|tree|section, default: screen) The type of resource to render
+    type                    = (screen|menu|form|tree|decorator|section|ftl, default: -dependent on resource-, fallback default: screen) The type of resource to render
                               * {{{screen}}}: an Ofbiz screen (widget) by {{{component://}}} location
                                 NOTE: this does not go through {{{include-screen}}} element - use {{{include-screen}}} to force that if needed for some reason
+                                NOTE: this is the default in most cases, but not all.
                               * {{{screen-widget}}}: an Ofbiz screen (widget) by {{{component://}}} location - 
                                 same as {{{screen}}} but using alternate inclusion method using xml {{{include-screen}}}
                               * {{{menu}}} or {{{include-menu}}}: an Ofbiz menu (widget) by {{{component://}}} location
                               * {{{form}}} or {{{include-form}}}: an Ofbiz form (widget) by {{{component://}}} location
                               * {{{tree}}} or {{{include-tree}}}: an Ofbiz tree (widget) by {{{component://}}} location
                               * {{{section}}}: an Ofbiz screen (widget) decorator section, with {{{name}}} arg
+                              * {{{decorator}}} (WORK-IN-PROGRESS): an Ofbiz decorator-screen.
+                                the {{{sections}}} parameter maps decorator-section names to Freemarker code to be included.
+                              * {{{ftl}}}: special standalone isolated Freemarker template include mode. {{{resource}}} is 
+                                expected to point to an FTL file. this differs from the Freemarker #include command in that
+                                the FTL is processed in a standard ofbiz way similar to a screen, the context stack is by default pushed/pop
+                                around the include (unless context does not support), and the template gets its own variable binding environment
+                                so it does not interfere with other templates. You cannot use this to reuse definitions
+                                from other FTL files; use #include for that. for more advanced options or 
+                                to render inline strings as templates, try #interpretStd instead.
+                                NOTE: if type is omitted and resource ends with the extension ".ftl", this type is implied; allows brevity.
                               NOTE: screen, menu, form and tree (xxx) can be given a {{{include-}}} prefix. The {{{include-}}} version
                                   guarantees that the include will be processed using the XML {{{include-xxx}}} element. 
                                   The non-{{{include-}}} versions may be implemented using other means
                                   and may be more efficient, but sometimes it may be needed to force the include mechanism.
     ctxVars                 = ((map), default: -empty-) A map of screen context vars to be set before the invocation
+                              WARN: For {{{type="section"}}}, {{{ctxVars}}} may not work as expected; you may have to pass
+                                  {{{globalCtxVars}}} instead, due to issues with scoping and nesting.
+                                  {{{globalCtxVars}}} will work in most cases, but unfortunately they are overridden
+                                  by the invoked's sections local vars, so they can't be used to provide overrides.
                               NOTE: Currently, this uses #setContextField. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
     globalCtxVars           = ((map), default: -empty-) A map of screen global context vars to be set before the invocation
@@ -101,9 +120,9 @@ TODO: Reimplement as transform.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
-    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
+    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     asString                = ((boolean), default: false) If true, the render will render to a string like a regular FTL macro; otherwise goes straight to Ofbiz's writer
                               In stock Ofbiz, which is also current Scipio default behavior (for compabilitity and speed), render calls go directly to writer, 
                               which is faster but cannot be captured using freemarker {{{#assign}}} directive. If you need to capture
@@ -120,20 +139,71 @@ TODO: Reimplement as transform.
                               See widget-menu.xsd {{{include-menu}}} element for details.
     subMenus                = (none|active|all, default: all) Sub-menu render filter [{{{menu}}} type only]
                               See widget-menu.xsd {{{include-menu}}} element for details.
+    secMap                  = ((map)) For type="decorator", maps decorator-section names to Freemarker code to execute.
+                              WORK-IN-PROGRESS
+                              The entries may be TemplateInvoker instances returned from #interpretStd or #interpretStdLoc.
+                              Alternatively, simple strings may be passed which will be interpreted as template locations
+                              or screen widgets based on extension.
+                              Only file locations are supported this way due to security risks of mixing locations and inline content,
+                              and because locations allow for optimizations.            
     
   * History *
+    Enhanced for 1.14.4 (type="ftl", type="decorator" (WORK-IN-PROGRESS), improved defaults handling).
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
-<#macro render resource="" name="" type="screen" ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="" 
-    asString=false shareScope="" maxDepth="" subMenus="">
-  <@varSection ctxVars=ctxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues>
-    <#-- assuming type=="screen" for now -->
-    <#if type == "screen">
-        ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope))}<#t>
-    <#elseif type == "section">
-        ${StringUtil.wrapString(sections.renderScopedGen(name, asString, shareScope))}<#t>
-    <#else>
+<#macro render resource="" name="" type="" ctxVars={} globalCtxVars={} reqAttribs={} clearValues=false restoreValues=true 
+    asString=false shareScope=false maxDepth="" subMenus="" secMap={}>
+  <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
+  <#if !type?has_content>
+    <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
+    <#local type = resource?ends_with(".ftl")?string("ftl", "screen")>
+  </#if>
+  <#-- WARN: 2017-04-26: For type="section" we MUST pass the ctxVars down to the called method,
+          because it may be using different "context" object (even if derived from the original context stack).
+          We do not have to do this with globalCtxVars the globalContext should be the same since the section
+          context should be derived from the original context stack.
+      WARN 2: Even with this, ctxVars may not work as expected for type="section" due to further nesting.
+          May be forced to rely on globalCtxVars and leave it at that... (TODO: REVIEW)
+      NOTE: We make assumption that the nested context is a MapStack. if it's not we'd have even more problems,
+          but shouldn't be anywhere. 
+  -->
+  <#local innerCtxVars = ctxVars>
+  <#local outerCtxVars = {}>
+  <#local skipSetCtxVars = false>
+  <#if shareScope>
+    <#-- WARN: if shareScope=true and restoreValues=true, we can't rely on the called function to restore the values...
+          so this complicates further. -->
+    <#if restoreValues>
+      <#local innerCtxVars = ctxVars>
+      <#local outerCtxVars = ctxVars>
+      <#local skipSetCtxVars = true><#-- the assignments are done via innerCtxVars, outer just needs to restore after -->
+    <#elseif clearValues>
+      <#local innerCtxVars = ctxVars>
+      <#local outerCtxVars = ctxVars>
+      <#local skipSetCtxVars = true><#-- the assignments are done via innerCtxVars, outer just needs to clear after -->
+    </#if>
+  </#if>
+  <#if type == "screen">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
+      ${StringUtil.wrapString(screens.renderScopedGen(resource, name, asString, shareScope, innerCtxVars))}<#t>
+    </@varSection><#t>
+  <#elseif type == "decorator">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
+      <p>(@render type="decorator" is not yet implemented)</p><#t>
+      <#--${StringUtil.wrapString(screens.renderDecoratorScopedGen(resource, name, asString, shareScope, sections, innerCtxVars)})}--><#t>
+    </@varSection><#t>  
+  <#elseif type == "section">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
+      ${StringUtil.wrapString((sections.renderScopedGen(name, asString, shareScope, innerCtxVars))!"")}<#t>
+    </@varSection><#t>  
+  <#elseif type == "ftl">
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
+      <#-- DEV NOTE: using envOut to emulate screens.render behavior, so even though not always good, is more predictable. -->
+      ${interpretStd({"location":resource, "envOut":!asString, "shareScope":shareScope, "ctxVars":innerCtxVars})}<#t>
+    </@varSection><#t>  
+  <#else>
+    <@varSection ctxVars=outerCtxVars globalCtxVars=globalCtxVars reqAttribs=reqAttribs clearValues=clearValues restoreValues=restoreValues skipSetCtxVars=skipSetCtxVars><#t>
       <#-- strip include- prefix from type, because for the rest it's all the same -->
       <#local type = type?replace("include-", "")>
       <#if !name?has_content>
@@ -144,28 +214,183 @@ TODO: Reimplement as transform.
       <#-- DEV NOTE: WARN: name clashes -->
       <#if type == "menu">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioFormWidgetWrapper", asString))}<#t>
       <#elseif type == "tree">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioTreeWidgetWrapper", asString))}<#t>
       <#elseif type == "screen">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioScreenWidgetWrapper", asString))}<#t>
       </#if>
-    </#if>
-  </@varSection>
+    </@varSection><#t>
+  </#if>
+  </#if>
 </#macro>
+
+<#-- 
+*************
+* interpretStd
+************
+Interprets/compiles a string or file location as a template and returns the template
+in a self-sufficient template invoker wrapper, which can later be evaluated using
+a simple invocation form (by default, simple string evaluation).
+
+This can be seen as an alternative to the {{{?interpret}}} built-in, 
+with significant differences. Unlike {{{?interpret}}}, the default behavior
+is to treat the invocation as a standalone template render, rather than
+evaluating within the current template environment.
+In this respect, #interpretStd is closer to the @render directive, but
+with no widget renderer involvement.
+
+Furthermore, while {{{?interpret}}} returns a directive as wrapper (evaluated using {{{<@value/>}}} syntax),
+by default, #interpretStd returns a scalar (string)-implementing wrapper,
+so that it can be evaluated using the same syntax used for regular string variables,
+and thus can substitute more easily.
+
+Unlike {{{?interpret}}}, variables from the FTL environment are NOT available
+from #interpretStd invocations; only variables from the widget renderer
+{{{context}}} ({{{MapStack}}}) are available. This is closer to @render and is an explicit feature
+intended to prevent interfering with FTL environment of parent templates.
+Furthermore, by default, the context {{{MapStack}}} is pushed (see {{{pushCtx}}} parameter).
+
+This function accepts one parameter which is a map of parameters, described below.
+If a single string is supplied instead, it is taken as the inline string template
+to interpret, and all other parameters get defaults.
+
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template str.
+
+  * Parameters *
+    body                    = ((string)) An inline string to use as template body
+                              The input itself automatically bypasses screen auto-html escaping.
+                              NOTE: if instead of an args map, the function receives a single
+                                  string parameter, then it is considered the value of this
+                                  parameter, and all others receive defaults.
+    location                = ((string)) A file location, alternative to inline {{{template}}}
+                              The input itself automatically bypasses screen auto-html escaping.
+    invokeMode              = (ofbiz-std, default: ofbiz-std) The general invocation and context mode
+                              Possible values:
+                              * {{{ofbiz-std}}}: Causes a standalone, standard ofbiz template invocation,
+                                with the {{{context}}} variable as root binding,
+                                similar to using FreeMarkerWorker directly. By default, the current
+                                context is reused and pushed (unless specified otherwise).
+                                NOTE: this is completely different from freemarker's {{{?interpret}}} built-in,
+                                    which evaluates the template as if it were part of the current environment and template.
+                              NOTE: By default, in all invokeModes, the function will attempt to use
+                                  template compilation caches appropriate for the current renderer. 
+                                  Currently there is no parameter to disable it and no reason to.
+                              NOTE: By default, in all invokeModes, the function will attempt to use 
+                                  the same ObjectWrapper as currently in use, meaning the same
+                                  auto-html-escaping hack will apply.
+                              TODO: parameters to specify cache and configuration/objectwrappers.
+    invokeCtx               = ((map), default: -mode-dependent-) Context object to use for invocation
+                              For {{{ofbiz-std}}}, the default is to use the well-known {{{context}}} variable
+                              found in the freemarker environment at time of invocation.
+                              NOTE: In most case this should not be set and leave it to fetch the context by itself;
+                                  in which case, to pass vars, leave pushCtx to {{{true}}} and and pass them in {{{ctxVars}}} instead.                    
+    pushCtx                 = ((boolean), default: -mode-dependent-) Whether to push/pop the context around the evaluation
+                              For {{{ofbiz-std}}}, the default is {{{true}}}.
+                              If the invokeCtx is not a MapStack, this has no effect.
+    ctxVars                 = ((map)) Additional context vars to pass at time of invocation
+                              If pushCtx is true (default), these are lost after render finish.
+    unwrapCtxVars           = ((boolean), default: false) Whether to bother to ftl-unwrap the ctxVars or not                          
+    model                   = (hybrid|scalar|directive|hybrid, default: hybrid) The Freemarker TemplateModel to wrap the interpreted/compiled template
+                              * {{{scalar}}}: The returned value will evaluate (render) the template
+                                when it is coerced to string or passed through the {{{?string}}} built-in.
+                                This allows the interpreted template to substitute for a regular string variable.
+                              * {{{directive}}}: The returned value behaves like the return value of
+                                the {{{?interpret}}} built-in and must be evaluated using the
+                                {{{<@value />}}} syntax.
+                              * {{{hybrid}}}: implements both {{{scalar}}} and {{{directive}}} 
+                                at the same time.
+    envOut                  = ((boolean), default: false) Whether to output as string or environment writer
+                              If set to true, the string-rendering methods of the model ({{{?string}}}) will output
+                              to the current Freemarker environment output INSTEAD of returning as a string,
+                              and will instead always return an empty string.
+                              This is for advanced usage and is usually only needed so that the string-like
+                              models behave more like Ofbiz's {{{screens}}} object, or for performance
+                              reasons.
+                              This only applies to {{{scalar}}} and {{{hybrid}}} models, and doesn't affect
+                              the {{{directive}}} model or the directive mode of the {{{hybrid}}} model.
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function interpretStd args={}>
+</#function>
+-->
+
+<#-- 
+*************
+* interpretStdLoc
+************
+Interprets/compiles a file location as a template and returns the template
+in a self-sufficient template invoker wrapper, which can later be evaluated using
+a simple invocation form (by default, simple string evaluation).
+
+This is merely an alias to #interpretStd, where if a single string is passed instead of
+an args map, it is interpreted to be a file location instead of the template itself.
+
+NOTE: It is also possible to pass the map as the second parameter instead of the first, with
+    first being the template location.
+
+  * Parameters *
+    (other)                 = See #interpretStd
+
+  * Related *                           
+    @ofbizUrl
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function interpretStdLoc args={}>
+</#function>
+-->
+
+<#-- 
+*************
+* makeSectionsRenderer
+************
+Creates a sections renderer that can be used in place of the "sections" object.
+
+The returned object implements a single {{{render(name)}}} method that can be used to
+render the section by name.
+
+WARN: 2017-03-28: currently this only implements the sections renderer "ftl" type,
+    which means the sections cannot be passed back to the widget renderer.
+TODO: widget renderer-compatible sections renderer ("screen" type).
+
+  * Parameters *
+    type                    = (ftl) (required) The sections renderer type
+                              Possible values:
+                              * {{{ftl}}}: creates an FTL-only sections renderer
+                                it cannot be used from the widget renderer.
+                                the sectionsMap values should usually be return values
+                                from either #interpretStd, #interpretStdLoc or {{{?interpret}}}.
+                                if strings are passed, they are simply outputted as-is.
+    sectionsMap             = ((map)) Map of section names to implementations
+                              See type for allowed values.
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeSectionsRenderer type sectionsMap>
+</#function>
+-->
 
 <#-- 
 *************
@@ -863,24 +1088,10 @@ to indicate the value null.
                                 NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                     object found in the global {{{scipioNullObject}}} variable.
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function setVars varMaps={}>
-  <#if !(varMaps.ctxVars!false)?is_boolean>
-    <#list mapKeys(varMaps.ctxVars) as name>
-      <#local dummy = setContextField(name, varMaps.ctxVars[name])>
-    </#list>
-  </#if>
-  <#if !(varMaps.globalCtxVars!false)?is_boolean>
-    <#list mapKeys(varMaps.globalCtxVars) as name>
-      <#local dummy = setGlobalContextField(name, varMaps.globalCtxVars[name])>
-    </#list>
-  </#if>
-  <#if !(varMaps.reqAttribs!false)?is_boolean>
-    <#list mapKeys(varMaps.reqAttribs) as name>
-      <#local dummy = setRequestAttribute(name, varMaps.reqAttribs[name])>
-    </#list>
-  </#if>
-  <#return "">
 </#function>
+-->
 
 <#-- 
 *************
@@ -897,28 +1108,10 @@ to indicate the value null.
                               * {{{globalCtxVars}}}: A list (or map - keys used) of screen global context vars names to clear
                               * {{{reqAttribs}}}: A list (or map - keys used) of request attributes names to clear
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function clearVars varLists={}>
-  <#list mapsKeysOrListOrBool(varLists.ctxVars!) as name>
-    <#local dummy = setContextField(name, scipioNullObject)>
-  </#list>
-  <#list mapsKeysOrListOrBool(varLists.globalCtxVars!) as name>
-    <#local dummy = setGlobalContextField(name, scipioNullObject)>
-  </#list>
-  <#list mapsKeysOrListOrBool(varLists.reqAttribs!) as name>
-    <#local dummy = setRequestAttribute(name, scipioNullObject)>
-  </#list>
-  <#return "">
 </#function>
-
-<#function mapsKeysOrListOrBool object>
-  <#if object?is_sequence>
-    <#return object>
-  <#elseif object?is_boolean>
-    <#return []>
-  <#else>
-    <#return mapKeys(object)>
-  </#if>
-</#function>
+-->
 
 <#-- 
 *************
@@ -929,45 +1122,24 @@ Gets all the named attributes and context vars.
 This function is enhanced to support more value types and the special value scipioNullObject
 to indicate the value null.
 
-TODO: This is currently extremely inefficient; should implement as transform.
-
   * Parameters *
     varLists                = ((map)) A map of lists, or map of maps (keys used), of var names to extract values
                               * {{{ctxVars}}}: A list (or map - keys used) of screen context vars names to extract
                               * {{{globalCtxVars}}}: A list (or map - keys used) of screen global context vars names to extract
                               * {{{reqAttribs}}}: A list (or map - keys used) of request attributes names to extract
-    saveNulls               = ((boolean), default: false) If true, null/missing values will get map entries with {{{ScipioNullObject}}}; otherwise, omitted from results
+    saveNulls               = ((boolean), default: true) If true, null/missing values will get map entries with null value; otherwise, omitted from results
+                              NOTE: 2017-04-28: default is now 
     
   * Return Value *
-    A map of maps with same keys as parameters. 
+    A map of maps with same keys as parameters.
+    
+  * History *
+    Modified for 1.14.3.
 -->
+<#-- IMPLEMENTED AS TRANSFORM
 <#function extractVars varLists={} saveNulls=false>
-  <#local ctxVarsMap = {}>
-  <#local globalCtxVarsMap = {}>
-  <#local reqAttribsMap = {}>
-  <#list mapsKeysOrListOrBool(varLists.ctxVars!) as name>
-    <#if context[name]??>
-      <#local ctxVarsMap = ctxVarsMap + {name: context[name]}>
-    <#elseif saveNulls>
-      <#local ctxVarsMap = ctxVarsMap + {name: scipioNullObject}>
-    </#if>
-  </#list>
-  <#list mapsKeysOrListOrBool(varLists.globalCtxVars!) as name>
-    <#if globalContext[name]??>
-      <#local globalCtxVarsMap = globalCtxVarsMap + {name: globalContext[name]}>
-    <#elseif saveNulls>
-      <#local globalCtxVarsMap = globalCtxVarsMap + {name: scipioNullObject}>
-    </#if>
-  </#list>
-  <#list mapsKeysOrListOrBool(varLists.reqAttribs!) as name>
-    <#if request.getAttribute(name)??>
-      <#local reqAttribsMap = reqAttribsMap + {name: request.getAttribute(name)}>
-    <#elseif saveNulls>
-      <#local reqAttribsMap = reqAttribsMap + {name: scipioNullObject}>
-    </#if>
-  </#list>
-  <#return {"ctxVars":ctxVarsMap, "globalCtxVars": globalCtxVarsMap, "reqAttribs":reqAttribsMap}>
 </#function>
+-->
 
 <#-- 
 *************
@@ -988,31 +1160,72 @@ to indicate the value null.
     reqAttribs              = ((map), default: -empty-) A map of request attributes to be set before the invocation
                               NOTE: Currently, this uses #setRequestAttribute. To set null, the key values may be set to a special null-representing
                                   object found in the global {{{scipioNullObject}}} variable.
-    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
     restoreValues           = ((boolean), default: true) If true, the original values are saved and restored after invocation
                               NOTE: 2016-07-29: The default for this parameter has been changed to {{{true}}}.
+    clearValues             = ((boolean), default: false) If true, the passed request attributes and context vars are removed (or set to null) after invocation
 -->
-<#macro varSection ctxVars=false globalCtxVars=false reqAttribs=false clearValues="" restoreValues="">
-  <#if !clearValues?is_boolean>
-    <#-- DEV NOTE: if clearValues was true as default, you'd have to check for explicit
-        restoreValues (!restoreValues?is_boolean) before setting the true default here -->
-    <#local clearValues = false>
-  </#if>
-  <#if !restoreValues?is_boolean>
-    <#local restoreValues = true>
-  </#if>
-  <#local varMaps = {"ctxVars":ctxVars, "globalCtxVars":globalCtxVars, "reqAttribs":reqAttribs}>
-  <#if restoreValues && !clearValues>
-    <#local origValues = extractVars(varMaps, true)>
-  </#if>
-  <#local dummy = setVars(varMaps)>
-  <#nested>
-  <#if clearValues>
-    <#local dummy = clearVars(varMaps)>
-  <#elseif restoreValues>
-    <#local dummy = setVars(origValues)>
-  </#if>
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro varSection ctxVars={} globalCtxVars={} reqAttribs={} clearValues=false restoreValues=true>
 </#macro>
+-->
+
+<#-- 
+*************
+* virtualSection
+************
+Defines a virtual section that produces no markup (used in targeted rendering),
+with a name of global scope.
+This is equivalent to defining a {{{<section>}}} widget element 
+(whereas @section is equivalent to {{{<screenlet>}}} widget element).
+
+This is required to be able to re-implement some widgets screens and decorators as FTL.
+
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
+
+NOTE: this implicitly defines a @renderTarget.
+
+  * Parameters *
+    name                    = Virtual section name (global scope)
+    contains                = contains-expression
+                              See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro virtualSection name="" contains="*">
+</#macro>
+-->
+
+<#-- 
+*************
+* renderTarget
+************
+Used within a standard library macro definition to implemented targeted rendering for the directive.
+
+See {{{widget-screen.xsd}}} "contains" expression attribute definition for more information.
+
+NOTE: Due to possible performance concerns, only a few of the scipio standard Freemarker API currently support this:
+    @container, @form, @table, @section (NOTE: @section actually matches as "screenlet" element name with % selector).
+    They are mostly meant to work with the {{{scpRenderTargetExpr}}} ID selector ({{{#}}}).
+
+FIXME: Some of the behavior is currently hardcoded inside the renderTarget implementation.
+
+  * Parameters *
+    dirName                 = Name of the containing directive
+    dirArgs                 = ((map)) Map of arguments that were passed to the directive
+                              The implementation may extract name and ID OR it may do nothing.
+                              TODO: clarify
+    id                      = id                
+    name                    = name        
+    
+  * History *
+    Added for 1.14.3.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro renderTarget dirName="" dirArgs={} id="" name="">
+</#macro>
+-->
 
 <#-- 
 *************
@@ -1301,6 +1514,7 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 -->
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
+  <#local paramMap = toSimpleMap(paramMap)>
   <#list mapKeys(paramMap) as key>
     <#if res?has_content && (!res?ends_with(paramDelim))>
       <#local res = res + paramDelim>
@@ -1920,7 +2134,7 @@ NOTE: 2016-10-20: Currently only supports "always" (deep) rewrapping mode; ideal
     Rewritten for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function rewrapObject object mode="">
+<#function rewrapObject object wrapper="" mode="">
 </#function>
 -->
 
@@ -3451,7 +3665,7 @@ a replacing string ("=").
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#if (!class?has_content)>
+  <#if !(class?has_content)>
     <#return "+" + newClass> <#-- if string was empty, make sure start with "+" so we don't crush next defaults -->
   <#else>
     <#return class + " " + newClass> <#-- don't worry about spaces here; trimmed later -->
@@ -4125,8 +4339,8 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
     div:divclass;h+3:headingclass;consumeLevel=true
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
-  <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
-    allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
+  <#return rewrapMap(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
+    allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId), "raw-simple")>
 
 <#-- old FTL impl
   <#local headingLevel = "">
@@ -4273,6 +4487,48 @@ Helper method that can extract style names by prefix with int value suffix from 
 -->
 <#function extractPrefixedStyleNamesWithInt style prefixMap>
   <#return Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].extractPrefixedStyleNamesWithInt(style, prefixMap)>
+</#function>
+
+<#-- 
+*************
+* limitStrValToItems
+************
+Ensures that the given string value is contained in a field items list, 
+by only returning the value if it is in fact contained or void (missing value) otherwise.
+
+This is usually used in conjunction with @field {{{items}}} parameter for field types {{{select}}}, {{{radio}}} or {{{checkbox}}}.
+
+If the value is matched, the value itself is returned; otherwise void (no result) is returned.
+This should always be combined with one of the missing value Freemarker operators (??, !).
+
+The value and item values automatically get the #rawString operation applied (along with coercion to string);
+however, the original value is returned and not the raw one.
+
+NOTE: for performance and other reasons it is usually best to have a groovy script do this, but this is a frequently needed operation.
+
+  * Parameters *
+    value                   = ((string), required) Value to check
+    items                   = ((list), required) Field items list, a list of maps, each map containing a {{{value}}} key
+                              Alternatively, this may be a map, in which case the map keys are checked instead.
+    key                     = (string, default: value) The name of the key to check for each map entry in the items list                          
+    
+  * Return Value *
+    the original value if it matched an item, or void if no item was matched (for use with missing value operator).
+-->
+<#function limitStrValToItems value items key="value">
+  <#local val = rawString(value)>
+  <#if items?is_sequence>
+    <#list items as item>
+      <#if rawString(item[key]!"") == val>
+        <#return value>
+      </#if>
+    </#list>
+  <#elseif isObjectType("map", items)>
+    <#if items[val]??>
+      <#return value>
+    </#if>
+  </#if>
+  <#-- (return void if nothing matched) -->
 </#function>
 
 <#-- 
@@ -4500,6 +4756,7 @@ Returns void if nothing.
   <#if res?has_content>
     <#return res>
   </#if>
+  <#-- DEV NOTE: the conditions below almost look wrong, but they are actually correct and are here to prevent useless double-lookups already covered by the first check above -->
   <#if renderContextType != "general">
     <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
     <#if res?has_content>

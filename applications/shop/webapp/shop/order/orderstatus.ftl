@@ -16,19 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#if orderHeader?has_content>
   <#-- SCIPIO: NOTE: this condition came from ofbiz patch. TODO: review if we want it/safe
   <#if (maySelectItems!"N") == "Y">-->
-  <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
-    <input type="hidden" name="add_all" value="false" />
-    <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
+  
   <#--</#if>-->
     <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
-    <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
-  <#--<#if (maySelectItems!"N") == "Y">-->
-  </form>
+    <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
+        <input type="hidden" name="add_all" value="false" />
+        <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
+        <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
+        <#--<#if (maySelectItems!"N") == "Y">-->
+    </form>
   <#--</#if>-->
 <#else>
   <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>

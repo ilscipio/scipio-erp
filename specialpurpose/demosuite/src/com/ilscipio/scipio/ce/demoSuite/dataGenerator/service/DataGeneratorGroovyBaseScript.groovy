@@ -15,7 +15,7 @@ import org.ofbiz.service.ServiceUtil
 import org.ofbiz.service.engine.GroovyBaseScript
 
 
-
+// FIXME?: revisit reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("general", "data.generator.max.records", 50);
     private static final String resource_error = "DemoSuiteUiLabels";

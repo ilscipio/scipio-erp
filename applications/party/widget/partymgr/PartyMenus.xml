@@ -231,7 +231,7 @@
         </menu-item>
     </menu>
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="viewprofile">
+        default-menu-item-name="viewprofile" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
         <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
         <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
@@ -272,6 +272,17 @@
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>
         </menu-item>
+        
+        <menu-item name="EditUserLoginSecurityGroups" title="${uiLabelMap.SecurityGroups}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <condition>
+                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+            </condition>
+            <link target="EditUserLoginSecurityGroups">
+                <parameter param-name="userLoginId" from-field="userLogin.userLoginId"/>
+            </link>
+        </menu-item>
+        
+        
         
          <menu-item name="createIdentification" title="${uiLabelMap.CommonNew} ${uiLabelMap.PartyPartyIdentification}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="viewidentifications">
@@ -390,7 +401,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
         <menu-item-alias name="NewPartyInvitation" for="PARENT-NOSUB"/>
     </menu>
@@ -609,7 +620,7 @@
                     <if-compare field="communicationEvent.statusId" operator="equals" value="COM_ENTERED"/>
                 </and>
             </condition>
-            <link target="/sfa/control/EditSalesOpportunity" url-mode="inter-app">
+            <link target="/crm/control/EditSalesOpportunity" url-mode="inter-app">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>
@@ -742,7 +753,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CommEventTabBar" recursive="includes-only" />
     </menu>
     
@@ -820,7 +831,7 @@
                     <if-compare field="communicationEvent.statusId" operator="equals" value="COM_ENTERED"/>
                 </and>
             </condition>
-            <link target="/sfa/control/EditSalesOpportunity" url-mode="inter-app">
+            <link target="/crm/control/EditSalesOpportunity" url-mode="inter-app">
                 <parameter param-name="communicationEventId" from-field="parameters.communicationEventId"/>
             </link>
         </menu-item>

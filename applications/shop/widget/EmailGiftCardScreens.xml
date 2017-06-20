@@ -30,7 +30,11 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/giftcardpurchase.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/giftcardpurchase.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -42,7 +46,11 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/giftcardreload.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/giftcardreload.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

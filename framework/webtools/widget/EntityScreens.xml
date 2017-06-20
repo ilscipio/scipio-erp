@@ -145,7 +145,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
+                        <screenlet title="${uiLabelMap.WebtoolsImportToDataSource}">
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/entity/EntityImportReaders.ftl"/></html>
                             </platform-specific>

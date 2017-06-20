@@ -38,7 +38,18 @@ under the License.
                         <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
                     </@td>
                     <#list fieldList as field>
-                        <@td>${record.fields.get(field.name)!?string}</@td>
+                        <@td>
+                            <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it 
+                               2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
+                            <#assign fieldValue = (record.fields[rawString(field.name)])! />
+                            <#if fieldValue?has_content>
+                                <#if (isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean)>
+                                    ${fieldValue?string}
+                                <#else>
+                                    <em>(${uiLabelMap.WebtoolsNoStringRepr})</em> 
+                                </#if>
+                            </#if>
+                        </@td>
                     </#list>
                     <@td>
                     <#if hasDeletePermission == 'Y'>

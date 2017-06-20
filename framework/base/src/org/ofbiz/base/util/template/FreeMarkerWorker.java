@@ -51,8 +51,11 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicBeansWrapperImpl;
+import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBasicDefaultObjectWrapperImpl;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.core.Environment;
@@ -60,6 +63,7 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -71,9 +75,13 @@ import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
+import freemarker.template.utility.DeepUnwrap;
 
-/** FreeMarkerWorker - Freemarker Template Engine Utilities.
- *
+/** 
+ * FreeMarkerWorker - Freemarker Template Engine Utilities.
+ * <p>
+ * SCIPIO: 2017-04-03: All ObjectWrappers are now made from custom types in ScipioFtlWrappers and
+ * they support custom plugin wrapping logic.
  */
 public class FreeMarkerWorker {
 
@@ -83,42 +91,37 @@ public class FreeMarkerWorker {
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
-    private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
+    // SCIPIO: 2017-04-03: custom wrapper FIXME: should not force BeansWrapper in the future...
+    //private static final BeansWrapper defaultOfbizWrapper = new BeansWrapperBuilder(version).build();
+    private static final BeansWrapper defaultOfbizWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizWrapper(version);
     private static final Configuration defaultOfbizConfig = makeConfiguration(defaultOfbizWrapper);
     
     /**
-     * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
+     * SCIPIO: The default escaping charset for the Freemarker <code>?url</code> built-in.
+     * <p>
+     * NOTE: This is hardcoded here because it is also already hardcoded in <code>UrlCodec</code>.
      */
-    private static final ObjectWrapper defaultOfbizSimpleMapWrapper;
-    static {
-        BeansWrapperBuilder builder = new BeansWrapperBuilder(version);
-        builder.setSimpleMapWrapper(true);
-        defaultOfbizSimpleMapWrapper = builder.build();
-    }
+    private static final String defaultUrlEscapingCharset = "UTF-8";
+    
+    /**
+     * SCIPIO: A version of defaultOfbizWrapper that produces simple maps (SimpleMapAdapter).
+     * FIXME: should not force BeansWrapper in the future...
+     */
+    private static final BeansWrapper defaultOfbizSimpleMapWrapper = (BeansWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultOfbizSimpleMapWrapper(version);
     
     /**
      * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
      * using adapters for collections.
+     * FIXME: should not force DefaultObjectWrapper in the future...
      */
-    private static final ObjectWrapper defaultSimpleTypeWrapper;
-    static {
-        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
-        builder.setUseAdaptersForContainers(true);
-        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
-        defaultSimpleTypeWrapper = builder.build();
-    }
+    private static final DefaultObjectWrapper defaultSimpleTypeWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeWrapper(version);
     
     /**
      * SCIPIO: A basic object wrapper that produces mainly simple, inline-FTL-like types, 
      * using copies for collections.
+     * FIXME: should not force DefaultObjectWrapper in the future...
      */
-    private static final ObjectWrapper defaultSimpleTypeCopyingWrapper;
-    static {
-        DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(version);
-        builder.setUseAdaptersForContainers(false);
-        builder.setSimpleMapWrapper(true); // NOTE: this shouldn't really be used
-        defaultSimpleTypeCopyingWrapper = builder.build();
-    }
+    private static final DefaultObjectWrapper defaultSimpleTypeCopyingWrapper = (DefaultObjectWrapper) ScipioFtlWrappers.getSystemObjectWrapperFactory().getDefaultSimpleTypeCopyingWrapper(version);
     
     /**
      * SCIPIO: A copy of the current thread Environment.
@@ -181,6 +184,7 @@ public class FreeMarkerWorker {
         try {
             newConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
             newConfig.setSetting("number_format", "0.##########");
+            newConfig.setURLEscapingCharset(getDefaultUrlEscapingCharset()); // SCIPIO: new 2017-01-27
         } catch (TemplateException e) {
             Debug.logError("Unable to set date/time and number formats in FreeMarker: " + e, module);
         }
@@ -207,6 +211,13 @@ public class FreeMarkerWorker {
         return newConfig;
     }
 
+    /**
+     * SCIPIO: Returns the default escaping charset for the Freemarker <code>?url</code> built-in.
+     */
+    public static String getDefaultUrlEscapingCharset() {
+        return defaultUrlEscapingCharset;
+    }
+    
     /**
      * Protected helper method.
      */
@@ -443,8 +454,14 @@ public class FreeMarkerWorker {
         return getTemplate(templateLocation, cachedTemplates, defaultOfbizConfig);
     }
 
+    /**
+     * Gets a Template instance from the template cache. If the Template instance isn't
+     * found in the cache, then one will be created.
+     * <p>
+     * SCIPIO: 2017-02-21: May now pass cache null to bypass caching.
+     */
     public static Template getTemplate(String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+        Template template = (cache != null) ? cache.get(templateLocation) : null;
         if (template == null) {
             // only make the reader if we need it, and then close it right after!
             Reader templateReader = makeReader(templateLocation);
@@ -453,24 +470,36 @@ public class FreeMarkerWorker {
             } finally { // SCIPIO: added finally
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (cache != null) {
+                template = cache.putIfAbsentAndGet(templateLocation, template);
+            }
         }
         return template;
     }
     
     /**
-     * SCIPIO: Gets template from string out of custom cache (new).
+     * SCIPIO: Gets template from string out of custom cache (new). Template name is set to same as key.
      */
-    public static Template getTemplateFromString(String templateString, String templateLocation, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
-        Template template = cache.get(templateLocation);
+    public static Template getTemplateFromString(String templateString, String templateKey, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        return getTemplateFromString(templateString, templateKey, templateKey, cache, config);
+    }
+    
+    /**
+     * SCIPIO: Gets template from string out of custom cache (new).
+     * 2017-02-21: May now pass cache null to bypass caching.
+     */
+    public static Template getTemplateFromString(String templateString, String templateKey, String templateName, UtilCache<String, Template> cache, Configuration config) throws TemplateException, IOException {
+        Template template = (cache != null) ? cache.get(templateKey) : null;
         if (template == null) {
             Reader templateReader = new StringReader(templateString);
             try {
-                template = new Template(templateLocation, templateReader, config);
+                template = new Template(templateName, templateReader, config);
             } finally {
                 templateReader.close();
             }
-            template = cache.putIfAbsentAndGet(templateLocation, template);
+            if (cache != null) {
+                template = cache.putIfAbsentAndGet(templateKey, template);
+            }
         }
         return template;
     }
@@ -814,9 +843,26 @@ public class FreeMarkerWorker {
     /**
      * OFBiz specific TemplateExceptionHandler.  Sanitizes any error messages present in
      * the stack trace prior to printing to the output writer.
+     * <p>
+     * SCIPIO: 2017-03-23: now public for reuse.
+     * SCIPIO: 2017-03-23: modified to allow customized behavior - see UtilRender.
      */
-    static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
+    public static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
         public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
+            // SCIPIO: 2017-03-23: new switch, split up code
+            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(env);
+            if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
+                handleTemplateExceptionDebug(te, env, out);
+            } else {
+                handleTemplateExceptionRethrow(te, env, out);
+            }
+        }
+        
+        protected void handleTemplateExceptionRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
+            TemplateExceptionHandler.RETHROW_HANDLER.handleTemplateException(te, env, out);
+        }
+        
+        protected void handleTemplateExceptionDebug(TemplateException te, Environment env, Writer out) throws TemplateException {
             StringWriter tempWriter = new StringWriter();
             PrintWriter pw = new PrintWriter(tempWriter, true);
             te.printStackTrace(pw);
@@ -889,4 +935,32 @@ public class FreeMarkerWorker {
         }
     }
     
+    /**
+     * SCIPIO: Gets the render exception mode from the environment or more generic variables (best-effort).
+     */
+    public static UtilRender.RenderExceptionMode getRenderExceptionMode(Environment env) {
+        // TODO: REVIEW SECURITY IMPLICATIONS 
+        // (currently moot because Ofbiz already relies heavily on context for security e.g. simpleEncoder)
+        if (env != null) {
+            try {
+                TemplateModel modeModel = env.getVariable(UtilRender.RENDER_EXCEPTION_MODE_VAR);
+                if (modeModel != null) {
+                    UtilRender.RenderExceptionMode mode = UtilRender.RenderExceptionMode.valueOfPermissive(DeepUnwrap.permissiveUnwrap(modeModel));
+                    if (mode != null) return mode;
+                }
+                TemplateModel contextModel = env.getVariable("context");
+                if (contextModel instanceof freemarker.ext.util.WrapperTemplateModel) {
+                    Object obj = ((freemarker.ext.util.WrapperTemplateModel) contextModel).getWrappedObject();
+                    if (obj instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        UtilRender.RenderExceptionMode mode = UtilRender.getRenderExceptionMode((Map<String, ?>) obj);
+                        if (mode != null) return mode;
+                    }
+                }
+            } catch (Exception e) {
+                ;
+            }
+        }
+        return UtilRender.getGlobalRenderExceptionMode();
+    }
 }

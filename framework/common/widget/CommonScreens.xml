@@ -33,7 +33,11 @@ under the License.
                         <html-template location="component://common/webcommon/includes/htmlheader-for-ajax.ftl" />
                     </html>
                 </platform-specific>
-                <decorator-section-include name="body" />
+                <section name="Global-Column-Main">
+                    <widgets>
+                        <decorator-section-include name="body" />
+                    </widgets>
+                </section>
                 <platform-specific>
                     <html>
                         <html-template location="component://common/webcommon/includes/htmlfooter-for-ajax.ftl" />
@@ -82,7 +86,6 @@ under the License.
                  Can be forced to put some theme scripts here if apps depend heavily on them -->
             
             <!-- Legacy jQuery; TODO: Remove once possible -->
-            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />
             
@@ -109,7 +112,6 @@ under the License.
             <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true" />
-            <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" /> // replaced by foundation datepicker
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jquery.maskedinput-1.3.1.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
@@ -122,7 +124,6 @@ under the License.
                 
             <!-- jQuery CSSs -->
             <!-- DISABLED FOR CLEAN-UP
-            <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true" />
             <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
             <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true" />
             <set field="layoutSettings.javaScripts[]" value="/images/fieldlookup.js" global="true" />
@@ -165,6 +166,8 @@ under the License.
                     }
                 }
             ]]></script>
+            <!-- Fetch messages from system -->
+            <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/GetUserNotifications.groovy" />
         </actions>
     </screen>
     
@@ -202,8 +205,17 @@ under the License.
             <set field="globalTitle" from-field="resolvedTitle" global="true"/>
 
             <set field="headerTitle" from-field="resolvedTitle"/>
+            <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO" global="true"/>
 
             <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>
+            
+            <!-- 2017-05-19: output the public-facing parts of layoutSettings when in viewAsJson mode
+                WARN: these are returned without ofbizContentUrl wrapping; caller must handle
+                NOTE: DO NOT output the full layoutSettings here, because it contains internal paths that _could_ be considered
+                    security risk on some production systems. -->
+            <set field="scpOutParams.layoutSettings.javaScripts" from-field="layoutSettings.javaScripts" global="true"/>
+            <set field="scpOutParams.layoutSettings.javaScriptsFooter" from-field="layoutSettings.javaScriptsFooter" global="true"/>
+            <set field="scpOutParams.layoutSettings.styleSheets" from-field="layoutSettings.styleSheets" global="true"/>
         </actions>
     </screen>
 
@@ -222,9 +234,26 @@ under the License.
             <actions>
                 <include-screen-actions name="GlobalActions" />
                 <include-screen-actions name="GlobalTemplateActions" />
+                
+                <!-- 2017-05-19: SPECIAL: contains-expressions for header depends on whether
+                    customSideBar is set or not. if the theme does its own sidebar then we cannot
+                    optimize the left column; the theme has to do it with ftl @virtualSection directives -->
+                <if>
+                    <condition><if-true field="customSideBar" /></condition>
+                    <then>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Right"/>
+                    </then>
+                    <else>
+                        <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right"/>
+                    </else>
+                </if>
             </actions>
             <widgets>
-                <section>
+                <!-- 2017-05-04: "contains" expression is used in targeted rendering mode to exclude unrelated sections from executing 
+                    when certain sections are targeted. It works by negative logic. It is a shorthand to having to wrap everything 
+                    in more unreadable <condition> blocks. It's primarily an optimization to avoid executing needless actions; 
+                    note that even when a section is executed, it does not necessarily mean it will cause rendering output. -->
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
@@ -236,13 +265,17 @@ under the License.
                             </html>
                         </platform-specific>
                         <!-- render header -->
-                        <platform-specific>
-                            <html>
-                                <html-template location="${headerTemplateLocation}" />
-                            </html>
-                        </platform-specific>
+                        <section name="Global-Head-Header">
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="${headerTemplateLocation}" />
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
                         <!-- render appbar or its opening part -->
-                        <section name="Render-Main-Nav">
+                        <section name="Global-Main-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="appbarOpenTemplateLocation" />
@@ -265,7 +298,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                <section>
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -274,7 +307,7 @@ under the License.
                     </condition>
                     <widgets>
                         <!-- render appheader: both menu widget style and ftl template style menus are supported -->
-                        <section name="Render-App-Nav">
+                        <section name="Global-App-Nav">
                             <condition>
                                 <not>
                                     <if-empty field="userLogin" />
@@ -327,7 +360,7 @@ under the License.
                     </widgets>
                 </section>
                 <!-- render the appbar closing part -->
-                <section>
+                <section contains="${headAppContainsExpr}, *">
                     <condition>
                         <and>
                             <if-empty field="parameters.ajaxUpdateEvent" />
@@ -346,28 +379,40 @@ under the License.
                 </section>
                 <!-- TODO?: could have a layoutSettings.inlineJavaScripts[] containing FTL locations for templates to 
                      include in <head></head>, but doesn't seem worth it for now -->
-                <platform-specific>
-                    <html>
-                        <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
-                    </html>
-                </platform-specific>
+                <section name="Global-Head-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonHeadScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
                 <!-- render content area -->
-                <decorator-section-include name="pre-content"/>
-                <container style="${styles.grid_row} ${styles.grid_theme}" id="content-main-section">
+                <section name="Global-Pre-Content" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <decorator-section-include name="pre-content"/>
+                    </widgets>
+                </section>
+                <container style="${styles.grid_theme}" id="content-main-section">
                     <section>
                         <condition>
                             <not>
                                 <if-empty-section section-name="content-full-screen"/>
                             </not>
                         </condition>
-                        <widgets>                    
-                           <decorator-section-include name="content-full-screen"/>
+                        <widgets>
+                            <section name="Global-Content-Full">
+                                <widgets>
+                                    <decorator-section-include name="content-full-screen"/>
+                                </widgets>
+                            </section>      
                         </widgets>
                         <fail-widgets>
                         <!-- Closer to body: <decorator-section-include name="pre-body" /> -->
                             
                             <!-- Theme Override for menu generation (allows themes to rely on custom macros to generate sidebars) -->
-                            <section>
+                            <section name="Global-Content-Main">
                                 <condition>
                                     <if-true field="customSideBar" />
                                 </condition>
@@ -528,18 +573,22 @@ under the License.
                     </section>
                 </container>
                 <!-- TODO: this could be in theme as described above, but not worth it for now -->
-                <platform-specific>
-                    <html>
-                        <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
-                    </html>
-                </platform-specific>
-                <section>
+                <section name="Global-Foot-Scripts" contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://common/webcommon/includes/commonFootScripts.ftl" />
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+                <section contains="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right, *">
                     <condition>
                         <if-empty field="parameters.ajaxUpdateEvent" />
                     </condition>
                     <widgets>
                         <!-- render footer -->
-                        <section name="Render-Footer">
+                        <section name="Global-Footer">
                             <condition>
                                 <if-empty field="applicationFooterTemplate" />
                             </condition>
@@ -612,10 +661,10 @@ under the License.
                                 <not><if-empty-section section-name="body"/></not>
                             </condition>
                             <widgets>
-                                    <container id="content-main-body">
-                                        <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
-                                        <decorator-section-include name="body"/>
-                                    </container>
+                                <container id="content-main-body">
+                                    <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
@@ -684,7 +733,6 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.ofbiz.common.JsLanguageFilesMapping.validation.getFilePath(initialLocaleComplete)}" global="true"/>
 
-                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.js" global="true"/>
                 <!-- Replaced by foundation datepicker <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jqueryui-timepicker-addon/dist/jqueryui-timepicker-addon.min.js" global="true" />-->
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/jeditable/jquery.jeditable.js" global="true"/>
@@ -693,7 +741,6 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" global="true"/>                
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
                     <!-- jQuery CSSs -->
-                <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true"/>
 
                 <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/selectall.js" global="true"/>
@@ -718,7 +765,7 @@ under the License.
     
     <!-- Common Widgets -->
     <screen name="column-left">
-        <section>
+        <section name="Global-Column-Left" contains="!$Global-Column-Main, !$Global-Column-Right, *">
             <widgets>
                 <container style="${columnLeftStyle}" id="left-sidebar">
                     <container style="sidebar">
@@ -731,7 +778,7 @@ under the License.
     </screen>
     
     <screen name="column-right">
-        <section>
+        <section name="Global-Column-Right" contains="!$Global-Column-Main, !$Global-Column-Left, *">
             <widgets>
                 <container style="${columnRightStyle}" id="right-sidebar">
                     <container style="sidebar">
@@ -743,31 +790,39 @@ under the License.
     </screen>
     
     <screen name="column-main">
-        <section>
+        <section name="Global-Column-Main" contains="!$Global-Column-Left, !$Global-Column-Right, *">
             <condition>
                 <if-empty field="noTitle"/>
             </condition>
             <widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <label style="h1" text="${headerTitle}"/>
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <label style="h1" text="${headerTitle}"/>
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </widgets>
             <fail-widgets>
                 <container style="${columnMainStyle}" id="main-content">
-                    <platform-specific>
-                        <html>
-                            <html-template location="${messagesTemplateLocation}" />
-                        </html>
-                    </platform-specific>
-                    <decorator-section-include name="pre-body" />
-                    <decorator-section-include name="body" />
+                    <section name="Global-Column-Main-Inner">
+                        <widgets>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="${messagesTemplateLocation}" />
+                                </html>
+                            </platform-specific>
+                            <decorator-section-include name="pre-body" />
+                            <decorator-section-include name="body" />
+                        </widgets>
+                    </section>
                 </container>
             </fail-widgets>
         </section>            
@@ -806,7 +861,8 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    
+    
     <!-- Default "error" page for XSL-FO based output. -->
     <screen name="FoError">
         <section>
@@ -820,6 +876,72 @@ under the License.
 <!--                <platform-specific><xsl-fo><html-template location="component://common/webcommon/error.fo.ftl"/></xsl-fo></platform-specific> -->
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- SCIPIO Email Decorator -->
+    <screen name="ScipioEmailDecorator">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="logoImageUrl" value="/images/scipio/scipio-logo.svg" global="true"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/openEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="headerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${headerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailHeader.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <decorator-section-include name="body" />
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="footerTemplate" />
+                        </not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="${footerTemplate}" />
+                            </email>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <platform-specific>
+                            <email>
+                                <html-template location="component://common/webcommon/includes/email/emailFooter.ftl" />
+                            </email>
+                        </platform-specific>
+                    </fail-widgets>
+                </section>
+                <platform-specific>
+                    <email>
+                        <html-template location="component://common/webcommon/includes/email/closeEmailBody.ftl"/>
+                    </email>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -1291,28 +1413,64 @@ under the License.
         <section>
             <widgets>
                 <include-menu name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"
-                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}"/>
+                    max-depth="${scipioWidgetWrapperArgs.maxDepth}" sub-menus="${scipioWidgetWrapperArgs.subMenus}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-menu>
             </widgets>
         </section>
     </screen>
     <screen name="scipioFormWidgetWrapper">
         <section>
             <widgets>
-                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
+                <include-form name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-form>
             </widgets>
         </section>
     </screen>
     <screen name="scipioTreeWidgetWrapper">
         <section>
             <widgets>
-                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}" />
+                <include-tree name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-tree>
             </widgets>
         </section>
     </screen>
     <screen name="scipioScreenWidgetWrapper">
         <section>
             <widgets>
-                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}"/>
+                <include-screen name="${scipioWidgetWrapperArgs.resName}" location="${scipioWidgetWrapperArgs.resLocation}" share-scope="${scipioWidgetWrapperArgs.shareScope}">
+                    <actions>
+                        <!-- these actions run post-context-stack-push, so the ctxVars added are scoped -->
+                        <script lang="groovy"><![CDATA[
+                            if (context.scipioWidgetWrapperArgs.ctxVars) {
+                                context.putAll(context.scipioWidgetWrapperArgs.ctxVars);
+                            }
+                        ]]></script>
+                    </actions>
+                </include-screen>
             </widgets>
         </section>
     </screen>
@@ -1387,7 +1545,11 @@ under the License.
         * name (required) - Complex menu name
         Complex menu render options:
         * subMenuFilter - Value for <include-menu sub-menus="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgSubMenuFilter (has priority)
         * maxDepth - Value for <include-menu max-depth="..." /> attribute (see widget-screen.xsd)
+          NOTE: this can also be overridden using the top context variable:
+          * menuCfgMaxDepth (has priority)
         Default locations:  
         * defLocation (required) - Application's default menu file location for menus
             This is only used for fallback simple/non-complex menus, when there is no explicit
@@ -1416,6 +1578,11 @@ under the License.
         * activeSubField (default: "activeSubMenu")
         * activeSubItemField (default: "activeSubMenuItem")
         * activeMainItemField (default: "activeMainMenuItem")
+        
+        NOTE: Where noted above (only where noted), some of the variables support overrides via 
+            top context variables, following the name pattern menuCfgXxxXxx (for menuCfg.xxxXxx).
+            When set these have priority over the menuCfg map entries. It is technically
+            possible to set these via global context.
     -->
     <screen name="ComplexMenu">
         <section>
@@ -1538,7 +1705,7 @@ under the License.
         * commonSideBarMenu.menuLoc - location of menus (default: parameters.mainDecoratorLocation)
     -->
     <screen name="CommonSideBarMenu">
-        <section>
+        <section name="Global-CommonSideBarMenu">
             <actions>
                 <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/CommonSideBarMenu.groovy"/>
             </actions>

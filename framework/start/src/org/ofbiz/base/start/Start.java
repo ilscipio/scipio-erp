@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Start {
 
+    public static final String module = Start.class.getName();
+    
     /*
      * This class implements a thread-safe state machine. The design is critical
      * for reliable starting and stopping of the server.
@@ -77,7 +79,7 @@ public final class Start {
         // Currently some commands have no dash, see OFBIZ-5872
         out.println("");
         out.println("Usage: java -jar ofbiz.jar [command] [arguments]");
-        out.println("both    -----> Runs simultaneously the POS (Point of Sales) application and OFBiz standard");
+        out.println("both    -----> Runs simultaneously the POS (Point of Sales) application and Scipio standard");
         out.println("-help, -? ----> This screen");
         out.println("load-data -----> Creates tables/load data, eg: load-data -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz. Or: load-data -file=/tmp/dataload.xml");
         out.println("pos     -----> Runs the POS (Point of Sales) application");
@@ -166,7 +168,7 @@ public final class Start {
         File logDir = new File(config.logDir);
         if (!logDir.exists()) {
             if (logDir.mkdir()) {
-                System.out.println("Created OFBiz log dir [" + logDir.getAbsolutePath() + "]");
+                System.out.println("Created Scipio log dir [" + logDir.getAbsolutePath() + "]");
             }
         }
     }
@@ -276,7 +278,7 @@ public final class Start {
     }
 
     private String sendSocketCommand(Control control) throws IOException, ConnectException {
-        String response = "OFBiz is Down";
+        String response = "Scipio is Down";
         try {
             Socket socket = new Socket(config.adminAddress, config.adminPort);
             // send the command
@@ -375,11 +377,61 @@ public final class Start {
         }
         if (config.shutdownAfterLoad) {
             stopServer();
+        } else {
+            // SCIPIO: 2017-03-28: new
+            printStartupReadyMessage();
         }
     }
 
     public Config getConfig() {
         return this.config;
+    }
+    
+    /**
+     * SCIPIO: prints the system startup ready/welcome message.
+     * 2017-03-28.
+     */
+    void printStartupReadyMessage() {
+        String desc = getPropertyValue("scipiometainfo.properties", "scipio.release.desc", "SCIPIO ERP");
+        String version = getPropertyValue("scipiometainfo.properties", "scipio.release.version", "unknown version");
+        String branch = getPropertyValue("scipiometainfo.properties", "scipio.release.branch", "unknown");
+        logInfo("\n\n\n"
+                + "\n*****************************************************************************"
+                + "\n" + desc + " " + version + " (" + branch + " branch) FRAMEWORK IS LOADED"
+                + "\n*****************************************************************************"
+                + "\n* Please wait for any startup jobs to finish..."
+                + "\n\n\n", module);
+    }
+    
+    /**
+     * SCIPIO: Gets property value.
+     * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.
+     */
+    String getPropertyValue(String resource, String name, String defaultValue) {
+        try {
+            Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.base.util.UtilProperties");
+            java.lang.reflect.Method method = cls.getMethod("getPropertyValue", String.class, String.class, String.class);
+            return (String) method.invoke(null, resource, name, defaultValue);
+        } catch(Exception e) {
+            System.out.println("Error loading or invoking UtilProperties");
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+    
+    /**
+     * SCIPIO: Logs info message.
+     * NOTE: because of bad ofbiz dependencies, we can't import base classes, so we have to use reflection.
+     */
+    void logInfo(String message, String module) {
+        try {
+            Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.base.util.Debug");
+            java.lang.reflect.Method method = cls.getMethod("logInfo", String.class, String.class);
+            method.invoke(null, message, module);
+        } catch(Exception e) {
+            System.out.println("Error loading or invoking Debug.logInfo");
+            e.printStackTrace();
+        }
     }
 
     // ----------------------------------------------- //
@@ -388,7 +440,7 @@ public final class Start {
         private ServerSocket serverSocket = null;
 
         AdminPortThread() throws StartupException {
-            super("OFBiz-AdminPortThread");
+            super("Scipio-AdminPortThread");
             try {
                 this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
             } catch (IOException e) {

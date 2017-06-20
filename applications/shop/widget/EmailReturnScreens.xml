@@ -31,7 +31,11 @@ under the License.
                 <!-- <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/> -->
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/returnaccept.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/returnaccept.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -43,7 +47,11 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/returncancel.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/returncancel.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -55,7 +63,11 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/returncomplete.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/returncomplete.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

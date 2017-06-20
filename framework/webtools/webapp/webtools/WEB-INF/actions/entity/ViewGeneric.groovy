@@ -63,6 +63,20 @@ context.put("hasCreatePermission", hasCreatePermission);
 context.put("hasUpdatePermission", hasUpdatePermission);
 context.put("hasDeletePermission" , hasDeletePermission);
 
+
+// SCIPIO: 2017-04-13: special flags to identify if a delete just happened in the event
+deleteAttempt = (context.deleteAttempt != null) ? Boolean.TRUE.equals(context.deleteAttempt) : Boolean.TRUE.equals(request.getAttribute("updateGenericDeleteAttempt"));
+context.deleteAttempt = deleteAttempt;
+deleteSuccess = (context.deleteSuccess != null) ? Boolean.TRUE.equals(context.deleteSuccess) : Boolean.TRUE.equals(request.getAttribute("updateGenericDeleteSuccess"));
+context.deleteSuccess = deleteSuccess;
+if (deleteSuccess) {
+    eventMessageList = context.eventMessageList ?: [];
+    if (!eventMessageList) {
+        eventMessageList.add(org.ofbiz.base.util.UtilProperties.getMessage('WebtoolsUiLabels', 'WebtoolsSpecifiedEntityValueRemovedSuccess', context.locale) + " (" + entityName + ")");
+        context.eventMessageList = eventMessageList;
+    }
+}
+
 boolean useValue = true;
 String curFindString = "entityName=" + entityName;
 GenericPK findByPK = delegator.makePK(entityName);
@@ -85,6 +99,14 @@ GenericValue value = null;
 //only try to find it if this is a valid primary key...
 if (findByPK.isPrimaryKey()) {
     value = delegator.findOne(findByPK.getEntityName(), findByPK, false);
+}
+// SCIPIO: 2017-04-13: if this was a deletion, get the previous value
+if (value == null && deleteAttempt) {
+    value = request.getAttribute("updateGenericValue");
+    if (value != null && findByPK == null) {
+        findByPK = value.getPrimaryKey();
+        context.put("findByPk", findByPK.toString());
+    }
 }
 context.put("value", value);
 

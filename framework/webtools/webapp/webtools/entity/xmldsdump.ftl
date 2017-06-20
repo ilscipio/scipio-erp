@@ -18,14 +18,14 @@ under the License.
 -->
 <#if tobrowser?? && tobrowser>
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
-<p>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</p>
+<p>${uiLabelMap.WebtoolsXMLExportSingleInfo!""}</p>
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@menu type="button">
     <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
-  <@commonMsg type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@commonMsg>
+  <@commonMsg type="error">${uiLabelMap.WebtoolsPermissionMaint}</@commonMsg>
 </#if>
 <#else>
 <#macro displayButtonBar>
@@ -41,10 +41,10 @@ under the License.
 
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
-  <#if parameters.filename?has_content && (numberOfEntities?number > 0)>
+  <#if parameters.filename?has_content && (numberOfEntities?has_content && numberOfEntities?number > 0)>
     <p>${uiLabelMap.WebtoolsWroteXMLForAllDataIn}</p>
     <p>${uiLabelMap.WebtoolsWroteNRecordsToXMLFile}</p>
-  <#elseif parameters.outpath?has_content && (numberOfEntities?number > 0)>
+  <#elseif parameters.outpath?has_content && (numberOfEntities?has_content && numberOfEntities?number > 0)>
     <#list results as result>
       <p>${result}</p>
     </#list>

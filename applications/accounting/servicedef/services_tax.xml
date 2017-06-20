@@ -174,7 +174,8 @@ under the License.
         <description>Create PartyTaxAuthInfo</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="fromDate" optional="true"/>
+        <!-- SCIPIO: 2017-04-24: must output the fromDate when it's omitted so it can be re-queried -->
+        <override name="fromDate" optional="true" mode="INOUT"/>
     </service>
     <service name="updatePartyTaxAuthInfo" default-entity-name="PartyTaxAuthInfo" engine="simple" auth="true"
         location="component://accounting/script/org/ofbiz/accounting/tax/TaxAuthorityServices.xml" invoke="updatePartyTaxAuthInfo">

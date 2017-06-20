@@ -53,7 +53,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <@field_textarea_widget name=name class=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank maxlength=maxlength required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
+<#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName="" alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
@@ -77,28 +77,15 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
-<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
+<#-- SCIPIO: NOTE: here noCurrentSelectedKey, key, and altKey may be omitted by caller (java) when null, so that way we decide the defaults ourselves -->
+<#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" noCurrentSelectedKey="" key="" altKey=false useHidden="" extraArgs...>
   <#-- delegate to scipio libs -->
   <#if event?has_content>
     <#local events = {event:action}>
   <#else>
     <#local events = {}>
   </#if>
-  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
-  <#-- old
-  <#list items as item>
-    <div class="switch small">
-    <span <@renderClass className alert />><#rt/>
-      <input type="checkbox"<#if (item_index == 0)> id="${escapeVal(id, 'html')}"</#if><#rt/>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${escapeVal(tooltip, 'html')}"</#if><#rt/>
-        <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
-          <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
-          name="${escapeVal(name, 'html')}" value="${escapeVal(item.value!"", 'html')}" <#if item.event?has_content> ${escapeVal(item.event, 'html')}="${escapeVal(item.action!, 'html')}"<#elseif event?has_content> ${escapeVal(event, 'html')}="${escapeVal(action, 'html')}"</#if>/><#rt/>
-          <label for="${escapeVal(id, 'html')}"></label>
-    </span>
-    </div>
-  </#list>
-  -->
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked value=key altValue=altKey useHidden=useHidden currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true required=renderFieldIsRequired(requiredField)/>
 </#macro>
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
@@ -253,7 +240,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       form["${escapeVal(focusFieldName, 'js')}"].focus();
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
-      if (jQuery(form).find(".required").size() > 0) {
+      if (jQuery(form).find(".required").length > 0) {
         jQuery(form).validate();
       }
     </@script><#lt/>
@@ -287,7 +274,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#-- SCIPIO: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
   <#local formInfo = readRequestStack("htmlFormRenderFormStack")!{}>
   <#if !formInfo?has_content>
-    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local formInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true}>
     <#local dummy = pushRequestStack("htmlFormRenderFormStack", formInfo)>
   </#if>
 
@@ -360,9 +347,9 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </tr>
   <@thead close=true open=false />
 </#macro>
-<#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...>
+<#macro renderFormatHeaderRowCellOpen style positionSpan inlineStyle="" extraArgs...>
   <#global renderFormatHeaderRowCellOpened = true>
-  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if>>
+  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#if inlineStyle?has_content> style="${escapeVal(inlineStyle, 'html')}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...>
   </th>
@@ -588,8 +575,13 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
-<#-- SCIPIO: only render empty space if not running within title open section -->
-<#macro renderFormatEmptySpace extraArgs...><#if (renderFormatFieldRowTitleCellOpened!false) != true>&nbsp;<#else><#global renderFieldTitleCurrentTitle = "&nbsp;"></#if></#macro>
+<#-- SCIPIO: only render empty space if not running within title open section 
+    2017-01-13: New role parameter (possible values: "", "field-title", ...) (DEV NOTE: acts as a surrogate to having to create a new macro for every purpose, like "renderEmptyFieldTitle") -->
+<#assign rfes_roleOutMap = {"field-title-single":""}><#-- "field-title-single":"&nbsp;", "field-title-list":"&nbsp;", "field-title":"&nbsp;", ... -->
+<#macro renderFormatEmptySpace role="" formType="" extraArgs...><#rt>
+    <#local outStr = rfes_roleOutMap[role+"-"+formType]!rfes_roleOutMap[role]!"&nbsp;"><#t>
+    <#if (renderFormatFieldRowTitleCellOpened!false) != true>${outStr}<#else><#global renderFieldTitleCurrentTitle = outStr></#if><#t>
+</#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false hideOptions=false requiredField="" extraArgs...>
   <#-- delegate to scipio libs -->
@@ -784,6 +776,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#-- SCIPIO: new: renders a submit form after table, for list/multi forms -->
 <#macro renderSubmitForm hiddenFormName="" formName="" formType="" targetUrl="" targetWindow="" 
     params={} useRowSubmit=false useMasterSubmitField=false submitEntries=[] extraArgs...>
+  <#local params = toSimpleMap(params)>
   <#-- NOTE: if (useRowSubmit==false && useMasterSubmitField==true), we can basically skip this entire macro,
     but there's no harm going through this in case we need the hook -->
   <#--<#if !(!useRowSubmit && useMasterSubmitField)>-->
@@ -883,8 +876,8 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if submitEntries?has_content && (useRowSubmit || !useMasterSubmitField)>
   <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapeVal(hiddenFormName, 'html')}">
-    <#list mapKeys(params) as paramName>
-      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[escapeVal(paramName, 'html')], 'html')}" />
+    <#list params?keys as paramName>
+      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[rawString(paramName)], 'html')}" />
     </#list>
     <#if useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -894,4 +887,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#--</#if>-->
 </#macro>
 
-  
+<#-- SCIPIO: 2017-04-24: new -->
+<#macro renderFormPageScripts pageScripts=[] extraArgs...>
+  <@script>
+    <#list pageScripts as pageScript>
+      ${rawString(pageScript)}
+    </#list>
+  </@script>
+</#macro>

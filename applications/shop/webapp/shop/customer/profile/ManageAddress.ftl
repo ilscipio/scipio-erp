@@ -134,7 +134,7 @@ under the License.
       </#if>
       </ul>
       <div id="displayEditBillToPostalAddress" style="display: none;">
-        <#include "EditBillToAddress.ftl" />
+        <#include "component://shop/webapp/shop/customer/profile/EditBillToAddress.ftl" />
       </div>
       <@script>
         jQuery("#displayEditBillToPostalAddress").dialog({autoOpen: false, modal: true,
@@ -183,7 +183,7 @@ under the License.
       </#if>
       </ul>
       <div id="displayEditShipToPostalAddress" style="display: none;">
-        <#include "EditShipToAddress.ftl" />
+        <#include "component://shop/webapp/shop/customer/profile/EditShipToAddress.ftl" />
       </div>
       <@script>
           jQuery("#displayEditShipToPostalAddress").dialog({autoOpen: false, modal: true,
@@ -217,7 +217,7 @@ under the License.
             <#assign postalAddressFlag = "Y" />
             <#assign postalAddress = partyContactMechValueMap.postalAddress! />
             <div id="displayEditAddressForm_${contactMech.contactMechId}" style="display: none;">
-              <#include "EditPostalAddress.ftl" />
+              <#include "component://shop/webapp/shop/customer/profile/EditPostalAddress.ftl" />
             </div>
             <#if postalAddress??>
                 <div class="form-field">
@@ -233,6 +233,7 @@ under the License.
                       </li>
                     <#if postalAddress.countryGeoId?has_content><li>${postalAddress.countryGeoId}</li></#if>
                     </ul>
+                    <#--
                     <#if (!postalAddress.countryGeoId?has_content || (postalAddress.countryGeoId!) == "USA")>
                       <#assign addr1 = postalAddress.address1!?string />
                       <#if (addr1?index_of(" ") > 0)>
@@ -240,7 +241,7 @@ under the License.
                         <#assign addressOther = addr1?substring(addr1?index_of(" ")+1) />
                         <a target="_blank" href="#" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">(${uiLabelMap.CommonLookupWhitepages})</a>
                       </#if>
-                    </#if>
+                    </#if>-->
                 </div>
               <div>
                 <span>

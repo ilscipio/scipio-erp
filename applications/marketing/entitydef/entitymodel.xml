@@ -556,8 +556,8 @@ under the License.
         <view-link entity-alias="TC" rel-entity-alias="TCV" rel-optional="true">
             <key-map field-name="trackingCodeId"/>
         </view-link>
-      </view-entity>
-      <view-entity entity-name="TrackingCodeAndOrderHeader"
+    </view-entity>
+    <view-entity entity-name="TrackingCodeAndOrderHeader"
                    package-name="org.ofbiz.marketing.reports"
                    title="View entity for reporting number of orders and total order amounts">
         <member-entity entity-alias="TCO" entity-name="TrackingCodeOrder"/>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if asm_multipleSelect??> <#-- we check only this var and suppose the others are also present -->
-  <@asmSelectScript id=asm_multipleSelect!"" title=asm_title!"" sortable=asm_sortable!false formId=asm_multipleSelectForm!""
+  <@dynamicSelectFieldScript id=asm_multipleSelect!"" title=asm_title!"" sortable=asm_sortable!false formId=asm_multipleSelectForm!""
     relatedFieldId=asm_relatedField!"" relatedTypeName=asm_type!"" relatedTypeFieldId=asm_typeField!""
     paramKey=asm_paramKey!"" requestName=asm_requestName!"" responseName=asm_responseName!"" />
 

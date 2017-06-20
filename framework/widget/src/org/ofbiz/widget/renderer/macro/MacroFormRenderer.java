@@ -84,6 +84,7 @@ import org.ofbiz.widget.model.ModelFormField.TextField;
 import org.ofbiz.widget.model.ModelFormField.TextFindField;
 import org.ofbiz.widget.model.ModelFormField.TextareaField;
 import org.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.ofbiz.widget.model.ModelPageScript;
 import org.ofbiz.widget.model.ModelScreenWidget;
 import org.ofbiz.widget.model.ModelSingleForm;
 import org.ofbiz.widget.model.ModelWidget;
@@ -182,11 +183,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
             FreeMarkerWorker.includeTemplate(template, environment);
         } catch (TemplateException e) {
             Debug.logError(e, "Error rendering screen thru ftl macro: " + macro, module);
+            handleError(writer, e); // SCIPIO
         } catch (IOException e) {
             Debug.logError(e, "Error rendering screen thru ftl, macro: " + macro, module);
+            handleError(writer, e); // SCIPIO
         }
     }
 
+    /**
+     * SCIPIO: makes exception handling decision for executeMacro exceptions.
+     */
+    private void handleError(Appendable writer, Throwable t) throws IOException, RuntimeException {
+        MacroScreenRenderer.handleError(writer, contextHandler.getInitialContext(writer), t);
+    }
+    
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -240,6 +250,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 size = Integer.parseInt(displayField.getSize());
             } catch (NumberFormatException nfe) {
                 Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+                handleError(writer, nfe); // SCIPIO
             }
         }
         ModelFormField.InPlaceEditor inPlaceEditor = displayField.getInPlaceEditor();
@@ -388,13 +399,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String clientAutocomplete = "false";
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
         boolean ajaxEnabled = updateAreas != null && this.javaScriptEnabled;
@@ -473,13 +478,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String visualEditorEnable = "";
         String buttons = "";
@@ -714,13 +713,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String mask = dateTimeField.getMask();
         if ("Y".equals(mask)) {
@@ -818,6 +811,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 textSize = Integer.parseInt(dropDownField.getTextSize());
             } catch (NumberFormatException nfe) {
                 Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), module);
+                handleError(writer, nfe); // SCIPIO
             }
             if (textSize > 0 && UtilValidate.isNotEmpty(currentValue) && currentValue.length() > textSize) {
                 currentValue = currentValue.substring(0, textSize - 8) + "..." + currentValue.substring(currentValue.length() - 5);
@@ -846,13 +840,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String currentDescription = null;
         if (UtilValidate.isNotEmpty(currentValue)) {
@@ -1061,13 +1049,32 @@ public final class MacroFormRenderer implements FormStringRenderer {
             if (items.length() > 1) {
                 items.append(",");
             }
-            items.append("{'value':");
-            items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            items.append("{");
+            if (optionValue.getKey() != null) {
+                items.append("'value':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
+            }
+            // SCIPIO: 2017-04-20: alt-value support
+            if (optionValue.getAltKey() != null) {
+                if (items.length() > 1) items.append(",");
+                items.append("'altValue':");
+                items.append(ftlFmt.makeStringLiteralSQ(optionValue.getAltKey()));
+            }
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                if (items.length() > 1) items.append(",");
+                items.append("'description':");
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");
+        // SCIPIO: 2017-04-20: new
+        String key = checkField.getKey(context);
+        String altKey = checkField.getAltKey(context);
+        String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
+        Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
         appendFieldInfo(sr, context, modelFormField);
@@ -1089,6 +1096,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
+        if (noCurrentSelectedKey != null) { // SCIPIO: NOTE: by doing this, we let macro decide how to handle default
+            sr.append(" noCurrentSelectedKey=");
+            sr.append(ftlFmt.makeStringLiteral(noCurrentSelectedKey));
+        }
+        if (key != null) {
+            sr.append(" key=");
+            sr.append(ftlFmt.makeStringLiteral(key));
+        }
+        if (altKey != null) {
+            sr.append(" altKey=");
+            sr.append(ftlFmt.makeStringLiteral(altKey));
+        }
+        sr.append(" useHidden=");
+        sr.append(ftlFmt.makeTernaryBooleanLiteral(useHidden));
         appendRequiredFieldParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
@@ -1120,8 +1141,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             items.append("{'key':");
             items.append(ftlFmt.makeStringLiteralSQ(optionValue.getKey()));
-            items.append(", 'description':");
-            items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            String description = optionValue.getDescription();
+            // SCIPIO: 2017-04-20: special one-char empty-title prevention
+            if (description != null && !" ".equals(description)) {
+                items.append(", 'description':");
+                // SCIPIO: 2017-02
+                items.append(ftlFmt.makeStringLiteralSQ(encode(optionValue.getDescription(), modelFormField, context)));
+            }
             items.append("}");
         }
         items.append("]");
@@ -1292,7 +1318,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         StringBuilder sb = new StringBuilder();
         if (UtilValidate.isNotEmpty(titleText)) {
             if (" ".equals(titleText)) {
-                executeMacro(writer, "<@renderFormatEmptySpace />");
+                // SCIPIO: 2017-01-13: delegate
+                //executeMacro(writer, "<@renderFormatEmptySpace />");
+                renderFormatEmptySpace(writer, context, modelFormField.getModelForm(), "field-title");
             } else {
                 titleText = UtilHttp.encodeAmpersands(titleText);
                 titleText = encode(titleText, modelFormField, context);
@@ -1335,15 +1363,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (!sb.toString().isEmpty()) {
             //check for required field style on single forms
             if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-                String requiredStyle = modelFormField.getRequiredFieldStyle();
-                if (UtilValidate.isNotEmpty(requiredStyle)) {
-                    // SCIPIO: add, don't replace
-                    //style = requiredStyle;
-                    if (UtilValidate.isEmpty(style))
-                        style = requiredStyle;
-                    else
-                        style = requiredStyle + " " + style;
-                }
+                style = combineRequiredStyle(style, false, context, modelFormField); // SCIPIO
             }
             StringWriter sr = new StringWriter();
             sr.append("<@renderFieldTitle ");
@@ -1589,9 +1609,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));        
         sr.append(" attribs=(");
         sr.append(attribs);
-        sr.append(") />");
+        sr.append(") ");
+        sr.append("/>");
         executeMacro(writer, sr.toString());
-
     }
 
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
@@ -1630,12 +1650,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) throws IOException {
         String areaStyle = modelFormField.getTitleAreaStyle();
+        String areaInlineStyle = modelFormField.getTitleAreaInlineStyle();
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatHeaderRowCellOpen ");
         sr.append(" style=");
         sr.append(ftlFmt.makeStringLiteral(areaStyle));
         sr.append(" positionSpan=");
         sr.append(Integer.toString(positionSpan));
+        sr.append(" inlineStyle=");
+        sr.append(ftlFmt.makeStringLiteral(areaInlineStyle));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
@@ -1806,7 +1829,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" lastPositionInRow=" + (lastPositionInRow != null ? lastPositionInRow.toString() : "\"\""));
     }
 
-    private void appendFieldInfo(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+    // SCIPIO: new
+    private void appendFieldType(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String fieldType = null;
         if (modelFormField.getFieldInfo() != null) {
             fieldType = modelFormField.getFieldInfo().getFieldTypeName();
@@ -1815,7 +1839,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             fieldType = "";
         }
         sr.append(" fieldType=" + ftlFmt.makeStringLiteral(fieldType) + " ");
-        
+    }
+    
+    // SCIPIO: new
+    private void appendFieldInfo(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+        appendFieldType(sr, context, modelFormField);
         boolean fieldTitleBlank = modelFormField.isBlankTitle(context);
         sr.append(" fieldTitleBlank=" + fieldTitleBlank + " ");
     }
@@ -1882,8 +1910,20 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        renderFormatEmptySpace(writer, context, modelForm, (String) context.get("renderFormatEmptySpace_role"));
+    }
+    
+    // SCIPIO: 2017-01-13: new overloads for new role parameter
+    public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm, String role) throws IOException {
         StringWriter sr = new StringWriter();
-        sr.append("<@renderFormatEmptySpace />");
+
+        sr.append("<@renderFormatEmptySpace");
+        sr.append(" role=");
+        sr.append(ftlFmt.makeStringLiteral(role != null ? role : ""));
+        sr.append(" formType=");
+        sr.append(ftlFmt.makeStringLiteral(modelForm.getType()));
+        sr.append("/>");
+        
         executeMacro(writer, sr.toString());
     }
 
@@ -2213,13 +2253,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         String name = modelFormField.getParameterName(context);
         String value = modelFormField.getEntry(context, lookupField.getDefaultValue(context));
@@ -2757,13 +2791,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         //check for required field style on single forms
         if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle))
-                requiredStyle = "required";
-            if (UtilValidate.isEmpty(className))
-                className = requiredStyle;
-            else
-                className = requiredStyle + " " + className;
+            className = combineRequiredStyle(className, context, modelFormField); // SCIPIO
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderPasswordField ");
@@ -3576,5 +3604,69 @@ public final class MacroFormRenderer implements FormStringRenderer {
      */
     protected void appendRequiredFieldParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         sr.append(" requiredField=" + (modelFormField.getRequiredField() ? "\"true\"" : "\"false\""));
+    }
+
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        if (modelForm.getPageScripts().size() <= 0) return;
+        // SCIPIO: 2017-04-21: new
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderFormPageScripts ");
+        appendFormPageScripts(writer, sr, context, modelForm);
+        sr.append("/>");
+        executeMacro(writer, sr.toString());
+    }
+    
+    /**
+     * SCIPIO: appends special page scripts to macro call.
+     * New 2017-04-21.
+     */
+    private void appendFormPageScripts(Appendable writer, Appendable sr, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // SCIPIO: 2017-04-21: special pageScripts
+        List<Object> pageScripts = new ArrayList<>();
+        for(ModelPageScript pageScript : modelForm.getPageScripts()) {
+            pageScripts.add(pageScript.getScript(context));
+        }
+        Environment env;
+        try {
+            env = getEnvironment(writer);
+            freemarker.template.TemplateModel pageScriptsModel = env.getObjectWrapper().wrap(pageScripts);
+            env.setGlobalVariable("_scpFormRenPageScripts", pageScriptsModel);
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+        sr.append(" pageScripts=_scpFormRenPageScripts");
+    }
+    
+    // SCIPIO: new 2017-04-21 - FIXME: hardcoded 'required' style added
+    String combineRequiredStyle(String className, boolean allowDefault, Map<String, Object> context, ModelFormField modelFormField) {
+        // ORIGINAL:
+//        String requiredStyle = modelFormField.getRequiredFieldStyle();
+//        if (UtilValidate.isEmpty(requiredStyle))
+//            requiredStyle = "required";
+//        if (UtilValidate.isEmpty(className))
+//            className = requiredStyle;
+//        else
+//            className = requiredStyle + " " + className;
+        String requiredStyle = modelFormField.getRequiredFieldStyle();
+        if (UtilValidate.isNotEmpty(requiredStyle)) {
+            // SCIPIO: NOTE: we expand as a bugfix to original ofbiz
+            requiredStyle = FlexibleStringExpander.expandString(requiredStyle, context);
+        } else {
+            if (allowDefault) {
+                // SCIPIO: FIXME: the 'required' style is currently hardcoded! 
+                // this should be gotten from global styles (ftl) instead...
+                // but this is currently not done from the target macros...
+                requiredStyle = "required";
+            } else {
+                requiredStyle = "";
+            }
+        }
+        return ModelForm.combineExtraStyle(className, requiredStyle);
+    }
+    
+    String combineRequiredStyle(String className, Map<String, Object> context, ModelFormField modelFormField) {
+        return combineRequiredStyle(className, true, context, modelFormField);
     }
 }

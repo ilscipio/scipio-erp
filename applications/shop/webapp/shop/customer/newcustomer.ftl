@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "customercommon.ftl">
+<#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <#-- SCIPIO: TODO?: Fields for business account (with party group) -->
 <#-- SCIPIO: TODO?: Some of this is redundant with customerbasicfields.ftl - investigate -->

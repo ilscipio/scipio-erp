@@ -56,8 +56,8 @@ context.styles = [
     "icon_password" : "fa fa-lock",
     "icon_tenant" : "fa fa-cloud",
     "icon_error" : "fa fa-exclamation-triangle",
-	"icon_edit" : "fa fa-pencil-square-o",
-	"icon_check" : "fa fa-check",
+    "icon_edit" : "fa fa-pencil-square-o",
+    "icon_check" : "fa fa-check",
     "icon_home" : "fa fa-home",
     "heading_level_prefix" : "heading-level-",
     "switch" : "switch",
@@ -110,12 +110,14 @@ context.styles = [
     "menu_generic_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_levelprefix" : "menu-level-",
+    "menu_generic_nameprefix" : "menu-name-",
     "menu_generic_item" : "",
     "menu_generic_itemdisabled" : "disabled",
     "menu_generic_itemactive" : "active",
     "menu_generic_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_generic_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_generic_itemselected" : "selected",
+    "menu_generic_itemnameprefix" : "item-name-",
     "menu_generic_item_contentdisabled" : "disabled",
     "menu_generic_item_contentactive" : "active",
     "menu_generic_item_contentactivetarget" : "active-target",
@@ -286,6 +288,7 @@ context.styles = [
     "menu_default_activetarget" : "menu-active-target", // NOTE: this is added in ADDITION to active
     "menu_default_activeancestor" : "menu-active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_levelprefix" : "menu-level-",
+    "menu_default_nameprefix" : "menu-name-",
     "menu_default_item" : "",
     "menu_default_item_htmlwrap" : true,
     "menu_default_itemdisabled" : "disabled",
@@ -293,6 +296,7 @@ context.styles = [
     "menu_default_itemactivetarget" : "active-target", // NOTE: this is added in ADDITION to active
     "menu_default_itemactiveancestor" : "active-ancestor", // NOTE: this is added in ADDITION to active
     "menu_default_itemselected" : "selected",
+    "menu_default_itemnameprefix" : "item-name-",
     "menu_default_item_contentdisabled" : "disabled",
     "menu_default_item_contentactive" : "active",
     "menu_default_item_contentactivetarget" : "active-target",
@@ -302,6 +306,20 @@ context.styles = [
     "menu_default_item_text" : "text-entry",
     "menu_default_item_submit" : "",
     "menu_default_item_generic" : "",
+    
+    /* separate-menu configurations */
+    "sepmenu_default_sidebar_config" : [
+        "layout" : "before-inline",
+        "sepTitle" : "#LABEL:CommonActions",
+        "sepTitleItemClass" : "+heading",
+        "nonsepTitle" : "#LABEL:CommonNavigation",
+        "nonsepTitleItemClass" : "+heading",
+        "nonsepTitleAlways" : true,
+        "separatorEnabled" : true,
+        "separatorItemClass" : "+separator",
+        "sepMenuClass" : "+scipio-nav-actions-separate-menu", // NOTE: currently this might not be outputted... but still may have internal use
+        "sepItemClass" : "+scipio-nav-actions-menu-item" // ugly kludge due to having no UL wrapper or any wrapper at all around actions menu items...
+    ],
     
     /* Misc menu styles */
     "menu_subappitem" : "subappitem",
@@ -737,7 +755,8 @@ context.styles = [
     "grid_cell" : "columns",
     "grid_cell_default" : "large-12",
     "grid_display" : "display",      /* display grid */
-    "grid_theme" : "fullWidth",
+    "grid_theme_pre" : "row fullWidth", /*pre-content-section*/
+    "grid_theme" : "row fullWidth", /*content-section*/
     "grid_end" : "end",
     "grid_small" : "small-",
     "grid_medium" : "medium-",
@@ -746,8 +765,11 @@ context.styles = [
     "grid_small_offset" : "small-offset-",
     "grid_medium_offset" : "medium-offset-",
     "grid_large_offset" : "large-offset-",
+    "grid_block_container" : "",
+    "grid_block_wrap" : "",
     "grid_block_prefix" : "",
     "grid_block_postfix" : "block-grid-",
+    "grid_postfix_container" : "",
     "grid_columns_1" : "large-1 columns",
     "grid_columns_2" : "large-2 medium-3 columns",
     "grid_columns_3" : "large-3 medium-4 columns",
@@ -926,9 +948,23 @@ context.styles = [
     "pricing_wrap" : "pricing-table",
     "pricing_price" : "price",
     "pricing_description" : "description",
+    "pricing_ribbon" : "ribbon",
     "pricing_title" : "title",
     "pricing_cta" : "cta-button",
     "pricing_bullet" : "bullet-item",
+    
+    /* Tabs */
+    "tabs_container" : "",
+    "tabs_wrap" : "tabs",                           /* Bootstrap: "nav nav-tabs" */
+    "tabs_item_title" : "tab-title",                /* Bootstrap: "nav-item" */
+    "tabs_item_title_link" : "",                    /* Bootstrap: "nav-link" */
+    "tabs_item_title_link_active" : "",
+    "tabs_item_title_active" : "active",
+    "tabs_item_title_disabled" : "",
+    "tabs_item_container": "tabs-content",          /* Bootstrap: "tab-content" */
+    "tabs_item_wrap" : "content",                   /* Bootstrap: "tab-pane" */
+    "tabs_item_active" : "active",
+    "tabs_item_disabled" : "disabled",
 
   /* Modal */
     "modal_wrap" : "reveal-modal",
@@ -1113,7 +1149,7 @@ context.styles = [
     "field_generic_tooltip" : "has-tip field-tooltip-wrap",
     
     /* default, for all fields */
-    "field_default_tooltip" : "has-tip tip-right",
+    "field_default_tooltip" : "has-tip tip-top",
     "field_default_tooltip_attribs" : [
       "data-tooltip" : "_NO_VALUE_",
       "aria-haspopup" : "true",
@@ -1181,30 +1217,27 @@ context.styles = [
         "multi": "data-list-multiform",
         "default": "generic"
     ],
-    
-    /* Field select element multiple-select classes (jQuery asmselect) */
-    "field_select_asmselect" : [
-      "containerClass" : "asmContainer",            /* Class for container that wraps this widget */
-      "selectClass" : "asmSelect",                  /* Class for the newly created <select> */
-      "optionDisabledClass" : "asmOptionDisabled",  /* Class for items that are already selected / disabled */
-      "listClass" : "asmList",                      /* Class for the list ($ol) */
-      "listSortableClass" : "asmListSortable",      /* Another class given to the list when it is sortable */
-      "listItemClass" : "asmListItem",              /* Class for the <li> list items */
-      "listItemLabelClass" : "asmListItemLabel",    /* Class for the label text that appears in list items */
-      "removeClass" : "asmListItemRemove button tiny",          /* Class given to the "remove" link */
-      "highlightClass" : "asmHighlight"             /* Class given to the highlight <span> */
-      /* "listType" : "ol",           Ordered list 'ol', or unordered list 'ul' */
-      /* "sortable" : false,          Should the list be sortable? */
-      /* "highlight" : false,         Use the highlight feature? */
-      /* "animate" : false,           Animate the the adding/removing of items in the list? */
-      /* "addItemTarget" : "bottom",        Where to place new selected items in list: top or bottom */
-      /* "hideWhenAdded" : false,         Hide the option when added to the list? works only in FF */
-      /* "debugMode" : false,         Debug mode keeps original select visible */
 
-      /* "removeLabel" : "remove",          Text used in the "remove" link */
-      /* "highlightAddedLabel" : "Added: ",       Text that precedes highlight of added item */
-      /* "highlightRemovedLabel" : "Removed: "     Text that precedes highlight of removed item */
-    ],
+    /*List of icons that can be assigned per webapplication and specific menu_items. Uses font-awesome icons by default.*/
+    "app_icon" : [
+        "main" : "fa-home", // Dashboard link
+        "admin" : "fa-wrench",
+        "accounting" : "fa-balance-scale",
+        "assetmaint" : "fa-cogs",
+        "ofbizsetup" : "fa-check-square",
+        "cms" : "fa-file-text",
+        "CRM" : "fa-bullhorn",
+        "humanres" : "fa-vcard",
+        "manufacturing" : "fa-industry",
+        "facility" : "fa-cube",
+        "marketing" : "fa-comments",
+        "order" : "fa-recycle",
+        "party" : "fa-users",
+        "catalog" : "fa-sitemap",
+        "shop" : "fa-shopping-cart",
+        "solr" : "fa-search",
+        "workeffort" : "fa-sliders"
+        ],
 
   /* Always declare last */
     "dummy" : ""

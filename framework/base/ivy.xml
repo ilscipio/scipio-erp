@@ -146,10 +146,10 @@
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs->default"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs->default"/>
         <dependency org="javax.?" name="annotations-api" rev="3.0" transitive="false" conf="j2eespecs->default"/>-->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.33" transitive="false" conf="j2eespecs->default"/><!-- official: 3.1 -->
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.33" transitive="false" conf="j2eespecs->default"/><!-- official: 2.3 -->
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.33" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.33" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.1 -->
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 2.3 -->
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.44" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
 
         <!-- re scripting -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting->default"/>

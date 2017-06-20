@@ -398,8 +398,8 @@ under the License.
 
     <form name="ManageQuotePrices" title="" type="multi" list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" use-row-submit="true"
         odd-row-style="alternate-row" paginate-target="ManageQuotePrices"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_nav_info_id_long}">
-            <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem">
+        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_nav_info_id_long}" use-when="custRequestId!=null &amp;&amp; custRequestItemSeqId!=null">
+            <hyperlink also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>

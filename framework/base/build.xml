@@ -162,6 +162,7 @@ under the License.
             <filename name="activemq-*.jar"/>
 
             <!-- FIXME: manually-committed JARs missing from public repos -->
+            <filename name="batik-all-*.jar"/>
             <filename name="hamcrest-all-*.jar"/>
             <filename name="bsh-engine-modified.jar"/>
             <filename name="clhm-*.jar"/>

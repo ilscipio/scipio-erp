@@ -142,7 +142,8 @@ under the License.
         <field name="purchaseCost" position="2"><text/></field>
         <field name="depreciation" title="${uiLabelMap.AccountingDepreciation}" position="2"><text/></field>
         <field name="salvageValue" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="fixedAssetId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="fixedAssetId==null" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFixedAssetProducts" type="list" list-name="fixedAssetProducts" target="updateFixedAssetProduct"

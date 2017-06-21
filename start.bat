@@ -27,7 +27,7 @@ rem set OFBIZ_LOG=runtime\logs\console.log
 rem ### Delete the last log
 rem del %OFBIZ_LOG%
 
-rem ###VM args block ####################################################
+rem ### VM args block ##################################################
 rem set MEMIF=-Xms128M -Xmx512M -XX:MaxPermSize=512m
 rem # RMI settings
 rem set DEBUG=-Dsun.rmi.server.exceptionTrace=true

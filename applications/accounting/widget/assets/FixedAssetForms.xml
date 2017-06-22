@@ -169,7 +169,7 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
 
         <field name="fixedAssetId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="productId" title="${uiLabelMap.AccountingProduct}"><lookup target-form-name="LookupProduct"/></field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAssetProductType" description="${description}">

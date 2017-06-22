@@ -96,7 +96,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="glXbrlClassId" title="XBRL ${uiLabelMap.CommonClass}"><display-entity entity-name="GlXbrlClass"/></field>
         
-        <field name="productId" title="${uiLabelMap.CommonProduct}"><display-entity entity-name="Product"/></field>
+        <field name="productId" title="${uiLabelMap.AccountingProduct}"><display-entity entity-name="Product"/></field>
         <field name="externalId"><display/></field>
          -->
     </form>
@@ -155,7 +155,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Product" description="${productId} - ${internalName}">
                     <entity-order-by field-name="productId"/>

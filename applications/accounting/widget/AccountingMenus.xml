@@ -1379,7 +1379,7 @@
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
-        <menu-item name="OrganizationAccountingReports" title="${uiLabelMap.AccountingReports}">
+        <menu-item name="OrganizationAccountingReports" title="${uiLabelMap.AccountingTrialBalance}">
             <link target="TrialBalance">
                 <parameter param-name="organizationPartyId" />
             </link>

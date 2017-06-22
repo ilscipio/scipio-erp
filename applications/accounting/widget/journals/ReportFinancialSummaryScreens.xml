@@ -805,10 +805,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
+                        <screenlet>
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
+                        <screenlet>
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="IncomeStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
@@ -954,10 +954,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+                        <screenlet>
                             <include-form name="ComparativeIncomeStatementParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+                        <screenlet >
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="ComparativeIncomeStatements.csv">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>

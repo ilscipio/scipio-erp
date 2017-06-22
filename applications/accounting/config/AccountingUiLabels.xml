@@ -221,15 +221,19 @@
     </property>
     <property key="AccountingAcctTransEntryRecon">
         <value xml:lang="en">Account Transaction Entry Reconciliations</value>
+        <value xml:lang="de">Abgleich von Transaktionen</value>
     </property>
      <property key="AccountingAcctGlRecon">
         <value xml:lang="en">Account GL Reconciliations</value>
+        <value xml:lang="de">Kontenabstimmung</value>
     </property>
     <property key="AccountingTransactionHeader">
         <value xml:lang="en">Transaction Header</value>
+        <value xml:lang="de">Allgemeine Transaktions-Info</value>
     </property>
     <property key="AccountingPostTransaction">
         <value xml:lang="en">Post Transaction</value>
+        <value xml:lang="de">Nach der Transaktion</value>
     </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="de">Kontenabstimmungen</value>
@@ -260,7 +264,7 @@
         <value xml:lang="zh_TW">交易記帳</value>
     </property>
     <property key="AccountingAcctgTransEntries">
-        <value xml:lang="de">Kontenbewegungen</value>
+        <value xml:lang="de">Kontenbewegungen (Einzeln)</value>
         <value xml:lang="en">Accounting Transactions Entries</value>
         <value xml:lang="fr">Entrées de transactions comptables</value>
         <value xml:lang="hi_IN">लेखा लेनदेन की प्रविष्टियाँ</value>
@@ -3205,7 +3209,7 @@
         <value xml:lang="zh_TW">比較現金流量表</value>
     </property>
     <property key="AccountingComparativeIncomeStatement">
-        <value xml:lang="de">Vergleichs-Ertragsrechnung</value>
+        <value xml:lang="de">Vergleichs-GuV</value>
         <value xml:lang="en">Comparative Income Statement</value>
         <value xml:lang="fr">Comparatif Compte de résultat</value>
         <value xml:lang="hi_IN">तुलनात्मक आय विवरण</value>
@@ -7388,7 +7392,7 @@
     </property>
     <property key="AccountingIncomeStatement">
         <value xml:lang="ar">تصربح الدخل</value>
-        <value xml:lang="de">Ertragsrechnung</value>
+        <value xml:lang="de">Ertragsrechnung (GuV)</value>
         <value xml:lang="en">Income Statement</value>
         <value xml:lang="es">Declaración de ingresos</value>
         <value xml:lang="fr">Déclaration de revenus</value>
@@ -7485,6 +7489,7 @@
     </property>
     <property key="AccountingInventoryValuation">
         <value xml:lang="en">Inventory Valuation</value>
+        <value xml:lang="de">Vorratsbewertung</value>
         <value xml:lang="fr">Évaluation des stocks</value>
         <value xml:lang="hi_IN">वस्तु मूल्यांकन</value>
         <value xml:lang="ja">棚卸資産評価</value>
@@ -14840,6 +14845,7 @@
     </property>
     <property key="AccountingTransactionTotals">
         <value xml:lang="en">Transaction Totals</value>
+        <value xml:lang="de">Transaktions-Summen</value>
         <value xml:lang="fr">Totaux de transaction</value>
         <value xml:lang="hi_IN">गतिविधि के योग</value>
         <value xml:lang="it">Totali Prime Note</value>
@@ -22090,6 +22096,7 @@
     </property>
     <property key="PageTitleSalesInvoiceByProductCategorySummary">
         <value xml:lang="cs">Souhrn prodejních faktur podle kategorií produktů</value>
+        <value xml:lang="de">Ausgangsrechnungen je Produktkategorie (Übersicht)</value>
         <value xml:lang="en">Sales Invoice By Product Category Summary</value>
         <value xml:lang="fr">Résumé des factures de vente par catégorie de produits</value>
         <value xml:lang="hi_IN">उत्पाद श्रेणी से बिक्री चालान सारांश</value>

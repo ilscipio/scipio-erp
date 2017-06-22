@@ -1549,7 +1549,7 @@
     </property>
     <property key="AccountingAssets">
         <value xml:lang="ar">الأصول</value>
-        <value xml:lang="de">Aktiva</value>
+        <value xml:lang="de">Vermögenswerte</value>
         <value xml:lang="en">Assets</value>
         <value xml:lang="es">Activos</value>
         <value xml:lang="fr">Actifs</value>

@@ -67,7 +67,7 @@ under the License.
         <!-- 
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="glXbrlClassId"><display-entity entity-name="GlXbrlClass"/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}"><display-entity entity-name="Product"/></field>
+        <field name="productId" title="${uiLabelMap.AccountingProduct}"><display-entity entity-name="Product"/></field>
         <field name="externalId"><display/></field>
         -->
     </form>
@@ -771,7 +771,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateProductGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}"><display/></field>
+        <field name="productId" title="${uiLabelMap.AccountingProduct}"><display/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
@@ -807,7 +807,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>

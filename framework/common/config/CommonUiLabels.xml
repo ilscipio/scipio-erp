@@ -1742,6 +1742,7 @@
     </property>
     <property key="CommonClass">
         <value xml:lang="en">Class</value>
+        <value xml:lang="de">Klasse</value>
     </property>
     <property key="CommonClear">
         <value xml:lang="ar">محو</value>
@@ -5683,9 +5684,11 @@
     </property>
     <property key="CommonInvoice">
         <value xml:lang="en">Invoice</value>
+        <value xml:lang="de">Rechnung</value>
     </property>
     <property key="CommonInvoices">
         <value xml:lang="en">Invoices</value>
+        <value xml:lang="de">Rechnungen</value>
     </property>
     <property key="CommonIsA">
         <value xml:lang="ar">هو</value>
@@ -8198,6 +8201,7 @@
     </property>
     <property key="CommonOrganisation">
         <value xml:lang="en">Organisation</value>
+        <value xml:lang="de">Organisation</value>
     </property>
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
@@ -8271,6 +8275,7 @@
     </property>
     <property key="CommonOwner">
         <value xml:lang="en">Owner</value>
+        <value xml:lang="de">Besitzer</value>
     </property>
     <property key="CommonPage">
         <value xml:lang="ar">صفحة</value>
@@ -8562,6 +8567,7 @@
     </property>
     <property key="CommonPeriod">
         <value xml:lang="en">Period</value>
+        <value xml:lang="de">Zeitraum</value>
     </property>
     <property key="CommonPermissionError">
         <value xml:lang="ar">خطأ في الصلاحية</value>
@@ -9851,6 +9857,7 @@
     </property>
     <property key="CommonResource">
         <value xml:lang="en">Resource</value>
+        <value xml:lang="de">Ressource</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>
@@ -9955,9 +9962,11 @@
     </property>
     <property key="CommonRole">
         <value xml:lang="en">Role</value>
+        <value xml:lang="de">Rolle</value>
     </property>
     <property key="CommonRoles">
         <value xml:lang="en">Roles</value>
+        <value xml:lang="de">Rollen</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>

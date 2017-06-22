@@ -124,6 +124,11 @@ under the License.
             </entity-one>
         </actions>
         <menu-item name="Summary" title="${uiLabelMap.CommonSummary}">
+            <condition>
+                <not>
+                    <if-empty field="orderId"/>
+                </not>              
+            </condition>
             <link target="orderview">
                 <parameter param-name="orderId"/>
             </link>
@@ -164,6 +169,11 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="OrderHistory" title="${uiLabelMap.OrderViewOrderHistory}">
+            <condition>
+                <not>
+                    <if-empty field="orderId"/>
+                </not>              
+            </condition>
             <link target="OrderHistory">
                 <parameter param-name="orderId"/>
             </link>

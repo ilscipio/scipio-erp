@@ -77,7 +77,7 @@ under the License.
     </form>
     
     <form name="AddPaymentGroup" type="single" target="createPaymentGroup" title="" default-map-name="paymentGroup">
-        <field name="paymentGroupName" position="1"><text/></field>      
+        <field name="paymentGroupName" title="${uiLabelMap.AccountingPaymentGroupName}" position="1"><text/></field>      
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentGroupType" description="${description}">

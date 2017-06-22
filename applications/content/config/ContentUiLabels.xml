@@ -3535,6 +3535,7 @@
     <property key="ContentUploadedFile">
         <value xml:lang="da">Uploadet fil</value>
         <value xml:lang="en">Uploaded File</value>
+        <value xml:lang="de">Datei-Upload</value>
         <value xml:lang="fr">Fichier téléversé</value>
         <value xml:lang="it">File caricato</value>
         <value xml:lang="ja">アップロードファイル</value>

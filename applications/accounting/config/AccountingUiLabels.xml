@@ -19249,6 +19249,7 @@
     </property>
     <property key="FormFieldTitle_periodTypeId">
         <value xml:lang="en">Period Type Id</value>
+        <value xml:lang="en">Zeitraum Id</value>
         <value xml:lang="fr">Réf. de type d'exercice</value>
         <value xml:lang="hi_IN">अवधि प्रकार क्रमांक</value>
         <value xml:lang="it">Tipo Periodo Fiscale</value>

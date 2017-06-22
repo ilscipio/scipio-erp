@@ -9962,9 +9962,11 @@
     </property>
     <property key="CommonRole">
         <value xml:lang="en">Role</value>
+        <value xml:lang="de">Rolle</value>
     </property>
     <property key="CommonRoles">
         <value xml:lang="en">Roles</value>
+        <value xml:lang="de">Rollen</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>

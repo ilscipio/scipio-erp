@@ -532,7 +532,7 @@ under the License.
             <get-related-one relation-name="QuantityUom" to-value-field="uom" value-field="product"/>
             <set field="quantityUom" from-field="uom.abbreviation" default-value="${uom.uomId}"/>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}">
             <display-entity entity-name="Product" description="${productId} - ${internalName}"/>
         </field>
         <field name="unitCost" widget-area-style="amount" title-area-style="align-right"><display currency="${currencyUomId}" type="currency"/></field>

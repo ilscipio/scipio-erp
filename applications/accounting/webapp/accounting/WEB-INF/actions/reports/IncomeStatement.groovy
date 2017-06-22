@@ -156,7 +156,7 @@ if (transactionTotals) {
     balanceTotal = balanceTotalDebit.subtract(balanceTotalCredit);
 }
 context.contraRevenueBalanceTotal = balanceTotal;
-balanceTotalList.add(UtilMisc.toMap("totalName", "TOTAL CONTRA REVENUE", "balance", balanceTotal));
+//balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingContraRevenue", "balance", balanceTotal));
 
 // EXPENSE
 // account balances
@@ -241,7 +241,7 @@ if (transactionTotals) {
     balanceTotal = balanceTotalDebit.subtract(balanceTotalCredit);
 }
 context.cogsExpense = balanceTotal;
-balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCostOfGoodsSold", "balance", balanceTotal));
+//balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCostOfGoodsSold", "balance", balanceTotal));
 
 // OPERATING EXPENSES (SGA_EXPENSE)
 // account balances
@@ -371,18 +371,26 @@ context.incomeBalanceTotal = balanceTotal;
 // NET SALES = REVENUES - CONTRA REVENUES
 context.netSales = (context.revenueBalanceTotal).subtract(context.contraRevenueBalanceTotal);
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingTotalNetSales", "balance", context.netSales));
+
+// COSTS OF GOODS SOLD
+balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCostOfGoodsSold", "balance", context.cogsExpense));
+
 // GROSS MARGIN = NET SALES - COSTS OF GOODS SOLD
 context.grossMargin = (context.netSales).subtract(context.cogsExpense);
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingGrossMargin", "balance", context.grossMargin));
+
 // OPERATING EXPENSES
 context.sgaExpense = sgaExpense;
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingOperatingExpenses", "balance", context.sgaExpense));
+
 // DEPRECIATION
 context.depreciation = depreciation;
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingDepreciation", "balance", context.depreciation));
-// INCOME FROM OPERATIONS = GROSS MARGIN - OPERATING EXPENSES
-context.incomeFromOperations = (context.grossMargin).subtract(context.sgaExpense);
+
+// INCOME FROM OPERATIONS = GROSS MARGIN - OPERATING EXPENSES - DEPRECIATION
+context.incomeFromOperations = (context.grossMargin).subtract(context.sgaExpense).subtract(context.depreciation);
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingIncomeFromOperations", "balance", context.incomeFromOperations));
+
 // NET INCOME
 context.netIncome = (context.netSales).add(context.incomeBalanceTotal).subtract(context.expenseBalanceTotal);
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingNetIncome", "balance", context.netIncome));

@@ -673,7 +673,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingTransactionTotals}">
+                        <screenlet>
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <section>

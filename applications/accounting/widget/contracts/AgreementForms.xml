@@ -53,7 +53,7 @@ under the License.
         <field name="agreementDate" title="${uiLabelMap.AccountingAgreementDate}"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find type="date"/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -102,7 +102,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" sort-field="true"><display type="date"/></field>
         <field name="agreementDate" title="${uiLabelMap.AccountingAgreementDate}"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" sort-field="true">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}" sort-field="true">
             <display-entity entity-name="Product" description="${internalName}"/>
         </field>
         <field name="textData" title="${uiLabelMap.AccountingTextData}"><hidden/></field>
@@ -410,10 +410,10 @@ under the License.
         <auto-fields-entity entity-name="AgreementProductAppl" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
         <field name="agreementItemSeqId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="agreementProductAppl==null">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}" use-when="agreementProductAppl==null">
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="agreementProductAppl!=null"><display/></field>
+        <field name="productId" title="${uiLabelMap.AccountingProduct}" use-when="agreementProductAppl!=null"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
@@ -426,7 +426,7 @@ under the License.
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}">
             <display-entity entity-name="Product" description=" ">
                 <sub-hyperlink target="EditAgreementItemProduct" description="${productId} - ${product.internalName}" link-style="${styles.link_nav_info_idname}">
                 <parameter param-name="agreementId"/>
@@ -566,7 +566,7 @@ under the License.
         <field name="agreementItemSeqId"><hidden/></field>
         <field name="partyId"><hidden/></field>
         <field name="currencyUomId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_info_id}">
+        <field name="productId" title="${uiLabelMap.AccountingProduct}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${productId}" target="EditAgreementItemSupplierProduct">
                 <parameter param-name="minimumOrderQuantity"/>
                 <parameter param-name="currencyUomId"/>

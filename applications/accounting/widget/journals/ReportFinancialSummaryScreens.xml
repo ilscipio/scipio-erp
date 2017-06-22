@@ -37,7 +37,7 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleSalesInvoiceByProductCategorySummary}">
                             <include-form name="SalesInvoiceByProductCategorySummaryOptions" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleSalesInvoiceByProductGlAccountSummary}">
+                        <screenlet>
                             <include-form name="SalesInvoiceByProductGlAccountSummaryOptions" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitlePaymentByMethodSummary}">
@@ -337,7 +337,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+                        <screenlet>
                             <include-form name="BalanceSheetParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="BalanceSheet.csv">
@@ -350,7 +350,7 @@ under the License.
                             <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                             <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                         </link>
-                        <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+                        <screenlet>
                             <label text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="BalanceSheetAssets" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingLiabilities}"/>
@@ -479,7 +479,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingComparativeBalanceSheet}">
+                        <screenlet>
                             <include-form name="ComparativeBalanceSheetParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="ComparativeBalanceSheet.csv">
@@ -496,7 +496,7 @@ under the License.
                             <parameter param-name="period2ThruDate"/>
                             <parameter param-name="period2GlFiscalTypeId" from-field="period2GlFiscalTypeId"/>
                         </link>
-                        <screenlet title="${uiLabelMap.AccountingComparativeBalanceSheet}">
+                        <screenlet>
                             <label text="${uiLabelMap.AccountingAssets}"/>
                             <include-form name="ComparativeBalanceSheetAssets" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                             <label text="${uiLabelMap.AccountingLiabilities}"/>
@@ -673,7 +673,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingTransactionTotals}">
+                        <screenlet>
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <section>
@@ -805,10 +805,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
+                        <screenlet>
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
+                        <screenlet>
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="IncomeStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
@@ -954,10 +954,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+                        <screenlet>
                             <include-form name="ComparativeIncomeStatementParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
+                        <screenlet >
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="ComparativeIncomeStatements.csv">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>
@@ -1398,10 +1398,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingCashFlowStatement}">
+                        <screenlet>
                             <include-form name="CashFlowStatementParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingCashFlowStatement}">
+                        <screenlet>
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="CashFlowStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
@@ -1528,10 +1528,10 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonOrganizationAccountingReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
+                        <screenlet>
                             <include-form name="ComparativeCashFlowStatementParameters" location="component://accounting/widget/journals/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
+                        <screenlet>
                             <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_run_sys} ${styles.action_export}" target="ComparativeCashFlowStatement.csv">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>

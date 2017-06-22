@@ -6032,4 +6032,9 @@
         <value xml:lang="zh">数据导入</value>
         <value xml:lang="zh_TW">資料匯入</value>
     </property>
+    <property key="WebtoolsUploadXmlFile"><!-- SCIPIO: TODO: localize -->
+        <value xml:lang="en">Upload XML File</value>
+        <value xml:lang="de">XML-Datei hochladen</value>
+        <value xml:lang="fr">Télécharger fichier XML</value>
+    </property>
 </resource>

@@ -2967,7 +2967,7 @@
         <value xml:lang="zh_TW">配置</value>
     </property>
     <property key="OrderContactInformation">
-        <value xml:lang="de">Kontaktinformation</value>
+        <value xml:lang="de">Kontakt Informationen</value>
         <value xml:lang="en">Contact Information</value>
         <value xml:lang="es">Información del contacto</value>
         <value xml:lang="fr">Information sur l'acteur</value>
@@ -15220,7 +15220,7 @@
         <value xml:lang="en">Confirm Order</value>
     </property>
     <property key="OrderCart">
-        <value xml:lang="de">Karte</value>
+        <value xml:lang="de">Warenkorb</value>
         <value xml:lang="en">Cart</value>
     </property>
     <property key="OrderOrderItemCancelled">

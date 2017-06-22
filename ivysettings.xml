@@ -20,6 +20,11 @@
  -->
 <ivysettings>
     <settings defaultResolver="central" />
+    <!-- SCIPIO: NOTE: for multi-project development efficiency and speed, in the Git repositories 
+        we leave the repository cache to the default ivy location, which is the user home dir (~/.ivy2/*). 
+        If you need a per-project or local repository cache, simply uncomment this line and comment the one below it:
+        (FIXME?: repositoryCacheDir as recommended by ivy docs appears to be ignored by ivy 2.4 - unknown reason/bug - so forced to set defaultCacheDir in addition) -->
+    <!--<caches defaultCacheDir="${ivy.settings.dir}/ivy/repositoryCache" repositoryCacheDir="${ivy.settings.dir}/ivy/repositoryCache" resolutionCacheDir="${ivy.settings.dir}/ivy/resolutionCache"/>-->
     <caches resolutionCacheDir="${ivy.settings.dir}/ivy/resolutionCache"/>
     <resolvers>
         <ibiblio name="central" m2compatible="true"/>

@@ -221,15 +221,19 @@
     </property>
     <property key="AccountingAcctTransEntryRecon">
         <value xml:lang="en">Account Transaction Entry Reconciliations</value>
+        <value xml:lang="de">Abgleich von Transaktionen</value>
     </property>
      <property key="AccountingAcctGlRecon">
         <value xml:lang="en">Account GL Reconciliations</value>
+        <value xml:lang="de">Kontenabstimmung</value>
     </property>
     <property key="AccountingTransactionHeader">
         <value xml:lang="en">Transaction Header</value>
+        <value xml:lang="de">Allgemeine Transaktions-Info</value>
     </property>
     <property key="AccountingPostTransaction">
         <value xml:lang="en">Post Transaction</value>
+        <value xml:lang="de">Nach der Transaktion</value>
     </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="de">Kontenabstimmungen</value>
@@ -260,7 +264,7 @@
         <value xml:lang="zh_TW">交易記帳</value>
     </property>
     <property key="AccountingAcctgTransEntries">
-        <value xml:lang="de">Kontenbewegungen</value>
+        <value xml:lang="de">Kontenbewegungen (Einzeln)</value>
         <value xml:lang="en">Accounting Transactions Entries</value>
         <value xml:lang="fr">Entrées de transactions comptables</value>
         <value xml:lang="hi_IN">लेखा लेनदेन की प्रविष्टियाँ</value>
@@ -723,7 +727,7 @@
         <value xml:lang="zh_TW">合約識別</value>
     </property>
     <property key="AccountingAgreementInformation">
-        <value xml:lang="de">Vereinbarungsinformation</value>
+        <value xml:lang="de">Details zur Vereinbarung</value>
         <value xml:lang="en">Agreement Information</value>
         <value xml:lang="fr">Information sur l'accord commercial</value>
         <value xml:lang="hi_IN">अनुबंध जानकारी</value>
@@ -1545,7 +1549,7 @@
     </property>
     <property key="AccountingAssets">
         <value xml:lang="ar">الأصول</value>
-        <value xml:lang="de">Aktiva</value>
+        <value xml:lang="de">Vermögenswerte</value>
         <value xml:lang="en">Assets</value>
         <value xml:lang="es">Activos</value>
         <value xml:lang="fr">Actifs</value>
@@ -2787,7 +2791,7 @@
         <value xml:lang="zh_TW">現金餘額</value>
     </property>
     <property key="AccountingCashFlowStatement">
-        <value xml:lang="de">Kapitalflussrechnung</value>
+        <value xml:lang="de">Kapitalflussrechnung (Cash Flow)</value>
         <value xml:lang="en">Cash Flow Statement</value>
         <value xml:lang="fr">Tableau des flux de trésorerie</value>
         <value xml:lang="hi_IN">रोकड प्रवाह विवरण</value>
@@ -2975,7 +2979,7 @@
         <value xml:lang="zh_TW">已結束時段</value>
     </property>
     <property key="AccountingClosingCashBalance">
-        <value xml:lang="de">Kassenbestand bei Kassenschluss</value>
+        <value xml:lang="de">Endbestand Zahlungsmittel</value>
         <value xml:lang="en">Closing Cash Balance</value>
         <value xml:lang="fr">Solde de clôture de trésorerie</value>
         <value xml:lang="hi_IN">बंद नकदी शेष</value>
@@ -3205,7 +3209,7 @@
         <value xml:lang="zh_TW">比較現金流量表</value>
     </property>
     <property key="AccountingComparativeIncomeStatement">
-        <value xml:lang="de">Vergleichs-Ertragsrechnung</value>
+        <value xml:lang="de">Vergleichs-GuV</value>
         <value xml:lang="en">Comparative Income Statement</value>
         <value xml:lang="fr">Comparatif Compte de résultat</value>
         <value xml:lang="hi_IN">तुलनात्मक आय विवरण</value>
@@ -4121,7 +4125,7 @@
         <value xml:lang="zh_TW">當前客製時間段</value>
     </property>
     <property key="AccountingCurrentLiabilities">
-        <value xml:lang="de">kurzfristige Verbindlichkeiten</value>
+        <value xml:lang="de">Kurzfristige Verbindlichkeiten</value>
         <value xml:lang="en">Current Liabilities</value>
         <value xml:lang="fr">Passifs circulants</value>
         <value xml:lang="ja">流動負債</value>
@@ -4744,6 +4748,7 @@
     </property>
     <property key="AccountingEditCustomTimePeriods">
         <value xml:lang="en">Custom Time Periods</value>
+        <value xml:lang="de">Eigener Zeitraum</value>
     </property>
     <property key="AccountingEditCustomTimePeriods">
         <value xml:lang="de">Individuelle Zeiträume bearbeiten</value>
@@ -7143,6 +7148,7 @@
     <property key="AccountingGlAccountTrialBalance">
         <value xml:lang="de">Probebilanz</value>
         <value xml:lang="en">GL Account Trial Balance</value>
+        <value xml:lang="de">Probebilanz (Hauptkonto)</value>
         <value xml:lang="fr">Balance</value>
         <value xml:lang="hi_IN">जीएल(GL) खाता तलपट(Trial Balance)</value>
         <value xml:lang="ja">GL勘定試算</value>
@@ -7152,9 +7158,14 @@
         <value xml:lang="zh">总账账户试算余额</value>
         <value xml:lang="zh_TW">總帳科目試算餘額</value>
     </property>
+    <property key="AccountingBalance">
+        <value xml:lang="de">Saldo</value>
+        <value xml:lang="en">Balance</value>
+    </property>
     <property key="AccountingGlAccountTrialBalanceReport">
         <value xml:lang="de">Probebilanzbericht</value>
         <value xml:lang="en">GL Account Trial Balance Report</value>
+        <value xml:lang="de">Probebilanz Report (Hauptkonto)</value>
         <value xml:lang="fr">Rapport des balances</value>
         <value xml:lang="hi_IN">जीएल(GL) खाता तलपट(Trial Balance) ब्यौरेवार विवरण</value>
         <value xml:lang="ja">GL勘定試算表</value>
@@ -7265,6 +7276,7 @@
     </property>
     <property key="AccountingGrossMargin">
         <value xml:lang="en">Gross Margin</value>
+        <value xml:lang="de">Bruttogewinn</value>
         <value xml:lang="fr">Marge brute</value>
         <value xml:lang="ja">粗利</value>
         <value xml:lang="nl">Bruto marge</value>
@@ -7285,6 +7297,7 @@
     </property>
     <property key="AccountingGroupMembers">
         <value xml:lang="en">Group Members</value>
+        <value xml:lang="de">Gruppenmitglieder</value>
         <value xml:lang="fr">Membres du groupe</value>
         <value xml:lang="hi_IN">समूह सदस्य</value>
         <value xml:lang="ja">グループメンバ</value>
@@ -7378,6 +7391,7 @@
     </property>
     <property key="AccountingIncomeFromOperations">
         <value xml:lang="en">Income From Operations</value>
+        <value xml:lang="de">EBIT</value>
         <value xml:lang="fr">Revenu depuis les opérations</value>
         <value xml:lang="ja">営業利益</value>
         <value xml:lang="nl">Operationele inkomsten</value>
@@ -7388,7 +7402,7 @@
     </property>
     <property key="AccountingIncomeStatement">
         <value xml:lang="ar">تصربح الدخل</value>
-        <value xml:lang="de">Ertragsrechnung</value>
+        <value xml:lang="de">Ertragsrechnung (GuV)</value>
         <value xml:lang="en">Income Statement</value>
         <value xml:lang="es">Declaración de ingresos</value>
         <value xml:lang="fr">Déclaration de revenus</value>
@@ -7485,6 +7499,7 @@
     </property>
     <property key="AccountingInventoryValuation">
         <value xml:lang="en">Inventory Valuation</value>
+        <value xml:lang="de">Vorratsbewertung</value>
         <value xml:lang="fr">Évaluation des stocks</value>
         <value xml:lang="hi_IN">वस्तु मूल्यांकन</value>
         <value xml:lang="ja">棚卸資産評価</value>
@@ -8573,6 +8588,7 @@
     </property>
     <property key="AccountingInvoicesDueSoon">
         <value xml:lang="en">Invoices Due Soon</value>
+        <value xml:lang="en">Fällige Rechnungen</value>
         <value xml:lang="fr">Factures à régler prochainement</value>
         <value xml:lang="ja">支払期日が近づいている請求</value>
         <value xml:lang="pt">Faturas devidas em breve</value>
@@ -8842,6 +8858,7 @@
     </property>
     <property key="AccountingLongTermAssets">
         <value xml:lang="en">Long Term Assets</value>
+        <value xml:lang="de">Langfristige Vermögenswerte</value>
         <value xml:lang="fr">Actifs à long terme</value>
         <value xml:lang="ja">固定資産</value>
         <value xml:lang="pt">Realizável a Longo Prazo</value>
@@ -10288,8 +10305,25 @@
         <value xml:lang="zh">期初余额</value>
         <value xml:lang="zh_TW">期初餘額</value>
     </property>
+    <property key="AccountingOpeningDebit">
+        <value xml:lang="en">Opening Debit</value>
+        <value xml:lang="de">Eröffnungsstand Soll</value>
+    </property>
+    <property key="AccountingOpeningCredit">
+        <value xml:lang="en">Opening Credit</value>
+        <value xml:lang="de">Eröffnungsstand Haben</value>
+    </property>
+    <property key="AccountingClosingDebit">
+        <value xml:lang="en">Closing Debit</value>
+        <value xml:lang="de">Abschlussstand Soll</value>
+    </property>
+    <property key="AccountingClosingCredit">
+        <value xml:lang="en">Closing Credit</value>
+        <value xml:lang="de">Abschlussstand Haben</value>
+    </property>
     <property key="AccountingOpeningCashBalance">
         <value xml:lang="en">Opening Cash Balance</value>
+        <value xml:lang="de">Anfangsbestand Zahlungsmittel</value>
         <value xml:lang="fr">Solde du compte liquidités</value>
         <value xml:lang="hi_IN">प्रारंभिक नकदी शेष</value>
         <value xml:lang="ja">期首現金残高</value>
@@ -10300,6 +10334,7 @@
     </property>
     <property key="AccountingOperatingExpenses">
         <value xml:lang="en">Operating Expenses</value>
+        <value xml:lang="de">Betriebsausgaben</value>
         <value xml:lang="fr">Charges d'exploitation</value>
         <value xml:lang="ja">営業費用</value>
         <value xml:lang="nl">Operationele kosten</value>
@@ -10310,6 +10345,7 @@
     </property>
     <property key="AccountingOperationalCash">
         <value xml:lang="en">Operational Cash</value>
+        <value xml:lang="de">Operativer Cashflow</value>
         <value xml:lang="fr">Trésorerie opérationnelle</value>
         <value xml:lang="hi_IN">à¤•à¥à¤°à¤¿à¤¯à¤¾à¤¶à¥€à¤² à¤¨à¤•à¤¦à¥€</value>
         <value xml:lang="ja">運用現金</value>
@@ -10758,6 +10794,7 @@
     </property>
     <property key="AccountingPastDueInvoices">
         <value xml:lang="en">Past Due Invoices</value>
+        <value xml:lang="de">Überfällige Rechnungen</value>
         <value xml:lang="fr">Factures en attente de règlement</value>
         <value xml:lang="ja">支払期日を経過した請求</value>
         <value xml:lang="nl">Vervallen facturen</value>
@@ -10768,6 +10805,7 @@
     </property>
     <property key="AccountingPaymentParentTypesNotCompatible">
         <value xml:lang="en">Payment parent types not compatible for application</value>
+        <value xml:lang="de">Die Zahlungsarten sind nicht mit der Anwendung kompatibel</value>
         <value xml:lang="fr">Le type de paiement parent n'est pas compatible avec cet usage</value>
         <value xml:lang="ja">支払上位(親)種類が申請と一致しません</value>
         <value xml:lang="vi">Loại thanh toán gốc không thích hợp cho lệnh này</value>
@@ -12568,6 +12606,7 @@
     </property>
     <property key="AccountingPeriodCashBalance">
         <value xml:lang="en">Period Cash Balance</value>
+        <value xml:lang="de">Zahlungsmittelbestand im Berichtszeitraum</value>
         <value xml:lang="fr">Période du solde de caisse</value>
         <value xml:lang="hi_IN">अवधि नकदी शेष</value>
         <value xml:lang="ja">期間現金損益</value>
@@ -12863,6 +12902,7 @@
     </property>
     <property key="AccountingPrintInvoices">
         <value xml:lang="en">Print Invoices</value>
+        <value xml:lang="de">Rechnungen Drucken</value>
         <value xml:lang="fr">Imprimer les factures</value>
         <value xml:lang="ja">請求書を印刷</value>
         <value xml:lang="pt">Imprimir Faturas</value>
@@ -13415,6 +13455,7 @@
         <value xml:lang="zh_TW">執行合計</value>
     </property>
     <property key="AccountingRunningTotalOutstanding">
+        <value xml:lang="de">Laufender Kontostand (ausstehend)</value>
         <value xml:lang="en">Running Total (Outstanding)</value>
         <value xml:lang="fr">Montant exécuté (exceptionnel)</value>
         <value xml:lang="hi_IN">निरंतर कुल (बकाया राशि)</value>
@@ -13796,6 +13837,7 @@
     </property>
     <property key="AccountingSelectAction">
         <value xml:lang="en">Select Action</value>
+        <value xml:lang="de">Aktion auswählen</value>
         <value xml:lang="fr">Choisir une action</value>
         <value xml:lang="hi_IN">कार्य चुनें</value>
         <value xml:lang="ja">動作を選択</value>
@@ -14485,6 +14527,7 @@
     </property>
     <property key="AccountingTimePeriod">
         <value xml:lang="ar">الفترة</value>
+        <value xml:lang="de">Zeiträume</value>
         <value xml:lang="en">Time Period</value>
         <value xml:lang="es">Periodo de tiempo</value>
         <value xml:lang="fr">Période</value>
@@ -14520,6 +14563,7 @@
     <property key="AccountingToParty">
         <value xml:lang="ar">إلى الطرف</value>
         <value xml:lang="en">To Party</value>
+        <value xml:lang="de">An Nutzer</value>
         <value xml:lang="es">A grupo</value>
         <value xml:lang="fr">A l'acteur</value>
         <value xml:lang="hi_IN">पार्टी को</value>
@@ -14553,6 +14597,7 @@
     </property>
     <property key="AccountingTotalAccumulatedDepreciation">
         <value xml:lang="en">Total Accumulated Depreciation</value>
+        <value xml:lang="de">Kumulierte Abschreibung</value>
         <value xml:lang="fr">Montant cumulé de la dépréciation</value>
         <value xml:lang="ja">減価償却累計額</value>
         <value xml:lang="nl">Geaccumuleerde afschrijvingen totaal</value>
@@ -14563,6 +14608,7 @@
     </property>
     <property key="AccountingTotalAmountPercentageIsNotEqualOneHundred">
         <value xml:lang="en">Total amountPercentage is not equal 100.</value>
+        <value xml:lang="de">Die Summe aus amountPercentage ist ungleich 100.</value>
         <value xml:lang="fr">Le pourcentage total n'est pas égal à 100%.</value>
         <value xml:lang="hi_IN">कुल amountPercentage बराबर 100 नहीं है</value>
         <value xml:lang="ja">金額合計割合(%)が100ではありません。</value>
@@ -14573,6 +14619,7 @@
     </property>
     <property key="AccountingTotalAssets">
         <value xml:lang="en">Total Assets</value>
+        <value xml:lang="de">Vermögenswerte</value>
         <value xml:lang="fr">Total de l'actif</value>
         <value xml:lang="ja">資産合計</value>
         <value xml:lang="nl">Totaal activa</value>
@@ -14612,6 +14659,7 @@
     </property>
     <property key="AccountingTotalClosingCashBalance">
         <value xml:lang="en">Total Closing Cash Balance</value>
+        <value xml:lang="de">Summe der Zahlungsmittel zu Periodenende</value>
         <value xml:lang="fr">Total Solde de fermeture de caisse</value>
         <value xml:lang="hi_IN">कुल बंद नकदी शेष</value>
         <value xml:lang="ja">期末現金残高合計</value>
@@ -14623,6 +14671,7 @@
     </property>
     <property key="AccountingTotalCommissionAmount">
         <value xml:lang="en">Total Commission Amount</value>
+        <value xml:lang="en">Summe der Privisionen/Kommissionen</value>
         <value xml:lang="fr">Montant total de commission</value>
         <value xml:lang="hi_IN">कुल दलाली राशी</value>
         <value xml:lang="ja">委託金額合計</value>
@@ -14634,6 +14683,7 @@
     </property>
     <property key="AccountingTotalCostCenterAmount">
         <value xml:lang="en">Cost center amount percentage saved successfully</value>
+        <value xml:lang="de">Gesamteinsparung des Kostencentersy</value>
         <value xml:lang="fr">Le pourcentage du centre de coût a été sauvegardé</value>
         <value xml:lang="ja">コストセンター金額率を保存しました</value>
         <value xml:lang="nl">Percentage kostenplaats succesvol opgeslagen</value>
@@ -14644,6 +14694,7 @@
     </property>
     <property key="AccountingTotalCredit_Disbursement">
         <value xml:lang="en">Total Credit(Disbursement)</value>
+        <value xml:lang="de">Gesamtsumme der Gutschriften (Auszahlung)</value>
         <value xml:lang="fr">Total crédit (décaissement)</value>
         <value xml:lang="hi_IN">कुल जमा</value>
         <value xml:lang="ja">貸方合計(支払金)</value>
@@ -14655,6 +14706,7 @@
     </property>
     <property key="AccountingTotalCurrentAssetBalance">
         <value xml:lang="en">Total Current Asset Balance</value>
+        <value xml:lang="de">Summe der kurzfristigen Vermögenswerte</value>
         <value xml:lang="fr">Total de l'actif courant</value>
         <value xml:lang="hi_IN">à¤•à¥à¤² à¤šà¤¾à¤²à¥‚ à¤¸à¤®à¥à¤ªà¤¤à¥à¤¤à¤¿ à¤°à¤¾à¤¶à¥€</value>
         <value xml:lang="ja">流動資産残高合計</value>
@@ -14666,6 +14718,7 @@
     </property>
     <property key="AccountingTotalDebit_Receipts">
         <value xml:lang="en">Total Debit(Receipts)</value>
+        <value xml:lang="de">Summe der Überweisungen (Einzahlung)</value>
         <value xml:lang="fr">Total Débit (recettes)</value>
         <value xml:lang="hi_IN">कुल नामे</value>
         <value xml:lang="ja">借方合計(受取金)</value>
@@ -14677,6 +14730,7 @@
     </property>
     <property key="AccountingTotalEndingCashBalance">
         <value xml:lang="en">Total Ending Cash Balance</value>
+        <value xml:lang="de">Summe des Kassenbestands am Ende des Buchungsabschnitts</value>
         <value xml:lang="fr">Solde total de fin de caisse</value>
         <value xml:lang="hi_IN">कुल अंतिम नकदी शेष</value>
         <value xml:lang="ja">最終現金残高合計</value>
@@ -14702,6 +14756,7 @@
     </property>
     <property key="AccountingTotalLiabilitiesAndEquities">
         <value xml:lang="en">Total Liabilities and Equities</value>
+        <value xml:lang="de">Summe der Aktiva und Passiva</value>
         <value xml:lang="fr">Total du passif et Actions</value>
         <value xml:lang="ja">負債および正味資産合計</value>
         <value xml:lang="pt">Total do Passivo e Ações</value>
@@ -14711,6 +14766,7 @@
     </property>
     <property key="AccountingTotalLiabilities">
         <value xml:lang="en">Total Liabilities</value>
+        <value xml:lang="de">Summe Passiva</value>
         <value xml:lang="fr">Total du passif</value>
         <value xml:lang="ja">負債合計</value>
         <value xml:lang="nl">Totaal kortlopende schulden</value>
@@ -14720,6 +14776,7 @@
     </property>
     <property key="AccountingTotalEquities">
         <value xml:lang="en">Total Equities</value>
+        <value xml:lang="en">Summe Aktiva</value>
         <value xml:lang="fr">Total Actions</value>
         <value xml:lang="ja">正味資産合計</value>
         <value xml:lang="nl">Totaal eigen vermogen</value>
@@ -14729,6 +14786,7 @@
     </property>
     <property key="AccountingTotalNetSales">
         <value xml:lang="en">Total Net Sales</value>
+        <value xml:lang="de">Gesamtumsatz</value>
         <value xml:lang="fr">Total net des ventes</value>
         <value xml:lang="hi_IN">कुल शुद्ध विक्रय</value>
         <value xml:lang="ja">正味販売合計</value>
@@ -14738,8 +14796,21 @@
         <value xml:lang="zh">净销售合计</value>
         <value xml:lang="zh_TW">淨銷售合計</value>
     </property>
+    <property key="AccountingRevenue">
+        <value xml:lang="en">Revenue</value>
+        <value xml:lang="de">Umsatz</value>
+    </property>
+    <property key="AccountingRevenues">
+        <value xml:lang="en">Revenues</value>
+        <value xml:lang="de">Umsätze</value>
+    </property>
+    <property key="AccountingContraRevenue">
+        <value xml:lang="en">Contra Revenue</value>
+        <value xml:lang="de">Abschreibungen aus Umsatzerlösen</value>
+    </property>
     <property key="AccountingTotalNumberOfOrders">
         <value xml:lang="en">Total Number of Orders</value>
+        <value xml:lang="de">Summe der Aufträge</value>
         <value xml:lang="fr">Total du nombre de commandes</value>
         <value xml:lang="hi_IN">कुल आदेशों की संख्या</value>
         <value xml:lang="ja">注文数合計</value>
@@ -14751,6 +14822,7 @@
     </property>
     <property key="AccountingTotalOfTheCurrentMonth">
         <value xml:lang="en">Total of the current month</value>
+        <value xml:lang="de">Gesamt (laufender Monat)</value>
         <value xml:lang="fr">Total du mois en cours</value>
         <value xml:lang="hi_IN">चालू माह के कुल</value>
         <value xml:lang="ja">当月合計</value>
@@ -14762,6 +14834,7 @@
     </property>
     <property key="AccountingTotalOfYearToDate">
         <value xml:lang="en">Total of Year To Date</value>
+        <value xml:lang="de">Gesamt (laufendes Jahr)</value>
         <value xml:lang="fr">Total de l'année sur la date</value>
         <value xml:lang="hi_IN">वर्ष से दिनांक का कुल</value>
         <value xml:lang="ja">年初来合計</value>
@@ -14773,6 +14846,7 @@
     </property>
     <property key="AccountingTotalOpeningCashBalance">
         <value xml:lang="en">Total Opening Cash Balance</value>
+        <value xml:lang="de">Summe der Zahlungsmittel zu Periodenbeginn</value>
         <value xml:lang="fr">Total ouvert du solde de caisse</value>
         <value xml:lang="hi_IN">कुल अथ नकदी शेष</value>
         <value xml:lang="ja">期首現金残高合計</value>
@@ -14784,6 +14858,7 @@
     </property>
     <property key="AccountingTotalOperationalCashBalance">
         <value xml:lang="en">Total Operational Cash Balance</value>
+        <value xml:lang="de">Summe der operativen Zahlungsmittel</value>
         <value xml:lang="fr">Total des opérations d'encaissement</value>
         <value xml:lang="hi_IN">à¤•à¥à¤² à¤•à¥à¤°à¤¿à¤¯à¤¾à¤¶à¥€à¤² à¤¨à¤•à¤¦à¥€</value>
         <value xml:lang="ja">運用現金残高合計</value>
@@ -14795,6 +14870,7 @@
     </property>
     <property key="AccountingTotalPeriodCashBalance">
         <value xml:lang="en">Total Period Cash Balance</value>
+        <value xml:lang="de">Summe der Zahlungsmittel im Berichtszeitraum</value>
         <value xml:lang="fr">Total des encaissements sur la période</value>
         <value xml:lang="hi_IN">कुल अवधि नकदी शेष</value>
         <value xml:lang="ja">期間現金残高合計</value>
@@ -14806,6 +14882,7 @@
     </property>
     <property key="AccountingTotalQuantityOnHand">
         <value xml:lang="en">Total Quantity On Hand</value>
+        <value xml:lang="de">Summe der verfügbaren Mengen</value>
         <value xml:lang="fr">Quantité totale de stock réel</value>
         <value xml:lang="hi_IN">कुल मात्रा हाथ पर</value>
         <value xml:lang="ja">手持数量合計</value>
@@ -14817,6 +14894,7 @@
     </property>
     <property key="AccountingTransactionHasBeenAlreadyPosted">
         <value xml:lang="en">Transaction has been already posted</value>
+        <value xml:lang="de">Der Vorgang wurde bereits gebucht</value>
         <value xml:lang="fr">Transaction déjà effectuée</value>
         <value xml:lang="hi_IN">गतिविधि पहले से ही दर्ज कर दी गयी है</value>
         <value xml:lang="it">Transazione è già stata contabilizzata</value>
@@ -14829,6 +14907,7 @@
     </property>
     <property key="AccountingTransactionIsAlreadyReconciled">
         <value xml:lang="en">Transaction Is already Reconciled</value>
+        <value xml:lang="de">Der Vorgang wurde bereits ausgeglichen</value>
         <value xml:lang="fr">Transaction déjà rapprochée</value>
         <value xml:lang="hi_IN">गतिविधि पहले से ही समझौता है</value>
         <value xml:lang="ja">トランザクションはすでに照合済</value>
@@ -14840,6 +14919,7 @@
     </property>
     <property key="AccountingTransactionTotals">
         <value xml:lang="en">Transaction Totals</value>
+        <value xml:lang="de">Transaktions-Summen</value>
         <value xml:lang="fr">Totaux de transaction</value>
         <value xml:lang="hi_IN">गतिविधि के योग</value>
         <value xml:lang="it">Totali Prime Note</value>
@@ -14918,6 +14998,7 @@
     <property key="AccountingTrialBalance">
         <value xml:lang="ar">الميزانية التجريبية</value>
         <value xml:lang="en">Trial Balance</value>
+        <value xml:lang="de">Probebilanz</value>
         <value xml:lang="es">Balance de prueba</value>
         <value xml:lang="fr">Balance comptable</value>
         <value xml:lang="hi_IN">तल पट</value>
@@ -15123,6 +15204,7 @@
     </property>
     <property key="AccountingUnPostedTransactionTotals">
         <value xml:lang="en">UnPosted Totals</value>
+        <value xml:lang="de">Nicht-gebuchte Gesamtsumme</value>
         <value xml:lang="fr">Totaux non comptabilisés</value>
         <value xml:lang="hi_IN">अनपोस्टेड योग</value>
         <value xml:lang="it">Prime Note Non Contabilizzate</value>
@@ -15548,6 +15630,7 @@
     </property>
     <property key="AccountingVendorParty">
         <value xml:lang="en">Vendor Party</value>
+        <value xml:lang="de">Anbieter</value>
         <value xml:lang="fr">Réf. vendeur</value>
         <value xml:lang="hi_IN">विक्रेता पार्टी</value>
         <value xml:lang="ja">ベンダ取引先</value>
@@ -16054,6 +16137,7 @@
     </property>
     <property key="FormFieldTitle_accountCode">
         <value xml:lang="ar">رمز الحساب</value>
+        <value xml:lang="de">Konto Code</value>
         <value xml:lang="en">Account Code</value>
         <value xml:lang="es">Código de cuenta</value>
         <value xml:lang="fr">Code du compte</value>
@@ -16237,6 +16321,7 @@
     </property>
     <property key="FormFieldTitle_actualBalance">
         <value xml:lang="en">Actual Balance</value>
+        <value xml:lang="de">IST-Saldo</value>
         <value xml:lang="fr">Balance réelle</value>
         <value xml:lang="hi_IN">वास्तविक शेष</value>
         <value xml:lang="it">Bilancio Corrente</value>
@@ -16251,6 +16336,7 @@
     </property>
     <property key="FormFieldTitle_actualCurrencyAmount">
         <value xml:lang="en">Actual Currency Amount</value>
+        <value xml:lang="en">IST-Menge an Währung</value>
         <value xml:lang="fr">Montant réel en devise</value>
         <value xml:lang="hi_IN">वास्तविक मुद्रा राशि</value>
         <value xml:lang="it">Importo attuale in valuta</value>
@@ -16450,7 +16536,7 @@
     </property>
     <property key="FormFieldTitle_amountToApply">
         <value xml:lang="ar">المبلغ للتطبيق</value>
-        <value xml:lang="de">zuzuweisender Betrag</value>
+        <value xml:lang="de">Ausstehender Betrag</value>
         <value xml:lang="en">Outstanding amount</value>
         <value xml:lang="es">Cantidad por aplicar</value>
         <value xml:lang="fr">Montant à allouer</value>
@@ -16859,6 +16945,7 @@
     </property>
     <property key="FormFieldTitle_customTimePeriodId">
         <value xml:lang="en">Custom Time Period Id</value>
+        <value xml:lang="de">Referenz-Zeitraum (Nr.)</value>
         <value xml:lang="fr">Réf. d'exercice spécifique</value>
         <value xml:lang="hi_IN">कस्टम समय अवधि क्रमांक</value>
         <value xml:lang="it">Periodo fiscale personalizzato</value>
@@ -17098,6 +17185,7 @@
     </property>
     <property key="FormFieldTitle_editGlAccountCategory">
         <value xml:lang="en">Edit GL Account Category</value>
+        <value xml:lang="de">Kontokategorien editieren</value>
         <value xml:lang="fr">Éditer la catégorie de compte</value>
         <value xml:lang="hi_IN">जीएल(Gl)खाता श्रेणी को संपादित करें</value>
         <value xml:lang="ja">GL勘定カテゴリを編集</value>
@@ -17386,6 +17474,7 @@
     </property>
     <property key="FormFieldTitle_findGlAccountCategory">
         <value xml:lang="en">Find Gl Account Category</value>
+        <value xml:lang="de">Kontokategorie finden</value>
         <value xml:lang="fr">Recherche d'une catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी खोजें</value>
         <value xml:lang="ja">GL勘定カテゴリを検索</value>
@@ -17606,6 +17695,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategory">
         <value xml:lang="en">GL Account Category</value>
+        <value xml:lang="de">Konto Kategorie</value>
         <value xml:lang="fr">Catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी</value>
         <value xml:lang="ja">GL勘定カテゴリ</value>
@@ -17616,6 +17706,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryId">
         <value xml:lang="en">GL Account Category Id</value>
+        <value xml:lang="de">Konto Kategorie Id</value>
         <value xml:lang="fr">Réf. de catégorie de cpt. GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी क्रमांक</value>
         <value xml:lang="ja">GL勘定カテゴリID</value>
@@ -17626,6 +17717,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryMember">
         <value xml:lang="en">GL Account Category Member</value>
+        <value xml:lang="de">Konto Kategorien Mitglieder</value>
         <value xml:lang="fr">Membre de la catégorie compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी सदस्य</value>
         <value xml:lang="ja">GL勘定カテゴリメンバ</value>
@@ -17636,6 +17728,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryType">
         <value xml:lang="en">GL Account Category Type</value>
+        <value xml:lang="de">Konto Kategorien-Art</value>
         <value xml:lang="fr">Type de catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी प्रकार</value>
         <value xml:lang="ja">GL勘定カテゴリ種類</value>
@@ -17646,6 +17739,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryTypeId">
         <value xml:lang="en">GL Account Category Type Id</value>
+        <value xml:lang="de">Konto Kategorien-Art Id</value>
         <value xml:lang="fr">Réf. de type de catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी प्रकार क्रमांक</value>
         <value xml:lang="ja">GL勘定カテゴリ種類ID</value>
@@ -17717,6 +17811,7 @@
     </property>
     <property key="FormFieldTitle_glFiscalType">
         <value xml:lang="en">Fiscal Gl Type</value>
+        <value xml:lang="de">Fiskal-Typ</value>
         <value xml:lang="fr">Type fiscal</value>
         <value xml:lang="hi_IN">वित्तीय सामान्य बही खाते का प्रकार</value>
         <value xml:lang="ja">会計GL種類</value>
@@ -18481,6 +18576,7 @@
     </property>
     <property key="FormFieldTitle_newGlAccountCategory">
         <value xml:lang="en">New GL Account Category</value>
+        <value xml:lang="de">Neue Konto Kategorie</value>
         <value xml:lang="fr">Nouvelle catégorie de compte</value>
         <value xml:lang="hi_IN">नई जीएल(Gl) खाता श्रेणी</value>
         <value xml:lang="ja">新規GL勘定カテゴリ</value>
@@ -18491,6 +18587,7 @@
     </property>
     <property key="FormFieldTitle_NextDepreciationAmount">
         <value xml:lang="en">Next depreciation amount</value>
+        <value xml:lang="de">Nächster Abschreibungsbetrag</value>
         <value xml:lang="fr">Prochain montant de la dépréciation</value>
         <value xml:lang="ja">次回減価償却額</value>
         <value xml:lang="vi">Giá trị khấu hao tiếp theo</value>
@@ -18652,6 +18749,7 @@
     </property>
     <property key="FormFieldTitle_outstandingAmount">
         <value xml:lang="en">Outstanding Amount</value>
+        <value xml:lang="de">Betrag Offen</value>
         <value xml:lang="fr">Montant impayé</value>
         <value xml:lang="hi_IN">बकाया राशि</value>
         <value xml:lang="it">Importo Da Pagare</value>
@@ -18695,6 +18793,7 @@
     </property>
     <property key="FormFieldTitle_paidAmount">
         <value xml:lang="en">Paid Amount</value>
+        <value xml:lang="de">Betrag Bezahlt</value>
         <value xml:lang="fr">Quantité payée</value>
         <value xml:lang="hi_IN">भुगतान की गई राशि</value>
         <value xml:lang="it">Importo Pagato</value>
@@ -19150,6 +19249,7 @@
     </property>
     <property key="FormFieldTitle_periodTypeId">
         <value xml:lang="en">Period Type Id</value>
+        <value xml:lang="en">Zeitraum Id</value>
         <value xml:lang="fr">Réf. de type d'exercice</value>
         <value xml:lang="hi_IN">अवधि प्रकार क्रमांक</value>
         <value xml:lang="it">Tipo Periodo Fiscale</value>
@@ -20266,6 +20366,7 @@
     </property>
     <property key="FormFieldTitle_transDescription">
         <value xml:lang="en">Trans Description</value>
+        <value xml:lang="de">Transaktions-Beschreibung</value>
         <value xml:lang="fr">Description de transaction</value>
         <value xml:lang="hi_IN">गतिविधि विवरण</value>
         <value xml:lang="it">Descrizione Transazione</value>
@@ -20280,6 +20381,7 @@
     </property>
     <property key="FormFieldTitle_transTypeDescription">
         <value xml:lang="en">Trans Type Description</value>
+        <value xml:lang="de">Transaktions-Art Beschreibung</value>
         <value xml:lang="fr">Type de description de transaction</value>
         <value xml:lang="hi_IN">गतिविधि प्रकार का विवरण</value>
         <value xml:lang="it">Descrizione Tipo Transazione</value>
@@ -22090,6 +22192,7 @@
     </property>
     <property key="PageTitleSalesInvoiceByProductCategorySummary">
         <value xml:lang="cs">Souhrn prodejních faktur podle kategorií produktů</value>
+        <value xml:lang="de">Ausgangsrechnungen je Produktkategorie (Übersicht)</value>
         <value xml:lang="en">Sales Invoice By Product Category Summary</value>
         <value xml:lang="fr">Résumé des factures de vente par catégorie de produits</value>
         <value xml:lang="hi_IN">उत्पाद श्रेणी से बिक्री चालान सारांश</value>

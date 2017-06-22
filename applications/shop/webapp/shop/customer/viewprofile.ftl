@@ -227,7 +227,7 @@ under the License.
                                 <input type="hidden" name="productStoreId" value="${productStoreId}" />
                                 <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                                 <input type="hidden" name="partyId" value="${party.partyId}" />
-                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault} ${uiLabelMap.OrderShippingAddress}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
+                                <input type="submit" style="display:inline;" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
                               </form>
                             </@menuitem>
                           </#if>

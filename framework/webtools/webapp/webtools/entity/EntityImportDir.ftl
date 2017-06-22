@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section>
 <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
   <form method="post" action="<@ofbizUrl>entityImportDir</@ofbizUrl>">
     ${uiLabelMap.WebtoolsAbsolutePath}:<br />
@@ -37,4 +36,3 @@ under the License.
         <p>${message}</p>
     </#list>
   </#if>
-</@section>

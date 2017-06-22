@@ -651,6 +651,17 @@ public class LoginWorker {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
+        
+        // SCIPIO: This forces the language to be set accordingly to the user's
+        // language settings. Unfortunately it seems to be changed some where
+        // else. ShopSetup.groovy is used as a fallback, although it won't be
+        // taken into account until the next time the user do something.
+        if (request.getLocale() != null && userLogin.getString("lastLocale") != null
+                && !request.getLocale().getLanguage().equals(userLogin.getString("lastLocale"))) {
+            Debug.logInfo("Found locale [" + request.getLocale().getLanguage() + "] but user preference is [" + userLogin.getString("lastLocale")
+                    + "]. Setting locale accordignly to user's preference.", module);
+            UtilHttp.setLocale(request, userLogin.getString("lastLocale"));
+        }
 
         String javaScriptEnabled = null;
         try {

@@ -1742,6 +1742,7 @@
     </property>
     <property key="CommonClass">
         <value xml:lang="en">Class</value>
+        <value xml:lang="de">Klasse</value>
     </property>
     <property key="CommonClear">
         <value xml:lang="ar">محو</value>
@@ -3853,7 +3854,7 @@
     <property key="CommonExpire">
         <value xml:lang="ar">إنهاء الصلاحية</value>
         <value xml:lang="cs">Expirovat</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -3874,7 +3875,7 @@
     <property key="CommonExpireAll">
         <value xml:lang="ar">إنهاء الصلاحية للكل</value>
         <value xml:lang="cs">Expirovat vše</value>
-        <value xml:lang="de">Alle ablaufen</value>
+        <value xml:lang="de">Alle ablaufen lassen</value>
         <value xml:lang="en">Expire All</value>
         <value xml:lang="es">Expirar todos</value>
         <value xml:lang="fr">Tout invalider</value>
@@ -3916,7 +3917,7 @@
     <property key="CommonExpires">
         <value xml:lang="ar">تتنتهى صلاحيته</value>
         <value xml:lang="cs">Uplyne</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Läuft ab</value>
         <value xml:lang="en">Expires</value>
         <value xml:lang="es">Expirados</value>
         <value xml:lang="fr">Invalider</value>
@@ -5683,9 +5684,11 @@
     </property>
     <property key="CommonInvoice">
         <value xml:lang="en">Invoice</value>
+        <value xml:lang="de">Rechnung</value>
     </property>
     <property key="CommonInvoices">
         <value xml:lang="en">Invoices</value>
+        <value xml:lang="de">Rechnungen</value>
     </property>
     <property key="CommonIsA">
         <value xml:lang="ar">هو</value>
@@ -8198,6 +8201,7 @@
     </property>
     <property key="CommonOrganisation">
         <value xml:lang="en">Organisation</value>
+        <value xml:lang="de">Organisation</value>
     </property>
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
@@ -8271,6 +8275,7 @@
     </property>
     <property key="CommonOwner">
         <value xml:lang="en">Owner</value>
+        <value xml:lang="de">Besitzer</value>
     </property>
     <property key="CommonPage">
         <value xml:lang="ar">صفحة</value>
@@ -8562,6 +8567,7 @@
     </property>
     <property key="CommonPeriod">
         <value xml:lang="en">Period</value>
+        <value xml:lang="de">Zeitraum</value>
     </property>
     <property key="CommonPermissionError">
         <value xml:lang="ar">خطأ في الصلاحية</value>
@@ -9851,6 +9857,7 @@
     </property>
     <property key="CommonResource">
         <value xml:lang="en">Resource</value>
+        <value xml:lang="de">Ressource</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>
@@ -9955,9 +9962,11 @@
     </property>
     <property key="CommonRole">
         <value xml:lang="en">Role</value>
+        <value xml:lang="de">Rolle</value>
     </property>
     <property key="CommonRoles">
         <value xml:lang="en">Roles</value>
+        <value xml:lang="de">Rollen</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>
@@ -11839,7 +11848,7 @@
     <property key="CommonTo">
         <value xml:lang="ar">إلى</value>
         <value xml:lang="cs">Komu</value>
-        <value xml:lang="de">Zu</value>
+        <value xml:lang="de">An</value>
         <value xml:lang="en">To</value>
         <value xml:lang="es">Para</value>
         <value xml:lang="fr">Vers </value>
@@ -12270,7 +12279,7 @@
     <property key="CommonUpdate">
         <value xml:lang="ar">تحديث</value>
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="de">aktualisieren</value>
+        <value xml:lang="de">Aktualisieren</value>
         <value xml:lang="en">Update</value>
         <value xml:lang="es">Actualizar</value>
         <value xml:lang="fr">Màj</value>
@@ -13923,7 +13932,7 @@
     <property key="FormFieldTitle_expireButton">
         <value xml:lang="ar">نهاية الصلاحية</value>
         <value xml:lang="cs">Zneplatnit</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -15764,7 +15773,7 @@
     <property key="FormFieldTitle_expireAction">
         <value xml:lang="ar">إنهاء الصلاحية</value>
         <value xml:lang="cs">Expirovat</value>
-        <value xml:lang="de">Ablaufen</value>
+        <value xml:lang="de">Ablaufen lassen</value>
         <value xml:lang="en">Expire</value>
         <value xml:lang="es">Expiración</value>
         <value xml:lang="fr">Invalider</value>
@@ -16046,7 +16055,7 @@
     <property key="FormFieldTitle_updateAction">
         <value xml:lang="ar">تحديث</value>
         <value xml:lang="cs">Aktualizovat</value>
-        <value xml:lang="de">aktualisieren</value>
+        <value xml:lang="de">Aktualisieren</value>
         <value xml:lang="en">Update</value>
         <value xml:lang="es">Actualizar</value>
         <value xml:lang="fr">Màj</value>

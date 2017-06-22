@@ -29,32 +29,18 @@
     <dependencies>
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.33" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.33" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.44" transitive="false" conf="application->default"/>
 
         <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="application->default"/>
-
-        <!-- TODO: MISSING DEPENDENCIES
-!       framework/catalina/lib/tomcat-8.0.33-catalina-ha.jar
-!       framework/catalina/lib/tomcat-8.0.33-catalina-tribes.jar
-!       framework/catalina/lib/tomcat-8.0.33-catalina.jar
-!       framework/catalina/lib/tomcat-8.0.33-jasper.jar
-!       framework/catalina/lib/tomcat-8.0.33-tomcat-api.jar
-!       framework/catalina/lib/tomcat-8.0.33-tomcat-coyote.jar
-!       framework/catalina/lib/tomcat-8.0.33-tomcat-jni.jar
-!       framework/catalina/lib/tomcat-8.0.33-tomcat-util-scan.jar
-!       framework/catalina/lib/tomcat-8.0.33-tomcat-util.jar
-!       framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli-adapters.jar
-!       framework/catalina/lib/tomcat-extras-8.0.33-tomcat-juli.jar
-        -->
     </dependencies>
 </ivy-module>

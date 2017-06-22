@@ -39,3 +39,10 @@ if (prodCatalog) {
 globalContext.productStore = productStore;
 globalContext.checkLoginUrl = LoginWorker.makeLoginUrl(request, "checkLogin");
 globalContext.catalogQuickaddUse = CatalogWorker.getCatalogQuickaddUse(request);
+
+// SCIPIO: This is a workaround to check whether the user language preference is the same as locale the locale we got.
+// If not, switch to user's preference. This works in conjunction with the change introduced in LoginWorker@doBasicLogin but
+// there language does not seem to be different meaning that it is changed elsewhere in between (but I couldn't find where exactly yet).
+if (locale && initialLocaleComplete && !locale.getLanguage().equals(initialLocaleComplete)) {
+    UtilHttp.setLocale(request, initialLocaleComplete);
+}

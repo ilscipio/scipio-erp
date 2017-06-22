@@ -4491,6 +4491,48 @@ Helper method that can extract style names by prefix with int value suffix from 
 
 <#-- 
 *************
+* limitStrValToItems
+************
+Ensures that the given string value is contained in a field items list, 
+by only returning the value if it is in fact contained or void (missing value) otherwise.
+
+This is usually used in conjunction with @field {{{items}}} parameter for field types {{{select}}}, {{{radio}}} or {{{checkbox}}}.
+
+If the value is matched, the value itself is returned; otherwise void (no result) is returned.
+This should always be combined with one of the missing value Freemarker operators (??, !).
+
+The value and item values automatically get the #rawString operation applied (along with coercion to string);
+however, the original value is returned and not the raw one.
+
+NOTE: for performance and other reasons it is usually best to have a groovy script do this, but this is a frequently needed operation.
+
+  * Parameters *
+    value                   = ((string), required) Value to check
+    items                   = ((list), required) Field items list, a list of maps, each map containing a {{{value}}} key
+                              Alternatively, this may be a map, in which case the map keys are checked instead.
+    key                     = (string, default: value) The name of the key to check for each map entry in the items list                          
+    
+  * Return Value *
+    the original value if it matched an item, or void if no item was matched (for use with missing value operator).
+-->
+<#function limitStrValToItems value items key="value">
+  <#local val = rawString(value)>
+  <#if items?is_sequence>
+    <#list items as item>
+      <#if rawString(item[key]!"") == val>
+        <#return value>
+      </#if>
+    </#list>
+  <#elseif isObjectType("map", items)>
+    <#if items[val]??>
+      <#return value>
+    </#if>
+  </#if>
+  <#-- (return void if nothing matched) -->
+</#function>
+
+<#-- 
+*************
 * saveCurrentContainerSizes
 ************
 This records current container (grid) sizes into a global stack

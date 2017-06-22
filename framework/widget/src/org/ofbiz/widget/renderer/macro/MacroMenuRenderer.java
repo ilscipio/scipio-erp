@@ -711,6 +711,5 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             throw new IOException(e);
         }
     }
-
     
 }

@@ -9857,6 +9857,7 @@
     </property>
     <property key="CommonResource">
         <value xml:lang="en">Resource</value>
+        <value xml:lang="de">Ressource</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>

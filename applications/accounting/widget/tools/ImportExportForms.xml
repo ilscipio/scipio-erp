@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    <form name="ExportInvoice" type="single" target="ExportInvoiceCsv.csv" title="" >
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
+        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+        <field name="startDate"><date-time/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ExportInvoiceCsv" list-name="listIt" target="" title="" type="list" view-size="99999"
+        odd-row-style="alternate-row" header-row-style="header-row-2" paginate="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <entity-condition entity-name="InvoiceExport">
+                <condition-list combine="and">
+                    <condition-list combine="or">
+                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                    </condition-list>
+                    <condition-expr field-name="invoiceDate" operator="greater-equals" from-field="parameters.startDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="invoiceId"/>
+            </entity-condition>
+        </actions>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="invoiceId" title="invoiceId"><display/></field>
+        <field name="invoiceTypeId" title="invoiceTypeId"><display/></field>
+        <field name="invoiceDate" title="invoiceDate"><display/></field>
+        <field name="dueDate" title="dueDate"><display/></field>
+        <field name="partyIdFrom" title="partyIdFrom"><display/></field>
+        <field name="partyIdFromTrans" title="partyIdFromTrans"><display/></field>
+        <field name="partyId" title="partyId"><display/></field>
+        <field name="partyIdTrans" title="partyIdTrans"><display/></field>
+        <field name="currencyUomId" title="currencyUomId"><display/></field>
+        <field name="description" title="description"><display/></field>
+        <field name="referenceNumber" title="referenceNumber"><display/></field>
+        <field name="invoiceItemSeqId" title="invoiceItemSeqId"><display/></field>
+        <field name="invoiceItemTypeId" title="invoiceItemTypeId"><display/></field>
+        <field name="productId" title="productId"><display/></field>
+        <field name="productIdTrans" title="productIdTrans"><display/></field>
+        <field name="itemDescription" title="itemDescription"><display/></field>
+        <field name="quantity" title="quantity"><display/></field>
+        <field name="amount" title="amount"><display/></field>
+    </form>
+    
+    <form name="ImportInvoice" type="upload" target="ImportInvoice" title="" >
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
+        <field name="uploadedFile"><file/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
+    </form>
+    
+    
+    <form name="ExportTransactions" type="single" target="ExportTransaction.csv" title="" >
+        <field name="organizationPartyId" required-field="false">
+            <drop-down allow-empty="true" no-current-selected-key="Company">
+                <entity-options entity-name="PartyRoleNameDetail" description="${groupName} [${partyId}]" key-field-name="partyId">
+                    <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="acctgTransId" required-field="false">
+            <!-- SCIPIO: TODO: REQUEST DOES NOT EXIST
+            <lookup target-form-name="LookupTransaction"/>-->
+            <text/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="false"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
+    </form>
+    <form name="ExportTransactionCsv" list-name="listIt" target="" title="" type="list" view-size="99999"
+        odd-row-style="alternate-row" header-row-style="header-row-2" paginate="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <entity-condition entity-name="AcctgTransAndEntries" list="listIt" distinct="true">
+                <condition-list>
+                    <condition-expr field-name="acctgTransId" operator="equals" from-field="acctgTransId" ignore-if-empty="true"/>
+                    <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="productId" operator="equals" from-field="parameters.productId" ignore-if-empty="true"/>
+                    <condition-expr field-name="workEffortId" operator="equals" from-field="parameters.workEffortId" ignore-if-empty="true"/>
+                    <condition-expr field-name="shipmentId" operator="equals" from-field="parameters.shipmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                    <condition-list combine="or">
+                        <condition-expr field-name="organizationPartyId" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                    </condition-list>
+                </condition-list>              
+                <order-by field-name="-transactionDate"/>
+                <order-by field-name="acctgTransEntrySeqId"/>
+            </entity-condition>
+        </actions>
+        <field name="acctgTransId"><display/></field>
+        <field name="accountCode"><display/></field>
+        <field name="accountName"><display/></field>
+        <field name="debitCreditFlag" ><display/></field>
+        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="transactionDate"><display type="date-time"/></field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="transDescription"><display/></field>
+        <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        <field name="isPosted"><display/></field>
+        <field name="postedDate"><display type="date-time"/></field>
+        <field name="postAcctgTrans" title="${uiLabelMap.AccountingPostTransaction}"><display/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><display/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><display/></field>
+        <field name="workEffortId"><display/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>
+    </form>
+    
+    
+</forms>

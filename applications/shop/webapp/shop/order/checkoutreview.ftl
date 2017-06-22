@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@script>
     var clicked = 0;
@@ -34,6 +34,9 @@ under the License.
 </@script>
 
 <#if !isDemoStore?? || isDemoStore><@alert type="info">${uiLabelMap.OrderDemoFrontNote}.</@alert></#if>
+<#if validPaymentMethodTypeForSubscriptions && subscriptions>
+    <@alert type="warning">Your order contains subscriptions and each subscription payment through PayPal must be authorized separately. Therefore you can activate them once the order is created. <#if !orderContainsSubscriptionItemsOnly>The rest of items require just one authorization so you will be redirected to PayPal when the order gets submitted</#if></@alert>
+</#if>
 
 <#if cart?? && (0 < cart.size())>
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />

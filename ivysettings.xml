@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to Ilscipio Gmbh (ILSCIPIO) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ -->
+<ivysettings>
+    <settings defaultResolver="central" />
+    <!-- SCIPIO: NOTE: for multi-project development efficiency and speed, in the Git repositories 
+        we leave the repository cache to the default ivy location, which is the user home dir (~/.ivy2/*). 
+        If you need a per-project or local repository cache, simply uncomment this line and comment the one below it:
+        (FIXME?: repositoryCacheDir as recommended by ivy docs appears to be ignored by ivy 2.4 - unknown reason/bug - so forced to set defaultCacheDir in addition) -->
+    <!--<caches defaultCacheDir="${ivy.settings.dir}/ivy/repositoryCache" repositoryCacheDir="${ivy.settings.dir}/ivy/repositoryCache" resolutionCacheDir="${ivy.settings.dir}/ivy/resolutionCache"/>-->
+    <caches resolutionCacheDir="${ivy.settings.dir}/ivy/resolutionCache"/>
+    <resolvers>
+        <ibiblio name="central" m2compatible="true"/>
+        <ibiblio name="maven" root="https://mvnrepository.com/artifact/" m2compatible="true" />
+        <filesystem name="local">
+            <artifact pattern="${ivy.settings.dir}/lib/[artifact]-[revision].[ext]"/>
+        </filesystem>
+    </resolvers>
+</ivysettings>

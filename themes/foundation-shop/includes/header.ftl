@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "common.ftl">
 
 <#-- Applications -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey!></#if>
@@ -26,7 +27,7 @@ under the License.
   <#assign userName = person.firstName! + " " + person.middleName! + " " + person.lastName!>
 <#elseif partyGroup?has_content>
   <#assign userName = partyGroup.groupName!>
-<#elseif userHasAccount>
+<#elseif userHasAccount><#-- NOTE: see common.ftl for userHasAccount setup -->
   <#assign userName = userLogin.userLoginId>
 <#else>
   <#assign userName = "">

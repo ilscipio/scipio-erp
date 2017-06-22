@@ -33,11 +33,15 @@ under the License.
         <event name="checkExternalLoginKey" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkExternalLoginKey"/>
         <event name="checkProtectedView" type="java" path="org.ofbiz.webapp.control.ProtectViewWorker" invoke="checkProtectedView"/>
         <event name="extensionConnectLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="extensionConnectLogin"/>
+        <event name="checkMessageRedirect" type="java" path="com.ilscipio.scipio.common.CommonEvents" invoke="checkMessageRedirect"/>
     </preprocessor>
     <postprocessor>
         <!-- Events to run on every request after all other processing (chains exempt) -->
     </postprocessor>
 
+    <!-- SCIPIO: view-as-json configuration; created 2017-05-15 -->
+    <view-as-json enabled="true" json-request-uri="jsonExplicit" update-session="false" regular-login="true" />
+    
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
@@ -163,6 +167,45 @@ under the License.
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
+    </request-map>
+    <!-- SCIPIO: version of "json" that will only output attributes specifically requested in "scipioOutParams" map or "scipioOutAttrNames" list -->
+    <request-map uri="jsonExplicit">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributesExplicit"/>
+        <response name="success" type="none"/>
+    </request-map>
+    
+    <!-- SCIPIO: specific view render request that outputs page output to json -->
+    <request-map uri="ajaxRender">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <!-- COPY THESE into your webapp controller if your webapp requires https="false" or auth="false" support
+    <request-map uri="ajaxRenderPlainNoAuth">
+        <security https="false" auth="false"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <request-map uri="ajaxRenderPlainAuth">
+        <security https="false" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>
+    <request-map uri="ajaxRenderSecureNoAuth">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
+    </request-map>-->
+    <request-map uri="ajaxRenderSecureAuth">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.renderer.RenderEvents" invoke="renderViewToOutParams"/>
+        <response name="error"  type="request" value="jsonExplicit"/>
+        <response name="success"  type="request" value="jsonExplicit"/>
     </request-map>
 
     <request-map uri="showHelp">

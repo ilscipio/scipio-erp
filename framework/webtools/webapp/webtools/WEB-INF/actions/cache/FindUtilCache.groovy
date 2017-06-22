@@ -45,6 +45,7 @@ names.each { cacheName ->
         cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
         cache.useFileSystemStore = utilCache.getUseFileSystemStore().toString();
         cache.cacheMemory = utilCache.getSizeInBytes();
+        cache.sizeLimit = UtilFormatOut.formatQuantity(utilCache.getSizeLimit()); // SCIPIO
         totalCacheMemory += cache.cacheMemory;
         cacheList.add(cache);
 }

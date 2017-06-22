@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,10 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.ScreenRenderException;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.w3c.dom.Element;
 
 /**
@@ -150,6 +153,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
     /**
      * Renders this screen to a String, i.e. in a text format, as defined with the
      * ScreenStringRenderer implementation.
+     * SCIPIO: RENAMED to renderScreenStringCore 2017-05-09.
      *
      * @param writer The Writer that the screen text will be written to
      * @param context Map containing the screen context; the following are
@@ -167,7 +171,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
      *   different screen elements; implementing your own makes it possible to
      *   use the same screen definitions for many types of screen UIs
      */
-    public void renderScreenString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws ScreenRenderException {
+    protected void renderScreenStringCore(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws ScreenRenderException {
         // make sure the "nullField" object is in there for entity ops
         context.put("nullField", GenericEntity.NULL_FIELD);
 
@@ -238,6 +242,32 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         }
     }
 
+    /**
+     * SCIPIO: New wrapper around *Core method for targeted rendering.
+     */
+    public final void renderScreenString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) throws ScreenRenderException {
+        // SCIPIO: targeted rendering applicability check.
+        WidgetRenderTargetState renderTargetState = WidgetRenderTargetExpr.getRenderTargetState(context);
+        WidgetRenderTargetState.ExecutionInfo execInfo;
+        try {
+            execInfo = renderTargetState.handleShouldExecute(this, writer, context, screenStringRenderer);
+        } catch (IOException e) {
+            throw new ScreenRenderException(e);
+        }
+        if (!execInfo.shouldExecute()) {
+            return;
+        }
+        try {
+            renderScreenStringCore(execInfo.getWriterForElementRender(), context, screenStringRenderer);
+        } finally {
+            try {
+                execInfo.handleFinished(context); // SCIPIO: return logic
+            } catch (IOException e) {
+                throw new ScreenRenderException(e);
+            }
+        }
+    }
+    
     public LocalDispatcher getDispatcher(Map<String, Object> context) {
         LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
         return dispatcher;

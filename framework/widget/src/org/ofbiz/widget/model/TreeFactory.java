@@ -48,6 +48,10 @@ public class TreeFactory extends WidgetFactory {
 
     public static final UtilCache<String, Map<String, ModelTree>> treeLocationCache = UtilCache.createUtilCache("widget.tree.locationResource", 0, 0, false);
 
+    public static TreeFactory getTreeFactory() { // SCIPIO: new
+        return treeFactory;
+    }
+    
     /**
      * Gets widget from location or exception. 
      * <p>

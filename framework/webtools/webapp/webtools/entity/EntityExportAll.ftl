@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@section>
 <p>${uiLabelMap.WebtoolsXMLExportInfo}</p>
 <#if results?has_content>
     <@heading>${uiLabelMap.WebtoolsResults}:</@heading>
@@ -32,4 +31,3 @@ under the License.
     <@field type="input" label=uiLabelMap.WebtoolsTimeoutSeconds size="6" value=txTimeout!'7200' name="txTimeout"/>
     <@field type="submit" text=uiLabelMap.WebtoolsExport class="${styles.link_run_sys!} ${styles.action_export!}" />
 </form>
-</@section>

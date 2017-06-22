@@ -56,6 +56,9 @@ public interface FormStringRenderer {
     // SCIPIO: new
     public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
+    // SCIPIO: 2017-04-21: new
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 

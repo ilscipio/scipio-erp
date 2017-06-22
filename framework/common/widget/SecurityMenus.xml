@@ -80,7 +80,7 @@
         </menu-item>
     </menu>
     <menu name="SecurityGroupSideBar" default-menu-item-name="EditSecurityGroup"
-        extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="SecurityGroupTabBar" recursive="includes-only" />
     </menu>
 </menus>

@@ -30,5 +30,62 @@ under the License.
         <permission-service service-name="visualThemePermissionCheck" main-action="UPDATE"/>
         <attribute name="visualThemeId" type="String" mode="IN" optional="true"/>
     </service>
+    
+    <!-- Scipio services: Common demo data generator interface. 
+        Services must implement this interface in order to have the demo data generator using the common in/out attributes and also to be listed in the demoDataGenerator screen.
+    -->
+    <service name="demoDataGenerator" engine="interface">
+        <attribute name="num" type="Integer" mode="IN" optional="true" />
+        <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="generatedDataStats" type="java.util.List" optional="true" mode="OUT"/>
+    </service>
 
+    <!-- Scipio: FileListener services -->
+    <service name="startFileListener" auth="false"
+            engine="java" location="com.ilscipio.scipio.common.CommonServices" invoke="startFileListener">
+        <description>Service to boot up FileListeners on the system</description>
+    </service>
+    <service name="triggerFileEvent" auth="false"
+            engine="java" location="com.ilscipio.scipio.common.CommonServices" invoke="triggerFileEvent">
+        <description>An empty service, which is triggered once a file has changed inside of a filesystem. Can be used to trigger further events down the line.</description>
+        <attribute name="fileEvent" type="String" mode="IN" />
+        <attribute name="fileLocation" type="String" mode="IN" />
+        <attribute name="fileType" type="String" mode="IN" optional="true"/>
+        <attribute name="eventName" type="String" mode="IN" />
+        <attribute name="eventRoot" type="String" mode="IN" />
+    </service>
+    
+    
+    <!-- Cache Clearing services -->
+    <service name="clearFileCaches" engine="java" export="true"
+            location="com.ilscipio.scipio.common.CommonServices" invoke="clearFileCaches" auth="true">
+        <description>Looks up and clears cache based on a file location.</description>
+        <attribute name="fileLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="fileType" type="String" mode="IN" optional="true"/>
+        <attribute name="cacheName" mode="IN" type="String"/>
+    </service>
+    
+    
+    <!-- Messages -->
+    <service name="createSystemMessage" engine="entity-auto" default-entity-name="SystemMessages" auth="true" invoke="create">
+        <description>Creates a new system message</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+    </service>
+    
+    <!-- Partial Screen renderer
+        removed for now: this cannot be called as request event due to security risk, so
+        do not want to encourage unless it finds some alternate use 
+    <service name="renderPartialScreen" engine="java" export="true"
+            location="com.ilscipio.scipio.common.CommonServices" invoke="renderPartialScreen" auth="true">
+        <description>Renders a partial screen and returns the rendered String. Supported types: section|screen</description>
+        <attribute name="resource" mode="IN" type="String" optional="false" />
+        <attribute name="name" mode="IN" type="String" optional="false" />
+        <attribute name="type" mode="IN" type="String" optional="false" />
+        <attribute name="html" mode="OUT" type="String" optional="true" allow-html="any"/>
+    </service>
+     -->
+     
 </services>

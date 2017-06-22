@@ -1324,6 +1324,9 @@ public class FormRenderer {
         
         // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.       
         listFormHandler.renderSubmitForm();
+        
+        // SCIPIO: 2017-04-21: new
+        formStringRenderer.renderFormPageScripts(writer, context, modelForm);
        
         listFormHandler.renderFinalize();
     }
@@ -1358,6 +1361,9 @@ public class FormRenderer {
         // SCIPIO: Renders (if not already) a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.   
         // NOTE: this must be OUTSIDE the multi form close because it has its own <form> element
         listFormHandler.renderSubmitForm();
+        
+        // SCIPIO: 2017-04-21: new
+        formStringRenderer.renderFormPageScripts(writer, context, modelForm);
 
         listFormHandler.renderFinalize();
     }
@@ -1627,7 +1633,9 @@ public class FormRenderer {
         // render form close
         if (!modelForm.getSkipEnd())
             formStringRenderer.renderFormClose(writer, context, modelForm);
-
+        
+        // SCIPIO: 2017-04-21: new
+        formStringRenderer.renderFormPageScripts(writer, context, modelForm);
     }
 
     /**
@@ -1678,7 +1686,10 @@ public class FormRenderer {
                         && fieldInfo.getFieldType() != FieldInfo.RESET) {
                     formStringRenderer.renderFieldTitle(writer, context, formField);
                 } else {
+                    // SCIPIO: 2017-01-13: new role parameter
+                    context.put("renderFormatEmptySpace_role", "field-title");
                     formStringRenderer.renderFormatEmptySpace(writer, context, modelForm);
+                    context.remove("renderFormatEmptySpace_role");
                 }
     
                 // render title formatting close

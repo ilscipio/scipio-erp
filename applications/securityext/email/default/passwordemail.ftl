@@ -17,19 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<html>
-<head>
-</head>
-<body>
-  <div>${uiLabelMap.SecurityExtThisEmailIsInResponseToYourRequestToHave} <#if useEncryption>${uiLabelMap.SecurityExtANew}<#else>${uiLabelMap.SecurityExtYour}</#if> ${uiLabelMap.SecurityExtPasswordSentToYou}.</div>
-  <br />
-  <div>
+  <p>${uiLabelMap.SecurityExtThisEmailIsInResponseToYourRequestToHave} <#if useEncryption>${uiLabelMap.SecurityExtANew}<#else>${uiLabelMap.SecurityExtYour}</#if> ${uiLabelMap.SecurityExtPasswordSentToYou}.</p>
+  <p>
       <#if useEncryption>
           ${uiLabelMap.SecurityExtNewPasswordMssgEncryptionOn}
       <#else>
           ${uiLabelMap.SecurityExtNewPasswordMssgEncryptionOff}
       </#if>
       "${password}"
-  </div>
-</body>
-</html>
+    <p>

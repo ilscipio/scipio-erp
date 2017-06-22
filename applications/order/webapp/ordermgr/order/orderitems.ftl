@@ -98,7 +98,7 @@ under the License.
                                 <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
                                 <@td class="${styles.text_right!}">
                                     <#assign productItemStatus>
-                                         <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
+                                                <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
                                                     <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
@@ -106,6 +106,19 @@ under the License.
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
                                                     </form>
                                                     <br/>
+                                                <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                                    <#assign paymentMethod = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethod", false)!>
+                                                    <#if !paymentMethod?has_content>
+                                                        <#assign paymentMethodType = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethodType", false)>            
+                                                        <a href="javascript:document.OrderCancelOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderCancelSelectedItems}</a>
+                                                        <form name="OrderCancelOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
+                                                            <input type="hidden" name="statusId" value="ITEM_CANCELLED"/>
+                                                            <input type="hidden" name="orderId" value="${orderId!}"/>
+                                                            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
+                                                            <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
+                                                        </form>
+                                                        <br/>
+                                                    </#if>
                                                 </#if>
                                                 <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                                                 <#list orderItemStatuses as orderItemStatus>

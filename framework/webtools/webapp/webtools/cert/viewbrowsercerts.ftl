@@ -23,7 +23,7 @@ under the License.
     <#assign clientCerts = request.getAttribute("javax.net.ssl.peer_certificates")!/>
 </#if>
 
-<@section title=uiLabelMap.WebtoolsCertsX509>
+<@section><#-- SCIPIO: dup: title=uiLabelMap.WebtoolsCertsX509 -->
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
       <@fields type="default-manual">

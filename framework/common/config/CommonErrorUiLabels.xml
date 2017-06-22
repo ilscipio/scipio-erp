@@ -179,4 +179,9 @@
         <value xml:lang="zh">宽度缩放因子是null</value>
         <value xml:lang="zh_TW">寬度縮放因數是null</value>
     </property>
+    <!-- SCIPIO: TODO: localize -->
+    <property key="CommonErrorOccurredContactSupport">
+        <value xml:lang="en">An error occurred. Please contact support.</value>
+        <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
+    </property> 
 </resource>

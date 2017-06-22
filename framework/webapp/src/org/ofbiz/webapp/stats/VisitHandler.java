@@ -45,7 +45,7 @@ public class VisitHandler {
     // Debug module name
     public static final String module = VisitHandler.class.getName();
 
-    public static final String visitorCookieName = "OFBiz.Visitor";
+    public static final String visitorCookieName = "Scipio.Visitor";
 
     protected static final InetAddress address;
     static {

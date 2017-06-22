@@ -53,7 +53,7 @@ import org.w3c.dom.NamedNodeMap;
  * @see <code>widget-menu.xsd</code>
  */
 @SuppressWarnings("serial")
-public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with sub-menu
+public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidget { // SCIPIO: new comon base class to share with sub-menu
 
     /*
      * ----------------------------------------------------------------------- *
@@ -148,6 +148,12 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
     private final Map<String, ModelMenuItemAlias> menuItemAliasMap; // SCIPIO: new
     private final Map<String, String> menuItemNameAliasMap;
     
+    // SCIPIO: 2017-04-25: new separated menu options
+    private final FlexibleStringExpander separateMenuType;
+    private final FlexibleStringExpander separateMenuTargetStyle;
+    private final FlexibleStringExpander separateMenuTargetPreference;
+    private final FlexibleStringExpander separateMenuTargetOriginalAction;
+    
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
         super(menuElement);
@@ -197,6 +203,11 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         String forceExtendsSubMenuModelScope = "";
         String forceAllSubMenuModelScope = "";
         boolean alwaysExpandSelectedOrAncestor = false;
+        FlexibleStringExpander separateMenuType = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetStyle = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetPreference = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander separateMenuTargetOriginalAction = FlexibleStringExpander.getInstance("");
+        
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
         String parentResource = menuElement.getAttribute("extends-resource");
@@ -245,6 +256,11 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                 selectedMenuContextFieldName = parent.selectedMenuContextFieldName;
                 menuContainerStyleExdr = parent.menuContainerStyleExdr;
                 alwaysExpandSelectedOrAncestor = parent.alwaysExpandSelectedOrAncestor;
+                
+                separateMenuType = parent.separateMenuType;
+                separateMenuTargetStyle = parent.separateMenuTargetStyle;
+                separateMenuTargetPreference = parent.separateMenuTargetPreference;
+                separateMenuTargetOriginalAction = parent.separateMenuTargetOriginalAction;
             }
         }
         if (!menuElement.getAttribute("type").isEmpty())
@@ -328,6 +344,12 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         if (!menuElement.getAttribute("always-expand-selected-or-ancestor").isEmpty()) 
             alwaysExpandSelectedOrAncestor = "true".equals(menuElement.getAttribute("always-expand-selected-or-ancestor"));
         
+        separateMenuType = getExpander(menuElement, "separate-menu-type", separateMenuType);
+        separateMenuTargetStyle = getExpander(menuElement, "separate-menu-target-style", separateMenuTargetStyle);
+        separateMenuTargetPreference = getExpander(menuElement, "separate-menu-target-preference", separateMenuTargetPreference);
+        if (separateMenuTargetPreference.isEmpty()) separateMenuTargetPreference = FlexibleStringExpander.getInstance("greatest-ancestor");
+        separateMenuTargetOriginalAction = getExpander(menuElement, "separate-menu-target-original-action", separateMenuTargetOriginalAction);
+        
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
         this.defaultSubMenuInstanceScope = defaultSubMenuInstanceScope;
@@ -368,6 +390,11 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         this.type = type;
         this.itemsSortMode = itemsSortMode;
         this.alwaysExpandSelectedOrAncestor = alwaysExpandSelectedOrAncestor;
+        
+        this.separateMenuType = separateMenuType;
+        this.separateMenuTargetStyle = separateMenuTargetStyle;
+        this.separateMenuTargetPreference = separateMenuTargetPreference;
+        this.separateMenuTargetOriginalAction = separateMenuTargetOriginalAction;
         
         CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
         Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
@@ -432,6 +459,18 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         this.manualExpandedNodes = Collections.unmodifiableList(manualExpandedItems);
     }
 
+    private static FlexibleStringExpander getExpander(Element element, String name, FlexibleStringExpander existing) { // SCIPIO: helper
+        if (!element.getAttribute(name).isEmpty())
+            return FlexibleStringExpander.getInstance(element.getAttribute(name));
+        return existing;
+    }
+    
+    private static String getString(Element element, String name, String existing) { // SCIPIO: helper
+        if (!element.getAttribute(name).isEmpty())
+            return element.getAttribute(name);
+        return existing;
+    }
+    
     /**
      * SCIPIO: Menu loading factored out of main constructor and modified for reuse.
      * <p>
@@ -553,8 +592,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                                     processIncludeActions(extendedMenuElem, null, null, actions, 
                                             extendedNextResource, true, 
                                             extendedNextCurrentMenuDefBuildArgs, genBuildArgs);
-                                }
-                                else {
+                                } else {
                                     Debug.logError("Failed to find (via include-actions or include-elements) parent menu definition '" + 
                                             extendedMenuName + "' in resource '" + extendedNextResource + "'", module);
                                 }
@@ -565,19 +603,16 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                             processIncludeActions(includedMenuElem, null, null, actions, 
                                     nextResource, true, 
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
-                        }
-                        else {
+                        } else {
                             processIncludeActions(includedMenuElem, null, null, actions, 
                                     nextResource, false, 
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
-                    }
-                    else {
+                    } else {
                         Debug.logError("Failed to find include-actions or include-elements menu definition '" + 
                                 inclMenuName + "' in resource '" + nextResource + "'", module);
                     }
-                }
-                else {
+                } else {
                     Debug.logError("Unrecognized include-actions or include-elements recursive mode: " + inclRecursive, module);
                 }
             } 
@@ -699,8 +734,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                                     processIncludeMenuItems(extendedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                             extendedNextResource, true, inclExcludeItems, nextSubMenusFilter, extendedForceSubMenuModelScope, parentSubMenu,
                                             extendedNextCurrentMenuDefBuildArgs, genBuildArgs);
-                                }
-                                else {
+                                } else {
                                     Debug.logError("Failed to find (via include-menu-items or include-elements) parent menu definition '" + 
                                             extendedMenuName + "' in resource '" + extendedNextResource + "'", module);
                                 }
@@ -712,18 +746,15 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                             processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                     nextResource, true, inclExcludeItems, nextSubMenusFilter, includedForceSubMenuModelScope, parentSubMenu,
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
-                        }
-                        else {
+                        } else {
                             processIncludeMenuItems(includedMenuElem, null, null, menuItemList, menuItemMap, menuItemAliasMap, nextIncludeMenuItemAliases,
                                     nextResource, false, inclExcludeItems, nextSubMenusFilter, includedForceSubMenuModelScope, parentSubMenu,
                                     includedNextCurrentMenuDefBuildArgs, genBuildArgs);
                         }
-                    }
-                    else {
+                    } else {
                         Debug.logError("Failed to find include-menu-items or include-elements menu definition '" + inclMenuName + "' in resource '" + nextResource + "'", module);
                     }
-                }
-                else {
+                } else {
                     Debug.logError("Unrecognized include-menu-items or include-elements recursive mode: " + inclRecursive, module);
                 }
             } 
@@ -1272,8 +1303,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                         }
                     };
                 }
-            }
-            else if ("title".equals(itemsSortMode)) {
+            } else if ("title".equals(itemsSortMode)) {
                 if (ignoreCase) {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
@@ -1281,8 +1311,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                             return o1.getTitle(context).compareToIgnoreCase(o2.getTitle(context));
                         }
                     };
-                }
-                else {
+                } else {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
                         public int compare(ModelMenuItem o1, ModelMenuItem o2) {
@@ -1290,8 +1319,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                         }
                     };
                 }
-            }
-            else if ("linktext".equals(itemsSortMode)) {
+            } else if ("linktext".equals(itemsSortMode)) {
                 if (ignoreCase) {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
@@ -1305,19 +1333,16 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                                 else {
                                     return 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if (l2 != null) {
                                     return -1;
-                                }
-                                else {
+                                } else {
                                     return 0;
                                 }
                             }
                         }
                     };
-                }
-                else {
+                } else {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
                         public int compare(ModelMenuItem o1, ModelMenuItem o2) {
@@ -1326,24 +1351,20 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                             if (l1 != null) {
                                 if (l2 != null) {
                                     return l1.getTextExdr().expandString(context).compareTo(l2.getTextExdr().expandString(context));
-                                }
-                                else {
+                                } else {
                                     return 1;
                                 }
-                            }
-                            else {
+                            } else {
                                 if (l2 != null) {
                                     return -1;
-                                }
-                                else {
+                                } else {
                                     return 0;
                                 }
                             }
                         }
                     };
                 }
-            }
-            else if ("displaytext".equals(itemsSortMode)) {
+            } else if ("displaytext".equals(itemsSortMode)) {
                 if (ignoreCase) {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
@@ -1351,8 +1372,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
                             return o1.getDisplayText(context).compareToIgnoreCase(o2.getDisplayText(context));
                         }
                     };
-                }
-                else {
+                } else {
                     cmp = new Comparator<ModelMenuItem>() {
                         @Override
                         public int compare(ModelMenuItem o1, ModelMenuItem o2) {
@@ -1372,8 +1392,7 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
             for(ModelMenuItem origItem : menuItemList) {
                 if ("off".equals(origItem.getSortMode())) {
                     finalList.add(origItem);
-                }
-                else {
+                } else {
                     finalList.add(sortedIt.next());
                 }
             }
@@ -1507,10 +1526,6 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
      * be called after the sub menu name was validated).
      * <p>
      * NOTE: This handles the special PARENT/PARENT-WITHSUB/PARENT-NOSUB values, and NONE handling.
-     * <p>
-     * DOES NOT HANDLE the non-error fallbacks for NONE special values 
-     * NOR the error fallbacks for failed lookups. the MenuAndItemLookup.getLookupMenuItemName() should
-     * be checked for these cases.
      * <p>
      * NOTE: this overload assumes subMenu was already looked up and merely stores subMenuName in the lookup result.
      */
@@ -1919,6 +1934,63 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
     public List<ModelMenuNode> getManualExpandedNodes() {
         return manualExpandedNodes;
     }
+    
+    // SCIPIO: DEV NOTE: WARN: DO NOT CALL THESE separate menu accessors on the fly; use MenuRenderState instead
+    private String getSeparateMenuType(Map<String, Object> context) {
+        return separateMenuType.expandString(context);
+    }
+
+    private String getSeparateMenuTargetStyle(Map<String, Object> context) {
+        return separateMenuTargetStyle.expandString(context);
+    }
+    
+    private String getSeparateMenuTargetPreference(Map<String, Object> context) {
+        return separateMenuTargetPreference.expandString(context);
+    }
+    
+    private String getSeparateMenuTargetOriginalAction(Map<String, Object> context) {
+        return separateMenuTargetOriginalAction.expandString(context);
+    }
+    
+    public SeparateMenuConfig getSeparateMenuConfig(Map<String, Object> context) {
+        return new SeparateMenuConfig(this, context);
+    }
+    
+    public static class SeparateMenuConfig {
+        private final String type;
+        private final String targetStyle;
+        private final String targetPreference;
+        private final String targetOriginalAction;
+        private final boolean enabled;
+        
+        private SeparateMenuConfig(ModelMenu modelMenu, Map<String, Object> context) {
+            this.type = modelMenu.getSeparateMenuType(context);
+            this.targetStyle = modelMenu.getSeparateMenuTargetStyle(context);
+            this.targetPreference = modelMenu.getSeparateMenuTargetPreference(context);
+            this.targetOriginalAction = modelMenu.getSeparateMenuTargetOriginalAction(context);
+            this.enabled = !type.isEmpty() && !targetStyle.isEmpty();
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getTargetStyle() {
+            return targetStyle;
+        }
+
+        public String getTargetPreference() {
+            return targetPreference;
+        }
+
+        public String getTargetOriginalAction() {
+            return targetOriginalAction;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+    }
 
     /**
      * Renders this menu to a String, i.e. in a text format, as defined with the
@@ -2069,6 +2141,10 @@ public class ModelMenu extends ModelMenuCommon { // SCIPIO: new comon base class
         
         public boolean isEmpty() {
             return this.subMenu == null && this.menuItem == null;
+        }
+        
+        public static boolean isEmpty(MenuAndItem menuAndItem) {
+            return menuAndItem == null || menuAndItem.isEmpty();
         }
         
         public ModelSubMenu getSubMenu() {

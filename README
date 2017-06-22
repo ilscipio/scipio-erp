@@ -43,8 +43,8 @@ In order to install SCIPIO ERP, the following prerequisites must be installed:
  * Download and Install
 
 Download
-The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 stable branch, which
-provides you with the latest stable version of the 1.14.x line with latest important updates:
+The recommended way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
+provides you with the latest version of the 1.14.x line with latest important updates:
 
 1. Open your command line and run:
 a. git clone https://github.com/ilscipio/scipio-erp.git
@@ -125,6 +125,19 @@ If you would like to get in touch with the OFBiz community of users and
 developers, the following page will help to get started:
 
   http://ofbiz.apache.org/community.html
+  
+*****************
+* L I C E N S E *
+***************** 
+The source code that makes up The SCIPIO ERP Community Edition
+(hereinafter referred to as "SCIPIO ERP") and the majority of the
+libraries distributed with it are licensed under the Apache License v2.0.
+
+Other licenses used by libraries distributed with SCIPIO ERP are listed
+in the LICENSE file. This file includes a list of all libraries distributed with SCIPIO
+ERP and the full text of the license used for each.
+
+For additional details, see the NOTICE file.
 
 ***********************
 * D I S C L A I M E R *

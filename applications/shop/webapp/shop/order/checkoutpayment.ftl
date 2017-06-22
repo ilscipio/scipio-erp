@@ -23,7 +23,7 @@ under the License.
 <#-- TODO?: Amount boxes could pre-calculate and adjust automatically, but it's not clear if the leave-empty
     logic is exactly replicable in JS (must be exact) or might require AJAX calls -->
 
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#-- SCIPIO: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->

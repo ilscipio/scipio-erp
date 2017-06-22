@@ -32,7 +32,11 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactListVerifyEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactListVerifyEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -45,7 +49,11 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/webapp/shop/customer/miniSignUpForContactList.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/webapp/shop/customer/miniSignUpForContactList.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -58,7 +66,11 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactUsEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactUsEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -72,7 +84,11 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactListSubscribeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactListSubscribeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -86,7 +102,11 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactListUnsubscribeVerifyEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactListUnsubscribeVerifyEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -100,7 +120,11 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactListUnsubscribeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactListUnsubscribeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -114,7 +138,11 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ContactListEmailTemplate.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ContactListEmailTemplate.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

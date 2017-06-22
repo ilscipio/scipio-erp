@@ -265,7 +265,7 @@ public class ShippingEvents {
         try {
             genericEstimate = dispatcher.runSync("calcShipmentCostEstimate", context);
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Shipment Service Error", module);
+            Debug.logError("Shipment Service Error", module);
             throw new GeneralException();
         }
         if (ServiceUtil.isError(genericEstimate) || ServiceUtil.isFailure(genericEstimate)) {
@@ -333,7 +333,7 @@ public class ShippingEvents {
                     // because we don't want to blow up too big or rollback the transaction when this happens, always have it run in its own transaction...
                     serviceResp = dispatcher.runSync(serviceName, context, 0, true);
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "Shipment Service Error", module);
+                    Debug.logError("Shipment Service Error", module);
                     throw new GeneralException(e);
                 }
                 if (ServiceUtil.isError(serviceResp)) {

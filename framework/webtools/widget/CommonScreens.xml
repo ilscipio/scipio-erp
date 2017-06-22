@@ -254,7 +254,8 @@ under the License.
         </section>
     </screen>
     
-    <!-- SCIPIO: Dashboard widget implementation -->
+    <!-- SCIPIO: Dashboard widget implementation 
+        TODO: move to more approp file -->
     <screen name="ScipioMemoryInfo">
         <section>
             <actions>
@@ -291,6 +292,7 @@ under the License.
                 <set field="chartType" value="bar"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="hour"/>
+                <set field="chartIntervalScopeLabel" value="CommonHour"/>
                 <set field="chartIntervalCount" value="12"/>
                 <set field="chartDatasets" value="1"/>
                 <set field="xlabel" value=""/> <!-- x-axis label -->
@@ -306,7 +308,7 @@ under the License.
                         </not>
                     </condition>
                      <widgets>
-                       <screenlet title="${uiLabelMap.WebtoolsStatsRequestsBy} ${chartIntervalScope}">
+                       <screenlet title="${uiLabelMap.WebtoolsStatsRequestsBy} ${uiLabelMap[chartIntervalScopeLabel]}">
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/dashboard/UserRequestCount.ftl"/></html>
                             </platform-specific>

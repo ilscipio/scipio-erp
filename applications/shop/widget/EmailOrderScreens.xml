@@ -34,44 +34,38 @@ under the License.
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop"/>
                 <set field="title" value="Order"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
                     <!-- at the top left of every page we put the logo and company information -->
                     <decorator-section name="topLeft">
-                        <section>
-                            <widgets>
-                                <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
-                            </widgets>
-                        </section>
+                        <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <!-- at the top right of every page we put the order information -->
                     <decorator-section name="topRight">
-                        <section>
-                            <widgets>
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <include-screen name="CompanyLogo" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportHeaderInfo.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <!-- the contach mechanisms, terms, payment and shipping methods are shown in the first page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportContactMechs.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- order items and totals -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                                <!-- return policies and notes are shown in the last page -->
-                                <platform-specific>
-                                    <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
-                                </platform-specific>
-                            </widgets>
-                        </section>
+                        <!-- order items and totals -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportBody.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                        <!-- return policies and notes are shown in the last page -->
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://order/webapp/ordermgr/order/orderReportConditions.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="footer">
+                       <platform-specific>
+                           <xsl-fo><html-template location="component://order/webapp/ordermgr/order/pdf/ScipioOrderFooter.fo.ftl"/></xsl-fo>
+                       </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -92,7 +86,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -112,7 +110,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -128,7 +130,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -144,7 +150,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/OrderNoticeEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -160,7 +170,11 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/emailpayretry.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/emailpayretry.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
@@ -176,7 +190,32 @@ under the License.
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/ShipmentStatus.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://shop/templates/email/ShipmentNotificationEmail.ftl"/></html></platform-specific>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/ShipmentNotificationEmail.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <!-- SCIPIO -->
+    <screen name="orderheader">
+        <section>
+            <widgets>
+                <platform-specific><email><html-template location="component://shop/webapp/shop/order/orderheader.ftl"/></email></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="orderitems">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderItems.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><email><html-template location="component://shop/webapp/shop/order/orderitems.ftl"/></email></platform-specific>
             </widgets>
         </section>
     </screen>

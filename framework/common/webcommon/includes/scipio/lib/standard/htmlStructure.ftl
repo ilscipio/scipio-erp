@@ -51,6 +51,7 @@ to this one.
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.container_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
+<@renderTarget dirName="container" id=id dirArgs=args>
   <#if open>
     <#local attribs = makeAttribMapFromArgMap(args)>
     <#if !elem?has_content || elem == "container">
@@ -77,6 +78,7 @@ to this one.
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
   </#if>
+</@renderTarget>
 </#macro>
 
 <#--
@@ -390,8 +392,6 @@ TODO: Reimplement in java in com.ilscipio.scipio.ce.webapp.ftl.template.standard
 ************
 Creates a grid list.
 
-Since this is very foundation specific, this function may be dropped in future installations
-
   * Usage Examples *  
     <@grid>
         <li>Text or <a href="">Anchor</a></li>
@@ -428,25 +428,27 @@ Since this is very foundation specific, this function may be dropped in future i
   <#local dummy = pushRequestStack("scipioGridInfoStack", gridInfo)>
   <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
   <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
-  <#if type == "tiles" || type == "freetiles">
-    <#local freewallNum = getRequestVar("scipioFreewallIdNum")!0>
-    <#local freewallNum = freewallNum + 1 />
-    <#local dummy = setRequestVar("scipioFreewallIdNum", freewallNum)>
-    <#if !id?has_content>
-      <#local id = "freewall_id_${freewallNum!0}">
-    </#if>
-
-    <#local tileStyleName = tilesType>
-    <#local tileStylePrefix = "tile_" + tileStyleName>
-    <#local defaultTileStylePrefix = "tile_default">
-
-    <#local class = addClassArg(class, styles.tile_container!)>
-    <#local class = addClassArgDefault(class, styles[tileStylePrefix + "_containerclass"]!styles[defaultTileStylePrefix + "_containerclass"]!"")>
- 
-    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
-  <#elseif type=="list">
-    <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
-  </#if>
+      <#if type == "tiles" || type == "freetiles">
+        <#local freewallNum = getRequestVar("scipioFreewallIdNum")!0>
+        <#local freewallNum = freewallNum + 1 />
+        <#local dummy = setRequestVar("scipioFreewallIdNum", freewallNum)>
+        <#if !id?has_content>
+          <#local id = "freewall_id_${freewallNum!0}">
+        </#if>
+    
+        <#local tileStyleName = tilesType>
+        <#local tileStylePrefix = "tile_" + tileStyleName>
+        <#local defaultTileStylePrefix = "tile_default">
+    
+        <#local class = addClassArg(class, styles.tile_container!)>
+        <#local class = addClassArgDefault(class, styles[tileStylePrefix + "_containerclass"]!styles[defaultTileStylePrefix + "_containerclass"]!"")>
+     
+        <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
+      <#elseif type=="list">
+        <#if styles.grid_block_container?has_content><@container class=styles.grid_block_container close=false/></#if>
+            <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
+        <#if styles.grid_block_container?has_content><@container open=false/></#if>
+      </#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("scipioGridInfoStack")>
 </#macro>
@@ -478,9 +480,9 @@ Since this is very foundation specific, this function may be dropped in future i
   <#-- this never takes effect
   <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
   <#if ((columns-2) > 0)>
-    <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+    <#local class = addClassArgDefault(class, "${styles.grid_block_wrap} ${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
   <#else>
-    <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+    <#local class = addClassArgDefault(class, "${styles.grid_block_wrap} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
   </#if>
   <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
   <ul<@compiledClassAttribStr class=class />>
@@ -818,7 +820,8 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
 <#macro section args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.section_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-
+<#-- NOTE: this is registered as SCREENLET element so we can have equivalence with widget elements -->
+<@renderTarget dirName="screenlet" id=containerId?has_content?string(containerId, id) dirArgs=args>
   <#if open>
     <#if !type?has_content>
       <#local type = "default">
@@ -835,6 +838,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     containerClass=containerClass containerId=containerId containerStyle=containerStyle contentClass=contentClass contentStyle=contentStyle
     attribs=attribs containerAttribs=containerAttribs contentAttribs=contentAttribs
     open=open close=close passArgs=passArgs><#nested /></@section_core>
+</@renderTarget>
 </#macro>
 
 <#-- Core implementation of @section. 

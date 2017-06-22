@@ -38,12 +38,14 @@ under the License.
         <attribute name="createDummyFks" type="String" mode="IN" optional="true"/>
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="rowProcessed" type="Long" mode="OUT" optional="false"/>
     </service>
     <service name="entityImport" engine="java"
             location="org.ofbiz.webtools.WebToolsServices" invoke="entityImport" auth="true" use-transaction="false">
         <description>Imports an entity xml file or text string</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <implements service="uploadFileInterface"/><!-- SCIPIO: 2017-06-15: now supports single file upload -->
         <attribute name="filename" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="fmfilename" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="fulltext" type="String" mode="IN" optional="true" allow-html="any"/>
@@ -54,8 +56,9 @@ under the License.
         <attribute name="checkDataOnly" type="String" mode="IN" optional="true"/>
         <attribute name="txTimeout" type="Integer" mode="IN" optional="true"/>
         <attribute name="placeholderValues" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="allowedEntityNames" type="java.util.Set" mode="IN" optional="true"/><!-- SCIPIO: new 2017-06-15 -->
         <attribute name="messages" type="List" mode="OUT" optional="false"/>
-    </service>
+    </service>    
     <service name="entityImportDir" engine="java"
             location="org.ofbiz.webtools.WebToolsServices" invoke="entityImportDir" auth="true" use-transaction="false">
         <description>Imports all entity xml files contained in a directory</description>

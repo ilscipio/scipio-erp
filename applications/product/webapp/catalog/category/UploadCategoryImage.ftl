@@ -14,8 +14,8 @@
                 
                 "iframeParentSel" : "#EditProductCategory",
                 "expectedResultContainerSel" : "#EditProductCategory",
-                "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-                "errorResultAddWrapper" : false,
+                "errorResultContainerSel" : "#main-${styles.alert_wrap!} .alert-box.alert",
+                "errorResultAddWrapper" : true,
     
                 "resultContentReplace" : true,
                 "contentContainerSel" : "#ImageFields",

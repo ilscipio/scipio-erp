@@ -80,7 +80,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="CatalogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CatalogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CatalogTabBar" recursive="includes-only" />
     </menu>
     
@@ -95,14 +95,33 @@ under the License.
     </menu>
 
     <menu name="FeaturesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: 2017-05-22: it turns out, the features sub-menu SHOULD always expand... 
+            because FeaturesTabBar and so the Type, Category, Group, and Interaction links used to be top-level elements
+            so they don't associate with anything. -->
+        <menu-item-alias name="EditProductFeatures" for="PARENT-WITHSUB"/>
         <menu-item name="Feature" title="${uiLabelMap.ProductFeature}">
-            <link target="EditFeature"/>
+            <!-- SCIPIO: always show this for now because otherwise there's a consistency issue
+            <condition>
+                <or>
+                    <if-compare field="activeSubMenuItem" operator="equals" value="Feature" />
+                    <not><if-empty field="productFeatureId"/></not>
+                </or>
+            </condition>-->
+            <link target="EditFeature">
+                <parameter param-name="productFeatureId"/>
+            </link>
         </menu-item>
         <menu-item name="FeatureType" title="${uiLabelMap.ProductFeatureType}">
-            <link target="EditFeatureTypes"/>
+            <link target="EditFeatureTypes">
+                <!-- does nothing
+                <parameter param-name="productFeatureTypeId"/> -->
+            </link>
         </menu-item>
         <menu-item name="FeatureCategory" title="${uiLabelMap.ProductFeatureCategory}">
-            <link target="EditFeatureCategories"/>
+            <link target="EditFeatureCategories">
+                <!-- all it does is prefix find form, not helpful
+                <parameter param-name="productFeatureCategoryId"/> -->
+            </link>
         </menu-item>
         <menu-item name="FeatureGroup" title="${uiLabelMap.ProductFeatureGroup}">
             <link target="EditFeatureGroups"/>
@@ -216,7 +235,7 @@ under the License.
             </link>
         </menu-item> -->
     </menu>
-    <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CategorySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="CategoryTabBar" recursive="includes-only" />
     </menu>
 
@@ -406,7 +425,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductStoreSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProductStoreTabBar" recursive="includes-only" />
         <menu-item name="EditProductStoreWebSites">
             <sub-menu name="WebSite" include="component://content/widget/content/ContentMenus.xml#WebSiteSideBar"/>
@@ -522,7 +541,7 @@ under the License.
     </menu>
     
     <!-- SCIPIO: new Promo Sidebar -->
-    <menu name="PromoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PromoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PromoTabBar" recursive="includes-only" />
     </menu>
     
@@ -828,7 +847,7 @@ under the License.
         <!-- SCIPIO: EditProductCommunicationEvents removed -->
         <!-- SCIPIO: ViewProductGroupOrder removed -->
     </menu>
-    <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ProductSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProductTabBar" recursive="includes-only" />
         <menu-item name="EditProductFeatures">
             <!-- SCIPIO: NOTE: see comments on EditProductFeatures in ProductTabBar -->

@@ -37,7 +37,7 @@ body {}
   background: #e1e1e1;
 }
 
-// Fix margin on rows
+/* Fix margin on rows
 .row {
     .row {
         margin-bottom:2em;        
@@ -45,7 +45,7 @@ body {}
                     margin-bottom:0px;
         }
     }
-}
+}*/
 
 // Fix form elements
 // form > div > .columns:last-child {max-width:50em;float:left!important;}
@@ -57,6 +57,7 @@ body {}
 //     but I don't remember any.
 div.form-field-entry div.field-entry-widgetpostfix, 
 div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
+div.form-field-entry div.field-entry-type-textarea {max-width:none !important;}
 
 /* CONTENT */
 .align-right {
@@ -547,4 +548,43 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
 .tmpldoc-content .lib-page-intro h4 { /* specific to base and derived themes */
   margin-top: 2em;
   font-weight: bold;
+}
+
+
+/*Messages*/
+.message_wrap {
+    display:block;
+    width: 200px;
+    line-height: 1.6em;
+    padding-bottom:8px;
+    
+    .message_header {
+        text-decoration: bold;
+        padding-bottom:0px;
+        height:1.6em;
+    }
+    
+    .message_time {
+        font-size:0.7em;
+        display:inline-block;
+    }
+    
+    .message_body {
+        font-size:0.8em;
+        line-height: 1.2em;
+    }
+    
+    &.message_isread {
+        .message_body,.message_header{ 
+            color: #999;
+        }
+    }
+}
+
+/*trumbowyg fix*/
+.trumbowyg-modal {
+    .dataTables_wrapper div.dataTables_filter label {
+        float:none;
+        margin-right:0px;
+     }
 }

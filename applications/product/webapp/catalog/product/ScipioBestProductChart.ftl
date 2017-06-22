@@ -1,6 +1,6 @@
 <#assign chartType=chartType!"pie"/>    <#-- (line|bar|pie) default: line -->
 <#assign library=chartLibrary!"chart"/>
-<#assign datasets=chartDatasets?number!1 />
+<#assign datasets=(chartDatasets!1)?number />
 
 <#if bestSellingProducts?has_content>
     <#if chartType == "pie" || chartType == "bar">
@@ -13,7 +13,7 @@
                     <#if currData?has_content> 
                         <#if datasets == 1>             
                             <#list currData as bestSellingProduct>     
-                                <@chartdata value="${bestSellingProduct.qtyOrdered!0}" title=(bestSellingProduct.productName!bestSellingProduct.productId)/>
+                                <@chartdata value=(bestSellingProduct.qtyOrdered!0) title=(bestSellingProduct.productName!bestSellingProduct.productId)/>
                             </#list>                           
                         </#if>
                     </#if>

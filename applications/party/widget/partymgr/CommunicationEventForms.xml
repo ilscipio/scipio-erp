@@ -769,7 +769,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="sequenceNum"><text/></field>
-        <field name="drMimeTypeId" widget-style="smallSelect">
+        <field name="drMimeTypeId" widget-style="+smallSelect">
             <drop-down allow-empty="false">
                 <option key="application/msword" description="${uiLabelMap.ContentMSWord}"/>
                 <option key="application/pdf" description="${uiLabelMap.ContentPDFFile}"/>

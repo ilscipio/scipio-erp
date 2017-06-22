@@ -24,31 +24,6 @@ under the License.
 ********************
 
  -->
-<#-- Variables -->
-<#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
-<#if externalLoginKey??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
-<#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
-<#assign contextPath = request.getContextPath()>
-<#if userLogin?has_content>
-    <#assign displayApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "main")>
-    <#assign displaySecondaryApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")>
-    <#assign appModelMenu = Static["org.ofbiz.widget.model.MenuFactory"].getMenuFromLocation(applicationMenuLocation,applicationMenuName)>
-</#if>
-<#if person?has_content>
-  <#assign userName = person.firstName!"" + " " + person.middleName!"" + " " + person.lastName!"">
-<#elseif partyGroup?has_content>
-  <#assign userName = partyGroup.groupName!>
-<#elseif userLogin??>
-  <#assign userName = userLogin.userLoginId>
-<#else>
-  <#assign userName = "">
-</#if>
-<#if defaultOrganizationPartyGroupName?has_content>
-  <#assign orgName = " - " + defaultOrganizationPartyGroupName!>
-<#else>
-  <#assign orgName = "">
-</#if>
-
 <#-- Macro for rendering the general menu (userprofile etc.) -->
 <#macro generalMenu>
     <#if userLogin??>
@@ -143,9 +118,35 @@ under the License.
     <#--<#if applicationMenuLocation?has_content && applicationMenuName?has_content>
         <@render type="menu" name=applicationMenuName resource=applicationMenuLocation />
     </#if>-->
-  <#if sections??>
-    ${sections.render("left-column")}
-  </#if>
+    <@render type="section" name="left-column"/>
+</#macro>
+
+<#macro notificationsMenu>
+<ul class="dropdown">
+        <li class="not-click"><label>${uiLabelMap["CommonLastSytemNotes"]}</label></li>
+        <#list systemNotifications as notification>
+            <li>
+                <#if notification.url?has_content><#assign notificationUrl=addParamsToUrl(notification.url,{"scipioSysMsgId":notification.messageId})></#if>
+                <a href="${notificationUrl!"#"}">
+                    <div class="message_wrap <#if notification.isRead?has_content && notification.isRead=='Y'>message_isread</#if>">
+                        <#--<div class="message_status">
+                            <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
+                        </div>-->
+                        <div class="message_header">
+                            ${notification.title!"No Title"} <span class="message_time right">${notification.createdStamp?string.short}</span>
+                        </div>
+                        <div class="message_body">${notification.description!""}</div>
+                    </div>
+                </a>
+            </li>
+        </#list>
+        <#-- 
+        <li class="active">
+            <a href="#">
+                <div>View All</div>
+            </a>
+        </li>-->
+</ul>
 </#macro>
 
 <#-- Macro for rendering your company logo. Uses a smaller version of your logo if isSmall=true. -->
@@ -166,6 +167,33 @@ under the License.
         <a href="<@ofbizUrl>${logoLinkURL!""}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@ofbizContentUrl>"/><span class="logo-text">${applicationTitle!}</span></a>
     </#if>
 </#macro>
+
+<@virtualSection name="Global-Header-Metro" contains="!$Global-Column-Left, *">
+
+<#-- Variables -->
+<#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
+<#if externalLoginKey??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
+<#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
+<#assign contextPath = request.getContextPath()>
+<#if userLogin?has_content>
+    <#assign displayApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "main")>
+    <#assign displaySecondaryApps = Static["org.ofbiz.webapp.control.LoginWorker"].getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")>
+    <#assign appModelMenu = Static["org.ofbiz.widget.model.MenuFactory"].getMenuFromLocation(applicationMenuLocation,applicationMenuName)>
+</#if>
+<#if person?has_content>
+  <#assign userName = person.firstName!"" + " " + person.middleName!"" + " " + person.lastName!"">
+<#elseif partyGroup?has_content>
+  <#assign userName = partyGroup.groupName!>
+<#elseif userLogin??>
+  <#assign userName = userLogin.userLoginId>
+<#else>
+  <#assign userName = "">
+</#if>
+<#if defaultOrganizationPartyGroupName?has_content>
+  <#assign orgName = " - " + defaultOrganizationPartyGroupName!>
+<#else>
+  <#assign orgName = "">
+</#if>
 
   <@scripts output=true> <#-- ensure @script elems here will always output -->
 
@@ -283,9 +311,17 @@ under the License.
                         <!-- Menu sidebar begin-->
                         <#-- NOTE: side-nav is on the child ul -->
                         <div class="side-nav-area">
+</@virtualSection>
+              
                         <#if userLogin??>  
-                            <@sideBarMenu/> 
-                        </#if>                
+                          <@virtualSection name="Global-Column-Left">
+                            <@virtualSection name="Global-Column-Left-Large">
+                              <@sideBarMenu/>
+                            </@virtualSection>
+                          </@virtualSection>
+                        </#if>
+                      
+<@virtualSection name="Global-Header-Post-Metro" contains="!$Global-Column-Left, *">
                         </div>
                         
                     </nav>
@@ -332,6 +368,13 @@ under the License.
                             </ul>-->
 
                             <ul class="right">
+                                <#-- Notifications -->
+                                <#if systemNotifications?has_content>
+                                    <li class="has-dropdown not-click"><a href="#"><i class="${styles.icon!} ${styles.icon_prefix!}bell"></i><#if systemNotificationsCount?has_content> <span class="label">${systemNotificationsCount}</span></#if></a>
+                                        <@notificationsMenu />
+                                    </li>
+                                </#if>
+                                <#-- UserLogin -->
                                 <li class="has-dropdown">
                                    <#if userLogin??><a class="" href="#"><i class="${styles.icon_user}"></i> ${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}</a><#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if>
                                     <ul class="dropdown">
@@ -353,11 +396,13 @@ under the License.
                     
                     <#if userLogin??>  
                     <aside class="left-off-canvas-menu">
+                      <@virtualSection name="Global-Column-Left-Small">
                       <ul class="off-canvas-list">
                           <@sideBarMenu/> 
                           <@primaryAppsMenu/>
                           <@secondaryAppsMenu/>
-                       </ul>
+                      </ul>
+                      </@virtualSection>
                     </aside>
                     </#if>
                 
@@ -374,3 +419,4 @@ under the License.
                             <a class="right-off-canvas-toggle menu-icon"><span></span></a>
                         </section>
                     </nav>
+</@virtualSection>

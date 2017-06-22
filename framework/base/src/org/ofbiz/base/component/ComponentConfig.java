@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -186,6 +187,26 @@ public final class ComponentConfig {
         }
         return webappInfos;
     }
+    
+    /**
+     * SCIPIO: Returns webapp infos by context root (mount-point).
+     */
+    private static Map<String, List<WebappInfo>> getAllWebappResourceInfosByContextRoot(Collection<ComponentConfig> componentList, String componentName) {
+        Map<String, List<WebappInfo>> contextRootWebappInfos = new HashMap<>();
+        for (ComponentConfig cc : componentList) {
+            if (componentName == null || componentName.equals(cc.getComponentName())) {
+                for(WebappInfo webappInfo : cc.getWebappInfos()) {
+                    List<WebappInfo> webappInfoList = contextRootWebappInfos.get(webappInfo.getContextRoot());
+                    if (webappInfoList == null) {
+                        webappInfoList = new ArrayList<>();
+                        contextRootWebappInfos.put(webappInfo.getContextRoot(), webappInfoList);
+                    }
+                    webappInfoList.add(webappInfo);
+                }
+            }
+        }
+        return contextRootWebappInfos;
+    }
 
     public static List<WebappInfo> getAppBarWebInfos(String serverName) {
         return ComponentConfig.getAppBarWebInfos(serverName, null, null);
@@ -263,6 +284,14 @@ public final class ComponentConfig {
             // Do we really need to do this?
             throw new ComponentException("No component found named : " + globalName);
         }
+    }
+    
+    /**
+     * SCIPIO: Special method for initialization only to set the global component order.
+     * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
+     */
+    public static void clearStoreComponents(List<ComponentConfig> componentList) {
+        componentConfigCache.clearAndPutAll(componentList);
     }
 
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
@@ -347,7 +376,13 @@ public final class ComponentConfig {
     private final List<KeystoreInfo> keystoreInfos;
     private final List<WebappInfo> webappInfos;
     private final List<ContainerConfig.Container> containers;
-
+    /**
+     * SCIPIO: The components this one depends on.
+     * This is the implementation of the "depends-on" element (existed in stock ofbiz xsd, but not implemented).
+     * Does not contain duplicates.
+     */
+    private final List<String> componentDependencies;
+    
     private ComponentConfig(String globalName, String rootLocation) throws ComponentException {
         if (!rootLocation.endsWith("/")) {
             rootLocation = rootLocation + "/";
@@ -474,8 +509,60 @@ public final class ComponentConfig {
         } catch (ContainerException ce) {
             throw new ComponentException("Error reading containers for component: " + this.globalName, ce);
         }
+        // SCIPIO: component dependencies
+        childElements = UtilXml.childElementList(ofbizComponentElement, "depends-on");
+        if (!childElements.isEmpty()) {
+            Collection<String> componentDependencies = new LinkedHashSet<>();
+            for (Element curElement : childElements) {
+                String depName = curElement.getAttribute("component-name");
+                if (depName.equals(this.componentName)) {
+                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has dependency on itself", module);
+                    continue;
+                }
+                if (componentDependencies.contains(depName)) {
+                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has duplicate dependency on component '" + depName + "'", module);
+                    continue;
+                }
+                componentDependencies.add(depName);
+            }
+            this.componentDependencies = Collections.unmodifiableList(new ArrayList<String>(componentDependencies));
+        } else {
+            this.componentDependencies = Collections.emptyList();
+        }
         if (Debug.verboseOn())
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
+    }
+    
+    /**
+     * SCIPIO: Copy constructor, with extra optional overrides such as explicit webappInfos.
+     */
+    private ComponentConfig(ComponentConfig other, List<WebappInfo> webappInfos) {
+        this.globalName = other.globalName;
+        this.rootLocation = other.rootLocation;
+        this.componentName = other.componentName;
+        this.enabled = other.enabled;
+        this.resourceLoaderInfos = other.resourceLoaderInfos;
+        this.classpathInfos = other.classpathInfos;
+        this.entityResourceInfos = other.entityResourceInfos;
+        this.serviceResourceInfos = other.serviceResourceInfos;
+        this.testSuiteInfos = other.testSuiteInfos;
+        this.keystoreInfos = other.keystoreInfos;
+        if (webappInfos != null) {
+            List<WebappInfo> newWebappInfos = new ArrayList<>(webappInfos.size());
+            for(WebappInfo webappInfo : webappInfos) {
+                if (webappInfo.componentConfig != this) {
+                    // NOTE: IMPORTANT: We must duplicate all the webapps if the backreference to ComponentConfig has changed!
+                    newWebappInfos.add(new WebappInfo(webappInfo, this));
+                } else {
+                    newWebappInfos.add(webappInfo);
+                }
+            }
+            this.webappInfos = Collections.unmodifiableList(newWebappInfos);
+        } else {
+            this.webappInfos = other.webappInfos;
+        }
+        this.containers = other.containers;
+        this.componentDependencies = other.componentDependencies;
     }
 
     public boolean enabled() {
@@ -598,6 +685,13 @@ public final class ComponentConfig {
         return this.webappInfos;
     }
 
+    /**
+     * SCIPIO: Returns the names of components this component depends on.
+     */
+    public List<String> getComponentDependencies() {
+        return componentDependencies;
+    }
+    
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
         return isFileResourceLoader(resourceInfo.loader);
     }
@@ -610,6 +704,88 @@ public final class ComponentConfig {
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }
 
+    /**
+     * SCIPIO: Returns the component names for a list of configs.
+     */
+    public static List<String> getComponentNames(Collection<ComponentConfig> componentList) {
+        List<String> names = new ArrayList<>(componentList.size());
+        for(ComponentConfig config : componentList) {
+            names.add(config.getComponentName());
+        }
+        return names;
+    }
+    
+    /**
+     * SCIPIO: Creates a (order-preserving) map of component names to configs from a list of configs.
+     */
+    public static Map<String, ComponentConfig> makeComponentNameMap(Collection<ComponentConfig> componentList) {
+        Map<String, ComponentConfig> map = new LinkedHashMap<>();
+        for(ComponentConfig config : componentList) {
+            map.put(config.getComponentName(), config);
+        }
+        return map;
+    }
+    
+    /**
+     * SCIPIO: Post-processes the global list of loaded components after all
+     * <code>ofbiz-component.xml</code> files have been read (hook/callback) (new 2017-01-19).
+     */
+    public static List<ComponentConfig> postProcessComponentConfigs(List<ComponentConfig> componentList) {
+        componentList = (postProcessWebappInfos(componentList));
+        return componentList;
+    }
+    
+    /**
+     * SCIPIO: Post-processes the webapp infos of component list.
+     */
+    private static List<ComponentConfig> postProcessWebappInfos(List<ComponentConfig> componentList) {
+        // Find all duplicate mount-points 
+        Map<String, ComponentConfig> modifiedComponentsByName = new HashMap<>();
+        for(Map.Entry<String, List<WebappInfo>> entry : getAllWebappResourceInfosByContextRoot(componentList, null).entrySet()) {
+            // FIXME?: this part is not the most efficient and in certain cases may create needless copies
+            List<WebappInfo> webappInfoList = entry.getValue();
+            if (webappInfoList != null && webappInfoList.size() >= 2) {
+                WebappInfo lastWebappInfo = webappInfoList.get(webappInfoList.size() - 1);
+                // Handle special override-modes for all webapps before the last one
+                for(WebappInfo webappInfo : webappInfoList.subList(0, webappInfoList.size() - 1)) {
+                    if ("remove-overridden-webapp".equals(lastWebappInfo.getOverrideMode())) {
+                        ComponentConfig prevCc = webappInfo.componentConfig;
+                        // NOTE: if the CC has multiple webapps, it may already have been updated,
+                        // so fetch it out of the map
+                        if (modifiedComponentsByName.containsKey(prevCc.getComponentName())) {
+                            prevCc = modifiedComponentsByName.get(prevCc.getComponentName());
+                        }
+                        List<WebappInfo> prevWebappInfoList = prevCc.getWebappInfos();
+                        List<WebappInfo> newWebappInfoList = new ArrayList<>(prevWebappInfoList.size());
+                        // removed this webapp from the list
+                        for(WebappInfo prevWebappInfo : prevWebappInfoList) {
+                            if (prevWebappInfo != webappInfo && !prevWebappInfo.getName().equals(webappInfo.getName())) {
+                                newWebappInfoList.add(prevWebappInfo);
+                            }
+                        }
+                        ComponentConfig newCc = new ComponentConfig(prevCc, newWebappInfoList);
+                        modifiedComponentsByName.put(newCc.getComponentName(), newCc);
+                    }
+                }
+            }
+        }
+        
+        if (modifiedComponentsByName.size() == 0) { // optimization
+            return componentList;
+        }
+        
+        List<ComponentConfig> resultList = new ArrayList<>(componentList.size());
+        for(ComponentConfig cc : componentList) {
+            if (modifiedComponentsByName.containsKey(cc.getComponentName())) {
+                resultList.add(modifiedComponentsByName.get(cc.getComponentName()));
+            } else {
+                resultList.add(cc);
+            }
+        }
+        
+        return resultList;
+    }
+    
     /**
      * An object that models the <code>&lt;classpath&gt;</code> element.
      * 
@@ -657,6 +833,31 @@ public final class ComponentConfig {
 
         private synchronized Collection<ComponentConfig> values() {
             return Collections.unmodifiableList(new ArrayList<ComponentConfig>(componentConfigs.values()));
+        }
+        
+        /**
+         * SCIPIO: Clears all (for reordering).
+         */
+        private synchronized void clear() {
+            componentConfigs.clear();
+            componentLocations.clear();
+        }
+        
+        /**
+         * SCIPIO: putAll.
+         */
+        private synchronized void putAll(Collection<? extends ComponentConfig> configList) {
+            for(ComponentConfig config : configList) {
+                put(config);
+            }
+        }
+        
+        /**
+         * SCIPIO: Atomic clear + putAll method.
+         */
+        private synchronized void clearAndPutAll(Collection<? extends ComponentConfig> configList) {
+            clear();
+            putAll(configList);
         }
     }
 
@@ -830,6 +1031,7 @@ public final class ComponentConfig {
         // CatalinaContainer modifies this field.
         private volatile boolean appBarDisplay;
         private final String accessPermission;
+        private final String overrideMode; // SCIPIO: 2017-01-19: new override mode, to handle duplicate mount-points
 
         private WebappInfo(ComponentConfig componentConfig, Element element) {
             this.componentConfig = componentConfig;
@@ -913,8 +1115,34 @@ public final class ComponentConfig {
             } else {
                 this.initParameters = Collections.emptyMap();
             }
+            // SCIPIO: new
+            this.overrideMode = element.getAttribute("override-mode");
         }
 
+        /**
+         * SCIPIO: Copy constructor, with optional parent/backreference override for component config.
+         */
+        private WebappInfo(WebappInfo other, ComponentConfig componentConfig) {
+            this.componentConfig = (componentConfig != null) ? componentConfig : other.componentConfig;
+            this.virtualHosts = other.virtualHosts;
+            this.initParameters = other.initParameters;
+            this.name = other.name;
+            this.title = other.title;
+            this.description = other.description;
+            this.menuName = other.menuName;
+            this.server = other.server;
+            this.mountPoint = other.mountPoint;
+            this.contextRoot = other.contextRoot;
+            this.location = other.location;
+            this.basePermission = other.basePermission;
+            this.position = other.position;
+            this.sessionCookieAccepted = other.sessionCookieAccepted;
+            this.privileged = other.privileged;
+            this.appBarDisplay = other.appBarDisplay;
+            this.accessPermission = other.accessPermission;
+            this.overrideMode = other.overrideMode;
+        }
+        
         public synchronized boolean getAppBarDisplay() {
             return this.appBarDisplay;
         }
@@ -957,6 +1185,10 @@ public final class ComponentConfig {
 
         public boolean isSessionCookieAccepted() {
             return sessionCookieAccepted;
+        }
+        
+        public String getOverrideMode() { // SCIPIO: new
+            return overrideMode;
         }
 
         public synchronized void setAppBarDisplay(boolean appBarDisplay) {

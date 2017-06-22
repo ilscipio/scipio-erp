@@ -26,7 +26,11 @@ under the License.
        partyId="ACCOUNTING" glAccountId="700000" organizationPartyId="ACCOUNTING" amount="100" debitCreditFlag="C"/>
 -->
 
-  <GlAccount parentGlAccountId="" glAccountId="100000" accountCode="100000"
+  <GlAccount parentGlAccountId="" glAccountId="US_GAAP" accountCode="US-GAAP"
+    glAccountClassId="" glAccountTypeId="" glResourceTypeId="MONEY"
+    accountName="" description=""/>
+    
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="100000" accountCode="100000"
     glAccountClassId="ASSET" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="ASSETS" description=""/>
 
@@ -290,7 +294,7 @@ under the License.
 <!-- TODO & NOTE: Contra-asset identified as"-nnnnnnn-" above. Same as a "negative liability" below.-->
 
 <!-- LIABILITIES -->
-  <GlAccount parentGlAccountId="" glAccountId="200000" accountCode="200000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="200000" accountCode="200000"
     glAccountClassId="LIABILITY" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="LIABILITIES" description=""/>
 
@@ -607,7 +611,7 @@ Owners equity / Net worth >> reassigned the numbers according to Sole Proprietor
 Corporation = 330000, Subchapter S Corporation = 340000, because ABA had same numbers with different assignments
 according to which type of entity.
 -->
-  <GlAccount parentGlAccountId="" glAccountId="300000" accountCode="300000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="300000" accountCode="300000"
     glAccountClassId="EQUITY" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OWNERS EQUITY AND NET WORTH" description=""/>
 
@@ -708,7 +712,7 @@ according to which type of entity.
     accountName="RETAINED EARNINGS" description=""/>
 
 <!-- SALES -->
-  <GlAccount parentGlAccountId="" glAccountId="400000" accountCode="400000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="400000" accountCode="400000"
     glAccountClassId="REVENUE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="SALES" description=""/>
   <GlAccount parentGlAccountId="400000" glAccountId="401000" accountCode="401000"
@@ -739,7 +743,7 @@ according to which type of entity.
     accountName="CUSTOMER RETURNS - WORK OR TIME ENTRY" description=""/>
 
 <!-- COST OF GOODS SOLD -->
-  <GlAccount parentGlAccountId="" glAccountId="500000" accountCode="500000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="500000" accountCode="500000"
     glAccountClassId="COGS_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="COST OF GOODS SOLD" description=""/>
   <GlAccount parentGlAccountId="500000" glAccountId="501000" accountCode="501000"
@@ -855,7 +859,7 @@ but they are grouped here for convenience purposes -->
     accountName="INVENTORY ADJUSTMENT - CAT 2" description=""/>
 
 <!-- OPERATING EXPENSES (600000 - 700000) -->
-  <GlAccount parentGlAccountId="" glAccountId="600000" accountCode="600000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="600000" accountCode="600000"
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="EXPENSE" description=""/>
 
@@ -1237,7 +1241,7 @@ but they are grouped here for convenience purposes -->
     glAccountClassId="SGA_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER INSURANCE" description=""/>
 
-  <GlAccount parentGlAccountId="" glAccountId="700000" accountCode="700000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="700000" accountCode="700000"
     glAccountClassId="SGA_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER EXPENSES" description=""/>
 
@@ -1409,7 +1413,7 @@ but they are grouped here for convenience purposes -->
     accountName="MISCELLANEOUS EXPENSE" description=""/>
 
 <!-- OTHER INCOME -->
-  <GlAccount parentGlAccountId="" glAccountId="800000" accountCode="800000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="800000" accountCode="800000"
     glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER INCOME" description=""/>
 
@@ -1451,7 +1455,7 @@ but they are grouped here for convenience purposes -->
     glAccountClassId="CASH_INCOME" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER INCOME" description=""/>
 
-  <GlAccount parentGlAccountId="" glAccountId="820000" accountCode="820000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="820000" accountCode="820000"
     glAccountClassId="CASH_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER EXPENSE" description=""/>
 
@@ -1471,11 +1475,11 @@ but they are grouped here for convenience purposes -->
     glAccountClassId="CASH_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="OTHER EXPENSES" description=""/>
 
-  <GlAccount parentGlAccountId="" glAccountId="850000" accountCode="850000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="850000" accountCode="850000"
     glAccountClassId="DEBIT" glAccountTypeId="PROFIT_LOSS_ACCOUNT" glResourceTypeId="MONEY"
     accountName="NET INCOME" description=""/>
 
-  <GlAccount parentGlAccountId="" glAccountId="900000" accountCode="900000"
+  <GlAccount parentGlAccountId="US_GAAP" glAccountId="900000" accountCode="900000"
     glAccountClassId="NON_POSTING" glAccountTypeId="" glResourceTypeId="MONEY"
     accountName="INCOME TAX" description=""/>
 

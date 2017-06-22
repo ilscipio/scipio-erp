@@ -18,11 +18,11 @@ under the License.
 -->
 
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl secure=true>keywordsearch</@ofbizUrl>">
-        <@row collapse=true>
-            <@cell small=9>
+        <@row collapse=true class="keywordsearch">
+            <@cell small=10>
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) widgetOnly=true/>
             </@cell>
-            <@cell small=3>
+            <@cell small=2>
               <a href="javascript:{}" onclick="document.getElementById('keywordsearchbox_keywordsearchform').submit();" class="${styles.button!} ${styles.expand!}"><i class="${styles.icon!} ${styles.icon_prefix!}magnifying-glass ${styles.icon_prefix!}search"></i></a>
             </@cell>
         </@row>

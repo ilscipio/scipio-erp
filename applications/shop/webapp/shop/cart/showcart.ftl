@@ -367,8 +367,8 @@ function setAlternateGwp(field) {
         </@cell>
         <@cell columns=6>
             <#if showPromoText?? && showPromoText>
-                <@panel type="callout">
-                  <@section title=uiLabelMap.OrderSpecialOffers>
+                <@panel type="callout" title=uiLabelMap.OrderSpecialOffers>
+                  <@section>
                     <ol>
                       <#list productPromos as productPromo>
                         <li>${productPromo.promoName!}

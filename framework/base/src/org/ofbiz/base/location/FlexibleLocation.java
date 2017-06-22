@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
@@ -70,16 +71,27 @@ public final class FlexibleLocation {
 
     /**
      * Find the location type descriptor for the passed location String;
-     *   generally is all text before the first ":" character.
-     *   If no type descriptor is found, defaults to "classpath".
+     * generally is all text before the first ":" character.
+     * If no type descriptor is found, returns the specified default.
+     * SCIPIO: 2017-06-15: Modified to overload to return the specified default.
      */
-    private static String getLocationType(String location) {
+    private static String getLocationType(String location, String defaultValue) {
         int colonIndex = location.indexOf(":");
         if (colonIndex > 0) {
             return location.substring(0, colonIndex);
         } else {
-            return "classpath";
+            return defaultValue;
         }
+    }
+    
+    /**
+     * Find the location type descriptor for the passed location String;
+     * generally is all text before the first ":" character.
+     * If no type descriptor is found, defaults to "classpath".
+     * SCIPIO: This is the original getLocationType behavior.
+     */
+    private static String getLocationType(String location) {
+        return getLocationType(location, "classpath");
     }
 
     /**
@@ -117,7 +129,7 @@ public final class FlexibleLocation {
             throw new MalformedURLException("Could not find a LocationResolver for the location type: " + locationType);
         }
     }
-
+    
     public static String stripLocationType(String location) {
         if (UtilValidate.isEmpty(location)) {
             return "";
@@ -137,5 +149,71 @@ public final class FlexibleLocation {
         return strippedSoFar.toString();
     }
 
+    /**
+     * SCIPIO: Checks if the given protocol name is among the registered protocol names having resolvers.
+     * Added 2017-06-15.
+     */
+    public static boolean isRegisteredProtocol(String protocolName) {
+        return locationResolvers.containsKey(protocolName);
+    }
+    
+    /**
+     * SCIPIO: Checks if the given location starts with a protocol that is registered.
+     * NOTE: Does not guarantee that the location is a valid URL, nor that the location
+     * is in fact 
+     * Added 2017-06-15.
+     */
+    public static boolean isRegisteredProtocolLocation(String location) {
+        if (UtilValidate.isEmpty(location)) return false;
+        int colonIndex = location.indexOf(":");
+        return (colonIndex > 0) && locationResolvers.containsKey(location.substring(0, colonIndex));
+    }
+    
+    /**
+     * SCIPIO: Checks if the given location is intended to be a URL (having a protocol prefix), which may be a candidate
+     * for the {@link #resolveLocation} methods.
+     * <p>
+     * Currently, this returns true if and only if either:
+     * 1) the location starts with a registered protocol name in lowercase followed by a colon, or
+     * 2) the location contains a colon followed by two front slashes.
+     * In all other locations, this returns false to indicate maybe a file location was sought.
+     * <p>
+     * NOTE: This is a best-effort heuristic intended to cope with user input and 
+     * automatically try to determine the most likely intended format;
+     * but it does not guarantee that the location could not have been a simple file name or path.
+     * It is case-sensitive and will only recognize lowercase protocol prefix.
+     * <p>
+     * Added 2017-06-15.
+     */
+    public static boolean isUrlLocation(String location) {
+        if (UtilValidate.isEmpty(location)) return false; // if empty, resolveLocation always returns null
+        String type = getLocationType(location, null);
+        if (type == null) return false; 
+        if (isRegisteredProtocol(type)) return true;
+        if (location.indexOf("//", type.length() + 1) >= 0) return true;
+        return false;
+    }
+    
+    /**
+     * SCIPIO: Resolves the given location as a URL (having a protocol prefix) or as a filename.
+     * If <code>isUrl</code> is true, treats as URL; if false, treats as filename; if null, automatically
+     * tries to determined using the {@link #isUrlLocation} heuristic.
+     * Added 2017-06-15.
+     */
+    public static URL resolveLocationAsUrlOrFilename(String location, Boolean isUrl) throws MalformedURLException {
+        if (isUrl == Boolean.TRUE) return resolveLocation(location);
+        else if (isUrl == Boolean.FALSE) return UtilURL.fromFilename(location);
+        else return isUrlLocation(location) ? resolveLocation(location) : UtilURL.fromFilename(location);
+    }
+    
+    /**
+     * SCIPIO: Resolves the given location as a URL (having a protocol prefix) or as a filename.
+     * Tries to determined using the {@link #isUrlLocation} heuristic.
+     * Added 2017-06-15.
+     */
+    public static URL resolveLocationAsUrlOrFilename(String location) throws MalformedURLException {
+        return isUrlLocation(location) ? resolveLocation(location) : UtilURL.fromFilename(location);
+    }
+    
     private FlexibleLocation() {}
 }

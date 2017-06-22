@@ -972,6 +972,14 @@ under the License.
             <now-timestamp field="parameters.effectiveDate"/>
         </if-empty>
         
+        <!-- 
+            SCIPIO: When invoked through the shop this didn't work since it took the current logged in customer and has no perms to run the service below. 
+            So now the service is ran by system user.
+        -->
+        <entity-one entity-name="UserLogin" value-field="permUserLogin">
+            <field-map field-name="userLoginId" value="system"/>
+        </entity-one>
+        <set from-field="permUserLogin" field="partyAccountingPreferencesMap.userLogin"/>
         <!-- check currency and when required use invoice currency rate or convert when invoice not available -->
         <set field="partyAccountingPreferencesMap.organizationPartyId" from-field="organizationPartyId"/>
         <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesMap">

@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "ordercommon.ftl">
+<#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <#-- SCIPIO: TODO: Uncomment return link once converted -->
 
@@ -34,9 +34,9 @@ under the License.
 <#assign printable = printable!false>
 
 <#if (orderHeader.orderId)??>
-  <@heading level=1>
+  <@heading>
     <#-- SCIPIO: This page doesn't actually show a full invoice - only the PDF is a full invoice (with tax information) - so "PDF" beside title is misleading -->
-    ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
+    ${getLabel("OrderOrderId")}: ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
   </@heading>
 </#if>
 
@@ -71,7 +71,7 @@ under the License.
     <#-- orderinfo -->
     <@row>
         <@cell columns=4>
-            <@section title=uiLabelMap.CommonOverview>
+            <@section title=uiLabelMap.CommonOverview containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                 <@table type="fields">
                   <#if placingParty?has_content && orderDate?has_content>
                     <#-- SCIPIO: screen finds it -->
@@ -145,7 +145,7 @@ under the License.
         <#-- payment info -->
         <@cell columns=4>
             <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-                <@section title=uiLabelMap.AccountingPaymentInformation>
+                <@section title=uiLabelMap.AccountingPaymentInformation containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                     <@table type="fields">
                         <#macro paymentMethodAmount paymentMethodId>
                           <#if (paymentMethodAmountMap[paymentMethodId])?has_content>
@@ -291,7 +291,7 @@ under the License.
         <#-- shipping info -->
         <@cell columns=4>
             <#if orderItemShipGroups?has_content>
-                <@section title=uiLabelMap.OrderShippingInformation>
+                <@section title=uiLabelMap.OrderShippingInformation containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                     <#-- shipping address -->
 
                     <#if orderItemShipGroups?has_content>

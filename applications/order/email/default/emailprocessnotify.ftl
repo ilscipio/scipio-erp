@@ -16,14 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-
-<body>
-
 <h1>Attention!</h1>
 <div>&nbsp;</div>
 
@@ -79,6 +71,3 @@ under the License.
     </@td>
   </@tr>
 </@table>
-
-</body>
-</html>

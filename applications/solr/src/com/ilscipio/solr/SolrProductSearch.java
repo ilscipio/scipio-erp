@@ -28,6 +28,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
@@ -56,7 +57,10 @@ public abstract class SolrProductSearch {
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
-        GenericValue productInstance = (GenericValue) context.get("instance");
+        // NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity
+        //GenericValue productInstance = (GenericValue) context.get("instance");
+        GenericEntity productInstance = (GenericEntity) context.get("instance");
+        
         String productId = (String) productInstance.get("productId");
 
         boolean indexed = false;

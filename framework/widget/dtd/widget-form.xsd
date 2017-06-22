@@ -67,6 +67,8 @@ under the License.
                 <xs:element minOccurs="0" ref="row-actions" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-row-style" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-target" />
+                <!-- SCIPIO: 2017-04-21: new: extra spot to insert javascript -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="page-script" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-service" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-entity" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="field" />
@@ -709,6 +711,35 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="page-script">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Spot to put extra javascript.
+                Added 2017-04-21.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute name="lang" default="javascript">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="javascript" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="preprocessor" default="none">
+                <xs:annotation>
+                    <xs:documentation>If preprocessor="flexible", flexible expressions are used to interpret the content.
+                        Default: none (no preprocessing)</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none" />
+                        <xs:enumeration value="flexible" />
+                        <!-- TODO: interpreted Freemarker support
+                        <xs:enumeration value="ftl" />-->
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="auto-fields-service">
         <xs:complexType>
             <xs:attribute name="service-name" type="xs:string" use="required" />
@@ -946,6 +977,11 @@ under the License.
                     <xs:documentation>The name of a style (like a CSS class) to apply to the area around the title of this field.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="title-area-inline-style">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The CSS style attributes to apply to the area around the title of this field.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="widget-area-style">
                 <xs:annotation>
                     <xs:documentation>The name of a style (like a CSS class) to apply to the area around the widget that the user will interact with for this field.</xs:documentation>
@@ -1129,8 +1165,44 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="no-current-selected-key">
                 <xs:annotation>
-                    <xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation>
+                    <xs:documentation>SCIPIO: The key to mark as selected when there is no current entry value, or
+                        in other words the default value.
+                        2017-04-20: This has now been implemented for check field; it behaves as a default value (same 
+                            as defaultValue parameter of @field macro in the Freemarker templating API).</xs:documentation>
                 </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Key value for single check field (with multiple checkbox, used as key value where unspecified).
+                        (Corresponds to the "value" parameter of the @field macro from Freemarker templating API).
+                        Default: "Y"
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="alt-key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: Alt key value for single check field (with multiple checkbox, used as alt key value where unspecified).
+                        NOTE: if specified, this automatically implies use-hidden="true" (unless explicitly set false, in which case this is ignored).
+                        (Corresponds to the "altValue" parameter of the @field macro from Freemarker templating API).
+                        Default: If use-hidden="true", "N"; otherwise, none (empty)
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="use-hidden" default="">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: (boolean) If true, checkbox alt-key will be submitted when the check field is off using hidden inputs.
+                        Requires dynamic script (javascript).
+                        Default: true if alt-key is specified (even if empty); false otherwise.
+                        NOTE: to prevent submitting empty value, 
+                        Added 2017-04-20.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="" />
+                        <xs:enumeration value="true" />
+                        <xs:enumeration value="false" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -2114,7 +2186,7 @@ under the License.
                         If specified the list entry will be placed in the local
                         context, otherwise each list entry must be a Map that will be expanded
                         into the local context.
-                </xs:documentation>
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="key-name" use="required">
@@ -2124,7 +2196,15 @@ under the License.
                         to the server; this should be the full name of the location of the
                         key value in the context, given the list-entry-name or expanded
                         list-entry Map as the options you would most likely use.
-                </xs:documentation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="alt-key-name">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: CHECK FIELD ONLY: Alternate key name (new 2017-04-20). 
+                        2017-04-20: Currently only used for checkboxes, for the "off" state.
+                        Corresponds to the "altValue" map argument in the "items" argument of the @field macro of the Freemarker templating API.
+                        NOTE: If this resolves to a non-empty value, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="description">
@@ -2137,6 +2217,14 @@ under the License.
     <xs:element name="option">
         <xs:complexType>
             <xs:attribute type="xs:string" name="key" use="required" />
+            <xs:attribute type="xs:string" name="alt-key">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: CHECK FIELD ONLY: Alternate key (new 2017-04-20). 
+                        2017-04-20: Currently only used for checkboxes, for the "off" state.
+                        Corresponds to the "altValue" map argument in the "items" argument of the @field macro of the Freemarker templating API.
+                        NOTE: If this is specified, then special input hidden logic to submit the alt value is automatically employed.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="description">
                 <xs:annotation>
                     <xs:documentation>What the user will see in the widget; defaults to the value of the key attribute.</xs:documentation>

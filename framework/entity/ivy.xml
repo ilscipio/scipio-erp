@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to Ilscipio Gmbh (ILSCIPIO) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ -->
+<ivy-module version="2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info module="entity" organisation="com.ilscipio.scipio.ce"/>
+    <configurations>
+        <!-- configurations for initial download/build -->
+        <conf name="application" description="download all jars required for build"/>
+        
+        <conf name="base" description="download all base root jars required for build"/>
+        <conf name="jdbc" description="download all jdbc jars required for build"/>
+    </configurations>
+
+    <dependencies>
+        <!-- dependencies for initial/build downloads -->
+        <!-- re init -->
+        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="base->default"/>
+        
+        <!-- DEV NOTE: IF YOU INCREASE ANY OF THESE VERSION NUMBERS, MAKE SURE TO UPDATE THE ONES
+            IN THE ROOT /ivy.xml FILE (AS LONG AS THEY EXIST) -->
+        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk17" rev="2.2.10" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="2.2.10" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.4" transitive="false" conf="jdbc->default"/>
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.39" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.postgresql" name="postgresql" rev="9.4.1209.jre7" transitive="false" conf="jdbc->default"/>
+        <dependency org="org.postgresql" name="postgresql" rev="9.4.1209" transitive="false" conf="jdbc->default"/>
+        
+        <!-- TODO: MISSING DEPENDENCIES
+!       framework/entity/lib/jdbc/derby-10.11.1.1.jar
+!       framework/entity/lib/jdbc/unused/firebird/1.7/jaybird-2.2.10_jre7.jar
+!       framework/entity/lib/jdbc/unused/firebird/1.8/jaybird-2.2.10_jre8.jar
+!       framework/entity/lib/jdbc/unused/hsql/hsqldb.jar
+!       framework/entity/lib/jdbc/unused/mysql/mysql-connector-java-5.1.39-bin.jar
+!       framework/entity/lib/jdbc/unused/postgresql/1.7/postgresql-9.4.1209.jre7.jar
+!       framework/entity/lib/jdbc/unused/postgresql/1.8/postgresql-9.4.1209.jar
+         -->
+         
+        <!-- WORKAROUND for evicted postgresql dependencies -->
+        <conflict manager="all"/>
+    </dependencies>
+</ivy-module>

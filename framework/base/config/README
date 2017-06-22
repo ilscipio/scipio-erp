@@ -1,4 +1,9 @@
-The 30 May 2014 a new self signed SSL certificate was created on the OFBiz demo VM with own CA following http://httpd.apache.org/docs/current/ssl/ssl_faq.html#realcert
-This certificate is valid for 10 years (until May 27 08:43:19 2024 GMT)
-Characteristics: C=US, ST=DE, L=Wilmington, O=Apache Software Fundation, OU=Apache OFBiz, CN=ofbiz-vm.apache.org/emailAddress=dev@ofbiz.apache.org
+SCIPIO: Apr 18 22:07:18 2017 GMT: New self signed SSL certificate was created. 
+Example procedure: http://httpd.apache.org/docs/current/ssl/ssl_faq.html#realcert
+This certificate is valid for 10 years (until Apr 16 22:07:18 2027 GMT)
+Characteristics: C=DE, ST=Hesse, L=Heuchelheim, O=ilscipio GmbH, OU=SCIPIO ERP, CN=localhost/emailAddress=info@ilscipio.com
 The password is still the same: changeit
+To view details, use: 
+  keytool -list -v -keystore ofbizssl.jks
+NOTE: The RMI self-signed certificate has also been updated, and has the same information and password, but it is
+    a different certificate with different signature than the web certificate.

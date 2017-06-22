@@ -72,4 +72,14 @@ under the License.
         <main-jar/>
         <test-jar/>
     </target>
+    
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+    <selector id="lib.update.manual.files">
+        <or>
+            <!-- FIXME: manually-committed JARs missing from public repos -->
+            <filename name="watermarker-*.jar"/>
+        </or>
+    </selector>
+    
 </project>

@@ -23,20 +23,25 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BooleanModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
 import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
 import javolution.util.FastMap;
 
 /**
@@ -599,4 +604,76 @@ public abstract class TemplateFtlUtil {
         }
     }
 
+    /**
+     * Makes param string (no starting delimiter), based on
+     * {@link org.ofbiz.webapp.control.RequestLinkUtil.makeParamString(Map<String, Object>, String)}.
+     * DEV NOTE: keep both methods in sync.
+     */
+    public static String makeParamString(TemplateHashModelEx params, String delim, boolean nonEscaping) throws TemplateModelException {
+        StringBuilder sb = new StringBuilder("");
+        TemplateCollectionModel keysModel = params.keys();
+        TemplateModelIterator itModel = keysModel.iterator();
+        if (nonEscaping) {
+            while (itModel.hasNext()) {
+                TemplateScalarModel nameModel = (TemplateScalarModel) itModel.next();
+                String rawName = (String) LangFtlUtil.unwrapAlways(nameModel);
+                TemplateModel valModel = params.get(rawName);
+                if (valModel instanceof TemplateCollectionModel) {
+                    TemplateCollectionModel valCollModel = ((TemplateCollectionModel) valModel);
+                    TemplateModelIterator valItModel = valCollModel.iterator();
+                    while(valItModel.hasNext()) {
+                        RequestLinkUtil.appendToParamStringAsString(sb, rawName, getRawVal(valItModel.next()), delim);
+                    }
+                } else if (valModel instanceof TemplateSequenceModel) {
+                    TemplateSequenceModel valSeqModel = ((TemplateSequenceModel) valModel);
+                    for(int i=0; i < valSeqModel.size(); i++) {
+                        RequestLinkUtil.appendToParamStringAsString(sb, rawName, getRawVal(valSeqModel.get(i)), delim);
+                    }
+                } else {
+                    RequestLinkUtil.appendToParamStringAsString(sb, rawName, getRawVal(valModel), delim);
+                }
+            }
+        } else {
+            while (itModel.hasNext()) {
+                TemplateScalarModel nameModel = (TemplateScalarModel) itModel.next();
+                String name = nameModel.getAsString();
+                String rawName = (String) LangFtlUtil.unwrapAlways(nameModel);
+                TemplateModel valModel = params.get(rawName);
+                if (valModel instanceof TemplateCollectionModel) {
+                    TemplateCollectionModel valCollModel = ((TemplateCollectionModel) valModel);
+                    TemplateModelIterator valItModel = valCollModel.iterator();
+                    while(valItModel.hasNext()) {
+                        TemplateModel subValModel = valItModel.next();
+                        RequestLinkUtil.appendToParamStringAsString(sb, name, getAsStringEscapingIfString(subValModel), delim);
+                    }
+                } else if (valModel instanceof TemplateSequenceModel) {
+                    TemplateSequenceModel valSeqModel = ((TemplateSequenceModel) valModel);
+                    for(int i=0; i < valSeqModel.size(); i++) {
+                        TemplateModel subValModel = valSeqModel.get(i);
+                        RequestLinkUtil.appendToParamStringAsString(sb, name, getAsStringEscapingIfString(subValModel), delim);
+                    }
+                } else {
+                    RequestLinkUtil.appendToParamStringAsString(sb, name, getAsStringEscapingIfString(valModel), delim);
+                }
+            }
+        }
+        if (sb.length() >= delim.length()) {
+            sb.delete(0, delim.length());
+        }
+        return sb.toString();
+    }
+    
+    private static Object getRawVal(TemplateModel model) throws TemplateModelException {
+        return (model != null) ? LangFtlUtil.unwrapAlways(model) : null;
+    }
+    
+    private static Object getAsStringEscapingIfString(TemplateModel model) throws TemplateModelException {
+        if (model == null) {
+            return null;
+        } else if (OfbizFtlObjectType.STRING.isObjectType(model)) {
+            return ((TemplateScalarModel) model).getAsString();
+        } else {
+            return LangFtlUtil.unwrapAlways(model);
+        }
+    }
 }

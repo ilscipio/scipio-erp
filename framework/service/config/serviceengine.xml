@@ -102,7 +102,7 @@ under the License.
         <jms-service name="serviceMessenger" send-mode="all">
             <server jndi-server-name="default"
                     jndi-name="jms/TopicConnectionFactory"
-                    topic-queue="jms/OFBTopic"
+                    topic-queue="jms/ScipioTopic"
                     type="topic"
                     username="admin"
                     password="admin"

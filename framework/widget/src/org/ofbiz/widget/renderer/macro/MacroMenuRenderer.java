@@ -62,6 +62,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     public static final String module = MacroMenuRenderer.class.getName();
     
     /**
+     * SCIPIO: NOTE: This should always be true. Scipio no longer supports the old rendering method.
+     */
+    private static final boolean oneShotMacrosEnabled = UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true);
+    
+    /**
      * SCIPIO: Maps traditional Ofbiz macro names to one-shot macro render entries.
      */
     static final Map<String, OneShotMacro.Entry> renderEntryMacroNameMap;
@@ -92,9 +97,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     /**
      * SCIPIO: One-shot macro helper class. Controls whether render macros piecemeal or
      * in one invocation upon close.
+     * <p>
+     * NOTE: 2017-04-25: removed final, in some case might need to switch it out temporarily.
      */
-    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("scipioWebapp", "scipio.templating.widget.oneshotmacros", true), 
-            "renderMenuFull", renderEntryMacroNameMap, ftlFmt);
+    private OneShotMacro oneShotMacro = makeOneShotMacroInst();
     
     /**
      * Constructor.
@@ -109,6 +115,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         this.rendererName = name; // SCIPIO: new
     }
 
+    private OneShotMacro makeOneShotMacroInst() { // SCIPIO
+        return new OneShotMacro(oneShotMacrosEnabled, "renderMenuFull", renderEntryMacroNameMap, ftlFmt);
+    }
+    
     /**
      * SCIPIO: Returns macro library path used for this renderer. 
      */
@@ -196,8 +206,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         if (oneShotMacro.isEnabled()) {
             oneShotMacro.appendData(writer, macroName, macroParameters);
-        }
-        else {
+        } else {
             executeMacroReal(writer, macroName, macroParameters);
         }
     }
@@ -531,6 +540,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("disabled", disabled);
         parameters.put("selectedAncestor", selectedAncestor);
         
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", menuItem.getName());
+        
         try {
             executeMacro(writer, "renderMenuItemBegin", parameters);
         } catch (TemplateException e) {
@@ -554,7 +566,37 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                     // need functionality from org.ofbiz.widget.model.ModelMenu.FlaggedMenuNodes
                     if (!Boolean.FALSE.equals(expandOvrd)) { // false expandOvrd prevents expand, true guarantees expand
                         if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu) || Boolean.TRUE.equals(expandOvrd)) {
-                            childSubMenu.renderSubMenuString(writer, context, this);
+                            // 2017-04-25: if this is the separate sub-menu match, we have to render it to a different output
+                            if (renderState != null && renderState.checkUpdateSeparateMenuTargetSelected(context, childSubMenu)) {
+                                // SPECIAL: to extract the sub-menu definition, we put a marker, output, and copy the output
+                                String subMenuOutput;
+                                oneShotMacro.setMarker();
+                                try {
+                                    childSubMenu.renderSubMenuString(writer, context, this);
+     
+                                    subMenuOutput = oneShotMacro.getBufferFromFirstValueSinceMarker();
+                                    
+                                    String origAction = renderState.getSeparateMenuConfig().getTargetOriginalAction();
+                                    if (origAction.startsWith("remove")) {
+                                        // simply delete the text output we made
+                                        oneShotMacro.resetToMarker();
+                                    } else { // preserve
+                                        // nothing to do, we leave the original alone 
+                                    }
+                                } finally {
+                                    oneShotMacro.clearMarker();
+                                }
+                                
+                                if (UtilValidate.isNotEmpty(subMenuOutput)) {
+                                    oneShotMacro.addExtraRootMacroArgRaw("sepMenuDef", subMenuOutput);
+                                }
+                            } else if (renderState != null && renderState.isSeparateMenuTargetStaticNonSelected(context, childSubMenu) &&
+                                    "remove-all".equals(renderState.getSeparateMenuConfig().getTargetOriginalAction())) {
+                                ; // do not render - removing all candidates
+                            } else {
+                                // Regular case
+                                childSubMenu.renderSubMenuString(writer, context, this);
+                            }
                         }
                     }
                 }
@@ -603,6 +645,13 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
         
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", menu.getName());
+        
+        // SCIPIO: 2017-04-25: new
+        parameters.put("sepMenuType", renderState.getSeparateMenuConfig().getType());
+        // NOTE: sepMenuDef is added using special code further below
+        
         try {
             executeMacro(writer, "renderMenuBegin", parameters);
         } catch (TemplateException e) {
@@ -635,6 +684,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean selectedAncestor = !selected && subMenu.isSameOrAncestorOf(selectedMenuAndItem.getSubMenu());
         parameters.put("selected", selected);
         parameters.put("selectedAncestor", selectedAncestor);
+        
+        // SCIPIO: 2017-02-17: new
+        parameters.put("name", subMenu.getName());
         
         try {
             executeMacro(writer, "renderSubMenuBegin", parameters);

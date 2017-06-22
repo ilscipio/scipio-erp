@@ -85,7 +85,12 @@ Common menus NOTES:
     
     <!-- SCIPIO: New menu for sidebars derived from main app bar menus. Should have mostly minor differences with CommonSideBarMenu. -->
     <menu name="CommonEmptyAppSideBarMenu" type="simple" menu-container-style="+menu-type-sidebar" 
-        selected-menuitem-context-field-name="activeMainMenuItem" selected-menu-context-field-name="activeMainSubMenu" items-sort-mode="displaytext-ignorecase">
+        selected-menuitem-context-field-name="activeMainMenuItem" selected-menu-context-field-name="activeMainSubMenu" items-sort-mode="displaytext-ignorecase"
+        separate-menu-type="${groovy:context.menuCfgSepMenuType?:'default-sidebar'}" 
+        separate-menu-target-style="${groovy:context.menuCfgSepMenuTargetStyle?:'scipio-nav-actions-menu'}" 
+        separate-menu-target-preference="${groovy:context.menuCfgSepMenuTargetPref?:'greatest-ancestor'}" 
+        separate-menu-target-original-action="${groovy:context.menuCfgSepMenuTargetOrigAction?:'remove-selected'}"
+        ><!-- DEV NOTE: "remove-all" could be needed instead... -->
     </menu>
     <menu name="CommonAppSideBarMenu" extends="CommonEmptyAppSideBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}" >

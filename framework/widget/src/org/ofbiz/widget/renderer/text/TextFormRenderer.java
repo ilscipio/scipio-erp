@@ -327,4 +327,10 @@ public class TextFormRenderer implements FormStringRenderer {
         return "text";
     }
 
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        // SCIPIO: new
+    }
+
 }

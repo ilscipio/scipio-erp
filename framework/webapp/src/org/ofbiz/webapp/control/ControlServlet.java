@@ -35,6 +35,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -46,6 +48,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.stats.VisitHandler;
 
@@ -217,7 +220,7 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
                 Debug.logError(throwable, "Error in request handler: ", module);
-                request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(throwable.toString()));
+                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, throwable));
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
          } catch (RequestHandlerExceptionAllowExternalRequests e) {
@@ -225,7 +228,7 @@ public class ControlServlet extends HttpServlet {
               Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
-            request.setAttribute("_ERROR_MESSAGE_", UtilCodec.getEncoder("html").encode(e.toString()));
+            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, e));
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
 
@@ -240,26 +243,51 @@ public class ControlServlet extends HttpServlet {
 
             // use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
+                // SCIPIO: 2017-05-15: special case for targeted rendering of error page
+                Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_REQPARAM);
+                if (scpErrorRenderTargetExpr != null) {
+                    RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
+                }
+                
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
                 Debug.logError("Including errorPage: " + errorPage, module);
 
                 // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
                 try {
-                    rd.forward(request, response); //SCIPIO: Changed from include to forward so that the response can be handled appropriately
+                    rd.forward(request, response); // SCIPIO: Changed from include to forward so that the response can be handled appropriately
                 } catch (Throwable t) {
                     Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 
                     String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
-                    try {
-                        response.getWriter().print(errorMessage);
-                    } catch (Throwable t2) {
+                    // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
+                    if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
                         try {
-                            int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                            Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
-                            response.sendError(errorToSend, errorMessage);
-                        } catch (Throwable t3) {
-                            // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
-                            throw new IllegalStateException(errorMessage);
+                            response.getWriter().print(errorMessage);
+                        } catch (Throwable t2) {
+                            try {
+                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
+                                response.sendError(errorToSend, errorMessage);
+                            } catch (Throwable t3) {
+                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                throw new IllegalStateException(errorMessage);
+                            }
+                        }
+                    } else {
+                        // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
+                        final String genericErrorMessage = RequestUtil.getGenericErrorMessage();
+                        try {
+                            response.getWriter().print(genericErrorMessage);
+                        } catch (Throwable t2) {
+                            try {
+                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() 
+                                    + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
+                                response.sendError(errorToSend, genericErrorMessage);
+                            } catch (Throwable t3) {
+                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                throw new IllegalStateException(genericErrorMessage);
+                            }
                         }
                     }
                 }
@@ -313,7 +341,7 @@ public class ControlServlet extends HttpServlet {
         GenericDelegator.clearUserIdentifierStack();
         GenericDelegator.clearSessionIdentifierStack();
     }
-
+    
     /**
      * @see javax.servlet.Servlet#destroy()
      */

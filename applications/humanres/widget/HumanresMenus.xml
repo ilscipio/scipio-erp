@@ -138,7 +138,7 @@
         </menu-item>
     </menu>
     
-    <menu name="EmploymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EditPartyBenefit">
+    <menu name="EmploymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EditPartyBenefit" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="EmploymentBar" recursive="includes-only" />
     </menu>
     
@@ -170,7 +170,7 @@
         </menu-item>
     </menu>
     
-    <menu name="EmplPositionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EmplPositionView">
+    <menu name="EmplPositionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EmplPositionView" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="EmplPositionBar" recursive="includes-only" />
         <menu-item-alias name="FindEmplPositions" for="PARENT-NOSUB"/>
     </menu>
@@ -307,7 +307,7 @@
     </menu>
     
     <menu name="EmployeeProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="EditEmployeeSkills">
+        default-menu-item-name="EditEmployeeSkills" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="EmployeeProfileTabBar" recursive="includes-only" />
     </menu>
     

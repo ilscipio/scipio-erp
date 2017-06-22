@@ -1,3 +1,4 @@
+<#include "common.ftl">
                 <#--</ul>-->
         </nav>
         </div>

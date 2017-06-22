@@ -181,9 +181,18 @@ public abstract class ModelWidget implements Serializable {
     public abstract String getContainerLocation();
     
     /**
-     * SCIPIO: Returns widget type, usually same as tag name (for post-construction logging).
+     * SCIPIO: Returns widget type, usually same as tag name 
+     * 
      */
     public abstract String getWidgetType();
+    
+    /**
+     * SCIPIO: Returns tag name, usually same as widget type 
+     * (for post-construction logging, dynamic queries, targeted rendering).
+     */
+    public String getTagName() {
+        return getWidgetType();
+    }
     
     /**
      * SCIPIO: Returns location#name widget string.
@@ -202,6 +211,51 @@ public abstract class ModelWidget implements Serializable {
      */
     public String getLogWidgetLocationString() {
         return " (" + getWidgetType() +" widget: " + getFullLocationAndName() + ")";
+    }
+    
+    /**
+     * SCIPIO: For any ModelWidget that supports a <code>id="..."</code> attribute.
+     */
+    public interface IdAttrWidget {
+        String getId();
+    }
+    
+    /**
+     * SCIPIO: For any ModelWidget that supports a flexible <code>name="..."</code> attribute.
+     */
+    public interface FlexibleNameAttrWidget {
+        String getName(Map<String, Object> context);
+    }
+
+    /**
+     * SCIPIO: For any ModelWidget that supports a flexible <code>id="..."</code> attribute.
+     */
+    public interface FlexibleIdAttrWidget { // no need yet: extends IdAttrWidget
+        String getId(Map<String, Object> context);
+    }
+    
+    /**
+     * SCIPIO: Gets widget name, either flexible if available, or hardcoded if specified, or null.
+     */
+    public static String getName(ModelWidget widget, Map<String, Object> context) {
+        if (widget instanceof FlexibleNameAttrWidget) {
+            return ((FlexibleNameAttrWidget) widget).getName(context);
+        } else {
+            return widget.getName();
+        }
+    }
+    
+    /**
+     * SCIPIO: Gets widget id, either flexible if available, or hardcoded if available, or null.
+     */
+    public static String getId(ModelWidget widget, Map<String, Object> context) {
+        if (widget instanceof FlexibleIdAttrWidget) {
+            return ((FlexibleIdAttrWidget) widget).getId(context);
+        } else if (widget instanceof IdAttrWidget) {
+            return ((IdAttrWidget) widget).getId();
+        } else {
+            return null;
+        }
     }
     
 }

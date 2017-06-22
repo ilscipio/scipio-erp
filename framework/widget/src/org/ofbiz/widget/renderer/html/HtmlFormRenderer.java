@@ -1350,8 +1350,9 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.io.Writer, java.util.Map, org.ofbiz.widget.form.model.ModelForm, org.ofbiz.widget.model.ModelFormField, int positionSpan)
      */
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) throws IOException {
-        writer.append("   <td");
+        writer.append("   <th");
         String areaStyle = modelFormField.getTitleAreaStyle();
+        String areaInlineStyle = modelFormField.getTitleAreaInlineStyle();
         if (positionSpan > 1) {
             writer.append(" colspan=\"");
             writer.append(Integer.toString(positionSpan));
@@ -1362,6 +1363,11 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
             writer.append(areaStyle);
             writer.append("\"");
         }
+        if (UtilValidate.isNotEmpty(areaInlineStyle)) {
+            writer.append(" style=\"");
+            writer.append(areaInlineStyle);
+            writer.append("\"");
+        }
         writer.append(">");
         //appendWhitespace(writer);
     }
@@ -1370,7 +1376,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
      * @see org.ofbiz.widget.form.FormStringRenderer#renderFormatHeaderRowCellClose(java.io.Writer, java.util.Map, org.ofbiz.widget.form.model.ModelForm, org.ofbiz.widget.model.ModelFormField)
      */
     public void renderFormatHeaderRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) throws IOException {
-        writer.append("</td>");
+        writer.append("</th>");
         appendWhitespace(writer);
     }
 
@@ -2850,6 +2856,12 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
     @Override
     public String getRendererName() { // SCIPIO: new
         return "html";
+    }
+
+    @Override
+    public void renderFormPageScripts(Appendable writer, Map<String, Object> context, ModelForm modelForm)
+            throws IOException {
+        // SCIPIO: new
     }
 
 }

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Base" default="jar" basedir=".">
+<project name="OFBiz - Base" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -107,4 +107,74 @@ under the License.
             </test-elements>
         </test-jar>
     </target>
+
+    <!-- SCIPIO: Special lib download script for complex base includes -->
+    <target name="do-lib-update" description="Downloads all jars (base component implementation)">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="base">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/barcode4j-[^/]+)(\.jar)$$" to="\1-barcode4j-fop-ext-complete\2" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?javax\.mail-([^/]+\.jar)$$" to="\1mail-\2" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <ivy:retrieve pattern="lib/ant/${lib.update.filename.pattern.ivy}" conf="ant"/>
+        <ivy:retrieve pattern="lib/commons/${lib.update.filename.pattern.ivy}" conf="commons"/>
+        <ivy:retrieve pattern="lib/j2eespecs/${lib.update.filename.pattern.ivy}" conf="j2eespecs">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <!-- NOTE: Ofbiz used Tomcat-provided API jars instead of official javax ones, and here we have to make assumptions about corresponding versions (FIXME?) -->
+                <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$$" to="\1servlet-api-3.1.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$$" to="\1jsp-api-2.3.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$$" to="\1el-api-3.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$$" to="\1annotations-api-3.0.jar" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <ivy:retrieve pattern="lib/scripting/${lib.update.filename.pattern.ivy}" conf="scripting">
+            <firstmatchmapper>
+                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
+                <regexpmapper from="^(.*/)?oro(-[^/]+\.jar)$$" to="\1jakarta-oro\2" handledirsep="true"/>
+                <identitymapper/>
+            </firstmatchmapper>
+        </ivy:retrieve>
+        <!-- TODO?: these are from the root /ivy.xml...
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="activemq"/>
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="cobertura"/>
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="sonar-ant-task"/>
+        -->
+    </target>
+
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
+        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
+    <selector id="lib.update.manual.files">
+        <or>
+            <filename name="ant-*.jar"/>
+            <filename name="ant/**.jar"/>
+            <filename name="ivy-*.jar"/>
+            <!-- doesn't appear to be in use in mandatory build code anywhere
+            <filename name="scripting/antlr-*.jar"/>-->
+            <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
+ 
+            <!-- TODO?: these currently get downloaded separately, on-demand; should handle automatically instead? -->
+            <filename name="sonar-*.jar"/>
+            <filename name="cobertura-*.jar"/>
+            <filename name="activemq-*.jar"/>
+
+            <!-- FIXME: manually-committed JARs missing from public repos -->
+            <filename name="hamcrest-all-*.jar"/>
+            <filename name="avalon-framework-*.jar"/>
+            <filename name="batik-all-*.jar"/>
+            <filename name="bsh-engine-modified.jar"/>
+            <filename name="clhm-*.jar"/>
+            <filename name="ical4j-*.jar"/>
+            <filename name="jdbm-*.jar"/>
+            <filename name="jpim-*.jar"/>
+            <filename name="resolver-*.jar"/>
+            <filename name="scripting/jython-nooro.jar"/>
+            <filename name="scripting/bsh-*.jar"/>
+            <filename name="serializer-*.jar"/>
+        </or>
+    </selector>
+    
 </project>

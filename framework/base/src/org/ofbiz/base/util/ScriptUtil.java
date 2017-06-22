@@ -46,6 +46,7 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 
+import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -74,10 +75,22 @@ public final class ScriptUtil {
     private static ScriptHelperFactory helperFactory = null;
     /** A set of script names - derived from the JSR-223 scripting engines. */
     public static final Set<String> SCRIPT_NAMES;
+    /** 
+     * SCIPIO: New (2017-01-30) static ScriptEnginerManager instance, instead of recreating at every invocation.
+     * NOTE: For this to be safe, we MUST use the static ClassLoader, and NOT the thread context classloader,
+     * because the latter may be a Tomcat webapp classloader for an arbitrary webapp.
+     * NOTE: This singleton means it is not possible for a webapp to provide its own script engines, but generally
+     * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances, 
+     * there would probably have to be a ScriptEngineManager cached in every ServletContext as attribute (TODO?).
+     */
+    private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(ScriptUtil.class.getClassLoader());
 
     static {
+        // SCIPIO: sanity check
+        Debug.logInfo("ScriptUtil engine manager class loader: " + ScriptUtil.class.getClassLoader().getClass().getName(), module);
+        
         Set<String> writableScriptNames = new HashSet<String>();
-        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngineManager manager = getScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
         if (engines.isEmpty()) {
             Debug.logInfo("No scripting engines were found.", module);
@@ -131,11 +144,12 @@ public final class ScriptUtil {
         Assert.notNull("filePath", filePath);
         CompiledScript script = parsedScripts.get(filePath);
         if (script == null) {
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByExtension(getFileExtension(filePath));
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             try {
                 Compilable compilableEngine = (Compilable) engine;
                 URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
@@ -170,11 +184,12 @@ public final class ScriptUtil {
         String cacheKey = language.concat("://").concat(script);
         CompiledScript compiledScript = parsedScripts.get(cacheKey);
         if (compiledScript == null) {
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName(language);
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             try {
                 Compilable compilableEngine = (Compilable) engine;
                 compiledScript = compilableEngine.compile(script);
@@ -269,11 +284,12 @@ public final class ScriptUtil {
             if (compiledScript != null) {
                 return executeScript(compiledScript, null, createScriptContext(context), null);
             }
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = getScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName(language);
             if (engine == null) {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
+            engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Begin processing script [" + script + "] using engine " + engine.getClass().getName(), module);
             }
@@ -376,11 +392,12 @@ public final class ScriptUtil {
             }
         }
         String fileExtension = getFileExtension(filePath);
-        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngineManager manager = getScriptEngineManager();
         ScriptEngine engine = manager.getEngineByExtension(fileExtension);
         if (engine == null) {
             throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
         }
+        engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
         if (Debug.verboseOn()) {
             Debug.logVerbose("Begin processing script [" + filePath + "] using engine " + engine.getClass().getName(), module);
         }
@@ -410,7 +427,10 @@ public final class ScriptUtil {
     public static Class<?> parseScript(String language, String script) {
         Class<?> scriptClass = null;
         if ("groovy".equals(language)) {
-            scriptClass = GroovyUtil.parseClass(script);
+            // SCIPIO: 2017-01-27: this now parses using the custom GroovyClassLoader,
+            // so that groovy snippets from FlexibleStringExpander support extra additions
+            //scriptClass = GroovyUtil.parseClass(script);
+            scriptClass = GroovyUtil.parseClass(script, GroovyUtil.getGroovyScriptClassLoader());
         }
         return scriptClass;
     }
@@ -513,5 +533,54 @@ public final class ScriptUtil {
             }
         }
         return sb.toString();
+    }
+    
+    /**
+     * SCIPIO: Applies global configurations to the given ScriptEngine, if any, for this invocation/thread. 
+     * Should be called by all ScriptUtil methods every time a new ScriptEngine is gotten
+     * from the ScriptEngineManager.
+     * <p>
+     * NOTE: This is safe only with the assumption that the ScriptEngine instance
+     * passed was newly created for this thread (and not a singleton instance). 
+     * At current time (2017-01-27), this was already being assumed (implied by the presence of
+     * calls such as <code>ScriptEngine.setContext</code>, above),
+     * and is known to be true for GroovyScriptEngineImpl (see Groovy source code),
+     * further dictated by the fact that GroovyScriptEngineFactory cannot be configured
+     * without subclassing.
+     */
+    private static ScriptEngine configureScriptEngineForInvoke(ScriptEngine scriptEngine) {
+        return configureScriptEngine(scriptEngine);
+    }
+    
+    /**
+     * SCIPIO: Configures the given script engine with any non-default settings needed.
+     * <p>
+     * 2017-01-27: This now sets our custom GroovyClassLoader on the engine, so that
+     * all Groovy scripts will derived from Ofbiz GroovyBaseScript and methods
+     * such as <code>from(...)</code> (entity queries) are available everywhere,
+     * notably from inline scripts.
+     */
+    private static ScriptEngine configureScriptEngine(ScriptEngine scriptEngine) {
+        if (scriptEngine instanceof GroovyScriptEngineImpl) {
+            GroovyScriptEngineImpl groovyScriptEngine = (GroovyScriptEngineImpl) scriptEngine;
+            groovyScriptEngine.setClassLoader(GroovyUtil.getGroovyScriptClassLoader());
+        }
+        return scriptEngine;
+    }
+    
+    /**
+     * SCIPIO: Returns an appropriate {@link javax.script.ScriptEngineManager} for current
+     * thread, with ofbiz configuration (if any). Abstracts the creation and selection of the manager.
+     * <p>
+     * NOTE: 2017-01-30: This now currently always returns a manager that uses the basic component-level
+     * classloader (rather than webapp classloader).
+     */
+    public static ScriptEngineManager getScriptEngineManager() {
+        // SCIPIO: 2017-01-30: we will no longer create a new manager at every invocation;
+        // needless re-initialization; does not appear to be any strong concrete reason to do this.
+        // In addition, the classloader should probably not be there current thread context classloader (with current setup),
+        // so in this new() call might call for ScriptUtil.class.getClassLoader() as parameter.
+        //return new ScriptEngineManager();
+        return scriptEngineManager;
     }
 }

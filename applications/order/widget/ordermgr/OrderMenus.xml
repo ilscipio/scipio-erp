@@ -178,7 +178,7 @@ under the License.
         </menu-item>-->
     </menu>
     
-    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
         <menu-item-alias name="OrderFindOrder" for="PARENT-NOSUB"/>
         <menu-item-alias name="OrderNewNote" for="PARENT-WITHSUB"/>
@@ -360,38 +360,56 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RequirementTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="QuoteTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">    
         <menu-item name="ViewQuote" title="${uiLabelMap.CommonSummary}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ViewQuote">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
         <menu-item name="EditQuote" title="${uiLabelMap.OrderQuote}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="EditQuote">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
         <menu-item name="ListQuoteAttributes" title="${uiLabelMap.CommonAttributes}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteAttributes">
                 <parameter param-name="quoteId"/>
             </link>
         </menu-item>
         <menu-item name="ListQuoteItems" title="${uiLabelMap.CommonItems}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteItems">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
 
         <menu-item name="ListQuoteNotes" title="${uiLabelMap.CommonNotes}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteNotes">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
         <menu-item name="ListQuoteRoles" title="${uiLabelMap.PartyParties}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteRoles">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
@@ -400,6 +418,7 @@ under the License.
             <condition>
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
                 </and>
             </condition>
             <link target="ListQuoteCoefficients">
@@ -410,6 +429,7 @@ under the License.
             <condition>
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
                 </and>
             </condition>
             <link target="ManageQuotePrices">
@@ -420,6 +440,7 @@ under the License.
             <condition>
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
                 </and>
             </condition>
             <link target="ListQuoteAdjustments">
@@ -430,6 +451,7 @@ under the License.
             <condition>
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
+                    <not><if-empty field="quoteId"/></not>
                 </and>
             </condition>
             <link target="ViewQuoteProfit">
@@ -437,18 +459,24 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="QuoteWorkEfforts" title="${uiLabelMap.WorkEfforts}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteWorkEfforts">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
         <menu-item name="QuoteTerms" title="${uiLabelMap.CommonTerms}">
+            <condition>
+                <not><if-empty field="quoteId"/></not>
+            </condition>
             <link target="ListQuoteTerms">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
             </link>
         </menu-item>
     </menu>
     
-    <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="QuoteTabBar" recursive="includes-only" />
     </menu>
     
@@ -629,7 +657,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RequestTabBar" recursive="includes-only" />
         <menu-item name="requestitems">
             <sub-menu name="RequestItem" include="RequestItemSideBar"/>
@@ -684,7 +712,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
         <menu-item-alias name="OrderFindReturn" for="PARENT-NOSUB"/>
         <menu-item-alias name="OrderQuickReturn" for="PARENT-WITHSUB"/>
@@ -717,7 +745,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="RequestItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RequestItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="editrequestitemmenu" recursive="includes-only" />
     </menu>
     

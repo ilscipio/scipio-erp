@@ -32,6 +32,7 @@ under the License.
   <@field type="select" name="newLocale">
     <#assign altRow = true>
     <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
+    
     <#list availableLocales as availableLocale>
         <#assign altRow = !altRow>
         <#assign langAttr = availableLocale.toString()?replace("_", "-")>
@@ -39,7 +40,7 @@ under the License.
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#assign langDir = "rtl">
         </#if>
-        <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#if (locale!?string) == availableLocale?string> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
+        <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#if (locale?has_content) && (locale.getLanguage() == availableLocale.getLanguage())> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#list>
   </@field>
   <@field type="submit" text=uiLabelMap.CommonSubmit/>

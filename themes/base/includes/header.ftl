@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#include "common.ftl">
 <#-- Applications -->
 <#if (requestAttributes.externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
 <#if (externalLoginKey)??><#assign externalKeyParam = "?externalLoginKey=" + (requestAttributes.externalLoginKey!)></#if>
@@ -122,6 +123,34 @@ under the License.
             <#assign appCount = appCount + 1>
           </li>
     </#list>
+</#macro>
+
+<#macro notificationsMenu>
+<ul class="dropdown">
+        <li class="not-click"><label>${uiLabelMap["CommonLastSytemNotes"]}</label></li>
+        <#list systemNotifications as notification>
+            <li>
+                <#if notification.url?has_content><#assign notificationUrl=addParamsToUrl(notification.url,{"scipioSysMsgId":notification.messageId})></#if>
+                <a href="${notificationUrl!"#"}">
+                    <div class="message_wrap <#if notification.isRead?has_content && notification.isRead=='Y'>message_isread</#if>">
+                        <#--<div class="message_status">
+                            <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
+                        </div>-->
+                        <div class="message_header">
+                            ${notification.title!"No Title"} <span class="message_time right">${notification.createdStamp?string.short}</span>
+                        </div>
+                        <div class="message_body">${notification.description!""}</div>
+                    </div>
+                </a>
+            </li>
+        </#list>
+        <#-- 
+        <li class="active">
+            <a href="#">
+                <div>View All</div>
+            </a>
+        </li>-->
+</ul>
 </#macro>
 
 <#-- in theory there is a transform that converts the selected menu to a proper list on these screens. It is never used by any of the other ofbiz screens, however and poorly documented
@@ -297,6 +326,13 @@ so for now we have to split the screens in half and rely on the menu widget rend
       <section class="top-bar-section">
         <!-- Right Nav Section -->
         <ul class="right">
+          <#-- Notifications -->
+          <#if systemNotifications?has_content>
+              <li class="has-dropdown not-click"><a href="#"><i class="${styles.icon!} ${styles.icon_prefix!}bell"></i><#if systemNotificationsCount?has_content> <span class="label">${systemNotificationsCount}</span></#if></a>
+                <@notificationsMenu />
+              </li>
+          </#if>
+          <#-- UserLogin -->
           <li class="has-dropdown not-click">
             <#if userLogin??><a href="#">${uiLabelMap.CommonWelcome}! ${userLogin.userLoginId}<#else><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></#if></a>
             <ul class="dropdown">       

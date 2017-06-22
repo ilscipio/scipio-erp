@@ -1,5 +1,5 @@
 
-<#include "catalogcommon.ftl">
+<#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#-- variable setup -->
 <#assign price = priceMap! />
@@ -86,15 +86,20 @@
                     toggleAmt(checkAmtReq(productId)); -->
                     toggleAmt('N');
                 }
-            }          
+            } else {
+                setVariantPriceSpec("${escapeVal(uiLabelMap.OrderChooseVariations, 'js')}...");
+            }         
         }
         
     </#if>
 
     function setVariantPrice(productId) {
+        console.log("setting variant price for productId: " + productId);       
         var productInfo = variantProductInfoMap[productId];
         if (productInfo) {
-            var price = productInfo.price;
+            var price = productInfo.priceFormatted;
+            if (price == null)
+                price = productInfo.price;
             if (price != null) {
                 setVariantPriceSpec(price);
             }
@@ -103,6 +108,7 @@
     
     function setVariantPriceSpec(price) {
         <#-- SCIPIO: TODO -->
+        $("#product-price strong").text(price);
     }    
   
     function checkAmtReq(productId) {
@@ -261,10 +267,10 @@
                 </#if>
 
                 <#if price.price?has_content>
-                    <#assign currentPrice = price.price/>
+                    <#assign currentPrice = price.price/>                    
                 <#else>
                     <#assign currentPrice = oldPrice/>
-                </#if>
+                </#if>               
 
                 <#-- SCIPIO: Uncomment to mark a product that is on sale
                 <#if price.isSale?? && price.isSale>
@@ -277,7 +283,9 @@
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
-                <#if currentPrice?has_content>
+                <#if (!product.isVirtual?has_content || (product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
+                    <span id="product-price"><strong>${uiLabelMap.OrderChooseVariations}...</strong></span>
+                <#elseif currentPrice?has_content>
                     <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
                 </#if>
                     <@script>
@@ -366,7 +374,7 @@
                         
                         <#-- SCIPIO: It is possible to have a limited amount of variant combination. 
                                    Therefore the available options are only displayed for the first variant and updated for the next based on the selected type. -->
-                        <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
+                        <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">                            
                             <#if variantTree?? && (variantTree.size() > 0)>
                                 <#list featureSet as currentType>
                                     <#if currentType_index == 0>
@@ -400,10 +408,11 @@
                         </#if>
                     <#else>
                         <#-- SCIPIO: This is a sanity check, leave here for debugging, will do no harm -->
+                        <#assign selFeatureTypes=toSimpleMap(selFeatureTypes!{})>
                         <#if selFeatureTypes?has_content>
                           <p>
                             <strong>WARN: </strong> Product has selectable features 
-                              [<#list mapKeys(selFeatureTypes) as typeId>${selFeatureTypes[typeId]!typeId!}<#if typeId_has_next>, </#if></#list>]
+                              [<#list mapKeys(selFeatureTypes) as typeId>${escapeVal(selFeatureTypes[typeId]!typeId!, 'html')}<#if typeId_has_next>, </#if></#list>]
                               but is not virtual - not currently handled
                           </p>
                         </#if>
@@ -527,20 +536,25 @@
       <#assign prodLongDescr = productContentWrapper.get("DESCRIPTION")!?trim/>
     </#if>
     <#assign prodWarnings = escapeVal(productContentWrapper.get("WARNINGS")!, 'htmlmarkup', {"allow":"internal"})/>
-
-    <ul class="tabs" data-tab>
-      <li class="tab-title active"><a href="#panel11"><i class="${styles.icon!} ${styles.icon_prefix}pencil"></i> ${uiLabelMap.CommonOverview}</a></li><#-- ${uiLabelMap.CommonDescription} -->
-      <li class="tab-title"><a href="#panel21"><i class="${styles.icon!} ${styles.icon_prefix}list"></i> ${uiLabelMap.CommonSpecifications}</a></li><#-- ${uiLabelMap.CommonInformation} -->
-    </ul>
-    <div class="tabs-content">
-        <div class="content active" id="panel11">
-            <@productDetailLongDescContent />
-        </div>
-            
-        <div class="content" id="panel21">
-            <@productDetailProductAttribContent />
-        </div>
-    </div>
+    
+    <#assign productDetailLongDescContentString><@productDetailLongDescContent /></#assign>
+    <#assign productDetailProductAttribContentString><@productDetailProductAttribContent /></#assign>
+    
+    <#if productDetailLongDescContentString?has_content || productDetailProductAttribContentString?has_content>
+        <@tabs>
+            <#if productDetailLongDescContentString?has_content>
+                <@tab title=uiLabelMap.CommonOverview>
+                    ${productDetailLongDescContentString}
+                </@tab>
+            </#if>
+            <#if productDetailProductAttribContentString?has_content>
+                <@tab title=uiLabelMap.CommonSpecifications>
+                    ${productDetailProductAttribContentString}
+                </@tab>
+            </#if>
+        </@tabs>
+    </#if>
+    
 </@section>
 <@section>
         <#-- Prefill first select box (virtual products only)

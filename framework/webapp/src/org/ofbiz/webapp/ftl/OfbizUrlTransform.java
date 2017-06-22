@@ -77,7 +77,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
-        final boolean strict = TransformUtil.getBooleanArg(args, "strict", rawParamsDefault); // SCIPIO: new
+        final boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
         
         final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: modified to remove default; leave centralized
         final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
@@ -91,7 +91,10 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         final Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp"); // Alias for type="inter-webapp"
         final Boolean controller = TransformUtil.getBooleanArg(args, "controller");
         final boolean extLoginKey = TransformUtil.getBooleanArg(args, "extLoginKey", false);
-        
+        // NOTE: the default for paramDelim is highly heuristic... for now just follow rawParams (even though it's not its exact meaning)
+        final String paramDelimDefault = rawParams ? "&" : "&amp;";
+        final String paramDelim = TransformUtil.getStringArg(args, "paramDelim", paramDelimDefault, true, true);
+
         return new Writer(out) {
 
             @Override
@@ -152,7 +155,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         String requestUrl = buf.toString();
                         // SCIPIO: If requested, add external login key
                         if (extLoginKey) {
-                            requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, true);
+                            requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, paramDelim);
                         }
                         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                         // SCIPIO: Now use more advanced method

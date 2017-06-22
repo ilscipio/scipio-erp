@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#include "customercommon.ftl">
+<#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
 <@section title=uiLabelMap.ProductSubscriptions id="subscription-summary">
     <@table type="data-list"> <#-- orig: width="100%" cellspacing="0" cellpadding="2" -->

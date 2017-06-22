@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<project name="Scipio - Build Tools" default="jar" basedir=".">
+    
+    <!-- SCIPIO: 2017-01-17: Assembles a small build tools jar
+        that can run independently from the ofbiz jars.
+        This is forcefully needed for some cases such as clean tasks.
+        Invoke using "ant build-scipio-build-tools" in main project. 
+        TODO?: could try to refactor into own directory. -->
+    
+    <!-- we need to reuse build.xml definitions...
+    <import file="../../common.xml"/>-->
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property name="desc" value="Scipio Build Tools"/>
+    <property name="name" value="scipio-build-tools"/>
+    <property name="ofbiz.home.dir" value="../.."/>
+    
+    <!-- NOTE: this must be included AFTER property defs -->
+    <import file="build.xml"/>
+    
+    <!-- FIXME: this include list is only affecting the class compilation, NOT the jar packaging, such
+        that the tools JAR ends up with extra garbage classes after a few global builds...
+        does not yet cause issues but probably will at some point... -->
+    <patternset id="src.inc.set">
+      <include name="com/ilscipio/scipio/ce/build/**/*.java"/>
+    </patternset>
+    
+    <path id="local.class.path">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dir}/commons" includes="*.jar"/>
+        <fileset dir="${lib.dir}/j2eespecs" includes="*.jar"/>
+        <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
+    </path>
+
+    <target name="jar" depends="classes">
+        <main-jar />
+    </target>
+    
+    <!-- SPECIAL: PREVENT ivy from running - we don't need the dependencies,  
+        and getting them makes clean tasks too heavy -->
+    <target name="init-lib-update">
+    </target>
+    
+</project>

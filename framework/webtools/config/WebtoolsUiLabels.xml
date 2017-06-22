@@ -573,13 +573,13 @@
         <value xml:lang="zh_TW">查詢入口網頁</value>
     </property>
     <property key="PageTitleFindUtilCache">
-        <value xml:lang="de">Cache Wartungsseite</value>
-        <value xml:lang="en">Cache Maintenance Page</value>
-        <value xml:lang="fr">Page de maintenance des caches</value>
+        <value xml:lang="de">Cache Wartungs</value>
+        <value xml:lang="en">Cache Maintenance</value>
+        <value xml:lang="fr">Maintenance des caches</value>
         <value xml:lang="it">Manutenzione cache</value>
         <value xml:lang="ja">キャッシュメンテナンスページ</value>
-        <value xml:lang="pt">Cache da PÃ¡gina de ManutenÃ§Ã£o</value>
-        <value xml:lang="ro">Pagina Intretinere Cache</value>
+        <value xml:lang="pt">Cache de ManutenÃ§Ã£o</value>
+        <value xml:lang="ro">Intretinere Cache</value>
         <value xml:lang="th">หน้าของการดูแลรักษา</value>
         <value xml:lang="vi">Trang quản trị bộ Đệm</value>
         <value xml:lang="zh">缓存维护页面</value>
@@ -587,12 +587,12 @@
     </property>
     <property key="PageTitleFindUtilCacheElements">
         <value xml:lang="de">Cache Elemente Wartungsseite</value>
-        <value xml:lang="en">Cache Element Maintenance Page</value>
-        <value xml:lang="fr">Page d'entretien d'éléments des caches</value>
-        <value xml:lang="it">Pagina manutenzione elementi cache</value>
+        <value xml:lang="en">Cache Element Maintenance</value>
+        <value xml:lang="fr">Entretien d'éléments des caches</value>
+        <value xml:lang="it">Manutenzione elementi cache</value>
         <value xml:lang="ja">キャッシュ要素メンテナンスページ</value>
-        <value xml:lang="pt">Elemento de Cache da PÃ¡gina de ManutenÃ§Ã£o</value>
-        <value xml:lang="ro">Pagina Intretinere Elemente Cache</value>
+        <value xml:lang="pt">Elemento de Cache de ManutenÃ§Ã£o</value>
+        <value xml:lang="ro">Intretinere Elemente Cache</value>
         <value xml:lang="th">หน้าของการดูแลรักษาอย่างละเอียด</value>
         <value xml:lang="vi">Trang quản trị phần tử bộ Đệm</value>
         <value xml:lang="zh">缓存元素维护页面</value>
@@ -1059,6 +1059,18 @@
         <value xml:lang="fr">Tout sélectionner (sauf les views)</value>
         <value xml:lang="it">Seleziona tutto</value>
         <value xml:lang="ja">すべてチェック (ビュー以外)</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh_TW">檢查全部</value>
+    </property>
+    <property key="WebtoolsCheckAllPlain"><!-- SCIPIO: need one without the "(not views)" -->
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
         <value xml:lang="pt">Selecionar todos</value>
         <value xml:lang="th">ตรวจสอบทั้งหมด</value>
         <value xml:lang="vi">Chọn tất cả</value>
@@ -3891,8 +3903,8 @@
     </property>
     <property key="WebtoolsOutToBrowser">
         <value xml:lang="de">ODER Browserausgabe</value>
-        <value xml:lang="en">&lt;U&gt;OR&lt;/U&gt; Out to Browser (FireFox, Safari and Opera: view source. Chrome does not work)</value>
-        <value xml:lang="fr">&lt;U&gt;OU&lt;/U&gt; dans le navigateur (FireFox, Safari  et Opera : voir le source. Chrome ne fontionne pas)</value>
+        <value xml:lang="en">Or Out to Browser (FireFox, Safari and Opera: view source. Chrome does not work)</value>
+        <value xml:lang="fr">Ou dans le navigateur (FireFox, Safari  et Opera : voir le source. Chrome ne fontionne pas)</value>
         <value xml:lang="it">O output al browser</value>
         <value xml:lang="ja">ブラウザに出力</value>
         <value xml:lang="pt">Ou devolver para o navegador</value>
@@ -5876,7 +5888,7 @@
         <value xml:lang="zh_TW">把${numberWritten}個記錄寫到XML檔${parameters.filename}.</value>
     </property>
     <property key="WebtoolsWroteXMLForAllDataIn">
-        <value xml:lang="de">Es wurde XML für alle Daten in ${numberofEntities} Entitäten geschrieben.</value>
+        <value xml:lang="de">Es wurde XML für alle Daten in ${numberOfEntities} Entitäten geschrieben.</value>
         <value xml:lang="en">Wrote XML for all data in ${numberOfEntities} entities.</value>
         <value xml:lang="fr">Ecrire XML pour toute les donnée inclues ${numberOfEntities} Entités.</value>
         <value xml:lang="it">Scritti XML per tutti i dati in ${numberOfEntities} entità.</value>
@@ -5899,6 +5911,15 @@
         <value xml:lang="vi">Giao diện bạn đang sử dụng cung cấp chức năng Kết xuất dữ liệu từ Cơ sở dữ liệu. Các tài liệu kết xuất sẽ có thẻ gốc "&lt;entity-engine-xml&gt;"( có 01 Tập tin với mỗi Thực thể của Ứng dụng này)</value>
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh_TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
+    </property>
+    <property key="WebtoolsXMLExportSingleInfo"><!-- SCIPIO: TODO: Localize -->
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
     </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
@@ -5961,6 +5982,14 @@
         <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
         <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
     </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
+        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
+        <value xml:lang="en">The specified entity value has been successfully removed.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
+        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
+        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
+    </property>
     <property key="WebtoolsDeveloperDocumentation">
         <value xml:lang="de">Developer Documentation</value>
         <value xml:lang="en">Developer Documentation</value>
@@ -5968,5 +5997,44 @@
     <property key="WebtoolsTemplateApiDocsTitle">
         <value xml:lang="de">Templating Toolkit Dokumentation</value>
         <value xml:lang="en">Templating Toolkit Documentation</value>
+    </property>
+    <property key="WebtoolsFieldValueNoStringRepr">
+        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
+        <value xml:lang="en">Field value can't be represented as string</value>
+    </property>
+    <property key="WebtoolsNoStringRepr">
+        <value xml:lang="de">Keine Stringdarstellung</value>
+        <value xml:lang="en">No string representation</value>
+    </property>
+    <property key="WebtoolsDataExport">
+        <value xml:lang="de">Daten exportieren</value>
+        <value xml:lang="en">Data Export</value>
+        <value xml:lang="fr">Export de données</value>
+        <value xml:lang="it">Esporta dati</value>
+        <value xml:lang="ja">データエクスポート</value>
+        <value xml:lang="pt">ExportaÃ§Ã£o de dados</value>
+        <value xml:lang="ro">Exporta Date</value>
+        <value xml:lang="th">ส่งออกข้อมูล</value>
+        <value xml:lang="vi">Kết xuất dữ liệu</value>
+        <value xml:lang="zh">数据导出</value>
+        <value xml:lang="zh_TW">資料匯出</value>
+    </property>
+    <property key="WebtoolsDataImport">
+        <value xml:lang="de">Daten importieren</value>
+        <value xml:lang="en">Data Import</value>
+        <value xml:lang="fr">Import de données</value>
+        <value xml:lang="it">Importa dati da</value>
+        <value xml:lang="ja">XMLデータインポート</value>
+        <value xml:lang="pt">Importar dados</value>
+        <value xml:lang="ro">Importa Datele</value>
+        <value xml:lang="th">นำเข้าข้อมูล</value>
+        <value xml:lang="vi">Nhập khẩu dữ liệu</value>
+        <value xml:lang="zh">数据导入</value>
+        <value xml:lang="zh_TW">資料匯入</value>
+    </property>
+    <property key="WebtoolsUploadXmlFile"><!-- SCIPIO: TODO: localize -->
+        <value xml:lang="en">Upload XML File</value>
+        <value xml:lang="de">XML-Datei hochladen</value>
+        <value xml:lang="fr">Télécharger fichier XML</value>
     </property>
 </resource>

@@ -1742,6 +1742,7 @@
     </property>
     <property key="CommonClass">
         <value xml:lang="en">Class</value>
+        <value xml:lang="de">Klasse</value>
     </property>
     <property key="CommonClear">
         <value xml:lang="ar">محو</value>

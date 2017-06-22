@@ -14527,6 +14527,7 @@
     </property>
     <property key="AccountingTimePeriod">
         <value xml:lang="ar">الفترة</value>
+        <value xml:lang="de">Zeiträume</value>
         <value xml:lang="en">Time Period</value>
         <value xml:lang="es">Periodo de tiempo</value>
         <value xml:lang="fr">Période</value>
@@ -17184,6 +17185,7 @@
     </property>
     <property key="FormFieldTitle_editGlAccountCategory">
         <value xml:lang="en">Edit GL Account Category</value>
+        <value xml:lang="de">Kontokategorien editieren</value>
         <value xml:lang="fr">Éditer la catégorie de compte</value>
         <value xml:lang="hi_IN">जीएल(Gl)खाता श्रेणी को संपादित करें</value>
         <value xml:lang="ja">GL勘定カテゴリを編集</value>
@@ -17472,6 +17474,7 @@
     </property>
     <property key="FormFieldTitle_findGlAccountCategory">
         <value xml:lang="en">Find Gl Account Category</value>
+        <value xml:lang="de">Kontokategorie finden</value>
         <value xml:lang="fr">Recherche d'une catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी खोजें</value>
         <value xml:lang="ja">GL勘定カテゴリを検索</value>
@@ -17692,6 +17695,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategory">
         <value xml:lang="en">GL Account Category</value>
+        <value xml:lang="de">Konto Kategorie</value>
         <value xml:lang="fr">Catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी</value>
         <value xml:lang="ja">GL勘定カテゴリ</value>
@@ -17702,6 +17706,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryId">
         <value xml:lang="en">GL Account Category Id</value>
+        <value xml:lang="de">Konto Kategorie Id</value>
         <value xml:lang="fr">Réf. de catégorie de cpt. GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी क्रमांक</value>
         <value xml:lang="ja">GL勘定カテゴリID</value>
@@ -17712,6 +17717,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryMember">
         <value xml:lang="en">GL Account Category Member</value>
+        <value xml:lang="de">Konto Kategorien Mitglieder</value>
         <value xml:lang="fr">Membre de la catégorie compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी सदस्य</value>
         <value xml:lang="ja">GL勘定カテゴリメンバ</value>
@@ -17722,6 +17728,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryType">
         <value xml:lang="en">GL Account Category Type</value>
+        <value xml:lang="de">Konto Kategorien-Art</value>
         <value xml:lang="fr">Type de catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी प्रकार</value>
         <value xml:lang="ja">GL勘定カテゴリ種類</value>
@@ -17732,6 +17739,7 @@
     </property>
     <property key="FormFieldTitle_glAccountCategoryTypeId">
         <value xml:lang="en">GL Account Category Type Id</value>
+        <value xml:lang="de">Konto Kategorien-Art Id</value>
         <value xml:lang="fr">Réf. de type de catégorie de compte GL</value>
         <value xml:lang="hi_IN">जीएल(Gl) खाता श्रेणी प्रकार क्रमांक</value>
         <value xml:lang="ja">GL勘定カテゴリ種類ID</value>
@@ -18568,6 +18576,7 @@
     </property>
     <property key="FormFieldTitle_newGlAccountCategory">
         <value xml:lang="en">New GL Account Category</value>
+        <value xml:lang="de">Neue Konto Kategorie</value>
         <value xml:lang="fr">Nouvelle catégorie de compte</value>
         <value xml:lang="hi_IN">नई जीएल(Gl) खाता श्रेणी</value>
         <value xml:lang="ja">新規GL勘定カテゴリ</value>
@@ -18578,6 +18587,7 @@
     </property>
     <property key="FormFieldTitle_NextDepreciationAmount">
         <value xml:lang="en">Next depreciation amount</value>
+        <value xml:lang="de">Nächster Abschreibungsbetrag</value>
         <value xml:lang="fr">Prochain montant de la dépréciation</value>
         <value xml:lang="ja">次回減価償却額</value>
         <value xml:lang="vi">Giá trị khấu hao tiếp theo</value>

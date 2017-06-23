@@ -40,6 +40,7 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.fop.apps.io.ResourceResolverFactory;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
@@ -51,15 +52,47 @@ import org.ofbiz.base.util.UtilValidate;
  * Apache FOP worker class.
  */
 
-public class ApacheFopWorker {
+public final class ApacheFopWorker {
 
     public static final String module = ApacheFopWorker.class.getName();
     /** File name prefix used for temporary files. Currently set to
      * <code>org.ofbiz.webapp.view.ApacheFopWorker-</code>.
      */
-    public static final String tempFilePrefix = "org.ofbiz.webapp.view.ApacheFopWorker-";
+    private static final String tempFilePrefix = "org.ofbiz.webapp.view.ApacheFopWorker-";
 
-    protected static FopFactory fopFactory = null;
+    private static FopFactory fopFactory = null;
+    
+    private static final int encryptionLengthBitsDefault = 128;
+    
+    private static final String encryptionLengthDefault = UtilProperties.getPropertyValue("fop", "fop.encryption-length.default", String.valueOf(encryptionLengthBitsDefault));
+
+    private static final String userPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.userPassword.default");
+
+    private static final String ownerPasswordDefault = UtilProperties.getPropertyValue("fop", "fop.ownerPassword.default");
+
+    private static final String allowPrintDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrint.default", "true");
+
+    private static final String allowCopyContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowCopyContent.default", "true");
+
+    private static final String allowEditContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditContent.default", "true");
+
+    private static final String allowEditAnnotationsDefault = UtilProperties.getPropertyValue("fop", "fop.allowEditAnnotations.default", "true");
+
+    private static final String allowFillInFormsDefault = UtilProperties.getPropertyValue("fop", "fop.allowFillInForms.default", "true");
+
+    private static final String allowAccessContentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAccessContent.default", "true");
+
+    private static final String allowAssembleDocumentDefault = UtilProperties.getPropertyValue("fop", "fop.allowAssembleDocument.default", "true");
+
+    private static final String allowPrintHqDefault = UtilProperties.getPropertyValue("fop", "fop.allowPrintHq.default", "true");
+
+    private static final String encryptMetadataDefault = UtilProperties.getPropertyValue("fop", "fop.encrypt-metadata.default", "true");
+    
+    private static final String fopPath = UtilProperties.getPropertyValue("fop", "fop.path", "/framework/webapp/config");
+    
+    private static final String fopFontBaseProperty = UtilProperties.getPropertyValue("fop", "fop.font.base.url", "/framework/webapp/config/");
+
+    private ApacheFopWorker() {}
 
     /** Returns an instance of the FopFactory class. FOP documentation recommends
      * the reuse of the factory instance because of the startup time.
@@ -71,35 +104,22 @@ public class ApacheFopWorker {
                 if (fopFactory != null) {
                     return fopFactory;
                 }
-                // Create the factory
-                fopFactory = FopFactory.newInstance();
-
-                // Limit the validation for backwards compatibility
-                fopFactory.setStrictValidation(false);
 
                 try {
                     String ofbizHome = System.getProperty("ofbiz.home");
-                    String fopPath = UtilProperties.getPropertyValue("fop.properties", "fop.path", "/framework/webapp/config");
                     File userConfigFile = FileUtil.getFile(ofbizHome + fopPath + "/fop.xconf");
                     if (userConfigFile.exists()) {
-                        fopFactory.setUserConfig(userConfigFile);
-                        URL baseUrl = new URL(fopFactory.getBaseURL());
-                        String protocol = baseUrl.getProtocol();
-                        String host = baseUrl.getHost();
-                        Integer baseport = baseUrl.getPort();
-                        Integer port = baseport + Start.getInstance().getConfig().portOffset;
-                        fopFactory.setBaseURL(protocol + "://" + host + ":" + port);
+                        fopFactory = FopFactory.newInstance(userConfigFile);
                     } else {
                         Debug.logWarning("FOP configuration file not found: " + userConfigFile, module);
                     }
-                    String fopFontBaseProperty = UtilProperties.getPropertyValue("fop.properties", "fop.font.base.url", "/framework/webapp/config/");
                     File fontBaseFile = FileUtil.getFile(ofbizHome + fopFontBaseProperty);
                     if (fontBaseFile.isDirectory()) {
-                        fopFactory.getFontManager().setFontBaseURL(fontBaseFile.toURI().toURL().toString());
+                        fopFactory.getFontManager().setResourceResolver(ResourceResolverFactory.createDefaultInternalResourceResolver(fontBaseFile.toURI()));
                     } else {
                         Debug.logWarning("FOP font base URL not found: " + fontBaseFile, module);
                     }
-                    Debug.logInfo("FOP FontBaseURL: " + fopFactory.getFontManager().getFontBaseURL(), module);
+                    Debug.logInfo("FOP FontBaseURL: " + fopFactory.getFontManager().getResourceResolver().getBaseURI(), module);
                 } catch (Exception e) {
                     Debug.logWarning(e, "Error reading FOP configuration: ", module);
                 }
@@ -119,16 +139,6 @@ public class ApacheFopWorker {
         StreamSource stylesheet = stylesheetFile == null ? null : new StreamSource(stylesheetFile);
         BufferedOutputStream dest = new BufferedOutputStream(new FileOutputStream(destFile));
         Fop fop = createFopInstance(dest, outputFormat);
-        if (fop.getUserAgent().getBaseURL() == null) {
-            String baseURL = null;
-            try {
-                File parentFile = new File(srcFile.getAbsolutePath()).getParentFile();
-                baseURL = parentFile.toURI().toURL().toExternalForm();
-            } catch (Exception e) {
-                baseURL = "";
-            }
-            fop.getUserAgent().setBaseURL(baseURL);
-        }
         transform(src, stylesheet, fop);
         dest.close();
     }
@@ -175,11 +185,24 @@ public class ApacheFopWorker {
      * @return Fop instance
      */
     public static Fop createFopInstance(OutputStream out, String outputFormat) throws FOPException {
+        return createFopInstance(out, outputFormat, null);
+    }
+
+    /** Returns a new Fop instance. Note: FOP documentation recommends using
+     * a Fop instance for one transform run only.
+     * @param out The target (result) OutputStream instance
+     * @param outputFormat Optional output format, defaults to "application/pdf"
+     * @param foUserAgent FOUserAgent object which may contains encryption-params in render options
+     * @return Fop instance
+     */
+    public static Fop createFopInstance(OutputStream out, String outputFormat, FOUserAgent foUserAgent) throws FOPException {
         if (UtilValidate.isEmpty(outputFormat)) {
             outputFormat = MimeConstants.MIME_PDF;
         }
-        FopFactory fopFactory = getFactoryInstance();
-        FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+        if (UtilValidate.isEmpty(foUserAgent)) {
+            FopFactory fopFactory = getFactoryInstance();
+            foUserAgent = fopFactory.newFOUserAgent();
+        }
         Fop fop;
         if (out != null) {
             fop = fopFactory.newFop(outputFormat, foUserAgent, out);
@@ -219,13 +242,13 @@ public class ApacheFopWorker {
 
     /** Local URI resolver for the Transformer class.
      */
-    public static class LocalResolver implements URIResolver {
+    private static class LocalResolver implements URIResolver {
 
         private URIResolver defaultResolver;
 
-        protected LocalResolver() {}
+        private LocalResolver() {}
 
-        public LocalResolver(URIResolver defaultResolver) {
+        private LocalResolver(URIResolver defaultResolver) {
             this.defaultResolver = defaultResolver;
         }
 
@@ -241,5 +264,53 @@ public class ApacheFopWorker {
             }
             return defaultResolver.resolve(href, base);
         }
+    }
+
+    public static String getEncryptionLengthDefault() {
+        return encryptionLengthDefault;
+    }
+
+    public static String getUserPasswordDefault() {
+        return userPasswordDefault;
+    }
+
+    public static String getOwnerPasswordDefault() {
+        return ownerPasswordDefault;
+    }
+
+    public static String getAllowPrintDefault() {
+        return allowPrintDefault;
+    }
+
+    public static String getAllowCopyContentDefault() {
+        return allowCopyContentDefault;
+    }
+
+    public static String getAllowEditContentDefault() {
+        return allowEditContentDefault;
+    }
+
+    public static String getAllowEditAnnotationsDefault() {
+        return allowEditAnnotationsDefault;
+    }
+
+    public static String getAllowAccessContentDefault() {
+        return allowAccessContentDefault;
+    }
+
+    public static String getAllowFillInFormsDefault() {
+        return allowFillInFormsDefault;
+    }
+
+    public static String getAllowAssembleDocumentDefault() {
+        return allowAssembleDocumentDefault;
+    }
+
+    public static String getAllowPrintHqDefault() {
+        return allowPrintHqDefault;
+    }
+
+    public static String getEncryptMetadataDefault() {
+        return encryptMetadataDefault;
     }
 }

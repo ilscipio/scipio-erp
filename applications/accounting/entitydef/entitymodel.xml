@@ -3870,6 +3870,24 @@ under the License.
             <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
         </view-link>
     </view-entity>
+    <view-entity entity-name="TaxAuthorityAndGeo" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: new: faster than TaxAuthorityAndDetail when party not needed or causes problems -->
+        <member-entity entity-alias="TA" entity-name="TaxAuthority"/>
+        <member-entity entity-alias="GEO" entity-name="Geo"/>
+        <alias-all entity-alias="TA"/>
+        <alias-all entity-alias="GEO"/>
+        <view-link entity-alias="TA" rel-entity-alias="GEO">
+            <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="TaxAuthorityAndPartyGroup" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: new: faster than TaxAuthorityAndDetail when geo not needed -->
+        <member-entity entity-alias="TA" entity-name="TaxAuthority"/>
+        <member-entity entity-alias="PG" entity-name="PartyGroup"/>
+        <alias-all entity-alias="TA"/>
+        <alias-all entity-alias="PG"/>
+        <view-link entity-alias="TA" rel-entity-alias="PG">
+            <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="TaxAuthorityAssoc" package-name="org.ofbiz.accounting.tax" title="Tax Authority Association Entity">
         <field name="taxAuthGeoId" type="id-ne"></field>
         <field name="taxAuthPartyId" type="id-ne"></field>

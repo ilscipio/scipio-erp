@@ -92,8 +92,8 @@ under the License.
         -->
         <fo:static-content flow-name="xsl-region-before">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-number="1" column-width="proportional-column-width(66)" padding-left="5mm" padding-right="5mm"/>
-                <fo:table-column column-number="2" column-width="proportional-column-width(33)" padding-left="5mm" padding-right="5mm"/>
+                <fo:table-column column-number="1" column-width="proportional-column-width(66)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+                <fo:table-column column-number="2" column-width="proportional-column-width(33)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>${sections.render("topLeft")}</fo:table-cell>
@@ -105,7 +105,9 @@ under the License.
 
         <#-- the footer -->
         <fo:static-content flow-name="xsl-region-after">
-            ${sections.render("footer")}
+            <fo:block>
+                ${sections.render("footer")}
+            </fo:block>    
         </fo:static-content>
 
         <#-- page number -->
@@ -117,7 +119,7 @@ under the License.
 
         <#-- the body -->
         <fo:flow flow-name="xsl-region-body">
-            ${sections.render("body")}
+            ${sections.render("body")}  
             <fo:block id="theEnd"/>  <#-- marks the end of the pages and used to identify page-number at the end -->
         </fo:flow>
     </fo:page-sequence>

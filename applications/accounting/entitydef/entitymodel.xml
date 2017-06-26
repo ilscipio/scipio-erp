@@ -3870,7 +3870,7 @@ under the License.
             <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
         </view-link>
     </view-entity>
-    <view-entity entity-name="TaxAuthorityAndGeo" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: new: faster than TaxAuthorityAndDetail when party not needed or causes problems -->
+    <view-entity entity-name="TaxAuthorityAndGeo" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: 2017-06-26: new: faster than TaxAuthorityAndDetail when party not needed or causes problems -->
         <member-entity entity-alias="TA" entity-name="TaxAuthority"/>
         <member-entity entity-alias="GEO" entity-name="Geo"/>
         <alias-all entity-alias="TA"/>
@@ -3879,9 +3879,18 @@ under the License.
             <key-map field-name="taxAuthGeoId" rel-field-name="geoId"/>
         </view-link>
     </view-entity>
-    <view-entity entity-name="TaxAuthorityAndPartyGroup" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: new: faster than TaxAuthorityAndDetail when geo not needed -->
+    <view-entity entity-name="TaxAuthorityAndPartyGroup" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: 2017-06-26: new: faster than TaxAuthorityAndDetail when geo not needed -->
         <member-entity entity-alias="TA" entity-name="TaxAuthority"/>
         <member-entity entity-alias="PG" entity-name="PartyGroup"/>
+        <alias-all entity-alias="TA"/>
+        <alias-all entity-alias="PG"/>
+        <view-link entity-alias="TA" rel-entity-alias="PG">
+            <key-map field-name="taxAuthPartyId" rel-field-name="partyId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="TaxAuthorityAndPartyNameView" package-name="org.ofbiz.accounting.tax"><!-- SCIPIO: 2017-06-26: new: more detailed than TaxAuthorityAndDetail and no geo -->
+        <member-entity entity-alias="TA" entity-name="TaxAuthority"/>
+        <member-entity entity-alias="PG" entity-name="PartyNameView"/>
         <alias-all entity-alias="TA"/>
         <alias-all entity-alias="PG"/>
         <view-link entity-alias="TA" rel-entity-alias="PG">

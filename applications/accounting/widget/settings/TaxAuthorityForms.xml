@@ -25,12 +25,18 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         
         <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
+            <!-- SCIPIO: too many entries
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
-            </drop-down>
+            </drop-down>-->
+            <!-- could do this instead, but inconsistent with rest of form and creates an extra query
+            <drop-down allow-empty="true">
+                <entity-options entity-name="TaxAuthorityAndGeo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
+            </drop-down>-->
+            <lookup target-form-name="LookupTaxAuthorityGeo"/>
         </field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}" position="2">
-            <lookup target-form-name="LookupPartyName"/>
+            <lookup target-form-name="LookupTaxAuthorityPartyName"/><!-- SCIPIO: filter out unneeded instead: LookupPartyName -->
         </field>
         <field name="requireTaxIdForExemption">
             <drop-down allow-empty="true">
@@ -593,8 +599,12 @@ under the License.
 
         <!-- SCIPIO: NOTE: due to screen merging, only need to show the editable taxAuthGeoId & taxAuthPartyId if there was an error looking up the taxAuthority -->
         <field use-when="taxAuthority==null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" required-field="true">
+            <!-- SCIPIO: too many entries
             <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
+            </drop-down>-->
+            <drop-down allow-empty="true">
+                <entity-options entity-name="TaxAuthorityAndGeo" description="${geoName} [${geoId}]" key-field-name="geoId"></entity-options>
             </drop-down>
         </field>
         <field use-when="taxAuthority!=null" name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">

@@ -281,12 +281,14 @@ under the License.
         <auto-fields-entity entity-name="AgreementGeographicalApplic" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
         <field name="agreementItemSeqId"><hidden/></field>
-        <field name="geoId" use-when="agreementGeographicalApplic==null">
+        <field name="geoId" use-when="agreementGeographicalApplic==null" required-field="true">
+            <!-- SCIPIO: too many entries in system
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" description="${geoName} [${geoId}]">
                     <entity-order-by field-name="geoName"/>
                 </entity-options>
-            </drop-down>
+            </drop-down>-->
+            <lookup target-form-name="LookupGeo"/>
         </field>
         <field name="geoId" use-when="agreementGeographicalApplic!=null"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">

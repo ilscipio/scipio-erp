@@ -31,7 +31,7 @@
         <!-- re init -->
         <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="application->default"/>
         
-        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.3" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" transitive="false" conf="application->default"/>
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" transitive="false" conf="application->default"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" transitive="false" conf="application->default"/>
         

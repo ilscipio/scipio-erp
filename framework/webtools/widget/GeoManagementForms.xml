@@ -67,6 +67,7 @@
     <form name="LinkGeos" type="single" target="linkGeos" title="" focus-field-name="geoId" 
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="geoIds" title="${uiLabelMap.CommonGeos}">
+            <!-- SCIPIO: FIXME?: without entity-constraint, this drop-down may produce too many entries... but the JS doesn't allow us to change this yet... -->
             <drop-down allow-multiple="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} (${geoId})">
 <!--                    <entity-constraint name="geoTypeId" operator="in" value="STATE,PROVINCE,REGIONS"/><!-\- useful to quickly test -\->-->
@@ -85,6 +86,7 @@
             </drop-down>
         </field>
         <field name="geoId" title="${uiLabelMap.CommonGeo}">
+            <!-- SCIPIO: FIXME?: without entity-constraint, this drop-down may produce too many entries... but the JS doesn't allow us to change this yet... -->
             <drop-down current="selected">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} (${geoId})">
                     <entity-order-by field-name="geoId"/>

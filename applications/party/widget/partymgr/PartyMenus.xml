@@ -68,12 +68,12 @@
             <link target="Preferences">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item> 
+        </menu-item>--> 
         <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
             <link target="viewroles">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item>-->
+        </menu-item>
         <menu-item name="viewidentifications" title="${uiLabelMap.PartyPartyIdentifications}">
             <link target="viewidentifications">
                 <parameter param-name="partyId"/>

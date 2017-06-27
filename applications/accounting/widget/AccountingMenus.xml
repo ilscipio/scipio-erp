@@ -1771,12 +1771,12 @@
         <menu-item name="findVendors" title="${uiLabelMap.AccountingVendors}">
             <link target="findVendors"/>
         </menu-item>
-        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingTimePeriod}">
+        <menu-item name="TimePeriods" title="${uiLabelMap.AccountingSetTimePeriod}">
             <link target="TimePeriods">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
-        <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingCustomTimePeriod}">
+        <menu-item name="CustomTimePeriods" title="${uiLabelMap.AccountingUpdateTimePeriod}">
             <link target="EditCustomTimePeriod">
                 <parameter param-name="organizationPartyId" />
             </link>

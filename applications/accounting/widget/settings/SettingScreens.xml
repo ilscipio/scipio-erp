@@ -41,7 +41,7 @@ under the License.
     <screen name="EditCustomTimePeriod">
         <section>
             <actions>
-                <set field="titleProperty" value="AccountingCustomTimePeriods"/>
+                <set field="titleProperty" value="AccountingUpdateTimePeriod"/>
                 <set field="activeSubMenuItem" value="CustomTimePeriods"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/period/EditCustomTimePeriod.groovy"/>
             </actions>

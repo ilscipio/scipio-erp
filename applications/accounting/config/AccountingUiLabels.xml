@@ -363,6 +363,14 @@
         <value xml:lang="de">Individuelle Zeiträume</value>
         <value xml:lang="en">Custom Time Period</value>
     </property>
+    <property key="AccountingUpdateTimePeriod">
+        <value xml:lang="de">Zeitraum ändern</value>
+        <value xml:lang="en">Time Period - Update</value>
+    </property>
+    <property key="AccountingSetTimePeriod">
+        <value xml:lang="de">Zeitraum setzen</value>
+        <value xml:lang="en">Time Period - Set</value>
+    </property>
     <property key="AccountingAddCustomTimePeriod">
         <value xml:lang="de">Individueller Zeitraum hinzufügen</value>
         <value xml:lang="en">Add Custom Time Period</value>

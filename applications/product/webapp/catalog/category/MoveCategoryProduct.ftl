@@ -29,6 +29,6 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#copyCategoryProductMembers_modal').foundation('reveal','open');
+        $('#modal_copyCategoryProductMembers').foundation('reveal','open');
     });
 </@script>

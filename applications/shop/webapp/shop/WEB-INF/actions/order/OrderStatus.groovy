@@ -127,8 +127,7 @@ if (orderHeader) {
     // SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
     Map<String, BigDecimal> paymentTotalsByPaymentMethod = orderReadHelper.getReceivedPaymentTotalsByPaymentMethod();
     context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(paymentTotalsByPaymentMethod) && paymentTotalsByPaymentMethod.keySet().contains("EXT_PAYPAL"));
-    context.orderContainsSubscriptionItemsOnly = orderReadHelper.orderContainsSubscriptionItemsOnly();
-    Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  orderReadHelper.orderContainsSubscriptionItemsOnly() + "   subscriptions =======> " + context.subscriptions);
+    context.orderContainsSubscriptionItemsOnly = orderReadHelper.orderContainsSubscriptionItemsOnly();    
     
     if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
         Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();

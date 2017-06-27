@@ -1,5 +1,7 @@
 package org.ofbiz.base.util;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,11 +16,11 @@ import java.util.Random;
 public class UtilRandom {
 
     /**
-    * Method should generate random number that represents a time between two
-    * dates.
-    * 
-    * @return
-    */
+     * Method should generate random number that represents a time between two
+     * dates.
+     * 
+     * @return
+     */
     private static long getRandomTimeBetweenTwoDates(Timestamp beginDate, Map<String, Object> context) {
         long beginTime, endTime;
         Calendar cal = Calendar.getInstance();
@@ -42,7 +44,7 @@ public class UtilRandom {
         return beginTime;
     }
 
-    public static String generateRandomDate(Map<String, Object> context) {       
+    public static String generateRandomDate(Map<String, Object> context) {
         return generateRandomDate(null, context);
     }
 
@@ -60,8 +62,8 @@ public class UtilRandom {
     public static Timestamp generateRandomTimestamp(Map<String, Object> context) {
         return generateRandomTimestamp(null, context);
     }
-    
-    public static Timestamp generateRandomTimestamp(Date beginDate, Map<String, Object> context) {        
+
+    public static Timestamp generateRandomTimestamp(Date beginDate, Map<String, Object> context) {
         Timestamp randomDate;
         if (UtilValidate.isNotEmpty(beginDate)) {
             randomDate = new Timestamp(getRandomTimeBetweenTwoDates(new Timestamp(beginDate.getTime()), context));
@@ -70,7 +72,7 @@ public class UtilRandom {
         }
         return randomDate;
     }
-    
+
     public static int random(List myList) {
         int size = myList.size();
         int index = new Random().nextInt(size);
@@ -94,6 +96,10 @@ public class UtilRandom {
         int x = rand.nextInt(max - min + 1) + min;
         x = rand.nextInt(max - min + 1) + min;
         return x;
+    }
+
+    public static String generateRandom() {        
+        return new BigInteger(130, new SecureRandom()).toString(32);
     }
 
 }

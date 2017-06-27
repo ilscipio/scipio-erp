@@ -61,10 +61,10 @@ under the License.
                 <fo:table-body>
                     <fo:table-row>
                         <fo:table-cell>
-${sections.render("topLeft")}
+                            ${sections.render("topLeft")}
                         </fo:table-cell>
                         <fo:table-cell>
-${sections.render("topRight")}
+                            ${sections.render("topRight")}
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
@@ -80,7 +80,7 @@ ${sections.render("topRight")}
 
         <#-- the body -->
         <fo:flow flow-name="xsl-region-body">
-${sections.render("body")}
+            ${sections.render("body")}
             <fo:block id="theEnd"/>  <#-- marks the end of the pages and used to identify page-number at the end -->
         </fo:flow>
     </fo:page-sequence>

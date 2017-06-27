@@ -14,7 +14,7 @@
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-launcher.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-contrib-1.0b3.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/avalon-framework-4.3.1-api.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/avalon-framework-api-4.3.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-fop-ext-2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/batik-all-1.9.jar"/>

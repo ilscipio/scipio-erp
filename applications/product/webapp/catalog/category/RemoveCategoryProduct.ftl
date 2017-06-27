@@ -11,6 +11,6 @@
 </@modal>
 <@script>
     $(document).ready(function() {
-        $('#removeExpiredCategoryProductMembers_modal').foundation('reveal','open');
+        $('#modal_removeExpiredCategoryProductMembers').foundation('reveal','open');
     });
 </@script>

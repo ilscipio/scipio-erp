@@ -44,6 +44,7 @@
         <!-- dependencies for initial/build downloads -->
         <!-- re base root -->
         <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" transitive="false" conf="base->default"/>
+        <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" transitive="false" conf="base->default"/>
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" transitive="false" conf="base->default"/>
         <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base->default"/>
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base->default"/>

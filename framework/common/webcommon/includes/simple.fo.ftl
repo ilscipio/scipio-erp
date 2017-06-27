@@ -97,7 +97,7 @@ under the License.
 
         <#-- Body -->
         <fo:flow flow-name="xsl-region-body" font-size="${bodyFontSize!"8pt"}">
-${sections.render("body")}
+            ${sections.render("body")}
             <fo:block id="theEnd"/>
         </fo:flow>
     </fo:page-sequence>

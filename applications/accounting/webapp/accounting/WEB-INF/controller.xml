@@ -2693,6 +2693,10 @@ under the License.
     <request-map uri="LookupGlReconciliation"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlReconciliation"/></request-map>
     <request-map uri="LookupCustomTimePeriod"><security auth="true" https="true"/><response name="success" type="view" value="LookupCustomTimePeriod"/></request-map>
 
+    <!-- SCIPIO: new lookups -->
+    <request-map uri="LookupTaxAuthorityGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityGeo"/></request-map>
+    <request-map uri="LookupTaxAuthorityPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityPartyName"/></request-map>
+
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
 
     <request-map uri="invoice.pdf">
@@ -3192,6 +3196,10 @@ under the License.
     <view-map name="LookupAgreementItem" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupAgreementItem"/>
     <view-map name="LookupPaymentGroupMember" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupPaymentGroupMember"/>
     <view-map name="LookupGlReconciliation" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlReconciliation"/>
+
+    <!-- SCIPIO: new lookups -->
+    <view-map name="LookupTaxAuthorityGeo" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityGeo"/>
+    <view-map name="LookupTaxAuthorityPartyName" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityPartyName"/>
 
     <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
     <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#NewDepositSlip"/>

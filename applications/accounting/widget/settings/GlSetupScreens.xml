@@ -98,8 +98,8 @@ under the License.
         <section>
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="AccountingTimePeriod"/>
-                <set field="labelTitleProperty" value="${uiLabelMap.AccountingTimePeriod}"/>
+                <set field="titleProperty" value="AccountingSetTimePeriod"/>
+                <set field="labelTitleProperty" value="${uiLabelMap.AccountingSetTimePeriod}"/>
                 <set field="activeSubMenuItem" value="TimePeriods"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <entity-condition entity-name="CustomTimePeriod" list="openTimePeriods">

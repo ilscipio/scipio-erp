@@ -161,7 +161,7 @@ under the License.
         <@script>
             $(document).ready(function() {
                 $('#shipmentPackageContent_${shipmentPackageData_index}').click(function() {
-                    $('#shipmentPackageContent_${shipmentPackageData_index}_modal').foundation('reveal','open');
+                    $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
                 });
             });
         </@script>

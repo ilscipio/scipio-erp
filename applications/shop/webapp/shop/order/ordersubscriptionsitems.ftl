@@ -248,7 +248,7 @@
             <@td>
                 <input type="hidden" name="subscriptionId_${orderItem.orderItemSeqId}" value="${orderItem.subscriptionId!}"/>
                 <input type="hidden" name="authorizeItem_${orderItem.orderItemSeqId}" value="N"/>
-                <#if orderItem.statusId == "ITEM_APPROVED">                 
+                <#if orderItem.statusId == "ITEM_APPROVED">
                     <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('authorizeBillingAgreement')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />
                 <#elseif orderItem.statusId == "ITEM_COMPLETED">

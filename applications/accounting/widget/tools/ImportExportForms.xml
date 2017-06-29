@@ -33,8 +33,8 @@ under the License.
             <entity-condition entity-name="InvoiceExport">
                 <condition-list combine="and">
                     <condition-list combine="or">
-                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals"/>
-                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals" ignore-if-empty="true"/><!-- SCIPIO: added  ignore-if-empty="true" -->
+                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals" ignore-if-empty="true"/><!-- SCIPIO: added  ignore-if-empty="true" -->
                     </condition-list>
                     <condition-expr field-name="invoiceDate" operator="greater-equals" from-field="parameters.startDate" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
@@ -65,7 +65,7 @@ under the License.
     
     <form name="ImportInvoice" type="upload" target="ImportInvoice" title="" >
         <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
-        <field name="uploadedFile"><file/></field>
+        <field name="uploadedFile" required-field="true"><file/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
     

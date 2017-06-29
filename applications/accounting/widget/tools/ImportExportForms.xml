@@ -20,9 +20,11 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="ExportInvoice" type="single" target="ExportInvoiceCsv.csv" title="" >
-        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
-        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+    <form name="ExportInvoice" type="single" target="ExportInvoiceCsv.csv" title="">
+        <field name="invoiceId" required-field="true"><lookup target-form-name="LookupInvoice"/></field>
+        <!-- SCIPIO: NOTE: not required by export
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>-->
+        <field name="organizationPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="startDate"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
@@ -64,11 +66,12 @@ under the License.
     </form>
     
     <form name="ImportInvoice" type="upload" target="ImportInvoice" title="" >
-        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
         <field name="uploadedFile" required-field="true"><file/></field>
+        <!-- SCIPIO: the service REQUIRES this field or fails... TODO: review the service
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>-->
+        <field name="organizationPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
-    
     
     <form name="ExportTransactions" type="single" target="ExportTransaction.csv" title="" >
         <field name="organizationPartyId" required-field="false">

@@ -16373,4 +16373,8 @@
         <value xml:lang="en">Navigation</value>
         <value xml:lang="fr">Navigation</value>
     </property>
+    <property key="CommonThisIsAPlaceholder">
+        <value xml:lang="de">Das ist ein Platzhalter!</value>
+        <value xml:lang="en">This is a placeholder!</value>
+    </property>
 </resource>

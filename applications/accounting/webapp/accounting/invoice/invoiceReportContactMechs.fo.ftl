@@ -40,7 +40,7 @@ under the License.
             <fo:block>${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
         </#if>
     <#else>
-        <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound}${billToParty.partyId}</fo:block>
+        <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound} ${billToParty.partyId}</fo:block>
     </#if>
     </fo:block>
 </fo:block>

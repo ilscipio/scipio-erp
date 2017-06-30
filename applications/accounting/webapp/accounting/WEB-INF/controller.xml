@@ -388,13 +388,13 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlAccount"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
-        <response name="error" type="view" value="GlAccountNavigate"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/><!-- SCIPIO: errors have to go back to the form! -->
     </request-map>
     <request-map uri="updateGlAccount">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateGlAccount"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
-        <response name="error" type="view" value="GlAccountNavigate"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/><!-- SCIPIO: errors have to go back to the form! -->
     </request-map>
 
     <request-map uri="ListGlAccountOrganization"><security https="true" auth="true"/><response name="success" type="view" value="ListGlAccountOrganization"/></request-map>
@@ -1865,7 +1865,7 @@ under the License.
     **************
     * Import/Export 
     **************-->
-    <request-map uri="ImportExport"> <!-- currently mapped to ImportExportInvoice -->
+    <request-map uri="ImportExport"> <!-- currently mapped to ImportExportInvoice (see view mappings) -->
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ImportExport"/>
     </request-map>
@@ -1880,8 +1880,8 @@ under the License.
     <request-map uri="ImportInvoice">
         <security auth="true" https="true"/>
         <event invoke="importInvoice" path="" type="service"/>
-        <response name="success" type="request" value="ImportExport"/>
-        <response name="error" type="view" value="ImportExport"/>
+        <response name="success" type="request" value="ImportExportInvoice"/><!-- SCIPIO: now mapped to invoice screen: ImportExport -->
+        <response name="error" type="view" value="ImportExportInvoice"/><!-- SCIPIO: now mapped to invoice screen: ImportExport -->
     </request-map>
     <request-map uri="ExportTransactions">
         <security https="true" auth="true"/>
@@ -2876,7 +2876,7 @@ under the License.
     <view-map name="FindGlAccountReconciliations" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindGlAccountReconciliations"/>
     <view-map name="EditGlReconciliation" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#EditGlReconciliation"/>
 
-    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#AddGlAccount"/>
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccount"/>
     <!-- NOTE/TODO: these 2 appear to never have been implemented all the way, just request and view defs so far...
     <view-map name="EditGlobalGlAccountOrganizations" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccountOrganizations"/>
     <view-map name="EditGlobalGlAccountRoles" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccountRoles"/>
@@ -3029,7 +3029,9 @@ under the License.
     **************
     * Import / Export
     **************-->
-    <view-map name="ImportExport" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ImportExport"/>
+    <!-- SCIPIO: now maps to invoice by default
+    <view-map name="ImportExport" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ImportExport"/>-->
+    <view-map name="ImportExport" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ImportExportInvoice"/>
     <view-map name="ImportExportInvoice" type="screen" page="component://accounting/widget/tools/ImportExportScreens.xml#ImportExportInvoice"/>
     <view-map name="ExportInvoicesCsv" type="screencsv" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportInvoiceCsv" content-type="text/csv" encoding="none"/>
     <view-map name="ExportTransactionCsv" type="screencsv" page="component://accounting/widget/tools/ImportExportScreens.xml#ExportTransactionCsv" content-type="text/csv" encoding="none"/>

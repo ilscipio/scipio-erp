@@ -83,7 +83,7 @@ under the License.
 <#macro renderMultiFormClose extraArgs...></#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={} extraArgs...><fo:table border="solid black"><#list columnStyles as columnStyle><fo:table-column<#if columnStyle?has_content> <@getFoStyle columnStyle/></#if>/></#list></#macro>
-<#macro renderFormatListWrapperClose formName extraArgs...></fo:table-body></fo:table></#macro>
+<#macro renderFormatListWrapperClose formName extraArgs...><fo:table-row><fo:table-cell><fo:block/></fo:table-cell></fo:table-row></fo:table-body></fo:table></#macro>
 
 <#macro renderFormatHeaderRowOpen style extraArgs...><fo:table-header><fo:table-row></#macro>
 <#macro renderFormatHeaderRowClose extraArgs...></fo:table-row></fo:table-header><fo:table-body>
@@ -93,8 +93,8 @@ under the License.
 <#macro renderFormatHeaderRowCellOpen style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><@getFoStyle "listtitlestyle"/>><fo:block></#macro>
 <#macro renderFormatHeaderRowCellClose extraArgs...></fo:block></fo:table-cell></#macro>
 
-<#macro renderFormatHeaderRowFormCellOpen style extraArgs...><fo:table-cell></#macro>
-<#macro renderFormatHeaderRowFormCellClose extraArgs...></fo:table-cell></#macro>
+<#macro renderFormatHeaderRowFormCellOpen style extraArgs...></#macro>
+<#macro renderFormatHeaderRowFormCellClose extraArgs...></#macro>
 <#macro renderFormatHeaderRowFormCellTitleSeparator style isLast extraArgs...></#macro>
 
 <#macro renderFormatFooterRowOpen style extraArgs...></#macro>
@@ -102,10 +102,10 @@ under the License.
     
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle extraArgs...><fo:table-row></#macro>
 <#macro renderFormatItemRowClose formName extraArgs...></fo:table-row></#macro>
-<#macro renderFormatItemRowCellOpen fieldName style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><#if style?has_content><@getFoStyle style/><#else><@getFoStyle "tabletext"/></#if>></#macro>
-<#macro renderFormatItemRowCellClose fieldName extraArgs...></fo:table-cell></#macro>
-<#macro renderFormatItemRowFormCellOpen style extraArgs...><fo:table-cell></#macro>
-<#macro renderFormatItemRowFormCellClose extraArgs...></fo:table-cell></#macro>
+<#macro renderFormatItemRowCellOpen fieldName style positionSpan extraArgs...><fo:table-cell <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if><#if style?has_content><@getFoStyle style/><#else><@getFoStyle "tabletext"/></#if>><fo:block></#macro>
+<#macro renderFormatItemRowCellClose fieldName extraArgs...></fo:block></fo:table-cell></#macro>
+<#macro renderFormatItemRowFormCellOpen style extraArgs...></#macro>
+<#macro renderFormatItemRowFormCellClose extraArgs...></#macro>
 
 <#macro renderFormatSingleWrapperOpen formName style extraArgs...><fo:table><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-column column-width="1.75in"/><fo:table-body></#macro>
 <#macro renderFormatSingleWrapperClose formName extraArgs...></fo:table-body></fo:table></#macro>
@@ -115,10 +115,10 @@ under the License.
 <#macro renderFormatFieldRowTitleCellOpen style positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...><fo:table-cell font-weight="bold" text-align="right" padding="3pt"><fo:block></#macro>
 <#macro renderFormatFieldRowTitleCellClose fieldType="" fieldTitleBlank=false extraArgs...></fo:block></fo:table-cell></#macro>
 <#macro renderFormatFieldRowSpacerCell extraArgs...></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>></#macro>
-<#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false extraArgs...></fo:table-cell></#macro>
+<#macro renderFormatFieldRowWidgetCellOpen positionSpan style positions="" position="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={} extraArgs...><fo:table-cell text-align="left" padding="2pt" padding-left="5pt" <#if positionSpan?has_content && positionSpan gt 1 >number-columns-spanned="${positionSpan}"</#if>><fo:block></#macro>
+<#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false extraArgs...></fo:block></fo:table-cell></#macro>
 
-<#macro renderFormatEmptySpace extraArgs...> </#macro>
+<#macro renderFormatEmptySpace extraArgs...> <@makeBlock "" " " /><!--space--></#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase hideOptions=false extraArgs...><@makeBlock className value /></#macro>
 

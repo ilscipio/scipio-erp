@@ -147,8 +147,6 @@
         </menu-item>
     </menu>
     
-    
-    
     <!-- 
     <menu name="ApInvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewInvoices">
@@ -182,7 +180,7 @@
     
     <!-- 
     **************
-    * Accounts Receivavle 
+    * Accounts Receivable 
     **************
     -->
     <menu name="AccountsReceivableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -1008,8 +1006,6 @@
             <link target="FindCommissions"/>
         </menu-item>
     </menu>
-    
-    
     
     <menu name="InvoiceSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">

@@ -73,132 +73,119 @@ under the License.
 
     <screen name="SalesInvoiceByProductCategorySummary">
         <section>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+
+                <set field="titleProperty" value="PageTitleSalesInvoiceByProductCategorySummary"/>
+
+                <set field="rootProductCategoryId" from-field="parameters.rootProductCategoryId"/>
+                <entity-one entity-name="ProductCategory" value-field="rootProductCategory" auto-field-map="false" use-cache="true">
+                    <field-map field-name="productCategoryId" from-field="rootProductCategoryId"/>
+                </entity-one>
+
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
+                
+                <set field="activeSubMenuItem" value="SalesInvoiceByProductCategorySummary"/>
+            </actions>
             <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitleSalesInvoiceByProductCategorySummary"/>
-
-                        <set field="rootProductCategoryId" from-field="parameters.rootProductCategoryId"/>
-                        <entity-one entity-name="ProductCategory" value-field="rootProductCategory" auto-field-map="false" use-cache="true">
-                            <field-map field-name="productCategoryId" from-field="rootProductCategoryId"/>
-                        </entity-one>
-
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductCategorySummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductCategorySummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="SalesInvoiceByProductGlAccountSummary">
         <section>
-            <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitleSalesInvoiceByProductGlAccountSummary"/>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+                
+                <set field="titleProperty" value="PageTitleSalesInvoiceByProductGlAccountSummary"/>
 
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductGlAccountSummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductGlAccountSummary.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductGlAccountSummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
 
     <screen name="PaymentByMethodSummary">
         <section>
-            <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitlePaymentByMethodSummary"/>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+            
+                <set field="titleProperty" value="PageTitlePaymentByMethodSummary"/>
 
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/PaymentByMethodSummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/PaymentByMethodSummary.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/PaymentByMethodSummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="InventoryIssueSummary">
         <section>
-            <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitleInventoryIssueSummary"/>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+            
+                <set field="titleProperty" value="PageTitleInventoryIssueSummary"/>
 
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/InventoryIssueSummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/InventoryIssueSummary.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/InventoryIssueSummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="FinancialAccountSummary">
         <section>
-            <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitleFinancialAccountSummary"/>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+            
+                <set field="titleProperty" value="PageTitleFinancialAccountSummary"/>
 
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/FinancialAccountSummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountSummary.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/FinancialAccountSummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

@@ -31,10 +31,10 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <@field_generic_widget text=text />
 </#macro>
 
-<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" extraArgs...>
+<#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt="" collapse=false fieldType="" fieldTitleBlank=false requiredField="" tooltip="" extraArgs...>
   <#-- delegate to scipio libs -->
   <@field_display_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert 
-    inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField)/>
+    inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank required=renderFieldIsRequired(requiredField) tooltip=tooltip/>
 </#macro>
 <#macro renderHyperlinkField extraArgs...></#macro>
 
@@ -711,6 +711,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro formatBoundaryComment boundaryType widgetType widgetName><!-- ${escapeVal(boundaryType, 'html')}  ${escapeVal(widgetType, 'html')}  ${escapeVal(widgetName, 'html')} --></#macro>
 
 <#macro renderTooltip tooltip tooltipStyle extraArgs...>
+  <#-- SCIPIO: DEPRECATED: this macro will be phased out in favor of tooltip= parameter. -->
   <#if tooltip?has_content><span class="<#if tooltipStyle?has_content>${escapeVal(tooltipStyle, 'html')}<#else>tooltip</#if>">${escapeVal(tooltip, 'htmlmarkup')}</span><#rt/></#if>
 </#macro>
 

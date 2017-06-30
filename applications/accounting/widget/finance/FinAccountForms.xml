@@ -137,8 +137,8 @@ under the License.
         <field name="replenishLevel" position="2"><text/></field>
         <field name="submitAction" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="finAccountId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="actualBalance"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
-        <field name="availableBalance" position="2"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
+        <field name="actualBalance" use-when="finAccount!=null"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
+        <field name="availableBalance" position="2" use-when="finAccount!=null"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
     </form>
 
     <form name="ListFinAccountRoles" type="list" list-name="finAccountRoles" target="updateFinAccountRole" separate-columns="true"

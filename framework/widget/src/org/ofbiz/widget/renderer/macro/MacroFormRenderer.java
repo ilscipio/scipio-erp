@@ -350,12 +350,14 @@ public final class MacroFormRenderer implements FormStringRenderer {
             sr.append(ftlFmt.makeStringLiteral(inPlaceEditorParams.toString()));
         }
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         if (displayField instanceof DisplayEntityField) {
             makeHyperlinkString(writer, ((DisplayEntityField) displayField).getSubHyperlink(), context);
         }
-        this.appendTooltip(writer, context, modelFormField);
+        // SCIPIO: now inlined above
+        //this.appendTooltip(writer, context, modelFormField);
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) throws IOException {
@@ -409,10 +411,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(textField.getMask())) {
             mask = textField.getMask();
         }
-        String tooltip = modelFormField.getTooltip(context); // SCIPIO: new arg
-        if (UtilValidate.isEmpty(tooltip)) {
-            tooltip = "";
-        }
         String ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         boolean disabled = textField.getDisabled();
         StringWriter sr = new StringWriter();
@@ -448,9 +446,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(mask));
         sr.append(" placeholder=");
         sr.append(ftlFmt.makeStringLiteral(placeholder));
-        sr.append(" tooltip="); // SCIPIO: new arg
-        sr.append(ftlFmt.makeStringLiteral(tooltip));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();
@@ -458,7 +455,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             makeHyperlinkString(writer, subHyperlink, context);
         }
         this.addAsterisks(writer, context, modelFormField);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO: as param instead (above)
     }
 
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) throws IOException {
@@ -2332,10 +2329,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(fadeBackground)) {
             fadeBackground = "false";
         }
-        String tooltip = modelFormField.getTooltip(context); // SCIPIO: new arg
-        if (UtilValidate.isEmpty(tooltip)) {
-            tooltip = "";
-        }
         Boolean isInitiallyCollapsed = lookupField.getInitiallyCollapsed();
         String clearText = "";
         Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
@@ -2416,14 +2409,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(isInitiallyCollapsed));
         sr.append(" lastViewName=");
         sr.append(ftlFmt.makeStringLiteral(lastViewName));
-        sr.append(" tooltip=");
-        sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: new arg
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField);
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.makeHyperlinkString(writer, lookupField.getSubHyperlink(), context);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO: covered above
     }
 
     protected String appendExternalLoginKey(String target) {
@@ -3198,17 +3190,31 @@ public final class MacroFormRenderer implements FormStringRenderer {
         return targetParams;
     }
 
+    /**
+     * Appends explicit tooltip markup.
+     * @deprecated SCIPIO: 2017-06-29: this should be inlined as tooltip="" argument to other field render calls instead.
+     * @see #appendTooltipParam
+     */
+    @Deprecated
     public void appendTooltip(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         // render the tooltip, in other methods too
-        String tooltip = modelFormField.getTooltip(context);
         StringWriter sr = new StringWriter();
-        sr.append("<@renderTooltip ");
-        sr.append("tooltip=");
+        sr.append("<@renderTooltip");
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO: now delegates
+        sr.append(" />");
+        executeMacro(writer, sr.toString());
+    }
+    
+    /**
+     * SCIPIO: Appends tooltip & tooltipStyle parameters for a macro call.
+     * Added 2017-06-29.
+     */
+    public void appendTooltipParam(Appendable sr, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
+        String tooltip = modelFormField.getTooltip(context);
+        sr.append(" tooltip=");
         sr.append(ftlFmt.makeStringLiteral(tooltip)); // SCIPIO: redundant: FreeMarkerWorker.encodeDoubleQuotes(tooltip)
         sr.append(" tooltipStyle=");
         sr.append(ftlFmt.makeStringLiteral(modelFormField.getTooltipStyle()));
-        sr.append(" />");
-        executeMacro(writer, sr.toString());
     }
 
     public void makeHyperlinkString(Appendable writer, ModelFormField.SubHyperlink subHyperlink, Map<String, Object> context) throws IOException {

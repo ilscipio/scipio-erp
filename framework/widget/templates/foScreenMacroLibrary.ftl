@@ -85,11 +85,11 @@ under the License.
 </#macro>
 
 <#macro renderColumnBegin id style extraArgs...>
-        <fo:table-cell<#if id?has_content> id="${id}"</#if><#if style?has_content> <@getFoStyle style/></#if>>
+        <fo:table-cell<#if id?has_content> id="${id}"</#if><#if style?has_content> <@getFoStyle style/></#if>><fo:block>
 </#macro>
 
 <#macro renderColumnEnd extraArgs...>
-        </fo:table-cell>
+        </fo:block></fo:table-cell>
 </#macro>
 
 </#escape>

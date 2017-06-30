@@ -20,9 +20,18 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="ExportInvoice" type="single" target="ExportInvoiceCsv.csv" title="" >
-        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
-        <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
+    <form name="ExportInvoice" type="single" target="ExportInvoiceCsv.csv" title="">
+        <field name="invoiceId" required-field="true"><lookup target-form-name="LookupInvoice"/></field>
+        <!-- SCIPIO: NOTE: not required by export
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>-->
+        <field name="organizationPartyId" required-field="false">
+            <drop-down allow-empty="true"><!-- no-current-selected-key="Company" -->
+                <entity-options entity-name="PartyRoleNameDetail" description="${groupName} [${partyId}]" key-field-name="partyId">
+                    <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="startDate"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
@@ -33,8 +42,8 @@ under the License.
             <entity-condition entity-name="InvoiceExport">
                 <condition-list combine="and">
                     <condition-list combine="or">
-                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals"/>
-                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals" ignore-if-empty="true"/><!-- SCIPIO: added  ignore-if-empty="true" -->
+                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals" ignore-if-empty="true"/><!-- SCIPIO: added  ignore-if-empty="true" -->
                     </condition-list>
                     <condition-expr field-name="invoiceDate" operator="greater-equals" from-field="parameters.startDate" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
@@ -64,15 +73,23 @@ under the License.
     </form>
     
     <form name="ImportInvoice" type="upload" target="ImportInvoice" title="" >
-        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>
-        <field name="uploadedFile"><file/></field>
+        <field name="uploadedFile" required-field="true"><file/></field>
+        <!-- SCIPIO: required
+        <field name="organizationPartyId"><hidden value="${parameters.organizationPartyId}"/></field>-->
+        <field name="organizationPartyId" required-field="true"><!-- SCIPIO: the service REQUIRES this field or fails... TODO: review the service -->
+            <drop-down allow-empty="true" no-current-selected-key="Company"><!-- FIXME: unhardcode default? -->
+                <entity-options entity-name="PartyRoleNameDetail" description="${groupName} [${partyId}]" key-field-name="partyId">
+                    <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
     
-    
     <form name="ExportTransactions" type="single" target="ExportTransaction.csv" title="" >
         <field name="organizationPartyId" required-field="false">
-            <drop-down allow-empty="true" no-current-selected-key="Company">
+            <drop-down allow-empty="true" no-current-selected-key="Company"><!-- FIXME: unhardcode default? -->
                 <entity-options entity-name="PartyRoleNameDetail" description="${groupName} [${partyId}]" key-field-name="partyId">
                     <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
                     <entity-order-by field-name="groupName"/>
@@ -137,6 +154,4 @@ under the License.
         <field name="workEffortId"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>
     </form>
-    
-    
 </forms>

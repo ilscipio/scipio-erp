@@ -41,6 +41,7 @@ under the License.
 </#macro>
 
 <#macro renderTooltip tooltip tooltipStyle extraArgs...></#macro>
+<#macro renderAsterisks requiredField requiredStyle extraArgs...></#macro>
 <#macro renderCheckField items className alert id allChecked currentValue name event action fieldType="" fieldTitleBlank=false extraArgs...></#macro>
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action fieldType="" fieldTitleBlank=false extraArgs...></#macro>
 

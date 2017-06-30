@@ -73,31 +73,28 @@ under the License.
 
     <screen name="SalesInvoiceByProductCategorySummary">
         <section>
+            <actions>
+                <include-screen-actions name="FinancialSummaryDataPrep"/>
+            
+                <set field="titleProperty" value="PageTitleSalesInvoiceByProductCategorySummary"/>
+
+                <set field="rootProductCategoryId" from-field="parameters.rootProductCategoryId"/>
+                <entity-one entity-name="ProductCategory" value-field="rootProductCategory" auto-field-map="false" use-cache="true">
+                    <field-map field-name="productCategoryId" from-field="rootProductCategoryId"/>
+                </entity-one>
+
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
+            </actions>
             <widgets>
-                <include-screen name="FinancialSummaryDataPrep" share-scope="true"/>
-                <section>
-                    <actions>
-                        <set field="titleProperty" value="PageTitleSalesInvoiceByProductCategorySummary"/>
-
-                        <set field="rootProductCategoryId" from-field="parameters.rootProductCategoryId"/>
-                        <entity-one entity-name="ProductCategory" value-field="rootProductCategory" auto-field-map="false" use-cache="true">
-                            <field-map field-name="productCategoryId" from-field="rootProductCategoryId"/>
-                        </entity-one>
-
-                        <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
-                    </actions>
-                    <widgets>
-                        <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                                <screenlet>
-                                    <platform-specific>
-                                        <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductCategorySummary.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/reports/SalesInvoiceByProductCategorySummary.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

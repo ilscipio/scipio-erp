@@ -75,7 +75,7 @@ under the License.
         <section>
             <actions>
                 <include-screen-actions name="FinancialSummaryDataPrep"/>
-            
+
                 <set field="titleProperty" value="PageTitleSalesInvoiceByProductCategorySummary"/>
 
                 <set field="rootProductCategoryId" from-field="parameters.rootProductCategoryId"/>
@@ -84,6 +84,8 @@ under the License.
                 </entity-one>
 
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/SalesInvoiceByProductCategorySummary.groovy"/>
+                
+                <set field="activeSubMenuItem" value="SalesInvoiceByProductCategorySummary"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">

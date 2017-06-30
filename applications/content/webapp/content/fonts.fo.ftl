@@ -300,7 +300,7 @@ Helvetica
 </fo:table>
   </fo:block>
 
-  <fo:block font-family="Helvetica"  font-size="14pt">
+  <fo:block font-family="Helvetica" font-size="14pt">
 Times Roman
   </fo:block>
   <fo:block space-after.optimum="10pt" font-family="Times Roman" font-size="10pt">
@@ -560,7 +560,7 @@ Times Roman
 </fo:table>
   </fo:block>
 
-  <fo:block font-family="Helvetica"  font-size="14pt">
+  <fo:block font-family="Helvetica" font-size="14pt">
 Courier
   </fo:block>
   <fo:block space-after.optimum="10pt" font-family="Courier" font-size="10pt">
@@ -820,7 +820,7 @@ Courier
 </fo:table>
   </fo:block>
 
-  <fo:block font-family="Helvetica"  font-size="14pt">
+  <fo:block font-family="Helvetica" font-size="14pt">
  ZapfDingbats:
   </fo:block>
   <fo:block space-after.optimum="10pt" font-family="ZapfDingbats" font-size="10pt">
@@ -1068,7 +1068,7 @@ Courier
 </fo:table>
   </fo:block>
 
-  <fo:block font-family="Helvetica"  font-size="14pt">
+  <fo:block font-family="Helvetica" font-size="14pt">
  Symbol:
   </fo:block>
   <fo:block space-after.optimum="10pt" font-family="Symbol" font-size="10pt">
@@ -1304,7 +1304,7 @@ Courier
   </fo:block>
   
   
-  <fo:block font-family="Helvetica"  font-size="14pt">
+  <fo:block font-family="Helvetica" font-size="14pt">
 NotoSans
   </fo:block>
   <fo:block space-after.optimum="10pt" font-family="NotoSans" font-size="10pt">
@@ -1569,13 +1569,13 @@ NotoSans
   <fo:block font-family="Helvetica" font-size="12pt">
 Some special characters:
   </fo:block>
-  <fo:block font-family="Helvetica"  font-size="12pt">
+  <fo:block font-family="Helvetica" font-size="12pt">
 Euro symbol in Helvetica 12 ( dec 8364, hex 20AC): &#x20AC;
   </fo:block>
-  <fo:block font-family="NotoSans"  font-size="12pt">
+  <fo:block font-family="NotoSans" font-size="12pt">
 Ruppe symbol in NotoSans 12 (dec 8377, hex 20B9): &#x20B9;
   </fo:block>
-  <fo:block font-family="NotoSans"  font-size="12pt">
+  <fo:block font-family="NotoSans" font-size="12pt">
 I &#x2665; NotoSans!
   </fo:block>
 

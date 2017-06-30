@@ -175,27 +175,32 @@ under the License.
         </section>
     </screen>
 
-    <screen name="AddGlAccount">
+    <screen name="AddGlAccount"><!-- SCIPIO: NOTE: the edit version is EditGlobalGlAccount -->
         <section>
             <actions>
+                <set field="parameters.glAccountId" type="Object" value=""/><!-- force new -->
+                <!--
+                <include-screen-actions name="GetGlAccountActions"/>
                 <set field="titleProperty" value="PageTitleAddGlAccount"/>
-                <set field="activeSubMenuItem" value=""/>
+                <set field="activeSubMenuItem" value="GlAccountNavigate"/>
                 <set field="labelTitleProperty" value=""/>
-                <!-- SCIPIO: 2017-06-29: removed, doesn't even work properly and doing what comment suggests cause more problems
-                <set field="glAccount" value=""/><!- - make sure glAccountId field is shown - ->-->
+                -->
             </actions>
             <widgets>
-                <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <include-screen name="EditGlobalGlAccount"/>
+                <!-- 
+                <decorator-screen name="CommonGLDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet> <!-- title="${uiLabelMap.PageTitleAddGlAccount}" -->
+                        <screenlet> <!- - title="${uiLabelMap.PageTitleAddGlAccount}" - ->
                             <include-form name="EditGlAccount" location="component://accounting/widget/ledger/GlobalGlAccountsForms.xml"/>
                         </screenlet>
 
-                        <!-- include-screen screen-name="ListGlAccounts" name="ListGlAccounts" / -->
+                        <!- - include-screen screen-name="ListGlAccounts" name="ListGlAccounts" / - ->
 
-                        <!-- tree name="ListGlAccountTree" location="component://accounting/widget/ledger/AccountingTrees.xml"/ -->
+                        <!- - tree name="ListGlAccountTree" location="component://accounting/widget/ledger/AccountingTrees.xml"/ - ->
                      </decorator-section>
                 </decorator-screen>
+                -->
             </widgets>
         </section>
     </screen>
@@ -259,24 +264,63 @@ under the License.
         </section>
     </screen>
 
-    <screen name="EditGlobalGlAccount">
+    <screen name="EditGlobalGlAccount"><!-- SCIPIO: NOTE: the add version is AddGlAccount -->
         <section>
             <actions>
-                <!-- <set field="title" value="Edit GlAccount"/>
-                <set field="titleProperty" value=""/>
-                <set field="labelTitleProperty" value=""/> -->
+                <include-screen-actions name="GetCheckGlAccountActions"/>
+                <set field="titleProperty" value="${groovy: (context.glAccount != null || context.glAccountId) ? 'PageTitleEditGlAccount' : 'PageTitleAddGlAccount'}"/><!-- SCIPIO -->
                 <set field="activeSubMenuItem" value="GlAccountNavigate"/>
-                
-                <set field="glAccountId" from-field="parameters.glAccountId"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonGLDecorator">
+                <decorator-screen name="CommonGLDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-form name="EditGlAccount" location="component://accounting/widget/ledger/GlobalGlAccountsForms.xml"/>
+                        <screenlet>
+                            <include-form name="EditGlAccount" location="component://accounting/widget/ledger/GlobalGlAccountsForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
+    </screen>
+    <screen name="GetGlAccountActions"><!-- SCIPIO: new -->
+        <actions>
+            <if>
+                <condition>
+                    <not><if-compare field="GetGlAccountActions_run" operator="equals" type="Boolean" value="true"/></not>
+                </condition>
+                <then>
+                    <script lang="groovy"><![CDATA[
+                        // SCIPIO: prevents problems with glAccountId!=null test, prevents empty string/undef
+                        context.glAccountId = context.glAccountId ?: parameters.glAccountId ?: null;
+                    ]]></script>
+                    <entity-one entity-name="GlAccount" value-field="glAccount"/>
+                </then>
+            </if>
+        </actions>
+    </screen>
+    <screen name="GetCheckGlAccountActions"><!-- SCIPIO: new -->
+        <actions>
+            <include-screen-actions name="GetGlAccountActions"/>
+            <if>
+                <condition>
+                    <and>
+                        <if-empty field="glAccount"/>
+                        <not><if-empty field="glAccountId"/></not>
+                    </and>
+                </condition>
+                <then>
+                    <script lang="groovy"><![CDATA[
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(org.ofbiz.base.util.UtilProperties.getMessage('AccountingUiLabels', 
+                            'AccountingGlAccountNotFound', context, context.locale));
+                    ]]></script>
+                </then>
+            </if>
+        </actions>
     </screen>
     <screen name="ViewRateAmounts">
         <section>

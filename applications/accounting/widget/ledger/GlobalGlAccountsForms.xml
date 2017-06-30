@@ -112,18 +112,16 @@ under the License.
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
-            <script lang="groovy"><![CDATA[
-                // SCIPIO: prevents problems with glAccountId!=null test, prevents empty string/undef
-                context.glAccountId = context.glAccountId ?: parameters.glAccountId ?: null;
-            ]]></script>
-            <entity-one entity-name="GlAccount" value-field="glAccount"/>
+            <!-- SCIPIO -->
+            <include-screen-actions name="GetGlAccountActions" location="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml"/>
         </actions>
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
-        <field name="glAccountId" title="${uiLabelMap.CommonId}" use-when="glAccount!=null"><display/></field>
-        <field name="glAccountId" use-when="glAccount==null&amp;&amp;glAccountId!=null" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>
+        <field name="glAccountId" use-when="glAccount!=null" title="${uiLabelMap.CommonId}"><display/></field>
+        <!-- SCIPIO: the screen shows this now
+        <field name="glAccountId" use-when="glAccount==null&amp;&amp;glAccountId!=null" title="${uiLabelMap.CommonId}" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display also-hidden="false"/></field>-->
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field name="accountCode" title="${uiLabelMap.CommonCode}" position="2"><text/></field>
-        <field name="accountName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="accountName" title="${uiLabelMap.CommonName}" required-field="true"><text/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false" no-current-selected-key="_NA_">
                 <entity-options entity-name="GlAccountType" description="${description}">

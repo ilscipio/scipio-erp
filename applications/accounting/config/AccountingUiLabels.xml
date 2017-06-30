@@ -20600,6 +20600,7 @@
     
     <property key="PageTitleAddGlAccount">
         <value xml:lang="cs">Přidat účet do hlavní knihy</value>
+        <value xml:lang="de">Gl Account hinzufügen</value><!-- SCIPIO -->
         <value xml:lang="en">Add Gl Account</value>
         <value xml:lang="es">Agregar Cuenta de LM</value>
         <value xml:lang="fr">Ajouter un compte comptable</value>
@@ -22571,5 +22572,17 @@
         <value xml:lang="en">New Tax Authority Party Info</value>
         <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
         <value xml:lang="fr">Ajouter informations d'une administration fiscale</value>
+    </property>
+    <property key="PageTitleEditGlAccount">
+        <value xml:lang="de">Bearbeiten Gl Account</value>
+        <value xml:lang="en">Edit Gl Account</value>
+    </property>
+    <property key="AccountingGlAccountNotFound">
+        <value xml:lang="de">Gl Account ${glAccountId} nicht gefunden</value>
+        <value xml:lang="en">Gl Account ${glAccountId} not found</value>
+    </property>
+    <property key="AccountingNoteInvoiceMissingStatusRecords">
+        <value xml:lang="de">Die Rechnung ${invoiceId} hat keine InvoiceStatus-Aufzeichnungen; Dies ist in der Regel auf Samen oder Demo-Daten nicht nach dem formalen Rechnungserstellungsprozess (createInvoice-Service).</value>
+        <value xml:lang="en">Invoice ${invoiceId} has no InvoiceStatus records; this is usually due to seed or demo data not following the formal invoice creation process (createInvoice service).</value>
     </property>
 </resource>

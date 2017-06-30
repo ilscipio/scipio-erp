@@ -388,13 +388,13 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createGlAccount"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
-        <response name="error" type="view" value="GlAccountNavigate"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/><!-- SCIPIO: errors have to go back to the form! -->
     </request-map>
     <request-map uri="updateGlAccount">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateGlAccount"/>
         <response name="success" type="view" value="GlAccountNavigate"/>
-        <response name="error" type="view" value="GlAccountNavigate"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/><!-- SCIPIO: errors have to go back to the form! -->
     </request-map>
 
     <request-map uri="ListGlAccountOrganization"><security https="true" auth="true"/><response name="success" type="view" value="ListGlAccountOrganization"/></request-map>
@@ -2876,7 +2876,7 @@ under the License.
     <view-map name="FindGlAccountReconciliations" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#FindGlAccountReconciliations"/>
     <view-map name="EditGlReconciliation" type="screen" page="component://accounting/widget/ledger/GlScreens.xml#EditGlReconciliation"/>
 
-    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#AddGlAccount"/>
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccount"/>
     <!-- NOTE/TODO: these 2 appear to never have been implemented all the way, just request and view defs so far...
     <view-map name="EditGlobalGlAccountOrganizations" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccountOrganizations"/>
     <view-map name="EditGlobalGlAccountRoles" type="screen" page="component://accounting/widget/ledger/GlobalGlAccountsScreens.xml#EditGlobalGlAccountRoles"/>

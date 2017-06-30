@@ -112,11 +112,15 @@ under the License.
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
+            <script lang="groovy"><![CDATA[
+                // SCIPIO: prevents problems with glAccountId!=null test, prevents empty string/undef
+                context.glAccountId = context.glAccountId ?: parameters.glAccountId ?: null;
+            ]]></script>
             <entity-one entity-name="GlAccount" value-field="glAccount"/>
         </actions>
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
-        <field name="glAccountId" title="${uiLabelMap.CommonId}"><display/></field>
-        <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonId}" use-when="glAccount!=null"><display/></field>
+        <field name="glAccountId" use-when="glAccount==null&amp;&amp;glAccountId!=null" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
         <field name="accountCode" title="${uiLabelMap.CommonCode}" position="2"><text/></field>
         <field name="accountName" title="${uiLabelMap.CommonName}"><text/></field>

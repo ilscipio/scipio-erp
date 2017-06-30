@@ -181,9 +181,9 @@ under the License.
                 <set field="titleProperty" value="PageTitleAddGlAccount"/>
                 <set field="activeSubMenuItem" value=""/>
                 <set field="labelTitleProperty" value=""/>
-                <set field="glAccount" value=""/><!-- make sure glAccountId field is shown -->
+                <!-- SCIPIO: 2017-06-29: removed, doesn't even work properly and doing what comment suggests cause more problems
+                <set field="glAccount" value=""/><!- - make sure glAccountId field is shown - ->-->
             </actions>
-
             <widgets>
                 <decorator-screen name="CommonAccountingAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

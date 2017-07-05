@@ -798,6 +798,9 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 
 NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
+NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixed in Scipio and will be modified again soon;
+    see the parameter's documentation below. 
+
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
                               WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
@@ -811,8 +814,17 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                                   In Scipio, while this behavior is left intact for compatibility with old code, 
                                   you should simply avoid relying on any such check and not consider
                                   "/images/defaultImage.jpg" as a special value, or simply not use it.
-    variant                 = ((string)) variant
-                              (Stock Ofbiz parameter)
+    variant                 = ((string)) Variant image, normally same image with different dimensions
+                              2017-07-04: The variant name is now appended using one of the following 3 filename patterns:
+                              * {{{/file.ext}}} -> {{{/file-${variant}.ext}}} [STOCK]: in most cases the variant is added this way, before extension with dash, EXCEPT when:
+                              * {{{/file-original.ext}}} -> {{{/file-${variant}.ext}}} [NEW]: when the filename ends with the keyword "original" after dash, it is replaced with the variant word, and:
+                              * {{{/original.ext}}} -> {{{/${variant}.ext}}} [NEW]: when the filename part is exactly the keyword "original", it is substituted with the variant word.
+                              The NEW cases have been added so that the macro now supports the stock product image upload configuration (see catalog.properties),
+                              rather than conflicting with it.
+                              SPECIAL PREFIXES: The variant can be prefixed with one of the following characters:
+                              * {{{-}}}: this forces the first STOCK case above, to support filenames that originally were named "original".
+                              * {{{~}}}: TODO: NOT IMPLEMENTED: special operator: if the variant begins with the tilde character (~), a special closest-matching behavior will be enabled... 
+                              (Stock Ofbiz parameter, modified in Scipio)
     ctxPrefix               = ((boolean)|(string), default: false) Contextual path prefix
                               Extra path prefix prepended to the uri, which may replace the central system default prefix if
                               it produces an absolute URL (prefixed with "http:", "https:", or "//").
@@ -848,6 +860,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                               (New in Scipio) 
                               
   * History *
+    Enhanced for 1.14.4 (variant parameter).
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM

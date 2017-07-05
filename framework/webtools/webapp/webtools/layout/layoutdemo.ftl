@@ -1867,6 +1867,14 @@
         ${escapeVal(urlContent, 'html')} <em>(<strong>USAGE ERROR - DANGEROUS:</strong> js pre-escaping - unsafe string passed to ctxPrefix - should produce log warning that JS string possibly unsafe)</em>
       </li>
     </ul>
+    <p>Variant filename (only) tests:</p>
+    <ul>
+      <li><@ofbizContentUrl uri="/image/some-thing/test.jpg" variant="detail"/> (append)</li>
+      <li><@ofbizContentUrl uri="/image/some-thing/test-original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@ofbizContentUrl uri="/image/some-thing/original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="detail"/> (should replace original) (non-strict, tries to work even if html-escaped)</li>
+      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="-detail"/> (force-append)</li>
+    </ul>
   </@section>
   
   <@section title="Misc URL tests">

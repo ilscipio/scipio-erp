@@ -51,6 +51,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.image.ProductImageWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -297,6 +298,15 @@ public class ImageManagementServices {
         return ServiceUtil.returnSuccess();
     }
     
+    /**
+     * Scaling method.
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
+     * <p>
+     * SCIPIO: NOTE: 2017-07-04: This appears to have been a modified copy-paste of the methods in
+     * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
+     */
     public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId)
         throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
         
@@ -320,7 +330,7 @@ public class ImageManagementServices {
         Map<String, Object> result = FastMap.newInstance();
         
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));

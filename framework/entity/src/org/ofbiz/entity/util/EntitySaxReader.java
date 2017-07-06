@@ -454,7 +454,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                         ModelEntity modelEntity = currentValue.getModelEntity();
                         ModelField modelField = modelEntity.getField(currentFieldName.toString());
                         String type = modelField.getType();
-                        if (type != null && type.equals("blob")) {
+                        if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
                             byte strData[] = new byte[currentFieldValue.length()];
                             strData = currentFieldValue.toString().getBytes();
                             byte binData[] = new byte[currentFieldValue.length()];

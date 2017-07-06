@@ -195,6 +195,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected boolean holdOrder = false;
     protected Timestamp orderDate = null;
     protected Timestamp cancelBackOrderDate = null;
+    
+    // SCIPIO: Cart item subscriptions 
+    protected Map<ShoppingCartItem, List<GenericValue>> cartSubscriptionItems = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -5299,5 +5302,86 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             emailList.addAll(addEmailList);
         }
         return emailList;
+    }
+    
+    // ================= Cart Subscriptions =================
+
+    /**
+     * SCIPIO: Retrieve all subscription of the entire cart
+     * 
+     * @return Map<GenericValue, List<GenericValue>>
+     * @throws GenericEntityException
+     */
+    public Map<ShoppingCartItem, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
+        List<ShoppingCartItem> cartItems = items();
+        if (cartItems != null) {
+            for (ShoppingCartItem cartItem : cartItems) {
+                List<GenericValue> productSubscriptions = getItemSubscriptions(cartItem);
+                for (GenericValue productSubscription : productSubscriptions) {
+                    Debug.log("Found cartItem [" + cartItem.getOrderItemSeqId() + "#" + cartItem.getProductId() + "] with subscription id["
+                            + productSubscription.getString("subscriptionResourceId") + "]");
+                }
+            }
+            return this.cartSubscriptionItems;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Retrieve all subscriptions associated to an cartItem
+     * 
+     * @return List<GenericValue>
+     * @throws GenericEntityException
+     */
+    public List<GenericValue> getItemSubscriptions(ShoppingCartItem cartItem) throws GenericEntityException {
+        Delegator delegator = cartItem.getDelegator();
+        if (this.cartSubscriptionItems == null)
+            this.cartSubscriptionItems = FastMap.newInstance();
+
+        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
+                .where("productId", cartItem.getProductId()).cache(true).filterByDate().queryList();
+        if (UtilValidate.isNotEmpty(productSubscriptionResources))
+            this.cartSubscriptionItems.put(cartItem, productSubscriptionResources);
+        return productSubscriptionResources;
+    }
+
+    /**
+     * SCIPIO: Checks if any order item has an underlying subscription/s bound
+     * to it
+     * 
+     * @return boolean
+     * @throws GenericEntityException
+     */
+    public boolean hasSubscriptions() {
+        return UtilValidate.isNotEmpty(this.cartSubscriptionItems);
+    }
+
+    /**
+     * SCIPIO: Checks if an order item has an underlying subscription/s bound to
+     * it
+     * 
+     * @return boolean
+     * @throws GenericEntityException
+     */
+    public boolean hasSubscriptions(GenericValue cartItem) {
+        return UtilValidate.isNotEmpty(this.cartSubscriptionItems) && this.cartSubscriptionItems.containsKey(cartItem);
+    }
+
+    /**
+     * SCIPIO: Check if the order contains only subscription items
+     * 
+     * @return boolean
+     */
+    public boolean orderContainsSubscriptionItemsOnly() {
+        List<ShoppingCartItem> cartItems = items();
+        if (cartItems != null && cartSubscriptionItems != null) {
+            for (ShoppingCartItem orderItem : cartItems) {
+                if (!cartSubscriptionItems.containsKey(orderItem))
+                    return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }

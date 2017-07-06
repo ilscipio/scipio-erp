@@ -53,6 +53,8 @@ public abstract class ContentImageWorker {
     
     public static final String ORIGINAL_SIZETYPE = "original";
     
+    public static final String CONTENT_IMAGEPROP_FILEPATH = "/applications/content/config/ImageProperties.xml";
+    
     protected ContentImageWorker() {
     }
 
@@ -65,7 +67,11 @@ public abstract class ContentImageWorker {
      * Added 2017-07-04.
      */
     public static String getContentImagePropertiesFullPath() {
-        return getImagePropertiesFullPath("/applications/content/config/ImageProperties.xml");
+        return getImagePropertiesFullPath(CONTENT_IMAGEPROP_FILEPATH);
+    }
+    
+    public static String getContentImagePropertiesPath() {
+        return CONTENT_IMAGEPROP_FILEPATH;
     }
     
     /**

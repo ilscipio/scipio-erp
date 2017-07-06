@@ -29,6 +29,8 @@ import org.ofbiz.content.image.ContentImageWorker;
  */
 public abstract class ProductImageWorker {
 
+    public static final String PRODUCT_IMAGEPROP_FILEPATH = "/applications/product/config/ImageProperties.xml";
+    
     protected ProductImageWorker() {
     }
 
@@ -38,11 +40,20 @@ public abstract class ProductImageWorker {
      * Added 2017-07-04.
      */
     public static String getProductImagePropertiesFullPath() {
-        String path = ContentImageWorker.getImagePropertiesFullPath("/applications/product/config/ImageProperties.xml");
+        String path = ContentImageWorker.getImagePropertiesFullPath(PRODUCT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
             return path;
         } else {
             return ContentImageWorker.getContentImagePropertiesFullPath();
+        }
+    }
+    
+    public static String getProductImagePropertiesPath() {
+        String path = ContentImageWorker.getImagePropertiesFullPath(PRODUCT_IMAGEPROP_FILEPATH);
+        if (new java.io.File(path).exists()) {
+            return PRODUCT_IMAGEPROP_FILEPATH;
+        } else {
+            return ContentImageWorker.getContentImagePropertiesPath();
         }
     }
 }

@@ -1158,7 +1158,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             String name = modelField.getName();
 
             String type = modelField.getType();
-            if (type != null && type.equals("blob")) {
+            if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added export byte-array and object as base64; not just blob, otherwise invalid output for other two
                 Object obj = get(name);
                 boolean b1 = obj instanceof byte [];
                 if (b1) {

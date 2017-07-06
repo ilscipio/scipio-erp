@@ -252,7 +252,7 @@
                     <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('authorizeBillingAgreement')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />
                 <#elseif orderItem.statusId == "ITEM_COMPLETED">
-                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingAgreement')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingAgreementPayPalRest')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopCancelSubscription}" />
                 </#if>
             </@td>

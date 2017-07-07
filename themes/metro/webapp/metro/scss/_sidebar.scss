@@ -245,7 +245,7 @@ $sidebar-width: 200px;
     
     .name{
          a {color: $white}
-        .logo-text {display:inline-block; width:100px;word-break: break-all;}
+        .logo-text {display:inline-block; width:100px;word-break: break-word;}
         img{
             width: 55px;
             height: 55px;

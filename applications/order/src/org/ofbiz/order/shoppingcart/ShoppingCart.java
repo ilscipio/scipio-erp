@@ -197,7 +197,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected Timestamp cancelBackOrderDate = null;
     
     // SCIPIO: Cart item subscriptions 
-    protected Map<ShoppingCartItem, List<GenericValue>> cartSubscriptionItems = null;
+    protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -5312,11 +5312,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * @return Map<GenericValue, List<GenericValue>>
      * @throws GenericEntityException
      */
-    public Map<ShoppingCartItem, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
+    public Map<String, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
         List<ShoppingCartItem> cartItems = items();
         if (cartItems != null) {
             for (ShoppingCartItem cartItem : cartItems) {
-                List<GenericValue> productSubscriptions = getItemSubscriptions(cartItem);
+                List<GenericValue> productSubscriptions = getItemSubscriptions(cartItem.getDelegator(), cartItem.getProductId());
                 for (GenericValue productSubscription : productSubscriptions) {
                     Debug.log("Found cartItem [" + cartItem.getOrderItemSeqId() + "#" + cartItem.getProductId() + "] with subscription id["
                             + productSubscription.getString("subscriptionResourceId") + "]");
@@ -5328,20 +5328,19 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * SCIPIO: Retrieve all subscriptions associated to an cartItem
+     * SCIPIO: Retrieve all subscriptions associated to an productId
      * 
      * @return List<GenericValue>
      * @throws GenericEntityException
      */
-    public List<GenericValue> getItemSubscriptions(ShoppingCartItem cartItem) throws GenericEntityException {
-        Delegator delegator = cartItem.getDelegator();
+    public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
         if (this.cartSubscriptionItems == null)
             this.cartSubscriptionItems = FastMap.newInstance();
 
-        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
-                .where("productId", cartItem.getProductId()).cache(true).filterByDate().queryList();
+        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
+                .cache(true).filterByDate().queryList();
         if (UtilValidate.isNotEmpty(productSubscriptionResources))
-            this.cartSubscriptionItems.put(cartItem, productSubscriptionResources);
+            this.cartSubscriptionItems.put(productId, productSubscriptionResources);
         return productSubscriptionResources;
     }
 

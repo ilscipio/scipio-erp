@@ -973,7 +973,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         if (index < 0) return;
         if (cartLines.size() <= index) return;
+        // SCIPIO: Removing cart item from subscriptions map, if exists
+        if (cartSubscriptionItems.containsKey(cartLines.get(index).getProductId())) {
+            cartSubscriptionItems.remove(cartLines.get(index).getProductId());
+        }
         ShoppingCartItem item = cartLines.remove(index);
+        
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks
         item.setQuantity(BigDecimal.ZERO, dispatcher, this, triggerExternalOps, true, false, true);
@@ -1458,6 +1463,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
+        
+        // SCIPIO: Clearing subscription items
+        this.cartSubscriptionItems.clear();
 
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {

@@ -26,7 +26,7 @@
         and should not be called directly as controller events (assume all except where otherwise noted) -->
 
     <service name="contentImageFileScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.product.imagemanagement.ImageManagementServices" invoke="productImageFileScaleInAllSize" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false">
         <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames)</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -67,21 +67,22 @@
         <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
-        <attribute name="copyOrig" mode="IN" type="String" optional="true">
+        <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
         </attribute>
         
         <!-- OUTPUT -->
-        <attribute name="imageUrlMap" mode="IN" type="Map" optional="true">
-            <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original" (UNLESS found to already exist / same as input)</description>
+        <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
+            <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original"</description>
         </attribute>
-        <attribute name="bufferedImage" mode="IN" type="java.awt.image.BufferedImage" optional="true">
+        <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
     </service>
     
+    <!-- TODO -->
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageScaleInAllSize" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false">
         <description>(TODO) Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
         <!-- TODO -->
         
@@ -100,15 +101,15 @@
         <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
-        <attribute name="copyOrig" mode="IN" type="String" optional="true">
+        <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
         </attribute>
     
         <!-- OUTPUT -->
-        <attribute name="imageRecordMap" mode="IN" type="Map" optional="true">
+        <attribute name="imageRecordMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to record IDs</description>
         </attribute>
-        <attribute name="bufferedImage" mode="IN" type="java.awt.image.BufferedImage" optional="true">
+        <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
     </service>

@@ -54,11 +54,11 @@ public abstract class ProductImageServices {
         String type = null;
         String id = (String) context.get("productId");
         if (viewType.toLowerCase().contains("main")) {
-            String filenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", (Delegator) context.get("delegator"));
+            String filenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator);
             imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "type", "original"));
             contentCtx.put("imageFnFmt", filenameFormat);
         } else if (viewType.toLowerCase().contains("additional") && viewNumber != null && viewNumber != 0) {
-            String filenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", (Delegator) context.get("delegator"));
+            String filenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", delegator);
             if (filenameFormat.endsWith("${id}")) { // TODO: REVIEW: don't get this
                 id = id + "_View_" + viewNumber;
             } else {

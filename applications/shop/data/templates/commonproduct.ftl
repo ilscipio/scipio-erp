@@ -36,7 +36,7 @@ NOTE: This template does not support globals as-is (#global)
     <#if !description?has_content>
       <#local description = productName>
     </#if>
-    <#local longDescription = (.node.@longDescription[0])!"">
+    <#local longDescription = (.node.@longDescription[0])!.node.longDescription!"">
     <#if !longDescription?has_content>
       <#local longDescription = description>
     </#if>

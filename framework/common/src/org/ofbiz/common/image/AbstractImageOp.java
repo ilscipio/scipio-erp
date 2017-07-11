@@ -12,13 +12,29 @@ public abstract class AbstractImageOp implements ImageOp {
 
     protected final AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory;
     protected final String name;
-    protected final Map<String, Object> defaultOptions;
+    protected final Map<String, Object> confOptions;
+    protected final Map<String, Object> defOptions;
+    /**
+     * This is defaultOptions + confOptions.
+     */
+    protected final Map<String, Object> confDefOptions;
     
-    public AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name, Map<String, Object> defaultOptions) {
+    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name, 
+            Map<String, Object> confOptions, Map<String, Object> defOptions) {
         this.factory = factory;
         this.name = name;
-        this.defaultOptions = defaultOptions != null ? Collections.unmodifiableMap(
-                new HashMap<String, Object>(defaultOptions)) : Collections.<String, Object>emptyMap();
+        this.confOptions = confOptions != null ? Collections.unmodifiableMap(
+                factory.makeOptionsMap(confOptions)) : Collections.<String, Object>emptyMap();
+        this.defOptions = confOptions != null ? Collections.unmodifiableMap(
+                factory.makeOptionsMap(defOptions)) : Collections.<String, Object>emptyMap();
+        Map<String, Object> confDefOptions = factory.makeOptionsMap(this.defOptions);
+        confDefOptions.putAll(this.confOptions);
+        this.confDefOptions = confDefOptions;
+    }
+    
+    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name, 
+            Map<String, Object> confOptions) {
+        this(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     @Override
@@ -27,8 +43,18 @@ public abstract class AbstractImageOp implements ImageOp {
     }
 
     @Override
+    public Map<String, Object> getConfiguredOptions() {
+        return confOptions;
+    }
+
+    @Override
     public Map<String, Object> getDefaultOptions() {
-        return defaultOptions;
+        return defOptions;
+    }
+
+    @Override
+    public Map<String, Object> getConfiguredAndDefaultOptions() {
+        return confDefOptions;
     }
 
     @Override
@@ -42,13 +68,26 @@ public abstract class AbstractImageOp implements ImageOp {
     }
     
     protected Map<String, Object> getEffectiveOptions(Map<String, Object> options) {
-        if (options == null || options.isEmpty()) return defaultOptions;
-        else if (defaultOptions.isEmpty()) return options;
+        if (options == null || options.isEmpty()) return confDefOptions;
+        else if (confDefOptions.isEmpty()) return options;
         else {
-            Map<String, Object> mergedMap = new HashMap<>(defaultOptions);
+            Map<String, Object> mergedMap = getFactory().makeOptionsMap(confDefOptions);
             mergedMap.putAll(options);
             return mergedMap;
         }
+    }
+    
+    protected String getApiName() {
+        return getFactory().getApiName();
+    }
+    
+    @Override
+    public String toString() {
+        return "[" + getName() + "/" + getApiName() + "/defaults:" + getConfiguredAndDefaultOptions().toString() + "]";
+    }
+    
+    public String toString(Map<String, Object> options) {
+        return "[" + getName() + "/" + getApiName() + "/options:" + options.toString() + "]";
     }
     
     // NOTE: this needs two params otherwise the multiple inherit hierarchy breaks
@@ -60,7 +99,7 @@ public abstract class AbstractImageOp implements ImageOp {
 
         @Override
         public V getDerivedImageOpInst(String name, Map<String, Object> defaultScalingOptions, ImageOp other) {
-            Map<String, Object> mergedOptions = new HashMap<>(other.getDefaultOptions());
+            Map<String, Object> mergedOptions = makeOptionsMap(other.getConfiguredOptions());
             if (defaultScalingOptions != null) {
                 mergedOptions.putAll(defaultScalingOptions);
             }
@@ -68,6 +107,24 @@ public abstract class AbstractImageOp implements ImageOp {
         }
         
         protected abstract String getApiName();
+        
+        /**
+         * Helper for implementing {@link ImageOpFactory#makeValidOptions}.
+         * If the value is null but srcOptions contained the key, then we put null, because this may
+         * mean the caller wanted to pass explicit null (also converts empty string to null in some cases).
+         */
+        protected void putOption(Map<String, Object> destOptions, String name, Object value, Map<String, Object> srcOptions) {
+            if (value != null || srcOptions.containsKey(name)) {
+                destOptions.put(name, value);
+            }
+        }
+        
+        protected Map<String, Object> makeOptionsMap(Map<String, Object> srcMap) {
+            return new HashMap<>(srcMap);
+        }
+        protected Map<String, Object> makeOptionsMap() {
+            return new HashMap<>();
+        }
     }
 
 }

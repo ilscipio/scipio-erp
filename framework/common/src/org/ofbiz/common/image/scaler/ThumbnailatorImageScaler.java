@@ -11,6 +11,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
 import net.coobird.thumbnailator.resizers.configurations.Dithering;
 import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
 
@@ -20,7 +21,8 @@ import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
  * Supported scalingOptions:
  * <ul>
  * <li>filter (String) - "smooth" (default) or substitute (see {@link #filterMap} below for supported)</li>
- * <li>dithering (boolean) - true/false
+ * <li>dithering (Boolean) - true/false/empty/null
+ * <li>antialiasing (Boolean) - true/false/empty/null
  * </ul>
  * </p>
  * TODO: add more scalingOptions
@@ -33,7 +35,10 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     public static final String API_NAME = "thumbnailator";
     
     /**
-     * Maps <code>scalingOptions.filter</code> to Thumbnailator filter instances.
+     * Maps <code>scalingOptions.filter</code> to Thumbnailator ScalingMode instances.
+     * FIXME?: this does not properly represent/support all the ResizerFactory/Resizer classes/combinations
+     * supported by Thumbnailator; however because these are internal definitions (client code should NOT
+     * try to pass them), we can fix this later if wanted...
      */
     private static final Map<String, ScalingMode> filterMap;
     static {
@@ -44,7 +49,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         //map.put("default", Image.SCALE_DEFAULT); // TODO
         //map.put("fast", Image.SCALE_FAST); // TODO
         //map.put("replicate", Image.SCALE_REPLICATE); // TODO
-        map.put("smooth", ScalingMode.PROGRESSIVE_BILINEAR);
+        map.put("smooth", null); // Thumbnailator default (smooth-auto)
         
         // SPECIFIC ALGORITHMS
         map.put("bicubic", ScalingMode.BICUBIC);
@@ -52,19 +57,25 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         map.put("progbilinear", ScalingMode.PROGRESSIVE_BILINEAR);
         
         // API-SPECIFIC
-        // (none)
+        map.put("smooth-auto", null); // Thumbnailator default (selects between progbilinear, bicubic and bilinear automatically)
+                                      // Behavior described in net.coobird.thumbnailator.resizers.DefaultResizerFactory
         
         filterMap = Collections.unmodifiableMap(map);
-        
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
     
-    private static final ScalingMode defaultFilter = filterMap.get("smooth");
-    private static final Boolean defaultDithering = null; // use Thumbnailator different for scaling mode
+    public static final Map<String, Object> DEFAULT_OPTIONS;
+    static {
+        Map<String, Object> options = new HashMap<>();
+        options.put("filter", filterMap.get("smooth")); // String
+        options.put("dithering", null); // Boolean; we set null to use Thumbnailator default
+        options.put("antialiasing", null); // Boolean
+        DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
+    }
     
     protected ThumbnailatorImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name,
-            Map<String, Object> defaultScalingOptions) {
-        super(factory, name, defaultScalingOptions);
+            Map<String, Object> confOptions) {
+        super(factory, name, confOptions);
     }
 
     public static class Factory extends AbstractImageScalerFactory<ThumbnailatorImageScaler> {
@@ -76,50 +87,53 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>();
-            ScalingMode filter = getFilter(options, null);
-            if (filter != null) {
-                validOptions.put("filter", filter);
-            }
-            Boolean dithering = getDithering(options, null);
-            if (dithering != null) {
-                validOptions.put("dithering", dithering);
-            }
+            putOption(validOptions, "filter", getFilter(options), options);
+            putOption(validOptions, "dithering", getDithering(options), options);
+            putOption(validOptions, "antialiasing", getAntialiasing(options), options);
             return validOptions;
         }
 
-        @Override
-        protected String getApiName() {
-            return API_NAME;
-        }
+        @Override protected String getApiName() { return API_NAME; }
+        @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
     
     @Override
     protected Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
-            Map<String, Object> scalingOptions) throws IOException {
+            Map<String, Object> options) throws IOException {
         Thumbnails.Builder<BufferedImage> builder = Thumbnails.of(image).size(targetWidth, targetHeight);
-        builder = builder.scalingMode(getFilter(scalingOptions, defaultFilter));
-        Boolean dithering = getDithering(scalingOptions, defaultDithering);
+        ScalingMode filter = getFilter(options);
+        if (filter != null) {
+            builder = builder.scalingMode(getFilter(options));
+        }
+        Boolean dithering = getDithering(options);
         if (dithering != null) {
             builder = builder.dithering(dithering ? Dithering.ENABLE : Dithering.DISABLE);
+        }
+        Boolean antialiasing = getAntialiasing(options);
+        if (antialiasing != null) {
+            builder = builder.antialiasing(antialiasing ? Antialiasing.ON : Antialiasing.OFF);
         }
         return builder.asBufferedImage();
     }
     
-    protected static ScalingMode getFilter(Map<String, Object> options, ScalingMode defaultValue) throws IllegalArgumentException {
+    // NOTE: defaults are handled through the options merging with defaults
+    protected static ScalingMode getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
-        if (filterObj == null) return defaultValue;
+        if (filterObj == null) return null;
         else if (filterObj instanceof ScalingMode) return (ScalingMode) filterObj;
         else {
             String filterName = (String) filterObj;
-            if (filterName.isEmpty()) return defaultValue;
-            ScalingMode filter = filterMap.get(filterName);
-            if (filter == null) throw new IllegalArgumentException("filter '" + filterName + "' not supported by Thumbnailator library");
-            return filter;
+            if (filterName.isEmpty()) return null;
+            if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
+            return filterMap.get(filterName);
         }
     }
     
-    protected static Boolean getDithering(Map<String, Object> options, Boolean defaultValue) {
-        Boolean dithering = UtilMisc.booleanValue(options.get("dithering"));
-        return dithering != null ? dithering : defaultValue;
+    protected static Boolean getDithering(Map<String, Object> options) {
+        return UtilMisc.booleanValue(options.get("dithering"));
+    }
+    
+    protected static Boolean getAntialiasing(Map<String, Object> options) {
+        return UtilMisc.booleanValue(options.get("antialiasing"));
     }
 }

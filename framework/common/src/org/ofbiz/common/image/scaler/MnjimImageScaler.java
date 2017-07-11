@@ -60,14 +60,18 @@ public class MnjimImageScaler extends AbstractImageScaler {
         // (none)
         
         filterMap = Collections.unmodifiableMap(map);
-        
         Debug.logInfo(AbstractImageScaler.getFilterMapLogRepr(API_NAME, map), module);
     }
     
-    private static final ResampleFilter defaultFilter = filterMap.get("smooth");
+    public static final Map<String, Object> DEFAULT_OPTIONS;
+    static {
+        Map<String, Object> options = new HashMap<>();
+        options.put("filter", filterMap.get("smooth")); // String
+        DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
+    }
     
-    protected MnjimImageScaler(AbstractImageScalerFactory<MnjimImageScaler> factory, String name, Map<String, Object> defaultScalingOptions) {
-        super(factory, name, defaultScalingOptions);
+    protected MnjimImageScaler(AbstractImageScalerFactory<MnjimImageScaler> factory, String name, Map<String, Object> confOptions) {
+        super(factory, name, confOptions);
     }
 
     public static class Factory extends AbstractImageScalerFactory<MnjimImageScaler> {
@@ -80,40 +84,36 @@ public class MnjimImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>(options);
-            ResampleFilter filter = getFilter(options, null);
-            if (filter != null) {
-                validOptions.put("filter", filter);
-            }
+            putOption(validOptions, "filter", getFilter(options), options);
             return validOptions;
         }
 
-        @Override
-        protected String getApiName() {
-            return API_NAME;
-        }
+        @Override protected String getApiName() { return API_NAME; }
+        @Override public Map<String, Object> getDefaultOptions() { return DEFAULT_OPTIONS; }
     }
     
     @Override
     protected Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
-            Map<String, Object> scalingOptions) throws IOException {
-        ResampleFilter filter = getFilter(scalingOptions, defaultFilter);
+            Map<String, Object> options) throws IOException {
+        ResampleFilter filter = getFilter(options);
         
         ResampleOp op = new ResampleOp(targetWidth, targetHeight);
-        op.setFilter(filter);
-        
+        if (filter != null) {
+            op.setFilter(filter);
+        }
         return op.filter(image, null);
     }
     
-    protected static ResampleFilter getFilter(Map<String, Object> options, ResampleFilter defaultValue) throws IllegalArgumentException {
+    // NOTE: defaults are handled through the options merging with defaults
+    protected static ResampleFilter getFilter(Map<String, Object> options) throws IllegalArgumentException {
         Object filterObj = options.get("filter");
-        if (filterObj == null) return defaultValue;
+        if (filterObj == null) return null;
         else if (filterObj instanceof ResampleFilter) return (ResampleFilter) filterObj;
         else {
             String filterName = (String) filterObj;
-            if (filterName.isEmpty()) return defaultValue;
-            ResampleFilter filter = filterMap.get(filterName);
-            if (filter == null) throw new IllegalArgumentException("filter '" + filterName + "' not supported by java-image-scaler library");
-            return filter;
+            if (filterName.isEmpty()) return null;
+            if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
+            return filterMap.get(filterName);
         }
     }
 }

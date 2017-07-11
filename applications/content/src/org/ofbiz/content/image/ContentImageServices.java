@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
@@ -87,6 +88,8 @@ public abstract class ContentImageServices {
         if (locale == null) locale = Locale.getDefault(); // FIXME?: default for output (not log)
         final String logPrefix = "imageFileScaleInAllSizeCore: ";
 
+        long startTime = System.nanoTime();
+        
         try {
             /* ImageProperties.xml */
             Map<String, Map<String, String>> imgPropertyMap = new HashMap<>();
@@ -291,6 +294,10 @@ public abstract class ContentImageServices {
                     } // scaleImgMap
                 } // Loop over sizeType
     
+                if (ImageUtil.verboseOn()) {
+                    long endTime = System.nanoTime();
+                    Debug.logInfo("Scaled content images in " + ((endTime - startTime) / 1000000) + "ms for " + bufImgPath, module);
+                }
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("imageUrlMap", imgUrlMap);
                 result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));

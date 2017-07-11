@@ -10,7 +10,9 @@ public interface ImageOp {
 
     String getName();
     
+    Map<String, Object> getConfiguredOptions();
     Map<String, Object> getDefaultOptions();
+    Map<String, Object> getConfiguredAndDefaultOptions();
     
     /**
      * Returns a new Map with options parsed in the format recognized by
@@ -52,5 +54,7 @@ public interface ImageOp {
          * this ImageOp. In other words, converts strings to numbers, discards unrecognized, etc.
          */
         Map<String, Object> makeValidOptions(Map<String, Object> options);
+        
+        Map<String, Object> getDefaultOptions();
     }
 }

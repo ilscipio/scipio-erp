@@ -1105,7 +1105,9 @@ public class UtilProperties implements Serializable {
             if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
                 String middle = name.substring(prefix.length(), name.length() - suffixLength);
                 if (allowDots || !middle.contains(".")) {
-                    out.put((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""), properties.getProperty(name));
+                    String value = properties.getProperty(name);
+                    if (value != null) value = value.trim();
+                    out.put((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""), value);
                 }
             }
         }

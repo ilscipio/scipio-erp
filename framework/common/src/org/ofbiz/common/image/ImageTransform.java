@@ -36,6 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -97,15 +98,20 @@ public class ImageTransform {
      * scaleImage
      * <p>
      * scale original image related to the ImageProperties.xml dimensions
+     * <p>
+     * SCIPIO: 2017-07-10: now supports scaling options/algorithm specs.
      *
      * @param   bufImg          Buffered image to scale
      * @param   imgHeight       Original image height
      * @param   imgWidth        Original image width
      * @param   dimensionMap    Image dimensions by size type
      * @param   sizeType        Size type to scale
+     * @param   scalingOptions  (SCIPIO) Scaler options, or null for default:
+     *                          scalerName: scaler name (algorithm or library name)
+     *                          (other): scaler-specific options
      * @return                  New scaled buffered image
      */
-    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale) {
+    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale, Map<String, Object> scalingOptions) {
 
         /* VARIABLES */
         BufferedImage bufNewImg;
@@ -192,8 +198,14 @@ public class ImageTransform {
         }
 
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
-
+        // SCIPIO: 2017-07-10: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        //Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        Image newImg;
+        try {
+            newImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
 
         result.put("responseMessage", "success");
@@ -203,6 +215,22 @@ public class ImageTransform {
 
     }
 
+    /**
+     * scaleImage
+     * <p>
+     * scale original image related to the ImageProperties.xml dimensions
+     *
+     * @param   bufImg          Buffered image to scale
+     * @param   imgHeight       Original image height
+     * @param   imgWidth        Original image width
+     * @param   dimensionMap    Image dimensions by size type
+     * @param   sizeType        Size type to scale
+     * @return                  New scaled buffered image
+     */
+    public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale) {
+        return scaleImage(bufImg, imgHeight, imgWidth, dimensionMap, sizeType, locale, null);
+    }
+    
     /**
      * getXMLValue
      * <p>

@@ -79,6 +79,7 @@ public abstract class ContentImageServices {
         String imgPropertyPath = (String) context.get("imagePropXmlPath");
         Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
         boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
+        Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
         Locale locale = (Locale) context.get("locale");
         
         final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
@@ -230,7 +231,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // Scale
-                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale);
+                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
     
                     /* Write the new image file */
                     if (resultScaleImgMap.containsKey("responseMessage") && resultScaleImgMap.get("responseMessage").equals("success")) {

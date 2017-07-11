@@ -71,6 +71,11 @@
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
         </attribute>
         
+        <!-- SCALING OPTIONS -->
+        <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
+            <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
+        </attribute>
+        
         <!-- OUTPUT -->
         <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original"</description>
@@ -103,6 +108,11 @@
         </attribute>
         <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
+        </attribute>
+    
+        <!-- SCALING OPTIONS -->
+        <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
+            <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
         </attribute>
     
         <!-- OUTPUT -->

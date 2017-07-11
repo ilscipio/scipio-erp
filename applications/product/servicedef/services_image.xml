@@ -63,6 +63,11 @@
             <description>For additional</description>
         </attribute>
         
+        <!-- SCALING OPTIONS -->
+        <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
+            <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
+        </attribute>
+        
         <!-- OUTPUT -->
         <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original" (UNLESS found to already exist / same as input)

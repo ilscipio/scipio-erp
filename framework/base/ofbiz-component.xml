@@ -29,6 +29,7 @@ under the License.
     <classpath type="jar" location="lib/ant/*"/>
     <classpath type="jar" location="lib/commons/*"/>
     <classpath type="jar" location="lib/j2eespecs/*"/>
+    <classpath type="jar" location="lib/media/*"/><!-- SCIPIO: Added 2017-07-10 -->
     <classpath type="jar" location="lib/scripting/*"/>
 
     <test-suite loader="main" location="testdef/basetests.xml"/>

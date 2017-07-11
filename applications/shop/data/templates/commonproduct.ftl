@@ -133,7 +133,8 @@ NOTE: This template does not support globals as-is (#global)
             "copyOrig":copyOrig
         }/>
     
-    <#local dummy = Static["org.ofbiz.base.util.Debug"].logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>
+    <#-- printed by service
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
     
     <#-- Update Product -->
     <#if (imageNr <= 0)>

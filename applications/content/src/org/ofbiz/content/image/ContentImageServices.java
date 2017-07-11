@@ -294,10 +294,11 @@ public abstract class ContentImageServices {
                     } // scaleImgMap
                 } // Loop over sizeType
     
-                if (ImageUtil.verboseOn()) {
-                    long endTime = System.nanoTime();
-                    Debug.logInfo("Scaled content images in " + ((endTime - startTime) / 1000000) + "ms for " + bufImgPath, module);
-                }
+                // this is helpful info and doesn't do much harm
+                //if (ImageUtil.verboseOn()) {
+                long endTime = System.nanoTime();
+                Debug.logInfo("Scaled content images in " + ((endTime - startTime) / 1000000) + "ms for " + bufImgPath, module);
+                //}
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("imageUrlMap", imgUrlMap);
                 result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));

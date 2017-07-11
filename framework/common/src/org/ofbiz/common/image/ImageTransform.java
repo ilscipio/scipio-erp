@@ -328,8 +328,11 @@ public class ImageTransform {
                             bufImgType);
 
                 Graphics2D g = bufferedImage.createGraphics();
-                g.drawImage(image,0,0,null);
-                g.dispose();
+                try {
+                    g.drawImage(image,0,0,null);
+                } finally { // SCIPIO: added finally
+                    g.dispose();
+                }
 
                 return( bufferedImage );
         }

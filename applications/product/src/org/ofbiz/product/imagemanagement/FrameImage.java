@@ -26,6 +26,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.content.layout.LayoutWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -221,13 +223,24 @@ public class FrameImage {
         return result;
     }
     
+    /**
+     * combineBufferedImage
+     * @deprecated SCIPIO: 2017-07-11: if you don't pass colorModel, indexed images will not work properly.
+     */
+    @Deprecated
     public static BufferedImage combineBufferedImage(Image image1, Image image2, int bufImgType) {
+        return combineBufferedImage(image1, image2, bufImgType, null);
+    }
+    
+    public static BufferedImage combineBufferedImage(Image image1, Image image2, int bufImgType, ColorModel colorModel) {
         // Full image loading 
         image1 = new ImageIcon(image1).getImage();
         image2 = new ImageIcon(image2).getImage();
         
         // New BufferedImage creation 
-        BufferedImage bufferedImage = new BufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType);
+        // SCIPIO: indexed images fix
+        //BufferedImage bufferedImage = new BufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType);
+        BufferedImage bufferedImage = ImageTransform.createBufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType, colorModel);
         Graphics2D g = bufferedImage.createGraphics( );
         g.drawImage(image1, null, null);
         
@@ -385,7 +398,7 @@ public class FrameImage {
             
             Image newImg1 = bufImg1.getScaledInstance(width, height , Image.SCALE_SMOOTH);
             Image newImg2 = bufImg2.getScaledInstance(width , height , Image.SCALE_SMOOTH);
-            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImgType);
+            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImgType, bufImg1.getColorModel()); // SCIPIO: color model
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
             ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"));
             

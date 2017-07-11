@@ -21,6 +21,8 @@ package org.ofbiz.common.image;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -206,7 +208,7 @@ public class ImageTransform {
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
         }
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
 
         result.put("responseMessage", "success");
         result.put("bufferedImage", bufNewImg);
@@ -310,10 +312,23 @@ public class ImageTransform {
      * @return BufferedImage
      */
     public static BufferedImage toBufferedImage(Image image) {
-        return ImageTransform.toBufferedImage(image, BufferedImage.TYPE_INT_ARGB_PRE);
+        return ImageTransform.toBufferedImage(image, BufferedImage.TYPE_INT_ARGB_PRE, null); // SCIPIO: new deleg
     }
 
+    /**
+     * toBufferedImage with specific type.
+     * @deprecated SCIPIO: 2017-07-11: use {@link #toBufferedImage(Image, int, ColorModel)}; if you 
+     * don't pass colorModel, indexed images will not work properly.
+     */
     public static BufferedImage toBufferedImage(Image image, int bufImgType) {
+        return toBufferedImage(image, bufImgType, null);
+    }
+    
+    /**
+     * toBufferedImage with specific type and color model (used as needed for indexed images).
+     * SCIPIO: modified 2017-07-11.
+     */
+    public static BufferedImage toBufferedImage(Image image, int bufImgType, ColorModel colorModel) {
         /** Check if the image isn't already a BufferedImage instance */
         if( image instanceof BufferedImage ) {
                 return( (BufferedImage)image );
@@ -322,11 +337,17 @@ public class ImageTransform {
                 image = new ImageIcon(image).getImage();
 
                 /** new BufferedImage creation */
-                BufferedImage bufferedImage = new BufferedImage(
+                // SCIPIO: 2017-07-11: this does NOT work for indexed images - slaughters them
+//                BufferedImage bufferedImage = new BufferedImage(
+//                            image.getWidth(null),
+//                            image.getHeight(null),
+//                            bufImgType);
+                BufferedImage bufferedImage = createBufferedImage(
                             image.getWidth(null),
                             image.getHeight(null),
-                            bufImgType);
-
+                            bufImgType,
+                            colorModel);
+                
                 Graphics2D g = bufferedImage.createGraphics();
                 try {
                     g.drawImage(image,0,0,null);
@@ -335,6 +356,27 @@ public class ImageTransform {
                 }
 
                 return( bufferedImage );
+        }
+    }
+    
+    /**
+     * SCIPIO: Creates a new blank BufferedImage with the given type AND color model IF applicable.
+     * WARN: we need to preserve the color model if there is one! stock ofbiz did not do this!
+     * Needed to support indexed images properly.
+     * Added 2017-07-11.
+     */
+    public static BufferedImage createBufferedImage(int targetWidth, int targetHeight, int imgType, ColorModel colorModel) {
+        if (imgType == BufferedImage.TYPE_BYTE_BINARY || imgType == BufferedImage.TYPE_BYTE_INDEXED) {
+            if (colorModel instanceof IndexColorModel) {
+                return new BufferedImage(targetWidth, targetHeight, imgType, (IndexColorModel) colorModel);
+            } else {
+                return new BufferedImage(targetWidth, targetHeight, imgType);
+            }
+        } else if (imgType == BufferedImage.TYPE_CUSTOM) {
+            // this was the default used in stock Ofbiz, it appears sane
+            return new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+        } else {
+            return new BufferedImage(targetWidth, targetHeight, imgType);
         }
     }
 }

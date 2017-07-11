@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.common.image.ImageUtil;
 
 /**
@@ -53,25 +54,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
         if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
             return image;
         } else {
-            BufferedImage destImage;
-            
-            // WARN: we need to preserve the color model if there is one! stock ofbiz did not do this!
-            int imgType = image.getType();
-            if (imgType == BufferedImage.TYPE_BYTE_BINARY) {
-                if (ImageUtil.verboseOn()) Debug.logInfo("Image type: TYPE_BYTE_BINARY", module);
-                destImage = new BufferedImage(targetWidth, targetHeight, image.getType(), (IndexColorModel) image.getColorModel());
-            } else if (imgType == BufferedImage.TYPE_BYTE_INDEXED) {
-                if (ImageUtil.verboseOn()) Debug.logInfo("Image type: TYPE_BYTE_INDEXED", module);
-                destImage = new BufferedImage(targetWidth, targetHeight, image.getType(), (IndexColorModel) image.getColorModel());
-            } else if (imgType == BufferedImage.TYPE_CUSTOM) {
-                if (ImageUtil.verboseOn()) Debug.logInfo("Image type: TYPE_CUSTOM; using TYPE_INT_ARGB_PRE", module);
-                // this is the default used in stock Ofbiz, it appears sane
-                destImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB_PRE);
-            } else {
-                if (ImageUtil.verboseOn()) Debug.logInfo("Image type: " + image.getType(), module);
-                destImage = new BufferedImage(targetWidth, targetHeight, image.getType());
-            }
-
+            BufferedImage destImage = ImageTransform.createBufferedImage(targetWidth, targetHeight, image.getType(), image.getColorModel());
             Graphics g = destImage.createGraphics();
             try {
                 g.drawImage(image, 0, 0, null);

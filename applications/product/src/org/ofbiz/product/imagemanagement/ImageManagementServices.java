@@ -640,7 +640,7 @@ public class ImageManagementServices {
         // scale original image with new size
         Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);
@@ -699,7 +699,7 @@ public class ImageManagementServices {
         // scale original image with new size
         Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);

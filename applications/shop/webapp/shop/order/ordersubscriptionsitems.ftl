@@ -12,7 +12,7 @@
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       <#else>
         <@th width="45%">${uiLabelMap.OrderProduct}</@th>
-        <@th width="25%" colspan="3">${uiLabelMap.EcommerceSubscriptionDetails}</@th>        
+        <@th width="25%" colspan="3">${uiLabelMap.ShopSubscriptionDetails}</@th>        
         <@th width="15%">${uiLabelMap.CommonQuantity}</@th><#--${uiLabelMap.OrderQtyOrdered}-->
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       </#if>

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageTransform;
 
 /**
  * SCIPIO: Java AWT (JRE/JDK) image scaler implementation.
@@ -20,6 +21,8 @@ import org.ofbiz.base.util.Debug;
  * </p>
  * NOTE: In theory AWT itself is supposed to be configurable, but there are no good filter implementations
  * of {@link java.awt.image.ImageFilter} nor system-configurable libraries containing them.
+ * <p>
+ * FIXME?: unclear whether this correctly preserves ColorModel for indexed images.
  * <p>
  * Added 2017-07-10.
  */
@@ -81,10 +84,16 @@ public class AwtImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
+    public BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
         Integer filter = getFilter(options);
         if (filter == null) filter = 0;
-        return image.getScaledInstance(targetWidth, targetHeight, filter);
+        
+        // FIXME?: it's unclear whether getScaledInstance is correcting preserving the ColorModel
+        // for indexed images here... but this is just for backward-compat anyway; the other
+        // scalers are better in every way.
+        
+        Image resultImage = image.getScaledInstance(targetWidth, targetHeight, filter);
+        return ImageTransform.toCompatibleBufferedImage(resultImage, image.getColorModel());
     }
     
     // NOTE: defaults are handled through the options merging with defaults

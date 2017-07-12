@@ -1,6 +1,5 @@
 package org.ofbiz.common.image.scaler;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
@@ -85,7 +84,7 @@ public class ComposedImageScaler extends AbstractImageScaler {
     protected static Map<String, Object> makeOptionsMap() { return new HashMap<>(); }
     
     @Override
-    protected Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
+    protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         
         Map<String, OptionSetEntry> sets = UtilGenerics.checkMap(options.get("sets"));

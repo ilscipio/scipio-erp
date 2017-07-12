@@ -1,6 +1,5 @@
 package org.ofbiz.common.image.scaler;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collections;
@@ -66,6 +65,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
+        putDefaultBufTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
@@ -84,6 +84,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>(options);
+            putCommonBufTypeOptions(validOptions, options);
             putOption(validOptions, "filter", getFilter(options), options);
             return validOptions;
         }
@@ -93,15 +94,33 @@ public class MnjimImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    protected Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
+    protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         ResampleFilter filter = getFilter(options);
+        
+        // this appears to be pointless - morten already converts to a type that it likes - it's 
+        // the result image type that matters to us...
+//        // PRE-CONVERT: morten doesn't use the same defaults as us...
+//        if (image.getType() == BufferedImage.TYPE_BYTE_BINARY ||
+//                image.getType() == BufferedImage.TYPE_BYTE_INDEXED ||
+//                        image.getType() == BufferedImage.TYPE_CUSTOM) {
+//            Integer fallbacktype = image.getColorModel().hasAlpha() ? getFallbacktype(options) : getFallbacktypenoalpha(options);
+//            image = ImageUtils.convert(image, fallbacktype);
+//            // orig:
+//            //image = ImageUtils.convert(image, image.getColorModel().hasAlpha() ?
+//            //        BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_3BYTE_BGR);
+//        }
         
         ResampleOp op = new ResampleOp(targetWidth, targetHeight);
         if (filter != null) {
             op.setFilter(filter);
         }
-        return op.filter(image, null);
+        Integer destImgType = getTargetOrFallbackBufImgType(image, options, false);
+        // WARN: this instantiation may lose parts of the ColorModel, but it's just what morten does internally anyway
+        BufferedImage destImage = (destImgType != null) ? new BufferedImage(targetWidth, targetHeight, destImgType) : null;
+        // NOTE: the morten lib doesn't support writing out to some types notably indexed, so something like this would fail for indexed types:
+        //BufferedImage destImage = ImageTransform.createBufferedImage(targetWidth, targetHeight, image.getType(), image.getColorModel());
+        return op.filter(image, destImage);
     }
     
     // NOTE: defaults are handled through the options merging with defaults

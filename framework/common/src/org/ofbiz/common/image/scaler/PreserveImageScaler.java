@@ -1,17 +1,13 @@
 package org.ofbiz.common.image.scaler;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.image.ImageTransform;
-import org.ofbiz.common.image.ImageUtil;
 
 /**
  * SCIPIO: Null resizing, in other words doesn't resize (only crops/fills).
@@ -50,11 +46,11 @@ public class PreserveImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
+    public BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
         if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
             return image;
         } else {
-            BufferedImage destImage = ImageTransform.createBufferedImage(targetWidth, targetHeight, image.getType(), image.getColorModel());
+            BufferedImage destImage = ImageTransform.createCompatibleBufferedImage(image, targetWidth, targetHeight);
             Graphics g = destImage.createGraphics();
             try {
                 g.drawImage(image, 0, 0, null);

@@ -1,6 +1,5 @@
 package org.ofbiz.common.image.scaler;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collections;
@@ -23,6 +22,7 @@ import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
  * <li>filter (String) - "smooth" (default) or substitute (see {@link #filterMap} below for supported)</li>
  * <li>dithering (Boolean) - true/false/empty/null
  * <li>antialiasing (Boolean) - true/false/empty/null
+ * <li>fallbacktype (String/Integer) - BufferedImage.TYPE_*
  * </ul>
  * </p>
  * TODO: add more scalingOptions
@@ -67,9 +67,10 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
+        putDefaultBufTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String
         options.put("dithering", null); // Boolean; we set null to use Thumbnailator default
-        options.put("antialiasing", null); // Boolean
+        options.put("antialiasing", null); // Boolean 
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
     
@@ -87,6 +88,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>();
+            putCommonBufTypeOptions(validOptions, options);
             putOption(validOptions, "filter", getFilter(options), options);
             putOption(validOptions, "dithering", getDithering(options), options);
             putOption(validOptions, "antialiasing", getAntialiasing(options), options);
@@ -98,7 +100,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    protected Image scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
+    protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         Thumbnails.Builder<BufferedImage> builder = Thumbnails.of(image).size(targetWidth, targetHeight);
         ScalingMode filter = getFilter(options);
@@ -113,6 +115,16 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         if (antialiasing != null) {
             builder = builder.antialiasing(antialiasing ? Antialiasing.ON : Antialiasing.OFF);
         }
+        
+        // FIXME?: Thumbnailator doesn't appear to preserve the ColorModel of indexed images nor suppport setting it.
+        // so for indexed we have no choice but to pass a hardcoded RGB type, which
+        // will lose the original color model... oh well?
+
+        Integer destImgType = getTargetOrFallbackBufImgType(image, options, false);
+        if (destImgType != null) {
+            builder.imageType(destImgType);
+        }
+        
         return builder.asBufferedImage();
     }
     
@@ -136,4 +148,5 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     protected static Boolean getAntialiasing(Map<String, Object> options) {
         return UtilMisc.booleanValue(options.get("antialiasing"));
     }
+    
 }

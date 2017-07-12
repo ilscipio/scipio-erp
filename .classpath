@@ -87,6 +87,8 @@
     <classpathentry kind="lib" path="framework/base/lib/j2eespecs/servlet-api-3.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/media/java-image-scaling-0.8.6.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/media/thumbnailator-0.4.8.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/imgscalr-lib-4.2.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/common-image-3.3.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/antlr-2.7.6.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/asm-3.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/bsf-2.4.0.jar"/>

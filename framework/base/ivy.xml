@@ -180,6 +180,8 @@
         <!-- SCIPIO: 2017-07-10: new image libs -->
         <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" transitive="false" conf="media->default"/>
         <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" transitive="false" conf="media->default"/>
-        
+        <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" transitive="false" conf="media->default"/>
+        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" transitive="false" conf="media->default"/>
+
     </dependencies>
 </ivy-module>

@@ -19,12 +19,12 @@ import org.ofbiz.common.image.ImageUtil;
 public abstract class ImageScalers {
 
     public static final String module = ImageScalers.class.getName();
-    public static final String IMAGE_PROP_SCALER_PREFIX = ImageUtil.IMAGE_PROP_PREFIX + "scaler.";
+    public static final String IMAGE_PROP_SCALER_PREFIX = ImageUtil.IMAGEOP_PROP_PREFIX + "scaler.";
     
     public static final String SCALER_NAME_OPT = "scalerName";
     
     private static final Map<String, ImageScaler> scalers = Collections.unmodifiableMap(readScalers(
-            ImageUtil.getAllPropertiesFiles(ImageUtil.IMAGE_PROP_RESOURCE), IMAGE_PROP_SCALER_PREFIX));
+            ImageUtil.getAllPropertiesFiles(ImageUtil.IMAGEOP_PROP_RESOURCE), IMAGE_PROP_SCALER_PREFIX));
     private static final ImageScaler defaultScaler = extractDefaultScaler(scalers, true, true);
     
     protected ImageScalers() {
@@ -74,7 +74,7 @@ public abstract class ImageScalers {
                 if (log) Debug.logError(e, "Could not instantiate stock default image scaler; scaling will fail: " + e.getMessage(), module);
             }
         }
-        if (log && scaler != null) Debug.logInfo("Default image scaler instance: " + scaler.getClass().getName(), module);
+        if (log && scaler != null) Debug.logInfo("Default image scaler instance: " + scaler.toString(), module);
         return scaler;
     }
 }

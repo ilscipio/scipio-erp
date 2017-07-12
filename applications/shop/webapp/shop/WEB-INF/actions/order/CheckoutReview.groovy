@@ -61,15 +61,13 @@ if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     for (GenericValue subscription : context.subscriptionItems.keySet()) {
         List<GenericValue> subscriptionAdjustments = FastList.newInstance();
         orderItemRemoved = orderItems.remove(subscription);
-        for (GenericValue orderAdjustment : orderAdjustments) {            
-            Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+        for (GenericValue orderAdjustment : orderAdjustments) {
             if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
                 orderAdjustments.remove(orderAdjustment);
                 subscriptionAdjustments.add(orderAdjustment);
             }            
         }
         orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
-        Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
     }
     context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
 }

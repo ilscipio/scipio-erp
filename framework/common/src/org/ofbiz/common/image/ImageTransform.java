@@ -55,6 +55,25 @@ public class ImageTransform {
     public static final String module = ImageTransform.class.getName();
     public static final String resource = "CommonErrorUiLabels";
 
+    /**
+     * SCIPIO: Default BufferedImage type to use in operations where the input type
+     * is unspecified or unusable.
+     * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE for this, but other image libraries
+     * appear to use TYPE_INT_ARGB, so using that for now.
+     * Added 2017-07-12.
+     */
+    public static final int DEFAULT_BUFIMAGE_TYPE = ImageUtil.getBufferedImageTypeInt(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.bufImgType", "TYPE_INT_ARGB"), BufferedImage.TYPE_INT_ARGB);
+    /**
+     * SCIPIO: Default BufferedImage type to use in operations where the input type
+     * is unspecified or unusable and the image has no alpha channel. 
+     * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE for this, but other image libraries
+     * appear to use TYPE_INT_ARGB, so using that for now.
+     * Added 2017-07-12.
+     */
+    public static final int DEFAULT_BUFIMAGE_TYPE_NOALPHA = ImageUtil.getBufferedImageTypeInt(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.bufImgTypeNoAlpha", "TYPE_INT_RGB"), BufferedImage.TYPE_INT_RGB);
+            
     public ImageTransform() {
     }
 
@@ -189,26 +208,25 @@ public class ImageTransform {
             result.put("errorMessage", errMsg);
             return result;
         }
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            String errMsg = UtilProperties.getMessage(resource, "ImageTransform.unknown_buffered_image_type", locale);
-            Debug.logWarning(errMsg, module);
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            String errMsg = UtilProperties.getMessage(resource, "ImageTransform.unknown_buffered_image_type", locale);
+//            Debug.logWarning(errMsg, module);
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
 
         // scale original image with new size
         // SCIPIO: 2017-07-10: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
         //Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
-        Image newImg;
         try {
-            newImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
         }
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
 
         result.put("responseMessage", "success");
         result.put("bufferedImage", bufNewImg);
@@ -307,19 +325,26 @@ public class ImageTransform {
      * toBufferedImage
      * <p>
      * Transform from an Image instance to a BufferedImage instance
-     *
+     * <p>
+     * SCIPIO: NOTE: this does NOT preserve the image type such as index or color model; always creates as fixed
+     * system default type (previously was hardcoded as TYPE_INT_ARGB_PRE; see {@link #DEFAULT_BUFIMAGE_TYPE}
+     * for current value).
+     * 
      * @param image             Source image
      * @return BufferedImage
      */
     public static BufferedImage toBufferedImage(Image image) {
-        return ImageTransform.toBufferedImage(image, BufferedImage.TYPE_INT_ARGB_PRE, null); // SCIPIO: new deleg
+        // SCIPIO: don't hardcode
+        //return ImageTransform.toBufferedImage(image, BufferedImage.TYPE_INT_ARGB_PRE, null); // SCIPIO: new deleg
+        return ImageTransform.toBufferedImage(image, DEFAULT_BUFIMAGE_TYPE, null); // SCIPIO: new deleg
     }
 
     /**
      * toBufferedImage with specific type.
-     * @deprecated SCIPIO: 2017-07-11: use {@link #toBufferedImage(Image, int, ColorModel)}; if you 
-     * don't pass colorModel, indexed images will not work properly.
+     * @deprecated SCIPIO: 2017-07-11: SCIPIO: 2017-07-11: use {@link #createCompatibleBufferedImage}; this
+     * method does NOT support indexed images properly
      */
+    @Deprecated
     public static BufferedImage toBufferedImage(Image image, int bufImgType) {
         return toBufferedImage(image, bufImgType, null);
     }
@@ -327,6 +352,7 @@ public class ImageTransform {
     /**
      * toBufferedImage with specific type and color model (used as needed for indexed images).
      * SCIPIO: modified 2017-07-11.
+     * NOTE: best to use {@link #toCompatibleBufferedImage} instead.
      */
     public static BufferedImage toBufferedImage(Image image, int bufImgType, ColorModel colorModel) {
         /** Check if the image isn't already a BufferedImage instance */
@@ -364,19 +390,128 @@ public class ImageTransform {
      * WARN: we need to preserve the color model if there is one! stock ofbiz did not do this!
      * Needed to support indexed images properly.
      * Added 2017-07-11.
+     * NOTE: best to use {@link #createCompatibleBufferedImage}.
      */
     public static BufferedImage createBufferedImage(int targetWidth, int targetHeight, int imgType, ColorModel colorModel) {
         if (imgType == BufferedImage.TYPE_BYTE_BINARY || imgType == BufferedImage.TYPE_BYTE_INDEXED) {
             if (colorModel instanceof IndexColorModel) {
                 return new BufferedImage(targetWidth, targetHeight, imgType, (IndexColorModel) colorModel);
             } else {
+                // probably shouldn't happen...
                 return new BufferedImage(targetWidth, targetHeight, imgType);
             }
         } else if (imgType == BufferedImage.TYPE_CUSTOM) {
-            // this was the default used in stock Ofbiz, it appears sane
-            return new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+            return new BufferedImage(targetWidth, targetHeight, getDefaultBufferedImageType(colorModel));
         } else {
             return new BufferedImage(targetWidth, targetHeight, imgType);
+        }
+    }
+    
+    /**
+     * SCIPIO: Converts the image to a new BufferedImage if it's not already one, and preserves
+     * the original image parameters as much as possible.
+     *
+     * @param image the image
+     * @param colorModel to use; 
+     * @param fallbackBufImgType optional fallback target image type; this is a hint and may be ignored
+     */
+    public static BufferedImage toCompatibleBufferedImage(Image image, ColorModel colorModel, Integer fallbackBufImgType) {
+        /** Check if the image isn't already a BufferedImage instance */
+        if( image instanceof BufferedImage ) {
+                return( (BufferedImage)image );
+        } else {
+                /** Full image loading */
+                image = new ImageIcon(image).getImage();
+
+                /** new BufferedImage creation */
+                BufferedImage bufferedImage = createCompatibleBufferedImage(image, colorModel);
+                
+                Graphics2D g = bufferedImage.createGraphics();
+                try {
+                    g.drawImage(image,0,0,null);
+                } finally { // SCIPIO: added finally
+                    g.dispose();
+                }
+
+                return( bufferedImage );
+        }
+    }
+    
+    /**
+     * SCIPIO: Converts the image to a new BufferedImage if it's not already one, and preserves
+     * the original image parameters as much as possible.
+     *
+     * @param image the image
+     * @param colorModel to use; 
+     */
+    public static BufferedImage toCompatibleBufferedImage(Image image, ColorModel colorModel) {
+        return toCompatibleBufferedImage(image, colorModel, null);
+    }
+    
+    /**
+     * SCIPIO: Improved method for creating a compatible BufferedImage.
+     * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
+     * Added 2017-07-12.
+     * @param image the image
+     * @param colorModel required color model, MUST be passed
+     * @param targetWidth optional width
+     * @param targetHeight optional height
+     */
+    public static BufferedImage createCompatibleBufferedImage(Image image, ColorModel colorModel, Integer targetWidth, Integer targetHeight) {
+        return new BufferedImage(colorModel, colorModel.createCompatibleWritableRaster(
+                targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
+                colorModel.isAlphaPremultiplied(), null);
+    }
+    
+    /**
+     * SCIPIO: Improved method for creating a compatible BufferedImage.
+     * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
+     * Added 2017-07-12.
+     * @param image the image
+     * @param colorModel required color model, MUST be passed
+     */
+    public static BufferedImage createCompatibleBufferedImage(Image image, ColorModel colorModel) {
+        return createCompatibleBufferedImage(image, colorModel, null, null);
+    }
+    
+    /**
+     * SCIPIO: Improved method for creating a compatible BufferedImage.
+     * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
+     * This version automatically gets the color model from the buffered image.
+     * Added 2017-07-12.
+     * @param image the image (including color model)
+     * @param targetWidth optional width
+     * @param targetHeight optional height
+     */
+    public static BufferedImage createCompatibleBufferedImage(BufferedImage image, Integer targetWidth, Integer targetHeight) {
+        ColorModel colorModel = image.getColorModel();
+        return new BufferedImage(colorModel, colorModel.createCompatibleWritableRaster(
+                targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
+                colorModel.isAlphaPremultiplied(), null);
+    }
+    
+    /**
+     * SCIPIO: Improved method for creating a compatible BufferedImage.
+     * Based on mortennobel {@link com.mortennobel.imagescaling.AdvancedResizeOp#createCompatibleDestImage}.
+     * This version automatically gets the color model from the buffered image.
+     * Added 2017-07-12.
+     * @param image the image (including color model)
+     */
+    public static BufferedImage createCompatibleBufferedImage(BufferedImage image) {
+        return createCompatibleBufferedImage(image, null, null);
+    }
+    
+    /**
+     * SCIPIO: Returns the system default BufferedImage type most appropriate for the
+     * given color model.
+     * Added 2017-07-12.
+     * TODO: REVIEW: what about colorModel.isAlphaPremultiplied()?
+     */
+    public static int getDefaultBufferedImageType(ColorModel colorModel) {
+        if (colorModel.hasAlpha()) {
+            return DEFAULT_BUFIMAGE_TYPE;
+        } else {
+            return DEFAULT_BUFIMAGE_TYPE_NOALPHA;
         }
     }
 }

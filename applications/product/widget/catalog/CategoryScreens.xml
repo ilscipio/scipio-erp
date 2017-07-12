@@ -268,7 +268,7 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                  <section>
                                     <actions>
-                                        <set field="productCategoryAssociationMode" value="child" />
+                                        <set field="productCategoryAssociationMode" value="parent" />
                                     </actions>
                                     <widgets>
                                         <include-screen name="ScipioCategoryAssociationList"/>
@@ -278,7 +278,7 @@ under the License.
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <section>
                                     <actions>
-                                        <set field="productCategoryAssociationMode" value="parent" />
+                                        <set field="productCategoryAssociationMode" value="child" />
                                     </actions>
                                     <widgets>
                                         <include-screen name="ScipioCategoryAssociationList"/>
@@ -316,7 +316,7 @@ under the License.
                         <condition-expr field-name="productCategoryId" from-field="originalProductCategoryId"/>
                         <order-by field-name="sequenceNum"/>
                     </entity-condition>
-                    <set field="sectionTitle" value="${uiLabelMap.ProductCategoryChildCategoryList}"/>
+                    <set field="sectionTitle" value="${uiLabelMap.ProductCategoryParentCategoryList}"/>
                     </actions>
                 </section>
                 <section>
@@ -328,7 +328,7 @@ under the License.
                             <condition-expr field-name="parentProductCategoryId" from-field="originalProductCategoryId"/>
                             <order-by field-name="sequenceNum"/>
                         </entity-condition>
-                        <set field="sectionTitle" value="${uiLabelMap.ProductCategoryParentCategoryList}"/>
+                        <set field="sectionTitle" value="${uiLabelMap.ProductCategoryChildCategoryList}"/>
                     </actions>
                 </section>
                 <section>

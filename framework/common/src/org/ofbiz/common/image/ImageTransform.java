@@ -374,12 +374,7 @@ public class ImageTransform {
                             bufImgType,
                             colorModel);
                 
-                Graphics2D g = bufferedImage.createGraphics();
-                try {
-                    g.drawImage(image,0,0,null);
-                } finally { // SCIPIO: added finally
-                    g.dispose();
-                }
+                copyToBufferedImage(image, bufferedImage); // SCIPIO: factored
 
                 return( bufferedImage );
         }
@@ -426,12 +421,7 @@ public class ImageTransform {
                 /** new BufferedImage creation */
                 BufferedImage bufferedImage = createCompatibleBufferedImage(image, colorModel);
                 
-                Graphics2D g = bufferedImage.createGraphics();
-                try {
-                    g.drawImage(image,0,0,null);
-                } finally { // SCIPIO: added finally
-                    g.dispose();
-                }
+                copyToBufferedImage(image, bufferedImage); // SCIPIO: factored
 
                 return( bufferedImage );
         }
@@ -502,6 +492,19 @@ public class ImageTransform {
     }
     
     /**
+     * SCIPIO: Simple copy of a source image to a destination buffered image.
+     * Added 2017-07-12.
+     */
+    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage) {
+        Graphics2D g = destImage.createGraphics();
+        try {
+            g.drawImage(srcImage, 0, 0, null);
+        } finally { // SCIPIO: added finally
+            g.dispose();
+        }
+    }
+    
+    /**
      * SCIPIO: Returns the system default BufferedImage type most appropriate for the
      * given color model.
      * Added 2017-07-12.
@@ -514,4 +517,5 @@ public class ImageTransform {
             return DEFAULT_BUFIMAGE_TYPE_NOALPHA;
         }
     }
+
 }

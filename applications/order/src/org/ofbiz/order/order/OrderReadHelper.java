@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.Delegator;
@@ -70,14 +71,18 @@ public class OrderReadHelper {
 
     public static final String module = OrderReadHelper.class.getName();
 
-    // scales and rounding modes for BigDecimal math
+    // scales and rounding modes for BigDecimal math    
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
     public static final int rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
     public static final int taxCalcScale = UtilNumber.getBigDecimalScale("salestax.calc.decimals");
     public static final int taxFinalScale = UtilNumber.getBigDecimalScale("salestax.final.decimals");
     public static final int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
     public static final BigDecimal ZERO = (BigDecimal.ZERO).setScale(scale, rounding);
-    public static final BigDecimal percentage = (new BigDecimal("0.01")).setScale(scale, rounding);
+    public static final BigDecimal percentage = (new BigDecimal("0.01")).setScale(scale, rounding);    
+    /**
+     * SCIPIO: Custom flag used to determine whether only one subscription is allowed per order or not.
+     */
+    public static boolean subscriptionSingleOrderItem = UtilProperties.getPropertyAsBoolean("order", "order.item.subscription.singleOrderItem", false);
 
     protected GenericValue orderHeader = null;
     protected List<GenericValue> orderItemAndShipGrp = null;

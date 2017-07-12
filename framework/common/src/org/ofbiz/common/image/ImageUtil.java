@@ -1,6 +1,8 @@
 package org.ofbiz.common.image;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,10 +29,13 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
  */
 public abstract class ImageUtil {
     public static final String module = ImageUtil.class.getName();
-    public static final String IMAGE_PROP_RESOURCE = "imageops.properties";
-    public static final String IMAGE_PROP_PREFIX = "image.";
+    public static final String IMAGECOMMON_PROP_RESOURCE = "imagecommon.properties";
+    public static final String IMAGECOMMON_PROP_PREFIX = "image.";
+    public static final String IMAGEOP_PROP_RESOURCE = "imageops.properties";
+    public static final String IMAGEOP_PROP_PREFIX = "image.";
     
-    private static boolean DEBUG = UtilProperties.getPropertyAsBoolean(IMAGE_PROP_RESOURCE, IMAGE_PROP_PREFIX+"debug", false) || Debug.verboseOn(); // FIXME?: should really read verboseOn dynamically, not cache the value here...
+    private static boolean DEBUG = UtilProperties.getPropertyAsBoolean(IMAGECOMMON_PROP_RESOURCE, 
+            IMAGECOMMON_PROP_PREFIX+"debug", false) || Debug.verboseOn(); // FIXME?: should really read verboseOn dynamically, not cache the value here...
     
     protected ImageUtil() {
     }
@@ -209,4 +214,30 @@ public abstract class ImageUtil {
         return Arrays.asList(new Properties[]{UtilProperties.getProperties(resource)});
     }
     
+    /**
+     * SCIPIO: Dynamically gets BufferedImage type by name.
+     * Added 2017-07-12.
+     */
+    public static int getBufferedImageTypeInt(String typeName) {
+        try {
+            Field field = BufferedImage.class.getField(typeName);
+            return field.getInt(null);
+        } catch(Exception e) {
+            throw new IllegalArgumentException("Buffered image type with name '" + typeName + "' does not exist in BufferedImage", e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Dynamically gets BufferedImage type by name.
+     * Added 2017-07-12.
+     */
+    public static int getBufferedImageTypeInt(String typeName, int defaultValue) {
+        try {
+            Field field = BufferedImage.class.getField(typeName);
+            return field.getInt(null);
+        } catch(Exception e) {
+            Debug.logError(e, "Buffered image type with name '" + typeName + "' does not exist in BufferedImage", module);
+            return defaultValue;
+        }
+    }
 }

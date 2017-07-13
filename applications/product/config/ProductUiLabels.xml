@@ -15604,7 +15604,7 @@
         <value xml:lang="zh_TW">新建者/修訂者</value>
     </property>
     <property key="ProductCrossSell">
-        <value xml:lang="de">Sie könnten auch diese Interessant finden:</value>
+        <value xml:lang="de">Vielleicht sind auch folgende Artikel für Sie interessant:</value>
         <value xml:lang="en">You might be interested in these as well:</value>
         <value xml:lang="es">También le puede interesar:</value>
         <value xml:lang="fr">Vous pourriez aussi être intéressé(e) par ceci :</value>

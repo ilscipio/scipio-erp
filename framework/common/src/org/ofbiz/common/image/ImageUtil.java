@@ -1,8 +1,6 @@
 package org.ofbiz.common.image;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -215,29 +213,31 @@ public abstract class ImageUtil {
     }
     
     /**
-     * SCIPIO: Dynamically gets BufferedImage type by name.
-     * Added 2017-07-12.
+     * Adds an image option to the options map without modifying the original, and returns the new one.
+     * NOTE: null value is significant.
+     * 
      */
-    public static int getBufferedImageTypeInt(String typeName) {
-        try {
-            Field field = BufferedImage.class.getField(typeName);
-            return field.getInt(null);
-        } catch(Exception e) {
-            throw new IllegalArgumentException("Buffered image type with name '" + typeName + "' does not exist in BufferedImage", e);
-        }
+    public static Map<String, Object> addImageOpOption(Map<String, Object> options, String name, Object value) {
+        if (options == null) options = new HashMap<>();
+        else options = new HashMap<>(options);
+        options.put(name, value);
+        return options;
     }
     
     /**
-     * SCIPIO: Dynamically gets BufferedImage type by name.
-     * Added 2017-07-12.
+     * Adds an image option to the options map without modifying the original, and returns the new one,
+     * but only if the map did not already contain the name as key.
+     * NOTE: null value is significant.
+     * TODO: REVIEW: need LinkedHashMap?
      */
-    public static int getBufferedImageTypeInt(String typeName, int defaultValue) {
-        try {
-            Field field = BufferedImage.class.getField(typeName);
-            return field.getInt(null);
-        } catch(Exception e) {
-            Debug.logError(e, "Buffered image type with name '" + typeName + "' does not exist in BufferedImage", module);
-            return defaultValue;
+    public static Map<String, Object> addImageOpOptionIfNotSet(Map<String, Object> options, String name, Object value) {
+        if (options == null) {
+            options = new HashMap<>();
+            options.put(name, value);
+        } else if (!options.containsKey(name)) {
+            options = new HashMap<>(options);
+            options.put(name, value);
         }
+        return options;
     }
 }

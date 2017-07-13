@@ -1,5 +1,6 @@
 package org.ofbiz.common.image;
 
+import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,8 @@ import java.util.Map;
  * Added 2017-07-10.
  */
 public abstract class AbstractImageOp implements ImageOp {
-
+    public static final String module = AbstractImageOp.class.getName();
+    
     protected final AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory;
     protected final String name;
     protected final Map<String, Object> confOptions;
@@ -127,4 +129,28 @@ public abstract class AbstractImageOp implements ImageOp {
         }
     }
 
+    /**
+     * Parses (if needed) and returns an ImageType option from the options map.
+     * This always returns an instance except when the map does not contain the field name at all,
+     * or when parsing error (exception).
+     */
+    public static ImageType getImageTypeOption(Map<String, Object> options, String fieldName) {
+        try {
+            if (!options.containsKey(fieldName)) return null;
+            else return ImageType.getForObject(options.get(fieldName));
+        } catch(Exception e) {
+            throw new IllegalArgumentException("Invalid image type option " + fieldName + ": " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Returns an ImagePixelType (BufferedImage TYPE_XXX) int for the given ImageType option appropriate
+     * for the given image. May return null.
+     */
+    protected static Integer getImagePixelTypeOption(Map<String, Object> options, String fieldName, BufferedImage srcImage) {
+        ImageType imageType = getImageTypeOption(options, fieldName);
+        if (imageType != null) return imageType.getPixelTypeFor(srcImage);
+        return null;
+    }
+    
 }

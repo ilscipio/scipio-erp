@@ -55,22 +55,19 @@ context.subscriptions = orh.hasSubscriptions();
 // SCIPIO: TODO: We may add more paymentMethodTypeIds in the future
 context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
 context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
-Debug.log("validPaymentMethodTypeForSubscriptions ==========> " + context.validPaymentMethodTypeForSubscriptions + "  orderContainsSubscriptionItemsOnly ===========>  " +  context.orderContainsSubscriptionItemsOnly + "   subscriptions =======> " + context.subscriptions);
 
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
     for (GenericValue subscription : context.subscriptionItems.keySet()) {
         List<GenericValue> subscriptionAdjustments = FastList.newInstance();
         orderItemRemoved = orderItems.remove(subscription);
-        for (GenericValue orderAdjustment : orderAdjustments) {            
-            Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+        for (GenericValue orderAdjustment : orderAdjustments) {
             if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
                 orderAdjustments.remove(orderAdjustment);
                 subscriptionAdjustments.add(orderAdjustment);
             }            
         }
         orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
-        Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
     }
     context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
 }
@@ -83,7 +80,6 @@ context.orderHeaderAdjustments = orderHeaderAdjustments;
 context.orderItemShipGroups = cart.getShipGroups();
 context.headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);
 orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments, workEfforts);
-Debug.log("orderSubTotal =============> " + orderSubTotal);
 
 context.orderSubTotal = orderSubTotal;
 context.placingCustomerPerson = userLogin?.getRelatedOne("Person", false);
@@ -150,7 +146,6 @@ if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     context.orderVATTaxTotal = cart.getTotalVATTax();
     context.orderGrandTotal = cart.getGrandTotal();
 }
-Debug.log("orderShippingTotal ===> " + context.orderShippingTotal + "   orderTaxTotal ===> " + context.orderTaxTotal + "   orderVATTaxTotal ===> " + context.orderVATTaxTotal + "  orderGrandTotal ===> " +  context.orderGrandTotal);
 
 context.orderItems = orderItems;
 context.orderAdjustments = orderAdjustments;

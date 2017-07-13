@@ -444,6 +444,7 @@ public class UtilMisc {
      * SCIPIO: Create a HashSet from passed objX parameters
      * @return The resulting HashSet
      */
+    @SafeVarargs
     public static <T> Set<T> toHashSet(T... obj) {
         return new HashSet<T>(Arrays.asList(obj));
     }
@@ -963,5 +964,16 @@ public class UtilMisc {
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableArrayList(T... elems) {
         return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(elems)));
+    }
+    
+    /**
+     * SCIPIO: For an inMap with generics Map&lt;K, V&gt;, populates and returns the opposite mapping outMap, Map&lt;V, K&gt;
+     * Added 2017-07-12.
+     */
+    public static <K, V> Map<V, K> putAllReverseMapping(Map<V, K> outMap, Map<? extends K, ? extends V> inMap) {
+        for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
+            outMap.put(entry.getValue(), entry.getKey());
+        }
+        return outMap;
     }
 }

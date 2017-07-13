@@ -32,6 +32,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
@@ -1073,7 +1074,45 @@ public class UtilProperties implements Serializable {
         }
         return properties;
     }
+    
+    /**
+     * SCIPIO: Returns all property names in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between.
+     * Added 2017-07-10.
+     */
+    public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        Set<String> names = new HashSet<>();
+        int suffixLength = (suffix == null ? 0 : suffix.length());
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
+                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                if (allowDots || !middle.contains(".")) {
+                    names.add((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""));
+                }
+            }
+        }
+        return names;
+    }
 
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefixSuffix(Map<String, ? super String> out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        int suffixLength = (suffix == null ? 0 : suffix.length());
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
+                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                if (allowDots || !middle.contains(".")) {
+                    String value = properties.getProperty(name);
+                    if (value != null) value = value.trim();
+                    out.put((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""), value);
+                }
+            }
+        }
+    }
+    
     /** Custom ResourceBundle class. This class extends ResourceBundle
      * to add custom bundle caching code and support for the OFBiz custom XML
      * properties file format.

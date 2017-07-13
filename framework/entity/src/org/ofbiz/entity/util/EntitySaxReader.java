@@ -62,6 +62,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
+import javolution.lang.Reflection.Method;
 import javolution.text.CharArray;
 import javolution.text.Text;
 import javolution.xml.sax.Attributes;
@@ -412,6 +413,17 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     TemplateHashModel staticModels = FreeMarkerWorker.getDefaultOfbizWrapper().getStaticModels();
                     context.put("Static", staticModels);
 
+                    // SCIPIO: 2017-07-07: the following allows use of delegator and dispatcher straight from the FTLs,
+                    // so that the templates have the correct delegator/dispatcher and easier to use
+                    context.put("delegator", delegator);
+                    // SCIPIO: in order to get dispatcher we have to use reflect, to bypass dependencies
+                    try {
+                        java.lang.reflect.Method getDispatcherMethod = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.entityext.EntityServiceFactory").getMethod("getLocalDispatcher", Delegator.class);
+                        context.put("dispatcher", getDispatcherMethod.invoke(null, delegator));
+                    } catch(Exception e) {
+                        Debug.logError(e, "Could not get dispatcher for delegator " + delegator.getDelegatorName(), module);
+                    }
+                    
                     context.put("doc", nodeModel);
                     template.process(context, outWriter);
                     String s = outWriter.toString();
@@ -454,7 +466,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                         ModelEntity modelEntity = currentValue.getModelEntity();
                         ModelField modelField = modelEntity.getField(currentFieldName.toString());
                         String type = modelField.getType();
-                        if (type != null && type.equals("blob")) {
+                        if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
                             byte strData[] = new byte[currentFieldValue.length()];
                             strData = currentFieldValue.toString().getBytes();
                             byte binData[] = new byte[currentFieldValue.length()];

@@ -80,4 +80,8 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="de">Abonnements</value>
         <value xml:lang="en">Subscriptions</value>
     </property>
+    <property key="ShopSubscriptionDetails">
+        <value xml:lang="de">Abonnementdetails</value>
+        <value xml:lang="en">Subscription Details</value>
+    </property>
 </resource>

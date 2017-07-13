@@ -59,6 +59,7 @@
     <classpathentry kind="lib" path="framework/base/lib/xmlrpc-server-3.1.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xstream-1.4.9.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xpp3-1.1.4c.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons/commons-beanutils-core-1.8.3.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons/commons-codec-1.10.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons/commons-collections-3.2.2.jar"/>
@@ -84,6 +85,10 @@
     <classpathentry kind="lib" path="framework/base/lib/j2eespecs/el-api-3.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/j2eespecs/jsp-api-2.3.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/j2eespecs/servlet-api-3.1.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/java-image-scaling-0.8.6.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/thumbnailator-0.4.8.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/imgscalr-lib-4.2.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/media/common-image-3.3.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/antlr-2.7.6.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/asm-3.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/bsf-2.4.0.jar"/>
@@ -91,7 +96,6 @@
     <classpathentry kind="lib" path="framework/base/lib/scripting/groovy-all-2.4.5.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/jakarta-oro-2.0.8.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/scripting/jython-nooro.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/ecj-4.5.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-catalina-ha.jar"/>
     <classpathentry kind="lib" path="framework/catalina/lib/tomcat-8.0.44-catalina-tribes.jar"/>

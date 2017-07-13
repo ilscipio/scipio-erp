@@ -18,8 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- SCIPIO: NOTE: 2017-07-04: If this file is removed, the product images 
-    will use the file under content component config instead. -->
+<!-- SCIPIO: Content/Generic global content image resizing/splitting discrete dimensions
+Duplicated from (original): component://product/config/ImageProperties.xml -->
 <!-- 
     # The uploaded image is scaled in each size tye , you can descrease or increase size types ; size type name doesn't have to contain space
     # Just one configured dimension on two is allowed to restrict just one image dimension, whatever its proportions 

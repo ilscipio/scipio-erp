@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,6 +52,9 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.scaler.ImageScaler;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.content.layout.LayoutWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -113,12 +117,13 @@ public class FrameImage {
             BufferedImage bufImg1 = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
             BufferedImage bufImg2 = ImageIO.read(new File(imageServerPath + "/frame/"+frameImageName));
             
-            int bufImgType;
-            if (BufferedImage.TYPE_CUSTOM == bufImg1.getType()) {
-                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-            } else {
-                bufImgType = bufImg1.getType();
-            }
+            // SCIPIO: obsolete
+//            int bufImgType;
+//            if (BufferedImage.TYPE_CUSTOM == bufImg1.getType()) {
+//                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//            } else {
+//                bufImgType = bufImg1.getType();
+//            }
             
             int width = Integer.parseInt(imageWidth);
             int height= Integer.parseInt(imageHeight);
@@ -152,9 +157,21 @@ public class FrameImage {
             String filenameToUse = (String) contentResult.get("contentId") + ".jpg";
             String filenameTouseThumb = (String) contentResult.get("contentId") + nameOfThumb + ".jpg";
             
-            Image newImg1 = bufImg1.getScaledInstance(width, height , Image.SCALE_SMOOTH);
-            Image newImg2 = bufImg2.getScaledInstance(width , height , Image.SCALE_SMOOTH);
-            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImgType);
+            // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+            //Image newImg1 = bufImg1.getScaledInstance(width, height , Image.SCALE_SMOOTH);
+            //Image newImg2 = bufImg2.getScaledInstance(width , height , Image.SCALE_SMOOTH);
+            BufferedImage newImg1;
+            BufferedImage newImg2;
+            try {
+                Map<String, Object> scalingOptions = new HashMap<>();
+                ImageScaler scaler = ImageScalers.getScalerOrDefault(scalingOptions);
+                newImg1 = scaler.scaleImage(bufImg1, width, height);
+                newImg2 = scaler.scaleImage(bufImg2, width, height);
+            } catch(IOException e) {
+                throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+            }
+            
+            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1);
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
             ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
             
@@ -221,13 +238,30 @@ public class FrameImage {
         return result;
     }
     
-    public static BufferedImage combineBufferedImage(Image image1, Image image2, int bufImgType) {
+//    /**
+//     * combineBufferedImage
+//     * @deprecated SCIPIO: 2017-07-11: This failed to preserve image type properly for indexed images.
+//     * FIXME?: this will simply crash now. get rid of anything that called this.
+//     */
+//    @Deprecated
+//    public static BufferedImage combineBufferedImage(Image image1, Image image2, int bufImgType) {
+//        return combineBufferedImage(image1, image2, (BufferedImage) null);
+//    }
+    
+    /**
+     * combineBufferedImage.
+     * SCIPIO: 2017-07-10: modified to take a typeReferenceImage instance of bufImgType, so we have the full
+     * information to replicate the original image type, needed for indexed images.
+     */
+    public static BufferedImage combineBufferedImage(Image image1, Image image2, BufferedImage typeReferenceImage) {
         // Full image loading 
         image1 = new ImageIcon(image1).getImage();
         image2 = new ImageIcon(image2).getImage();
         
         // New BufferedImage creation 
-        BufferedImage bufferedImage = new BufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType);
+        // SCIPIO: indexed images fix
+        //BufferedImage bufferedImage = new BufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType);
+        BufferedImage bufferedImage = ImageTransform.createCompatibleBufferedImage(typeReferenceImage, image1.getWidth(null), image1.getHeight(null));
         Graphics2D g = bufferedImage.createGraphics( );
         g.drawImage(image1, null, null);
         
@@ -373,19 +407,32 @@ public class FrameImage {
             BufferedImage bufImg1 = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
             BufferedImage bufImg2 = ImageIO.read(new File(imageServerPath + "/frame/" + frameImageName));
             
-            int bufImgType;
-            if (BufferedImage.TYPE_CUSTOM == bufImg1.getType()) {
-                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-            } else {
-                bufImgType = bufImg1.getType();
-            }
+            // SCIPIO: obsolete
+//            int bufImgType;
+//            if (BufferedImage.TYPE_CUSTOM == bufImg1.getType()) {
+//                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//            } else {
+//                bufImgType = bufImg1.getType();
+//            }
             
             int width = Integer.parseInt(request.getParameter("imageWidth"));
             int height= Integer.parseInt(request.getParameter("imageHeight"));
             
-            Image newImg1 = bufImg1.getScaledInstance(width, height , Image.SCALE_SMOOTH);
-            Image newImg2 = bufImg2.getScaledInstance(width , height , Image.SCALE_SMOOTH);
-            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImgType);
+            // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+            //Image newImg1 = bufImg1.getScaledInstance(width, height , Image.SCALE_SMOOTH);
+            //Image newImg2 = bufImg2.getScaledInstance(width , height , Image.SCALE_SMOOTH);
+            BufferedImage newImg1;
+            BufferedImage newImg2;
+            try {
+                Map<String, Object> scalingOptions = new HashMap<>();
+                ImageScaler scaler = ImageScalers.getScalerOrDefault(scalingOptions);
+                newImg1 = scaler.scaleImage(bufImg1, width, height);
+                newImg2 = scaler.scaleImage(bufImg2, width, height);
+            } catch(IOException e) {
+                throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+            }
+            
+            BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1); // SCIPIO
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
             ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"));
             

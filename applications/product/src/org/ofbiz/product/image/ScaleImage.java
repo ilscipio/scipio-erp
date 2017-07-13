@@ -46,6 +46,13 @@ import org.ofbiz.service.ServiceUtil;
  * ScaleImage Class
  * <p>
  * Scale the original image into 4 different size Types (small, medium, large, detail)
+ * <p>
+ * SCIPIO: 2017-07-04: DEV NOTE: WARN: There will unfortunately be some more duplication
+ * of the code here to the class {@link org.ofbiz.content.image.ContentImageServices}.
+ * Maintenance fixes may need to be applied in double to that class.
+ * <p>
+ * SCIPIO: WARN: In addition to the scale methods below, in stock ofbiz a third method existed
+ * and was apparently copy pasted from these: {@link org.ofbiz.product.imagemanagement.ImageManagementServices#scaleImageMangementInAllSize}.
  */
 public class ScaleImage {
 
@@ -59,9 +66,12 @@ public class ScaleImage {
     }
 
     /**
-     * scaleImageInAllSize
+     * scaleImageInAllSize.
      * <p>
      * Scale the original image into all different size Types (small, medium, large, detail)
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
      *
      * @param   context                     Context
      * @param   filenameToUse               Filename of future image files
@@ -90,7 +100,7 @@ public class ScaleImage {
         Map<String, Object> result = FastMap.newInstance();
 
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -247,6 +257,14 @@ public class ScaleImage {
         }
     }
 
+    /**
+     * scaleImageManageInAllSize.
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
+     * <p>
+     * SCIPIO: NOTE: No code in ofbiz appears to be using this method. It is yet unknown why it is here.
+     */
     public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber , String imageType)
         throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
 
@@ -270,7 +288,7 @@ public class ScaleImage {
         Map<String, Object> result = FastMap.newInstance();
 
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));

@@ -195,6 +195,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected boolean holdOrder = false;
     protected Timestamp orderDate = null;
     protected Timestamp cancelBackOrderDate = null;
+    
+    // SCIPIO: Cart item subscriptions 
+    protected Map<String, List<GenericValue>> cartSubscriptionItems = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -970,7 +973,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         if (index < 0) return;
         if (cartLines.size() <= index) return;
+        // SCIPIO: Removing cart item from subscriptions map, if exists
+        if (cartSubscriptionItems.containsKey(cartLines.get(index).getProductId())) {
+            cartSubscriptionItems.remove(cartLines.get(index).getProductId());
+        }
         ShoppingCartItem item = cartLines.remove(index);
+        
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks
         item.setQuantity(BigDecimal.ZERO, dispatcher, this, triggerExternalOps, true, false, true);
@@ -1455,6 +1463,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
+        
+        // SCIPIO: Clearing subscription items
+        this.cartSubscriptionItems.clear();
 
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {
@@ -5299,5 +5310,85 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             emailList.addAll(addEmailList);
         }
         return emailList;
+    }
+    
+    // ================= Cart Subscriptions =================
+
+    /**
+     * SCIPIO: Retrieve all subscription of the entire cart
+     * 
+     * @return Map<GenericValue, List<GenericValue>>
+     * @throws GenericEntityException
+     */
+    public Map<String, List<GenericValue>> getItemSubscriptions() throws GenericEntityException {
+        List<ShoppingCartItem> cartItems = items();
+        if (cartItems != null) {
+            for (ShoppingCartItem cartItem : cartItems) {
+                List<GenericValue> productSubscriptions = getItemSubscriptions(cartItem.getDelegator(), cartItem.getProductId());
+                for (GenericValue productSubscription : productSubscriptions) {
+                    Debug.log("Found cartItem [" + cartItem.getOrderItemSeqId() + "#" + cartItem.getProductId() + "] with subscription id["
+                            + productSubscription.getString("subscriptionResourceId") + "]");
+                }
+            }
+            return this.cartSubscriptionItems;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Retrieve all subscriptions associated to an productId
+     * 
+     * @return List<GenericValue>
+     * @throws GenericEntityException
+     */
+    public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
+        if (this.cartSubscriptionItems == null)
+            this.cartSubscriptionItems = FastMap.newInstance();
+
+        List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
+                .cache(true).filterByDate().queryList();
+        if (UtilValidate.isNotEmpty(productSubscriptionResources))
+            this.cartSubscriptionItems.put(productId, productSubscriptionResources);
+        return productSubscriptionResources;
+    }
+
+    /**
+     * SCIPIO: Checks if any order item has an underlying subscription/s bound
+     * to it
+     * 
+     * @return boolean
+     * @throws GenericEntityException
+     */
+    public boolean hasSubscriptions() {
+        return UtilValidate.isNotEmpty(this.cartSubscriptionItems);
+    }
+
+    /**
+     * SCIPIO: Checks if an order item has an underlying subscription/s bound to
+     * it
+     * 
+     * @return boolean
+     * @throws GenericEntityException
+     */
+    public boolean hasSubscriptions(GenericValue cartItem) {
+        return UtilValidate.isNotEmpty(this.cartSubscriptionItems) && this.cartSubscriptionItems.containsKey(cartItem);
+    }
+
+    /**
+     * SCIPIO: Check if the order contains only subscription items
+     * 
+     * @return boolean
+     */
+    public boolean orderContainsSubscriptionItemsOnly() {
+        List<ShoppingCartItem> cartItems = items();
+        if (cartItems != null && cartSubscriptionItems != null) {
+            for (ShoppingCartItem orderItem : cartItems) {
+                if (!cartSubscriptionItems.containsKey(orderItem))
+                    return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }

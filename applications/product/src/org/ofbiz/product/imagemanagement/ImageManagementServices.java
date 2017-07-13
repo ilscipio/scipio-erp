@@ -45,12 +45,16 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageUtil;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.image.ProductImageWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -297,6 +301,15 @@ public class ImageManagementServices {
         return ServiceUtil.returnSuccess();
     }
     
+    /**
+     * Scaling method.
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
+     * <p>
+     * SCIPIO: NOTE: 2017-07-04: This appears to have been a modified copy-paste of the methods in
+     * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
+     */
     public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId)
         throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
         
@@ -320,7 +333,7 @@ public class ImageManagementServices {
         Map<String, Object> result = FastMap.newInstance();
         
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -619,18 +632,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        //bufNewImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);
@@ -678,18 +700,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-11: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        // Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);

@@ -25,6 +25,8 @@ public abstract class ContentRequestWorker {
     private static final String htmlEscapedFrontSlash = UtilCodec.encode("html", "/");
     private static final String jsEscapedFrontSlash = "\\/";
     
+    public static final String ORIGINAL_SIZETYPE = "original";
+    
     /**
      * SCIPIO: builds a content link.
      * <p>
@@ -32,6 +34,8 @@ public abstract class ContentRequestWorker {
      * it should be done before storing in the database - if/when needed.
      * having default as true would be dangerous!
      * <p>
+     * SCIPIO: 2017-07-04: imgSize has several enhanced behaviors; see <code>@ofbizContentUrl</code> docs.
+     * 
      * @param ctxPrefix a custom prefix for the URL, that may replace the system-wide default
      * @param strict FALSE by default (for legacy reasons), affects pre-escaped value handling
      */
@@ -99,7 +103,17 @@ public abstract class ContentRequestWorker {
                 if (index > 0) {
                     String suffix = requestUrl.substring(index);
                     String imgName = requestUrl.substring(0, index);
-                    requestUrl = imgName + "-" + imgSize + suffix;
+                    // SCIPIO: 2017-07-04: several patches here. the original was simply the following line:
+                    //requestUrl = imgName + "-" + imgSize + suffix;
+                    if (imgSize.startsWith("-")) {
+                        // forces stock behavior
+                        requestUrl = imgName + imgSize + suffix;
+                    } else if (imgSize.startsWith("~")) {
+                        // TODO: special case, not yet handled
+                        requestUrl = getRequestUrlSubstituted(imgName, suffix, ORIGINAL_SIZETYPE, imgSize.substring(1), !strict);
+                    } else {
+                        requestUrl = getRequestUrlSubstituted(imgName, suffix, ORIGINAL_SIZETYPE, imgSize, !strict);
+                    }
                 }
             }
         }
@@ -108,6 +122,42 @@ public abstract class ContentRequestWorker {
         
         return newURL.toString();
     }
+    
+    /**
+     * SCIPIO: Implements special -original keyword substitutions, designed to support stock product image paths
+     * configurations.
+     */
+    private static String getRequestUrlSubstituted(String imgName, String suffix, String origSizeType, String imgSize, boolean tryEncoded) {
+        String requestUrl;
+        if (imgName.endsWith(origSizeType)) {
+            final int origWordLen = origSizeType.length();
+            if (imgName.length() <= origWordLen) {
+                requestUrl = imgSize + suffix; 
+            } else {
+                char sep = imgName.charAt(imgName.length() - origWordLen - 1);
+                if (sep == '/' || sep == '-') {
+                    requestUrl = imgName.substring(0, imgName.length() - origWordLen) + imgSize + suffix;
+                } else if (tryEncoded && containsStrBeforeSuffix(imgName, origWordLen, htmlEscapedFrontSlash)) { // BEST-EFFORT
+                    requestUrl = imgName.substring(0, imgName.length() - origWordLen) + imgSize + suffix;
+                } else {
+                    // stock case
+                    requestUrl = imgName + "-" + imgSize + suffix;
+                }
+            }
+        } else {
+            // stock case
+            requestUrl = imgName + "-" + imgSize + suffix;
+        }
+        return requestUrl;
+    }
+    
+    private static boolean containsStrBeforeSuffix(String imgName, int suffixSize, String str) {
+        int combLen = suffixSize + str.length();
+        if (imgName.length() < combLen) return false;
+        String prevStr = imgName.substring(imgName.length() - combLen, imgName.length() - suffixSize);
+        return str.equals(prevStr);
+    }
+    
     
     // SCIPIO: WARN/FIXME: does not handle pre-escaped/pre-encoded strings!!!
     private static String getUriPathToConcat(String prefix, String suffix, boolean strict) {

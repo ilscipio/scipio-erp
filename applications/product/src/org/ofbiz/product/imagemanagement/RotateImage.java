@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -92,16 +93,19 @@ public class RotateImage {
             String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
             
-            int bufImgType;
-            if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-            } else {
-                bufImgType = bufImg.getType();
-            }
+            // SCIPIO: obsolete
+//            int bufImgType;
+//            if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//            } else {
+//                bufImgType = bufImg.getType();
+//            }
             
             int w = bufImg.getWidth(null);
             int h = bufImg.getHeight(null);
-            BufferedImage bufNewImg = new BufferedImage(w, h, bufImgType);
+            // SCIPIO: fixed for indexed images
+            //BufferedImage bufNewImg = new BufferedImage(w, h, bufImgType);
+            BufferedImage bufNewImg = ImageTransform.createBufferedImage(w, h, bufImg.getType(), bufImg.getColorModel());
             Graphics2D g = bufNewImg.createGraphics();
             g.rotate(Math.toRadians(Double.parseDouble(angle)), w/2, h/2);
             g.drawImage(bufImg,0,0,null);

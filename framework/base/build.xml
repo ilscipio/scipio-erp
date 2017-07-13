@@ -34,6 +34,7 @@ under the License.
         <fileset dir="${lib.dir}/commons" includes="*.jar"/>
         <fileset dir="${lib.dir}/j2eespecs" includes="*.jar"/>
         <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
+        <fileset dir="${lib.dir}/media" includes="*.jar"/>
         <fileset dir="../start/build/lib" includes="*.jar"/>
     </path>
 
@@ -137,6 +138,7 @@ under the License.
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
+        <ivy:retrieve pattern="lib/media/${lib.update.filename.pattern.ivy}" conf="media"/>
         <!-- TODO?: these are from the root /ivy.xml...
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="activemq"/>
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="cobertura"/>

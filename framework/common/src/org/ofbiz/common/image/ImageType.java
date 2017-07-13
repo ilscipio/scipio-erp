@@ -234,10 +234,17 @@ public class ImageType {
      */
     public static final ImageType EMPTY = new ImageType();
     /**
-     * Special preserve instance that instructs to try to preserve the original image type.
+     * Special preserve instance that instructs to try to preserve the original image type,
+     * UNLESS the preservation produces color or data loss.
      * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
      */
-    public static final ImageType PRESERVE = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
+    public static final ImageType PRESERVE_IF_LOSSLESS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
+    /**
+     * Special preserve instance that instructs to always preserve the original image type,
+     * EVEN if it results in color or data loss.
+     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
+     */
+    public static final ImageType PRESERVE_ALWAYS = new ImageType(ImagePixelType.TYPE_PRESERVE_ALWAYS);
     /**
      * Generic TYPE_INT_ARGB_PRE for full RGB with fake alpha.
      * NOTE: This is the stock ofbiz setting, and was previously hardcoded throughout all java files.

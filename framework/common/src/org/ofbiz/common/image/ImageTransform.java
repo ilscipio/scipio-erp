@@ -204,7 +204,7 @@ public class ImageTransform {
         // SCIPIO: 2017-07-10: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
         //Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
         try {
-            scalingOptions = ImageUtil.addImageOpOptionIfNotSet(scalingOptions, "targettype", ImageType.PRESERVE); // NOTE: stock ofbiz behavior appeared to try to preserve
+            scalingOptions = ImageUtil.addImageOpOptionIfNotSet(scalingOptions, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
             bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);

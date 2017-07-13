@@ -126,7 +126,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
 
         Integer targetType = getMergedTargetImagePixelType(options, image);
         Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
-        BufferedImage result;
+        BufferedImage resultImage;
         if (targetType != null) {
             int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
 
@@ -139,45 +139,45 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
                         !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
                         // for output type, use defaultType if it's a valid value
                         builder.imageType(defaultType); 
-                        result = builder.asBufferedImage();
+                        resultImage = builder.asBufferedImage();
                     } else {
                         // check fallback
                         if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
                                 !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
                             // next use fallback if it was valid
                             builder.imageType(fallbackType); 
-                            result = builder.asBufferedImage();
+                            resultImage = builder.asBufferedImage();
                         } else {
                             // in this case thumbnailator tries to preserve and fails
                             builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                            result = builder.asBufferedImage();
+                            resultImage = builder.asBufferedImage();
                         }
                     }
                 } else {
                     // thumbnailator can't handle indexed or custom
                     // just pick a good one for no color loss and re-convert after
                     builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                    result = builder.asBufferedImage();
-                    result = checkConvertResultImageType(image, result, options, idealType, fallbackType);
+                    resultImage = builder.asBufferedImage();
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType, fallbackType);
                 }
             } else {
                 // here thumbnailator can _probably_ output the type we want...
                 builder.imageType(idealType);
-                result = builder.asBufferedImage();
+                resultImage = builder.asBufferedImage();
             }
         } else {
             if (ImagePixelType.isTypeIndexedOrCustom(image.getType())) {
                 // in this case thumbnailator tries to preserve and fails
                 builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                result = builder.asBufferedImage();
+                resultImage = builder.asBufferedImage();
             } else {
                 // default is to preserve original
                 // TODO: REVIEW: want hardcode this?
                 //builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                result = builder.asBufferedImage();
+                resultImage = builder.asBufferedImage();
             }
         }
-        return result;
+        return resultImage;
     }
     
     // NOTE: defaults are handled through the options merging with defaults

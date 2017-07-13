@@ -1,5 +1,6 @@
 package org.ofbiz.common.image.scaler;
 
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
@@ -67,11 +68,12 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
     
     protected BufferedImage scaleImageDebug(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
         long startTime = System.nanoTime();
-        BufferedImage result = scaleImageCore(image, targetWidth, targetHeight, options);
+        BufferedImage resultImage = scaleImageCore(image, targetWidth, targetHeight, options);
         long endTime = System.nanoTime();
         Debug.logInfo("Scaled image in " + ((endTime - startTime) / 1000000) + "ms using " + this.toString(options)
-            + "; input image type: " + image.getType()+ "; output image type: " + result.getType(), module);
-        return result;
+            + "; input type: " + ImageType.printImageTypeInfo(image) 
+            + "; output type: " + ImageType.printImageTypeInfo(resultImage), module);
+        return resultImage;
     }
         
     /**
@@ -144,16 +146,29 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
         if (ImagePixelType.isTypeIndexedOrCustom(targetPixelType) && origTargetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
             return modifiedImage;
         
-        if (ImageUtil.verboseOn()) 
-            Debug.logInfo("Image op reconvert required: image op type: " + modifiedImage.getType() + "; target type: " + targetPixelType, module);
-        
         BufferedImage resultImage;
+        // FIXME?: we make the assumption that if the type is the same, it means all other parameters
+        // about color space and data should be preserved from the original - but this is flawed assumption
         if (targetPixelType == srcImage.getType()) {
+            // ALTERNATIVE implementation (not as good):
+            //resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), targetPixelType, srcImage.getColorModel());
             resultImage = ImageTransform.createCompatibleBufferedImage(srcImage, modifiedImage.getWidth(), modifiedImage.getHeight());
         } else {
             resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), targetPixelType, null);
         }
-        ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
+        //RenderingHints renderingHints = new RenderingHints(
+        //        RenderingHints.KEY_COLOR_RENDERING,
+        //        RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        RenderingHints renderingHints = null;
+        
+        if (ImageUtil.verboseOn()) 
+            Debug.logInfo("Applying required image pixel type post-op conversion ("
+                    + "input type: " + ImageType.printImageTypeInfo(srcImage) 
+                    + "; post-op type: " + ImageType.printImageTypeInfo(modifiedImage)
+                    + "; target type: " + ImageType.printImageTypeInfo(resultImage)
+                    + ")", module);
+                
+        ImageTransform.copyToBufferedImage(modifiedImage, resultImage, renderingHints);
         return resultImage;
     }
 

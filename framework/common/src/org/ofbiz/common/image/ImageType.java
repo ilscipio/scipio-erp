@@ -2,6 +2,7 @@ package org.ofbiz.common.image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
@@ -583,5 +584,21 @@ public class ImageType {
      * *************************************************************
      */
 
-    
+    public static String printImageTypeInfo(BufferedImage image) {
+        StringBuilder sb = new StringBuilder("[image pixel type: ");
+        sb.append(ImagePixelType.getTypeConstantName(image.getType(), "(INVALID)"));
+        ColorModel cm = image.getColorModel();
+        sb.append("; bits per pixel: ");
+        sb.append(cm.getPixelSize());
+        
+        if (image.getColorModel() instanceof IndexColorModel) {
+            IndexColorModel icm = (IndexColorModel) cm;
+            sb.append("; color array size: ");
+            sb.append(icm.getMapSize());
+        }
+        
+        sb.append("]");
+        return sb.toString();
+        
+    }
 }

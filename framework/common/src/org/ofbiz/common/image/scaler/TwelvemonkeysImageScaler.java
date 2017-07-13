@@ -120,7 +120,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
                     }
                 } else {
                     result = op.filter(image, null);
-                    result = checkConvertResultImageType(image, result, options, idealType, fallbackType);
+                    result = checkConvertResultImageType(image, result, options, targetType, fallbackType);
                 }
             } else {
                 BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);

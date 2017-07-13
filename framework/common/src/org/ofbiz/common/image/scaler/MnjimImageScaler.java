@@ -126,7 +126,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
         // maybe we should re-check TYPE_PRESERVE and call ImageTransform.createCompatibleBufferedImage...
         Integer targetType = getMergedTargetImagePixelType(options, image);
         Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
-        BufferedImage result;
+        BufferedImage resultImage;
         if (targetType != null) {
             int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
             
@@ -140,34 +140,34 @@ public class MnjimImageScaler extends AbstractImageScaler {
                         !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
                         // for output type, use defaultType if it's a valid value
                         BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
-                        result = op.filter(image, destImage);
+                        resultImage = op.filter(image, destImage);
                     } else {
                         // check fallback
                         if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
                                 !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
                             // next use fallback if it was valid
                             BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
-                            result = op.filter(image, destImage);
+                            resultImage = op.filter(image, destImage);
                         } else {
                             // if no usable default or fallback, leave it to morten to produce lossless
-                            result = op.filter(image, null);
+                            resultImage = op.filter(image, null);
                         }
                     }
                 } else {
                     // if a specific type was requested or TYPE_PRESERVE_ALWAYS, we'll try post-convert even if possible loss.
                     // so we will let morten pick its poison and checkConvertResultImageType will reconvert it after
-                    result = op.filter(image, null);
-                    result = checkConvertResultImageType(image, result, options, idealType, fallbackType);
+                    resultImage = op.filter(image, null);
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType, fallbackType);
                 }
             } else {
                 // here morten will _probably_ support the type we want...
                 BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
-                result = op.filter(image, destImage);
+                resultImage = op.filter(image, destImage);
             }
         } else {
-            result = op.filter(image, null);
+            resultImage = op.filter(image, null);
         }
-        return result;
+        return resultImage;
     }
     
     // NOTE: defaults are handled through the options merging with defaults

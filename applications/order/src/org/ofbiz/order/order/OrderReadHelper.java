@@ -82,7 +82,7 @@ public class OrderReadHelper {
     /**
      * SCIPIO: Custom flag used to determine whether only one subscription is allowed per order or not.
      */
-    public static boolean subscriptionSingleOrderItem = UtilProperties.getPropertyAsBoolean("order", "order.item.subscription.singleOrderItem", false);
+    public static final boolean subscriptionSingleOrderItem = UtilProperties.getPropertyAsBoolean("order", "order.item.subscription.singleOrderItem", false);
 
     protected GenericValue orderHeader = null;
     protected List<GenericValue> orderItemAndShipGrp = null;

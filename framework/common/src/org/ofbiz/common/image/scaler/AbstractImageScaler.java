@@ -58,7 +58,10 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
     
     protected boolean requiresScaling(BufferedImage image, int targetWidth, int targetHeight) {
         // SPECIAL CASE: by default, in all cases, if the image is same dimensions, we'll just return as-is
-        if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) return false;
+        if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
+            if (ImageUtil.verboseOn()) Debug.logInfo("Not scaling image; output dimensions match input (" + targetWidth + "x" + targetHeight + ")", module);
+            return false;
+        }
         else return true;
     }
     

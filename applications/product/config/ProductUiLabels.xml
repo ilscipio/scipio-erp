@@ -12638,6 +12638,7 @@
         <value xml:lang="zh_TW">允許USPS位址 (郵箱、 退貨率等)</value>
     </property>
     <property key="ProductAlsoBought">
+        <value xml:lang="de">Kunden, die diesen Artikel gekauft haben, kauften auch:</value>
         <value xml:lang="en">Customers who bought this item also bought:</value>
         <value xml:lang="it">Clienti che hanno comprato questo prodotto hanno comprato anche:</value>
         <value xml:lang="ja">このアイテムを購入した人が他に購入したもの</value>

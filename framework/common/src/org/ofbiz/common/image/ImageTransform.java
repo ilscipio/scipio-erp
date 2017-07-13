@@ -20,6 +20,7 @@ package org.ofbiz.common.image;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
@@ -550,13 +551,22 @@ public class ImageTransform {
      * SCIPIO: Simple copy of a source image to a destination buffered image.
      * Added 2017-07-12.
      */
-    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage) {
+    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
         Graphics2D g = destImage.createGraphics();
         try {
+            if (renderingHints != null) g.setRenderingHints(renderingHints);
             g.drawImage(srcImage, 0, 0, null);
         } finally { // SCIPIO: added finally
             g.dispose();
         }
+    }
+    
+    /**
+     * SCIPIO: Simple copy of a source image to a destination buffered image.
+     * Added 2017-07-12.
+     */
+    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage) {
+        copyToBufferedImage(srcImage, destImage, null);
     }
 
 }

@@ -45,6 +45,9 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageUtil;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -629,18 +632,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        //bufNewImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);
@@ -688,18 +700,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-11: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        // Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType, bufImg.getColorModel()); // SCIPIO: now pass color model, for indexed images
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);

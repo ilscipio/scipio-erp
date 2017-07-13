@@ -93,18 +93,19 @@ public class RotateImage {
             String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
             
-            int bufImgType;
-            if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-            } else {
-                bufImgType = bufImg.getType();
-            }
+            // SCIPIO: obsolete
+//            int bufImgType;
+//            if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//                bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//            } else {
+//                bufImgType = bufImg.getType();
+//            }
             
             int w = bufImg.getWidth(null);
             int h = bufImg.getHeight(null);
             // SCIPIO: fixed for indexed images
             //BufferedImage bufNewImg = new BufferedImage(w, h, bufImgType);
-            BufferedImage bufNewImg = ImageTransform.createBufferedImage(w, h, bufImgType, bufImg.getColorModel());
+            BufferedImage bufNewImg = ImageTransform.createBufferedImage(w, h, bufImg.getType(), bufImg.getColorModel());
             Graphics2D g = bufNewImg.createGraphics();
             g.rotate(Math.toRadians(Double.parseDouble(angle)), w/2, h/2);
             g.drawImage(bufImg,0,0,null);

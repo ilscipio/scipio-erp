@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.imgscalr.Scalr;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 
 /**
  * SCIPIO: Imgscalr image scaler implementation.
@@ -54,7 +55,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
-        putDefaultBufTypeOptions(options);
+        putDefaultImageTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String 
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
@@ -73,7 +74,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>(options);
-            putCommonBufTypeOptions(validOptions, options);
+            putCommonImageTypeOptions(validOptions, options);
             putOption(validOptions, "filter", getFilter(options), options);
             return validOptions;
         }
@@ -86,10 +87,18 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         
-        // FIXME?: doesn't seem to be any way to ensure targettype/fallbacktype is used for indexed images
-        // without an extra transfer, but by coincidence it seems to use TYPE_INT_RGB or similar...
+        // FIXME?: imgscalr supports no target image types at all...
+        BufferedImage result = Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
+        
+        Integer targetType = getMergedTargetImagePixelType(options, image);
+        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
 
-        return Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
+        // FIXME?: for now don't bother post-converting anything at all unless we're forced...
+        if (targetType == null || targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
+            return result;
+        } else {
+            return checkConvertResultImageType(image, result, options, targetType, fallbackType);
+        }
     }
     
     // NOTE: defaults are handled through the options merging with defaults

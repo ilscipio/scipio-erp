@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 
 import com.twelvemonkeys.image.ResampleOp;
 
@@ -54,7 +55,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
-        putDefaultBufTypeOptions(options);
+        putDefaultImageTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
@@ -73,7 +74,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>(options);
-            putCommonBufTypeOptions(validOptions, options);
+            putCommonImageTypeOptions(validOptions, options);
             putOption(validOptions, "filter", getFilter(options), options);
             return validOptions;
         }
@@ -86,16 +87,49 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
     protected BufferedImage scaleImageCore(BufferedImage image, int targetWidth, int targetHeight,
             Map<String, Object> options) throws IOException {
         Integer filter = getFilter(options);
-        BufferedImageOp resampler;
+        BufferedImageOp op;
         if (filter != null) {
-            resampler = new ResampleOp(targetWidth, targetHeight, filter);
+            op = new ResampleOp(targetWidth, targetHeight, filter);
         } else {
-            resampler = new ResampleOp(targetWidth, targetHeight);
+            op = new ResampleOp(targetWidth, targetHeight);
         }
-        Integer destImgType = getTargetOrFallbackBufImgType(image, options, false);
-        // WARN: this instantiation may lose parts of the ColorModel (TODO: check internals to see if scaler handles better...) 
-        BufferedImage destImage = (destImgType != null) ? new BufferedImage(targetWidth, targetHeight, destImgType) : null;
-        return resampler.filter(image, destImage);
+
+        // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
+    
+        Integer targetType = getMergedTargetImagePixelType(options, image);
+        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        BufferedImage result;
+        if (targetType != null) {
+            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+            
+            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
+                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
+                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
+                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
+                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
+                        BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
+                        result = op.filter(image, destImage);
+                    } else {
+                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
+                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
+                            BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
+                            result = op.filter(image, destImage);
+                        } else {
+                            result = op.filter(image, null);
+                        }
+                    }
+                } else {
+                    result = op.filter(image, null);
+                    result = checkConvertResultImageType(image, result, options, idealType, fallbackType);
+                }
+            } else {
+                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
+                result = op.filter(image, destImage);
+            }
+        } else {
+            result = op.filter(image, null);
+        }
+        return result;
     }
     
     // NOTE: defaults are handled through the options merging with defaults

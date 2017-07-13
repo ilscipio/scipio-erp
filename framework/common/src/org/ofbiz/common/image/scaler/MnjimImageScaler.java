@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 
 import com.mortennobel.imagescaling.ResampleFilter;
 import com.mortennobel.imagescaling.ResampleFilters;
@@ -65,7 +66,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
     public static final Map<String, Object> DEFAULT_OPTIONS;
     static {
         Map<String, Object> options = new HashMap<>();
-        putDefaultBufTypeOptions(options);
+        putDefaultImageTypeOptions(options);
         options.put("filter", filterMap.get("smooth")); // String
         DEFAULT_OPTIONS = Collections.unmodifiableMap(options);
     }
@@ -84,7 +85,7 @@ public class MnjimImageScaler extends AbstractImageScaler {
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
             Map<String, Object> validOptions = new HashMap<>(options);
-            putCommonBufTypeOptions(validOptions, options);
+            putCommonImageTypeOptions(validOptions, options);
             putOption(validOptions, "filter", getFilter(options), options);
             return validOptions;
         }
@@ -115,12 +116,58 @@ public class MnjimImageScaler extends AbstractImageScaler {
         if (filter != null) {
             op.setFilter(filter);
         }
-        Integer destImgType = getTargetOrFallbackBufImgType(image, options, false);
-        // WARN: this instantiation may lose parts of the ColorModel, but it's just what morten does internally anyway
-        BufferedImage destImage = (destImgType != null) ? new BufferedImage(targetWidth, targetHeight, destImgType) : null;
-        // NOTE: the morten lib doesn't support writing out to some types notably indexed, so something like this would fail for indexed types:
-        //BufferedImage destImage = ImageTransform.createBufferedImage(targetWidth, targetHeight, image.getType(), image.getColorModel());
-        return op.filter(image, destImage);
+        
+        // HOW THIS WORKS: we try our best to get the filter to write directly in the image pixel type requested.
+        // But morten does not support indexed images as output, and in addition, reconverting after is not guaranteed lossless.
+        // In that case there are two options:
+        // 1) scale + reconvert in two steps to honor requested image pixel type: could result in losses
+        // 2) don't honor the requested image pixel type: changes the format, but usually lossless
+        // TODO: REVIEW: the new BufferedImage calls do not transfer over all possible info like ColorModel, but morten itself doesn't either, so...
+        // maybe we should re-check TYPE_PRESERVE and call ImageTransform.createCompatibleBufferedImage...
+        Integer targetType = getMergedTargetImagePixelType(options, image);
+        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        BufferedImage result;
+        if (targetType != null) {
+            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+            
+            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
+                // morten can't write out to indexed or custom, and if we try to convert after, there is a chance of loss.
+                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
+                    // if preserve is not high prio (TYPE_PRESERVE_IF_LOSSLESS only) we will just not honor the idealTarget.
+                    // NOTE: defaultType could be already included in targetType, but not always, so we have to recheck it...
+                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
+                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
+                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
+                        // for output type, use defaultType if it's a valid value
+                        BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
+                        result = op.filter(image, destImage);
+                    } else {
+                        // check fallback
+                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
+                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
+                            // next use fallback if it was valid
+                            BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
+                            result = op.filter(image, destImage);
+                        } else {
+                            // if no usable default or fallback, leave it to morten to produce lossless
+                            result = op.filter(image, null);
+                        }
+                    }
+                } else {
+                    // if a specific type was requested or TYPE_PRESERVE_ALWAYS, we'll try post-convert even if possible loss.
+                    // so we will let morten pick its poison and checkConvertResultImageType will reconvert it after
+                    result = op.filter(image, null);
+                    result = checkConvertResultImageType(image, result, options, idealType, fallbackType);
+                }
+            } else {
+                // here morten will _probably_ support the type we want...
+                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
+                result = op.filter(image, destImage);
+            }
+        } else {
+            result = op.filter(image, null);
+        }
+        return result;
     }
     
     // NOTE: defaults are handled through the options merging with defaults

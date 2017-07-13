@@ -7,6 +7,8 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.image.AbstractImageOp;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 import org.ofbiz.common.image.ImageUtil;
 
 /**
@@ -16,18 +18,19 @@ import org.ofbiz.common.image.ImageUtil;
 public abstract class AbstractImageScaler extends AbstractImageOp implements ImageScaler {
     public static final String module = AbstractImageScaler.class.getName();
     
-    protected static void putDefaultBufTypeOptions(Map<String, Object> options) {
+    protected static void putDefaultImageTypeOptions(Map<String, Object> options) {
         // NOTE: comments below only apply to the filters that make use of these options
         
         // TODO: REVIEW: if this is uncommented, it will force the specified types
         // as result formats even if the filter could have preserved the original/input image format
-        //options.put("targettype", ImageTransform.DEFAULT_BUFIMAGE_TYPE);
-        //options.put("targettypenoalpha", ImageTransform.DEFAULT_BUFIMAGE_TYPE_NOALPHA);
+        //options.put("targettype", ImageType.DEFAULT);
+        
+        // used when targettype not set
+        options.put("defaulttype", ImageType.DEFAULT);
         
         // if these fallbacks are set, they are used as result formats for any
         // input types the filter can't replicated (custom and/or indexed)
-        options.put("fallbacktype", ImageTransform.DEFAULT_BUFIMAGE_TYPE);
-        options.put("fallbacktypenoalpha", ImageTransform.DEFAULT_BUFIMAGE_TYPE_NOALPHA);
+        options.put("fallbacktype", ImageType.DEFAULT);
     }
     
     protected AbstractImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name, 
@@ -97,43 +100,61 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
     // NOTE: ugly 2 parameters required to keep hierarchy consistent
     public static abstract class AbstractImageScalerFactory<T extends AbstractImageScaler> extends AbstractImageOpFactory<AbstractImageScaler, ImageScaler> implements ImageScalerFactory {
         
-        protected void putCommonBufTypeOptions(Map<String, Object> destOptions, Map<String, Object> srcOptions) {
-            putOption(destOptions, "targettype", getBufImgTypeOption(srcOptions, "targettype"), srcOptions);
-            putOption(destOptions, "targettypenoalpha", getBufImgTypeOption(srcOptions, "targettypenoalpha"), srcOptions);
-            
-            putOption(destOptions, "fallbacktype", getBufImgTypeOption(srcOptions, "fallbacktype"), srcOptions);
-            putOption(destOptions, "fallbacktypenoalpha", getBufImgTypeOption(srcOptions, "fallbacktypenoalpha"), srcOptions);
+        protected void putCommonImageTypeOptions(Map<String, Object> destOptions, Map<String, Object> srcOptions) {
+            putOption(destOptions, "overridetype", getImageTypeOption(srcOptions, "overridetype"), srcOptions);
+            putOption(destOptions, "targettype", getImageTypeOption(srcOptions, "targettype"), srcOptions);
+            putOption(destOptions, "defaulttype", getImageTypeOption(srcOptions, "defaulttype"), srcOptions);
+            putOption(destOptions, "fallbacktype", getImageTypeOption(srcOptions, "fallbacktype"), srcOptions);
         }
         
     }
     
-    protected static Integer getBufImgTypeOption(Map<String, Object> options, String fieldName) {
-        Object typeObj = options.get(fieldName);
-        if (typeObj == null) return null;
-        else if (typeObj instanceof Integer) return (Integer) typeObj;
-        else {
-            String name = (String) typeObj;
-            if (name.isEmpty()) return null;
-            try {
-                return ImageUtil.getBufferedImageTypeInt(name);
-            } catch(Exception e) {
-                throw new IllegalArgumentException(fieldName + " '" + name + "' not supported by library or does not exist", e);
-            }
-        }
+    protected static ImageType getMergedTargetImageType(Map<String, Object> options) {
+        ImageType type = getImageTypeOption(options, "overridetype");
+        if (type != null) return type;
+        type = getImageTypeOption(options, "targettype");
+        if (type != null) return type;
+        return getImageTypeOption(options, "defaulttype");
     }
     
-    protected static Integer getTargetOrFallbackBufImgType(BufferedImage srcImg, Map<String, Object> options, boolean supportsIndexed) {
-        Integer targetType = srcImg.getColorModel().hasAlpha() ? getBufImgTypeOption(options, "targettype") : getBufImgTypeOption(options, "targettypenoalpha");
-        if (targetType != null) {
-            return targetType;
+    protected static Integer getMergedTargetImagePixelType(Map<String, Object> options, BufferedImage srcImage) {
+        ImageType imageType = getMergedTargetImageType(options);
+        return imageType != null ? imageType.getPixelTypeFor(srcImage) : null;
+    }
+    
+    /**
+     * Best-effort attempt to honor requests for specific format or orig-preserve of the returned image after an image operation.
+     * <p>
+     * NOTE: targetType should be already resolved (don't pass TYPE_PRESERVE here).
+     * <p>
+     * FIXME?: this checks for type using a simple (modifiedImage.getType() == targetType) check, which 
+     * may miss details about the image...
+     */
+    protected BufferedImage checkConvertResultImageType(BufferedImage srcImage, BufferedImage modifiedImage, 
+            Map<String, Object> options, Integer targetPixelType, Integer fallbackPixelType) {
+        if (targetPixelType == null) return modifiedImage;
+        Integer origTargetPixelType = targetPixelType;
+        
+        if (ImagePixelType.isTypePreserve(targetPixelType)) targetPixelType = srcImage.getType();
+        
+        // APPROXIMATION of an image type equality check
+        if (modifiedImage.getType() == targetPixelType) return modifiedImage;
+        
+        // TODO: REVIEW: DO NOT convert to indexed if lossless mode
+        if (ImagePixelType.isTypeIndexedOrCustom(targetPixelType) && origTargetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
+            return modifiedImage;
+        
+        if (ImageUtil.verboseOn()) 
+            Debug.logInfo("Image op reconvert required: image op type: " + modifiedImage.getType() + "; target type: " + targetPixelType, module);
+        
+        BufferedImage resultImage;
+        if (targetPixelType == srcImage.getType()) {
+            resultImage = ImageTransform.createCompatibleBufferedImage(srcImage, modifiedImage.getWidth(), modifiedImage.getHeight());
         } else {
-            if ((!supportsIndexed && (srcImg.getType() == BufferedImage.TYPE_BYTE_INDEXED || srcImg.getType() == BufferedImage.TYPE_BYTE_BINARY)) || 
-                    srcImg.getType() == BufferedImage.TYPE_CUSTOM) {
-                return srcImg.getColorModel().hasAlpha() ? getBufImgTypeOption(options, "fallbacktype") : getBufImgTypeOption(options, "fallbacktypenoalpha");
-            } else {
-                return null;
-            }
+            resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), targetPixelType, null);
         }
+        ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
+        return resultImage;
     }
-    
+
 }

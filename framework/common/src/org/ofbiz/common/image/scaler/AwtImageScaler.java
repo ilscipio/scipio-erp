@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 
 /**
  * SCIPIO: Java AWT (JRE/JDK) image scaler implementation.
@@ -92,8 +93,24 @@ public class AwtImageScaler extends AbstractImageScaler {
         // for indexed images here... but this is just for backward-compat anyway; the other
         // scalers are better in every way.
         
-        Image resultImage = image.getScaledInstance(targetWidth, targetHeight, filter);
-        return ImageTransform.toCompatibleBufferedImage(resultImage, image.getColorModel());
+        Image modifiedImage = image.getScaledInstance(targetWidth, targetHeight, filter);
+
+        Integer targetType = getMergedTargetImagePixelType(options, image);
+        if (targetType != null) {
+            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+            
+            if (idealType == image.getType()) {
+                BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(image, modifiedImage.getWidth(null), modifiedImage.getHeight(null));
+                ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
+                return resultImage;
+            } else {
+                BufferedImage resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(null), modifiedImage.getHeight(null), idealType, null);
+                ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
+                return resultImage;
+            }
+        } else {
+            return ImageTransform.toCompatibleBufferedImage(modifiedImage, image.getType(), image.getColorModel());
+        }
     }
     
     // NOTE: defaults are handled through the options merging with defaults

@@ -14,15 +14,16 @@ import com.twelvemonkeys.image.ResampleOp;
 
 /**
  * SCIPIO: Twelvemonkeys common-image image scaler implementation.
+ * @deprecated 2017-07-14: This scaler implementation is currently not being maintained, but could be used again later.
  * <p>
  * Supported scalingOptions:
  * <ul>
  * <li>filter (String) - "smooth" (default) or substitute (see {@link #filterMap} below for supported)</li>
  * </ul>
  * </p>
- * <p>
  * Added 2017-07-12.
  */
+@Deprecated
 public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
     public static final String module = TwelvemonkeysImageScaler.class.getName();
@@ -97,7 +98,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
     
         Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        Integer fallbackType = getFallbackImagePixelType(options, image);
         BufferedImage result;
         if (targetType != null) {
             int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;

@@ -12,6 +12,7 @@ import org.ofbiz.common.image.ImageType.ImagePixelType;
 
 /**
  * SCIPIO: Imgscalr image scaler implementation.
+ * @deprecated 2017-07-14: This scaler implementation is currently not being maintained, but could be used again later.
  * <p>
  * Supported scalingOptions:
  * <ul>
@@ -91,14 +92,10 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         BufferedImage result = Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
         
         Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        Integer fallbackType = getFallbackImagePixelType(options, image);
 
         // FIXME?: for now don't bother post-converting anything at all unless we're forced...
-        if (targetType == null || targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-            return result;
-        } else {
-            return checkConvertResultImageType(image, result, options, targetType, fallbackType);
-        }
+        return checkConvertResultImageType(image, result, options, targetType, fallbackType);
     }
     
     // NOTE: defaults are handled through the options merging with defaults

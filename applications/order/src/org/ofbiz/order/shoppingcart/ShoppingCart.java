@@ -1465,7 +1465,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.productPromoCodes.clear();
         
         // SCIPIO: Clearing subscription items
-        this.cartSubscriptionItems.clear();
+        if (this.cartSubscriptionItems != null)
+            this.cartSubscriptionItems.clear();
 
         // clear the auto-save info
         if (ProductStoreWorker.autoSaveCart(this.getDelegator(), this.getProductStoreId())) {

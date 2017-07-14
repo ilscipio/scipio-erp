@@ -23,7 +23,9 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.ImageObserver;
 import java.awt.image.IndexColorModel;
+import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,8 +39,10 @@ import javax.swing.ImageIcon;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
 import org.ofbiz.common.image.scaler.ImageScalers;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -549,15 +553,101 @@ public class ImageTransform {
     }
     
     /**
-     * SCIPIO: Simple copy of a source image to a destination buffered image.
+     * SCIPIO: Simple copy of a source image to a destination buffered image using the best
+     * transfer method available, trying to minimize data/color loss.
      * Added 2017-07-12.
+     * <p>
+     * NOTE: Unlike java.awt, this assumes dithering should be OFF by default for indexed images -
+     * in modern applications we will always try to find a better solution than dithering (at cost of performance).
+     * To enable, you must pass explicit {@link java.awt.RenderingHints#VALUE_DITHER_ENABLE}.
+     * <p>
+     * WARN/FIXME: Graphics2D.drawImage appears to ignore RenderingHints.KEY_DITHERING and always
+     * applies dithering - this tries to implement a workaround, but is very slow!
+     * WARN: The workaround is currently only possible if the source Image is a BufferedImage.
+     * <p>
+     * TODO: What callers really need for indexed target images is an algorithm to build best/optimized
+     * palette based on source image colors; because even using the original image palette successfully
+     * is suboptimal quality.
+     * <p>
      * @return the destImage
      */
     public static BufferedImage copyToBufferedImage(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
+        if (ImagePixelType.isTypeIndexed(destImage)) {
+            if (renderingHints != null && RenderingHints.VALUE_DITHER_ENABLE.equals(renderingHints.get(RenderingHints.KEY_DITHERING))) {
+                return copyToBufferedImageAwt(srcImage, destImage, renderingHints);
+            } else {
+                // FIXME: here want to disable dithering for indexed images; however, 
+                // Graphics2D.drawImage appears to ignore the KEY_DITHERING key!
+                // the workaround is to manually transfer the pixels, which is horrendous
+                renderingHints = ensureRenderingHintCopy(renderingHints, RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
+                return copyToBufferedImageManual(srcImage, destImage, renderingHints);
+            }
+        } else {
+            return copyToBufferedImageAwt(srcImage, destImage, renderingHints);
+        }
+    }
+    
+    /**
+     * SCIPIO: Simple copy of a source image to a destination buffered image using 
+     * {@link java.awt.Graphics#drawImage}.
+     * <p>
+     * WARN/FIXME: Graphics2D.drawImage appears to ignore RenderingHints.KEY_DITHERING and always applies dithering!
+     * <p>
+     * Added 2017-07-14.
+     * <p>
+     * @return the destImage
+     */
+    public static BufferedImage copyToBufferedImageAwt(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
         Graphics2D g = destImage.createGraphics();
         try {
             if (renderingHints != null) g.setRenderingHints(renderingHints);
             g.drawImage(srcImage, 0, 0, null);
+        } finally { // SCIPIO: added finally
+            g.dispose();
+        }
+        return destImage;
+    }
+    
+    /**
+     * SCIPIO: Simple copy of a source image to a destination buffered image using a slow but surefire
+     * transfer loop. WARN: slow and very slow.
+     * Added 2017-07-14.
+     * <p>
+     * @return the destImage
+     */
+    public static BufferedImage copyToBufferedImageManual(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
+        Graphics2D g = destImage.createGraphics();
+        try {
+            if (renderingHints != null) g.setRenderingHints(renderingHints);
+            if (srcImage instanceof BufferedImage) {
+                // FIXME: very slow
+                if (ImageUtil.verboseOn()) Debug.logInfo("Executing manual BufferedImage pixel copy (very slow, but can avoid dithering)", module);
+                BufferedImage srcBufImage = ((BufferedImage) srcImage);
+                for (int x = 0; x < srcImage.getWidth(null); x++) {
+                    for (int y = 0; y < srcImage.getHeight(null); y++) {
+                        destImage.setRGB(x, y, srcBufImage.getRGB(x, y));
+                    }
+                }
+            } else {
+                // FIXME: even worse than above! creates a whole copy for nothing.
+                if (ImageUtil.verboseOn()) Debug.logInfo("Executing manual Image double pixel copy (extremely slow, but can avoid dithering)", module);
+                int[] pixels = new int[srcImage.getWidth(null)*srcImage.getHeight(null)];
+                PixelGrabber pg = new PixelGrabber(srcImage, 0, 0, srcImage.getWidth(null), 
+                        srcImage.getHeight(null), pixels, 0, srcImage.getWidth(null));
+                try {
+                    pg.grabPixels();
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException("Couldn't get image pixels: " + e.getMessage(), e);
+                }
+                if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
+                    throw new IllegalStateException("Couldn't get image pixels: aborted");
+                }
+                for (int x = 0; x < srcImage.getWidth(null); x++) {
+                    for (int y = 0; y < srcImage.getHeight(null); y++) {
+                        destImage.setRGB(x, y, pixels[y*srcImage.getWidth(null)+x]);
+                    }
+                }
+            }
         } finally { // SCIPIO: added finally
             g.dispose();
         }
@@ -587,4 +677,40 @@ public class ImageTransform {
                 colorModel.isAlphaPremultiplied(), null);
     }
 
+    /**
+     * SCIPIO: Returns disable dithering hint config if type is indexed.
+     * WARN: this may not be respected by Graphics2D.drawImage - see {@link #copyToBufferedImage}.
+     * Added 2017-07-14.
+     */
+    public static RenderingHints getNoDitheringRenderingHintsIfIndexed(int targetPixelType) {
+        if (ImagePixelType.isTypeIndexed(targetPixelType))
+            return new RenderingHints(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_DISABLE);
+        else return null;
+    }
+    
+    /**
+     * SCIPIO: Sets dithering value in new RenderingHints without modifying original; creates new if needed.
+     * Added 2017-07-14.
+     */
+    public static RenderingHints ensureRenderingHintCopy(RenderingHints renderingHints, RenderingHints.Key key, Object value) {
+        if (renderingHints == null) return new RenderingHints(key, value);
+        if (value == null) {
+            if (renderingHints.get(key) == null) return renderingHints;
+        } else {
+            if (value.equals(renderingHints.get(key))) return renderingHints;
+        }
+        renderingHints = new RenderingHints(UtilGenerics.<RenderingHints.Key, Object>checkMap(renderingHints));
+        renderingHints.put(key, value);
+        return renderingHints;
+    }
+    
+    /**
+     * SCIPIO: Sets given value in RenderingHints in-place; creates new if needed.
+     * Added 2017-07-14.
+     */
+    public static RenderingHints ensureRenderingHintInPlace(RenderingHints renderingHints, RenderingHints.Key key, Object value) {
+        if (renderingHints == null) return new RenderingHints(key, value);
+        renderingHints.put(key, value);
+        return renderingHints;
+    }
 }

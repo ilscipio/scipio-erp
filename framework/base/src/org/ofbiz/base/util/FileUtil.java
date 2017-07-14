@@ -57,11 +57,18 @@ public class FileUtil {
             try {
                 path = ComponentLocationResolver.getBaseLocation(path).toString();
             } catch (MalformedURLException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, module); 
                 return null;
             }
-        } else if (path.startsWith("file://")) { // SCIPIO: 2017-06-15: new workaround to allow URL file paths through this method (but strict)
-            path = path.substring("file://".length());
+        } else if (root == null && path.startsWith("file://")) { // SCIPIO: 2017-06-15: new workaround to allow URL file paths through this method (but strict)
+            // SCIPIO: 2017-07-14: too rudimentary
+            //path = path.substring("file://".length());
+            try {
+                return new File(new java.net.URI(path));
+            } catch (Exception e) { // SCIPIO: NOTE: catching all for now because method is old and callers may not be ready for change
+                Debug.logError(e, "Error getting File for path " + path + ": " + e.getMessage(), module);
+                return null;
+            }
         }
         return new File(root, localizePath(path));
     }

@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.content.image;
 
+import org.ofbiz.base.util.UtilProperties;
+
 /**
  * SCIPIO: Content/generic image utilities.
  * Added 2017-07-04.
@@ -26,9 +28,20 @@ public abstract class ContentImageWorker {
 
     public static final String module = ContentImageWorker.class.getName();
     
+    /**
+     * Special image size type name designating the original (unscaled/unmodified) image.
+     * <p>
+     * This should be the same value as {@link org.ofbiz.webapp.content.ContentRequestWorker#ORIGINAL_SIZETYPE}
+     * which is used in the <code>@ofbizContentUrl</code> macro.
+     */
     public static final String ORIGINAL_SIZETYPE = "original";
     
     public static final String CONTENT_IMAGEPROP_FILEPATH = "/applications/content/config/ImageProperties.xml";
+    
+    /**
+     * Keeps from overloading log with giant filenames.
+     */
+    public static final int LOG_INFO_MAXPATH = UtilProperties.getPropertyAsInteger("content", "image.log.info.maxpath", 80);
     
     protected ContentImageWorker() {
     }
@@ -49,4 +62,11 @@ public abstract class ContentImageWorker {
         return CONTENT_IMAGEPROP_FILEPATH;
     }
     
+    public static String formatLogInfoPath(String filename) {
+        if (filename == null || filename.isEmpty()) return "[none]";
+        else return "'" 
+                + (filename.length() > LOG_INFO_MAXPATH ? "..." + filename.substring(filename.length() - LOG_INFO_MAXPATH) : filename)
+                + "'";
+    }
+
 }

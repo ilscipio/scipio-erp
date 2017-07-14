@@ -31,7 +31,7 @@
         <description>Scales a product image file according to size types in product config ImageProperties.xml and using filename formats from catalog.properties</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
-            <description>Full path of original image in filesystem as input (alternative to imageOrigUrl; if neither specified, auto-determines an original filename under imageServerPath)</description>
+            <description>Full path of original image in filesystem as input (alternative to imageOrigUrl; if neither specified, auto-determines an original filename under imageServerPath); also supports component:// and file:// prefixes</description>
         </attribute>
         <attribute name="imageOrigUrl" mode="IN" type="String" optional="true">
             <description>URL of image relative to server root of original image in filesystem as input; WARN: 2017-07-04: MUST start with imageUrlPrefix else error; no other mount-points supported (alternative to imageOrigPath; if neither specified, auto-determines an original filename under imageServerPath)</description>
@@ -39,17 +39,40 @@
         <attribute name="imageOrigFn" mode="IN" type="String" optional="true">
             <description>Original filename (no directories) of the image - required only if neither imageOrigPath nor imageOrigUrl specified</description>
         </attribute>
+        <attribute name="imageOrigFnFmt" mode="IN" type="String" optional="true">
+            <description>Image filename format string for original only, relative to imageServerPath/imageUrlPrefix, no extension; only useful if copyOrig==true or if imageOrigPath/imageOrigUrl are omitted (default: same as imageFnFmt)</description>
+        </attribute>
         <!-- TODO: support this alternate input
         <attribute name="imageOrigContentId" mode="IN" type="String" optional="true">
             <description>Original image contentId as input (alternative to imageOrigPath)</description>
         </attribute>-->
 
+        <!-- BASE PATHS -->
+        <attribute name="imageServerPath" mode="IN" type="String" optional="true">
+            <description>Full filesystem path of base server image, parameterized with ${tenantId} (default: uses image.server.path / catalog.properties); also supports component:// and file:// prefixes</description>
+        </attribute>
+        <attribute name="imageUrlPrefix" mode="IN" type="String" optional="true">
+            <description>URL prefix for generated images, parameterized with ${tenantId} (default: uses image.url.prefix / catalog.properties)</description>
+        </attribute>
+
         <!-- GENERATED FILES PARAMETERS -->
+        <attribute name="imageFnFmt" mode="IN" type="String" optional="true">
+            <description>Image filename format string, relative to imageServerPath/imageUrlPrefix, no extension, parameterized with ${sizetype} (or ${type}) and product fields (default: uses image.filename.format OR image.filename.additionalviewsize.format / catalog.properties)</description>
+        </attribute>
+        <attribute name="imagePathArgs" mode="IN" type="Map" optional="true">
+            <description>Additional args for parameterized paths</description>
+        </attribute>
+        <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
+            <description>Path to ImageProperties.xml file containing size types, from ofbiz home root (default: /applications/product/config/ImageProperties.xml)</description>
+        </attribute>
         <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
         <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
+        </attribute>
+        <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
+            <description>[TODO: NOT IMPLEMENTED] If true, also deletes old files in target directory (default: false)</description>
         </attribute>
         
         <!-- PRODUCT-SPECIFIC -->

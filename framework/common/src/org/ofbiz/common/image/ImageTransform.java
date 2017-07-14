@@ -531,8 +531,9 @@ public class ImageTransform {
      */
     public static BufferedImage createCompatibleBufferedImage(BufferedImage image, Integer targetWidth, Integer targetHeight) {
         ColorModel colorModel = image.getColorModel();
-        return new BufferedImage(colorModel, colorModel.createCompatibleWritableRaster(
-                targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
+        return new BufferedImage(colorModel, 
+                //image.getRaster().createCompatibleWritableRaster(targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
+                colorModel.createCompatibleWritableRaster(targetWidth != null ? targetWidth : image.getWidth(null), targetHeight != null ? targetHeight : image.getHeight(null)),
                 colorModel.isAlphaPremultiplied(), null);
     }
     
@@ -550,8 +551,9 @@ public class ImageTransform {
     /**
      * SCIPIO: Simple copy of a source image to a destination buffered image.
      * Added 2017-07-12.
+     * @return the destImage
      */
-    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
+    public static BufferedImage copyToBufferedImage(Image srcImage, BufferedImage destImage, RenderingHints renderingHints) {
         Graphics2D g = destImage.createGraphics();
         try {
             if (renderingHints != null) g.setRenderingHints(renderingHints);
@@ -559,14 +561,30 @@ public class ImageTransform {
         } finally { // SCIPIO: added finally
             g.dispose();
         }
+        return destImage;
     }
     
     /**
      * SCIPIO: Simple copy of a source image to a destination buffered image.
      * Added 2017-07-12.
+     * @return the destImage
      */
-    public static void copyToBufferedImage(Image srcImage, BufferedImage destImage) {
-        copyToBufferedImage(srcImage, destImage, null);
+    public static BufferedImage copyToBufferedImage(Image srcImage, BufferedImage destImage) {
+        return copyToBufferedImage(srcImage, destImage, null);
+    }
+    
+    /**
+     * SCIPIO: Attempts to create an exact copy of the original image in a new instance.
+     * WARN: TODO: currently not guaranteed to work for all images.
+     * Added 2017-07-14.
+     * @return the cloned image
+     */
+    public static BufferedImage cloneBufferedImage(BufferedImage image) {
+        ColorModel colorModel = image.getColorModel();
+        return new BufferedImage(colorModel, 
+                //image.copyData(image.getRaster().createCompatibleWritableRaster()),
+                image.copyData(colorModel.createCompatibleWritableRaster(image.getWidth(null), image.getHeight(null))),
+                colorModel.isAlphaPremultiplied(), null);
     }
 
 }

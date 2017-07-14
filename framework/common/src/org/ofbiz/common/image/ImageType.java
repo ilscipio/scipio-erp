@@ -72,16 +72,31 @@ public class ImageType {
          * *************************************************************
          */
 
+        // DEV NOTE: we start at -10 for future/external interoperability
+        
+        /**
+         * Forces preserving the input image type EVEN if it causes color loss
+         * or is very slow.
+         */
+        public static final int TYPE_PRESERVE_ALWAYS = -10;
+        
         /**
          * Attempts to preserve the input image type but ONLY if it causes no color loss.
+         * WARN: 2017-07-14: current code may not always be able to guarantee this...
          */
-        public static final int TYPE_PRESERVE_IF_LOSSLESS = -1;
+        public static final int TYPE_PRESERVE_IF_LOSSLESS = -11;
         
         /**
-         * Forces preserving the input image type EVEN if it causes color loss.
+         * Attempts to preserve the input image type but ONLY if it causes no noticeable
+         * color loss (or only very minor, e.g. as would a high-quality JPG).
          */
-        public static final int TYPE_PRESERVE_ALWAYS = -2;
+        public static final int TYPE_PRESERVE_IF_LOWLOSS = -12;
         
+        /**
+         * This is used as a flag similar to passing null or an empty value - any extra
+         * conversions are simply skipped. Only unavoidable conversions as part of the main imageop are performed.
+         */
+        public static final int TYPE_NOPRESERVE = -20;
         
         /*
          * *************************************************************
@@ -93,11 +108,11 @@ public class ImageType {
         // weird negative numbers
         
         public static Map<String, Integer> getTypeNameValueMap() {
-            return ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP;
+            return ImageType.imagePixelTypeNameValueMap;
         }
         
         public static Map<Integer, String> getTypeValueNameMap() {
-            return ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP;
+            return ImageType.imagePixelTypeValueNameMap;
         }
 
         /**
@@ -105,7 +120,7 @@ public class ImageType {
          * Throws IllegalArgumentException if invalid name.
          */
         public static int getTypeConstant(String name) throws IllegalArgumentException {
-            Integer value = ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP.get(name);
+            Integer value = ImageType.imagePixelTypeNameValueMap.get(name);
             if (value != null) return value;
             else throw new IllegalArgumentException(name + " is not a valid image pixel type TYPE_XXX constant name in " + ImagePixelType.class.getName());
         }
@@ -115,7 +130,7 @@ public class ImageType {
          * Returns default if invalid name.
          */
         public static Integer getTypeConstant(String name, Integer defaultValue) {
-            Integer value = ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP.get(name);
+            Integer value = ImageType.imagePixelTypeNameValueMap.get(name);
             return (value != null) ? value : defaultValue;
         }
         
@@ -124,7 +139,7 @@ public class ImageType {
          * Throws IllegalArgumentException if invalid value.
          */
         public static String getTypeConstantName(int value) throws IllegalArgumentException {
-            String name = ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP.get(value);
+            String name = ImageType.imagePixelTypeValueNameMap.get(value);
             if (name != null) return name;
             else throw new IllegalArgumentException(value + " is not a valid image pixel type TYPE_XXX constant value in " + ImagePixelType.class.getName());
         }
@@ -134,7 +149,7 @@ public class ImageType {
          * Returns default if invalid value.
          */
         public static String getTypeConstantName(int value, String defaultValue) {
-            String name = ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP.get(value);
+            String name = ImageType.imagePixelTypeValueNameMap.get(value);
             return (name != null) ? name : defaultValue;
         }
         
@@ -173,8 +188,8 @@ public class ImageType {
          */
         
         public static boolean isTypeIndexed(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_BYTE_INDEXED || 
-                    imagePixelType == BufferedImage.TYPE_BYTE_BINARY;
+            return imagePixelType == TYPE_BYTE_INDEXED || 
+                    imagePixelType == TYPE_BYTE_BINARY;
         }
         
         public static boolean isTypeIndexed(BufferedImage image) {
@@ -182,7 +197,7 @@ public class ImageType {
         }
         
         public static boolean isTypeCustom(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_CUSTOM;
+            return imagePixelType == TYPE_CUSTOM;
         }
         
         public static boolean isTypeCustom(BufferedImage image) {
@@ -190,9 +205,9 @@ public class ImageType {
         }
         
         public static boolean isTypeIndexedOrCustom(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_BYTE_INDEXED || 
-                    imagePixelType == BufferedImage.TYPE_BYTE_BINARY || 
-                    imagePixelType == BufferedImage.TYPE_CUSTOM;
+            return imagePixelType == TYPE_BYTE_INDEXED || 
+                    imagePixelType == TYPE_BYTE_BINARY || 
+                    imagePixelType == TYPE_CUSTOM;
         }
         
         public static boolean isTypeIndexedOrCustom(BufferedImage image) {
@@ -200,12 +215,48 @@ public class ImageType {
         }
         
         public static boolean isTypePreserve(int imagePixelType) {
-            return imagePixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS || 
-                    imagePixelType == ImagePixelType.TYPE_PRESERVE_ALWAYS;
+            return imagePixelType == TYPE_PRESERVE_IF_LOSSLESS || 
+                    imagePixelType == TYPE_PRESERVE_ALWAYS ||
+                    imagePixelType == TYPE_PRESERVE_IF_LOWLOSS;
+        }
+        
+        public static boolean isTypeNoPreserve(int imagePixelType) {
+            return imagePixelType == TYPE_NOPRESERVE;
         }
         
         public static boolean isTypeSpecial(int imagePixelType) {
-            return isTypePreserve(imagePixelType);
+            return isTypePreserve(imagePixelType) || isTypeNoPreserve(imagePixelType);
+        }
+        
+        /**
+         * If targetPixelType is a TYPE_PRESERVE_XX, returns srcImagePixelType;
+         * if it is TYPE_NOPRESERVE, returns currentPixelType (usually the result type of an image op);
+         * otherwise returns targetPixelType.
+         */
+        public static int resolveTargetType(int targetPixelType, int srcImagePixelType, int currentPixelType) {
+            if (isTypePreserve(targetPixelType)) return srcImagePixelType;
+            else if (isTypeNoPreserve(targetPixelType)) return currentPixelType;
+            else return targetPixelType;
+        }
+
+        public static int resolveTargetType(int targetPixelType, BufferedImage srcImage, int currentPixelType) {
+            return resolveTargetType(targetPixelType, srcImage.getType(), currentPixelType);
+        }
+        
+        /**
+         * If targetPixelType is a TYPE_PRESERVE_XX, returns srcImagePixelType;
+         * if it is TYPE_NOPRESERVE, throws IllegalArgumentException;
+         * otherwise returns targetPixelType.
+         */
+        public static int resolveTargetType(int targetPixelType, int srcImagePixelType) {
+            if (isTypePreserve(targetPixelType)) return srcImagePixelType;
+            else if (isTypeNoPreserve(targetPixelType)) 
+                throw new IllegalArgumentException("TARGET_NOPRESERVE or equivalent non-type was passed, but no current value available");
+            else return targetPixelType;
+        }
+
+        public static int resolveTargetType(int targetPixelType, BufferedImage srcImage) {
+            return resolveTargetType(targetPixelType, srcImage.getType());
         }
     }
 
@@ -213,14 +264,14 @@ public class ImageType {
      * Maps all {@link java.awt.image.BufferedImage} and {@link ImagePixelType} <code>TYPE_XXX</code>
      * constant definitions to their int values; for parsing.
      */
-    private static final Map<String, Integer> IMAGEPIXELTYPE_NAME_VALUE_MAP = Collections.unmodifiableMap(
+    private static final Map<String, Integer> imagePixelTypeNameValueMap = Collections.unmodifiableMap(
             populateClassIntFieldNameValueMapSafe(ImagePixelType.class, "TYPE_", new HashMap<String, Integer>()));
     /**
      * Maps all {@link java.awt.image.BufferedImage} and {@link ImagePixelType} <code>TYPE_XXX</code>
      * constant int values back to their names; for parsing.
      */
-    private static final Map<Integer, String> IMAGEPIXELTYPE_VALUE_NAME_MAP = Collections.unmodifiableMap(
-            UtilMisc.putAllReverseMapping(new HashMap<Integer, String>(), IMAGEPIXELTYPE_NAME_VALUE_MAP));
+    private static final Map<Integer, String> imagePixelTypeValueNameMap = Collections.unmodifiableMap(
+            UtilMisc.putAllReverseMapping(new HashMap<Integer, String>(), imagePixelTypeNameValueMap));
 
     
     /*
@@ -235,17 +286,28 @@ public class ImageType {
      */
     public static final ImageType EMPTY = new ImageType();
     /**
-     * Special preserve instance that instructs to try to preserve the original image type,
-     * UNLESS the preservation produces color or data loss.
-     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
-     */
-    public static final ImageType PRESERVE_IF_LOSSLESS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
-    /**
      * Special preserve instance that instructs to always preserve the original image type,
      * EVEN if it results in color or data loss.
      * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
      */
     public static final ImageType PRESERVE_ALWAYS = new ImageType(ImagePixelType.TYPE_PRESERVE_ALWAYS);
+    /**
+     * Special preserve instance that instructs to try to preserve the original image type,
+     * UNLESS the preservation produces color or data loss.
+     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
+     * WARN: 2017-07-14: current code may not always be able to guarantee this...
+     */
+    public static final ImageType PRESERVE_IF_LOSSLESS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
+    /**
+     * Special preserve instance that instructs to try to preserve the original image type,
+     * UNLESS the preservation produces too much color or data loss.
+     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
+     */
+    public static final ImageType PRESERVE_IF_LOWLOSS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOWLOSS);
+    /**
+     * Special no-preserve instance that prevents any extra conversions - similar to passing null or EMPTY.
+     */
+    public static final ImageType NOPRESERVE = new ImageType(ImagePixelType.TYPE_NOPRESERVE);
     /**
      * Generic TYPE_INT_ARGB_PRE for full RGB with fake alpha.
      * NOTE: This is the stock ofbiz setting, and was previously hardcoded throughout all java files.

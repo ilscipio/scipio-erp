@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ofbiz.base.util.UtilMisc;
+
 /**
  * SCIPIO: Common image operation base class (scaling, etc.), does all the boilerplate stuff.
  * Added 2017-07-10.
@@ -129,6 +131,10 @@ public abstract class AbstractImageOp implements ImageOp {
         }
     }
 
+    protected static Boolean getForceOp(Map<String, Object> options) {
+        return UtilMisc.booleanValue(options.get("forceop"));
+    }
+    
     /**
      * Parses (if needed) and returns an ImageType option from the options map.
      * This always returns an instance except when the map does not contain the field name at all,

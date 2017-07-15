@@ -51,12 +51,17 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
     
     @Override
     public BufferedImage scaleImage(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) throws IOException {
-        if (!requiresScaling(image, targetWidth, targetHeight)) return image;
-        if (ImageUtil.debugOn()) return scaleImageDebug(image, targetWidth, targetHeight, getEffectiveScalingOptions(image, targetWidth, targetHeight, options));
-        else return scaleImageCore(image, targetWidth, targetHeight, getEffectiveScalingOptions(image, targetWidth, targetHeight, options));
+        options = getEffectiveScalingOptions(image, targetWidth, targetHeight, options);
+        if (!requiresScaling(image, targetWidth, targetHeight, options)) return image;
+        if (ImageUtil.debugOn()) return scaleImageDebug(image, targetWidth, targetHeight, options);
+        else return scaleImageCore(image, targetWidth, targetHeight, options);
     }
     
-    protected boolean requiresScaling(BufferedImage image, int targetWidth, int targetHeight) {
+    protected boolean requiresScaling(BufferedImage image, int targetWidth, int targetHeight, Map<String, Object> options) {
+        if (Boolean.TRUE.equals(getForceOp(options))) {
+            return true;
+        }
+        
         // SPECIAL CASE: by default, in all cases, if the image is same dimensions, we'll just return as-is
         if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
             if (ImageUtil.verboseOn()) Debug.logInfo("Not scaling image; output dimensions match input (" + targetWidth + "x" + targetHeight + ")", module);
@@ -127,8 +132,98 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
         return imageType != null ? imageType.getPixelTypeFor(srcImage) : null;
     }
     
+    protected static Integer getFallbackImagePixelType(Map<String, Object> options, BufferedImage srcImage) {
+        ImageType imageType = getImageTypeOption(options, "fallbacktype");
+        return imageType != null ? imageType.getPixelTypeFor(srcImage) : null;
+    }
+    
+    /**
+     * Returns default or fallback pixel type or null if they are set to special value, or not native-supported.
+     * Intended for scalers that can't write out to indexed/custom types (basically all of them).
+     * DEV NOTE: WARN: be careful before changing this (you may have to copy-paste it).
+     */
+    protected Integer getDefaultOrFallbackRegularNativeSupportedDestPixelType(Map<String, Object> options, Integer fallbackType, BufferedImage srcImage) {
+        Integer defaultType = getImagePixelTypeOption(options, "defaulttype", srcImage);
+        if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
+                isNativeSupportedDestImagePixelType(defaultType)) {
+            return defaultType;
+        } else {
+            // check fallback
+            if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
+                    isNativeSupportedDestImagePixelType(fallbackType)) {
+                return fallbackType;
+            } else {
+                return null;
+            }
+        }
+    }
+    
+    protected int getFirstSupportedDestPixelTypeFromAllDefaults(Map<String, Object> options, BufferedImage srcImage, Integer fallbackType) {
+        return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", fallbackType, ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
+    }
+    
+    protected int getFirstSupportedDestPixelTypeFromAllDefaults(Map<String, Object> options, BufferedImage srcImage) {
+        return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", "fallbackType", ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
+    }
+    
+    protected int getFirstSupportedDestPixelTypeFromSystemDefaults(Map<String, Object> options, BufferedImage srcImage) {
+        return getFirstSupportedDestPixelType(options, srcImage, ImageType.DEFAULT, ImageType.DEFAULT_DIRECT, ImageType.INT_ARGB_OR_RGB);
+    }
+    
+    protected Integer getFirstSupportedDestPixelTypeFromOptionDefaults(Map<String, Object> options, BufferedImage srcImage, Integer fallbackType) {
+        return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", fallbackType);
+    }
+    
+    protected Integer getFirstSupportedDestPixelTypeFromOptionDefaults(Map<String, Object> options, BufferedImage srcImage) {
+        return getFirstSupportedDestPixelType(options, srcImage, "defaulttype", "fallbackType");
+    }
+    
+    protected Integer getFirstSupportedDestPixelType(Map<String, Object> options, BufferedImage srcImage, Object... candidateTypes) {
+        for(Object candidateType : candidateTypes) {
+            if (candidateType == null) continue;
+            Integer intCandidateType = null;
+            if (candidateType instanceof Integer) {
+                intCandidateType = (Integer) candidateType;
+            } else if (candidateType instanceof ImageType) {
+                intCandidateType = ((ImageType)candidateType).getPixelTypeFor(srcImage);
+            } else if (candidateType instanceof String) {
+                intCandidateType = getImagePixelTypeOption(options, (String) candidateType, srcImage);
+            } else {
+                throw new IllegalArgumentException("invalid candidate type");
+            }
+            if (intCandidateType != null && !ImagePixelType.isTypeSpecial(intCandidateType) && 
+                    isNativeSupportedDestImagePixelType(intCandidateType)) {
+                return intCandidateType;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns true if and only if checkConvertResultImageType is expected to perform a post-op conversion.
+     * Used to optimize the intermediate image type.
+     * Does NOT guarantee that a post-op conversion will actually happen.
+     */
+    protected boolean isPostConvertResultImage(BufferedImage srcImage, Map<String, Object> options, Integer targetPixelType) {
+        Integer effTargetPixelType = ImagePixelType.resolveTargetType(targetPixelType, srcImage);
+        
+        // DO NOT convert to indexed if lossless mode (TODO: REVIEW)
+        if (ImagePixelType.isTypeIndexedOrCustom(effTargetPixelType) && targetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
+            return false;
+        return true;
+    }
+    
     /**
      * Best-effort attempt to honor requests for specific format or orig-preserve of the returned image after an image operation.
+     * <p>
+     * COLOR LOSS: In principle, by default this method may produce color loss but only within the limits acceptable for the
+     * flag {@link org.ofbiz.common.image.ImageType.ImagePixelType#TYPE_PRESERVE_IF_LOWLOSS}.
+     * If targetPixelType is TYPE_PRESERVE_IF_LOSSLESS this will return modifiedImage as-is.
+     * WARN: This guarantee currently mainly applies only to target images of indexed type.
+     * <p>
+     * WARN: the color loss guarantee may not apply for TYPE_CUSTOM.
+     * FIXME: the color loss guarantee currently does not properly evaluate for non-indexed types!
+     * (should check for BPP and alpha channel downgrade...)
      * <p>
      * NOTE: targetType should be already resolved (don't pass TYPE_PRESERVE here).
      * <p>
@@ -136,33 +231,32 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
      * may miss details about the image...
      */
     protected BufferedImage checkConvertResultImageType(BufferedImage srcImage, BufferedImage modifiedImage, 
-            Map<String, Object> options, Integer targetPixelType, Integer fallbackPixelType) {
-        if (targetPixelType == null) return modifiedImage;
-        Integer origTargetPixelType = targetPixelType;
-        
-        if (ImagePixelType.isTypePreserve(targetPixelType)) targetPixelType = srcImage.getType();
-        
+            Map<String, Object> options, Integer targetPixelType) {
+        if (targetPixelType == null || targetPixelType == ImagePixelType.TYPE_NOPRESERVE) return modifiedImage;
+        Integer effTargetPixelType = ImagePixelType.resolveTargetType(targetPixelType, srcImage);
+
         // APPROXIMATION of an image type equality check
-        if (modifiedImage.getType() == targetPixelType) return modifiedImage;
+        if (modifiedImage.getType() == effTargetPixelType) return modifiedImage;
         
-        // TODO: REVIEW: DO NOT convert to indexed if lossless mode
-        if (ImagePixelType.isTypeIndexedOrCustom(targetPixelType) && origTargetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
+        // DO NOT convert to indexed if lossless mode (TODO: REVIEW)
+        if (ImagePixelType.isTypeIndexedOrCustom(effTargetPixelType) && targetPixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS)
             return modifiedImage;
+        
+        // TODO?: other missing type conversion loss checks...
         
         BufferedImage resultImage;
         // FIXME?: we make the assumption that if the type is the same, it means all other parameters
         // about color space and data should be preserved from the original - but this is flawed assumption
-        if (targetPixelType == srcImage.getType()) {
+        if (effTargetPixelType == srcImage.getType()) {
             // ALTERNATIVE implementation (not as good):
             //resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), targetPixelType, srcImage.getColorModel());
             resultImage = ImageTransform.createCompatibleBufferedImage(srcImage, modifiedImage.getWidth(), modifiedImage.getHeight());
         } else {
-            resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), targetPixelType, null);
+            resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(), modifiedImage.getHeight(), effTargetPixelType, null);
         }
-        //RenderingHints renderingHints = new RenderingHints(
-        //        RenderingHints.KEY_COLOR_RENDERING,
-        //        RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        RenderingHints renderingHints = null;
+
+        // WARN: this may not be respected by Graphics2D.drawImage - see copyToBufferedImage comments
+        RenderingHints renderingHints = ImageTransform.getNoDitheringRenderingHintsIfIndexed(resultImage.getType());
         
         if (ImageUtil.verboseOn()) 
             Debug.logInfo("Applying required image pixel type post-op conversion ("
@@ -170,7 +264,7 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
                     + "; post-op type: " + ImageType.printImageTypeInfo(modifiedImage)
                     + "; target type: " + ImageType.printImageTypeInfo(resultImage)
                     + ")", module);
-                
+
         ImageTransform.copyToBufferedImage(modifiedImage, resultImage, renderingHints);
         return resultImage;
     }

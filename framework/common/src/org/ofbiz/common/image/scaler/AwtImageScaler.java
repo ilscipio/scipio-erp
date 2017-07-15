@@ -89,16 +89,15 @@ public class AwtImageScaler extends AbstractImageScaler {
         Integer filter = getFilter(options);
         if (filter == null) filter = 0;
         
-        // FIXME?: it's unclear whether getScaledInstance is correcting preserving the ColorModel
-        // for indexed images here... but this is just for backward-compat anyway; the other
-        // scalers are better in every way.
-        
+        // WARN: getScaledInstance is an ancient and hardcoded method. It's usually here for
+        // backward-compat, because it's what Ofbiz was using.
         Image modifiedImage = image.getScaledInstance(targetWidth, targetHeight, filter);
 
         Integer targetType = getMergedTargetImagePixelType(options, image);
-        if (targetType != null) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
-            
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
+            int idealType = ImagePixelType.resolveTargetType(targetType, image);
+
+            // WARN: not using all color information to check preservation intention...
             if (idealType == image.getType()) {
                 BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(image, modifiedImage.getWidth(null), modifiedImage.getHeight(null));
                 ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
@@ -109,6 +108,7 @@ public class AwtImageScaler extends AbstractImageScaler {
                 return resultImage;
             }
         } else {
+            // WARN: this is flawed, but it will practically never happen.
             return ImageTransform.toCompatibleBufferedImage(modifiedImage, image.getType(), image.getColorModel());
         }
     }
@@ -124,6 +124,11 @@ public class AwtImageScaler extends AbstractImageScaler {
             if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
             return filterMap.get(filterName);
         }
+    }
+
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+        return true; // TODO: review
     }
 
 }

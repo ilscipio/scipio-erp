@@ -125,47 +125,26 @@ public class MnjimImageScaler extends AbstractImageScaler {
         // TODO: REVIEW: the new BufferedImage calls do not transfer over all possible info like ColorModel, but morten itself doesn't either, so...
         // maybe we should re-check TYPE_PRESERVE and call ImageTransform.createCompatibleBufferedImage...
         Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
         BufferedImage resultImage;
-        if (targetType != null) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
+            int idealType = ImagePixelType.resolveTargetType(targetType, image);
             
-            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
-                // morten can't write out to indexed or custom, and if we try to convert after, there is a chance of loss.
-                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-                    // if preserve is not high prio (TYPE_PRESERVE_IF_LOSSLESS only) we will just not honor the idealTarget.
-                    // NOTE: defaultType could be already included in targetType, but not always, so we have to recheck it...
-                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
-                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
-                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
-                        // for output type, use defaultType if it's a valid value
-                        BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
-                        resultImage = op.filter(image, destImage);
-                    } else {
-                        // check fallback
-                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
-                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
-                            // next use fallback if it was valid
-                            BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
-                            resultImage = op.filter(image, destImage);
-                        } else {
-                            // if no usable default or fallback, leave it to morten to produce lossless
-                            resultImage = op.filter(image, null);
-                        }
-                    }
-                } else {
-                    // if a specific type was requested or TYPE_PRESERVE_ALWAYS, we'll try post-convert even if possible loss.
-                    // so we will let morten pick its poison and checkConvertResultImageType will reconvert it after
-                    resultImage = op.filter(image, null);
-                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType, fallbackType);
-                }
-            } else {
-                // here morten will _probably_ support the type we want...
-                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
+            if (isNativeSupportedDestImagePixelType(idealType)) {
+                // here lib will _probably_ support the type we want...
+                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType); // WARN: possible ColorModel info loss here? (but morten does this)
                 resultImage = op.filter(image, destImage);
+            } else {
+                if (isPostConvertResultImage(image, options, targetType)) {
+                    resultImage = op.filter(image, null); // lib default image type should preserve best for intermediate
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType);
+                } else {
+                    int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+                    resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
+                }
             }
         } else {
-            resultImage = op.filter(image, null);
+            int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+            resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
         }
         return resultImage;
     }
@@ -181,5 +160,11 @@ public class MnjimImageScaler extends AbstractImageScaler {
             if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
             return filterMap.get(filterName);
         }
+    }
+    
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+        // TODO: REVIEW
+        return !ImagePixelType.isTypeIndexedOrCustom(targetPixelType);
     }
 }

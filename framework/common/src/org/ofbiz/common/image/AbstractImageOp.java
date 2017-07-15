@@ -159,4 +159,10 @@ public abstract class AbstractImageOp implements ImageOp {
         return null;
     }
     
+    /**
+     * Should return true if the the op implementation PROPERLY supports writing out directly
+     * to given dest image type without extra conversions.
+     */
+    public abstract boolean isNativeSupportedDestImagePixelType(int targetPixelType);
+    
 }

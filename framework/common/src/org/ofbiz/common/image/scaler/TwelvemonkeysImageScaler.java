@@ -98,39 +98,28 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
         // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
     
         Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getFallbackImagePixelType(options, image);
-        BufferedImage result;
-        if (targetType != null) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+        BufferedImage resultImage;
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
+            int idealType = ImagePixelType.resolveTargetType(targetType, image);
             
-            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
-                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
-                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
-                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
-                        BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
-                        result = op.filter(image, destImage);
-                    } else {
-                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
-                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
-                            BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
-                            result = op.filter(image, destImage);
-                        } else {
-                            result = op.filter(image, null);
-                        }
-                    }
-                } else {
-                    result = op.filter(image, null);
-                    result = checkConvertResultImageType(image, result, options, targetType, fallbackType);
-                }
+            if (isNativeSupportedDestImagePixelType(idealType)) {
+                // here lib will _probably_ support the type we want...
+                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType); // WARN: possible ColorModel info loss here? (but morten does this)
+                resultImage = op.filter(image, destImage);
             } else {
-                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
-                result = op.filter(image, destImage);
+                if (isPostConvertResultImage(image, options, targetType)) {
+                    resultImage = op.filter(image, null); // lib default image type should preserve best for intermediate
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType);
+                } else {
+                    int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+                    resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
+                }
             }
         } else {
-            result = op.filter(image, null);
+            int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+            resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
         }
-        return result;
+        return resultImage;
     }
     
     // NOTE: defaults are handled through the options merging with defaults
@@ -144,5 +133,10 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
             if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
             return filterMap.get(filterName);
         }
+    }
+    
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+        return !ImagePixelType.isTypeIndexedOrCustom(targetPixelType);
     }
 }

@@ -224,6 +224,10 @@ public class ImageType {
             return imagePixelType == TYPE_NOPRESERVE;
         }
         
+        public static boolean isTypeNoPreserveOrNull(Integer imagePixelType) {
+            return imagePixelType == null || imagePixelType == TYPE_NOPRESERVE;
+        }
+        
         public static boolean isTypeSpecial(int imagePixelType) {
             return isTypePreserve(imagePixelType) || isTypeNoPreserve(imagePixelType);
         }
@@ -335,9 +339,22 @@ public class ImageType {
      * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
      */
     public static final ImageType DEFAULT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.type"), 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default"), 
             INT_ARGB_OR_RGB, 
-            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.type");
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default");
+    /**
+     * SCIPIO: Global system default BufferedImage/ImageType direct/non-indexed RGB type.
+     * This is usually the same as DEFAULT but this one guarantees no index/custom/weird type.
+     * <p>
+     * If you change DEFAULT to something weird, then you need to assign this one to something direct.
+     * <p>
+     * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE only for this, but other image libraries
+     * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
+     */
+    public static final ImageType DEFAULT_DIRECT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct"), 
+            DEFAULT, 
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct");
 
     
     /*

@@ -212,14 +212,20 @@ public abstract class ImageUtil {
         return Arrays.asList(new Properties[]{UtilProperties.getProperties(resource)});
     }
     
+    public static Map<String, Object> makeOptions() {
+        return new HashMap<String, Object>(); 
+    }
+    
+    public static Map<String, Object> copyOptions(Map<String, Object> options) {
+        return options != null ? new HashMap<String, Object>(options) : new HashMap<String, Object>(); 
+    }
+    
     /**
-     * Adds an image option to the options map without modifying the original, and returns the new one.
-     * NOTE: null value is significant.
-     * 
+     * Adds an image option to the options map and returns.
+     * If options were null, returns a new map (result never null).
      */
     public static Map<String, Object> addImageOpOption(Map<String, Object> options, String name, Object value) {
         if (options == null) options = new HashMap<>();
-        else options = new HashMap<>(options);
         options.put(name, value);
         return options;
     }
@@ -228,6 +234,7 @@ public abstract class ImageUtil {
      * Adds an image option to the options map without modifying the original, and returns the new one,
      * but only if the map did not already contain the name as key.
      * NOTE: null value is significant.
+     * If options were null, returns a new map (result never null).
      * TODO: REVIEW: need LinkedHashMap?
      */
     public static Map<String, Object> addImageOpOptionIfNotSet(Map<String, Object> options, String name, Object value) {
@@ -235,8 +242,26 @@ public abstract class ImageUtil {
             options = new HashMap<>();
             options.put(name, value);
         } else if (!options.containsKey(name)) {
-            options = new HashMap<>(options);
             options.put(name, value);
+        }
+        return options;
+    }
+    
+    /**
+     * Similar to {@link #addImageOpOptionIfNotSet}, but only sets the option if neither the incoming options
+     * nor the ImageOp's defaults already contain the option.
+     * This allows to set defaults that have lower priority than both incoming and config options.
+     */
+    public static Map<String, Object> addImageOpOptionIfDefaultNotSet(Map<String, Object> options, String name, Object value, ImageOp imageOpInst) {
+        if (options == null) {
+            options = new HashMap<>();
+            if (!imageOpInst.getConfiguredAndDefaultOptions().containsKey(name)) {
+                options.put(name, value);
+            }
+        } else if (!options.containsKey(name)) {
+            if (!imageOpInst.getConfiguredAndDefaultOptions().containsKey(name)) {
+                options.put(name, value);
+            }
         }
         return options;
     }

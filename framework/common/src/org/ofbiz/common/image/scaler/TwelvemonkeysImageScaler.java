@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 import com.twelvemonkeys.image.ResampleOp;
 
@@ -97,19 +100,21 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
         // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
     
-        Integer targetType = getMergedTargetImagePixelType(options, image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
         BufferedImage resultImage;
-        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
-            int idealType = ImagePixelType.resolveTargetType(targetType, image);
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
             
-            if (isNativeSupportedDestImagePixelType(idealType)) {
+            if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
                 // here lib will _probably_ support the type we want...
-                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType); // WARN: possible ColorModel info loss here? (but morten does this)
+                BufferedImage destImage = ImageTransform.createBufferedImage(resolvedTargetTypeInfo, targetWidth, targetHeight);
                 resultImage = op.filter(image, destImage);
             } else {
-                if (isPostConvertResultImage(image, options, targetType)) {
+                if (isPostConvertResultImage(image, options, targetTypeInfo)) {
                     resultImage = op.filter(image, null); // lib default image type should preserve best for intermediate
-                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType);
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
                 } else {
                     int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
                     resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
@@ -136,7 +141,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
-        return !ImagePixelType.isTypeIndexedOrCustom(targetPixelType);
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
+        return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);
     }
 }

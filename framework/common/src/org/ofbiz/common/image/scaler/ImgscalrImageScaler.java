@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.imgscalr.Scalr;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 /**
  * SCIPIO: Imgscalr image scaler implementation.
@@ -90,11 +92,12 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         // FIXME?: imgscalr supports no target image types at all...
         BufferedImage result = Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
         
-        Integer targetType = getMergedTargetImagePixelType(options, image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
 
         // FIXME?: for now don't bother post-converting anything at all unless we're forced...
-        return isPostConvertResultImage(image, options, targetType) ?
-                checkConvertResultImageType(image, result, options, targetType) : result;
+        return isPostConvertResultImage(image, options, targetTypeInfo) ?
+                checkConvertResultImageType(image, result, options, targetTypeInfo) : result;
     }
     
     // NOTE: defaults are handled through the options merging with defaults
@@ -111,7 +114,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         return false; // FIXME: this isn't true, it can output ONE format... should check...
     }
 }

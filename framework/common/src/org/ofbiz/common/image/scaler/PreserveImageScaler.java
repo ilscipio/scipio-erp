@@ -62,7 +62,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         return true;
     }
 }

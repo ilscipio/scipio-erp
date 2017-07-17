@@ -9,7 +9,9 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 /**
  * SCIPIO: Java AWT (JRE/JDK) image scaler implementation.
@@ -93,23 +95,27 @@ public class AwtImageScaler extends AbstractImageScaler {
         // backward-compat, because it's what Ofbiz was using.
         Image modifiedImage = image.getScaledInstance(targetWidth, targetHeight, filter);
 
-        Integer targetType = getMergedTargetImagePixelType(options, image);
-        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
-            int idealType = ImagePixelType.resolveTargetType(targetType, image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            //if (ImagePixelType.imageMatchesRequestedType(imageToTest, targetPixelType, targetColorMode, srcImage))
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
 
-            // WARN: not using all color information to check preservation intention...
-            if (idealType == image.getType()) {
+            // NOTE: this check and the first if block could probably be omitted, but passing BufferedImage instance
+            // is slightly better 
+            if (ImageType.imageMatchesType(image, resolvedTargetTypeInfo)) {
                 BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(image, modifiedImage.getWidth(null), modifiedImage.getHeight(null));
                 ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
                 return resultImage;
             } else {
-                BufferedImage resultImage = ImageTransform.createBufferedImage(modifiedImage.getWidth(null), modifiedImage.getHeight(null), idealType, null);
+                BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(image, resolvedTargetTypeInfo, modifiedImage.getWidth(null), modifiedImage.getHeight(null));
                 ImageTransform.copyToBufferedImage(modifiedImage, resultImage);
                 return resultImage;
             }
         } else {
             // WARN: this is flawed, but it will practically never happen.
-            return ImageTransform.toCompatibleBufferedImage(modifiedImage, image.getType(), image.getColorModel());
+            return ImageTransform.toCompatibleBufferedImage(modifiedImage, ImageTypeInfo.from(image));
         }
     }
     

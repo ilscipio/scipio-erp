@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 import com.mortennobel.imagescaling.ResampleFilter;
 import com.mortennobel.imagescaling.ResampleFilters;
@@ -124,19 +127,21 @@ public class MnjimImageScaler extends AbstractImageScaler {
         // 2) don't honor the requested image pixel type: changes the format, but usually lossless
         // TODO: REVIEW: the new BufferedImage calls do not transfer over all possible info like ColorModel, but morten itself doesn't either, so...
         // maybe we should re-check TYPE_PRESERVE and call ImageTransform.createCompatibleBufferedImage...
-        Integer targetType = getMergedTargetImagePixelType(options, image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
         BufferedImage resultImage;
-        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
-            int idealType = ImagePixelType.resolveTargetType(targetType, image);
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
             
-            if (isNativeSupportedDestImagePixelType(idealType)) {
+            if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
                 // here lib will _probably_ support the type we want...
-                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType); // WARN: possible ColorModel info loss here? (but morten does this)
+                BufferedImage destImage = ImageTransform.createBufferedImage(resolvedTargetTypeInfo, targetWidth, targetHeight);
                 resultImage = op.filter(image, destImage);
             } else {
-                if (isPostConvertResultImage(image, options, targetType)) {
+                if (isPostConvertResultImage(image, options, targetTypeInfo)) {
                     resultImage = op.filter(image, null); // lib default image type should preserve best for intermediate
-                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType);
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
                 } else {
                     int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
                     resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
@@ -163,8 +168,8 @@ public class MnjimImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         // TODO: REVIEW
-        return !ImagePixelType.isTypeIndexedOrCustom(targetPixelType);
+        return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);
     }
 }

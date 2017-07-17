@@ -10,6 +10,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
@@ -124,21 +125,23 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         
         // FIXME?: can do the TYPE_PRESERVING logic better here...
 
-        Integer targetType = getMergedTargetImagePixelType(options, image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
         BufferedImage resultImage;
-        if (!ImagePixelType.isTypeNoPreserveOrNull(targetType)) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
 
-            if (isNativeSupportedDestImagePixelType(idealType)) {
+            if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
                 // here lib will _probably_ support the type we want...
-                builder.imageType(idealType);
+                builder.imageType(resolvedTargetTypeInfo.getPixelType());
                 resultImage = builder.asBufferedImage();
             } else {
-                if (isPostConvertResultImage(image, options, targetType)) {
+                if (isPostConvertResultImage(image, options, targetTypeInfo)) {
                     // for thumbnailator, we must always specify imageType because its default is to preserve and that doesn't work
                     builder.imageType(ImageType.DEFAULT_DIRECT.getPixelTypeFor(image)); 
                     resultImage = builder.asBufferedImage();
-                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType);
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
                 } else {
                     builder.imageType(getFirstSupportedDestPixelTypeFromAllDefaults(options, image));
                     resultImage = builder.asBufferedImage();
@@ -173,8 +176,8 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
     }
     
     @Override
-    public boolean isNativeSupportedDestImagePixelType(int targetPixelType) {
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
         // NOTE: thumnnailator will accept indexed image as out but fails to preserve color space/palete...
-        return !ImagePixelType.isTypeIndexedOrCustom(targetPixelType);
+        return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);
     }
 }

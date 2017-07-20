@@ -1,15 +1,19 @@
 package org.ofbiz.common.image;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
+import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -17,6 +21,9 @@ import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * SCIPIO: Structure used to specify image types based on different image formats and conditions.
+ * NOTE: This ImageType top-level class behaves more like a factory, for ImageTypeInfo instances,
+ * but it also abstracts a versatile image type specification (that returns different value depending
+ * on its contents and the source image available in context).
  * <p>
  * This is split into low-level image pixel type-based definitions in 
  * {@link ImageType.ImagePixelType} (<code>TYPE_XXX</code> constants)
@@ -32,7 +39,8 @@ import org.ofbiz.base.util.cache.UtilCache;
  * <p>
  * Added 2017-07-12.
  */
-public class ImageType {
+@SuppressWarnings("serial")
+public class ImageType implements Serializable {
 
     /*
      * *************************************************************
@@ -72,16 +80,33 @@ public class ImageType {
          * *************************************************************
          */
 
+        // DEV NOTE: we start at -10 for future/external interoperability
+        
+        /**
+         * Forces preserving the input image type EVEN if it causes color loss
+         * or is very slow.
+         */
+        public static final int TYPE_PRESERVE_ALWAYS = -10;
         /**
          * Attempts to preserve the input image type but ONLY if it causes no color loss.
+         * WARN: 2017-07-14: current code may not always be able to guarantee this...
          */
-        public static final int TYPE_PRESERVE_IF_LOSSLESS = -1;
-        
+        public static final int TYPE_PRESERVE_IF_LOSSLESS = -11;
         /**
-         * Forces preserving the input image type EVEN if it causes color loss.
+         * Same as TYPE_PRESERVE_IF_LOSSLESS except it will also only preserve if the operation is free in cost,
+         * or in other words does not require extra conversion.
          */
-        public static final int TYPE_PRESERVE_ALWAYS = -2;
-        
+        public static final int TYPE_PRESERVE_IF_LOSSLESS_FREE = -12;
+        /**
+         * Attempts to preserve the input image type but ONLY if it causes no noticeable
+         * color loss (or only very minor, e.g. as would a high-quality JPG).
+         */
+        public static final int TYPE_PRESERVE_IF_LOWLOSS = -13;
+        /**
+         * This is used as a flag similar to passing null or an empty value - any extra
+         * conversions are simply skipped. Only unavoidable conversions as part of the main imageop are performed.
+         */
+        public static final int TYPE_NOPRESERVE = -20;
         
         /*
          * *************************************************************
@@ -93,19 +118,28 @@ public class ImageType {
         // weird negative numbers
         
         public static Map<String, Integer> getTypeNameValueMap() {
-            return ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP;
+            return ImageType.imagePixelTypeNameValueMap;
         }
         
         public static Map<Integer, String> getTypeValueNameMap() {
-            return ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP;
+            return ImageType.imagePixelTypeValueNameMap;
         }
 
+        
+        public static boolean isValidTypeConstantName(String name) {
+            return imagePixelTypeNameValueMap.containsKey(name);
+        }
+        
+        public static boolean isValidTypeConstant(int value) {
+            return imagePixelTypeValueNameMap.containsKey(value);
+        }
+        
         /**
          * Gets {@link ImagePixelType} TYPE_XXX constant by name. 
          * Throws IllegalArgumentException if invalid name.
          */
         public static int getTypeConstant(String name) throws IllegalArgumentException {
-            Integer value = ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP.get(name);
+            Integer value = ImageType.imagePixelTypeNameValueMap.get(name);
             if (value != null) return value;
             else throw new IllegalArgumentException(name + " is not a valid image pixel type TYPE_XXX constant name in " + ImagePixelType.class.getName());
         }
@@ -115,16 +149,17 @@ public class ImageType {
          * Returns default if invalid name.
          */
         public static Integer getTypeConstant(String name, Integer defaultValue) {
-            Integer value = ImageType.IMAGEPIXELTYPE_NAME_VALUE_MAP.get(name);
+            Integer value = ImageType.imagePixelTypeNameValueMap.get(name);
             return (value != null) ? value : defaultValue;
         }
+
         
         /**
          * Gets {@link ImagePixelType} TYPE_XXX constant name by value.
          * Throws IllegalArgumentException if invalid value.
          */
         public static String getTypeConstantName(int value) throws IllegalArgumentException {
-            String name = ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP.get(value);
+            String name = ImageType.imagePixelTypeValueNameMap.get(value);
             if (name != null) return name;
             else throw new IllegalArgumentException(value + " is not a valid image pixel type TYPE_XXX constant value in " + ImagePixelType.class.getName());
         }
@@ -134,9 +169,12 @@ public class ImageType {
          * Returns default if invalid value.
          */
         public static String getTypeConstantName(int value, String defaultValue) {
-            String name = ImageType.IMAGEPIXELTYPE_VALUE_NAME_MAP.get(value);
+            String name = ImageType.imagePixelTypeValueNameMap.get(value);
             return (name != null) ? name : defaultValue;
         }
+
+        
+        
         
         /**
          * SCIPIO: Dynamically gets BufferedImage int constant by name.
@@ -173,8 +211,8 @@ public class ImageType {
          */
         
         public static boolean isTypeIndexed(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_BYTE_INDEXED || 
-                    imagePixelType == BufferedImage.TYPE_BYTE_BINARY;
+            return imagePixelType == TYPE_BYTE_INDEXED || 
+                    imagePixelType == TYPE_BYTE_BINARY;
         }
         
         public static boolean isTypeIndexed(BufferedImage image) {
@@ -182,7 +220,7 @@ public class ImageType {
         }
         
         public static boolean isTypeCustom(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_CUSTOM;
+            return imagePixelType == TYPE_CUSTOM;
         }
         
         public static boolean isTypeCustom(BufferedImage image) {
@@ -190,9 +228,9 @@ public class ImageType {
         }
         
         public static boolean isTypeIndexedOrCustom(int imagePixelType) {
-            return imagePixelType == BufferedImage.TYPE_BYTE_INDEXED || 
-                    imagePixelType == BufferedImage.TYPE_BYTE_BINARY || 
-                    imagePixelType == BufferedImage.TYPE_CUSTOM;
+            return imagePixelType == TYPE_BYTE_INDEXED || 
+                    imagePixelType == TYPE_BYTE_BINARY || 
+                    imagePixelType == TYPE_CUSTOM;
         }
         
         public static boolean isTypeIndexedOrCustom(BufferedImage image) {
@@ -200,12 +238,34 @@ public class ImageType {
         }
         
         public static boolean isTypePreserve(int imagePixelType) {
-            return imagePixelType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS || 
-                    imagePixelType == ImagePixelType.TYPE_PRESERVE_ALWAYS;
+            return imagePixelType == TYPE_PRESERVE_IF_LOSSLESS || 
+                    imagePixelType == TYPE_PRESERVE_ALWAYS ||
+                    imagePixelType == TYPE_PRESERVE_IF_LOWLOSS;
+        }
+        
+        public static boolean isTypeNoPreserve(int imagePixelType) {
+            return imagePixelType == TYPE_NOPRESERVE;
+        }
+        
+        public static boolean isTypeNoPreserveOrNull(Integer imagePixelType) {
+            return imagePixelType == null || imagePixelType == TYPE_NOPRESERVE;
         }
         
         public static boolean isTypeSpecial(int imagePixelType) {
-            return isTypePreserve(imagePixelType);
+            return isTypePreserve(imagePixelType) || isTypeNoPreserve(imagePixelType);
+        }
+        
+        public static boolean isTypeDirect(int imagePixelType) {
+            return !isTypeIndexedOrCustom(imagePixelType);
+        }
+        
+        /**
+         * Returns true mainly for "direct" non-indexed types that Graphics2D.drawImage has
+         * no issues with, with respect to color loss.
+         * If the type frequently results in color loss, this will return null.
+         */
+        public static boolean isTypeImageOpFriendly(int imagePixelType) {
+            return !isTypeIndexedOrCustom(imagePixelType);
         }
     }
 
@@ -213,14 +273,14 @@ public class ImageType {
      * Maps all {@link java.awt.image.BufferedImage} and {@link ImagePixelType} <code>TYPE_XXX</code>
      * constant definitions to their int values; for parsing.
      */
-    private static final Map<String, Integer> IMAGEPIXELTYPE_NAME_VALUE_MAP = Collections.unmodifiableMap(
+    private static final Map<String, Integer> imagePixelTypeNameValueMap = Collections.unmodifiableMap(
             populateClassIntFieldNameValueMapSafe(ImagePixelType.class, "TYPE_", new HashMap<String, Integer>()));
     /**
      * Maps all {@link java.awt.image.BufferedImage} and {@link ImagePixelType} <code>TYPE_XXX</code>
      * constant int values back to their names; for parsing.
      */
-    private static final Map<Integer, String> IMAGEPIXELTYPE_VALUE_NAME_MAP = Collections.unmodifiableMap(
-            UtilMisc.putAllReverseMapping(new HashMap<Integer, String>(), IMAGEPIXELTYPE_NAME_VALUE_MAP));
+    private static final Map<Integer, String> imagePixelTypeValueNameMap = Collections.unmodifiableMap(
+            UtilMisc.putAllReverseMapping(new HashMap<Integer, String>(), imagePixelTypeNameValueMap));
 
     
     /*
@@ -235,17 +295,34 @@ public class ImageType {
      */
     public static final ImageType EMPTY = new ImageType();
     /**
-     * Special preserve instance that instructs to try to preserve the original image type,
-     * UNLESS the preservation produces color or data loss.
-     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
-     */
-    public static final ImageType PRESERVE_IF_LOSSLESS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
-    /**
      * Special preserve instance that instructs to always preserve the original image type,
      * EVEN if it results in color or data loss.
      * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
      */
     public static final ImageType PRESERVE_ALWAYS = new ImageType(ImagePixelType.TYPE_PRESERVE_ALWAYS);
+    /**
+     * Special preserve instance that instructs to try to preserve the original image type,
+     * UNLESS the preservation produces color or data loss.
+     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
+     * WARN: 2017-07-14: current code may not always be able to guarantee this...
+     */
+    public static final ImageType PRESERVE_IF_LOSSLESS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS);
+    /**
+     * Same as PRESERVE_IF_LOSSLESS except it will also only preserve if the operation is free in cost,
+     * or in other words does not require extra conversion.
+     * @see #PRESERVE_IF_LOSSLESS
+     */
+    public static final ImageType PRESERVE_IF_LOSSLESS_FREE = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS_FREE);
+    /**
+     * Special preserve instance that instructs to try to preserve the original image type,
+     * UNLESS the preservation produces too much color or data loss.
+     * NOT strictly the only empty instance - use {@link #isEmpty()} for check.
+     */
+    public static final ImageType PRESERVE_IF_LOWLOSS = new ImageType(ImagePixelType.TYPE_PRESERVE_IF_LOWLOSS);
+    /**
+     * Special no-preserve instance that prevents any extra conversions - similar to passing null or EMPTY.
+     */
+    public static final ImageType NOPRESERVE = new ImageType(ImagePixelType.TYPE_NOPRESERVE);
     /**
      * Generic TYPE_INT_ARGB_PRE for full RGB with fake alpha.
      * NOTE: This is the stock ofbiz setting, and was previously hardcoded throughout all java files.
@@ -273,9 +350,31 @@ public class ImageType {
      * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
      */
     public static final ImageType DEFAULT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
-            ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.type"), 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default"), 
             INT_ARGB_OR_RGB, 
-            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"default.type");
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default");
+    /**
+     * SCIPIO: Global system default BufferedImage/ImageType direct/non-indexed RGB type.
+     * This is usually the same as DEFAULT but this one guarantees no index/custom/weird type.
+     * <p>
+     * If you change DEFAULT to something weird, then you need to assign this one to something direct.
+     * <p>
+     * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE only for this, but other image libraries
+     * appear to use something more like TYPE_INT_ARGB/TYPE_INT_RGB, so will use that for the time being.
+     */
+    public static final ImageType DEFAULT_DIRECT = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct"), 
+            ImagePixelType.isTypeDirect(DEFAULT.getPixelTypeDefault()) ? DEFAULT : INT_ARGB_OR_RGB, 
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct");
+    /**
+     * SCIPIO: Global system default BufferedImage/ImageType for image operations. 
+     * This should usually be a single TYPE_INT_ARGB OR TYPE_4BYTE_ABGR value to preserve all color components.
+     * NOTE: ofbiz used TYPE_PRESERVE_IF_NOT_CUSTOM for this but that may not even work at this time.
+     */
+    public static final ImageType DEFAULT_IMAGEOP = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop"), 
+            DEFAULT_DIRECT, 
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop");
 
     
     /*
@@ -285,9 +384,10 @@ public class ImageType {
      */
     
     // the Integer types here are stored outside map for faster read
-    private final Integer pixelTypeDefault;
-    private final Integer pixelTypeNoAlpha;
+    private final ImageTypeInfo defaultInfo;
+    private final ImageTypeInfo noAlphaInfo;
     private final Map<String, Integer> pixelTypes;
+    private final Map<Integer, Integer> typeMappings;
     
     
     /*
@@ -299,41 +399,63 @@ public class ImageType {
     /**
      * Makes from default and noalpha.
      */
+    public ImageType(ImageTypeInfo defaultInfo, ImageTypeInfo noAlphaInfo) {
+        this.defaultInfo = defaultInfo;
+        this.noAlphaInfo = noAlphaInfo;
+        Map<String, Integer> pixelTypes = new HashMap<>();
+        pixelTypes.put("default", defaultInfo.getPixelType());
+        pixelTypes.put("noalpha", noAlphaInfo.getPixelType());
+        this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
+        this.typeMappings = Collections.emptyMap();
+    }
+    
+    /**
+     * Makes from default and noalpha.
+     */
     public ImageType(Integer pixelTypeDefault, Integer pixelTypeNoAlpha) {
-        this.pixelTypeDefault = pixelTypeDefault;
-        this.pixelTypeNoAlpha = pixelTypeNoAlpha;
+        this.defaultInfo = ImageTypeInfo.from(pixelTypeDefault);
+        this.noAlphaInfo = ImageTypeInfo.from(pixelTypeNoAlpha);
         Map<String, Integer> pixelTypes = new HashMap<>();
         pixelTypes.put("default", pixelTypeDefault);
         pixelTypes.put("noalpha", pixelTypeNoAlpha);
         this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
+        this.typeMappings = Collections.emptyMap();
     }
     
     /**
      * Makes from default only.
      */
     public ImageType(Integer pixelTypeDefault) {
-        this.pixelTypeDefault = pixelTypeDefault;
-        this.pixelTypeNoAlpha = null;
+        this.defaultInfo = ImageTypeInfo.from(pixelTypeDefault);
+        this.noAlphaInfo = ImageTypeInfo.EMPTY;
         Map<String, Integer> pixelTypes = new HashMap<>();
         pixelTypes.put("default", pixelTypeDefault);
         this.pixelTypes = Collections.unmodifiableMap(pixelTypes);
+        this.typeMappings = Collections.emptyMap();
     }
     
     /**
      * Makes completely empty instance.
      */
     public ImageType() { 
-        this.pixelTypeDefault = null;
-        this.pixelTypeNoAlpha = null;
+        this.defaultInfo = ImageTypeInfo.EMPTY;
+        this.noAlphaInfo = ImageTypeInfo.EMPTY;
         this.pixelTypes = Collections.emptyMap();
+        this.typeMappings = Collections.emptyMap();
     }
     
     /**
-     * Makes from given map.
+     * Makes from given map and typemap.
      */
-    public ImageType(Map<String, Integer> pixelTypes) {
-        this.pixelTypeDefault = pixelTypes.get("default");
-        this.pixelTypeNoAlpha = pixelTypes.get("noalpha");
+    public ImageType(Map<String, Integer> pixelTypes, Map<Integer, Integer> typeMappings) {
+        pixelTypes = new HashMap<>(pixelTypes);
+        this.defaultInfo = ImageTypeInfo.from(pixelTypes.get("default"));
+        this.noAlphaInfo = ImageTypeInfo.from(pixelTypes.get("noalpha"));
+        
+        if (typeMappings == null || typeMappings.isEmpty()) typeMappings = Collections.emptyMap();
+        else typeMappings = Collections.unmodifiableMap(new HashMap<>(typeMappings));
+        this.typeMappings = typeMappings;
+        
         this.pixelTypes = Collections.unmodifiableMap(new HashMap<>(pixelTypes));
     }
     
@@ -424,16 +546,67 @@ public class ImageType {
     protected static ImageType createFromMapInnerStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
         String[] pairs = StringUtils.split(entries, ",");
         Map<String, Integer> intMap = new HashMap<>();
+        Map<Integer, Integer> typeMapping = null;
         for(String pair : pairs) {
-            String[] nameValue = StringUtils.split(pair, "=", 2);
-            if (nameValue.length != 2) throw new IllegalArgumentException("Invalid ImageType map string representation (missing '=' char): " + origStr);
-            String name = nameValue[0];
-            String value = nameValue[1];
-            if (name.isEmpty()) throw new IllegalArgumentException("Invalid ImageType map string representation (name empty): " + origStr);
-            if (value.isEmpty()) value = null;
-            intMap.put(name, value != null ? ImagePixelType.getTypeConstant(value) : null);
+            String[] nameValue = parseMapEntryStrReprNormalized(pair, origStr);
+            if ("typemap".equals(nameValue[0]) && nameValue[1] != null) {
+                typeMapping = parseTypeMapStrReprNormalized(nameValue[1], origStr);
+            } else {
+                intMap.put(nameValue[0], nameValue[1] != null ? ImagePixelType.getTypeConstant(nameValue[1]) : null);
+            }
         }
-        return new ImageType(intMap);
+        return new ImageType(intMap, typeMapping);
+    }
+    
+    protected static Map<Integer, Integer> parseTypeMapStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
+        if (entries.startsWith("{") && entries.endsWith("}")) {
+            String[] pairs = StringUtils.split(entries, ",");
+            Map<Integer, Integer> map = new HashMap<>();
+            for(String pair : pairs) {
+                String[] nameValue = parseMapEntryStrReprNormalized(pair, origStr);
+                if (nameValue[1] != null) {
+                    try {
+                        map.put(ImagePixelType.getTypeConstant(nameValue[0]), ImagePixelType.getTypeConstant(nameValue[1]));
+                    } catch(Exception e) {
+                        throw new IllegalArgumentException("Invalid ImageType map string representation (typemap sub-map entry is not a valid type mapping, "
+                                + "e.g. should be {...,typemap={TYPE_CUSTOM=TYPE_INT_ARGB,...},} - ), but found: " + origStr + "; cause: " + e.getMessage());
+                    }
+                } else {
+                    throw new IllegalArgumentException("Invalid ImageType map string representation (typemap sub-map entry is not a valid type mapping, "
+                            + "e.g. should be {...,typemap={TYPE_CUSTOM=TYPE_INT_ARGB,...},} - ), but found: " + origStr);
+                }
+            }
+            return map;
+        } else {
+            throw new IllegalArgumentException("Invalid ImageType map string representation (typemap sub-map entry is not a valid type mapping, "
+                    + "e.g. should be {...,typemap={TYPE_CUSTOM=TYPE_INT_ARGB,...},}), but found: " + origStr);
+        }
+    }
+    
+    protected static Map<String, String> parseMapStrReprNormalized(String entries, String origStr) throws IllegalArgumentException {
+        if (entries.startsWith("{") && entries.endsWith("}")) {
+            String[] pairs = StringUtils.split(entries, ",");
+            Map<String, String> map = new HashMap<>();
+            for(String pair : pairs) {
+                String[] nameValue = parseMapEntryStrReprNormalized(pair, origStr);
+                map.put(nameValue[0], nameValue[1]);
+            }
+            return map;
+        } else {
+            throw new IllegalArgumentException("Invalid ImageType map string representation: " + origStr);
+        }
+    }
+    
+    protected static String[] parseMapEntryStrReprNormalized(String pair, String origStr) throws IllegalArgumentException {
+        String[] nameValue = StringUtils.split(pair, "=", 2);
+        if (nameValue.length != 2) throw new IllegalArgumentException("Invalid ImageType map string representation (missing '=' char): " + origStr);
+        String name = nameValue[0];
+        String value = nameValue[1];
+        if (name.isEmpty()) throw new IllegalArgumentException("Invalid ImageType map string representation (name empty): " + origStr);
+        if (value.isEmpty()) value = null;
+        nameValue[0] = name;
+        nameValue[1] = value;
+        return nameValue;
     }
     
     
@@ -450,6 +623,10 @@ public class ImageType {
         return pixelTypes.isEmpty();
     }
     
+    /**
+     * Returns true if there is a non-null pixel type for this instance.
+     * This can be used as a more useful "non-empty" check.
+     */
     public boolean hasPixelTypeDefault() {
         return getPixelTypeDefault() != null;
     }
@@ -459,14 +636,35 @@ public class ImageType {
     }
     
     /**
-     * The image type to use by default (no special conditions). 
+     * Returns default type info or ImageTypeInfo.EMPTY (never null).
+     */
+    public ImageTypeInfo getDefaultInfo() {
+        return defaultInfo;
+    }
+    
+    /**
+     * Returns noalpha type info, with fallback on default info or ImageTypeInfo.EMPTY (never null).
+     */
+    public ImageTypeInfo getNoAlphaInfo() {
+        return noAlphaInfo != null ? noAlphaInfo : getDefaultInfo();
+    }
+    
+    /**
+     * Returns noalpha type info or ImageTypeInfo.EMPTY (never null).
+     */
+    public ImageTypeInfo getNoAlphaInfoRaw() {
+        return noAlphaInfo != null ? noAlphaInfo : ImageTypeInfo.EMPTY;
+    }
+    
+    /**
+     * The image type to use by default (no conditions). 
      */
     public Integer getPixelTypeDefault() {
         return getPixelTypeDefaultRaw();
     }
     
     public Integer getPixelTypeDefaultRaw() {
-        return pixelTypeDefault;
+        return defaultInfo.getPixelType();
     }
     
     /**
@@ -477,7 +675,7 @@ public class ImageType {
     }
     
     public Integer getPixelTypeNoAlphaRaw() {
-        return pixelTypeNoAlpha;
+        return noAlphaInfo.getPixelType();
     }
 
     /**
@@ -495,8 +693,13 @@ public class ImageType {
     /**
      * As read-only map.
      */
-    public Map<String, Integer> asMap() {
-        return pixelTypes;
+    public Map<String, Object> asMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.putAll(pixelTypes);
+        if (!typeMappings.isEmpty()) {
+            map.put("typemap", typeMappings);
+        }
+        return Collections.unmodifiableMap(map);
     }
     
     @Override
@@ -509,22 +712,51 @@ public class ImageType {
         return ImagePixelType.getTypeConstantName(pixelType, "{}");
     }
     
-    public static String makePixelTypeMapStrRepr(Map<String, Integer> pixelTypes) {
+    /**
+     * TODO: REVIEW: sketchy
+     */
+    private static String makePixelTypeMapStrRepr(Map<?, ?> map) {
         StringBuilder sb = new StringBuilder("{");
-        if (pixelTypes.containsKey("default")) { // show first
+        if (map.containsKey("default")) { // show first
             sb.append("default=");
-            sb.append(ImagePixelType.getTypeConstantName(pixelTypes.get("default"), ""));
+            sb.append(ImagePixelType.getTypeConstantName((Integer) map.get("default"), ""));
         }
-        for(Map.Entry<String, Integer> entry : pixelTypes.entrySet()) {
-            String name = entry.getKey();
-            if ("default".equals(name)) continue;
+        makePixelTypeMapStrRepr(map, sb, "default");
+        sb.append("}");
+        return sb.toString();
+    }
+    
+    private static void makePixelTypeMapStrRepr(Map<?, ?> map, StringBuilder sb, String... skipKeys) {
+        sb.append("{");
+        for(Map.Entry<?, ?> entry : map.entrySet()) {
+            String name;
+            if (entry.getKey() instanceof String) {
+                name = (String) entry.getKey();
+            } else if (entry.getKey() instanceof Integer) {
+                name = ImagePixelType.getTypeConstantName((Integer) entry.getKey(), "");
+            } else {
+                name = entry.getKey().toString();
+            }
+            if (Arrays.asList(skipKeys).contains(name)) continue;
             if (sb.length() > 1) sb.append(",");
             sb.append(name);
             sb.append("=");
-            sb.append(ImagePixelType.getTypeConstantName(entry.getValue(), ""));
+            Object value = entry.getValue();
+            if (value == null) {
+                sb.append("");
+            } else if (value instanceof String) {
+                sb.append((String)value);
+            } else if (value instanceof Integer) {
+                sb.append(ImagePixelType.getTypeConstantName((Integer) entry.getValue(), ""));
+            } else if (value instanceof Map) {
+                sb.append("{");
+                makePixelTypeMapStrRepr(UtilGenerics.checkMap(value), sb);
+                sb.append("}");
+            } else {
+                sb.append(value);
+            }
         }
         sb.append("}");
-        return sb.toString();
     }
     
     
@@ -535,11 +767,148 @@ public class ImageType {
      */
     
     /**
-     * Resolves the image pixel type to use for the given image.
+     * The image type info needed to properly describe an image type.
+     * NOTE: pixel type is NOT sufficient to describe type, that's why this exists, and
+     * because can't get BufferedImage/ImagePixelType type easily from ColorModel.
+     */
+    public static class ImageTypeInfo implements Serializable {
+        public static final ImageTypeInfo EMPTY = new ImageTypeInfo();
+        private static Map<Integer, ImageTypeInfo> pixelTypeInfoCache = Collections.emptyMap(); // allows unique instances
+        
+        protected final Integer pixelType;
+        protected final ColorModel colorModel;
+        
+        protected ImageTypeInfo(Integer pixelType, ColorModel colorModel) {
+            this.pixelType = pixelType;
+            this.colorModel = colorModel;
+        }
+        
+        protected ImageTypeInfo(Integer pixelType) {
+            this.pixelType = pixelType;
+            this.colorModel = null;
+        }
+        
+        protected ImageTypeInfo(BufferedImage image) {
+            this.pixelType = image.getType();
+            this.colorModel = image.getColorModel();
+        }
+        
+        protected ImageTypeInfo() { this(null, null); }
+        
+        public static ImageTypeInfo from(Integer pixelType, ColorModel colorModel) throws IllegalArgumentException {
+            if (colorModel != null) return new ImageTypeInfo(pixelType, colorModel);
+            else if (pixelType == null) return EMPTY;
+            else {
+                ImageTypeInfo info = pixelTypeInfoCache.get(pixelType);
+                if (info == null) {
+                    if (!ImagePixelType.isValidTypeConstant(pixelType)) {
+                        throw new IllegalArgumentException("Invalid ImagePixelType/BufferedImage TYPE_XXX constant value: " + pixelType);
+                    }
+                    info = new ImageTypeInfo(pixelType);
+                    // NOTE: full copy + unmodifiableMap SHOULD ensure thread safety
+                    Map<Integer, ImageTypeInfo> cache = new HashMap<>(pixelTypeInfoCache);
+                    cache.put(pixelType, info);
+                    pixelTypeInfoCache = Collections.unmodifiableMap(cache);
+                }
+                return info;
+            }
+        }
+        
+        public static ImageTypeInfo from(Integer pixelType) throws IllegalArgumentException {
+            return from(pixelType, null);
+        }
+        
+        public static ImageTypeInfo from(BufferedImage image) throws IllegalArgumentException {
+            return from(image.getType(), image.getColorModel());
+        }
+        
+        /**
+         * TODO: NOT IMPLEMENTED - IS IT POSSIBLE??
+         */
+        public static ImageTypeInfo from(Image image) throws IllegalArgumentException {
+            throw new UnsupportedOperationException("Cannot make ImageTypeInfo from " 
+                    + Image.class.getName() + " class; please use BufferedImage");
+        }
+        
+        public Integer getPixelType() {
+            return pixelType;
+        }
+        public ColorModel getColorModel() {
+            return colorModel;
+        }
+        
+        protected boolean imageMatchesType(BufferedImage imageToTest) {
+            return ImageType.imageMatchesType(imageToTest, getPixelType(), getColorModel());
+        }
+        
+        protected boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType) {
+            return ImageType.imageMatchesRequestedType(imageToTest, getPixelType(), getColorModel());
+        }
+        
+        protected boolean imageMatchesRequestedType(BufferedImage imageToTest, BufferedImage srcImage) {
+            return ImageType.imageMatchesRequestedType(imageToTest, getPixelType(), getColorModel(), srcImage);
+        }
+        
+        protected ImageTypeInfo resolveTargetType(BufferedImage srcImage) {
+            if (ImagePixelType.isTypePreserve(getPixelType())) return ImageTypeInfo.from(srcImage);
+            else if (ImagePixelType.isTypeNoPreserve(getPixelType())) 
+                throw new IllegalArgumentException("TARGET_NOPRESERVE or equivalent non-type was passed,"
+                        + " but no 'current' image type value available from this overload");
+            return this;
+        }
+        
+    }
+    
+    /**
+     * Resolves the image type info to use for the given image (RECOMMENDED OVERLOAD).
+     * May return null.
+     */
+    public ImageTypeInfo getImageTypeInfoFor(BufferedImage image) {
+        return getImageTypeInfoFor(image.getType(), image.getColorModel());
+    }
+    
+    /**
+     * Resolves the image type info to use for the given color model.
+     * May return null.
+     */
+    public ImageTypeInfo getImageTypeInfoFor(Integer targetPixelType, ColorModel colorModel) {
+        Integer resultPixelType = null;
+        ColorModel resultColorModel = null; // TODO: DEV NOTE: this must NOT be the colorModel parameter!!!
+        
+        if (targetPixelType != null) resultPixelType = typeMappings.get(targetPixelType);
+        if (resultPixelType == null && (colorModel != null && !colorModel.hasAlpha())) resultPixelType = getPixelTypeNoAlpha();
+        if (resultPixelType == null) resultPixelType = getPixelTypeDefault();
+        
+        return new ImageTypeInfo(resultPixelType, resultColorModel);
+    }
+    
+    /**
+     * Resolves the image type info to use for the given color model.
+     * May return null.
+     */
+    public ImageTypeInfo getImageTypeInfoFor(Integer targetPixelType) {
+        return getImageTypeInfoFor(targetPixelType, null);
+    }
+    
+    
+    /**
+     * Resolves the image pixel type to use for the given image (RECOMMENDED OVERLOAD).
      * May return null.
      */
     public Integer getPixelTypeFor(BufferedImage image) {
-        if (!image.getColorModel().hasAlpha()) return getPixelTypeNoAlpha();
+        return getPixelTypeFor(image.getType(), image.getColorModel());
+    }
+    
+    /**
+     * Resolves the image pixel type to use for the given color model.
+     * May return null.
+     */
+    public Integer getPixelTypeFor(Integer targetPixelType, ColorModel colorModel) {
+        if (targetPixelType != null) {
+            Integer resultPixelType = typeMappings.get(targetPixelType);
+            if (resultPixelType != null) return resultPixelType;
+        }
+        if (colorModel != null && !colorModel.hasAlpha()) return getPixelTypeNoAlpha();
         return getPixelTypeDefault();
     }
     
@@ -547,9 +916,29 @@ public class ImageType {
      * Resolves the image pixel type to use for the given color model.
      * May return null.
      */
-    public Integer getPixelTypeFor(ColorModel colorModel) {
-        if (!colorModel.hasAlpha()) return getPixelTypeNoAlpha();
-        return getPixelTypeDefault();
+    public Integer getPixelTypeFor(Integer targetPixelType) {
+        return getPixelTypeFor(targetPixelType, null);
+    }
+    
+    /**
+     * TODO: always returns null... (RECOMMENDED OVERLOAD)
+     */
+    public ColorModel getColorModelFor(BufferedImage image) {
+        return null;
+    }
+    
+    /**
+     * TODO: always returns null...
+     */
+    public ColorModel getColorModelFor(Integer targetPixelType, ColorModel colorModel) {
+        return null;
+    }
+    
+    /**
+     * TODO: always returns null...
+     */
+    public ColorModel getColorModelFor(Integer targetPixelType) {
+        return getColorModelFor(targetPixelType, null);
     }
     
     
@@ -584,6 +973,104 @@ public class ImageType {
      * *************************************************************
      */
 
+    /**
+     * If targetPixelType is a TYPE_PRESERVE_XX, returns srcImagePixelType;
+     * if it is TYPE_NOPRESERVE, returns currentPixelType (usually the result type of an image op);
+     * otherwise returns targetPixelType.
+     */
+    public static ImageTypeInfo resolveTargetType(ImageTypeInfo targetType, BufferedImage srcImage) {
+        return targetType.resolveTargetType(srcImage);
+    }
+    
+    /**
+     * If targetPixelType is a TYPE_PRESERVE_XX, returns srcImagePixelType;
+     * if it is TYPE_NOPRESERVE, returns currentPixelType (usually the result type of an image op);
+     * otherwise returns targetPixelType.
+     */
+    public static ImageTypeInfo resolveTargetType(int targetPixelType, ColorModel targetColorModel, BufferedImage srcImage) {
+        return ImageTypeInfo.from(targetPixelType, targetColorModel).resolveTargetType(srcImage);
+    }
+    
+    /**
+     * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
+     */
+    public static boolean imageMatchesType(BufferedImage imageToTest, ImageTypeInfo imageType) {
+        return imageType.imageMatchesType(imageToTest);
+    }
+    
+    /**
+     * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
+     */
+    public static boolean imageMatchesType(BufferedImage imageToTest, int targetPixelType, ColorModel targetColorModel) {
+        return imageToTest.getType() == targetPixelType; // TODO: check color model
+    }
+    
+    /**
+     * Checks if the image type exactly matches the targetPixelType and targetColorModel (optional).
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
+     */
+    public static boolean imageMatchesType(BufferedImage imageToTest, int targetPixelType) {
+        return imageMatchesType(imageToTest, targetPixelType, null); // TODO: check color model
+    }
+    
+    /**
+     * Checks if the image type exactly matches the targetTypeImage.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
+     */
+    public static boolean imageMatchesType(BufferedImage imageToTest, BufferedImage targetTypeImage) {
+        return imageToTest.getType() == targetTypeImage.getType(); // TODO: check color model
+    }
+    
+    /**
+     * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now.
+     * NOTE: here targetColorModel is NOT the source color model; it is used as-is.
+     */
+    public static boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType) {
+        return imageType.imageMatchesType(imageToTest);
+    }
+    
+    /**
+     * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
+     * NOTE: here targetColorModel is NOT the source color model; it is used as-is.
+     */
+    public static boolean imageMatchesRequestedType(BufferedImage imageToTest, int targetPixelType, ColorModel targetColorModel) {
+        return imageMatchesType(imageToTest, targetPixelType, targetColorModel);
+    }
+    
+    /**
+     * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type, which for this method is simply the srcImage's type.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
+     */
+    public static boolean imageMatchesRequestedType(BufferedImage imageToTest, BufferedImage srcImage) {
+        return imageMatchesType(imageToTest, srcImage);
+    }
+    
+    /**
+     * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
+     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType(int, BufferedImage)}.
+     */
+    public static boolean imageMatchesRequestedType(BufferedImage imageToTest, ImageTypeInfo imageType, BufferedImage srcImage) {
+        return imageType.imageMatchesRequestedType(imageToTest, srcImage);
+    }
+    
+    /**
+     * (HIGH-LEVEL for post-image op) Checks if the image matches the requested output type.
+     * WARN: FIXME?: does not handle colorModel... this is a simplification for now. cannot handle indexed images with different palettes!
+     * NOTE: this variant resolves targetPixelType using {@link #resolveTargetType(int, BufferedImage)}.
+     */
+    public static boolean imageMatchesRequestedType(BufferedImage imageToTest, Integer targetPixelType, ColorModel targetColorMode, BufferedImage srcImage) {
+        // THIS IS THE ACTUAL IMPLEMENTATION
+        
+        if (ImagePixelType.isTypePreserve(targetPixelType)) targetPixelType = resolveTargetType(targetPixelType, targetColorMode, srcImage).getPixelType();
+
+        return imageToTest.getType() == targetPixelType;
+    }
+
     public static String printImageTypeInfo(BufferedImage image) {
         StringBuilder sb = new StringBuilder("[image pixel type: ");
         sb.append(ImagePixelType.getTypeConstantName(image.getType(), "(INVALID)"));
@@ -599,6 +1086,5 @@ public class ImageType {
         
         sb.append("]");
         return sb.toString();
-        
     }
 }

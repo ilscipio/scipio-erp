@@ -8,10 +8,12 @@ import java.util.Map;
 
 import org.imgscalr.Scalr;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 /**
  * SCIPIO: Imgscalr image scaler implementation.
+ * @deprecated 2017-07-14: This scaler implementation is currently not being maintained, but could be used again later.
  * <p>
  * Supported scalingOptions:
  * <ul>
@@ -90,15 +92,12 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
         // FIXME?: imgscalr supports no target image types at all...
         BufferedImage result = Scalr.resize(image, getFilter(options), Scalr.Mode.FIT_EXACT, targetWidth, targetHeight);
         
-        Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
 
         // FIXME?: for now don't bother post-converting anything at all unless we're forced...
-        if (targetType == null || targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-            return result;
-        } else {
-            return checkConvertResultImageType(image, result, options, targetType, fallbackType);
-        }
+        return isPostConvertResultImage(image, options, targetTypeInfo) ?
+                checkConvertResultImageType(image, result, options, targetTypeInfo) : result;
     }
     
     // NOTE: defaults are handled through the options merging with defaults
@@ -112,5 +111,10 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
             if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
             return filterMap.get(filterName);
         }
+    }
+    
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
+        return false; // FIXME: this isn't true, it can output ONE format... should check...
     }
 }

@@ -208,4 +208,9 @@ public class ComposedImageScaler extends AbstractImageScaler {
         return optSetMapRes;
     }
 
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
+        throw new UnsupportedOperationException("Can't determine isNativeSupportedDestImagePixelType");
+    }
+    
 }

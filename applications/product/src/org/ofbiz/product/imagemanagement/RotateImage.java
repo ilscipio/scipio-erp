@@ -36,6 +36,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -105,7 +106,7 @@ public class RotateImage {
             int h = bufImg.getHeight(null);
             // SCIPIO: fixed for indexed images
             //BufferedImage bufNewImg = new BufferedImage(w, h, bufImgType);
-            BufferedImage bufNewImg = ImageTransform.createBufferedImage(w, h, bufImg.getType(), bufImg.getColorModel());
+            BufferedImage bufNewImg = ImageTransform.createBufferedImage(ImageTypeInfo.from(bufImg), w, h);
             Graphics2D g = bufNewImg.createGraphics();
             g.rotate(Math.toRadians(Double.parseDouble(angle)), w/2, h/2);
             g.drawImage(bufImg,0,0,null);

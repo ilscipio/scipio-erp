@@ -349,8 +349,8 @@ public class ImageManagementServices {
         index = filenameToUse.lastIndexOf(".");
         String imgExtension = filenameToUse.substring(index + 1);
         // paths
-        String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", (Delegator) context.get("delegator")), context);
-        String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", (Delegator) context.get("delegator")), context);
+        String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", dctx.getDelegator()), context);
+        String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", dctx.getDelegator()), context);
         
         
         /* get original BUFFERED IMAGE */
@@ -645,7 +645,7 @@ public class ImageManagementServices {
         // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
         //bufNewImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
         try {
-            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
             bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
@@ -713,7 +713,7 @@ public class ImageManagementServices {
         // SCIPIO: 2017-07-11: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
         // Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
         try {
-            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(null, "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
             bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);

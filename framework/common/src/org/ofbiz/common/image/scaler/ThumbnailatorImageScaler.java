@@ -10,6 +10,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
@@ -124,58 +125,31 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         
         // FIXME?: can do the TYPE_PRESERVING logic better here...
 
-        Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
         BufferedImage resultImage;
-        if (targetType != null) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
 
-            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
-                // morten can't write out to indexed or custom, and if we try to convert after, there is a chance of loss.
-                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-                    // if preserve is not high prio (TYPE_PRESERVE_IF_LOSSLESS only) we will just not honor the idealTarget.
-                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
-                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
-                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
-                        // for output type, use defaultType if it's a valid value
-                        builder.imageType(defaultType); 
-                        resultImage = builder.asBufferedImage();
-                    } else {
-                        // check fallback
-                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
-                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
-                            // next use fallback if it was valid
-                            builder.imageType(fallbackType); 
-                            resultImage = builder.asBufferedImage();
-                        } else {
-                            // in this case thumbnailator tries to preserve and fails
-                            builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                            resultImage = builder.asBufferedImage();
-                        }
-                    }
-                } else {
-                    // thumbnailator can't handle indexed or custom
-                    // just pick a good one for no color loss and re-convert after
-                    builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                    resultImage = builder.asBufferedImage();
-                    resultImage = checkConvertResultImageType(image, resultImage, options, targetType, fallbackType);
-                }
-            } else {
-                // here thumbnailator can _probably_ output the type we want...
-                builder.imageType(idealType);
+            if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
+                // here lib will _probably_ support the type we want...
+                builder.imageType(resolvedTargetTypeInfo.getPixelType());
                 resultImage = builder.asBufferedImage();
+            } else {
+                if (isPostConvertResultImage(image, options, targetTypeInfo)) {
+                    // for thumbnailator, we must always specify imageType because its default is to preserve and that doesn't work
+                    builder.imageType(ImageType.DEFAULT_DIRECT.getPixelTypeFor(image)); 
+                    resultImage = builder.asBufferedImage();
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
+                } else {
+                    builder.imageType(getFirstSupportedDestPixelTypeFromAllDefaults(options, image));
+                    resultImage = builder.asBufferedImage();
+                }
             }
         } else {
-            if (ImagePixelType.isTypeIndexedOrCustom(image.getType())) {
-                // in this case thumbnailator tries to preserve and fails
-                builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                resultImage = builder.asBufferedImage();
-            } else {
-                // default is to preserve original
-                // TODO: REVIEW: want hardcode this?
-                //builder.imageType(ImageType.INT_ARGB_OR_RGB.getPixelTypeFor(image)); 
-                resultImage = builder.asBufferedImage();
-            }
+            builder.imageType(getFirstSupportedDestPixelTypeFromAllDefaults(options, image)); 
+            resultImage = builder.asBufferedImage();
         }
         return resultImage;
     }
@@ -201,4 +175,9 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
         return UtilMisc.booleanValue(options.get("antialiasing"));
     }
     
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
+        // NOTE: thumnnailator will accept indexed image as out but fails to preserve color space/palete...
+        return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);
+    }
 }

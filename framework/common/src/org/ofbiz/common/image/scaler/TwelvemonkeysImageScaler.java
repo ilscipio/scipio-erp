@@ -8,21 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 
 import com.twelvemonkeys.image.ResampleOp;
 
 /**
  * SCIPIO: Twelvemonkeys common-image image scaler implementation.
+ * @deprecated 2017-07-14: This scaler implementation is currently not being maintained, but could be used again later.
  * <p>
  * Supported scalingOptions:
  * <ul>
  * <li>filter (String) - "smooth" (default) or substitute (see {@link #filterMap} below for supported)</li>
  * </ul>
  * </p>
- * <p>
  * Added 2017-07-12.
  */
+@Deprecated
 public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
     public static final String module = TwelvemonkeysImageScaler.class.getName();
@@ -96,40 +100,31 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
         // TODO: REVIEW: this is copy-pasted from morten scaler because very similar interfaces
     
-        Integer targetType = getMergedTargetImagePixelType(options, image);
-        Integer fallbackType = getImagePixelTypeOption(options, "fallbacktype", image);
-        BufferedImage result;
-        if (targetType != null) {
-            int idealType = ImagePixelType.isTypePreserve(targetType) ? image.getType() : targetType;
+        ImageType targetType = getMergedTargetImageType(options, ImageType.EMPTY);
+        ImageTypeInfo targetTypeInfo = targetType.getImageTypeInfoFor(image);
+        
+        BufferedImage resultImage;
+        if (!ImagePixelType.isTypeNoPreserveOrNull(targetTypeInfo.getPixelType())) {
+            ImageTypeInfo resolvedTargetTypeInfo = ImageType.resolveTargetType(targetTypeInfo, image);
             
-            if (ImagePixelType.isTypeIndexedOrCustom(idealType)) {
-                if (targetType == ImagePixelType.TYPE_PRESERVE_IF_LOSSLESS) {
-                    Integer defaultType = getImagePixelTypeOption(options, "defaulttype", image);
-                    if (defaultType != null && !ImagePixelType.isTypeSpecial(defaultType) && 
-                        !ImagePixelType.isTypeIndexedOrCustom(defaultType)) {
-                        BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, defaultType);
-                        result = op.filter(image, destImage);
-                    } else {
-                        if (fallbackType != null && !ImagePixelType.isTypeSpecial(fallbackType) && 
-                                !ImagePixelType.isTypeIndexedOrCustom(fallbackType)) {
-                            BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, fallbackType);
-                            result = op.filter(image, destImage);
-                        } else {
-                            result = op.filter(image, null);
-                        }
-                    }
-                } else {
-                    result = op.filter(image, null);
-                    result = checkConvertResultImageType(image, result, options, targetType, fallbackType);
-                }
+            if (isNativeSupportedDestImageType(resolvedTargetTypeInfo)) {
+                // here lib will _probably_ support the type we want...
+                BufferedImage destImage = ImageTransform.createBufferedImage(resolvedTargetTypeInfo, targetWidth, targetHeight);
+                resultImage = op.filter(image, destImage);
             } else {
-                BufferedImage destImage = new BufferedImage(targetWidth, targetHeight, idealType);
-                result = op.filter(image, destImage);
+                if (isPostConvertResultImage(image, options, targetTypeInfo)) {
+                    resultImage = op.filter(image, null); // lib default image type should preserve best for intermediate
+                    resultImage = checkConvertResultImageType(image, resultImage, options, targetTypeInfo);
+                } else {
+                    int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+                    resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
+                }
             }
         } else {
-            result = op.filter(image, null);
+            int nextTargetType = getFirstSupportedDestPixelTypeFromAllDefaults(options, image);
+            resultImage = op.filter(image, new BufferedImage(targetWidth, targetHeight, nextTargetType));
         }
-        return result;
+        return resultImage;
     }
     
     // NOTE: defaults are handled through the options merging with defaults
@@ -143,5 +138,10 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
             if (!filterMap.containsKey(filterName)) throw new IllegalArgumentException("filter '" + filterName + "' not supported by " + API_NAME + " library");
             return filterMap.get(filterName);
         }
+    }
+    
+    @Override
+    public boolean isNativeSupportedDestImagePixelType(int imagePixelType) {
+        return !ImagePixelType.isTypeIndexedOrCustom(imagePixelType);
     }
 }

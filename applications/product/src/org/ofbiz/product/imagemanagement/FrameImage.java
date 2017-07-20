@@ -53,6 +53,9 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageType.ImagePixelType;
+import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.common.image.scaler.ImageScaler;
 import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.content.layout.LayoutWorker;
@@ -163,10 +166,10 @@ public class FrameImage {
             BufferedImage newImg1;
             BufferedImage newImg2;
             try {
-                Map<String, Object> scalingOptions = new HashMap<>();
+                Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.DEFAULT_IMAGEOP);
                 ImageScaler scaler = ImageScalers.getScalerOrDefault(scalingOptions);
-                newImg1 = scaler.scaleImage(bufImg1, width, height);
-                newImg2 = scaler.scaleImage(bufImg2, width, height);
+                newImg1 = scaler.scaleImage(bufImg1, width, height, scalingOptions);
+                newImg2 = scaler.scaleImage(bufImg2, width, height, scalingOptions);
             } catch(IOException e) {
                 throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
             }
@@ -260,10 +263,18 @@ public class FrameImage {
         
         // New BufferedImage creation 
         // SCIPIO: indexed images fix
-        //BufferedImage bufferedImage = new BufferedImage(image1.getWidth(null), image1.getHeight(null), bufImgType);
-        BufferedImage bufferedImage = ImageTransform.createCompatibleBufferedImage(typeReferenceImage, image1.getWidth(null), image1.getHeight(null));
-        Graphics2D g = bufferedImage.createGraphics( );
-        g.drawImage(image1, null, null);
+        BufferedImage bufferedImage;
+        Graphics2D g;
+        if (image1 instanceof BufferedImage && ImagePixelType.isTypeImageOpFriendly(((BufferedImage) image1).getType())) {
+            // still create a copy to avoid modifying the original
+            bufferedImage = ImageTransform.cloneBufferedImage((BufferedImage) image1);
+            g = bufferedImage.createGraphics();
+        } else {
+            bufferedImage = ImageTransform.createBufferedImage(ImageType.DEFAULT_IMAGEOP.getImageTypeInfoFor(typeReferenceImage), image1.getWidth(null), 
+                    image1.getHeight(null));
+            g = bufferedImage.createGraphics();
+            g.drawImage(image1, null, null);
+        }
         
         // Draw Image combine
         Point2D center =  new Point2D.Float(bufferedImage.getHeight() / 2, bufferedImage.getWidth() / 2);
@@ -278,7 +289,14 @@ public class FrameImage {
         g.drawImage(bufferedImage, 0, 0, null);
         g.dispose();
         
-        return( bufferedImage );
+        // SCIPIO: new: we convert to the target type only at the very end, in separate step, so the previous operations don't suffer from color loss
+        if (ImageType.imageMatchesRequestedType(bufferedImage, typeReferenceImage)) {
+            return bufferedImage;
+        } else {
+            BufferedImage resultImage = ImageTransform.createCompatibleBufferedImage(typeReferenceImage, bufferedImage.getWidth(null), bufferedImage.getHeight(null));
+            ImageTransform.copyToBufferedImage(bufferedImage, resultImage);
+            return( resultImage );
+        }
     }
     
     public static String uploadFrame(HttpServletRequest request, HttpServletResponse response) {
@@ -424,10 +442,10 @@ public class FrameImage {
             BufferedImage newImg1;
             BufferedImage newImg2;
             try {
-                Map<String, Object> scalingOptions = new HashMap<>();
+                Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.DEFAULT_IMAGEOP);
                 ImageScaler scaler = ImageScalers.getScalerOrDefault(scalingOptions);
-                newImg1 = scaler.scaleImage(bufImg1, width, height);
-                newImg2 = scaler.scaleImage(bufImg2, width, height);
+                newImg1 = scaler.scaleImage(bufImg1, width, height, scalingOptions);
+                newImg2 = scaler.scaleImage(bufImg2, width, height, scalingOptions);
             } catch(IOException e) {
                 throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
             }

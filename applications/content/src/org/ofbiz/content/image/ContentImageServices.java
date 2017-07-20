@@ -29,13 +29,13 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
-import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
@@ -43,6 +43,7 @@ import org.ofbiz.service.ServiceUtil;
 
 /**
  * SCIPIO: Content/generic image services.
+ * FIXME: MISSING DELETION CODE LOGIC
  * Added 2017-07-04.
  * <p->
  * Derived from:
@@ -66,6 +67,7 @@ public abstract class ContentImageServices {
     /**
      * Core image file resizing service.
      * See contentImageFileScaleInAllSizeCore service interface for context params.
+     * FIXME: MISSING DELETION CODE LOGIC
      */
     public static Map<String, Object> contentImageFileScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
@@ -75,31 +77,39 @@ public abstract class ContentImageServices {
         String imageServerPath = (String) context.get("imageServerPath");
         String imageUrlPrefix = (String) context.get("imageUrlPrefix");
         String imageFnFmt = (String) context.get("imageFnFmt");
-        String imageFnFmtOrig = (String) context.get("imageFnFmtOrig");
+        String imageOrigFnFmt = (String) context.get("imageOrigFnFmt");
         Map<String, Object> imagePathArgs = UtilGenerics.checkMap(context.get("imagePathArgs"));
-        String imgPropertyPath = (String) context.get("imagePropXmlPath");
+        String imagePropXmlPath = (String) context.get("imagePropXmlPath");
         Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
         boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
+        boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
         Locale locale = (Locale) context.get("locale");
+        if (locale == null) locale = Locale.getDefault();
         
         final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
-        
-        if (locale == null) locale = Locale.getDefault(); // FIXME?: default for output (not log)
-        final String logPrefix = "imageFileScaleInAllSizeCore: ";
+        final String logPrefix = "contentImageFileScaleInAllSizeCore: ";
 
         long startTime = System.nanoTime();
         
         try {
+            // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
+            if (UtilValidate.isNotEmpty(imageOrigPath)) {
+                imageOrigPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageOrigPath, imageOrigPath);
+            }
+            if (UtilValidate.isNotEmpty(imageServerPath)) {
+                imageServerPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPath, imageServerPath);
+            }
+            
             /* ImageProperties.xml */
             Map<String, Map<String, String>> imgPropertyMap = new HashMap<>();
-            String imgPropertyFullPath;
-            if (UtilValidate.isNotEmpty(imgPropertyPath)) {
-                imgPropertyFullPath = ContentImageWorker.getImagePropertiesFullPath(imgPropertyPath);
+            String imagePropXmlPathFull;
+            if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
+                imagePropXmlPathFull = ContentImageWorker.getImagePropertiesFullPath(imagePropXmlPath);
             } else {
-                imgPropertyFullPath = ContentImageWorker.getContentImagePropertiesFullPath();
+                imagePropXmlPathFull = ContentImageWorker.getContentImagePropertiesFullPath();
             }
-            Map<String, Object> resultXMLMap = ImageTransform.getXMLValue(imgPropertyFullPath, locale);
+            Map<String, Object> resultXMLMap = ImageTransform.getXMLValue(imagePropXmlPathFull, locale);
             if ("success".equals(resultXMLMap.get("responseMessage"))) {
                 imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
             } else {
@@ -111,13 +121,13 @@ public abstract class ContentImageServices {
             }
             
             /* IMAGE */
-            if (imageFnFmtOrig == null) imageFnFmtOrig = imageFnFmt;
+            if (imageOrigFnFmt == null) imageOrigFnFmt = imageFnFmt;
 
             if (UtilValidate.isEmpty(imageOrigFn)) {
                 if (UtilValidate.isNotEmpty(imageOrigPath)) {
                     imageOrigFn = imageOrigPath;
                 } else if (UtilValidate.isNotEmpty(imageOrigUrl)) {
-                    imageOrigFn = imageServerPath + imageOrigUrl;
+                    imageOrigFn = imageOrigUrl;
                 } else {
                     throw new IllegalArgumentException("Required parameter missing: imageOrigFn/imageOrigPath/imageOrigUrl");
                 }
@@ -128,21 +138,21 @@ public abstract class ContentImageServices {
             
             // get Name and Extension
             if (imageOrigFn.lastIndexOf(".") <= 0 || imageOrigFn.lastIndexOf(".") >= (imageOrigFn.length() - 1)) { // SCIPIO: added this to prevent problems
-                throw new IllegalArgumentException("Original image filename [" + imageOrigFn + "] has missing or improper file extension");
+                throw new IllegalArgumentException("Original image filename [" + imageOrigFn + "] has missing or improper file extension (image type)");
             }
             String imgExtension = imageOrigFn.substring(imageOrigFn.lastIndexOf(".") + 1);
             
             // paths
             Map<String, Object> imageContext = new HashMap<>(context);
-            imageContext.putAll(imagePathArgs);
             imageContext.put("tenantId", delegator.getDelegatorTenantId());
-            imageServerPath = FlexibleStringExpander.expandString(imageServerPath != null ? imageServerPath : EntityUtilProperties.getPropertyValue("content", "image.server.path", delegator), imageContext);
-            imageUrlPrefix = FlexibleStringExpander.expandString(imageUrlPrefix != null ? imageUrlPrefix : EntityUtilProperties.getPropertyValue("content", "image.url.prefix", delegator), imageContext);
+            imageContext.putAll(imagePathArgs);
+            imageServerPath = FlexibleStringExpander.expandString(UtilValidate.isNotEmpty(imageServerPath) ? imageServerPath : EntityUtilProperties.getPropertyValue("content", "image.server.path", delegator), imageContext);
+            imageUrlPrefix = FlexibleStringExpander.expandString(UtilValidate.isNotEmpty(imageUrlPrefix) ? imageUrlPrefix : EntityUtilProperties.getPropertyValue("content", "image.url.prefix", delegator), imageContext);
             imageServerPath = imageServerPath.endsWith("/") ? imageServerPath.substring(0, imageServerPath.length()-1) : imageServerPath;
             imageUrlPrefix = imageUrlPrefix.endsWith("/") ? imageUrlPrefix.substring(0, imageUrlPrefix.length()-1) : imageUrlPrefix;
             
             FlexibleStringExpander imageFnFmtExpander = FlexibleStringExpander.getInstance(imageFnFmt);
-            FlexibleStringExpander imageFnFmtOrigExpander = FlexibleStringExpander.getInstance(imageFnFmtOrig);
+            FlexibleStringExpander imageOrigFnFmtExpander = FlexibleStringExpander.getInstance(imageOrigFnFmt);
             
             String bufImgPath;
             if (UtilValidate.isNotEmpty(imageOrigPath)) {
@@ -152,12 +162,13 @@ public abstract class ContentImageServices {
                 if (!imageOrigUrl.startsWith(imageUrlPrefix + "/")) throw new IllegalArgumentException("imageOrigUrl '" + imageOrigUrl + "' does not begin with expected imageUrlPrefix '" + imageUrlPrefix + "'");
                 bufImgPath = imageServerPath + imageOrigUrl.substring(imageUrlPrefix.length());
             } else {
-                bufImgPath = imageServerPath + "/" + expandImageFnFmt(imageFnFmtOrigExpander, origSizeType, imagePathArgs) + "." + imgExtension;
+                bufImgPath = imageServerPath + "/" + expandImageFnFmt(imageOrigFnFmtExpander, origSizeType, imagePathArgs) + "." + imgExtension;
             }
             
             /* get original BUFFERED IMAGE */
             Map<String, Object> resultBufImgMap = ImageTransform.getBufferedImage(bufImgPath, locale);
             
+            String targetDirectory = null;
             if ("success".equals(resultBufImgMap.get("responseMessage"))) {
                 BufferedImage bufImg = (BufferedImage) resultBufImgMap.get("bufferedImage");
     
@@ -171,9 +182,11 @@ public abstract class ContentImageServices {
                 
                 Map<String, String> imgUrlMap = new HashMap<>();
     
+                int imageDeleteCount = 0;
+                int imageCopyCount = 0;
                 if (copyOrig) {
                     String sizeType = origSizeType;
-                    String newFileLocation = expandImageFnFmt(imageFnFmtOrigExpander, sizeType, imagePathArgs);
+                    String newFileLocation = expandImageFnFmt(imageOrigFnFmtExpander, sizeType, imagePathArgs);
                     String newFileLocExt = newFileLocation + "." + imgExtension;
                     String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
                     if (bufImgPath.equals(newFileFullLoc)) {
@@ -183,7 +196,7 @@ public abstract class ContentImageServices {
                         String imageUrl = imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
                     } else {
-                        String targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
+                        targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
                         try {
                             // Create the new directory
                             File targetDir = new File(targetDirectory);
@@ -193,11 +206,11 @@ public abstract class ContentImageServices {
                                     Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_create_target_directory", LOG_LANG) + " - " + targetDirectory, module);
                                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory);
                                 }
-                            }
+                            } else if (deleteOld) {
                             // TODO?: how do this here?
 //                            // Delete existing image files
 //                            // Images aren't ordered by productId (${location}/${viewtype}/${sizetype}/${id}) !!! BE CAREFUL !!!
-//                            } else if (newFileLocation.endsWith("/" + "id-FIXME")) {
+//                             if (newFileLocation.endsWith("/" + "id-FIXME")) {
 //                                try {
 //                                    File[] files = targetDir.listFiles(); 
 //                                    for (File file : files) {
@@ -209,6 +222,7 @@ public abstract class ContentImageServices {
 //                                    Debug.logError(e, logPrefix+e.getMessage(), module);
 //                                }
 //                            }
+                            }
                         } catch (Exception e) {
                             Debug.logError(e, logPrefix+"Unexpected error during directory creation/deletion: " + e.getMessage(), module);
                             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
@@ -216,6 +230,7 @@ public abstract class ContentImageServices {
                         
                         try {
                             FileUtils.copyFile(new File(bufImgPath), new File(newFileFullLoc));
+                            imageCopyCount++;
                         } catch(Exception e) {
                             Debug.logError(e, logPrefix+"Error copying original file [" + bufImgPath + "] to [" + newFileFullLoc + "]: " + e.getMessage(), module);
                             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
@@ -227,6 +242,7 @@ public abstract class ContentImageServices {
                 }
                 
                 /* Scale image for each size from ImageProperties.xml */
+                int scaledImageCount = 0;
                 for (String sizeType : sizeTypeList) {
                     if (!imgPropertyMap.containsKey(sizeType)) {
                         Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
@@ -237,13 +253,13 @@ public abstract class ContentImageServices {
                     Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
     
                     /* Write the new image file */
-                    if (resultScaleImgMap.containsKey("responseMessage") && resultScaleImgMap.get("responseMessage").equals("success")) {
+                    if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
                         BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
     
                         // Build full path for the new scaled image
                         //imageFnToUse = sizeType + imageFnToUse.substring(imageFnToUse.lastIndexOf(".")); // BUG
                         String newFileLocation = expandImageFnFmt(imageFnFmtExpander, sizeType, imagePathArgs);
-                        String targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
+                        targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
                         try {
                             // Create the new directory
                             File targetDir = new File(targetDirectory);
@@ -253,11 +269,11 @@ public abstract class ContentImageServices {
                                     Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_create_target_directory", LOG_LANG) + " - " + targetDirectory, module);
                                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory);
                                 }
-                            }
+                            } else if (deleteOld) {
                             // TODO?: how do this here?
 //                            // Delete existing image files
 //                            // Images aren't ordered by productId (${location}/${viewtype}/${sizetype}/${id}) !!! BE CAREFUL !!!
-//                            } else if (newFileLocation.endsWith("/" + "id-FIXME")) {
+//                             if (newFileLocation.endsWith("/" + "id-FIXME")) {
 //                                try {
 //                                    File[] files = targetDir.listFiles(); 
 //                                    for (File file : files) {
@@ -269,6 +285,7 @@ public abstract class ContentImageServices {
 //                                    Debug.logError(e, logPrefix+e.getMessage(), module);
 //                                }
 //                            }
+                            }
                         } catch (Exception e) {
                             Debug.logError(e, logPrefix+"Unexpected error during directory creation or file deletion: " + e.getMessage(), module);
                             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
@@ -279,6 +296,7 @@ public abstract class ContentImageServices {
                         String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
                         try {
                             ImageIO.write(bufNewImg, imgExtension, new File(newFileFullLoc));
+                            scaledImageCount++;
                         } catch (IllegalArgumentException e) {
                             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
                             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
@@ -297,8 +315,37 @@ public abstract class ContentImageServices {
                 // this is helpful info and doesn't do much harm
                 //if (ImageUtil.verboseOn()) {
                 long endTime = System.nanoTime();
-                Debug.logInfo("Scaled content images in " + ((endTime - startTime) / 1000000) + "ms for " + bufImgPath, module);
+                StringBuilder logSb = new StringBuilder(logPrefix);
+                logSb.append("In ");
+                logSb.append((endTime - startTime) / 1000000);
+                logSb.append("ms created ");
+                logSb.append(scaledImageCount);
+                logSb.append(" scaled and ");
+                logSb.append(imageCopyCount);
+                logSb.append(" original copies of image ");
+                logSb.append(ContentImageWorker.formatLogInfoPath(bufImgPath));
+                if (targetDirectory != null) {
+                    logSb.append(" under ");
+                    logSb.append(ContentImageWorker.formatLogInfoPath(targetDirectory));
+                }
+                if (deleteOld) {
+                    logSb.append(" (");
+                    logSb.append(imageDeleteCount);
+                    logSb.append(" deleted)");
+                }
+                if (imgUrlMap.size() > 0) {
+                    logSb.append(" (sizes: ");
+                    final String sizeSep = ", ";
+                    for(String sizeType : imgUrlMap.keySet()) {
+                        logSb.append(sizeType);
+                        logSb.append(sizeSep);
+                    }
+                    logSb.setLength(logSb.length() - sizeSep.length());
+                    logSb.append(")");
+                }
+                Debug.logInfo(logSb.toString(), module);
                 //}
+                
                 Map<String, Object> result = ServiceUtil.returnSuccess();
                 result.put("imageUrlMap", imgUrlMap);
                 result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));

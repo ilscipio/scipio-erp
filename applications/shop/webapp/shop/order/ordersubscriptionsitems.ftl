@@ -1,3 +1,5 @@
+<#include "component://shop/webapp/shop/order/subscriptioncommon.ftl">
+
 <@section title=uiLabelMap.ShopOrderSubscriptionItems menuContent=menuContent>
   <@table type="data-complex" class="+order-detail-items">
     <@thead>
@@ -90,21 +92,6 @@
           </@modal>-->
         </#macro>
         <#assign mayCancelItem = false>
-        <#macro subscriptionLinkContent productSubscriptionResource index>
-          <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>          
-          <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${rawString(subscriptionResource.description)}]">
-            <@section title="${rawString(subscriptionResource.description)}: ${rawString(orderItem.itemDescription!)}">
-                Max Time: ${productSubscriptionResource.get("maxLifeTime")!} ${productSubscriptionResource.get("maxLifeTimeUomId")!} <br/>
-                Available Time: ${productSubscriptionResource.availableTime!} ${productSubscriptionResource.availableTime!} <br/>
-                Use Count Limit: ${productSubscriptionResource.useCountLimit!} <br/>
-                Use Time: ${productSubscriptionResource.useTime!} ${productSubscriptionResource.useTimeUomId!} <br/>
-                Automatic Extend: ${productSubscriptionResource.automaticExtend!} <br/>
-                Cancel Automatic Extended Time: ${productSubscriptionResource.canclAutmExtTime!} ${productSubscriptionResource.canclAutmExtTimeUomId!} <br/>
-                Period On Expiry: ${productSubscriptionResource.gracePeriodOnExpiry!} ${productSubscriptionResource.gracePeriodOnExpiryUomId!} <br/>               
-            </@section>
-          </@modal>
-        </#macro>
-        
         <#if maySelect>
           <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
           <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
@@ -199,7 +186,7 @@
                 <ul>
                 <#list producSubscriptionResources as productSubscriptionResource>                    
                     <li>
-                        <@subscriptionLinkContent productSubscriptionResource productSubscriptionResource_index/>
+                        <@subscriptionLinkContent productSubscriptionResource {} orderItem productSubscriptionResource_index/>
                     </li>
                 </#list>
                 </ul>

@@ -152,7 +152,9 @@ public class UtilProperties implements Serializable {
     private static Number getPropertyNumber(String resource, String name, Number defaultNumber, String type) {
         String str = getPropertyValue(resource, name);
         if (UtilValidate.isEmpty(str)) {
-            Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            // SCIPIO: 2017-07-15: should not be a warning nor error 
+            //Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            Debug.logInfo("Property [" + resource + "/" + name + "] empty; using defaultNumber " + defaultNumber + ".", module);
             return defaultNumber;
         } else
             try {
@@ -240,7 +242,7 @@ public class UtilProperties implements Serializable {
         try {
             result = new BigInteger(strValue);
         } catch (NumberFormatException nfe) {
-            Debug.logWarning("Couldnt convert String \"" + strValue + "\" to BigInteger; using defaultNumber " + defaultNumber.toString() + ".", module);
+            Debug.logWarning("Couldn't convert String \"" + strValue + "\" to BigInteger; using defaultNumber " + defaultNumber.toString() + ".", module);
         }
         return result;
     }
@@ -259,7 +261,7 @@ public class UtilProperties implements Serializable {
         try {
             result = new BigDecimal(strValue);
         } catch (NumberFormatException nfe) {
-            Debug.logWarning("Couldnt convert String \"" + strValue + "\" to BigDecimal; using defaultNumber " + defaultNumber.toString() + ".", module);
+            Debug.logWarning("Couldn't convert String \"" + strValue + "\" to BigDecimal; using defaultNumber " + defaultNumber.toString() + ".", module);
         }
         return result;
     }

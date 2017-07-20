@@ -27,7 +27,7 @@
 
     <service name="contentImageFileScaleInAllSizeCore" engine="java"
             location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false">
-        <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames)</description>
+        <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames); also supports component:// and file:// prefixes</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
             <description>Full path of original image in filesystem as input (alternative to imageOrigUrl; if neither specified, auto-determines an original filename under imageServerPath)</description>
@@ -38,6 +38,9 @@
         <attribute name="imageOrigFn" mode="IN" type="String" optional="true">
             <description>Original filename (no directories) of the image - required only if neither imageOrigPath nor imageOrigUrl specified</description>
         </attribute>
+        <attribute name="imageOrigFnFmt" mode="IN" type="String" optional="true">
+            <description>Image filename format string for original only, relative to imageServerPath/imageUrlPrefix, no extension; only useful if copyOrig==true or if imageOrigPath/imageOrigUrl are omitted (default: same as imageFnFmt)</description>
+        </attribute>
         <!-- TODO: support this alternate input
         <attribute name="imageOrigContentId" mode="IN" type="String" optional="true">
             <description>Original image contentId as input (alternative to imageOrigPath)</description>
@@ -45,7 +48,7 @@
 
         <!-- BASE PATHS -->
         <attribute name="imageServerPath" mode="IN" type="String" optional="true">
-            <description>Full filesystem path of base server image, parameterized with ${tenantId} (default: uses image.server.path / content.properties)</description>
+            <description>Full filesystem path of base server image, parameterized with ${tenantId} (default: uses image.server.path / content.properties); also supports component:// and file:// prefixes</description>
         </attribute>
         <attribute name="imageUrlPrefix" mode="IN" type="String" optional="true">
             <description>URL prefix for generated images, parameterized with ${tenantId} (default: uses image.url.prefix / content.properties)</description>
@@ -55,11 +58,8 @@
         <attribute name="imageFnFmt" mode="IN" type="String" optional="false">
             <description>Image filename format string, relative to imageServerPath/imageUrlPrefix, no extension, parameterized with ${sizetype} (or ${type}), required</description>
         </attribute>
-        <attribute name="imageFnFmtOrig" mode="IN" type="String" optional="true">
-            <description>Image filename format string for original only, relative to imageServerPath/imageUrlPrefix, no extension; only useful if copyOrig==true or if imageOrigPath/imageOrigUrl are omitted (default: same as imageFnFmt)</description>
-        </attribute>
         <attribute name="imagePathArgs" mode="IN" type="Map" optional="true">
-            <description>Args for parameterized paths</description>
+            <description>Additional args for parameterized paths</description>
         </attribute>
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
             <description>Path to ImageProperties.xml file containing size types, from ofbiz home root (default: /applications/content/config/ImageProperties.xml)</description>
@@ -69,6 +69,9 @@
         </attribute>
         <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
+        </attribute>
+        <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
+            <description>[TODO: NOT IMPLEMENTED] If true, also deletes old files in target directory (default: false)</description>
         </attribute>
         
         <!-- SCALING OPTIONS -->

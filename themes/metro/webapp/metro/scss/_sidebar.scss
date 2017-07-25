@@ -200,7 +200,13 @@ $sidebar-width: 200px;
 .inner-wrap {
 }
 
-.fixed {margin-left:$sidebar-width;}
+.fixed {
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+    } @else {
+        margin-right: $sidebar-width;
+    }
+}
 
 .tab-bar {
     h1 { 
@@ -220,6 +226,8 @@ $sidebar-width: 200px;
 
 #content-main-section {
     padding-top:50px;
+    
+    
 }
 
 #content-main-body{
@@ -235,13 +243,27 @@ $sidebar-width: 200px;
   .side-bar {
     @include side-nav-nested;
     
-    background-color: $side-bar-bg;    
-    left: 0px;
-    top: 0px;
-    bottom: 0;
-    position: fixed;
-    width: $sidebar-width;
-    overflow-x: hidden;
+    background-color: $side-bar-bg;
+    
+    @if $text-direction == ltr {
+        left: 0px;
+        right:auto;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    } @else {
+        left:auto;
+        right: 0px;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    
+    }
+    
     
     .name{
          a {color: $white}
@@ -263,8 +285,17 @@ $sidebar-width: 200px;
   .top-bar {
       background:$topbar-bg-color;
       border-bottom: 1px solid #D9DEE4;
-      margin-left: $sidebar-width;
-      padding-left:10px;
+      
+      
+      @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right:auto;
+        padding-left:10px;
+      } @else {
+        margin-left: auto;
+        margin-right: $sidebar-width;
+        padding-right:10px;
+      }
       
       img{
         width: 55px;
@@ -298,7 +329,15 @@ $sidebar-width: 200px;
   
   #content-main-section {
     width:auto;
-    margin-left: $sidebar-width;
+    
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right: auto;
+    } @else {
+        margin-right: $sidebar-width;
+         margin-left: auto;
+    }
+    
   }
   
   .page-noauth {

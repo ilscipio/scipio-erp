@@ -86,6 +86,11 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/datatables/datatables.min.css" sequenceId="05"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700" sequenceId="06"/>
     
+        
+    <!-- Right-to-Left support -->
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/base-theme/rtl/app.css" sequenceId="1"/>
+
+    
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="04"/>

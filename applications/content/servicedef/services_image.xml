@@ -88,19 +88,18 @@
         </attribute>
     </service>
     
-    <!-- TODO -->
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
             location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false">
         <description>(TODO) Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
-        <!-- TODO -->
         
         <!-- INPUT IMAGE -->
-        <attribute name="imageOrigContentId" mode="IN" type="String" optional="true">
+        <attribute name="imageOrigContentId" mode="IN" type="String" optional="false">
             <description>Original image contentId as input (alternative to imageOrigPath)</description>
         </attribute>
+        <!-- TODO?
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
             <description>Full path of original image in filesystem as input (alternative to imageOrigContentId)</description>
-        </attribute>
+        </attribute>-->
     
         <!-- GENERATED RECORD PARAMETERS -->
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
@@ -126,26 +125,5 @@
             <description>Original image contents, for reuse</description>
         </attribute>
     </service>
-    
-    <!-- MISC
-        <attribute name="imgFilePropResource" mode="IN" type="String" optional="true">
-            <description>For file-based storage, name of *.properties file resource containing filename settings (default: content[.properties])</description>
-        </attribute>
-        <attribute name="imgFilePropPrefix" mode="IN" type="String" optional="true">
-            <description>For file-based storage, prefix for *.properties file entries (default: "")</description>
-        </attribute>
-        <attribute name="imgFileServerPath" mode="IN" type="String" optional="true">
-            <description>For file-based storage, explicit server path (default: image.server.path from content.properties)</description>
-        </attribute>
-        <attribute name="imgFileServerUrl" mode="IN" type="String" optional="true">
-            <description>For file-based storage, explicit server url (default: image.url.prefix from content.properties)</description>
-        </attribute>
-        <attribute name="imgFileFnFmt" mode="IN" type="String" optional="true">
-            <description>For file-based storage, explicit filename format (default: image.filename.format from content.properties)</description>
-        </attribute>
-        <attribute name="imgFileAvsFnFmt" mode="IN" type="String" optional="true">
-            <description>For file-based storage, explicit additional view size file format (default: image.filename.additionalviewsize.format from content.properties)</description>
-        </attribute>
-     -->
 
 </services>

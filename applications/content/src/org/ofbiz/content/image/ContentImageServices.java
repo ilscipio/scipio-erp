@@ -383,7 +383,142 @@ public abstract class ContentImageServices {
      * See contentImageDbScaleInAllSizeCore service interface for context params.
      */
     public static Map<String, Object> contentImageDbScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
-        throw new UnsupportedOperationException("NOT YET IMPLEMENTED");
+        Delegator delegator = dctx.getDelegator();
+        String imageOrigContentId = (String) context.get("imageOrigContentId");
+        //String imageOrigPath = (String) context.get("imageOrigPath"); // TODO?
+        String imagePropXmlPath = (String) context.get("imagePropXmlPath");
+        Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
+        boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
+        boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
+        Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
+        Locale locale = (Locale) context.get("locale");
+        if (locale == null) locale = Locale.getDefault();
+        
+        final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
+        final String logPrefix = "contentImageDbScaleInAllSizeCore: ";
+
+        long startTime = System.nanoTime();
+        
+        try {
+            // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
+//            if (UtilValidate.isNotEmpty(imageOrigPath)) {
+//                imageOrigPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageOrigPath, imageOrigPath);
+//            }
+            
+            /* ImageProperties.xml */
+            Map<String, Map<String, String>> imgPropertyMap = new HashMap<>();
+            String imagePropXmlPathFull;
+            if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
+                imagePropXmlPathFull = ContentImageWorker.getImagePropertiesFullPath(imagePropXmlPath);
+            } else {
+                imagePropXmlPathFull = ContentImageWorker.getContentImagePropertiesFullPath();
+            }
+            Map<String, Object> resultXMLMap = ImageTransform.getXMLValue(imagePropXmlPathFull, locale);
+            if ("success".equals(resultXMLMap.get("responseMessage"))) {
+                imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
+            } else {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageProperties.xml", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml");
+            }
+            if (sizeTypeList == null) {
+                sizeTypeList = imgPropertyMap.keySet();
+            }
+            
+            /* IMAGE */
+
+            // paths
+            
+            /* get original BUFFERED IMAGE */
+            Map<String, Object> resultBufImgMap = ContentImageWorker.getBufferedImageFromContentId(imageOrigContentId, locale);
+            
+            String targetDirectory = null;
+            if ("success".equals(resultBufImgMap.get("responseMessage"))) {
+                BufferedImage bufImg = (BufferedImage) resultBufImgMap.get("bufferedImage");
+    
+                // get Dimensions
+                double imgHeight = bufImg.getHeight();
+                double imgWidth = bufImg.getWidth();
+                if (imgHeight == 0.0 || imgWidth == 0.0) {
+                    Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", LOG_LANG) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth, module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth);
+                }
+                
+                Map<String, String> imageRecordMap = new HashMap<>();
+    
+                int imageDeleteCount = 0;
+                int imageCopyCount = 0;
+                if (copyOrig) {
+                    String sizeType = origSizeType;
+                    
+                    String resContentId = null; // TODO
+                        
+                    imageRecordMap.put(sizeType, resContentId);
+                }
+                
+                /* Scale image for each size from ImageProperties.xml */
+                int scaledImageCount = 0;
+                for (String sizeType : sizeTypeList) {
+                    if (!imgPropertyMap.containsKey(sizeType)) {
+                        Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
+                        continue;
+                    }
+                    
+                    // Scale
+                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
+    
+                    /* Write the new image file */
+                    if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
+                        BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
+    
+                        String resContentId = null; // TODO
+                        imageRecordMap.put(sizeType, resContentId);
+                        
+                    } // scaleImgMap
+                } // Loop over sizeType
+    
+                // this is helpful info and doesn't do much harm
+                //if (ImageUtil.verboseOn()) {
+                long endTime = System.nanoTime();
+                StringBuilder logSb = new StringBuilder(logPrefix);
+                logSb.append("In ");
+                logSb.append((endTime - startTime) / 1000000);
+                logSb.append("ms created ");
+                logSb.append(scaledImageCount);
+                logSb.append(" scaled and ");
+                logSb.append(imageCopyCount);
+                logSb.append(" original copies of image for contentId ");
+                logSb.append(imageOrigContentId);
+                if (deleteOld) {
+                    logSb.append(" (");
+                    logSb.append(imageDeleteCount);
+                    logSb.append(" deleted)");
+                }
+                if (imageRecordMap.size() > 0) {
+                    logSb.append(" (sizes: ");
+                    final String sizeSep = ", ";
+                    for(String sizeType : imageRecordMap.keySet()) {
+                        logSb.append(sizeType);
+                        logSb.append(sizeSep);
+                    }
+                    logSb.setLength(logSb.length() - sizeSep.length());
+                    logSb.append(")");
+                }
+                Debug.logInfo(logSb.toString(), module);
+                //}
+                
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("imageRecordMap", imageRecordMap);
+                result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));
+                return result;
+            } else {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
+            }
+        } catch(Exception e) {
+            // FIXME?: more generic err msg
+            Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId + ": " + e.getMessage(), module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
+        }
     }
-      
+ 
 }

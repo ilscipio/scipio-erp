@@ -18,7 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.content.image;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.common.image.ImageTransform;
 
 /**
  * SCIPIO: Content/generic image utilities.
@@ -69,4 +77,32 @@ public abstract class ContentImageWorker {
                 + "'";
     }
 
+    public static Map<String, Object> getBufferedImageFromContentId(String contentId, Locale locale)
+            throws IllegalArgumentException, IOException {
+
+        /* VARIABLES */
+        BufferedImage bufImg;
+        Map<String, Object> result = new LinkedHashMap<String, Object>();
+
+        /* BUFFERED IMAGE */
+        try {
+            bufImg = null; // TODO
+            if (false) throw new IOException("NOT IMPLEMENTED"); //TODO
+            //bufImg = ImageIO.read(new File(fileLocation));
+        } catch (IllegalArgumentException e) {
+            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.input_is_null", locale) + " : " + contentId + " ; " + e.toString();
+            Debug.logError(errMsg, module);
+            result.put("errorMessage", errMsg);
+            return result;
+        } catch (IOException e) {
+            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.error_occurs_during_reading", locale) + " : " + contentId + " ; " + e.toString();
+            Debug.logError(errMsg, module);
+            result.put("errorMessage", errMsg);
+            return result;
+        }
+
+        result.put("responseMessage", "success");
+        result.put("bufferedImage", bufImg);
+        return result;
+    }
 }

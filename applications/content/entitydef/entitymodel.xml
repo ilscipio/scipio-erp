@@ -1124,6 +1124,17 @@ under the License.
         <key-map field-name="dataResourceId"/>
       </relation>
     </entity>
+    <!-- SCIPIO: 2017-07-31: new DocumentDataResource -->
+    <entity entity-name="DocumentDataResource"
+            package-name="org.ofbiz.content.data"
+            title="Document Data Object Entity">
+      <field name="dataResourceId" type="id-ne"></field>
+      <field name="documentData" type="byte-array"></field>
+      <prim-key field="dataResourceId"/>
+      <relation type="one" fk-name="DATA_REC_DOCUMENT" rel-entity-name="DataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.document -->

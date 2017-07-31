@@ -6,7 +6,7 @@ SCIPIO: Local subscriptions template common defs
   <#if !subscriptionResource?has_content>
       <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>   
   </#if>    
-  <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${rawString(subscriptionResource.description)}]">
+  <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${orderItem.susbscriptionId}] - ${rawString(subscriptionResource.description)}">
     <@section title="${rawString(subscriptionResource.description)}: ${rawString(orderItem.itemDescription!)}">
         <@table>
             <@tr>

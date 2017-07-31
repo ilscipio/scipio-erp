@@ -78,15 +78,48 @@
         <remove-value value-field="content"/>
         <get-related-one value-field="content" relation-name="DataResource" to-value-field="dataResource"/>
         <if-not-empty field="dataResource">
+            <!-- SCIPIO: 2017-07-31: instead of this, switch on dataResourceTypeId so we can avoid db overhead
             <get-related-one value-field="dataResource" relation-name="ImageDataResource" to-value-field="imageDataResource"/>
             <if-not-empty field="imageDataResource">
                 <remove-value value-field="imageDataResource"/>
-            </if-not-empty>
+            </if-not-empty>-->
+            <set field="dataResourceTypeId" from-field="dataResource.dataResourceTypeId"/>
+            <if-compare field="dataResourceTypeId" operator="equals" value="IMAGE_OBJECT">
+                <get-related-one value-field="dataResource" relation-name="ImageDataResource" to-value-field="imageDataResource"/>
+                <if-not-empty field="imageDataResource">
+                    <remove-value value-field="imageDataResource"/>
+                </if-not-empty>
+            </if-compare>
+            <if-compare field="dataResourceTypeId" operator="equals" value="VIDEO_OBJECT"><!-- SCIPIO: 2017-07-31: now delete VideoDataResource -->
+                <get-related-one value-field="dataResource" relation-name="VideoDataResource" to-value-field="videoDataResource"/>
+                <if-not-empty field="videoDataResource">
+                    <remove-value value-field="videoDataResource"/>
+                </if-not-empty>
+            </if-compare>
+            <if-compare field="dataResourceTypeId" operator="equals" value="AUDIO_OBJECT"><!-- SCIPIO: 2017-07-31: now delete AudioDataResource -->
+                <get-related-one value-field="dataResource" relation-name="AudioDataResource" to-value-field="audioDataResource"/>
+                <if-not-empty field="audioDataResource">
+                    <remove-value value-field="audioDataResource"/>
+                </if-not-empty>
+            </if-compare>
+            <if-compare field="dataResourceTypeId" operator="equals" value="DOCUMENT_OBJECT"><!-- SCIPIO: 2017-07-31: now delete DocumentDataResource -->
+                <get-related-one value-field="dataResource" relation-name="DocumentDataResource" to-value-field="documentDataResource"/>
+                <if-not-empty field="documentDataResource">
+                    <remove-value value-field="documentDataResource"/>
+                </if-not-empty>
+            </if-compare>
+            <if-compare field="dataResourceTypeId" operator="equals" value="OTHER_OBJECT"><!-- SCIPIO: 2017-07-31: now delete OtherDataResource -->
+                <get-related-one value-field="dataResource" relation-name="OtherDataResource" to-value-field="otherDataResource"/>
+                <if-not-empty field="otherDataResource">
+                    <remove-value value-field="otherDataResource"/>
+                </if-not-empty>
+            </if-compare>
             <get-related-one value-field="dataResource" relation-name="ElectronicText" to-value-field="electronicText"/>
             <if-not-empty field="electronicText">
                 <remove-value value-field="electronicText"/>
             </if-not-empty>
             <remove-related value-field="dataResource" relation-name="DataResourceRole"/>
+            <remove-related value-field="dataResource" relation-name="DataResourceAttribute"/><!-- SCIPIO: 2017-07-31: now delete DataResourceAttribute -->
             <remove-value value-field="dataResource"/>
         </if-not-empty>
     </simple-method>

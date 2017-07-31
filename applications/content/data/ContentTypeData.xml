@@ -135,6 +135,8 @@ under the License.
     <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="VIDEO_OBJECT" description="Video" hasTable="Y" parentTypeId=""/>
+    <!-- SCIPIO: 2017-07-31: new type for DocumentDataResource -->
+    <DataResourceType dataResourceTypeId="DOCUMENT_OBJECT" description="Document" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY" description="Survey" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY_RESPONSE" description="Survey Response" hasTable="N" parentTypeId=""/>
 

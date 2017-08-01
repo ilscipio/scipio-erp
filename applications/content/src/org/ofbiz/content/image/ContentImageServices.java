@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -490,14 +491,14 @@ public abstract class ContentImageServices {
             
             Map<String, Object> streamResult = DataResourceWorker.getDataResourceStream(origDataResource, "false", null, locale, "/", false);
             BufferedImage bufImg;
-            ByteArrayInputStream byteStream = (ByteArrayInputStream) streamResult.get("stream");
+            InputStream stream = (InputStream) streamResult.get("stream");
             try {
-                bufImg = ImageIO.read(byteStream);
+                bufImg = ImageIO.read(stream);
             } catch(Exception e) {
                 Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
             }   finally {
-                byteStream.close();
+                stream.close();
             }
             
             // get Dimensions

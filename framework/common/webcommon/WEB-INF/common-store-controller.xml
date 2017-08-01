@@ -95,7 +95,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="error" type="view" value="main"/>
     </request-map>
     
-    <request-map uri="forgotpassword">
+    <request-map uri="forgotPassword">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="forgotPassword"/>
         <response name="success" type="view" value="login"/>

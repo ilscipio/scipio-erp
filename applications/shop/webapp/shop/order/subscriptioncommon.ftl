@@ -5,8 +5,11 @@ SCIPIO: Local subscriptions template common defs
 <#macro subscriptionLinkContent productSubscriptionResource subscriptionResource orderItem index>
   <#if !subscriptionResource?has_content>
       <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>   
-  </#if>    
-  <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${orderItem.subscriptionId!}] - ${rawString(subscriptionResource.description)}">
+  </#if> 
+  <#assign subscriptionModalLabel>
+    <#if orderItem.subscriptionId?has_content>>[${orderItem.subscriptionId!}] - </#if> ${rawString(subscriptionResource.description)}
+  </#assign>   
+  <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="${subscriptionModalLabel}">
     <@section title="${rawString(subscriptionResource.description)}: ${rawString(orderItem.itemDescription!)}">
         <@table>
             <@tr>

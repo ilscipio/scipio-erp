@@ -19,27 +19,40 @@
 package org.ofbiz.content.image;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import javolution.util.FastList;
 
 /**
  * SCIPIO: Content/generic image services.
@@ -133,7 +146,7 @@ public abstract class ContentImageServices {
                 }
                 if (imageOrigFn.lastIndexOf("/") != -1) {
                     imageOrigFn = imageOrigFn.substring(imageOrigFn.lastIndexOf("/") + 1);
-                } 
+                }
             }
             
             // get Name and Extension
@@ -309,7 +322,11 @@ public abstract class ContentImageServices {
                         String imageUrl = imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
                         
-                    } // scaleImgMap
+                    } else {
+                        // SCIPIO: new
+                        Debug.logError(logPrefix+ServiceUtil.getErrorMessage(resultScaleImgMap), module);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultScaleImgMap));
+                    }
                 } // Loop over sizeType
     
                 // this is helpful info and doesn't do much harm
@@ -381,20 +398,32 @@ public abstract class ContentImageServices {
     /**
      * Core database image resizing service.
      * See contentImageDbScaleInAllSizeCore service interface for context params.
+     * FIXME: 2017-07-31: imageOrigContentId only supports stored ImageDataResource
      */
     public static Map<String, Object> contentImageDbScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        TimeZone timeZone = (TimeZone) context.get("timeZone");
         String imageOrigContentId = (String) context.get("imageOrigContentId");
+        String imageOrigFn = (String) context.get("imageOrigFn");
         //String imageOrigPath = (String) context.get("imageOrigPath"); // TODO?
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
         Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
-        boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
+        //boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
         boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
+        Map<String, Object> contentFields = UtilGenerics.checkMap(context.get("contentFields"));
+        Map<String, Object> dataResourceFields = UtilGenerics.checkMap(context.get("dataResourceFields"));
+        Map<String, Map<String, Object>> contentFieldsMap = UtilGenerics.checkMap(context.get("contentFieldsMap"));
+        Map<String, Map<String, Object>> dataResourceFieldsMap = UtilGenerics.checkMap(context.get("dataResourceFieldsMap"));
+        String fileSizeDataResAttrName = (String) context.get("fileSizeDataResAttrName");
+        String imageFnFmt = (String) context.get("imageFnFmt");
+        String targetFmtExt = (String) context.get("targetFmtExt");
         Locale locale = (Locale) context.get("locale");
         if (locale == null) locale = Locale.getDefault();
         
-        final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
+        //final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
         final String logPrefix = "contentImageDbScaleInAllSizeCore: ";
 
         long startTime = System.nanoTime();
@@ -424,96 +453,317 @@ public abstract class ContentImageServices {
                 sizeTypeList = imgPropertyMap.keySet();
             }
             
+            if (UtilValidate.isEmpty(imageFnFmt)) {
+                imageFnFmt = "${origfn}_${sizetype}";
+            }
+            FlexibleStringExpander imageFnFmtExpander = FlexibleStringExpander.getInstance(imageFnFmt);
+            
             /* IMAGE */
 
-            // paths
-            
-            /* get original BUFFERED IMAGE */
-            Map<String, Object> resultBufImgMap = ContentImageWorker.getBufferedImageFromContentId(imageOrigContentId, locale);
-            
-            String targetDirectory = null;
-            if ("success".equals(resultBufImgMap.get("responseMessage"))) {
-                BufferedImage bufImg = (BufferedImage) resultBufImgMap.get("bufferedImage");
-    
-                // get Dimensions
-                double imgHeight = bufImg.getHeight();
-                double imgWidth = bufImg.getWidth();
-                if (imgHeight == 0.0 || imgWidth == 0.0) {
-                    Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", LOG_LANG) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth);
-                }
-                
-                Map<String, String> imageRecordMap = new HashMap<>();
-    
-                int imageDeleteCount = 0;
-                int imageCopyCount = 0;
-                if (copyOrig) {
-                    String sizeType = origSizeType;
-                    
-                    String resContentId = null; // TODO
-                        
-                    imageRecordMap.put(sizeType, resContentId);
-                }
-                
-                /* Scale image for each size from ImageProperties.xml */
-                int scaledImageCount = 0;
-                for (String sizeType : sizeTypeList) {
-                    if (!imgPropertyMap.containsKey(sizeType)) {
-                        Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
-                        continue;
-                    }
-                    
-                    // Scale
-                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
-    
-                    /* Write the new image file */
-                    if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
-                        BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
-    
-                        String resContentId = null; // TODO
-                        imageRecordMap.put(sizeType, resContentId);
-                        
-                    } // scaleImgMap
-                } // Loop over sizeType
-    
-                // this is helpful info and doesn't do much harm
-                //if (ImageUtil.verboseOn()) {
-                long endTime = System.nanoTime();
-                StringBuilder logSb = new StringBuilder(logPrefix);
-                logSb.append("In ");
-                logSb.append((endTime - startTime) / 1000000);
-                logSb.append("ms created ");
-                logSb.append(scaledImageCount);
-                logSb.append(" scaled and ");
-                logSb.append(imageCopyCount);
-                logSb.append(" original copies of image for contentId ");
-                logSb.append(imageOrigContentId);
-                if (deleteOld) {
-                    logSb.append(" (");
-                    logSb.append(imageDeleteCount);
-                    logSb.append(" deleted)");
-                }
-                if (imageRecordMap.size() > 0) {
-                    logSb.append(" (sizes: ");
-                    final String sizeSep = ", ";
-                    for(String sizeType : imageRecordMap.keySet()) {
-                        logSb.append(sizeType);
-                        logSb.append(sizeSep);
-                    }
-                    logSb.setLength(logSb.length() - sizeSep.length());
-                    logSb.append(")");
-                }
-                Debug.logInfo(logSb.toString(), module);
-                //}
-                
-                Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("imageRecordMap", imageRecordMap);
-                result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));
-                return result;
-            } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
+            GenericValue origContent = delegator.findOne("Content", UtilMisc.toMap("contentId", imageOrigContentId), false);
+            if (origContent == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : Content: contentId: " + imageOrigContentId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : Content: contentId: " + imageOrigContentId);
             }
+            String origImageDataResourceId = origContent.getString("dataResourceId");
+            GenericValue origDataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", origImageDataResourceId), false);
+            if (origDataResource == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")");
+            }
+            // FIXME: we should support images stored in filesystem here, but only ImageDataResource for now
+            if (!"IMAGE_OBJECT".equals(origDataResource.getString("dataResourceTypeId"))) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : DataResource: dataResourceTypeId != IMAGE_OBJECT (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : DataResource: dataResourceTypeId != IMAGE_OBJECT (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+            }
+            GenericValue origImageDataResource = delegator.findOne("ImageDataResource", UtilMisc.toMap("dataResourceId", origImageDataResourceId), false);
+            if (origImageDataResource == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+            }
+            
+            byte[] bytes = origImageDataResource.getBytes("imageData");
+            if (bytes == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource.imageData null (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData null (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+            }
+            
+            BufferedImage bufImg;
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
+            try {
+                bufImg = ImageIO.read(byteStream);
+            } catch(Exception e) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+            }   finally {
+                byteStream.close();
+            }
+            
+            // get Dimensions
+            double imgHeight = bufImg.getHeight();
+            double imgWidth = bufImg.getWidth();
+            if (imgHeight == 0.0 || imgWidth == 0.0) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", LOG_LANG) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth);
+            }
+            
+            String imageOrigFnNoExt;
+            if (UtilValidate.isNotEmpty(imageOrigFn)) {
+                if (imageOrigFn.lastIndexOf(".") <= 0 || imageOrigFn.lastIndexOf(".") >= (imageOrigFn.length() - 1)) { // SCIPIO: added this to prevent problems
+                    throw new IllegalArgumentException("Original image filename [" + imageOrigFn + "] has missing or improper file extension (image type)");
+                }
+                if (UtilValidate.isEmpty(targetFmtExt)) {
+                    targetFmtExt = imageOrigFn.substring(imageOrigFn.lastIndexOf(".") + 1);
+                }
+                imageOrigFnNoExt = imageOrigFn.substring(0, imageOrigFn.lastIndexOf("."));
+            } else {
+                imageOrigFn = origDataResource.getString("dataResourceName");
+                if (UtilValidate.isEmpty(imageOrigFn)) {
+                    imageOrigFn = origDataResource.getString("objectInfo");
+                    if (UtilValidate.isEmpty(imageOrigFn)) {
+                        Debug.logWarning(logPrefix+"no original image filename available (dataResourceId: " + origImageDataResourceId + ")", module);
+                    }
+                }
+                if (imageOrigFn != null && imageOrigFn.lastIndexOf(".") >= 1) {
+                    imageOrigFnNoExt = imageOrigFn.substring(0, imageOrigFn.lastIndexOf("."));
+                } else {
+                    imageOrigFnNoExt = imageOrigFn;
+                }
+            }
+            
+            // get target type (assumed same as extension)
+            if (UtilValidate.isEmpty(targetFmtExt)) {
+                String mimeTypeId = origDataResource.getString("mimeTypeId");
+                if (UtilValidate.isEmpty(mimeTypeId)) {
+                    Debug.logError(logPrefix+"can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")", module);
+                    return ServiceUtil.returnError("can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")");
+                }
+                
+                List<GenericValue> fileExtValues = FastList.newInstance();
+                try {
+                    fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
+                    if (UtilValidate.isEmpty(fileExtValues)) {
+                        
+                    }
+                    targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
+                    if (fileExtValues.size() > 1) {
+                        Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+            }
+            
+            Map<String, String> imageContentIdMap = new HashMap<>();
+
+            int imageDeleteCount = 0;
+            if (deleteOld) {
+                for(String contentIdToRemove : ContentImageWorker.getResizedImageContentAssocContentIdTo(delegator, imageOrigContentId, false)) {
+                    // NOTE: this automatically removes the ContentAssoc
+                    Map<String, Object> servCtx = new HashMap<>();
+                    servCtx.put("userLogin", userLogin);
+                    servCtx.put("locale", locale);
+                    servCtx.put("timeZone", timeZone);
+                    servCtx.put("contentId", contentIdToRemove);
+                    try {
+                        Map<String, Object> contentResult = dispatcher.runSync("removeContentAndRelated", servCtx);
+                        if (!ServiceUtil.isSuccess(contentResult)) {
+                            return ServiceUtil.returnError("Error removing image content: " + ServiceUtil.getErrorMessage(contentResult));
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Cms: Error removing image content: " + e.getMessage(), module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+            }
+
+            int imageCopyCount = 0;
+            // not supporting this for now
+//            if (copyOrig) {
+//                String sizeType = origSizeType;
+//                
+//                GenericValue dataResource = delegator.makeValue("DataResource");
+//                dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
+//                dataResource.put("dataResourceName", contentName); // TODO: REVIEW
+//                dataResource.put("statusId", "CTNT_IN_PROGRESS");
+//                dataResource.put("mimeTypeId", mimeType.getString("mimeTypeId"));
+//                //dataResource.put("isPublic", "N");
+//                dataResource.put("objectInfo", fileName);
+//                dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+//                delegator.createSetNextSeqId(dataResource);
+//
+//                if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
+//                    GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
+//                    fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
+//                    fileSizeDataResourceAttr.put("attrName", fileSizeDataResAttrName);
+//                    fileSizeDataResourceAttr.put("attrValue", String.valueOf(fileSizeConverted));
+//                    fileSizeDataResourceAttr.create();
+//                }
+//                
+//                String dataResourceId = (String) dataResource.get("dataResourceId");
+//
+//                String newOrigContentId = null; // TODO
+//                    
+//                imageContentIdMap.put(sizeType, newOrigContentId);
+//            }
+            
+            /* Scale image for each size from ImageProperties.xml */
+            int scaledImageCount = 0;
+            for (String sizeType : sizeTypeList) {
+                if (!imgPropertyMap.containsKey(sizeType)) {
+                    Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
+                    continue;
+                }
+                
+                // Scale
+                Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
+
+                /* Write the new image file */
+                if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
+                    BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
+
+                    Map<String, Object> imageCtx = new HashMap<>();
+                    imageCtx.put("sizetype", sizeType);
+                    imageCtx.put("type", sizeType);
+                    imageCtx.put("origfn", imageOrigFnNoExt);
+                    imageCtx.put("origfnfull", imageOrigFn);
+                    imageCtx.put("ext", targetFmtExt);
+                    String targetFn = imageFnFmtExpander.expandString(imageCtx);
+                    
+                    GenericValue dataResource = delegator.makeValue("DataResource");
+                    dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
+                    dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+                    // TODO: REVIEW
+                    dataResource.put("dataResourceName", targetFn);
+                    //dataResource.put("statusId", origDataResource.get("statusId"));
+                    //dataResource.put("mimeTypeId", origDataResource.get("mimeTypeId"));
+                    //dataResource.put("isPublic", "N");
+                    //dataResource.put("objectInfo", fileName);
+                    if (dataResourceFieldsMap.get(sizeType) != null) {
+                        dataResource.setNonPKFields(dataResourceFieldsMap.get(sizeType));
+                    } else if (dataResourceFields != null) {
+                        dataResource.setNonPKFields(dataResourceFields);
+                    }
+                    delegator.createSetNextSeqId(dataResource);
+
+                    byte[] byteout;
+                    ByteArrayOutputStream byteos = new ByteArrayOutputStream();
+                    try {
+                        ImageIO.write(bufNewImg, targetFmtExt, byteos);
+                        byteout = byteos.toByteArray();
+                        scaledImageCount++;
+                    } catch (IllegalArgumentException e) {
+                        Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
+                    } catch (IOException e) {
+                        Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                    } finally {
+                        byteos.close();
+                    }
+                    
+                    GenericValue imageDataResource = delegator.makeValue("ImageDataResource");
+                    imageDataResource.put("imageData", byteout);
+                    imageDataResource.put("dataResourceId", dataResource.get("dataResourceId"));
+                    imageDataResource.create();
+                    
+                    if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
+                        GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
+                        fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
+                        fileSizeDataResourceAttr.put("attrName", fileSizeDataResAttrName);
+                        fileSizeDataResourceAttr.put("attrValue", String.valueOf(byteout.length));
+                        fileSizeDataResourceAttr.create();
+                    }
+                    
+                    String dataResourceId = (String) dataResource.get("dataResourceId");
+
+                    Map<String, Object> contentCtx = new HashMap<>();
+                    //contentCtx.put("contentTypeId", "SCP_MEDIA");
+                    //contentCtx.put("contentName", contentName);
+                    contentCtx.put("dataResourceId", dataResourceId);
+                    if (contentFieldsMap.get(sizeType) != null) {
+                        contentCtx.putAll(contentFieldsMap.get(sizeType));
+                    } else if (contentFields != null) {
+                        contentCtx.putAll(contentFields);
+                    }
+                    contentCtx.put("userLogin", userLogin);
+                    contentCtx.put("locale", locale);
+                    contentCtx.put("timeZone", timeZone);
+                    String resContentId;
+                    try {
+                        Map<String, Object> contentResult = dispatcher.runSync("createContent", contentCtx);
+                        if (!ServiceUtil.isSuccess(contentResult)) {
+                            Debug.logError(logPrefix+"Error creating Content: " + ServiceUtil.getErrorMessage(contentResult), module);
+                            return ServiceUtil.returnError("Error creating Content: " + ServiceUtil.getErrorMessage(contentResult));
+                        }
+                        resContentId = (String) contentResult.get("contentId");
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, logPrefix+"Error creating Content: " + e.getMessage(), module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                    
+                    String contentAssocTypeId = "IMGSZ_" + sizeType.toUpperCase();
+                    if (delegator.findOne("ContentAssocType", UtilMisc.toMap("contentAssocTypeId", contentAssocTypeId), false) == null) {
+                        Debug.logInfo(logPrefix+"ContentAssocType for contentAssocTypeId '" + contentAssocTypeId
+                                + "' does not yet exist; automatically creating...", module);
+                        GenericValue contentAssocType = delegator.makeValue("ContentAssocType");
+                        contentAssocType.put("contentAssocTypeId", contentAssocTypeId);
+                        contentAssocType.put("description", "Image - " + sizeType.substring(0, 1).toUpperCase() + sizeType.substring(1).toLowerCase());
+                        contentAssocType.create();
+                    }
+
+                    GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
+                    contentAssoc.put("contentId", imageOrigContentId);
+                    contentAssoc.put("contentIdTo", resContentId);
+                    contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
+                    contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
+                    contentAssoc.put("mapKey", sizeType);
+                    contentAssoc.create();
+                    
+                    imageContentIdMap.put(sizeType, resContentId);
+                } else {
+                    // SCIPIO: new
+                    Debug.logError(logPrefix+ServiceUtil.getErrorMessage(resultScaleImgMap), module);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultScaleImgMap));
+                }
+            } // Loop over sizeType
+
+            // this is helpful info and doesn't do much harm
+            //if (ImageUtil.verboseOn()) {
+            long endTime = System.nanoTime();
+            StringBuilder logSb = new StringBuilder(logPrefix);
+            logSb.append("In ");
+            logSb.append((endTime - startTime) / 1000000);
+            logSb.append("ms created ");
+            logSb.append(scaledImageCount);
+            logSb.append(" scaled and ");
+            logSb.append(imageCopyCount);
+            logSb.append(" original copies of image for contentId ");
+            logSb.append(imageOrigContentId);
+            if (deleteOld) {
+                logSb.append(" (");
+                logSb.append(imageDeleteCount);
+                logSb.append(" deleted)");
+            }
+            if (imageContentIdMap.size() > 0) {
+                logSb.append(" (sizes: ");
+                final String sizeSep = ", ";
+                for(String sizeType : imageContentIdMap.keySet()) {
+                    logSb.append(sizeType);
+                    logSb.append(sizeSep);
+                }
+                logSb.setLength(logSb.length() - sizeSep.length());
+                logSb.append(")");
+            }
+            Debug.logInfo(logSb.toString(), module);
+            //}
+            
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("imageContentIdMap", imageContentIdMap);
+            result.put("bufferedImage", bufImg);
+            return result;
+
         } catch(Exception e) {
             // FIXME?: more generic err msg
             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId + ": " + e.getMessage(), module);

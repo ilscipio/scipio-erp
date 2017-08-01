@@ -90,15 +90,15 @@
     
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
             location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false">
-        <description>(TODO) Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
+        <description>Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
         
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigContentId" mode="IN" type="String" optional="false">
-            <description>Original image contentId as input (alternative to imageOrigPath)
-                WARN: Currently only works with Content linked to a ImageDataResource stored record</description>
+            <description>Original image contentId as input (alternative to imageOrigPath)</description>
         </attribute>
         <attribute name="imageOrigFn" mode="IN" type="String" optional="true">
-            <description>Original filename (no directories) to use for the original image; by default tries to get this from dataResourceName or objectInfo on DataResource</description>
+            <description>Original filename (no directories) to use for the original image; by default tries to get this from DataResource.objectInfo
+                NOTE: Only required if the original DataResource.objectInfo did not contain a filename or path to a file (sometimes the case)</description>
         </attribute>
         <!-- TODO?
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -106,11 +106,8 @@
         </attribute>-->
     
         <!-- GENERATED RECORD PARAMETERS -->
-        <attribute name="imageFnFmt" mode="IN" type="String" optional="true">
-            <description>Image filename format string, no directories, no extension, parameterized with ${sizetype} (or ${type}) and ${origfn} (default: ${origfn}_${sizetype})</description>
-        </attribute>
         <attribute name="targetFmtExt" mode="IN" type="String" optional="true">
-            <description>Target format name, same as file extension, e.g. png, jpg, ... (default: inferred from DataResource.mimeTypeId)</description>
+            <description>Target format name, same as file extension, e.g. png, jpg, ... (default: inferred from original DataResource.mimeTypeId)</description>
         </attribute>
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
             <description>Path to ImageProperties.xml file containing size types, from ofbiz home root (default: /applications/content/config/ImageProperties.xml)</description>
@@ -128,19 +125,32 @@
         
         <!-- Content/DataResource  -->
         <attribute name="contentFields" mode="IN" type="Map" optional="true">
-            <description>Fields to use to populate the created Content entities (all sizeTypes)</description>
+            <description>Fields to use to populate the created Content entities (all sizeTypes)
+                NOTE: the following fields support flexible expressions: 
+                    contentName (default: "${origimg.contentName}_${sizetype}")</description>
         </attribute>
         <attribute name="dataResourceFields" mode="IN" type="Map" optional="true">
-            <description>Fields to use to populate the created DataResource entities (all sizeTypes)</description>
+            <description>Fields to use to populate the created DataResource entities (all sizeTypes)
+                NOTE: the following fields support flexible expressions: 
+                    dataResourceName (default: "${origimg.dataResourceName}_${sizetype}"),
+                    objectInfo (default: "${origfn}_${sizetype}.${ext}" NOTE: origfn comes from objectInfo but may be imageOrigFn w/o ext - if passed)</description>
         </attribute>
         <attribute name="contentFieldsMap" mode="IN" type="Map" optional="true">
-            <description>Map of fields to use to populate the duplicated original Content entity, if copyOrig true (map key: sizeType)</description>
+            <description>Map of fields to use to populate the duplicated original Content entity, if copyOrig true (map key: sizeType)
+                NOTE: the following fields support flexible expressions: (see contentFields)</description>
         </attribute>
         <attribute name="dataResourceFieldsMap" mode="IN" type="Map" optional="true">
-            <description>Map of fields to use to populate the duplicated original DataResource entity, if copyOrig true (map key: sizeType)</description>
+            <description>Map of fields to use to populate the duplicated original DataResource entity, if copyOrig true (map key: sizeType)
+                NOTE: the following fields support flexible expressions: (see dataResourceFields)</description>
         </attribute>
         <attribute name="fileSizeDataResAttrName" mode="IN" type="String" optional="true">
             <description>If specified, will add a DataResourceAttribute with this name containing the total filesize</description>
+        </attribute>
+        
+        <!-- ContentAssoc -->
+        <attribute name="contentAssocTypeId" mode="IN" type="String" optional="true">
+            <description>Content assoc type, with support for flexible expressions (default: "IMGSZ_${sizetype}")
+                NOTE: the entire string is automatically uppercased</description>
         </attribute>
     
         <!-- SCALING OPTIONS -->

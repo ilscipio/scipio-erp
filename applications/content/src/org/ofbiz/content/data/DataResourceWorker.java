@@ -1032,6 +1032,11 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 if (valObj != null) {
                     bytes = valObj.getBytes("audioData");
                 }
+            } else if ("DOCUMENT_OBJECT".equals(dataResourceTypeId)) { // SCIPIO: 2017-08-01: new DocumentDataResource type
+                valObj = EntityQuery.use(delegator).from("DocumentDataResource").where("dataResourceId", dataResourceId).cache(cache).queryOne();
+                if (valObj != null) {
+                    bytes = valObj.getBytes("documentData");
+                }
             } else if ("OTHER_OBJECT".equals(dataResourceTypeId)) {
                 valObj = EntityQuery.use(delegator).from("OtherDataResource").where("dataResourceId", dataResourceId).cache(cache).queryOne();
                 if (valObj != null) {

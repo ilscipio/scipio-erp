@@ -70,7 +70,7 @@ under the License.
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="view" value="login"/>
+        <response name="success" type="request-redirect" value="login"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="forgotPassword">

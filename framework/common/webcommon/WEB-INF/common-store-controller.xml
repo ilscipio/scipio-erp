@@ -85,7 +85,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
             to logout anonymous user in some cases -->
         <security https="true" auth="false"/><!-- auth="true" -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="view" value="login"/>
+        <response name="success" type="request-redirect" value="login"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="autoLogout">

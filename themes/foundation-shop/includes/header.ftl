@@ -200,6 +200,26 @@ under the License.
 </#if>
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
 <body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> page-auth">
+<#-- ================================
+            SOCIAL LOGIN 
+     ================================
+-->
+<#-- Facebook Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","facebook.enabled")== "Y">
+    <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
+    <@fbInit scope="public_profile,user_birthday,email"/>
+</#if>
+<#-- Google Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","google.enabled")== "Y">
+    <#include "component://auth-google/webapp/google/google-common.ftl"/>
+    <@googleInit/>
+</#if>
+<#-- Twitter Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","twitter.enabled")== "Y">
+    <#include "component://auth-twitter/webapp/facebook/fb-twitter.ftl"/>
+    <@twitterInit/>
+</#if>
+<#-- ================================ -->
 <div class="header" id="header">
 </div>
 

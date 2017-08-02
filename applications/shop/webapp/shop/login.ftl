@@ -157,6 +157,32 @@ under the License.
 
     </@cell>
 </@row>
+<#-- SOCIAL PLugins - requires Facebook, Google or Twitter Authentication Addon -->
+<#if getPropertyMsg("shop.properties","facebook.enabled") == "Y" 
+    || getPropertyMsg("shop.properties","google.enabled") == "Y" 
+    || getPropertyMsg("shop.properties","twitter.enabled") == "Y">
+<@section>
+<@row>
+    <@cell columns=6>
+            
+            <@heading>${uiLabelMap.CommonOr}</@heading>
+            <#-- Facebook Login (Requires Facebook Authentication Addon)-->
+            <#if getPropertyMsg("shop.properties","facebook.enabled") == "Y">
+                <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
+                <@fbButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","google.enabled") == "Y">
+                <#include "component://auth-google/webapp/google/google-common.ftl"/>
+                <@googleButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","twitter.enabled") == "Y">
+                <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
+                <@twitterButton/>
+            </#if>
+         </@cell>
+    </@row>
+</@section>
+</#if>
 <#--  
 <@section title=uiLabelMap.CommonForgotYourPassword>
   <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">

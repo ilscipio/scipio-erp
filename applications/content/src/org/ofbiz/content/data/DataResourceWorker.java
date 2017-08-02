@@ -973,6 +973,9 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
     /**
      * getDataResourceStream - gets an InputStream and Content-Length of a DataResource
+     * <p>
+     * SCIPIO: 2017-08-01: This now returns an extra byte[] streamBytes for optimization purposes - ONLY
+     * in cases where it one is involved.
      *
      * @param dataResource
      * @param https
@@ -1010,7 +1013,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             }
 
             byte[] bytes = text.getBytes();
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length));
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // object (binary) data
         } else if (dataResourceTypeId.endsWith("_OBJECT")) {
@@ -1046,14 +1049,15 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 throw new GeneralException("Unsupported OBJECT type [" + dataResourceTypeId + "]; cannot stream");
             }
 
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length));
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // file data
         } else if (dataResourceTypeId.endsWith("_FILE") || dataResourceTypeId.endsWith("_FILE_BIN")) {
             String objectInfo = dataResource.getString("objectInfo");
             if (UtilValidate.isNotEmpty(objectInfo)) {
                 File file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, contextRoot);
-                return UtilMisc.toMap("stream", new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), "length", Long.valueOf(file.length()));
+                byte[] bytes = FileUtils.readFileToByteArray(file); // SCIPIO: 2017-08-01: factored out here
+                return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(file.length()), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
             } else {
                 throw new GeneralException("No objectInfo found for FILE type [" + dataResourceTypeId + "]; cannot stream");
             }

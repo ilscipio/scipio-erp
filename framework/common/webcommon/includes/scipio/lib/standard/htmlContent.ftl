@@ -1468,6 +1468,7 @@ Creates a slider wrapper.
   <#local sliderIdNum = sliderIdNum + 1 />
   <#local dummy = setRequestVar("scipioSliderIdNum", sliderIdNum)>
   <#local dummy = setRequestVar("scipioSlideIdNum", 0)> <#-- Start counting slides from 0 -->
+  
   <#--<#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>-->
   <#global sliderId = id>  
   <#if !sliderId?has_content>
@@ -1481,6 +1482,8 @@ Creates a slider wrapper.
 <#-- @chart main markup - theme override -->
 <#macro slider_markup title="" id="" sliderIdNum=0 class="" library="" controls=true indicator=true 
         jsOptions="" origArgs={} passArgs={} catchArgs...>
+    <#-- right to left fix -->
+    <#if langDir?has_content && langDir=="rtl"><#local jsOptions="rtl:true,"+jsOptions/></#if>    
     <#if title?has_content><@heading title=title/></#if>
     <#switch library>
         <#case "owl">    

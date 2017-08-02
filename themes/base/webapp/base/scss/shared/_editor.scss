@@ -381,6 +381,7 @@ $transition-duration: 150ms !default;
 
         &.trumbowyg-input-error {
             input,
+            select,
             textarea {
                 border: 1px solid #e74c3c;
             }
@@ -390,7 +391,7 @@ $transition-duration: 150ms !default;
             }
         }
 
-        input {
+        input, select {
             position: absolute;
             top: 0;
             right: 0;
@@ -466,6 +467,22 @@ $transition-duration: 150ms !default;
                 background: darken($modal-reset-color, 10%);
             }
         }
+    }
+    
+    // SCIPIO: extras for scipio_links
+    h2.trumbowyg-scp-field-section-title,
+    h3.trumbowyg-scp-field-section-title,
+    h4.trumbowyg-scp-field-section-title,
+    h5.trumbowyg-scp-field-section-title,
+    h6.trumbowyg-scp-field-section-title {
+        text-align:left;
+        margin: 15px 12px;
+    }
+    
+    // FIXME: poor browser support
+    input.disabled, select.disabled {
+        background-color: lightgray;
+        color: gray;
     }
 }
 
@@ -748,7 +765,7 @@ body.trumbowyg-body-fullscreen {
                 }
             }
 
-            input {
+            input, select {
                 border-color: $dark-color;
                 color: #eee;
                 background: #333;
@@ -792,4 +809,19 @@ body.trumbowyg-body-fullscreen {
     .trumbowyg-overlay {
         background-color: rgba(15, 15, 15, 0.6);
     }
+}
+
+// extra CMS styles (non-trumbowyg)
+.cms-edit-page .page-attr-field .field-entry-title label {
+  // NOTE: can't use inline-block because then label-detail won't wrap
+  display: inline;
+}
+.cms-edit-page .page-attr-field .field-entry-title .label-detail {
+  display: inline;
+  font-size: 0.8em;
+  font-style: italic;
+  margin-left: 1em;
+}
+.cms-edit-page .page-attr-field .trumbowyg {
+  margin-top: 0; // the other inputs don't get margin
 }

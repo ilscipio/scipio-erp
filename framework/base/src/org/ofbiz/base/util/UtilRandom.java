@@ -72,6 +72,23 @@ public class UtilRandom {
         }
         return randomDate;
     }
+    
+    static String generateRandomPassword(int len){
+        System.out.println("Your Password ");
+        String charsCaps="ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+        String Chars="abcdefghijklmnopqrstuvwxyz";
+        String nums="0123456789";
+        String symbols="!@#$%^&*()_+-=.,/';:?><~*/-+";
+        String passSymbols=charsCaps + Chars + nums +symbols;
+        Random rnd=new Random();
+        char[] password=new char[len];
+
+        for(int i=0; i<len;i++){
+            password[i]=passSymbols.charAt(rnd.nextInt(passSymbols.length()));
+        }
+      return password.toString();
+
+    }
 
     public static int random(List myList) {
         int size = myList.size();

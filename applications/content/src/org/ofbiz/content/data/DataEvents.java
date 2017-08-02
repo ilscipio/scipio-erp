@@ -285,7 +285,9 @@ public class DataEvents {
             }
             OutputStream os = response.getOutputStream();
             Map<String, Object> resourceData = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"), false);
-            os.write(IOUtils.toByteArray((ByteArrayInputStream)resourceData.get("stream")));
+            // SCIPIO: 2017-08-01: the cast is unnecessary and will break some cases
+            //os.write(IOUtils.toByteArray((ByteArrayInputStream)resourceData.get("stream")));
+            os.write(IOUtils.toByteArray((InputStream)resourceData.get("stream")));
             os.flush();
         } catch (GenericEntityException e) {
             String errMsg = "Error downloading digital product content: " + e.toString();

@@ -489,6 +489,63 @@ under the License.
       <relation type="one-nofk" rel-entity-name="ImageDataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="VideoDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="AudioDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="DocumentDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
+        <key-map field-name="contentId" rel-field-name="contentIdStart"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentPurpose">
+          <key-map field-name="contentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="contentId"/>
+      </relation>
+    </view-entity>
+    <!-- SCIPIO: 2017-08-01: Same as ContentDataResourceView, but DataResource is required -->
+    <view-entity entity-name="ContentDataResourceRequiredView"
+                package-name="org.ofbiz.content.content"
+                title="Content and DataResource Required View Entity">
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="VideoDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="AudioDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="DocumentDataResource"><!-- SCIPIO: 2017-08-01: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
@@ -659,6 +716,7 @@ under the License.
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
+      <field name="sequenceId" type="id"></field><!-- SCIPIO: 2017-04-31: new sequenceId field for ordering in display -->
       <prim-key field="contentTypeId"/>
       <relation type="one" fk-name="CNTNT_TYPE_PARENT" title="Parent" rel-entity-name="ContentType">
         <key-map field-name="parentTypeId" rel-field-name="contentTypeId"/>
@@ -847,6 +905,75 @@ under the License.
         <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="VideoDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="AudioDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="DocumentDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" rel-entity-name="DataResourceType">
+        <key-map field-name="dataResourceTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId"/>
+      </relation>
+      <relation type="one" rel-entity-name="DataSource">
+        <key-map field-name="dataSourceId"/>
+      </relation>
+      <relation type="one" rel-entity-name="MimeType">
+        <key-map field-name="mimeTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="CharacterSet">
+        <key-map field-name="characterSetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceTypeAttr">
+        <key-map field-name="dataResourceTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceAttribute">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceRole">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </view-entity>
+    <!-- SCIPIO: 2017-07-31: Variant of DataResourceContentView that requires the Content relation -->
+    <view-entity entity-name="DataResourceContentRequiredView"
+                package-name="org.ofbiz.content.content"
+                title="DataResource and Content Required View">
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <alias-all entity-alias="DR"/>
+      <alias-all entity-alias="CO" prefix="co"/>
+      <view-link entity-alias="DR" rel-entity-alias="CO" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="VideoDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="AudioDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="DocumentDataResource"><!-- SCIPIO: 2017-07-31: new relations -->
         <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
@@ -1052,6 +1179,17 @@ under the License.
       <field name="videoData" type="byte-array"></field>
       <prim-key field="dataResourceId"/>
       <relation type="one" fk-name="DATA_REC_VIDEO" rel-entity-name="DataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+    </entity>
+    <!-- SCIPIO: 2017-07-31: new DocumentDataResource -->
+    <entity entity-name="DocumentDataResource"
+            package-name="org.ofbiz.content.data"
+            title="Document Data Object Entity">
+      <field name="dataResourceId" type="id-ne"></field>
+      <field name="documentData" type="byte-array"></field>
+      <prim-key field="dataResourceId"/>
+      <relation type="one" fk-name="DATA_REC_DOCUMENT" rel-entity-name="DataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
     </entity>

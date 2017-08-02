@@ -156,9 +156,10 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
 
+    <!-- SCIPIO: 2017-07-31: Upgraded to remove more records (those that are safe/logical to remove): DataResourceAttribute, VideoDataResource, etc. -->
     <service name="removeContentAndRelated" default-entity-name="Content" engine="simple"
             location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="removeContentAndRelated" auth="true">
-        <description>Remove Content</description>
+        <description>Remove Content and related entities (SCIPIO: enhanced)</description>
         <permission-service service-name="genericContentPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>

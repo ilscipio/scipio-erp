@@ -28,6 +28,13 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+    
+    <!-- Social Logins - requires Social Authentication Addons -->
+    <include location="component://auth-facebook/webapp/facebook/WEB-INF/auth-facebook-controller.xml" optional="true" order="pre-local" />
+    <include location="component://auth-google/webapp/google/WEB-INF/auth-google-controller.xml" optional="true" order="pre-local" />
+    <include location="component://auth-twitter/webapp/twitter/WEB-INF/auth-twitter-controller.xml" optional="true" order="pre-local" />
+ 
+    
     <description>SCIPIO: Common Framework-level Store Configuration File</description>
 
     <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
@@ -85,7 +92,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
             to logout anonymous user in some cases -->
         <security https="true" auth="false"/><!-- auth="true" -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="view" value="login"/>
+        <response name="success" type="request-redirect" value="login"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="autoLogout">
@@ -95,7 +102,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="error" type="view" value="main"/>
     </request-map>
     
-    <request-map uri="forgotpassword">
+    <request-map uri="forgotPassword">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="forgotPassword"/>
         <response name="success" type="view" value="login"/>

@@ -18,15 +18,18 @@
  *******************************************************************************/
 package org.ofbiz.content.image;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 
 /**
  * SCIPIO: Content/generic image utilities.
@@ -77,32 +80,51 @@ public abstract class ContentImageWorker {
                 + "'";
     }
 
-    public static Map<String, Object> getBufferedImageFromContentId(String contentId, Locale locale)
-            throws IllegalArgumentException, IOException {
-
-        /* VARIABLES */
-        BufferedImage bufImg;
-        Map<String, Object> result = new LinkedHashMap<String, Object>();
-
-        /* BUFFERED IMAGE */
-        try {
-            bufImg = null; // TODO
-            if (false) throw new IOException("NOT IMPLEMENTED"); //TODO
-            //bufImg = ImageIO.read(new File(fileLocation));
-        } catch (IllegalArgumentException e) {
-            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.input_is_null", locale) + " : " + contentId + " ; " + e.toString();
-            Debug.logError(errMsg, module);
-            result.put("errorMessage", errMsg);
-            return result;
-        } catch (IOException e) {
-            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.error_occurs_during_reading", locale) + " : " + contentId + " ; " + e.toString();
-            Debug.logError(errMsg, module);
-            result.put("errorMessage", errMsg);
-            return result;
+//    public static Map<String, Object> getBufferedImageFromContentId(String contentId, Locale locale)
+//            throws IllegalArgumentException, IOException {
+//
+//        /* VARIABLES */
+//        BufferedImage bufImg;
+//        Map<String, Object> result = new LinkedHashMap<String, Object>();
+//
+//        /* BUFFERED IMAGE */
+//        try {
+//            bufImg = null; // TODO
+//            if (false) throw new IOException("NOT IMPLEMENTED"); //TODO
+//            //bufImg = ImageIO.read(new File(fileLocation));
+//        } catch (IllegalArgumentException e) {
+//            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.input_is_null", locale) + " : " + contentId + " ; " + e.toString();
+//            Debug.logError(errMsg, module);
+//            result.put("errorMessage", errMsg);
+//            return result;
+//        } catch (IOException e) {
+//            String errMsg = UtilProperties.getMessage(ImageTransform.resource, "ImageTransform.error_occurs_during_reading", locale) + " : " + contentId + " ; " + e.toString();
+//            Debug.logError(errMsg, module);
+//            result.put("errorMessage", errMsg);
+//            return result;
+//        }
+//
+//        result.put("responseMessage", "success");
+//        result.put("bufferedImage", bufImg);
+//        return result;
+//    }
+    
+    public static List<GenericValue> getResizedImageContentAssocRecords(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("contentId", contentId));
+        condList.add(EntityCondition.makeCondition("contentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%"));
+        return delegator.findList("ContentAssoc", 
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
+    }
+    
+    public static Set<String> getResizedImageContentAssocContentIdTo(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
+        Set<String> contentIdListToRemove = new LinkedHashSet<>();
+        List<GenericValue> contentAssocToRemove = getResizedImageContentAssocRecords(delegator, contentId, useCache);
+        if (UtilValidate.isNotEmpty(contentAssocToRemove)) {
+            for(GenericValue contentAssoc : contentAssocToRemove) {
+                contentIdListToRemove.add(contentAssoc.getString("contentIdTo"));
+            }
         }
-
-        result.put("responseMessage", "success");
-        result.put("bufferedImage", bufImg);
-        return result;
+        return contentIdListToRemove;
     }
 }

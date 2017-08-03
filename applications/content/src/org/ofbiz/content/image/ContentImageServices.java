@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -418,7 +419,9 @@ public abstract class ContentImageServices {
         Map<String, Object> contentFields = UtilGenerics.checkMap(context.get("contentFields"));
         Map<String, Object> dataResourceFields = UtilGenerics.checkMap(context.get("dataResourceFields"));
         Map<String, Map<String, Object>> contentFieldsMap = UtilGenerics.checkMap(context.get("contentFieldsMap"));
+        if (contentFieldsMap == null) contentFieldsMap = Collections.emptyMap();
         Map<String, Map<String, Object>> dataResourceFieldsMap = UtilGenerics.checkMap(context.get("dataResourceFieldsMap"));
+        if (dataResourceFieldsMap == null) dataResourceFieldsMap = Collections.emptyMap();
         String fileSizeDataResAttrName = (String) context.get("fileSizeDataResAttrName");
         String targetFmtExt = (String) context.get("targetFmtExt");
         String contentAssocTypeIdExprStr = (String) context.get("contentAssocTypeId");

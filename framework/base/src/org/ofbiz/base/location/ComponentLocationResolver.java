@@ -79,7 +79,7 @@ public class ComponentLocationResolver implements LocationResolver {
             //Debug.logError(e, errMsg, module);
             // SCIPIO: 2017-08-03: special new exception so callers can handle this case
             //throw new MalformedURLException(errMsg);
-            throw new ComponentNotFoundURLException(errMsg);
+            throw new ComponentNotFoundURLException(errMsg, e);
         }
     }
 }

@@ -638,10 +638,10 @@ public abstract class ContentImageServices {
             imageCtx.put("ext", targetFmtExt);
             imageCtx.put("origfn", imageOrigFnNoExt);
             imageCtx.put("origfnnodir", imageOrigFullFnNoExt);
-            Map<String, Object> origimgCtx = new HashMap<>();
-            origimgCtx.putAll(origContent);
-            origimgCtx.putAll(origDataResource); // TODO: REVIEW: possible name clashes...
-            imageCtx.put("origimg", origimgCtx);
+            Map<String, Object> fieldsCtx = new HashMap<>();
+            fieldsCtx.putAll(origContent);
+            fieldsCtx.putAll(origDataResource); // TODO: REVIEW: possible name clashes...
+            imageCtx.put("fields", fieldsCtx);
             
             if (UtilValidate.isEmpty(contentAssocTypeIdExprStr)) {
                 contentAssocTypeIdExprStr = "IMGSZ_${sizetype}";

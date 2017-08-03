@@ -70,11 +70,11 @@ public abstract class ContentImageWorker {
     public static final Map<String, FlexibleStringExpander> RESIZEIMG_DATARESOURCE_FIELDEXPR;
     static {
         Map<String, FlexibleStringExpander> coExprMap = new HashMap<>();
-        coExprMap.put("contentName", FlexibleStringExpander.getInstance("${origimg.contentName}_${sizetype}"));
+        coExprMap.put("contentName", FlexibleStringExpander.getInstance("${fields.contentName}_${sizetype}"));
         RESIZEIMG_CONTENT_FIELDEXPR = Collections.unmodifiableMap(coExprMap);
         
         Map<String, FlexibleStringExpander> drExprMap = new HashMap<>();
-        drExprMap.put("dataResourceName", FlexibleStringExpander.getInstance("${origimg.dataResourceName}_${sizetype}"));
+        drExprMap.put("dataResourceName", FlexibleStringExpander.getInstance("${fields.dataResourceName}_${sizetype}"));
         drExprMap.put("objectInfo", FlexibleStringExpander.getInstance("${origfn}_${sizetype}.${ext}"));
         RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);  
     }

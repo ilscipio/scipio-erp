@@ -130,12 +130,12 @@
         <attribute name="contentFields" mode="IN" type="Map" optional="true">
             <description>Fields to use to populate the created Content entities (all sizeTypes)
                 NOTE: entries can be FlexibleStringExpander instances. defaults: 
-                    contentName (default: "${origimg.contentName}_${sizetype}")</description>
+                    contentName (default: "${fields.contentName}_${sizetype}")</description>
         </attribute>
         <attribute name="dataResourceFields" mode="IN" type="Map" optional="true">
             <description>Fields to use to populate the created DataResource entities (all sizeTypes)
                 NOTE: entries can be FlexibleStringExpander instances. defaults: 
-                    dataResourceName (default: "${origimg.dataResourceName}_${sizetype}"),
+                    dataResourceName (default: "${fields.dataResourceName}_${sizetype}"),
                     objectInfo (default: "${origfn}_${sizetype}.${ext}" NOTE: origfn comes from objectInfo but may be imageOrigFn w/o ext - if passed)</description>
         </attribute>
         <attribute name="contentFieldsMap" mode="IN" type="Map" optional="true">

@@ -7,57 +7,72 @@ import java.net.MalformedURLException;
  * that can cross legacy interfaces that support only MalformedURLException.
  * NOTE: Does NOT extend ComponentException!
  * Added 2017-08-03.
- * FIXME: componentCause is not currently part of the stack trace.
  */
 @SuppressWarnings("serial")
 public class ComponentURLException extends MalformedURLException {
     
-    private final Throwable componentErrorCause;
+    private final Throwable cause;
+   
+    /**
+     * Constructor with extra component error cause.
+     * DEV NOTE: this does does not initialize Throwable's cause member; it returns through {@link #getCause()} only;
+     * this is due to MalformedURLException limitation.
+     */
+    public ComponentURLException(String msg, Throwable cause) {
+        super(msg);
+        this.cause = cause;
+    }
     
     public ComponentURLException(String msg) {
         super(msg);
-        this.componentErrorCause = null;
+        this.cause = null;
     }
 
     /**
      * Constructor with extra component error cause.
-     * WARN: componentErrorCause does NOT initialize Throwable's cause; it is separate,
-     * due to MalformedURLException limitations.
+     * DEV NOTE: this does does not initialize Throwable's cause member; it returns through {@link #getCause()} only;
+     * this is due to MalformedURLException limitation.
      */
-    public ComponentURLException(String msg, Throwable componentErrorCause) {
-        super(msg);
-        this.componentErrorCause = componentErrorCause;
+    public ComponentURLException(Throwable cause) {
+        super(cause.getMessage());
+        this.cause = cause;
+    }
+
+    /**
+     * Factory method that wraps a ComponentException with optional message.
+     * @param msg optional message or null
+     * @param e component exception (required)
+     */
+    public static ComponentURLException fromComponentException(String msg, ComponentException e) {
+        if (e instanceof ComponentException.ComponentNotFoundException) {
+            return msg != null ? new ComponentNotFoundURLException(msg, e) : new ComponentNotFoundURLException(e);
+        } else {
+            return msg != null ? new ComponentURLException(msg, e) : new ComponentURLException(e);
+        }
     }
     
     /**
-     * Constructor with extra component error cause.
-     * WARN: componentErrorCause does NOT initialize Throwable's cause; it is separate,
-     * due to MalformedURLException limitations.
+     * Returns a cause of this ComponentURLException
+     * DEV NOTE: this returns the local cause member, NOT the Throwable one.
      */
-    public ComponentURLException(Throwable componentErrorCause) {
-        super(componentErrorCause.getMessage());
-        this.componentErrorCause = componentErrorCause;
+    public Throwable getCause() {
+        return cause;
     }
 
     /**
-     * Returns a cause of this ComponentURLException
-     * WARN: this is not the same as {@link #getCause()}, but can be used
-     * for checking cause exception type roughly the same way, when
-     * the ComponentURLException subclasses do not suffice.
+     * Helper exception that used to wrap a ComponentNotFoundException, for caller convenience.
+     * NOTE: not all ComponentException subclasses need or will have a corresponding ComponentURLException
+     * sub-class.
      */
-    public Throwable getComponentErrorCause() {
-        return componentErrorCause;
-    }
-
     public static class ComponentNotFoundURLException extends ComponentURLException {
-        public ComponentNotFoundURLException(String msg, Throwable componentErrorCause) {
-            super(msg, componentErrorCause);
+        public ComponentNotFoundURLException(String msg, Throwable cause) {
+            super(msg, cause);
         }
         public ComponentNotFoundURLException(String msg) {
             super(msg);
         }
-        protected ComponentNotFoundURLException(Throwable componentErrorCause) {
-            super(componentErrorCause);
+        protected ComponentNotFoundURLException(Throwable cause) {
+            super(cause);
         }
     }
     

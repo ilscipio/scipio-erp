@@ -26,7 +26,7 @@ import java.net.URL;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
-import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
+import org.ofbiz.base.component.ComponentURLException;
 import org.ofbiz.base.util.Debug;
 
 /**
@@ -79,7 +79,7 @@ public class ComponentLocationResolver implements LocationResolver {
             //Debug.logError(e, errMsg, module);
             // SCIPIO: 2017-08-03: special new exception so callers can handle this case
             //throw new MalformedURLException(errMsg);
-            throw new ComponentNotFoundURLException(errMsg, e);
+            throw ComponentURLException.fromComponentException(errMsg, e);
         }
     }
 }

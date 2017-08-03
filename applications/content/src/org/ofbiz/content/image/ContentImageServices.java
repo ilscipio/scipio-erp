@@ -734,7 +734,7 @@ public abstract class ContentImageServices {
                     content = delegator.createSetNextSeqId(content);
                     String resContentId = content.getString("contentId");
                     
-                    String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx);
+                    String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx).toUpperCase();
                     if (delegator.findOne("ContentAssocType", UtilMisc.toMap("contentAssocTypeId", contentAssocTypeId), false) == null) {
                         Debug.logInfo(logPrefix+"ContentAssocType for contentAssocTypeId '" + contentAssocTypeId
                                 + "' does not yet exist; automatically creating...", module);

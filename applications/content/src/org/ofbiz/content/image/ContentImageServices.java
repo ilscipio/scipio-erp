@@ -19,12 +19,12 @@
 package org.ofbiz.content.image;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -75,6 +75,19 @@ public abstract class ContentImageServices {
     // SCIPIO: FIXME?: don't really want this dependency, but not major issue 
     private static final String resourceProduct = "ProductErrorUiLabels";
     private static final Locale LOG_LANG = Locale.ENGLISH; // always EN
+    
+    public static final Map<String, FlexibleStringExpander> RESIZEIMG_CONTENT_FIELDEXPR;
+    public static final Map<String, FlexibleStringExpander> RESIZEIMG_DATARESOURCE_FIELDEXPR;
+    static {
+        Map<String, FlexibleStringExpander> coExprMap = new HashMap<>();
+        coExprMap.put("contentName", FlexibleStringExpander.getInstance("${origimg.contentName}_${sizetype}"));
+        RESIZEIMG_CONTENT_FIELDEXPR = Collections.unmodifiableMap(coExprMap);
+        
+        Map<String, FlexibleStringExpander> drExprMap = new HashMap<>();
+        drExprMap.put("dataResourceName", FlexibleStringExpander.getInstance("${origimg.dataResourceName}_${sizetype}"));
+        drExprMap.put("objectInfo", FlexibleStringExpander.getInstance("${origfn}_${sizetype}.${ext}"));
+        RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);  
+    }
     
     protected ContentImageServices() {
     }
@@ -662,24 +675,21 @@ public abstract class ContentImageServices {
                     dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
                     dataResource.put("createdDate", UtilDateTime.nowTimestamp());
                     dataResource.put("mimeTypeId", mimeTypeId);
-                    dataResource.put("dataResourceName", "${origimg.dataResourceName}_${sizetype}");
-                    dataResource.put("objectInfo", "${origfn}_${sizetype}.${ext}");
-                    //dataResource.put("statusId", origDataResource.get("statusId")); // caller should determine theses...
+                    // caller should determine theses...
+                    //dataResource.put("statusId", origDataResource.get("statusId")); 
                     //dataResource.put("isPublic", "N");
+                    
+                    Map<String, Object> customDrFields = new HashMap<>();
                     if (dataResourceFieldsMap.get(sizeType) != null) {
-                        dataResource.setNonPKFields(dataResourceFieldsMap.get(sizeType));
+                        customDrFields.putAll(dataResourceFieldsMap.get(sizeType));
                     } else if (dataResourceFields != null) {
-                        dataResource.setNonPKFields(dataResourceFields);
+                        customDrFields.putAll(dataResourceFields);
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    if (dataResource.getString("dataResourceName") != null) {
-                        dataResource.put("dataResourceName", FlexibleStringExpander.expandString(dataResource.getString("dataResourceName"), imageCtx, timeZone, locale));
-                    }
-                    if (dataResource.getString("objectInfo") != null) {
-                        dataResource.put("objectInfo", FlexibleStringExpander.expandString(dataResource.getString("objectInfo"), imageCtx, timeZone, locale));
-                    }
+                    parseContentDataResourceFieldExpr(customDrFields, RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
 
+                    dataResource.setNonPKFields(customDrFields);
                     delegator.createSetNextSeqId(dataResource);
 
                     byte[] byteout;
@@ -715,7 +725,6 @@ public abstract class ContentImageServices {
 
                     Map<String, Object> contentCtx = new HashMap<>();
                     contentCtx.put("dataResourceId", dataResourceId);
-                    dataResource.put("contentName", "${origimg.contentName}_${sizetype}");
                     if (contentFieldsMap.get(sizeType) != null) {
                         contentCtx.putAll(contentFieldsMap.get(sizeType));
                     } else if (contentFields != null) {
@@ -723,9 +732,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    if (contentCtx.get("contentName") != null) {
-                        contentCtx.put("contentName", FlexibleStringExpander.expandString((String) contentCtx.get("contentName"), imageCtx, timeZone, locale));
-                    }
+                    parseContentDataResourceFieldExpr(customDrFields, RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
                     
                     contentCtx.put("userLogin", userLogin);
                     contentCtx.put("locale", locale);
@@ -808,6 +815,24 @@ public abstract class ContentImageServices {
             // FIXME?: more generic err msg
             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId + ": " + e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
+        }
+    }
+    
+    private static void parseContentDataResourceFieldExpr(Map<String, Object> map, String fieldName, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
+        if (map.get(fieldName) != null) {
+            if (map.get(fieldName) instanceof FlexibleStringExpander) {
+                map.put(fieldName, ((FlexibleStringExpander) map.get("contentName")).expandString(imageCtx, timeZone, locale));
+            } else {
+                map.put(fieldName, FlexibleStringExpander.expandString((String) map.get("contentName"), imageCtx, timeZone, locale));
+            }
+        } else {
+            map.put(fieldName, defaultExprMap.get(fieldName).expandString(imageCtx, timeZone, locale));
+        }
+    }
+    
+    private static void parseContentDataResourceFieldExpr(Map<String, Object> map, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
+        for(String fieldName : defaultExprMap.keySet()) {
+            parseContentDataResourceFieldExpr(map, fieldName, defaultExprMap, imageCtx, timeZone, locale);
         }
     }
  

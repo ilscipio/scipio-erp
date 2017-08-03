@@ -76,19 +76,6 @@ public abstract class ContentImageServices {
     private static final String resourceProduct = "ProductErrorUiLabels";
     private static final Locale LOG_LANG = Locale.ENGLISH; // always EN
     
-    public static final Map<String, FlexibleStringExpander> RESIZEIMG_CONTENT_FIELDEXPR;
-    public static final Map<String, FlexibleStringExpander> RESIZEIMG_DATARESOURCE_FIELDEXPR;
-    static {
-        Map<String, FlexibleStringExpander> coExprMap = new HashMap<>();
-        coExprMap.put("contentName", FlexibleStringExpander.getInstance("${origimg.contentName}_${sizetype}"));
-        RESIZEIMG_CONTENT_FIELDEXPR = Collections.unmodifiableMap(coExprMap);
-        
-        Map<String, FlexibleStringExpander> drExprMap = new HashMap<>();
-        drExprMap.put("dataResourceName", FlexibleStringExpander.getInstance("${origimg.dataResourceName}_${sizetype}"));
-        drExprMap.put("objectInfo", FlexibleStringExpander.getInstance("${origfn}_${sizetype}.${ext}"));
-        RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);  
-    }
-    
     protected ContentImageServices() {
     }
 
@@ -687,7 +674,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    parseContentDataResourceFieldExpr(customDrFields, RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
+                    parseContentDataResourceFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
 
                     dataResource.setNonPKFields(customDrFields);
                     delegator.createSetNextSeqId(dataResource);
@@ -732,7 +719,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    parseContentDataResourceFieldExpr(customDrFields, RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
+                    parseContentDataResourceFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
                     
                     contentCtx.put("userLogin", userLogin);
                     contentCtx.put("locale", locale);

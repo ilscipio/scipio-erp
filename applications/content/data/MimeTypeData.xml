@@ -32,7 +32,7 @@ under the License.
     <CharacterSet characterSetId="UTF-8" description="Unicode 8 bit"/>
     <CharacterSet characterSetId="UTF-16" description="Unicode 16 bit"/>
 
-    <!-- SCIPIO: NOTE: 2017-02-08: The file MimeTypeTikaData.xml is loaded before this one,
+    <!-- SCIPIO: NOTE: 2017-08-02: The file MimeTypeTikaData.xml is loaded before this one,
         separately, for maintenance reasons; the definitions here are more refined and will override them. -->
 
     <!-- application mime types -->

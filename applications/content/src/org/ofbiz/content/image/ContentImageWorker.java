@@ -23,8 +23,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -149,5 +151,23 @@ public abstract class ContentImageWorker {
             }
         }
         return contentIdListToRemove;
+    }
+
+    public static void parseMapFieldExpr(Map<String, Object> map, String fieldName, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
+        if (map.get(fieldName) != null) {
+            if (map.get(fieldName) instanceof FlexibleStringExpander) {
+                map.put(fieldName, ((FlexibleStringExpander) map.get(fieldName)).expandString(imageCtx, timeZone, locale));
+            } else {
+                map.put(fieldName, FlexibleStringExpander.expandString((String) map.get(fieldName), imageCtx, timeZone, locale));
+            }
+        } else {
+            map.put(fieldName, defaultExprMap.get(fieldName).expandString(imageCtx, timeZone, locale));
+        }
+    }
+    
+    public static void parseMapFieldExpr(Map<String, Object> map, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
+        for(String fieldName : defaultExprMap.keySet()) {
+            parseMapFieldExpr(map, fieldName, defaultExprMap, imageCtx, timeZone, locale);
+        }
     }
 }

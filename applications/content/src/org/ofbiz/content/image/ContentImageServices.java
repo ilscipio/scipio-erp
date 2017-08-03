@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -674,7 +673,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    parseContentDataResourceFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
+                    ContentImageWorker.parseMapFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
 
                     dataResource.setNonPKFields(customDrFields);
                     delegator.createSetNextSeqId(dataResource);
@@ -719,7 +718,7 @@ public abstract class ContentImageServices {
                     }
                     
                     // interpret flexible expressions for fields where we support it
-                    parseContentDataResourceFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
+                    ContentImageWorker.parseMapFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
                     
                     contentCtx.put("userLogin", userLogin);
                     contentCtx.put("locale", locale);
@@ -804,23 +803,5 @@ public abstract class ContentImageServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
         }
     }
-    
-    private static void parseContentDataResourceFieldExpr(Map<String, Object> map, String fieldName, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
-        if (map.get(fieldName) != null) {
-            if (map.get(fieldName) instanceof FlexibleStringExpander) {
-                map.put(fieldName, ((FlexibleStringExpander) map.get("contentName")).expandString(imageCtx, timeZone, locale));
-            } else {
-                map.put(fieldName, FlexibleStringExpander.expandString((String) map.get("contentName"), imageCtx, timeZone, locale));
-            }
-        } else {
-            map.put(fieldName, defaultExprMap.get(fieldName).expandString(imageCtx, timeZone, locale));
-        }
-    }
-    
-    private static void parseContentDataResourceFieldExpr(Map<String, Object> map, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
-        for(String fieldName : defaultExprMap.keySet()) {
-            parseContentDataResourceFieldExpr(map, fieldName, defaultExprMap, imageCtx, timeZone, locale);
-        }
-    }
- 
+
 }

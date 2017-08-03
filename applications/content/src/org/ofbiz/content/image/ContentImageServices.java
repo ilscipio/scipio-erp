@@ -127,8 +127,8 @@ public abstract class ContentImageServices {
             if ("success".equals(resultXMLMap.get("responseMessage"))) {
                 imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
             } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageProperties.xml", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml");
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull);
             }
             if (sizeTypeList == null) {
                 sizeTypeList = imgPropertyMap.keySet();
@@ -448,8 +448,8 @@ public abstract class ContentImageServices {
             if ("success".equals(resultXMLMap.get("responseMessage"))) {
                 imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
             } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageProperties.xml", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml");
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull);
             }
             if (sizeTypeList == null) {
                 sizeTypeList = imgPropertyMap.keySet();

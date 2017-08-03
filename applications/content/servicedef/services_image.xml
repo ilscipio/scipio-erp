@@ -122,6 +122,9 @@
         <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
             <description>If true, removes all existing related images before creating new ones (default: false)</description>
         </attribute>
+        <attribute name="createdDate" mode="IN" type="String" optional="true">
+            <description>Optional createdDate for Content and DataResource</description>
+        </attribute>
         
         <!-- Content/DataResource  -->
         <attribute name="contentFields" mode="IN" type="Map" optional="true">

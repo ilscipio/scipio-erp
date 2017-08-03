@@ -435,7 +435,8 @@ public abstract class ContentImageServices {
         long startTime = System.nanoTime();
         
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
-        Timestamp createdDate = UtilDateTime.nowTimestamp();
+        Timestamp createdDate = (Timestamp) context.get("createdDate");
+        if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
         
         try {
             // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
@@ -716,9 +717,6 @@ public abstract class ContentImageServices {
                     }
                     
                     GenericValue content = delegator.makeValue("Content");
-                    content.put("userLogin", userLogin);
-                    content.put("locale", locale);
-                    content.put("timeZone", timeZone);
                     content.put("createdDate", createdDate);
                     
                     Map<String, Object> customCoFields = new HashMap<>();

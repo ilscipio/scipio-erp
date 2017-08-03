@@ -282,6 +282,7 @@ public final class ComponentConfig {
             return componentConfig;
         } else {
             // Do we really need to do this?
+            // SCIPIO: 2017-08-03: the answer is yes
             throw new ComponentException("No component found named : " + globalName);
         }
     }

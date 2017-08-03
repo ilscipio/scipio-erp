@@ -153,21 +153,12 @@ public abstract class ContentImageWorker {
         return contentIdListToRemove;
     }
 
-    public static void parseMapFieldExpr(Map<String, Object> map, String fieldName, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
-        if (map.get(fieldName) != null) {
-            if (map.get(fieldName) instanceof FlexibleStringExpander) {
-                map.put(fieldName, ((FlexibleStringExpander) map.get(fieldName)).expandString(imageCtx, timeZone, locale));
-            } else {
-                map.put(fieldName, FlexibleStringExpander.expandString((String) map.get(fieldName), imageCtx, timeZone, locale));
+    public static Map<String, Object> parseMapFieldExpr(Map<String, Object> map, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof FlexibleStringExpander) {
+                entry.setValue(((FlexibleStringExpander) entry.getValue()).expandString(imageCtx, timeZone, locale));
             }
-        } else {
-            map.put(fieldName, defaultExprMap.get(fieldName).expandString(imageCtx, timeZone, locale));
         }
-    }
-    
-    public static void parseMapFieldExpr(Map<String, Object> map, Map<String, FlexibleStringExpander> defaultExprMap, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {
-        for(String fieldName : defaultExprMap.keySet()) {
-            parseMapFieldExpr(map, fieldName, defaultExprMap, imageCtx, timeZone, locale);
-        }
+        return map;
     }
 }

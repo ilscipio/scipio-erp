@@ -674,14 +674,14 @@ public abstract class ContentImageServices {
                     //dataResource.put("isPublic", "N");
                     
                     Map<String, Object> customDrFields = new HashMap<>();
+                    customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
                     if (dataResourceFieldsMap.get(sizeType) != null) {
                         customDrFields.putAll(dataResourceFieldsMap.get(sizeType));
                     } else if (dataResourceFields != null) {
                         customDrFields.putAll(dataResourceFields);
                     }
-                    
                     // interpret flexible expressions for fields where we support it
-                    ContentImageWorker.parseMapFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
+                    customDrFields = ContentImageWorker.parseMapFieldExpr(customDrFields, imageCtx, timeZone, locale);
 
                     dataResource.setNonPKFields(customDrFields);
                     dataResource = delegator.createSetNextSeqId(dataResource);
@@ -720,13 +720,14 @@ public abstract class ContentImageServices {
                     content.put("createdDate", createdDate);
                     
                     Map<String, Object> customCoFields = new HashMap<>();
+                    customCoFields.putAll(ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR);
                     if (contentFieldsMap.get(sizeType) != null) {
                         customCoFields.putAll(contentFieldsMap.get(sizeType));
                     } else if (contentFields != null) {
                         customCoFields.putAll(contentFields);
                     }
                     // interpret flexible expressions for fields where we support it
-                    ContentImageWorker.parseMapFieldExpr(customCoFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
+                    customCoFields = ContentImageWorker.parseMapFieldExpr(customCoFields, imageCtx, timeZone, locale);
                     
                     content.setNonPKFields(customCoFields);
                     content.put("dataResourceId", dataResourceId);

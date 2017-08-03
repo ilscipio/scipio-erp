@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -433,6 +434,9 @@ public abstract class ContentImageServices {
 
         long startTime = System.nanoTime();
         
+        // USE SAME CREATED DATE FOR EVERYTHING RELATED
+        Timestamp createdDate = UtilDateTime.nowTimestamp();
+        
         try {
             // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
 //            if (UtilValidate.isNotEmpty(imageOrigPath)) {
@@ -609,7 +613,7 @@ public abstract class ContentImageServices {
 //                dataResource.put("mimeTypeId", mimeType.getString("mimeTypeId"));
 //                //dataResource.put("isPublic", "N");
 //                dataResource.put("objectInfo", fileName);
-//                dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+//                dataResource.put("createdDate", createdDate);
 //                delegator.createSetNextSeqId(dataResource);
 //
 //                if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
@@ -659,10 +663,10 @@ public abstract class ContentImageServices {
 
                     imageCtx.put("sizetype", sizeType);
                     imageCtx.put("type", sizeType);
-
+                    
                     GenericValue dataResource = delegator.makeValue("DataResource");
                     dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
-                    dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+                    dataResource.put("createdDate", createdDate);
                     dataResource.put("mimeTypeId", mimeTypeId);
                     // caller should determine theses...
                     //dataResource.put("statusId", origDataResource.get("statusId")); 
@@ -679,7 +683,8 @@ public abstract class ContentImageServices {
                     ContentImageWorker.parseMapFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR, imageCtx, timeZone, locale);
 
                     dataResource.setNonPKFields(customDrFields);
-                    delegator.createSetNextSeqId(dataResource);
+                    dataResource = delegator.createSetNextSeqId(dataResource);
+                    String dataResourceId = dataResource.getString("dataResourceId");
 
                     byte[] byteout;
                     ByteArrayOutputStream byteos = new ByteArrayOutputStream();
@@ -704,40 +709,31 @@ public abstract class ContentImageServices {
                     
                     if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
                         GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
-                        fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
+                        fileSizeDataResourceAttr.put("dataResourceId", dataResourceId);
                         fileSizeDataResourceAttr.put("attrName", fileSizeDataResAttrName);
                         fileSizeDataResourceAttr.put("attrValue", String.valueOf(byteout.length));
-                        fileSizeDataResourceAttr.create();
+                        fileSizeDataResourceAttr = fileSizeDataResourceAttr.create();
                     }
                     
-                    String dataResourceId = (String) dataResource.get("dataResourceId");
-
-                    Map<String, Object> contentCtx = new HashMap<>();
-                    contentCtx.put("dataResourceId", dataResourceId);
+                    GenericValue content = delegator.makeValue("Content");
+                    content.put("userLogin", userLogin);
+                    content.put("locale", locale);
+                    content.put("timeZone", timeZone);
+                    content.put("createdDate", createdDate);
+                    
+                    Map<String, Object> customCoFields = new HashMap<>();
                     if (contentFieldsMap.get(sizeType) != null) {
-                        contentCtx.putAll(contentFieldsMap.get(sizeType));
+                        customCoFields.putAll(contentFieldsMap.get(sizeType));
                     } else if (contentFields != null) {
-                        contentCtx.putAll(contentFields);
+                        customCoFields.putAll(contentFields);
                     }
-                    
                     // interpret flexible expressions for fields where we support it
-                    ContentImageWorker.parseMapFieldExpr(customDrFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
+                    ContentImageWorker.parseMapFieldExpr(customCoFields, ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR, imageCtx, timeZone, locale);
                     
-                    contentCtx.put("userLogin", userLogin);
-                    contentCtx.put("locale", locale);
-                    contentCtx.put("timeZone", timeZone);
-                    String resContentId;
-                    try {
-                        Map<String, Object> contentResult = dispatcher.runSync("createContent", contentCtx);
-                        if (!ServiceUtil.isSuccess(contentResult)) {
-                            Debug.logError(logPrefix+"Error creating Content: " + ServiceUtil.getErrorMessage(contentResult), module);
-                            return ServiceUtil.returnError("Error creating Content: " + ServiceUtil.getErrorMessage(contentResult));
-                        }
-                        resContentId = (String) contentResult.get("contentId");
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, logPrefix+"Error creating Content: " + e.getMessage(), module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
+                    content.setNonPKFields(customCoFields);
+                    content.put("dataResourceId", dataResourceId);
+                    content = delegator.createSetNextSeqId(content);
+                    String resContentId = content.getString("contentId");
                     
                     String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx);
                     if (delegator.findOne("ContentAssocType", UtilMisc.toMap("contentAssocTypeId", contentAssocTypeId), false) == null) {
@@ -746,7 +742,7 @@ public abstract class ContentImageServices {
                         GenericValue contentAssocType = delegator.makeValue("ContentAssocType");
                         contentAssocType.put("contentAssocTypeId", contentAssocTypeId);
                         contentAssocType.put("description", "Image - " + sizeType.substring(0, 1).toUpperCase() + sizeType.substring(1).toLowerCase());
-                        contentAssocType.create();
+                        contentAssocType = contentAssocType.create();
                     }
 
                     GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
@@ -755,7 +751,7 @@ public abstract class ContentImageServices {
                     contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
                     contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
                     contentAssoc.put("mapKey", sizeType);
-                    contentAssoc.create();
+                    contentAssoc = contentAssoc.create();
                     
                     imageContentIdMap.put(sizeType, resContentId);
                 } else {

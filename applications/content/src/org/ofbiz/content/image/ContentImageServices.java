@@ -748,7 +748,7 @@ public abstract class ContentImageServices {
                     contentAssoc.put("contentId", imageOrigContentId);
                     contentAssoc.put("contentIdTo", resContentId);
                     contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
-                    contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
+                    contentAssoc.put("fromDate", createdDate);
                     contentAssoc.put("mapKey", sizeType);
                     contentAssoc = contentAssoc.create();
                     

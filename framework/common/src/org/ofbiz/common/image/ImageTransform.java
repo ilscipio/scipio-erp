@@ -225,7 +225,7 @@ public class ImageTransform {
             // NOTE: stock ofbiz behavior in this method was to preserve, so for backward-compatibility we
             // set PRESERVE_IF_LOWLOSS, which is good enough in most cases; caller can specify.
             // In addition, we set this only if the scaler doesn't have a targettype, so this could be configured per-scaler in imageops.properties.
-            scalingOptions = ImageUtil.addImageOpOptionIfDefaultNotSet(ImageUtil.copyOptions(scalingOptions), "targettype", ImageType.PRESERVE_IF_LOWLOSS, imageScaler); 
+            scalingOptions = ImageUtil.addImageOpOptionIfDefaultNotSet(ImageUtil.copyOptions(scalingOptions), "targettype", ImageType.COMMON_SCALEIMAGE, imageScaler); 
             bufNewImg = imageScaler.scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
         } catch(IOException e) {
             throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);

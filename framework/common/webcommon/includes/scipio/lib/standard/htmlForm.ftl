@@ -1347,13 +1347,20 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     description             = For image type: image alt
     tooltip                 = Tooltip text
                               May result in extra wrapping container.
-    formatText              = ((boolean), default: false) If true, translates newlines to HTML linebreaks (and potentially other transformations)
-                              NOTE: The default for @field macro is currently false, which differs from the Ofbiz form widget default, which is true.
-                              WARN: It is possible the default may be changed to true for specific valueTypes. However, the default for "generic" will always be false.   
+    formatText              = ((boolean), default: true) If true, translates newlines to HTML linebreaks (and potentially other transformations)
+                              NOTE: 2017-08-03: The default for @field macro is currently {{{true}}}, which is the same as the Ofbiz form widget default, which is true.
+                                  Prior to 2017-08-03, this {{{formatText}}} parameter documentation had been mistakenly changed 
+                                  to suggest the default was {{{false}}} for {{{generic}}} (default) valueType for ftl templates (only). 
+                                  However, the actual code was not completely changed and the effective default remained {{{true}}}. 
+                                  Thus, currently, for compatibility reasons, the default is currently left to {{{true}}} 
+                                  for all cases including {{{generic}}} valueType for ftl templates.
     
     * generic *
     tooltip                 = Tooltip text
                               May result in extra wrapping container.
+                              
+  * History *
+    Modified for 1.14.4 (fixed documentation for "display" type "formatText" parameter).
 -->
 <#assign field_defaultArgs = {
   "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", 
@@ -2182,6 +2189,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#if !valueType?has_content || (valueType == "generic")>
           <#local displayType = "text">
           <#if !formatText?is_boolean>
+            <#-- SCIPIO: NOTE: 2017-08-03: there was an intent for this default to be false (for valueType == "generic" only, for ftl only), but
+                the code was never committed; so for compatibility reasons, leaving to true for now; see doc
+            <#local formatText = false>-->
             <#local formatText = true>
           </#if>
         <#else>

@@ -26,7 +26,7 @@
         and should not be called directly as controller events (assume all except where otherwise noted) -->
 
     <service name="contentImageFileScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames); also supports component:// and file:// prefixes</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -89,7 +89,7 @@
     </service>
     
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
         
         <!-- INPUT IMAGE -->

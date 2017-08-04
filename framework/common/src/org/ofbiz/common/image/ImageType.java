@@ -343,7 +343,7 @@ public class ImageType implements Serializable {
      */
     public static final ImageType CHAR_ARGB_OR_RGB = new ImageType(ImagePixelType.TYPE_4BYTE_ABGR, ImagePixelType.TYPE_3BYTE_BGR);
     /**
-     * SCIPIO: Global system default BufferedImage/ImageType type.
+     * Global system default BufferedImage/ImageType type.
      * For use in operations where the input type is unspecified or unusable.
      * <p>
      * NOTE: Ofbiz originally used TYPE_INT_ARGB_PRE only for this, but other image libraries
@@ -354,7 +354,7 @@ public class ImageType implements Serializable {
             INT_ARGB_OR_RGB, 
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default");
     /**
-     * SCIPIO: Global system default BufferedImage/ImageType direct/non-indexed RGB type.
+     * Global system default BufferedImage/ImageType direct/non-indexed RGB type.
      * This is usually the same as DEFAULT but this one guarantees no index/custom/weird type.
      * <p>
      * If you change DEFAULT to something weird, then you need to assign this one to something direct.
@@ -367,7 +367,7 @@ public class ImageType implements Serializable {
             ImagePixelType.isTypeDirect(DEFAULT.getPixelTypeDefault()) ? DEFAULT : INT_ARGB_OR_RGB, 
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.direct");
     /**
-     * SCIPIO: Global system default BufferedImage/ImageType for image operations. 
+     * Global system default BufferedImage/ImageType for image operations. 
      * This should usually be a single TYPE_INT_ARGB OR TYPE_4BYTE_ABGR value to preserve all color components.
      * NOTE: ofbiz used TYPE_PRESERVE_IF_NOT_CUSTOM for this but that may not even work at this time.
      */
@@ -375,6 +375,14 @@ public class ImageType implements Serializable {
             ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop"), 
             DEFAULT_DIRECT, 
             ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.default.imageop");
+    /**
+     * Default targetType specified by the central common scaling image helper methods, such as
+     * {@link ImageTransform#scaleImage}; the default for this is PRESERVE_IF_LOWLOSS.
+     */
+    public static final ImageType COMMON_SCALEIMAGE = getForObjectNonEmptySafe(UtilProperties.getPropertyValue(ImageUtil.IMAGECOMMON_PROP_RESOURCE, 
+            ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.common.scaleimage"), 
+            PRESERVE_IF_LOWLOSS, 
+            ImageUtil.IMAGECOMMON_PROP_RESOURCE + " " + ImageUtil.IMAGECOMMON_PROP_PREFIX+"type.common.scaleimage");
 
     
     /*
@@ -478,8 +486,12 @@ public class ImageType implements Serializable {
     public static ImageType getForObjectNonEmptySafe(Object obj, ImageType defaultValue, String resource) {
         try {
             ImageType imageType = getForObject(obj);
-            if (imageType == null || !imageType.hasPixelTypeDefault()) {
-                Debug.logWarning("Missing or incomplete ImageType definition in " + resource
+            if (imageType == null || imageType.isEmpty()) {
+                Debug.logInfo("No ImageType definition specified for " + resource
+                        + "; using default: " + defaultValue.toString(), module);
+                return defaultValue;
+            } else if (!imageType.hasPixelTypeDefault()) {
+                Debug.logWarning("Incomplete ImageType definition in " + resource
                         + "; using default: " + defaultValue.toString(), module);
                 return defaultValue;
             }
@@ -727,7 +739,6 @@ public class ImageType implements Serializable {
     }
     
     private static void makePixelTypeMapStrRepr(Map<?, ?> map, StringBuilder sb, String... skipKeys) {
-        sb.append("{");
         for(Map.Entry<?, ?> entry : map.entrySet()) {
             String name;
             if (entry.getKey() instanceof String) {
@@ -756,7 +767,6 @@ public class ImageType implements Serializable {
                 sb.append(value);
             }
         }
-        sb.append("}");
     }
     
     

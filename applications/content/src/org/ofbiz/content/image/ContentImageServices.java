@@ -19,12 +19,13 @@
 package org.ofbiz.content.image;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -128,8 +129,8 @@ public abstract class ContentImageServices {
             if ("success".equals(resultXMLMap.get("responseMessage"))) {
                 imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
             } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageProperties.xml", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml");
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap));
             }
             if (sizeTypeList == null) {
                 sizeTypeList = imgPropertyMap.keySet();
@@ -419,7 +420,9 @@ public abstract class ContentImageServices {
         Map<String, Object> contentFields = UtilGenerics.checkMap(context.get("contentFields"));
         Map<String, Object> dataResourceFields = UtilGenerics.checkMap(context.get("dataResourceFields"));
         Map<String, Map<String, Object>> contentFieldsMap = UtilGenerics.checkMap(context.get("contentFieldsMap"));
+        if (contentFieldsMap == null) contentFieldsMap = Collections.emptyMap();
         Map<String, Map<String, Object>> dataResourceFieldsMap = UtilGenerics.checkMap(context.get("dataResourceFieldsMap"));
+        if (dataResourceFieldsMap == null) dataResourceFieldsMap = Collections.emptyMap();
         String fileSizeDataResAttrName = (String) context.get("fileSizeDataResAttrName");
         String targetFmtExt = (String) context.get("targetFmtExt");
         String contentAssocTypeIdExprStr = (String) context.get("contentAssocTypeId");
@@ -430,6 +433,10 @@ public abstract class ContentImageServices {
         final String logPrefix = "contentImageDbScaleInAllSizeCore: ";
 
         long startTime = System.nanoTime();
+        
+        // USE SAME CREATED DATE FOR EVERYTHING RELATED
+        Timestamp createdDate = (Timestamp) context.get("createdDate");
+        if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
         
         try {
             // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
@@ -449,8 +456,8 @@ public abstract class ContentImageServices {
             if ("success".equals(resultXMLMap.get("responseMessage"))) {
                 imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
             } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageProperties.xml", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageProperties.xml");
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap));
             }
             if (sizeTypeList == null) {
                 sizeTypeList = imgPropertyMap.keySet();
@@ -607,7 +614,7 @@ public abstract class ContentImageServices {
 //                dataResource.put("mimeTypeId", mimeType.getString("mimeTypeId"));
 //                //dataResource.put("isPublic", "N");
 //                dataResource.put("objectInfo", fileName);
-//                dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+//                dataResource.put("createdDate", createdDate);
 //                delegator.createSetNextSeqId(dataResource);
 //
 //                if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
@@ -629,12 +636,12 @@ public abstract class ContentImageServices {
             
             Map<String, Object> imageCtx = new HashMap<>();
             imageCtx.put("ext", targetFmtExt);
-            Map<String, Object> origimgCtx = new HashMap<>();
-            origimgCtx.putAll(origContent);
-            origimgCtx.putAll(origDataResource); // TODO: REVIEW: possible name clashes...
-            origimgCtx.put("origfn", imageOrigFnNoExt);
-            origimgCtx.put("origfnnodir", imageOrigFullFnNoExt);
-            imageCtx.put("origimg", origimgCtx);
+            imageCtx.put("origfn", imageOrigFnNoExt);
+            imageCtx.put("origfnnodir", imageOrigFullFnNoExt);
+            Map<String, Object> fieldsCtx = new HashMap<>();
+            fieldsCtx.putAll(origContent);
+            fieldsCtx.putAll(origDataResource); // TODO: REVIEW: possible name clashes...
+            imageCtx.put("fields", fieldsCtx);
             
             if (UtilValidate.isEmpty(contentAssocTypeIdExprStr)) {
                 contentAssocTypeIdExprStr = "IMGSZ_${sizetype}";
@@ -657,30 +664,28 @@ public abstract class ContentImageServices {
 
                     imageCtx.put("sizetype", sizeType);
                     imageCtx.put("type", sizeType);
-
+                    
                     GenericValue dataResource = delegator.makeValue("DataResource");
                     dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
-                    dataResource.put("createdDate", UtilDateTime.nowTimestamp());
+                    dataResource.put("createdDate", createdDate);
                     dataResource.put("mimeTypeId", mimeTypeId);
-                    dataResource.put("dataResourceName", "${origimg.dataResourceName}_${sizetype}");
-                    dataResource.put("objectInfo", "${origfn}_${sizetype}.${ext}");
-                    //dataResource.put("statusId", origDataResource.get("statusId")); // caller should determine theses...
+                    // caller should determine theses...
+                    //dataResource.put("statusId", origDataResource.get("statusId")); 
                     //dataResource.put("isPublic", "N");
-                    if (dataResourceFieldsMap.get(sizeType) != null) {
-                        dataResource.setNonPKFields(dataResourceFieldsMap.get(sizeType));
-                    } else if (dataResourceFields != null) {
-                        dataResource.setNonPKFields(dataResourceFields);
-                    }
                     
+                    Map<String, Object> customDrFields = new HashMap<>();
+                    customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
+                    if (dataResourceFieldsMap.get(sizeType) != null) {
+                        customDrFields.putAll(dataResourceFieldsMap.get(sizeType));
+                    } else if (dataResourceFields != null) {
+                        customDrFields.putAll(dataResourceFields);
+                    }
                     // interpret flexible expressions for fields where we support it
-                    if (dataResource.getString("dataResourceName") != null) {
-                        dataResource.put("dataResourceName", FlexibleStringExpander.expandString(dataResource.getString("dataResourceName"), imageCtx, timeZone, locale));
-                    }
-                    if (dataResource.getString("objectInfo") != null) {
-                        dataResource.put("objectInfo", FlexibleStringExpander.expandString(dataResource.getString("objectInfo"), imageCtx, timeZone, locale));
-                    }
+                    customDrFields = ContentImageWorker.parseMapFieldExpr(customDrFields, imageCtx, timeZone, locale);
 
-                    delegator.createSetNextSeqId(dataResource);
+                    dataResource.setNonPKFields(customDrFields);
+                    dataResource = delegator.createSetNextSeqId(dataResource);
+                    String dataResourceId = dataResource.getString("dataResourceId");
 
                     byte[] byteout;
                     ByteArrayOutputStream byteos = new ByteArrayOutputStream();
@@ -705,61 +710,47 @@ public abstract class ContentImageServices {
                     
                     if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
                         GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
-                        fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
+                        fileSizeDataResourceAttr.put("dataResourceId", dataResourceId);
                         fileSizeDataResourceAttr.put("attrName", fileSizeDataResAttrName);
                         fileSizeDataResourceAttr.put("attrValue", String.valueOf(byteout.length));
-                        fileSizeDataResourceAttr.create();
+                        fileSizeDataResourceAttr = fileSizeDataResourceAttr.create();
                     }
                     
-                    String dataResourceId = (String) dataResource.get("dataResourceId");
-
-                    Map<String, Object> contentCtx = new HashMap<>();
-                    contentCtx.put("dataResourceId", dataResourceId);
-                    dataResource.put("contentName", "${origimg.contentName}_${sizetype}");
+                    GenericValue content = delegator.makeValue("Content");
+                    content.put("createdDate", createdDate);
+                    
+                    Map<String, Object> customCoFields = new HashMap<>();
+                    customCoFields.putAll(ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR);
                     if (contentFieldsMap.get(sizeType) != null) {
-                        contentCtx.putAll(contentFieldsMap.get(sizeType));
+                        customCoFields.putAll(contentFieldsMap.get(sizeType));
                     } else if (contentFields != null) {
-                        contentCtx.putAll(contentFields);
+                        customCoFields.putAll(contentFields);
                     }
-                    
                     // interpret flexible expressions for fields where we support it
-                    if (contentCtx.get("contentName") != null) {
-                        contentCtx.put("contentName", FlexibleStringExpander.expandString((String) contentCtx.get("contentName"), imageCtx, timeZone, locale));
-                    }
+                    customCoFields = ContentImageWorker.parseMapFieldExpr(customCoFields, imageCtx, timeZone, locale);
                     
-                    contentCtx.put("userLogin", userLogin);
-                    contentCtx.put("locale", locale);
-                    contentCtx.put("timeZone", timeZone);
-                    String resContentId;
-                    try {
-                        Map<String, Object> contentResult = dispatcher.runSync("createContent", contentCtx);
-                        if (!ServiceUtil.isSuccess(contentResult)) {
-                            Debug.logError(logPrefix+"Error creating Content: " + ServiceUtil.getErrorMessage(contentResult), module);
-                            return ServiceUtil.returnError("Error creating Content: " + ServiceUtil.getErrorMessage(contentResult));
-                        }
-                        resContentId = (String) contentResult.get("contentId");
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, logPrefix+"Error creating Content: " + e.getMessage(), module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
+                    content.setNonPKFields(customCoFields);
+                    content.put("dataResourceId", dataResourceId);
+                    content = delegator.createSetNextSeqId(content);
+                    String resContentId = content.getString("contentId");
                     
-                    String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx);
+                    String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx).toUpperCase();
                     if (delegator.findOne("ContentAssocType", UtilMisc.toMap("contentAssocTypeId", contentAssocTypeId), false) == null) {
                         Debug.logInfo(logPrefix+"ContentAssocType for contentAssocTypeId '" + contentAssocTypeId
                                 + "' does not yet exist; automatically creating...", module);
                         GenericValue contentAssocType = delegator.makeValue("ContentAssocType");
                         contentAssocType.put("contentAssocTypeId", contentAssocTypeId);
                         contentAssocType.put("description", "Image - " + sizeType.substring(0, 1).toUpperCase() + sizeType.substring(1).toLowerCase());
-                        contentAssocType.create();
+                        contentAssocType = contentAssocType.create();
                     }
 
                     GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
                     contentAssoc.put("contentId", imageOrigContentId);
                     contentAssoc.put("contentIdTo", resContentId);
                     contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
-                    contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
+                    contentAssoc.put("fromDate", createdDate);
                     contentAssoc.put("mapKey", sizeType);
-                    contentAssoc.create();
+                    contentAssoc = contentAssoc.create();
                     
                     imageContentIdMap.put(sizeType, resContentId);
                 } else {
@@ -810,5 +801,5 @@ public abstract class ContentImageServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", locale) + " : " + imageOrigContentId);
         }
     }
- 
+
 }

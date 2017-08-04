@@ -26,7 +26,7 @@
         and should not be called directly as controller events (assume all except where otherwise noted) -->
 
     <service name="contentImageFileScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames); also supports component:// and file:// prefixes</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -89,7 +89,7 @@
     </service>
     
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false">
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
         
         <!-- INPUT IMAGE -->
@@ -122,26 +122,29 @@
         <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
             <description>If true, removes all existing related images before creating new ones (default: false)</description>
         </attribute>
+        <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
+            <description>Optional createdDate for Content and DataResource</description>
+        </attribute>
         
         <!-- Content/DataResource  -->
         <attribute name="contentFields" mode="IN" type="Map" optional="true">
             <description>Fields to use to populate the created Content entities (all sizeTypes)
-                NOTE: the following fields support flexible expressions: 
-                    contentName (default: "${origimg.contentName}_${sizetype}")</description>
+                NOTE: entries can be FlexibleStringExpander instances. defaults: 
+                    contentName (default: "${fields.contentName}_${sizetype}")</description>
         </attribute>
         <attribute name="dataResourceFields" mode="IN" type="Map" optional="true">
             <description>Fields to use to populate the created DataResource entities (all sizeTypes)
-                NOTE: the following fields support flexible expressions: 
-                    dataResourceName (default: "${origimg.dataResourceName}_${sizetype}"),
+                NOTE: entries can be FlexibleStringExpander instances. defaults: 
+                    dataResourceName (default: "${fields.dataResourceName}_${sizetype}"),
                     objectInfo (default: "${origfn}_${sizetype}.${ext}" NOTE: origfn comes from objectInfo but may be imageOrigFn w/o ext - if passed)</description>
         </attribute>
         <attribute name="contentFieldsMap" mode="IN" type="Map" optional="true">
             <description>Map of fields to use to populate the duplicated original Content entity, if copyOrig true (map key: sizeType)
-                NOTE: the following fields support flexible expressions: (see contentFields)</description>
+                NOTE: entries can be FlexibleStringExpander instances (see contentFields)</description>
         </attribute>
         <attribute name="dataResourceFieldsMap" mode="IN" type="Map" optional="true">
             <description>Map of fields to use to populate the duplicated original DataResource entity, if copyOrig true (map key: sizeType)
-                NOTE: the following fields support flexible expressions: (see dataResourceFields)</description>
+                NOTE: entries can be FlexibleStringExpander instances (see dataResourceFields)</description>
         </attribute>
         <attribute name="fileSizeDataResAttrName" mode="IN" type="String" optional="true">
             <description>If specified, will add a DataResourceAttribute with this name containing the total filesize</description>

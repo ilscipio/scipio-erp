@@ -34,6 +34,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
+import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.metrics.MetricsFactory;
@@ -880,11 +881,11 @@ public class ConfigXMLReader {
             for (Element includeElement : UtilXml.childElementList(rootElement, "include")) {
                 String includeLocation = includeElement.getAttribute("location");
                 if (UtilValidate.isNotEmpty(includeLocation)) {
+                    // SCIPIO: support non-recursive
+                    boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
+                    boolean optional = "true".equals(includeElement.getAttribute("optional"));
                     try {
-                        // SCIPIO: support non-recursive
                         URL urlLocation = FlexibleLocation.resolveLocation(includeLocation);
-                        boolean recursive = !"no".equals(includeElement.getAttribute("recursive"));
-                        boolean optional = "true".equals(includeElement.getAttribute("optional"));
                         String order = includeElement.getAttribute("order");
                         Include include = new Include(urlLocation, recursive, optional, order);
                         includes.add(include);
@@ -893,8 +894,14 @@ public class ConfigXMLReader {
                         } else {
                             includesPreLocal.add(include);
                         }
+                    } catch (ComponentNotFoundURLException mue) { // SCIPIO: 2017-08-03: special case needed for missing component
+                        if (optional) {
+                            if (Debug.verboseOn()) Debug.logVerbose("Skipping optional processing include at [" + includeLocation + "]: component not found", module);
+                        } else {
+                            Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module);
+                        }
                     } catch (MalformedURLException mue) {
-                        Debug.logError(mue, "Error processing include at [" + includeLocation + "]:" + mue.toString(), module);
+                        Debug.logError(mue, "Error processing include at [" + includeLocation + "]: " + mue.toString(), module); // SCIPIO: 2017-08-03: typo fix
                     }
                 }
             }

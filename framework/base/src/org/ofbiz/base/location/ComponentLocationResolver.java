@@ -26,6 +26,7 @@ import java.net.URL;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
+import org.ofbiz.base.component.ComponentURLException;
 import org.ofbiz.base.util.Debug;
 
 /**
@@ -74,8 +75,11 @@ public class ComponentLocationResolver implements LocationResolver {
             return baseLocation;
         } catch (ComponentException e) {
             String errMsg = "Could not get root location for component with name [" + componentName + "], error was: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            throw new MalformedURLException(errMsg);
+            // SCIPIO: 2017-08-03: do not log this anymore, because the caller may need to handle it
+            //Debug.logError(e, errMsg, module);
+            // SCIPIO: 2017-08-03: special new exception so callers can handle this case
+            //throw new MalformedURLException(errMsg);
+            throw ComponentURLException.fromComponentException(errMsg, e);
         }
     }
 }

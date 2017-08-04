@@ -713,7 +713,7 @@ under the License.
             default-resource-name="ContentEntityLabels"
             title="Content Type Entity">
       <field name="contentTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <field name="sequenceId" type="id"></field><!-- SCIPIO: 2017-04-31: new sequenceId field for ordering in display -->

@@ -282,7 +282,8 @@ public final class ComponentConfig {
             return componentConfig;
         } else {
             // Do we really need to do this?
-            throw new ComponentException("No component found named : " + globalName);
+            // SCIPIO: 2017-08-03: the answer is yes
+            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName); // SCIPIO: 2017-08-03: better exception
         }
     }
     
@@ -297,7 +298,7 @@ public final class ComponentConfig {
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName, null);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getFullLocation(resourceLoaderName, location);
     }
@@ -318,7 +319,7 @@ public final class ComponentConfig {
     public static String getRootLocation(String componentName) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getRootLocation();
     }
@@ -326,7 +327,7 @@ public final class ComponentConfig {
     public static InputStream getStream(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getStream(resourceLoaderName, location);
     }
@@ -334,7 +335,7 @@ public final class ComponentConfig {
     public static URL getURL(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getURL(resourceLoaderName, location);
     }
@@ -357,7 +358,7 @@ public final class ComponentConfig {
     public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.isFileResourceLoader(resourceLoaderName);
     }

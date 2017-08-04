@@ -6170,6 +6170,42 @@
         <value xml:lang="zh_CN">注销</value>
         <value xml:lang="zh_TW">登出</value>
     </property>
+    <property key="FacebookLogin">
+        <value xml:lang="de">Anmeldung mit Facebook</value>
+        <value xml:lang="en">Sign in with Facebook</value>
+        <value xml:lang="fr">Connectez-vous avec Facebook</value>
+        <value xml:lang="hi_IN">Facebook के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Facebook</value>
+        <value xml:lang="ja">Facebookのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Facebook</value>
+        <value xml:lang="pt">Faça login no Facebook</value>
+        <value xml:lang="zh">请用facebook</value>
+        <value xml:lang="zh_TW">請用facebook</value>
+    </property>
+    <property key="GoogleLogin">
+        <value xml:lang="de">Anmeldung mit Google+</value>
+        <value xml:lang="en">Sign in with Google+</value>
+        <value xml:lang="fr">Connectez-vous avec Google+</value>
+        <value xml:lang="hi_IN">Google+ के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Google+</value>
+        <value xml:lang="ja">Google+のアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Google+</value>
+        <value xml:lang="pt">Faça login no Google+</value>
+        <value xml:lang="zh">请用google+</value>
+        <value xml:lang="zh_TW">請用google+</value>
+    </property>
+    <property key="TwitterLogin">
+        <value xml:lang="de">Anmeldung mit Twitter</value>
+        <value xml:lang="en">Sign in with Twitter</value>
+        <value xml:lang="fr">Connectez-vous avec Twitter</value>
+        <value xml:lang="hi_IN">Twitter के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Twitter</value>
+        <value xml:lang="ja">Twitterのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Twitter</value>
+        <value xml:lang="pt">Faça login no Twitter</value>
+        <value xml:lang="zh">请用twitter</value>
+        <value xml:lang="zh_TW">請用twitter</value>
+    </property>
     <property key="CommonLongDescription">
         <value xml:lang="de">Ausführliche Beschreibung</value>
         <value xml:lang="en">Long Description</value>

@@ -179,30 +179,23 @@ public class ImageVariantConfig implements Serializable {
     }
 
     /**
-     * Fitting mode - influences best-image selection - see css background-size property ("contain", "cover").
+     * Fitting mode - influences best-image selection - meant
+     * to be used in conjunction with css background-size property ("contain", "cover") or equivalent.
      * @see ImageVariantConfig#getCanvasBestVariant
      */
     public enum FitMode {
         /**
-         * The default mode, image resized to be fully contained in the canvas and at least one of the dimensions
-         * fully matches the canvas dimensions; selects the smallest variant that is slightly bigger
+         * The default mode, selects the smallest variant that is slightly bigger
          * than the canvas dimensions (if possible).
+         * This makes sense to use with css "contain".
          */
-        CONTAIN("contain"),
+        MINIMUM("min"),
         /**
-         * Image must be fully contained in the canvas but no resizing is going to be done to the image;
-         * selects the largest variant that is smaller than both canvas dimensions.
+         * Selects the largest variant that is smaller than both canvas dimensions.
          */
-        CONTAIN_NORESIZE("contain_noresize"),
+        MAXIMUM("max"),;
         
-        // TODO
-//        /**
-//         * The 
-//         */
-//        COVER("cover"),
-        ;
-        
-        public static final FitMode DEFAULT = CONTAIN;
+        public static final FitMode DEFAULT = MINIMUM;
         
         private final String strName;
         
@@ -215,9 +208,8 @@ public class ImageVariantConfig implements Serializable {
         }
         
         public static FitMode fromStrNameParamSafe(String strName) {
-            if ("contain".equals(strName) || "true".equals(strName)) return CONTAIN;
-            else if ("contain_noresize".equals(strName)) return CONTAIN_NORESIZE;
-            //else if ("cover".equals(strName)) return COVER;
+            if ("min".equals(strName) || "true".equals(strName)) return MINIMUM;
+            else if ("max".equals(strName)) return MAXIMUM;
             else return null;
         }
     }
@@ -226,11 +218,7 @@ public class ImageVariantConfig implements Serializable {
      * Tries to return the best variant for the canvas size, or null if there is no preferable option (usually
      * caller should use original in this case... unsure how to handle).
      * At least one of width and height must be specified.
-     * NOTE: the html/css must be configured to match this.
-     * 
-     * FIXME: COVER mode not supported
-     * TODO: needs much more testing, these are not based on browser algorithms or anything.
-     * 
+     * NOTE: the html/css must be configured to match this; "min" meant could go with "contain".
      * @see FitMode
      */
     public VariantInfo getCanvasBestFitVariant(FitMode mode, Integer width, Integer height) {
@@ -241,7 +229,7 @@ public class ImageVariantConfig implements Serializable {
             if (bestVariant != null) return bestVariant;
         }
         
-        if (mode == null || mode == FitMode.CONTAIN) {
+        if (mode == null || mode == FitMode.MINIMUM) {
             // here we get the smallest variant that is larger than the canvas dimensions (so that we
             // make the browser resize it DOWN instead of up, making less detail loss)
             // NOTE: if there is no best, then we'll return null and just use the original.
@@ -280,7 +268,7 @@ public class ImageVariantConfig implements Serializable {
                     }
                 }
             }
-        } else if (mode == FitMode.CONTAIN_NORESIZE) {
+        } else if (mode == FitMode.MAXIMUM) {
             // here we get the largest variant that is smaller that the canvas dimensions
             if (height == null) {
                 // only width specified, so try to get closest to width

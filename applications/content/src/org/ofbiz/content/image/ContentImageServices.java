@@ -44,6 +44,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -118,22 +119,18 @@ public abstract class ContentImageServices {
             }
             
             /* ImageProperties.xml */
-            Map<String, Map<String, String>> imgPropertyMap = new HashMap<>();
-            String imagePropXmlPathFull;
-            if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
-                imagePropXmlPathFull = ContentImageWorker.getImagePropertiesFullPath(imagePropXmlPath);
-            } else {
-                imagePropXmlPathFull = ContentImageWorker.getContentImagePropertiesFullPath();
+            ImageVariantConfig imgPropCfg;
+            if (UtilValidate.isEmpty(imagePropXmlPath)) {
+                imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
             }
-            Map<String, Object> resultXMLMap = ImageTransform.getXMLValue(imagePropXmlPathFull, locale);
-            if ("success".equals(resultXMLMap.get("responseMessage"))) {
-                imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
-            } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap));
+            try {
+                imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+            } catch(Exception e) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
             }
             if (sizeTypeList == null) {
-                sizeTypeList = imgPropertyMap.keySet();
+                sizeTypeList = imgPropCfg.getVariantNames();
             }
             
             /* IMAGE */
@@ -260,13 +257,13 @@ public abstract class ContentImageServices {
                 /* Scale image for each size from ImageProperties.xml */
                 int scaledImageCount = 0;
                 for (String sizeType : sizeTypeList) {
-                    if (!imgPropertyMap.containsKey(sizeType)) {
+                    if (!imgPropCfg.hasVariant(sizeType)) {
                         Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
                         continue;
                     }
                     
                     // Scale
-                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
+                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropCfg.getVariantStringMap(), sizeType, locale, scalingOptions);
     
                     /* Write the new image file */
                     if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
@@ -445,22 +442,18 @@ public abstract class ContentImageServices {
 //            }
             
             /* ImageProperties.xml */
-            Map<String, Map<String, String>> imgPropertyMap = new HashMap<>();
-            String imagePropXmlPathFull;
-            if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
-                imagePropXmlPathFull = ContentImageWorker.getImagePropertiesFullPath(imagePropXmlPath);
-            } else {
-                imagePropXmlPathFull = ContentImageWorker.getContentImagePropertiesFullPath();
+            ImageVariantConfig imgPropCfg;
+            if (UtilValidate.isEmpty(imagePropXmlPath)) {
+                imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
             }
-            Map<String, Object> resultXMLMap = ImageTransform.getXMLValue(imagePropXmlPathFull, locale);
-            if ("success".equals(resultXMLMap.get("responseMessage"))) {
-                imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
-            } else {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPathFull + " : " + ServiceUtil.getErrorMessage(resultXMLMap));
+            try {
+                imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+            } catch(Exception e) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
             }
             if (sizeTypeList == null) {
-                sizeTypeList = imgPropertyMap.keySet();
+                sizeTypeList = imgPropCfg.getVariantNames();
             }
             
             /* IMAGE */
@@ -650,13 +643,13 @@ public abstract class ContentImageServices {
             
             int scaledImageCount = 0;
             for (String sizeType : sizeTypeList) {
-                if (!imgPropertyMap.containsKey(sizeType)) {
+                if (!imgPropCfg.hasVariant(sizeType)) {
                     Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
                     continue;
                 }
                 
                 // Scale
-                Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropertyMap, sizeType, locale, scalingOptions);
+                Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropCfg.getVariantStringMap(), sizeType, locale, scalingOptions);
 
                 /* Write the new image file */
                 if ("success".equals(resultScaleImgMap.get("responseMessage"))) {

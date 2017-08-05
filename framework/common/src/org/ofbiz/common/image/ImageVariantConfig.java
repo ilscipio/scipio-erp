@@ -214,7 +214,7 @@ public class ImageVariantConfig implements Serializable {
             return strName;
         }
         
-        public FitMode fromStrNameParamSafe(String strName) {
+        public static FitMode fromStrNameParamSafe(String strName) {
             if ("contain".equals(strName) || "true".equals(strName)) return CONTAIN;
             else if ("contain_noresize".equals(strName)) return CONTAIN_NORESIZE;
             //else if ("cover".equals(strName)) return COVER;

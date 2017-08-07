@@ -13072,6 +13072,9 @@
         <value xml:lang="zh">欢迎使用OFBiz个人主页</value>
         <value xml:lang="zh_TW">歡迎使用OFBiz儀表板</value>
     </property>
+    <property key="CommonWith">
+        <value xml:lang="en">With</value>
+    </property>
     <property key="CommonWhere">
         <value xml:lang="ar">أين</value>
         <value xml:lang="cs">Kde</value>

@@ -13,9 +13,6 @@ contentCache = UtilCache.getOrCreateUtilCache("dashboard.webtools", 0, 0, 180000
 cacheId = "webtools_user_requestcount";
 
 Map<Date, Map<String, BigDecimal>> processResults() {
-    List mainAndExprs = FastList.newInstance();
-    mainAndExprs.add(EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"));
-
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "hour"; //day|week|month|year
     
@@ -26,9 +23,10 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     
     Map<Date, Long> totalRequests = [:];
     for (int i = 0; i <= iCount; i++) {
-        List serverHitDateAndExprs = FastList.newInstance(mainAndExprs);
+        List serverHitDateAndExprs = FastList.newInstance();
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
+        serverHitDateAndExprs.add(EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"));
         
         serverRequestHits = from("ServerHit").select("visitId").where(serverHitDateAndExprs).queryCount();
         totalRequests.put(dateIntervals.getDateFormatter().format(dateIntervals.getDateBegin()), serverRequestHits);

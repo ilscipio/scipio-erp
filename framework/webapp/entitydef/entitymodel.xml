@@ -90,6 +90,7 @@ under the License.
       </relation>
       <index name="SERVER_HIT_START_IDX" unique="true">
             <index-field name="visitId"/>
+            <index-field name="hitTypeId"/>
             <index-field name="hitStartDateTime"/>
        </index>
     </entity>

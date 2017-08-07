@@ -88,8 +88,7 @@ under the License.
       <relation type="one" fk-name="SERVER_HIT_VISIT" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
       </relation>
-      <index name="SERVER_HIT_START_IDX" unique="true">
-            <index-field name="visitId"/>
+      <index name="SERVER_HIT_START_IDX" unique="false">
             <index-field name="hitTypeId"/>
             <index-field name="hitStartDateTime"/>
        </index>

@@ -187,6 +187,9 @@ under the License.
         <index name="VISIT_THRU_IDX" unique="false">
             <index-field name="thruDate"/>
         </index>
+        <index name="VISIT_FROM_DATE" unique="false">
+            <index-field name="fromDate"/>
+        </index>
     </entity>
     <entity entity-name="Visitor" package-name="org.ofbiz.webapp.visit" title="Visitor Entity"
         sequence-bank-size="100">

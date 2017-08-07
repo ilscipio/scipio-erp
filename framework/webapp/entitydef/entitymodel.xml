@@ -88,6 +88,10 @@ under the License.
       <relation type="one" fk-name="SERVER_HIT_VISIT" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
       </relation>
+      <index name="SERVER_HIT_START_IDX" unique="false">
+            <index-field name="hitTypeId"/>
+            <index-field name="hitStartDateTime"/>
+       </index>
     </entity>
     <entity entity-name="ServerHitBin" package-name="org.ofbiz.webapp.visit" never-cache="true" title="Server Hit Bin Entity">
       <field name="serverHitBinId" type="id-ne"></field>
@@ -184,8 +188,13 @@ under the License.
         <relation type="one" fk-name="VISIT_USER_AGNT" rel-entity-name="UserAgent">
             <key-map field-name="userAgentId"/>
         </relation>
-        <index name="VISIT_THRU_IDX" unique="false">
+        <index name="VISIT_THRU_IDX" unique="true">
             <index-field name="thruDate"/>
+            <index-field name="visitId"/>
+        </index>
+        <index name="VISIT_FROM_DATE" unique="true">
+            <index-field name="fromDate"/>
+            <index-field name="visitId"/>
         </index>
     </entity>
     <entity entity-name="Visitor" package-name="org.ofbiz.webapp.visit" title="Visitor Entity"

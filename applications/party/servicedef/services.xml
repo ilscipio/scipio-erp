@@ -1351,5 +1351,20 @@ under the License.
         <permission-service service-name="partyGroupPermissionCheck" main-action="CREATE"/>
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="true" />
     </service>
+    
+    <!-- Login and Party Services - used by Social Logins -->
+    <service name="createPartyLoginAndSecurityGroups" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="createPartyLoginAndSecurityGroups" auth="true">
+        <description>Service to create a person, a UserLogin and add standard security groups to the new user</description>
+        <implements service="createPersonAndUserLogin"/>
+        <implements service="addUserLoginToSecurityGroup"/>
+    </service>
+    
+    <service name="findUserLogin"  engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="findUserLogin" auth="true">
+        <description>Service to check, if a UserLogin exists for a given userLoginId</description>  
+        <attribute name="userLoginId" mode="IN" type="String" optional="false"/>
+        <attribute name="responseMessage" mode="OUT" type="String" optional="false"/>
+        <attribute name="exists" mode="OUT" type="Boolean" optional="false"/>
+        <attribute name="userLogin" mode="OUT" type="String" optional="true"/>
+    </service>
 
 </services>

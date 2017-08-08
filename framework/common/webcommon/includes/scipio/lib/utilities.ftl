@@ -825,6 +825,18 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               * {{{-}}}: this forces the first STOCK case above, to support filenames that originally were named "original".
                               * {{{~}}}: TODO: NOT IMPLEMENTED: special operator: if the variant begins with the tilde character (~), a special closest-matching behavior will be enabled... 
                               (Stock Ofbiz parameter, modified in Scipio)
+    autoVariant             = (min|max|true|false|, default: false) Enable automatic variant selection with the specified selection mode
+                              * {{{true/min}}}: selects the smallest image that is bigger than the dimensions specified by width/height parameters
+                              * {{{max}}}: selects the largest image that is smaller than the dimensions specified by width/height parameters
+                              WARN: Like the {{{variant}}} parameter, in order for this to work properly for an image, the filesystem must contain
+                                  the proper variants for the image that match the explicit or implied variant configuration ({{{variantCfg}}} parameter).
+    width                   = ((int)) Target image width, for autoVariant 
+    height                  = ((int)) Target image height, for autoVariant
+    variantCfg              = Path to a variant configuration file (ImageProperties.xml)
+                              If omitted, this will lookup a default configuration file based on the settings in:
+                                {{{/framework/common/config/imagecommon.properties}}}
+                              The common/default/fallback/reference file is:
+                                {{{/framework/common/config/ImageProperties.xml}}}                              
     ctxPrefix               = ((boolean)|(string), default: false) Contextual path prefix
                               Extra path prefix prepended to the uri, which may replace the central system default prefix if
                               it produces an absolute URL (prefixed with "http:", "https:", or "//").
@@ -860,7 +872,7 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               (New in Scipio) 
                               
   * History *
-    Enhanced for 1.14.4 (variant parameter).
+    Enhanced for 1.14.4 (variant parameter enhancement; autoVariant parameters added).
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM

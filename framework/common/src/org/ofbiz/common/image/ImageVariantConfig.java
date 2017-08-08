@@ -44,6 +44,8 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     private static final PathVariantConfig PATHVARIANTCFG = PathVariantConfig.fromPropertiesSafe("imagecommon", 
             "image.variant.selector.bypath.", CACHE); // always use cache for this... for now
     
+    public static final String COMMON_IMAGEPROP_FILEPATH = "/framework/common/config/ImageProperties.xml";
+    
     protected final String name;
     protected final String sourceType;
     protected final String location;
@@ -172,20 +174,6 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public static ImageVariantConfig fromImagePropertiesXml(String imgPropsPath) throws IOException {
         return getCache().fromImagePropertiesXml(imgPropsPath);
     }
-    
-    /**
-     * If imgPropertyPath starts with component://, expands it to a full path; otherwise, assumes
-     * it is a path from scipio project root and expands it to a full path using <code>ofbiz.home</code>.
-     * @throws IllegalArgumentException 
-     * @throws MalformedURLException 
-     */
-    public static String getImagePropertiesFullPath(String imgPropertyPath) throws MalformedURLException, IllegalArgumentException {
-        if (FlexibleLocation.isUrlLocation(imgPropertyPath)) {
-            return FlexibleLocation.resolveFileUrlAsPath(imgPropertyPath);
-        } else {
-            return System.getProperty("ofbiz.home") + imgPropertyPath;
-        }
-    }    
     
     private static List<VariantInfo> parseImagePropertiesMap(Map<String, Map<String, String>> map) throws NumberFormatException {
         List<VariantInfo> res = new ArrayList<>();
@@ -561,5 +549,40 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             return defaultCfg;
         }
     }
-        
+     
+    /**
+     * If imgPropertyPath starts with component://, expands it to a full path; otherwise, assumes
+     * it is a path from scipio project root and expands it to a full path using <code>ofbiz.home</code>.
+     * @throws IllegalArgumentException 
+     * @throws MalformedURLException 
+     */
+    public static String getImagePropertiesFullPath(String imgPropertyPath) throws MalformedURLException, IllegalArgumentException {
+        if (FlexibleLocation.isUrlLocation(imgPropertyPath)) {
+            return FlexibleLocation.resolveFileUrlAsPath(imgPropertyPath);
+        } else {
+            return System.getProperty("ofbiz.home") + imgPropertyPath;
+        }
+    }
+    
+    public static String getImagePropertiesFullPathOrIoEx(String imgPropertyPath) throws IOException {
+        try {
+            return getImagePropertiesFullPath(imgPropertyPath);
+        } catch(IOException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new IOException(e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns the full path to the ImageProperties.xml file to use for common image size definitions.
+     * Added 2017-08-08.
+     */
+    public static String getCommonImagePropertiesFullPath() throws IOException {
+        return getImagePropertiesFullPathOrIoEx(COMMON_IMAGEPROP_FILEPATH);
+    }
+    
+    public static String getCommonImagePropertiesPath() throws IOException {
+        return COMMON_IMAGEPROP_FILEPATH;
+    }
 }

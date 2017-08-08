@@ -18,6 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.product.image;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
 
 /**
@@ -39,8 +43,8 @@ public abstract class ProductImageWorker {
      * Uses the one from product component if available; otherwise falls back on the generic one under content component.
      * Added 2017-07-04.
      */
-    public static String getProductImagePropertiesFullPath() {
-        String path = ContentImageWorker.getImagePropertiesFullPath(PRODUCT_IMAGEPROP_FILEPATH);
+    public static String getProductImagePropertiesFullPath() throws IOException {
+        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(PRODUCT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
             return path;
         } else {
@@ -48,8 +52,8 @@ public abstract class ProductImageWorker {
         }
     }
     
-    public static String getProductImagePropertiesPath() {
-        String path = ContentImageWorker.getImagePropertiesFullPath(PRODUCT_IMAGEPROP_FILEPATH);
+    public static String getProductImagePropertiesPath() throws IOException {
+        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(PRODUCT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
             return PRODUCT_IMAGEPROP_FILEPATH;
         } else {

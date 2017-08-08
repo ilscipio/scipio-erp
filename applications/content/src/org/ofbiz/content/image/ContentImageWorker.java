@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.content.image;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import java.util.TimeZone;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -82,20 +85,37 @@ public abstract class ContentImageWorker {
     protected ContentImageWorker() {
     }
 
-    public static String getImagePropertiesFullPath(String imgPropertyPath) {
-        return System.getProperty("ofbiz.home") + imgPropertyPath;
+    /**
+     * @throws IllegalArgumentException 
+     * @throws MalformedURLException 
+     * @deprecated use {@link org.ofbiz.common.image.ImageVariantConfig#getImagePropertiesFullPath}
+     */
+    @Deprecated
+    public static String getImagePropertiesFullPath(String imgPropertyPath) throws MalformedURLException, IllegalArgumentException {
+        return ImageVariantConfig.getImagePropertiesFullPath(imgPropertyPath);
     }
     
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for generic image size definitions.
+     * 2017-08-08: This can now be defined either under content or common components.
      * Added 2017-07-04.
      */
-    public static String getContentImagePropertiesFullPath() {
-        return getImagePropertiesFullPath(CONTENT_IMAGEPROP_FILEPATH);
+    public static String getContentImagePropertiesFullPath() throws IOException {
+        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(CONTENT_IMAGEPROP_FILEPATH);
+        if (new java.io.File(path).exists()) {
+            return path;
+        } else {
+            return ImageVariantConfig.getCommonImagePropertiesFullPath();
+        }
     }
     
-    public static String getContentImagePropertiesPath() {
-        return CONTENT_IMAGEPROP_FILEPATH;
+    public static String getContentImagePropertiesPath() throws IOException {
+        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(CONTENT_IMAGEPROP_FILEPATH);
+        if (new java.io.File(path).exists()) {
+            return CONTENT_IMAGEPROP_FILEPATH;
+        } else {
+            return ImageVariantConfig.getCommonImagePropertiesPath();
+        }
     }
     
     public static String formatLogInfoPath(String filename) {

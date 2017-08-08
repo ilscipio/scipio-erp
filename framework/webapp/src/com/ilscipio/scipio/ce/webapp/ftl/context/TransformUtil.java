@@ -217,14 +217,14 @@ public abstract class TransformUtil {
      * If string passed, will be parsed as integer. Other types such as maps or lists
      * will throw TemplateModelException.
      */
-    public static Integer getIntegerArg(TemplateModel obj, Integer defaultValue, boolean useDefaultWhenEmpty) throws TemplateModelException, NumberFormatException {
+    public static Integer getIntegerArg(TemplateModel obj, Integer defaultValue) throws TemplateModelException, NumberFormatException {
         if (obj instanceof TemplateNumberModel) {
             return ((TemplateNumberModel) obj).getAsNumber().intValue();
         } else if (obj instanceof TemplateScalarModel) {
             TemplateScalarModel s = (TemplateScalarModel) obj;
             String strResult = LangFtlUtil.getAsString(s, true);
             if (strResult.isEmpty()) {
-                return useDefaultWhenEmpty ? defaultValue : null;
+                return defaultValue;
             } else {
                 return Integer.parseInt(strResult);
             }
@@ -236,29 +236,16 @@ public abstract class TransformUtil {
         }
     }
     
-    /**
-     * Gets integer arg.
-     * <p>
-     * Only returns the default if the value is null, but not if empty.
-     */
-    public static Integer getIntegerArg(TemplateModel obj, Integer defaultValue) throws TemplateModelException {
-        return getIntegerArg(obj, defaultValue, false);
-    }
-    
     public static Integer getIntegerArg(TemplateModel obj) throws TemplateModelException {
-        return getIntegerArg(obj, null, false);
-    }
-
-    public static Integer getIntegerArg(Map<?, ?> args, String key, Integer defaultValue, boolean useDefaultWhenEmpty) throws TemplateModelException {
-        return getIntegerArg(getModel(args, key), defaultValue, useDefaultWhenEmpty);
+        return getIntegerArg(obj, null);
     }
     
     public static Integer getIntegerArg(Map<?, ?> args, String key, Integer defaultValue) throws TemplateModelException {
-        return getIntegerArg(getModel(args, key), defaultValue, false);
+        return getIntegerArg(getModel(args, key), defaultValue);
     }
     
     public static Integer getIntegerArg(Map<?, ?> args, String key) throws TemplateModelException {
-        return getIntegerArg(getModel(args, key), null, false);
+        return getIntegerArg(getModel(args, key), null);
     }
     
     /**

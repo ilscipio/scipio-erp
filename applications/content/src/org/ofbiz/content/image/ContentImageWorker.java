@@ -19,7 +19,6 @@
 package org.ofbiz.content.image;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,16 +83,6 @@ public abstract class ContentImageWorker {
     
     protected ContentImageWorker() {
     }
-
-    /**
-     * @throws IllegalArgumentException 
-     * @throws MalformedURLException 
-     * @deprecated use {@link org.ofbiz.common.image.ImageVariantConfig#getImagePropertiesFullPath}
-     */
-    @Deprecated
-    public static String getImagePropertiesFullPath(String imgPropertyPath) throws MalformedURLException, IllegalArgumentException {
-        return ImageVariantConfig.getImagePropertiesFullPath(imgPropertyPath);
-    }
     
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for generic image size definitions.
@@ -101,7 +90,7 @@ public abstract class ContentImageWorker {
      * Added 2017-07-04.
      */
     public static String getContentImagePropertiesFullPath() throws IOException {
-        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(CONTENT_IMAGEPROP_FILEPATH);
+        String path = ImageVariantConfig.getImagePropertiesFullPath(CONTENT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
             return path;
         } else {
@@ -110,7 +99,7 @@ public abstract class ContentImageWorker {
     }
     
     public static String getContentImagePropertiesPath() throws IOException {
-        String path = ImageVariantConfig.getImagePropertiesFullPathOrIoEx(CONTENT_IMAGEPROP_FILEPATH);
+        String path = ImageVariantConfig.getImagePropertiesFullPath(CONTENT_IMAGEPROP_FILEPATH);
         if (new java.io.File(path).exists()) {
             return CONTENT_IMAGEPROP_FILEPATH;
         } else {

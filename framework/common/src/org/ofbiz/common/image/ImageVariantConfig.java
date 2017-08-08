@@ -556,17 +556,13 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
      * @throws IllegalArgumentException 
      * @throws MalformedURLException 
      */
-    public static String getImagePropertiesFullPath(String imgPropertyPath) throws MalformedURLException, IllegalArgumentException {
-        if (FlexibleLocation.isUrlLocation(imgPropertyPath)) {
-            return FlexibleLocation.resolveFileUrlAsPath(imgPropertyPath);
-        } else {
-            return System.getProperty("ofbiz.home") + imgPropertyPath;
-        }
-    }
-    
-    public static String getImagePropertiesFullPathOrIoEx(String imgPropertyPath) throws IOException {
+    public static String getImagePropertiesFullPath(String imgPropertyPath) throws IOException {
         try {
-            return getImagePropertiesFullPath(imgPropertyPath);
+            if (FlexibleLocation.isUrlLocation(imgPropertyPath)) {
+                return FlexibleLocation.resolveFileUrlAsPath(imgPropertyPath);
+            } else {
+                return System.getProperty("ofbiz.home") + imgPropertyPath;
+            }
         } catch(IOException e) {
             throw e;
         } catch(Exception e) {
@@ -579,7 +575,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
      * Added 2017-08-08.
      */
     public static String getCommonImagePropertiesFullPath() throws IOException {
-        return getImagePropertiesFullPathOrIoEx(COMMON_IMAGEPROP_FILEPATH);
+        return getImagePropertiesFullPath(COMMON_IMAGEPROP_FILEPATH);
     }
     
     public static String getCommonImagePropertiesPath() throws IOException {

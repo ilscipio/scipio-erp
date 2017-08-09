@@ -20,6 +20,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.service.ServiceUtil;
 
@@ -510,11 +511,13 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
                 } else {
                     String pathPrefix = properties.getProperty(namePrefix + name + ".pathprefix");
                     if (pathPrefix != null) pathPrefix = pathPrefix.trim();
-                    else pathPrefix = "";
-                    ImageVariantConfig cfg = cfgFactory.fromImagePropertiesXml(cfgfile);
-                    if (cfg == null) throw new IllegalArgumentException("could not read: " + cfgfile);
-                    if (pathPrefixMap.containsKey(pathPrefix)) Debug.logWarning("Duplicate path prefix: " + pathPrefix + " for [" + resource + "/" + namePrefix + "]", module);
-                    pathPrefixMap.put(pathPrefix, cfg);
+                    if (UtilValidate.isEmpty(pathPrefix)) Debug.logError("Empty pathprefix for [" + resource + "/" + namePrefix + "] (default entry will be used)", module);
+                    else {
+                        ImageVariantConfig cfg = cfgFactory.fromImagePropertiesXml(cfgfile);
+                        if (cfg == null) throw new IllegalArgumentException("could not read: " + cfgfile);
+                        if (pathPrefixMap.containsKey(pathPrefix)) Debug.logWarning("Duplicate pathprefix: " + pathPrefix + " for [" + resource + "/" + namePrefix + "]", module);
+                        pathPrefixMap.put(pathPrefix, cfg);
+                    }
                 }
             }
             if (defaultCfg == null) throw new IllegalArgumentException("missing default variant configuration");

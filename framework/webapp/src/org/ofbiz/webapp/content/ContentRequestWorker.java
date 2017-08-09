@@ -34,7 +34,7 @@ public abstract class ContentRequestWorker {
      * component dependency issues.
      * Added 2017-08-08.
      */
-    public static final ImageVariantSelector.Factory variantSelectorFactory = FactoryUtil.getFactoryFromPropertySafe("imagecommon", "image.variant.selector.factory.default", "org.ofbiz.common.image.ImageVariantConfig#Cache#FactorySource");
+    public static final ImageVariantSelector.Factory variantSelectorFactory = FactoryUtil.getFactoryFromPropertySafe("imagecommon", "image.variant.selector.factory.default", "org.ofbiz.common.image.ImageVariantConfig$Cache$FactorySource");
 
     /**
      * SCIPIO: builds a content link.

@@ -74,12 +74,12 @@ public interface ImageVariantSelector {
                 if (UtilValidate.isEmpty(factorySourceClass)) factorySourceClass = defaultVal;
                 return getFactoryFromSource(factorySourceClass);
             } catch(Exception e) {
-                Debug.logError("Unable to get image variant selector factory from property [" + resource + "/" + name + "]", module);
+                Debug.logError(e, "Unable to get image variant selector factory from property [" + resource + "/" + name + "]: " + e.getMessage(), module);
                 if (defaultVal != null && !defaultVal.equals(factorySourceClass)) {
                     try {
                         return getFactoryFromSource(defaultVal);
                     } catch(Exception e1) {
-                        Debug.logError("Unable to get image variant selector factory default: " + defaultVal, module);
+                        Debug.logError(e1, "Unable to get image variant selector factory default: " + defaultVal + ": " + e1.getMessage(), module);
                         return null;
                     }
                 } else {

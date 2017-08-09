@@ -57,6 +57,8 @@ public abstract class ContentImageWorker {
     
     public static final String CONTENT_IMAGEPROP_FILEPATH = "/applications/content/config/ImageProperties.xml";
     
+    public static final String CONTENTATTR_VARIANTCFG = "scpVariantCfg";
+    
     /**
      * Keeps from overloading log with giant filenames.
      */

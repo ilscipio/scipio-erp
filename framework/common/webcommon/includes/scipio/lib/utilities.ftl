@@ -915,6 +915,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
     <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
     <#local res><@ofbizContentUrl uri=(args.uri!"") variant=(args.variant!"") 
         ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") 
+        autoVariant=(args.autoVariant!"") width=(args.width!"") height=(args.height!"") variantCfg=(args.variantCfg!"") 
         strict=strict rawParams=rawParams/></#local>
   <#else>
     <#local res><@ofbizContentUrl uri=args variant=variant strict=true rawParams=true/></#local>

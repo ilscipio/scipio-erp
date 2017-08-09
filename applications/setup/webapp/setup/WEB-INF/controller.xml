@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!--
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+    <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>-->
+    <include location="component://commonext/webapp/ofbizsetup/WEB-INF/controller.xml"/>
+    <description>SCIPIO-ERP Setup component controller</description>
+    
+    <!-- SCIPIO: NOTE: setup events will keep pointing to the original script locations (ofbizsetup, commonext) unless they
+        diverge significantly, because they contain significant code that should not be moved. -->
+    
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="initialsetup" save-home-view="true"/>
+    </request-map>
+    <request-map uri="initialsetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="initialsetup" save-home-view="true"/>
+    </request-map>
+
+    <!-- end of request mappings -->
+    
+    <!-- View Mappings -->
+    <view-map name="initialsetup" type="screen" page="component://setup/widget/SetupScreens.xml#InitialSetup"/>
+    <view-map name="showMessage" type="screen" page="component://setup/widget/SetupScreens.xml#nopartyAcctgPreference"/>
+    
+    <view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/>
+    <view-map name="EditFacility" type="screen" page="component://setup/widget/SetupScreens.xml#EditFacility"/>
+    
+    <view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/>
+    <view-map name="EditProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#EditProductStore"/>
+
+    <view-map name="EntityExportAll" type="screen" page="component://setup/widget/CommonScreens.xml#EntityExportAll"/>
+
+    <view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/>
+    <view-map name="EditWebSite" page="component://setup/widget/SetupScreens.xml#EditWebSite" type="screen"/>
+    
+    <view-map name="firstcustomer" type="screen" page="component://setup/widget/ProfileScreens.xml#FirstCustomer"/>
+    <view-map name="firstproduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProdCatalog"/>
+    <view-map name="EditCategory" type="screen" page="component://setup/widget/SetupScreens.xml#EditCategory"/>
+    <view-map name="EditProduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProduct"/>
+</site-conf>

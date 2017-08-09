@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- SCIPIO: NOTE: This file contains labels for the new setup component only; does not include the shared/legacy Setup* labels; see
+          component://commonext/config/SetupUiLabels.xml 
+        for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
+        WARN: both files share the same Setup* prefix for label names; beware overriding. (same issue occurred with filename) -->
+    <property key="SetupDummyLabel">
+        <value xml:lang="en">Dummy Label</value>
+        <value xml:lang="de">Dummy Label</value>
+    </property>
+</resource>

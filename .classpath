@@ -154,6 +154,7 @@
     <classpathentry kind="src" path="specialpurpose/demosuite/src"/>
     <classpathentry kind="src" path="applications/solr/src"/>
     <classpathentry kind="src" path="applications/shop/src"/>
+    <classpathentry kind="src" path="applications/setup/src"/>
     <classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
     <classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
     <classpathentry kind="lib" path="applications/solr/lib/solr-solrj-5.5.0.jar"/>

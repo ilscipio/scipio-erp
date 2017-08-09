@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -91,7 +92,12 @@ public abstract class ProductImageServices {
         }
         contentCtx.put("imagePathArgs", imagePathArgs);
         if (isStrArgEmpty(contentCtx, "imagePropXmlPath")) {
-            contentCtx.put("imagePropXmlPath", ProductImageWorker.getProductImagePropertiesPath());
+            try {
+                contentCtx.put("imagePropXmlPath", ProductImageWorker.getProductImagePropertiesPath());
+            } catch (Exception e) {
+                Debug.logError("Product image configuration error: " + e.getMessage(), module);
+                return ServiceUtil.returnError("Product image configuration error: " + e.getMessage());
+            }
         }
         
         // TODO/FIXME: currently provides no deletion of the old images...

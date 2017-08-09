@@ -8173,6 +8173,13 @@
         <value xml:lang="zh_CN">或者</value>
         <value xml:lang="zh_TW">或</value>
     </property>
+    <property key="CommonOrLoginWith">
+        <value xml:lang="de">Oder melden Sie sich bei</value>
+        <value xml:lang="en">Or login with</value>
+        <value xml:lang="es">O inicia sesión con</value>
+        <value xml:lang="fr">Ou connectez-vous avec</value>
+        <value xml:lang="pt">Ou faça o login com</value>
+    </property>
     <property key="CommonOrder">
         <value xml:lang="ar">أمر</value>
         <value xml:lang="cs">Objednávka</value>

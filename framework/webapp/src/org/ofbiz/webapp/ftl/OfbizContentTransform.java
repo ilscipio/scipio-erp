@@ -74,6 +74,13 @@ public class OfbizContentTransform implements TemplateTransformModel {
         final String uri = TransformUtil.getStringArg(args, "uri", rawParams); // SCIPIO: uri as alternative to nested
         final Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode"); // SCIPIO: new
         final Object ctxPrefixObj = TransformUtil.getBooleanOrStringArg(args, "ctxPrefix", null, false, rawParams); // SCIPIO: new
+        
+        // SCIPIO: autoVariant params: added 2017-08-08
+        final String autoVariant = TransformUtil.getStringNonEscapingArg(args, "autoVariant");
+        final Integer imgWidth = TransformUtil.getIntegerArg(args, "width");
+        final Integer imgHeight = TransformUtil.getIntegerArg(args, "height");
+        final String imgVariantCfg = TransformUtil.getStringNonEscapingArg(args, "variantCfg");
+        
         return new Writer(out) {
             @Override
             public void write(char cbuf[], int off, int len) {
@@ -96,7 +103,8 @@ public class OfbizContentTransform implements TemplateTransformModel {
                     BeanModel resp = (BeanModel) env.getVariable("response");
                     HttpServletResponse response = (resp == null) ? null : (HttpServletResponse) resp.getWrappedObject();
                     String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
-                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, ctxPrefix, urlDecode, strict);
+                    String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, 
+                            ctxPrefix, urlDecode, strict, autoVariant, imgWidth, imgHeight, imgVariantCfg);
                             
                     out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                 } catch (TemplateModelException e) {

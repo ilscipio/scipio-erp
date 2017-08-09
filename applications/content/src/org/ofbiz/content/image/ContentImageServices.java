@@ -753,6 +753,18 @@ public abstract class ContentImageServices {
                 }
             } // Loop over sizeType
 
+            // save the name of the image props def we used
+            GenericValue contentAttr = delegator.findOne("ContentAttribute", 
+                    UtilMisc.toMap("contentId", imageOrigContentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG), false);
+            if (contentAttr == null) {
+                contentAttr = delegator.makeValue("ContentAttribute", 
+                    UtilMisc.toMap("contentId", imageOrigContentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG, "attrValue", imagePropXmlPath));
+                contentAttr.create();
+            } else {
+                contentAttr.put("attrValue", imagePropXmlPath);
+                contentAttr.store();
+            }
+            
             // this is helpful info and doesn't do much harm
             //if (ImageUtil.verboseOn()) {
             long endTime = System.nanoTime();

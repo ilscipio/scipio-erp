@@ -2,7 +2,6 @@ package com.ilscipio.scipio.ce.webapp.ftl.context;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
@@ -212,6 +211,43 @@ public abstract class TransformUtil {
 
     }
 
+    /**
+     * Gets integer arg.
+     * <p>
+     * If string passed, will be parsed as integer. Other types such as maps or lists
+     * will throw TemplateModelException.
+     */
+    public static Integer getIntegerArg(TemplateModel obj, Integer defaultValue) throws TemplateModelException, NumberFormatException {
+        if (obj instanceof TemplateNumberModel) {
+            return ((TemplateNumberModel) obj).getAsNumber().intValue();
+        } else if (obj instanceof TemplateScalarModel) {
+            TemplateScalarModel s = (TemplateScalarModel) obj;
+            String strResult = LangFtlUtil.getAsString(s, true);
+            if (strResult.isEmpty()) {
+                return defaultValue;
+            } else {
+                return Integer.parseInt(strResult);
+            }
+        } else if (obj == null) {
+            return defaultValue;
+        } else {
+            throw new TemplateModelException("Expected integer model or string representing of integer, but got a " +
+                    obj.getClass() + " instead");
+        }
+    }
+    
+    public static Integer getIntegerArg(TemplateModel obj) throws TemplateModelException {
+        return getIntegerArg(obj, null);
+    }
+    
+    public static Integer getIntegerArg(Map<?, ?> args, String key, Integer defaultValue) throws TemplateModelException {
+        return getIntegerArg(getModel(args, key), defaultValue);
+    }
+    
+    public static Integer getIntegerArg(Map<?, ?> args, String key) throws TemplateModelException {
+        return getIntegerArg(getModel(args, key), null);
+    }
+    
     /**
      * Gets a deep-unwrapped map.
      * FIXME: nonEscaping bool is currently not handled... it may bypass escaping in some cases but not others...

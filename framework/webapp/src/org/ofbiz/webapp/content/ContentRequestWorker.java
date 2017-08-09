@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.image.ImageVariantSelector;
+import org.ofbiz.base.image.ImageVariantSelector.FactoryUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
@@ -28,6 +30,13 @@ public abstract class ContentRequestWorker {
     public static final String ORIGINAL_SIZETYPE = "original";
     
     /**
+     * SCIPIO: abstracted variant selector factory, needed to bypass
+     * component dependency issues.
+     * Added 2017-08-08.
+     */
+    public static final ImageVariantSelector.Factory variantSelectorFactory = FactoryUtil.getFactoryFromPropertySafe("imagecommon", "image.variant.selector.factory.default", "org.ofbiz.common.image.ImageVariantConfig$Cache$FactorySource");
+
+    /**
      * SCIPIO: builds a content link.
      * <p>
      * SCIPIO: added a urlDecode boolean and changed the default behavior to NOT url-decode (FALSE);
@@ -35,16 +44,38 @@ public abstract class ContentRequestWorker {
      * having default as true would be dangerous!
      * <p>
      * SCIPIO: 2017-07-04: imgSize has several enhanced behaviors; see <code>@ofbizContentUrl</code> docs.
+     * <p>
+     * SCIPIO: 2017-08-08: added autoVariant, imgWidth, imgHeight and imgVariantCfg parameters, enabled when
+     * autoVariantMode is not null.
      * 
      * @param ctxPrefix a custom prefix for the URL, that may replace the system-wide default
      * @param strict FALSE by default (for legacy reasons), affects pre-escaped value handling
      */
-    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict) {
+    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict,
+            String autoVariant, Integer imgWidth, Integer imgHeight, String imgVariantCfg) {
         String requestUrl = uri;
 
         // SCIPIO: Our default behavior is NOT to decode unless requested, in contrast to stock Ofbiz
         if (Boolean.TRUE.equals(urlDecode)) {
             requestUrl = UtilCodec.getUrlDecoder().decode(requestUrl);
+        }
+        
+        // SCIPIO: 2017-08-08: autoVariant implementation
+        if (UtilValidate.isNotEmpty(autoVariant) && (imgWidth != null || imgHeight != null)) {
+            try {
+                ImageVariantSelector variantSelector;
+                if (UtilValidate.isNotEmpty(imgVariantCfg)) {
+                    variantSelector = variantSelectorFactory.fromImagePropertiesXml(imgVariantCfg);
+                } else {
+                    variantSelector = variantSelectorFactory.fromResourceUrlPath(requestUrl);
+                }
+                ImageVariantSelector.VariantInfo variantInfo = variantSelector.getCanvasBestFitVariant(autoVariant, imgWidth, imgHeight);
+                if (variantInfo != null) {
+                    imgSize = variantInfo.getName();
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Error determining autoVariant for: " + requestUrl + ": " + e.getMessage(), module);
+            }
         }
         
         if (strict == null) { // SCIPIO: forced to use strict false by default 
@@ -121,6 +152,10 @@ public abstract class ContentRequestWorker {
         newURL.append(getUriPathToConcat(newURL.toString(), requestUrl, strict)); // SCIPIO: getUriPathToConcat
         
         return newURL.toString();
+    }
+    
+    public static String makeContentLink(HttpServletRequest request, HttpServletResponse response, String uri, String imgSize, String webSiteId, String ctxPrefix, Boolean urlDecode, Boolean strict) {
+        return makeContentLink(request, response, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict, null, null, null, null);
     }
     
     /**

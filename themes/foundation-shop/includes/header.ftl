@@ -207,7 +207,7 @@ under the License.
 <#-- Facebook Authentication Addon (required)-->
 <#if getPropertyMsg("shop.properties","facebook.enabled")== "Y">
     <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
-    <@fbInit scope="public_profile,user_birthday,email"/>
+    <@fbInit scope="public_profile,email"/>
 </#if>
 <#-- Google Authentication Addon (required)-->
 <#if getPropertyMsg("shop.properties","google.enabled")== "Y">

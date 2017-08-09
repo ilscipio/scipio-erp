@@ -165,7 +165,7 @@ under the License.
 <@row>
     <@cell columns=6>
             
-            <@heading>${uiLabelMap.CommonOr} ${uiLabelMap.CommonLogin} ${uiLabelMap.CommonWith}</@heading>
+            <@heading>${uiLabelMap.CommonOrLoginWith}</@heading>
             <#-- Facebook Login (Requires Facebook Authentication Addon)-->
             <#if getPropertyMsg("shop.properties","facebook.enabled") == "Y">
                 <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>

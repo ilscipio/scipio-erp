@@ -283,7 +283,7 @@
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
-                <#if (!product.isVirtual?has_content || (product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
+                <#if ((product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
                     <span id="product-price"><strong>${uiLabelMap.OrderChooseVariations}...</strong></span>
                 <#elseif currentPrice?has_content>
                     <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>

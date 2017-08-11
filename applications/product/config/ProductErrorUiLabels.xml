@@ -50,7 +50,7 @@
         <value xml:lang="zh_TW">在當前分類中沒有找到產品.</value>
     </property>
     <property key="ImageManagementErrorRmoveDefaultImage">
-        <value xml:lang="en">Unable to remove an image. It is the defualt image.</value>
+        <value xml:lang="en">Unable to remove an image. It is the default image.</value>
         <value xml:lang="ja">画像の削除はできません。デフォルトの画像です。</value>
         <value xml:lang="th">ไม่สามารถลบรูปภาพ</value>
         <value xml:lang="zh">无法删除图片。它是缺省图片。</value>

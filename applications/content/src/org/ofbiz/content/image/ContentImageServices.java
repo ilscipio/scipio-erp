@@ -670,8 +670,8 @@ public abstract class ContentImageServices {
                     
                     // SCIPIO: 2017-08-11: now store width & height in new DataResource fields,
                     // due to very high probability we will need these, and with decent access speed.
-                    dataResource.put("scpWidth", bufNewImg.getWidth());
-                    dataResource.put("scpHeight", bufNewImg.getHeight());
+                    dataResource.put("scpWidth", (long) bufNewImg.getWidth());
+                    dataResource.put("scpHeight", (long) bufNewImg.getHeight());
                     
                     Map<String, Object> customDrFields = new HashMap<>();
                     customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);

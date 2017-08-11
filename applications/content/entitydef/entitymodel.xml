@@ -837,9 +837,9 @@ under the License.
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
-      <!-- SCIPIO: NOTE: width & height are added to DataResource instead of as DataResourceAttribute because the latter is guaranteed to be too slow for future queries. -->
-      <field name="width" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
-      <field name="height" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
+      <!-- SCIPIO: NOTE: scpWidth & scpHeight are added to DataResource instead of as DataResourceAttribute because the latter is guaranteed to be too slow for future queries. -->
+      <field name="scpWidth" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
+      <field name="scpHeight" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
       <prim-key field="dataResourceId"/>
       <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>

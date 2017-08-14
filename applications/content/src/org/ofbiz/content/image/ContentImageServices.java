@@ -636,10 +636,12 @@ public abstract class ContentImageServices {
             fieldsCtx.putAll(origDataResource); // TODO: REVIEW: possible name clashes...
             imageCtx.put("fields", fieldsCtx);
             
-            if (UtilValidate.isEmpty(contentAssocTypeIdExprStr)) {
-                contentAssocTypeIdExprStr = "IMGSZ_${sizetype}";
+            FlexibleStringExpander contentAssocTypeIdExdr;
+            if (UtilValidate.isNotEmpty(contentAssocTypeIdExprStr)) {
+                contentAssocTypeIdExdr = FlexibleStringExpander.getInstance(contentAssocTypeIdExprStr);
+            } else {
+                contentAssocTypeIdExdr = ContentImageWorker.IMGSZ_CNTASSTYPEID_EXPR;
             }
-            FlexibleStringExpander contentAssocTypeIdExdr = FlexibleStringExpander.getInstance(contentAssocTypeIdExprStr);
             
             int scaledImageCount = 0;
             for (String sizeType : sizeTypeList) {
@@ -665,6 +667,11 @@ public abstract class ContentImageServices {
                     // caller should determine theses...
                     //dataResource.put("statusId", origDataResource.get("statusId")); 
                     //dataResource.put("isPublic", "N");
+                    
+                    // SCIPIO: 2017-08-11: now store width & height in new DataResource fields,
+                    // due to very high probability we will need these, and with decent access speed.
+                    dataResource.put("scpWidth", (long) bufNewImg.getWidth());
+                    dataResource.put("scpHeight", (long) bufNewImg.getHeight());
                     
                     Map<String, Object> customDrFields = new HashMap<>();
                     customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);

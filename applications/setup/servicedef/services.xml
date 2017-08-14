@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -17,15 +17,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- SCIPIO: don't include this; invalid: default="build" -->
-<project name="OFBiz Applications Build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-               securityext/build.xml, humanres/build.xml, 
-               shop/build.xml,
-               setup/build.xml,
-               solr/build.xml"/>
-</project>
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Scipio Setup Component Services</description>
+    <vendor>Ilscipio</vendor>
+    <version>1.0</version>
+
+    <service name="setupDummy" engine="interface">
+        <description>Dummy interface definition - remove when a real service is added</description>
+    </service>
+
+</services>

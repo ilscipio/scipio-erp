@@ -64,6 +64,8 @@ public abstract class ContentImageWorker {
      */
     public static final int LOG_INFO_MAXPATH = UtilProperties.getPropertyAsInteger("content", "image.log.info.maxpath", 80);
     
+    public static final FlexibleStringExpander IMGSZ_CNTASSTYPEID_EXPR = FlexibleStringExpander.getInstance("IMGSZ_${sizetype}");
+    
     /**
      * Default Content field expressions for contentImageDbScaleInAllSizeCore and such services.
      */

@@ -17,15 +17,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<!-- SCIPIO: don't include this; invalid: default="build" -->
-<project name="OFBiz Applications Build" basedir=".">
-    <filelist id="application-builds" dir="applications"
-        files="content/build.xml,party/build.xml,
-               workeffort/build.xml,product/build.xml,marketing/build.xml,
-               order/build.xml,manufacturing/build.xml,
-               accounting/build.xml,
-               securityext/build.xml, humanres/build.xml, 
-               shop/build.xml,
-               setup/build.xml,
-               solr/build.xml"/>
-</project>
+<entity-engine-xml>
+    <!-- SCIPIO: already defined in: component://commonext/data/OfbizSetupSecurityPermissionSeedData.xml
+    <SecurityPermission description="ALL Scipio Setup operations." permissionId="SETUP_ADMIN"/>
+    <SecurityPermission description="Scipio Setup View permission." permissionId="SETUP_VIEW"/>
+
+    <SecurityGroupPermission groupId="SUPER" permissionId="SETUP_ADMIN"/>
+    -->
+</entity-engine-xml>

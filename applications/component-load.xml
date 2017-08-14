@@ -36,6 +36,7 @@ under the License.
         
     <!-- common component used by most other components last because it uses info from most components-->
     <load-component component-location="commonext"/>
+    <load-component component-location="setup"/><!-- SCIPIO: new setup component; depends on common-ext -->
     
     <!-- SCIPIO common components -->
     <load-component component-location="solr"/>

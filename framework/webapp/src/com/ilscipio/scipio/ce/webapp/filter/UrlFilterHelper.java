@@ -26,8 +26,7 @@ public class UrlFilterHelper {
             String urlContextPath = getPathFromUrl(outboundUrlStr);
             if (urlContextPath.equals(currentContextPath)) {
                 return true;
-            }
-            else {
+            } else {
                 if (!currentContextPath.endsWith("/")) currentContextPath += "/";
                 return urlContextPath.startsWith(currentContextPath);
             }
@@ -44,8 +43,7 @@ public class UrlFilterHelper {
             String pathMatch = matcher.group(2);
             if (pathMatch.isEmpty()) {
                 result = "/";
-            }
-            else {
+            } else {
                 result = pathMatch;
             }
         }

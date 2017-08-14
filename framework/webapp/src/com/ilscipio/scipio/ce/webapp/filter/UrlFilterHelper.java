@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class UrlFilterHelper {
 
-    public void verifySameWebappContext(HttpServletRequest request, HttpServletResponse response) {
+    public static void verifySameWebappContext(HttpServletRequest request, HttpServletResponse response) {
         String outboundUrlStr = (String) request.getAttribute("urlRewriteMod.outboundUrlWebapp.outboundUrl");
         boolean isSameContextPath = isSameWebappContext(request, outboundUrlStr);
         request.setAttribute("urlRewriteMod.outboundUrlWebapp.isSameContext", isSameContextPath ? "true" : "false");
     }
     
-    public boolean isSameWebappContext(HttpServletRequest request, String outboundUrlStr) {
+    public static boolean isSameWebappContext(HttpServletRequest request, String outboundUrlStr) {
         if (outboundUrlStr != null) {
             String currentContextPath = request.getContextPath();
             String urlContextPath = getPathFromUrl(outboundUrlStr);

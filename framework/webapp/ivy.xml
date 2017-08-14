@@ -33,5 +33,8 @@
         <dependency org="com.lowagie" name="itext" rev="2.1.7" transitive="false" conf="application->default"/>
         <dependency org="rome" name="rome" rev="0.9" transitive="false" conf="application->default"/>
         
+        <!-- SCIPIO: 2017-08-14: uncomment this to fetch tuckey rewrite filter 
+        <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" transitive="false" conf="application->default"/>
+        -->
     </dependencies>
 </ivy-module>

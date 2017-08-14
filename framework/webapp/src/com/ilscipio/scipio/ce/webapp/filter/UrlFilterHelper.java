@@ -15,9 +15,9 @@ public class UrlFilterHelper {
     // NOTE: these should be non-static methods (TODO: re-verify)
     
     public void verifySameWebappContext(HttpServletRequest request, HttpServletResponse response) {
-        String outboundUrlStr = (String) request.getAttribute("urlRewriteMod.outboundUrlWebapp.outboundUrl");
+        String outboundUrlStr = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
         boolean isSameContextPath = isSameWebappContext(request, outboundUrlStr);
-        request.setAttribute("urlRewriteMod.outboundUrlWebapp.isSameContext", isSameContextPath ? "true" : "false");
+        request.setAttribute("urlFilter.outUrlWebapp.isSameContext", isSameContextPath ? "true" : "false");
     }
     
     public boolean isSameWebappContext(HttpServletRequest request, String outboundUrlStr) {

@@ -77,10 +77,10 @@ I think there is a conceptual mistake here. The breadcrumbs don't really care if
 They are rather to be seen as a way of leading up to a certain directory
 
 if (curCategoryId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
     validBreadcrumb = curCategoryId;
 } else if (curProductId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
 }
 
 

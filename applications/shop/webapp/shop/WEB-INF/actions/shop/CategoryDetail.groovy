@@ -65,7 +65,7 @@ try{
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     
     // get the product category & members
-    result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:viewSize, viewIndex:viewIndex]);
+    result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:viewSize, viewIndex:viewIndex, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
     
     productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
     solrProducts = result.results;

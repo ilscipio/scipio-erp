@@ -44,7 +44,7 @@ topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
 
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
-    res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId, currentTrail:currentTrail]);
+    res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId, currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
     catLevel = res.get("categories");
 }
 

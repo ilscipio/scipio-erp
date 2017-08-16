@@ -30,7 +30,7 @@ import org.ofbiz.product.category.CategoryWorker;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 module = "KeywordSearch.groovy";
 

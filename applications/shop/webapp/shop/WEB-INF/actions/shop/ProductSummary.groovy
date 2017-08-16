@@ -32,7 +32,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.store.*;
 import org.ofbiz.service.*;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");

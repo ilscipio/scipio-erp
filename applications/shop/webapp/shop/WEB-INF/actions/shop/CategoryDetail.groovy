@@ -31,7 +31,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import javolution.util.FastMap;
 import javolution.util.FastList;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;

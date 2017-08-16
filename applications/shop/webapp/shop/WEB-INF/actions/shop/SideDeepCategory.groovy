@@ -28,7 +28,7 @@ import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 final module = "SideDeepCategory.groovy";
 

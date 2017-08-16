@@ -26,7 +26,7 @@ import javolution.util.FastList;
 import com.ilscipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 module = "Breadcrumbs.groovy";
 breadcrumbsList = FastList.newInstance();

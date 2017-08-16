@@ -69,6 +69,14 @@ public class CategoryWorker {
     private CategoryWorker() {
     }
 
+    /**
+     * Gets catalog top category.
+     * <p>
+     * SCIPIO: NOTE (2017-08-15): This stock method relies entirely on the session attribute and request parameter
+     * <code>CATALOG_TOP_CATEGORY</code>; in stock ofbiz, it was intended to be used in backend.
+     * For store implementations, the method that you most likely want 
+     * is {@link org.ofbiz.product.catalog.CatalogWorker#getCatalogTopCategoryId}.
+     */
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         Map<String, Object> requestParameters = UtilHttp.getParameterMap(httpRequest);

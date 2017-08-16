@@ -475,11 +475,12 @@ public class CatalogUrlFilter extends ContextFilter {
         // work for stores and was probably an error; we need the one from CatalogWorker
         //return CategoryWorker.getCatalogTopCategory(request, null);
         
-        // TODO: REVIEW: in order to not interfere with existing store code, we will
-        // NOT save the catalog back to session from here for now...
-        // one of the callers of the method is the one that is setting the initial trail,
-        // and we don't want to interfere with that either.
-        String catalogId = CatalogWorker.getCurrentCatalogIdReadOnly(request); 
+        // TODO: REVIEW: originally switched to calling read-only here to avoid interfering with
+        // any store initialization code; however by doing that we risk becoming out of sync
+        // with the rest of the request; so now switched to calling the regular 
+        // catalogId/empty-trail save in session overload.
+        //String catalogId = CatalogWorker.getCurrentCatalogIdReadOnly(request);
+        String catalogId = CatalogWorker.getCurrentCatalogId(request); 
         return CatalogWorker.getCatalogTopCategoryId(request, catalogId);
     }
 

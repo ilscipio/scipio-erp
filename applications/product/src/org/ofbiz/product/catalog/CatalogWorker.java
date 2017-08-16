@@ -154,8 +154,10 @@ public class CatalogWorker {
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
      * get the first catalog from the database as specified in getCatalogIdsAvailable().
      * If this behavior is undesired, give the user a selectable list of catalogs.
+     * <p>
+     * SCIPIO: 2017-08-15: now supports reading CURRENT_CATALOG_ID without storing back to session (save boolean).
      */
-    public static String getCurrentCatalogId(ServletRequest request) {
+    public static String getCurrentCatalogId(ServletRequest request, boolean save, boolean saveTrail) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         Map<String, Object> requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
         String prodCatalogId = null;
@@ -174,15 +176,54 @@ public class CatalogWorker {
             if (UtilValidate.isNotEmpty(catalogIds)) prodCatalogId = catalogIds.get(0);
         }
 
-        if (!fromSession) {
+        if (save && !fromSession) {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
-            // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
-            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+            if (saveTrail) {
+                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+                // otherwise may lose work done by servlets and filters
+                //CategoryWorker.setTrail(request, FastList.<String>newInstance());
+                CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+            }
         }
         return prodCatalogId;
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * SCIPIO: This variant can optionally skip all saving to session.
+     * Added 2017-08-15.
+     */
+    public static String getCurrentCatalogId(ServletRequest request, boolean save) {
+        return getCurrentCatalogId(request, save, save);
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * <p>
+     * SCIPIO: NOTE: 2017-08-15: this is the original; now delegates.
+     */
+    public static String getCurrentCatalogId(ServletRequest request) {
+        return getCurrentCatalogId(request, true, true);
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * SCIPIO: This variant only reads and does not store the catalogId (or anything else) 
+     * back in session; intended for special purposes.
+     * Added 2017-08-15.
+     */
+    public static String getCurrentCatalogIdReadOnly(ServletRequest request) {
+        return getCurrentCatalogId(request, false, false);
     }
 
     public static List<String> getCatalogIdsAvailable(ServletRequest request) {

@@ -48,6 +48,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.OfbizUrlBuilder;
@@ -251,7 +252,9 @@ public class CatalogUrlFilter extends ContextFilter {
             // In some cases this is desirable, in others not.
             
             // generate trail belong to a top category
-            String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
+            // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
+            //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
+            String topCategoryId = getCatalogTopCategory(httpRequest);
             List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(httpRequest, "trailCategories", topCategoryId, false, false, true);
             List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
             
@@ -432,7 +435,9 @@ public class CatalogUrlFilter extends ContextFilter {
         }
         
         // generate trail belong to a top category
-        String topCategoryId = CategoryWorker.getCatalogTopCategory(request, null);
+        // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
+        //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
+        String topCategoryId = getCatalogTopCategory(request);
         List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
         List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
         
@@ -459,6 +464,25 @@ public class CatalogUrlFilter extends ContextFilter {
         return null;
     }
     
+    /**
+     * SCIPIO: Dedicated helper to get top category, from early filter call.
+     * NOTE: This is MODIFIED from stock ofbiz behavior for several issues, see code below.
+     * Added 2017-08-15.
+     */
+    private static String getCatalogTopCategory(ServletRequest request) {
+        // SCIPIO: BUGFIX: 2017-08-15: in stock ofbiz, this filter was calling 
+        // CategoryWorker.getCatalogTopCategory to get the top category; but this does not
+        // work for stores and was probably an error; we need the one from CatalogWorker
+        //return CategoryWorker.getCatalogTopCategory(request, null);
+        
+        // TODO: REVIEW: originally switched to calling read-only here to avoid interfering with
+        // any store initialization code; however by doing that we risk becoming out of sync
+        // with the rest of the request; so now switched to calling the regular 
+        // catalogId/empty-trail save in session overload.
+        //String catalogId = CatalogWorker.getCurrentCatalogIdReadOnly(request);
+        String catalogId = CatalogWorker.getCurrentCatalogId(request); 
+        return CatalogWorker.getCatalogTopCategoryId(request, catalogId);
+    }
 
     /**
      * SCIPIO: Stock code factored out from {@link #doFilter}.

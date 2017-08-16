@@ -1094,7 +1094,7 @@ functionality.
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (viewSize <= 0)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was a positive number: " + viewSize!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a positive number: " + viewSize!, "htmlUtilitiesPaginate")!>
       <#local viewSize = 1>
     </#if>  
     <#if (!viewIndex?is_number)>

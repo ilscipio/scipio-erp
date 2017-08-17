@@ -318,7 +318,7 @@ public abstract class SolrUtil {
      * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeQueryPhrase} for that.
      * @see #escapeQueryQuoted
      */
-    public static String escapeQueryPlain(String term) {
+    public static String escapeQueryValuePlain(String term) {
         return ClientUtils.escapeQueryChars(term);
         // Reference implementation:
 //        StringBuilder sb = new StringBuilder();
@@ -342,7 +342,7 @@ public abstract class SolrUtil {
      * At current time, this escapes the backslash and double-quote characters only.
      * @see #escapeQueryPlain
      */
-    public static String escapeQueryQuoted(String phrase) {
+    public static String escapeQueryValueQuoted(String phrase) {
         final String s = phrase;
         // Reference implementation: http://api.drupalhelp.net/api/apachesolr/SolrPhpClient--Apache--Solr--Service.php/function/Apache_Solr_Service%3A%3AescapePhrase/5
         // TODO: REVIEW: make sure this actually corresponds to the solr/lucene parser implementation,

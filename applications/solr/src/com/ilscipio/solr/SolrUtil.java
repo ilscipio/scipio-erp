@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javolution.util.FastMap;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.component.ComponentConfig;
@@ -18,13 +17,14 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+
+import javolution.util.FastMap;
 
 /**
  * Solr utility class.
@@ -308,6 +308,55 @@ public abstract class SolrUtil {
             viewIndex = (int) (start / (long) viewSize);
         }
         return viewIndex;
+    }
+    
+    /**
+     * Escapes all special solr/query characters in the given query expression
+     * <em>not</em> enclosed in quotes (simple term).
+     * At current time, this includes at least: 
+     * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
+     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeQueryPhrase} for that.
+     * @see #escapeQueryQuoted
+     */
+    public static String escapeQueryPlain(String term) {
+        return ClientUtils.escapeQueryChars(term);
+        // Reference implementation:
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < s.length(); i++) {
+//          char c = s.charAt(i);
+//          // These characters are part of the query syntax and must be escaped
+//          if (c == '\\' || c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
+//            || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
+//            || c == '*' || c == '?' || c == '|' || c == '&'  || c == ';' || c == '/'
+//            || Character.isWhitespace(c)) {
+//            sb.append('\\');
+//          }
+//          sb.append(c);
+//        }
+//        return sb.toString();
+    }
+    
+    /**
+     * Escapes all special solr/query characters in the given query expression intended to be
+     * enclosed in double-quotes (phrase).
+     * At current time, this escapes the backslash and double-quote characters only.
+     * @see #escapeQueryPlain
+     */
+    public static String escapeQueryQuoted(String phrase) {
+        final String s = phrase;
+        // Reference implementation: http://api.drupalhelp.net/api/apachesolr/SolrPhpClient--Apache--Solr--Service.php/function/Apache_Solr_Service%3A%3AescapePhrase/5
+        // TODO: REVIEW: make sure this actually corresponds to the solr/lucene parser implementation,
+        // w.r.t. the backslash handling; the php reference might be unofficial...
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            // there is no provided implementation for this...
+            if (c == '\\' || c == '\"') {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
     
 }

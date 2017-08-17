@@ -107,8 +107,9 @@ try {
     storeCatalogs = CatalogWorker.getStoreCatalogs(request);
     
     catalogFilter = "";
-    for (catalog in storeCatalogs)
-        catalogFilter += " catalog:" + catalog.prodCatalogId;
+    // FIXME: invalid
+    //for (catalog in storeCatalogs)
+    //    catalogFilter += " catalog:" + catalog.prodCatalogId;
     searchFilter += catalogFilter;
 
     // service requires these as string, but NOTE: it returns them as int
@@ -122,13 +123,16 @@ try {
     searchParamMap.viewIndex = viewIndex;
     
     if (Debug.verboseOn()) Debug.logVerbose("Keyword search params: " + searchParamMap, module);
-    if (Debug.infoOn()) Debug.logInfo("Keyword search params: " + searchParamMap, module);
+    //if (Debug.infoOn()) Debug.logInfo("Keyword search params: " + searchParamMap, module);
     
     result = dispatcher.runSync("solrKeywordSearch", [
         query:searchString, queryFilter:searchFilter, 
         viewSize:viewSize, viewIndex:viewIndex, 
         locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone
     ]);
+    if (Debug.verboseOn()) Debug.logVerbose("Keyword search results: " + result, module);
+    //if (Debug.infoOn()) Debug.logInfo("Keyword search result: " + result, module);
+
     if (ServiceUtil.isError(result)) {
         throw new Exception(ServiceUtil.getErrorMessage(result));
     }

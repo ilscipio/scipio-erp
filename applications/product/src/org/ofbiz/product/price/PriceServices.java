@@ -100,6 +100,8 @@ public class PriceServices {
         String findAllQuantityPricesStr = (String) context.get("findAllQuantityPrices");
         boolean findAllQuantityPrices = "Y".equals(findAllQuantityPricesStr);
         boolean optimizeForLargeRuleSet = "Y".equals(context.get("optimizeForLargeRuleSet"));
+        
+        boolean getMinimumVariantPrice = (Boolean) context.get("getMinimumVariantPrice");
 
         String agreementId = (String) context.get("agreementId");
 
@@ -234,8 +236,8 @@ public class PriceServices {
 
         // ===== get the prices we need: list, default, average cost, promo, min, max =====
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
-        GenericValue listPriceValue = getPriceValueForType("LIST_PRICE", productPrices, virtualProductPrices);
-        GenericValue defaultPriceValue = getPriceValueForType("DEFAULT_PRICE", productPrices, virtualProductPrices);
+        GenericValue listPriceValue = getPriceValueForType("LIST_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue defaultPriceValue = getPriceValueForType("DEFAULT_PRICE", productPrices, virtualProductPrices, false);
 
         // If there is an agreement between the company and the client, and there is
         // a price for the product in it, it will override the default price of the
@@ -253,13 +255,13 @@ public class PriceServices {
             }
         }
 
-        GenericValue competitivePriceValue = getPriceValueForType("COMPETITIVE_PRICE", productPrices, virtualProductPrices);
-        GenericValue averageCostValue = getPriceValueForType("AVERAGE_COST", productPrices, virtualProductPrices);
-        GenericValue promoPriceValue = getPriceValueForType("PROMO_PRICE", productPrices, virtualProductPrices);
-        GenericValue minimumPriceValue = getPriceValueForType("MINIMUM_PRICE", productPrices, virtualProductPrices);
-        GenericValue maximumPriceValue = getPriceValueForType("MAXIMUM_PRICE", productPrices, virtualProductPrices);
-        GenericValue wholesalePriceValue = getPriceValueForType("WHOLESALE_PRICE", productPrices, virtualProductPrices);
-        GenericValue specialPromoPriceValue = getPriceValueForType("SPECIAL_PROMO_PRICE", productPrices, virtualProductPrices);
+        GenericValue competitivePriceValue = getPriceValueForType("COMPETITIVE_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue averageCostValue = getPriceValueForType("AVERAGE_COST", productPrices, virtualProductPrices, false);
+        GenericValue promoPriceValue = getPriceValueForType("PROMO_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue minimumPriceValue = getPriceValueForType("MINIMUM_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue maximumPriceValue = getPriceValueForType("MAXIMUM_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue wholesalePriceValue = getPriceValueForType("WHOLESALE_PRICE", productPrices, virtualProductPrices, false);
+        GenericValue specialPromoPriceValue = getPriceValueForType("SPECIAL_PROMO_PRICE", productPrices, virtualProductPrices, false);
 
         // now if this is a virtual product check each price type, if doesn't exist get from variant with lowest DEFAULT_PRICE
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -271,7 +273,7 @@ public class PriceServices {
                 try {
                     List<GenericValue> variantAssocList = EntityQuery.use(delegator).from("ProductAssoc").where("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy("-fromDate").cache(true).filterByDate().queryList();
                     BigDecimal minDefaultPrice = null;
-                    List<GenericValue> variantProductPrices = null;
+                    List<GenericValue> variantProductPrices = FastList.newInstance();
                     for (GenericValue variantAssoc: variantAssocList) {
                         String curVariantProductId = variantAssoc.getString("productIdTo");
                         List<GenericValue> curVariantPriceList = EntityQuery.use(delegator).from("ProductPrice").where("productId", curVariantProductId).orderBy("-fromDate").cache(true).filterByDate(nowTimestamp).queryList();
@@ -286,7 +288,8 @@ public class PriceServices {
                                     Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
                                     if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
                                         minDefaultPrice = curDefaultPrice;
-                                        variantProductPrices = curVariantPriceList;
+                                        // SCIPIO: Fixed a stock OFBiz issue, only the last variant prices were taken into consideration
+                                        variantProductPrices.addAll(curVariantPriceList);
                                         // Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
                                     }
                                 }
@@ -294,34 +297,34 @@ public class PriceServices {
                         }
                     }
 
-                    if (variantProductPrices != null) {
+                    if (UtilValidate.isNotEmpty(variantProductPrices)) {
                         // we have some other options, give 'em a go...
                         if (listPriceValue == null) {
-                            listPriceValue = getPriceValueForType("LIST_PRICE", variantProductPrices, null);
+                            listPriceValue = getPriceValueForType("LIST_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (defaultPriceValue == null) {
-                            defaultPriceValue = getPriceValueForType("DEFAULT_PRICE", variantProductPrices, null);
+                            defaultPriceValue = getPriceValueForType("DEFAULT_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (competitivePriceValue == null) {
-                            competitivePriceValue = getPriceValueForType("COMPETITIVE_PRICE", variantProductPrices, null);
+                            competitivePriceValue = getPriceValueForType("COMPETITIVE_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (averageCostValue == null) {
-                            averageCostValue = getPriceValueForType("AVERAGE_COST", variantProductPrices, null);
+                            averageCostValue = getPriceValueForType("AVERAGE_COST", variantProductPrices, null,getMinimumVariantPrice);
                         }
                         if (promoPriceValue == null) {
-                            promoPriceValue = getPriceValueForType("PROMO_PRICE", variantProductPrices, null);
+                            promoPriceValue = getPriceValueForType("PROMO_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (minimumPriceValue == null) {
-                            minimumPriceValue = getPriceValueForType("MINIMUM_PRICE", variantProductPrices, null);
+                            minimumPriceValue = getPriceValueForType("MINIMUM_PRICE", variantProductPrices, null,getMinimumVariantPrice);
                         }
                         if (maximumPriceValue == null) {
-                            maximumPriceValue = getPriceValueForType("MAXIMUM_PRICE", variantProductPrices, null);
+                            maximumPriceValue = getPriceValueForType("MAXIMUM_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (wholesalePriceValue == null) {
-                            wholesalePriceValue = getPriceValueForType("WHOLESALE_PRICE", variantProductPrices, null);
+                            wholesalePriceValue = getPriceValueForType("WHOLESALE_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                         if (specialPromoPriceValue == null) {
-                            specialPromoPriceValue = getPriceValueForType("SPECIAL_PROMO_PRICE", variantProductPrices, null);
+                            specialPromoPriceValue = getPriceValueForType("SPECIAL_PROMO_PRICE", variantProductPrices, null, getMinimumVariantPrice);
                         }
                     }
                 } catch (GenericEntityException e) {
@@ -577,14 +580,26 @@ public class PriceServices {
         return result;
     }
 
-    private static GenericValue getPriceValueForType(String productPriceTypeId, List<GenericValue> productPriceList, List<GenericValue> secondaryPriceList) {
+    private static GenericValue getPriceValueForType(String productPriceTypeId, List<GenericValue> productPriceList, List<GenericValue> secondaryPriceList, Boolean getMinimumVariantPrice) {        
         List<GenericValue> filteredPrices = EntityUtil.filterByAnd(productPriceList, UtilMisc.toMap("productPriceTypeId", productPriceTypeId));
         GenericValue priceValue = EntityUtil.getFirst(filteredPrices);
-        if (filteredPrices != null && filteredPrices.size() > 1) {
-            if (Debug.infoOn()) Debug.logInfo("There is more than one " + productPriceTypeId + " with the currencyUomId " + priceValue.getString("currencyUomId") + " and productId " + priceValue.getString("productId") + ", using the latest found with price: " + priceValue.getBigDecimal("price"), module);
+        // SCIPIO: Introduced getMinimumVariantPrice, a way to get the minimum
+        // (variant) price for a type if true, otherwise it will return the first occurrence in the list.
+        if (getMinimumVariantPrice && UtilValidate.isNotEmpty(priceValue)) {
+            for (GenericValue productPrice : filteredPrices) {
+                if (productPrice.getBigDecimal("price").compareTo(priceValue.getBigDecimal("price")) == -1)
+                    priceValue = productPrice;
+            }
+        } else {
+            if (filteredPrices != null && filteredPrices.size() > 1) {
+                if (Debug.infoOn())
+                    Debug.logInfo("There is more than one " + productPriceTypeId + " with the currencyUomId " + priceValue.getString("currencyUomId")
+                            + " and productId " + priceValue.getString("productId") + ", using the latest found with price: "
+                            + priceValue.getBigDecimal("price"), module);
+            }
         }
         if (priceValue == null && secondaryPriceList != null) {
-            return getPriceValueForType(productPriceTypeId, secondaryPriceList, null);
+            return getPriceValueForType(productPriceTypeId, secondaryPriceList, null, getMinimumVariantPrice);
         }
         return priceValue;
     }

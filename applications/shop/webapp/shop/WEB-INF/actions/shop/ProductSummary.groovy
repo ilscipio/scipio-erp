@@ -119,6 +119,7 @@ if (product) {
         priceContext.agreementId = cart.getAgreementId();
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: otherwise it'll be calculating prices using the logged in user which could be a CSR instead of the customer
         priceContext.checkIncludeVat = "Y";
+        priceContext.getMinimumVariantPrice = true;
         priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
 
         context.price = priceMap;

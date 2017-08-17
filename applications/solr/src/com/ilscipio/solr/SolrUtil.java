@@ -315,8 +315,8 @@ public abstract class SolrUtil {
      * <em>not</em> enclosed in quotes (simple term).
      * At current time, this includes at least: 
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeQueryPhrase} for that.
-     * @see #escapeQueryQuoted
+     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeQueryValueQuoted} for that.
+     * @see #escapeQueryValueQuoted
      */
     public static String escapeQueryValuePlain(String term) {
         return ClientUtils.escapeQueryChars(term);
@@ -340,7 +340,7 @@ public abstract class SolrUtil {
      * Escapes all special solr/query characters in the given query expression intended to be
      * enclosed in double-quotes (phrase).
      * At current time, this escapes the backslash and double-quote characters only.
-     * @see #escapeQueryPlain
+     * @see #escapeQueryValuePlain
      */
     public static String escapeQueryValueQuoted(String phrase) {
         final String s = phrase;

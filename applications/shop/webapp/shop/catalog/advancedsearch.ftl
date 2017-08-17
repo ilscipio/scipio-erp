@@ -87,6 +87,7 @@ under the License.
     <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
   </@table>
 
+<#if false><#-- SCIPIO: TODO?: 2017-08-16: history will not work at the moment -->
   <#if searchOptionsHistoryList?has_content>
     
     <@section title="${rawLabel('OrderLastSearches')}...">
@@ -111,4 +112,5 @@ under the License.
     </#list>
     </@section>
   </#if>
+</#if>
 </form>

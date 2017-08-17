@@ -311,14 +311,14 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Escapes all special solr/query characters in the given query expression
-     * <em>not</em> enclosed in quotes (simple term).
+     * Escapes all special solr/query characters in the given query term
+     * <em>not</em> enclosed in quotes (single term).
      * At current time, this includes at least: 
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeQueryValueQuoted} for that.
-     * @see #escapeQueryValueQuoted
+     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeTermQuoted} for that.
+     * @see #escapeTermQuoted
      */
-    public static String escapeQueryValuePlain(String term) {
+    public static String escapeTermPlain(String term) {
         return ClientUtils.escapeQueryChars(term);
         // Reference implementation:
 //        StringBuilder sb = new StringBuilder();
@@ -337,12 +337,12 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Escapes all special solr/query characters in the given query expression intended to be
+     * Escapes all special solr/query characters in the given query term intended to be
      * enclosed in double-quotes (phrase).
      * At current time, this escapes the backslash and double-quote characters only.
-     * @see #escapeQueryValuePlain
+     * @see #escapeTermPlain
      */
-    public static String escapeQueryValueQuoted(String phrase) {
+    public static String escapeTermQuoted(String phrase) {
         final String s = phrase;
         // Reference implementation: http://api.drupalhelp.net/api/apachesolr/SolrPhpClient--Apache--Solr--Service.php/function/Apache_Solr_Service%3A%3AescapePhrase/5
         // TODO: REVIEW: make sure this actually corresponds to the solr/lucene parser implementation,

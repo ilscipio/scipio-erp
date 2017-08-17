@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -76,6 +75,7 @@ public abstract class SolrProductSearch {
                     GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
                     Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
                     dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
+                    copyStdServiceFieldsNotSet(context, dispatchContext);
                     Map<String, Object> runResult = dispatcher.runSync("addToSolrIndex", dispatchContext);
                     String runMsg = ServiceUtil.getErrorMessage(runResult);
                     if (UtilValidate.isEmpty(runMsg)) {
@@ -427,6 +427,7 @@ public abstract class SolrProductSearch {
             dispatchMap.put("facet", false);
             dispatchMap.put("spellcheck", true);
             dispatchMap.put("highlight", true);
+            copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
             result = ServiceUtil.returnSuccess();
@@ -474,6 +475,7 @@ public abstract class SolrProductSearch {
             if (context.get("queryFilter") != null)
                 dispatchMap.put("queryFilter", context.get("queryFilter"));
             dispatchMap.put("spellcheck", true);
+            copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
@@ -703,8 +705,8 @@ public abstract class SolrProductSearch {
         Map<String, Object> result;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Locale locale = new Locale("de_DE");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //Locale locale = new Locale("de_DE");
 
         // 2016-03-29: Only if dirty (or unknown)
         Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
@@ -746,9 +748,10 @@ public abstract class SolrProductSearch {
             client.deleteByQuery("*:*");
             client.commit();
 
-            // THis adds all products to the Index (instantly)
-            Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex",
-                    UtilMisc.toMap("fieldList", solrDocs, "userLogin", userLogin, "locale", locale, "treatConnectErrorNonFatal", treatConnectErrorNonFatal));
+            // This adds all products to the Index (instantly)
+            Map<String, Object> servCtx = UtilMisc.toMap("fieldList", solrDocs, "treatConnectErrorNonFatal", treatConnectErrorNonFatal);
+            copyStdServiceFieldsNotSet(context, servCtx);
+            Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
 
             String runMsg = ServiceUtil.getErrorMessage(runResult);
             if (UtilValidate.isEmpty(runMsg)) {
@@ -876,5 +879,15 @@ public abstract class SolrProductSearch {
         }
         
         return result;
+    }
+    
+    private static void copyStdServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx) {
+        copyServiceFieldsNotSet(srcCtx, destCtx, "locale", "userLogin", "timeZone");
+    }
+    
+    private static void copyServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx, String... fieldNames) {
+        for(String fieldName : fieldNames) {
+            if (!destCtx.containsKey(fieldName)) destCtx.put(fieldName, srcCtx.get(fieldName));
+        }
     }
 }

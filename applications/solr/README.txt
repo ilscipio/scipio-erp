@@ -1,6 +1,12 @@
 =====================================================
-Solr Component for Apache Ofbiz
+Solr Component for SCIPIO-ERP
 =====================================================
+
+SCIPIO: WARN: 2017-08-17: This document is currently out of date, and several features
+    or locations may be different than the ones described below (e.g., no installation
+    is required).
+
+****
 
 This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/)
 implementation of the Apache Solr search platform (http://lucene.apache.org/solr/).

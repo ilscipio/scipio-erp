@@ -2185,6 +2185,10 @@ public class ProductSearch {
         public boolean isAscending() {
             return this.ascending;
         }
+
+        public String getFieldName() { // SCIPIO: Added 2017-08-18.
+            return fieldName;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -2272,6 +2276,18 @@ public class ProductSearch {
         public boolean isAscending() {
             return this.ascending;
         }
+
+        public String getProductPriceTypeId() { // SCIPIO: Added 2017-08-18.
+            return productPriceTypeId;
+        }
+
+        public String getCurrencyUomId() { // SCIPIO: Added 2017-08-18.
+            return currencyUomId;
+        }
+
+        public String getProductStoreGroupId() { // SCIPIO: Added 2017-08-18.
+            return productStoreGroupId;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -2322,6 +2338,10 @@ public class ProductSearch {
         @Override
         public boolean isAscending() {
             return this.ascending;
+        }
+
+        public String getProductFeatureTypeId() { // SCIPIO: Added 2017-08-18.
+            return productFeatureTypeId;
         }
     }
     /** A rather large and verbose method that doesn't use the cool constraint and sort order objects */

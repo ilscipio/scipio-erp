@@ -43,6 +43,7 @@ under the License.
         <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
         <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
     </@field>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in near future...
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
@@ -54,20 +55,25 @@ under the License.
         </#list>
       </@field>
     </#list>
+  -->
     <@field type="generic" label=uiLabelMap.ProductSortedBy>
           <@field type="select" name="sortOrder">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+          <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in near future...
             <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
             <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
             <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+          -->
             <option value="SortProductPrice:LIST_PRICE">${uiLabelMap.ProductListPrice}</option>
             <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
+          <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in near future...
             <#if productFeatureTypes?? && productFeatureTypes?has_content>
               <#list productFeatureTypes as productFeatureType>
                 <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
               </#list>
             </#if>
+          -->
           </@field>
           <@field type="radio" name="sortAscending" value="Y" checked=true label=uiLabelMap.EcommerceLowToHigh/>
           <@field type="radio" name="sortAscending" value="N" label=uiLabelMap.EcommerceHighToLow/>
@@ -87,7 +93,6 @@ under the License.
     <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
   </@table>
 
-<#if false><#-- SCIPIO: TODO?: 2017-08-16: history will not work at the moment -->
   <#if searchOptionsHistoryList?has_content>
     
     <@section title="${rawLabel('OrderLastSearches')}...">
@@ -112,5 +117,5 @@ under the License.
     </#list>
     </@section>
   </#if>
-</#if>
+
 </form>

@@ -36,7 +36,6 @@ public abstract class ProductUtil {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) product.get("productId");
         Map<String, Object> dispatchContext = new HashMap<String, Object>();
-        Locale locale = new Locale("de_DE");
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
@@ -127,6 +126,9 @@ public abstract class ProductUtil {
                 Boolean isVirtual = ProductWorker.isVirtual(delegator, productId);
                 if (isVirtual)
                     dispatchContext.put("isVirtual", isVirtual);
+                Boolean isVariant = ProductWorker.isVariant(delegator, productId);
+                if (isVariant) // new 2017-08-17
+                    dispatchContext.put("isVariant", isVariant); 
                 Boolean isDigital = ProductWorker.isDigital(product);
                 if (isDigital)
                     dispatchContext.put("isDigital", isDigital);
@@ -181,7 +183,10 @@ public abstract class ProductUtil {
                 // dispatchContext.put("last_modified", "");
 
                 if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
-                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, locale, userLogin);
+                    // FIXME: locale should be looked up differently, but shouldn't have any impacts to price selection...
+                    //Locale priceConfigLocale = new Locale("de_DE");
+                    Locale priceConfigLocale = (Locale) context.get("locale"); 
+                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, priceConfigLocale, userLogin);
                     String listPrice = configWrapper.getTotalListPrice().setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
                     if (listPrice != null)
                         dispatchContext.put("listPrice", listPrice);

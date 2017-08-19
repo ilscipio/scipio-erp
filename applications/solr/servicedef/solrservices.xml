@@ -82,37 +82,63 @@ under the License.
         <attribute mode="IN" name="instance" optional="false" type="org.ofbiz.entity.GenericEntity" />
     </service>
 
+    <service name="solrProductAttributesSimple" engine="interface">
+        <description>Simple-type product attributes for addToSolrIndex Product</description>
+        <!-- DEV NOTE: these should correspond to the old hardcoded list com.ilscipio.solr.SolrUtil.solrProdAttrSimple
+            for backward compat, when a field is deprecated, move it back into addToSolrIndex interface -->
+        <attribute mode="IN" name="productId" optional="false" type="String" />
+        <attribute mode="IN" name="internalName" optional="true" type="String" />
+        <attribute mode="IN" name="manu" optional="true" type="String" />
+        <!-- TODO: REVIEW: size was hardcoded in com.ilscipio.solr.SolrUtil.solrProdAttrSimple but was not in interface nor schema...
+        <attribute mode="IN" name="size" optional="true" type="String" /> -->
+
+        <attribute mode="IN" name="smallImage" optional="true" type="String" />
+        <attribute mode="IN" name="mediumImage" optional="true" type="String" />
+        <attribute mode="IN" name="largeImage" optional="true" type="String" />
+
+        <attribute mode="IN" name="listPrice" optional="true" type="String" />
+        <attribute mode="IN" name="defaultPrice" optional="true" type="String" />
+        
+        <attribute mode="IN" name="inStock" optional="true" type="String" />
+        <attribute mode="IN" name="isVirtual" optional="true" type="Boolean" />
+        <attribute mode="IN" name="isVariant" optional="true" type="Boolean" />
+        
+        <attribute mode="IN" name="isDigital" optional="true" type="Boolean" />
+        <attribute mode="IN" name="isPhysical" optional="true" type="Boolean" />
+    </service>
+    
+    <service name="solrProductAttributesComplex" engine="interface">
+        <description>Complex-type product attributes for addToSolrIndex Product</description>
+        <attribute mode="IN" name="description" optional="true" type="Map" />
+        <attribute mode="IN" name="longDescription" optional="true" type="Map" />
+        <attribute mode="IN" name="title" optional="true" type="Map" />
+        <attribute mode="IN" name="category" optional="true" type="List" />
+        <attribute mode="IN" name="features" optional="true" type="Set" />
+        <attribute mode="IN" name="attributes" optional="true" type="List" />
+        <attribute mode="IN" name="catalog" optional="true" type="List" />
+    </service>
+
+    <service name="solrProductAttributes" engine="interface">
+        <description>All product attributes for addToSolrIndex Product</description>
+        <implements service="solrProductAttributesSimple"/>
+        <implements service="solrProductAttributesComplex"/>
+    </service>
+
     <service name="addToSolrIndex" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
         invoke="addToSolrIndex" debug="true" validate="true">
         <description>Add a Product to Solr Index</description>
+        <implements service="solrProductAttributes"/>
+        <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
+        <attribute mode="IN" name="sku" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
+        <attribute mode="IN" name="cat" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
+        <attribute mode="IN" name="keywords" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
+        <attribute mode="IN" name="image" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
+        <!-- SERVICE FIELDS -->
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
-        <attribute mode="IN" name="productId" optional="false" type="String" />
-        <attribute mode="IN" name="sku" optional="true" type="String" />
-        <attribute mode="IN" name="internalName" optional="true" type="String" />
-        <attribute mode="IN" name="manu" optional="true" type="String" />
-        <attribute mode="IN" name="cat" optional="true" type="String" />
-        <attribute mode="IN" name="listPrice" optional="true" type="String" />
-        <attribute mode="IN" name="defaultPrice" optional="true" type="String" />
-        <attribute mode="IN" name="description" optional="true" type="Map" />
-        <attribute mode="IN" name="longDescription" optional="true" type="Map" />
-        <attribute mode="IN" name="title" optional="true" type="Map" />
-        <attribute mode="IN" name="image" optional="true" type="String" />
-        <attribute mode="IN" name="keywords" optional="true" type="String" />
-        <attribute mode="IN" name="category" optional="true" type="List" />
-        <attribute mode="IN" name="features" optional="true" type="Set" />
-        <attribute mode="IN" name="attributes" optional="true" type="List" />
-        <attribute mode="IN" name="isVirtual" optional="true" type="Boolean" />
-        <attribute mode="IN" name="isDigital" optional="true" type="Boolean" />
-        <attribute mode="IN" name="isPhysical" optional="true" type="Boolean" />
-        <attribute mode="IN" name="inStock" optional="true" type="String" />
-        <attribute mode="IN" name="catalog" optional="true" type="List" />
-        <attribute mode="IN" name="smallImage" optional="true" type="String" />
-        <attribute mode="IN" name="mediumImage" optional="true" type="String" />
-        <attribute mode="IN" name="largeImage" optional="true" type="String" />
-        <attribute mode="OUT" name="errorType" optional="true" type="String" />        
         <attribute mode="IN" name="core" optional="true" type="String" />
+        <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>
     
     <service name="addListToSolrIndex" engine="java"
@@ -152,7 +178,13 @@ under the License.
         <attribute mode="IN" optional="false" name="query" type="String"/>
         <attribute mode="IN" optional="true" name="viewSize" type="String"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="String"/>
-        <attribute mode="IN" optional="true" name="queryFilter" type="String"/>
+        <attribute mode="IN" optional="true" name="queryFilter" type="String">
+            <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
+                    To avoid splitting, use queryFilters instead (with one entry).</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryFilters" type="List">
+            <description>List of strings, each used as-is as a filter (no splitting).</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
@@ -178,7 +210,13 @@ under the License.
         <attribute mode="IN" optional="true" name="start" type="Integer"/><!-- 2016-04-01: may specify either an absolute "start" value or a zero-based viewIndex -->
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
-        <attribute mode="IN" optional="true" name="queryFilter" type="String"/>
+        <attribute mode="IN" optional="true" name="queryFilter" type="String">
+            <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
+                    To avoid splitting, use queryFilters instead (with one entry).</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryFilters" type="List">
+            <description>List of strings, each used as-is as a filter (no splitting).</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>

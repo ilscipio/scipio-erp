@@ -526,6 +526,7 @@ that avoids logging every request
         <field name="popularity" type="int" indexed="true" stored="true" />
         <field name="inStock" type="int" indexed="true" stored="true" />
         <field name="isVirtual" type="boolean" indexed="true" stored="true" />
+        <field name="isVariant" type="boolean" indexed="true" stored="true" />
         <field name="isDigital" type="boolean" indexed="true" stored="true" />
         <field name="isPhysical" type="boolean" indexed="true" stored="true" />
         <!--

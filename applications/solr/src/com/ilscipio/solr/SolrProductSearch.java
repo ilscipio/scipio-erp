@@ -353,22 +353,21 @@ public abstract class SolrProductSearch {
                     solrQuery.setStart(viewIndex * viewSize);
                 }
             }
-            
 
-            // if ((List) context.get("queryFilter") != null &&
-            // ((ArrayList<SolrDocument>) context.get("queryFilter")).size() >
-            // 0) {
-            // List filter = (List) context.get("queryFilter");
-            // String[] tn = new String[filter.size()];
-            // Iterator it = filter.iterator();
-            // for (int i = 0; i < filter.size(); i++) {
-            // tn[i] = (String) filter.get(i);
-            // }
-            // solrQuery.setFilterQueries(tn);
-            // }
             String queryFilter = (String) context.get("queryFilter");
-            if (UtilValidate.isNotEmpty(queryFilter))
-                solrQuery.setFilterQueries(queryFilter.split(" "));
+            if (UtilValidate.isNotEmpty((String) queryFilter)) {
+                // WARN: 2017-08-17: we don't really want splitting on whitespace anymore, because it
+                // slaughters complex queries and ignores escaping; callers should use queryFilters list instead.
+                // However, we can at least fix a bug here where we can do better and split on \\s+ instead
+                //solrQuery.addFilterQuery(((String) queryFilter).split(" "));
+                solrQuery.addFilterQuery(((String) queryFilter).trim().split("\\s+"));
+            } 
+            Collection<String> queryFilters = UtilGenerics.checkCollection(context.get("queryFilters"));
+            if (queryFilters != null) {
+                for(String filter : queryFilters) {
+                    solrQuery.addFilterQuery(filter);
+                }
+            }
             if ((String) context.get("returnFields") != null) {
                 solrQuery.setFields((String) context.get("returnFields"));
             }
@@ -409,8 +408,9 @@ public abstract class SolrProductSearch {
             if (UtilValidate.isNotEmpty(context.get("productCategoryId"))) {
                 String productCategoryId = (String) context.get("productCategoryId");
                 dispatchMap.put("query", "cat:*" + productCategoryId + "*");
-            } else
-                return ServiceUtil.returnError("Missing product category id");
+            } else {
+                return ServiceUtil.returnError("Missing product category id"); // TODO: localize
+            }
             Integer viewSize = null;
             if (context.get("viewSize") != null) {
                 viewSize = Integer.parseInt((String) context.get("viewSize"));
@@ -424,11 +424,19 @@ public abstract class SolrProductSearch {
             if (context.get("queryFilter") != null) {
                 dispatchMap.put("queryFilter", context.get("queryFilter"));
             }
+            if (context.get("queryFilters") != null) {
+                dispatchMap.put("queryFilters", context.get("queryFilters"));
+            }
             dispatchMap.put("facet", false);
             dispatchMap.put("spellcheck", true);
             dispatchMap.put("highlight", true);
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
+            if (ServiceUtil.isFailure(searchResult)) {
+                return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult));
+            } else if (ServiceUtil.isError(searchResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+            }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
             result = ServiceUtil.returnSuccess();
             result.put("results", queryResult.getResults());
@@ -456,9 +464,9 @@ public abstract class SolrProductSearch {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         try {
-            if (context.get("query") == null || context.get("query").equals(""))
+            if (context.get("query") == null || context.get("query").equals("")) {
                 context.put("query", "*:*");
-
+            }
             Map<String, Object> dispatchMap = FastMap.newInstance();
             Integer viewSize = null;
             if (context.get("viewSize") != null) {
@@ -474,9 +482,22 @@ public abstract class SolrProductSearch {
                 dispatchMap.put("query", context.get("query"));
             if (context.get("queryFilter") != null)
                 dispatchMap.put("queryFilter", context.get("queryFilter"));
+            if (context.get("queryFilters") != null)
+                dispatchMap.put("queryFilters", context.get("queryFilters"));
+            if (context.get("sortBy") != null)
+                dispatchMap.put("sortBy", context.get("sortBy"));
+            if (context.get("sortByReverse") != null)
+                dispatchMap.put("sortByReverse", context.get("sortByReverse"));
+            if (context.get("facetQuery") != null)
+                dispatchMap.put("facetQuery", context.get("facetQuery"));
             dispatchMap.put("spellcheck", true);
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
+            if (ServiceUtil.isFailure(searchResult)) {
+                return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult));
+            } else if (ServiceUtil.isError(searchResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+            }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
             List<List<String>> suggestions = FastList.newInstance();
@@ -484,7 +505,7 @@ public abstract class SolrProductSearch {
                 Iterator<Suggestion> iter = queryResult.getSpellCheckResponse().getSuggestions().iterator();
                 while (iter.hasNext()) {
                     Suggestion resultDoc = iter.next();
-                    Debug.logInfo("Suggestion " + resultDoc.getAlternatives(), module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Suggestion: " + resultDoc.getAlternatives(), module);
                     suggestions.add(resultDoc.getAlternatives());
                 }
             }

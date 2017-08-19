@@ -1,5 +1,7 @@
 package com.ilscipio.solr;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +22,13 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceDispatcher;
 
 import javolution.util.FastMap;
 
@@ -32,11 +38,36 @@ import javolution.util.FastMap;
 public abstract class SolrUtil {
     
     public static final String module = SolrUtil.class.getName();
-    private static String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
+    
+    // DEV NOTE: there used to be a hardcoded list here, but it was out of sync with the service params.
+    // this should help prevent that...
+    private static List<String> solrProdAttrSimple = null;
 
     public static final String solrConfigName = "solrconfig.properties";
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
+    
+    private static List<String> getSolrProdAttrSimple() {
+        List<String> attrList = solrProdAttrSimple;
+        if (attrList == null) {
+            ModelService model = getModelServiceStaticSafe("solrProductAttributesSimple");
+            if (model != null) attrList = Collections.unmodifiableList(new ArrayList<>(model.getParameterNames(ModelService.IN_PARAM, true, false)));
+            else attrList = Collections.emptyList();
+            Debug.logInfo("Solr: Product attributes simple: " + attrList, module);
+            solrProdAttrSimple = attrList;
+        }
+        return attrList;
+    }
+    
+    private static ModelService getModelServiceStaticSafe(String serviceName) {
+        try {
+            LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
+            return dispatcher.getDispatchContext().getModelService(serviceName);
+        } catch(Exception e) {
+            Debug.logFatal(e, "Solr: Fatal Error: could not find " + serviceName + " service - solr will fail: " + e.getMessage(), module);
+            return null;
+        }
+    }
     
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
@@ -119,9 +150,9 @@ public abstract class SolrUtil {
         SolrInputDocument doc1 = new SolrInputDocument();
 
         // add defined attributes
-        for (int i = 0; i < solrProdAttribute.length; i++) {
-            if (context.get(solrProdAttribute[i]) != null) {
-                doc1.addField(solrProdAttribute[i], context.get(solrProdAttribute[i]).toString());
+        for (String attrName : getSolrProdAttrSimple()) {
+            if (context.get(attrName) != null) {
+                doc1.addField(attrName, context.get(attrName).toString());
             }
         }
 
@@ -316,6 +347,7 @@ public abstract class SolrUtil {
      * At current time, this includes at least: 
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
      * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeTermQuoted} for that.
+     * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
      * @see #escapeTermQuoted
      */
     public static String escapeTermPlain(String term) {
@@ -342,8 +374,8 @@ public abstract class SolrUtil {
      * At current time, this escapes the backslash and double-quote characters only.
      * @see #escapeTermPlain
      */
-    public static String escapeTermQuoted(String phrase) {
-        final String s = phrase;
+    public static String escapeTermQuoted(String term) {
+        final String s = term;
         // Reference implementation: http://api.drupalhelp.net/api/apachesolr/SolrPhpClient--Apache--Solr--Service.php/function/Apache_Solr_Service%3A%3AescapePhrase/5
         // TODO: REVIEW: make sure this actually corresponds to the solr/lucene parser implementation,
         // w.r.t. the backslash handling; the php reference might be unofficial...
@@ -357,6 +389,14 @@ public abstract class SolrUtil {
             sb.append(c);
         }
         return sb.toString();
+    }
+    
+    /**
+     * Escapes the term using {@link #escapeTermQuoted} and returns it within double-quotes.
+     * Convenience method.
+     */
+    public static String escapeTermAndQuote(String term) {
+        return "\"" + escapeTermQuoted(term) + "\"";
     }
     
 }

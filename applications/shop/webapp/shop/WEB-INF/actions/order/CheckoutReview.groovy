@@ -56,7 +56,9 @@ context.subscriptions = orh.hasSubscriptions();
 context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) && cart.getPaymentMethodTypeIds().contains("EXT_PAYPAL"));
 context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
 
-if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
+
+List<GenericValue> allSubscriptionAdjustments = FastList.newInstance();
+if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {	
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
     for (GenericValue subscription : context.subscriptionItems.keySet()) {
         List<GenericValue> subscriptionAdjustments = FastList.newInstance();
@@ -68,6 +70,7 @@ if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
             }            
         }
         orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
+        allSubscriptionAdjustments.addAll(subscriptionAdjustments);
     }
     context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
 }
@@ -137,8 +140,8 @@ if (shipmentMethodType) context.shipMethDescription = shipmentMethodType.descrip
 context.localOrderReadHelper = orh;
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
     context.orderShippingTotal = orh.getShippingTotal();
-    context.orderTaxTotal = orh.getTotalTax(orderAdjustments);
-    context.orderVATTaxTotal = orh.getTotalVATTax(orderAdjustments);
+    context.orderTaxTotal = orh.getTotalTax(allSubscriptionAdjustments);
+    context.orderVATTaxTotal = orh.getTotalVATTax(allSubscriptionAdjustments);
     context.orderGrandTotal = orh.getOrderGrandTotal();    
 } else {
     context.orderShippingTotal = cart.getTotalShipping();

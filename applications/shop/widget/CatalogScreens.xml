@@ -393,7 +393,9 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleSearchResults"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" default-value="10"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>
+                <!-- 2017-08-17: now using shop-specific script (itself may delegate)
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>-->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/KeywordSearch.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

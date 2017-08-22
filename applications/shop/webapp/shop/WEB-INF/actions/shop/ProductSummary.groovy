@@ -92,19 +92,10 @@ if (product) {
     //if (!country) 
     //    country = request.getLocale().getLanguage();
     country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCode(context.locale);
-    context.solrTitle = null;
-    context.description = null;
-    context.longdescription = null;
-    for (String key in solrProduct.keySet()) {
-        if (key.endsWith("_" + country)) {
-            if (key.startsWith("title_"))
-                context.solrTitle = solrProduct.get(key);
-            else if (key.startsWith("description_"))
-                context.description = solrProduct.get(key);
-            else if (key.startsWith("longdescription_"))
-                context.longdescription =  solrProduct.get(key);
-        }
-    }
+    // TODO?: REVIEW: in future will be possible issue of fallback language here if/when schema is amended
+    context.solrTitle = solrProduct["title_i18n_" + country];
+    context.description = solrProduct["description_i18n_" + country];
+    context.longdescription = solrProduct["longdescription_i18n_" + country];
 }
 
 categoryId = null;

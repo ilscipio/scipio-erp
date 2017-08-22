@@ -41,8 +41,7 @@ public class OfbizSolrInfoServlet extends HttpServlet {
             Debug.logInfo("OfbizSolrInfoServlet: First servlet init executed", module);
             servletInitStatusReached = true;
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

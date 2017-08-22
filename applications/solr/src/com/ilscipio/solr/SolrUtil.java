@@ -2,10 +2,10 @@ package com.ilscipio.solr;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
@@ -18,19 +18,13 @@ import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceDispatcher;
-
-import javolution.util.FastMap;
 
 /**
  * Solr utility class.
@@ -39,35 +33,86 @@ public abstract class SolrUtil {
     
     public static final String module = SolrUtil.class.getName();
     
-    // DEV NOTE: there used to be a hardcoded list here, but it was out of sync with the service params.
-    // this should help prevent that...
-    private static List<String> solrProdAttrSimple = null;
-
-    public static final String solrConfigName = "solrconfig.properties";
+    public static final String solrConfigName = "solrconfig";
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
-    
-    private static List<String> getSolrProdAttrSimple() {
-        List<String> attrList = solrProdAttrSimple;
-        if (attrList == null) {
-            ModelService model = getModelServiceStaticSafe("solrProductAttributesSimple");
-            if (model != null) attrList = Collections.unmodifiableList(new ArrayList<>(model.getParameterNames(ModelService.IN_PARAM, true, false)));
-            else attrList = Collections.emptyList();
-            Debug.logInfo("Solr: Product attributes simple: " + attrList, module);
-            solrProdAttrSimple = attrList;
+
+    private static final String solrContentLocalesStr;
+    private static final List<Locale> solrContentLocales;
+    static {
+        String locStr = UtilProperties.getPropertyValue(solrConfigName, "solr.content.locales");
+        if (locStr != null) locStr = locStr.trim();
+        if (UtilValidate.isEmpty(locStr)) {
+            locStr = UtilProperties.getPropertyValue("general", "locales.available");
         }
-        return attrList;
-    }
-    
-    private static ModelService getModelServiceStaticSafe(String serviceName) {
+        if (UtilValidate.isEmpty(locStr)) {
+            locStr = "en";
+        }
+        List<Locale> locList = new ArrayList<>();
+        StringBuilder normLocStr = new StringBuilder();
         try {
-            LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
-            return dispatcher.getDispatchContext().getModelService(serviceName);
+            for(String tag : locStr.split("\\s*,\\s*")) {
+                Locale locale = Locale.forLanguageTag(tag);
+                if (locale == null) throw new IllegalArgumentException("invalid locale: " + tag);
+                if (locList.contains(locale)) {
+                    Debug.logWarning("Solr: Configured locale list contains duplicate locales: " + locStr, module);
+                    continue;
+                }
+                locList.add(locale);
+                if (normLocStr.length() > 0) normLocStr.append(",");
+                normLocStr.append(locale.toString());
+            }
+            Debug.logInfo("Solr: Configured content locales: " + locStr, module);
         } catch(Exception e) {
-            Debug.logFatal(e, "Solr: Fatal Error: could not find " + serviceName + " service - solr will fail: " + e.getMessage(), module);
-            return null;
+            Debug.logError(e, "Solr: Could not parse content locales: " + locStr + ": " + e.getMessage(), module);
+            locStr = "en";
+            locList = UtilMisc.toList(Locale.ENGLISH);
         }
+        solrContentLocalesStr = normLocStr.toString();
+        solrContentLocales = Collections.unmodifiableList(locList);
     }
+    
+    private static final Locale solrContentLocaleDefault;
+    static {
+        Locale locale = null;
+        try {
+            String locStr = UtilProperties.getPropertyValue(solrConfigName, "solr.content.locales.default");
+            if (UtilValidate.isNotEmpty(locStr)) {
+                locale = Locale.forLanguageTag(locStr);
+            }
+        } catch(Exception e) {
+            Debug.logError("Solr: Error reading default locale: " + e.getMessage(), module);
+        }
+        if (locale == null) locale = Locale.getDefault();
+        Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
+        solrContentLocaleDefault = locale;
+    }
+    
+    /**
+     * Gets content locales. FIXME: currently ignores product store!
+     */
+    public static String getSolrContentLocalesString(Delegator delegator, String productStoreId) {
+        return solrContentLocalesStr; 
+    }
+    
+    /**
+     * Gets content locales. FIXME: currently ignores product store!
+     */
+    public static List<Locale> getSolrContentLocales(Delegator delegator, String productStoreId) {
+        return solrContentLocales; 
+    }
+    
+    /**
+     * Gets default content locale. FIXME: currently ignores product store!
+     */
+    public static Locale getSolrContentLocaleDefault(Delegator delegator, String productStoreId) {
+        return solrContentLocaleDefault; 
+    }
+
+    
+    // not currently useful
+    //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
+
     
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
@@ -78,8 +123,7 @@ public abstract class SolrUtil {
         String solrPort;
         if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
             solrPort = solrWebappPortOverride;
-        }
-        else {
+        } else {
             solrPort = UtilProperties.getPropertyValue("url.properties", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"));
         }
         
@@ -97,8 +141,7 @@ public abstract class SolrUtil {
         if (UtilValidate.isNotEmpty(sysProp)) {
             if ("true".equalsIgnoreCase(sysProp))  {
                 ecaEnabled = Boolean.TRUE;
-            }
-            else if ("false".equalsIgnoreCase(sysProp)) {
+            } else if ("false".equalsIgnoreCase(sysProp)) {
                 ecaEnabled = Boolean.FALSE;
             }
         }
@@ -129,8 +172,7 @@ public abstract class SolrUtil {
         Boolean webappCheckEnabled = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.useSolrWebappLoadedCheck", true);
         if (Boolean.TRUE.equals(webappCheckEnabled)) {
             return isSolrWebappInitialized();
-        }
-        else {
+        } else {
             // If webapp check disabled, then we say the check passed.
             return true;
         }
@@ -146,83 +188,11 @@ public abstract class SolrUtil {
     }
     
     
+    /**
+     * @deprecated Use {@link ProductUtil#generateSolrProductDocument(Map)} instead
+     */
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
-        SolrInputDocument doc1 = new SolrInputDocument();
-
-        // add defined attributes
-        for (String attrName : getSolrProdAttrSimple()) {
-            if (context.get(attrName) != null) {
-                doc1.addField(attrName, context.get(attrName).toString());
-            }
-        }
-
-        // add catalog
-        if (context.get("catalog") != null) {
-            List<String> catalog = UtilGenerics.<String>checkList(context.get("catalog"));
-            for (String c : catalog) {
-                doc1.addField("catalog", c);
-            }
-        }
-
-        // add categories
-        if (context.get("category") != null) {
-            List<String> category = UtilGenerics.<String>checkList(context.get("category"));
-            Iterator<String> catIter = category.iterator();
-            while (catIter.hasNext()) {
-                /*
-                 * GenericValue cat = (GenericValue) catIter.next(); GenericValue prodCategory = cat.getRelatedOneCache("ProductCategory"); if (prodCategory.get("description") != null) {
-                 * doc1.addField("category", prodCategory.get("description")); } doc1.addField("cat", prodCategory.get("productCategoryId"));
-                 */
-                String cat = (String) catIter.next();
-                doc1.addField("cat", cat);
-            }
-        }
-
-        // add features
-        if (context.get("features") != null) {
-            Set<String> features = UtilGenerics.<String>checkSet(context.get("features"));
-            Iterator<String> featIter = features.iterator();
-            while (featIter.hasNext()) {
-                String feat = featIter.next();
-                doc1.addField("features", feat);
-            }
-        }
-
-        // add attributes
-        if (context.get("attributes") != null) {
-            List<String> attributes = UtilGenerics.<String>checkList(context.get("attributes"));
-            Iterator<String> attrIter = attributes.iterator();
-            while (attrIter.hasNext()) {
-                String attr = attrIter.next();
-                doc1.addField("attributes", attr);
-            }
-        }
-
-        // add title
-        if (context.get("title") != null) {
-            Map<String, String> title = UtilGenerics.<String, String>checkMap(context.get("title"));
-            for (Map.Entry<String, String> entry : title.entrySet()) {
-                doc1.addField("title_i18n_" + entry.getKey(), entry.getValue());
-            }
-        }
-
-        // add short_description
-        if (context.get("description") != null) {
-            Map<String, String> description = UtilGenerics.<String, String>checkMap(context.get("description"));
-            for (Map.Entry<String, String> entry : description.entrySet()) {
-                doc1.addField("description_i18n_" + entry.getKey(), entry.getValue());
-            }
-        }
-
-        // add short_description
-        if (context.get("longDescription") != null) {
-            Map<String, String> longDescription = UtilGenerics.<String, String>checkMap(context.get("longDescription"));
-            for (Map.Entry<String, String> entry : longDescription.entrySet()) {
-                doc1.addField("longdescription_i18n_" + entry.getKey(), entry.getValue());
-            }
-        }
-
-        return doc1;
+        return ProductUtil.generateSolrProductDocument(context);
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {
@@ -235,26 +205,23 @@ public abstract class SolrUtil {
 
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, String core) {
         // create the data model
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<>();
         HttpSolrClient client = null;
         QueryResponse returnMap = new QueryResponse();
         try {
             // do the basic query
-            if (UtilValidate.isNotEmpty(core))
-                client = new HttpSolrClient(SolrUtil.solrUrl + "/" + core);
-            else
-                client = new HttpSolrClient(SolrUtil.solrFullUrl);
+            client = getHttpSolrClient(core);
             // create Query Object
             String query = "inStock[1 TO *]";
             if (categoryId != null)
-                query += " +cat:"+ categoryId;
+                query += " +cat:"+ SolrUtil.escapeTermFull(categoryId);
             else if (productId != null)
-                query += " +productId:" + productId;
+                query += " +productId:" + SolrUtil.escapeTermFull(productId);
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery(query);
 
             if (catalogId != null)
-                solrQuery.setFilterQueries("catalog:" + catalogId);
+                solrQuery.setFilterQueries("catalog:" + SolrUtil.escapeTermFull(catalogId));
             if (displayproducts) {
                 if (viewSize > -1) {
                     solrQuery.setRows(viewSize);
@@ -280,7 +247,7 @@ public abstract class SolrUtil {
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
             solrQuery.setFacetLimit(-1);
-            Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
             returnMap = client.query(solrQuery,METHOD.POST);
             result.put("rows", returnMap);
             result.put("numFound", returnMap.getResults().getNumFound());
@@ -297,8 +264,7 @@ public abstract class SolrUtil {
                     .where("solrId", "SOLR-MAIN").cache(false).queryOne();
             if (solrStatus == null) {
                 Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - seed data missing?", module);
-            }
-            else {
+            } else {
                 return solrStatus.getString("dataStatusId");
             }
         } catch (GenericEntityException e) {
@@ -316,8 +282,7 @@ public abstract class SolrUtil {
             if (solrStatus == null) {
                 Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - creating new", module);
                 solrStatus = delegator.create("SolrStatus", "solrId", "SOLR-MAIN", "dataStatusId", dataStatusId);
-            }
-            else {
+            } else {
                 solrStatus.setString("dataStatusId", dataStatusId);
                 solrStatus.store();
             }
@@ -341,14 +306,23 @@ public abstract class SolrUtil {
         return viewIndex;
     }
     
+    public static HttpSolrClient getHttpSolrClient(String core) {
+        if (UtilValidate.isNotEmpty(core)) return new HttpSolrClient(SolrUtil.solrUrl + "/" + core);
+        else return getHttpSolrClient();
+    }
+    
+    public static HttpSolrClient getHttpSolrClient() {
+        return new HttpSolrClient(SolrUtil.solrFullUrl);
+    }
+    
     /**
      * Escapes all special solr/query characters in the given query term
      * <em>not</em> enclosed in quotes (single term).
      * At current time, this includes at least: 
      * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeTermQuoted} for that.
+     * NOTE: The result should NOT be enclosed in quotes; use {@link #escapeTermForQuote} for that.
      * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
-     * @see #escapeTermQuoted
+     * @see #escapeTermForQuote
      */
     public static String escapeTermPlain(String term) {
         return ClientUtils.escapeQueryChars(term);
@@ -367,14 +341,14 @@ public abstract class SolrUtil {
 //        }
 //        return sb.toString();
     }
-    
+
     /**
      * Escapes all special solr/query characters in the given query term intended to be
      * enclosed in double-quotes (phrase).
      * At current time, this escapes the backslash and double-quote characters only.
      * @see #escapeTermPlain
      */
-    public static String escapeTermQuoted(String term) {
+    public static String escapeTermForQuote(String term) {
         final String s = term;
         // Reference implementation: http://api.drupalhelp.net/api/apachesolr/SolrPhpClient--Apache--Solr--Service.php/function/Apache_Solr_Service%3A%3AescapePhrase/5
         // TODO: REVIEW: make sure this actually corresponds to the solr/lucene parser implementation,
@@ -392,11 +366,79 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Escapes the term using {@link #escapeTermQuoted} and returns it within double-quotes.
+     * Escapes the term using {@link #escapeTermForQuote} and returns it within double-quotes.
      * Convenience method.
      */
     public static String escapeTermAndQuote(String term) {
-        return "\"" + escapeTermQuoted(term) + "\"";
+        return "\"" + escapeTermForQuote(term) + "\"";
     }
     
+    /**
+     * ABSTRACTED escaping method that will fully escape the given term using either {@link #escapeTermAndQuote}
+     * or {@link #escapeTermPlain} or another, at its own discretion or based on configuration.
+     * The result should NOT and NEVER be placed in quotes; it should be treated as containing its own quotes, even
+     * if the escaping method is changed.
+     * <p>
+     * DEV NOTE: this is to factor out the escaping code to simplify things later, because solr is not
+     * honoring <code>escapeTermPlain</code> as expected.
+     * <p>
+     * 2017-07-21: At current time, uses {@link #escapeTermPlain} - SEE KNOWN ISSUES.
+     */
+    public static String escapeTermFull(String term) {
+        return escapeTermPlain(term);
+    }
+    
+    /**
+     * Makes an expression to match a category ID for a special category field, whose values
+     * are in the format: <code>X/PARENT/CATEGORY</code> (where X is the category depth); 
+     * assumes the passed category ID is already escaped.
+     * NOTE: the field name is not escaped (should be hardcoded).
+     */
+    public static String makeCategoryIdFieldQueryRaw(String fieldName, String escapedProductCategoryId, boolean includeSubCategories) {
+        // can be:
+        // */CATID
+        // */CATID/*
+        // NOTE: at this time, should not be any CATID/*, 
+        // because there should always be a category depth as first entry (this was the chosen convention)
+        StringBuilder sb = new StringBuilder();
+        sb.append(fieldName);
+        sb.append(":(*\\/");
+        sb.append(escapedProductCategoryId);
+        if (includeSubCategories) {
+            sb.append("* *\\/");
+            sb.append(escapedProductCategoryId);
+            sb.append("\\/*)");
+        } else {
+            sb.append(")");
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Makes an expression to match a category ID for a special category field, whose values
+     * are in the format: <code>X/PARENT/CATEGORY</code>, and automatically escapes the passed category ID.
+     * NOTE: the field name is not escaped (should be hardcoded).
+     */
+    public static String makeCategoryIdFieldQueryEscape(String fieldName, String escapedProductCategoryId, boolean includeSubCategories) {
+        return makeCategoryIdFieldQueryRaw(fieldName, escapeTermFull(escapedProductCategoryId), includeSubCategories);
+    }
+   
+    /**
+     * Tries to return a field language code for the solr schema for the locale.
+     * For "en_US", returns the "en" part.
+     * TODO: REVIEW: sketchy
+     */
+    public static String getSolrSchemaLangCode(Locale locale) {
+        if (locale == null) return null;
+        return locale.getLanguage();
+    }
+    
+    /**
+     * Tries to return a field language locale for the solr schema for the locale.
+     * For "en_US", returns "en" locale.
+     * TODO: REVIEW: sketchy
+     */
+    public static Locale getSolrSchemaLangLocale(Locale locale) {
+        return (locale == null) ? null : Locale.forLanguageTag(getSolrSchemaLangCode(locale));
+    }
 }

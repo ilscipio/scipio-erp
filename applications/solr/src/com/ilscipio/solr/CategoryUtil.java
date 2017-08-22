@@ -1,9 +1,8 @@
 package com.ilscipio.solr;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javolution.util.FastList;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
@@ -14,7 +13,6 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.DispatchContext;
@@ -32,7 +30,6 @@ public abstract class CategoryUtil {
      * This method is a supplement to CatalogWorker methods.
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
-        List<String> catalogIds = FastList.newInstance();
         List<GenericValue> catalogs = null;
         try {
             EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("productCategoryId", productCategoryId));
@@ -41,23 +38,27 @@ public abstract class CategoryUtil {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up all catalogs", module);
         }
-        if (catalogs != null) {
+        List<String> catalogIds;
+        if (UtilValidate.isNotEmpty(catalogs)) {
+            catalogIds = new ArrayList<>(catalogs.size());
             for (GenericValue c : catalogs) {
                 catalogIds.add(c.getString("prodCatalogId"));
             }
+        } else {
+            catalogIds = new ArrayList<>();
         }
         return catalogIds;
     }
     
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-        List<List<String>> trailElements = FastList.newInstance();
+        List<List<String>> trailElements = new ArrayList<>();
         // 2016-03-22: don't need a loop here due to change below
         //String parentProductCategoryId = productCategoryId;
         //while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
             // find product category rollup
         try {
-            List<EntityCondition> rolllupConds = FastList.newInstance();
+            List<EntityCondition> rolllupConds = new ArrayList<>();
             //rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             rolllupConds.add(EntityUtil.getFilterByDateExpr());
@@ -67,13 +68,13 @@ public abstract class CategoryUtil {
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                 /* 2016-03-22: This does not work properly and creates invalid trails.
                  * Instead, use recursion.
-                List<List<String>> trailElementsAux = FastList.newInstance();
+                List<List<String>> trailElementsAux = new ArrayList<>();
                 trailElementsAux.addAll(trailElements);
                 // add only categories that belong to the top category to trail
                 for (GenericValue productCategoryRollup : productCategoryRollups) {
                     String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
                     parentProductCategoryId = trailCategoryId;
-                    List<String> trailElement = FastList.newInstance();
+                    List<String> trailElement = new ArrayList<>();
                     if (!trailElements.isEmpty()) {
                         for (List<String> trailList : trailElementsAux) {
                             trailElement.add(trailCategoryId);
@@ -109,7 +110,7 @@ public abstract class CategoryUtil {
         }
         //}
         if (trailElements.isEmpty()) {
-            List<String> trailElement = FastList.newInstance();
+            List<String> trailElement = new ArrayList<>();
             trailElement.add(productCategoryId);
             trailElements.add(trailElement);
         }
@@ -152,8 +153,7 @@ public abstract class CategoryUtil {
                 if (trailElement == null) {
                     trailElement = getBestDefaultTrail(catalogId, dctx, trailElements);
                 }
-            }
-            else {
+            } else {
                 trailElement = getBestDefaultTrail(catalogId, dctx, trailElements);
             }
             if (trailElement != null) {
@@ -208,14 +208,11 @@ public abstract class CategoryUtil {
     public static List<String> getBestDefaultTrail(String catalogId, DispatchContext dctx, List<List<String>> trails) {
         if (trails == null || trails.isEmpty()) {
             return null;
-        }
-        else if (trails.size() == 1) {
+        } else if (trails.size() == 1) {
             return trails.get(0);
-        }
-        else if (catalogId == null || catalogId.isEmpty()) {
+        } else if (catalogId == null || catalogId.isEmpty()) {
             return trails.get(0);
-        }
-        else {
+        } else {
             List<String> best = null;
             Integer bestIndex = null;
             
@@ -231,16 +228,14 @@ public abstract class CategoryUtil {
                             if (best == null) {
                                 best = trail;
                                 bestIndex = catIndex;
-                            }
-                            else {
+                            } else {
                                 if (catIndex < bestIndex) {
                                     best = trail;
                                     bestIndex = catIndex;
                                 }
                             }
                             break;
-                        }
-                        else {
+                        } else {
                             catIndex++;
                         }
                     }
@@ -275,8 +270,7 @@ public abstract class CategoryUtil {
                 String matchPart = matchIt.next();
                 if (candidatePart.equals(matchPart)) {
                     candidatePartMatches++;
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -284,8 +278,7 @@ public abstract class CategoryUtil {
             if (candidatePartMatches == matchTrail.size() && matchTrail.size() == candidateTrail.size()) {
                 // Found exact match, return it right away as shortcut
                 return candidateTrail;
-            }
-            else {
+            } else {
                 if (candidatePartMatches > partMatches) {
                     partMatches = candidatePartMatches;
                     best = candidateTrail;
@@ -296,17 +289,14 @@ public abstract class CategoryUtil {
         if (exact) {
             // If there was an exact match, it would have returned above
             return null;
-        }
-        else {
+        } else {
             if (containFullTrail) {
                 if (partMatches >= matchTrail.size()) {
                     return best;
-                }
-                else {
+                } else {
                     return null;
                 }
-            }
-            else {
+            } else {
                 return best;
             }
         }
@@ -319,7 +309,7 @@ public abstract class CategoryUtil {
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
     public static int getNextLevelFromCategoryId(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             if (productCategoryId.contains("/")) {
                 String[] productCategories = productCategoryId.split("/");
                 int level = Integer.parseInt(productCategories[0]);
@@ -339,7 +329,7 @@ public abstract class CategoryUtil {
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
      */
     public static String getFacetFilterForCategory(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             String[] productCategories = productCategoryId.split("/");
             int level = Integer.parseInt(productCategories[0]);
             int nextLevel = level+1;
@@ -347,8 +337,7 @@ public abstract class CategoryUtil {
             // 2016-03-22: Preserve the original ending / if there was one
             if (productCategoryId.endsWith("/")) {
                 return StringUtils.join(productCategories,"/") + "/";
-            }
-            else {
+            } else {
                 return StringUtils.join(productCategories,"/");
             }
         } catch(Exception e) {

@@ -84,6 +84,7 @@ under the License.
 
     <service name="solrProductAttributesSimple" engine="interface">
         <description>Simple-type product attributes for addToSolrIndex Product</description>
+        <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <!-- DEV NOTE: these should correspond to the old hardcoded list com.ilscipio.solr.SolrUtil.solrProdAttrSimple
             for backward compat, when a field is deprecated, move it back into addToSolrIndex interface -->
         <attribute mode="IN" name="productId" optional="false" type="String" />
@@ -109,6 +110,7 @@ under the License.
     
     <service name="solrProductAttributesComplex" engine="interface">
         <description>Complex-type product attributes for addToSolrIndex Product</description>
+        <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <attribute mode="IN" name="description" optional="true" type="Map" />
         <attribute mode="IN" name="longDescription" optional="true" type="Map" />
         <attribute mode="IN" name="title" optional="true" type="Map" />
@@ -120,6 +122,7 @@ under the License.
 
     <service name="solrProductAttributes" engine="interface">
         <description>All product attributes for addToSolrIndex Product</description>
+        <!-- WARN: 2017-08-21: these are currently intermediate fields names that match may match neither Product entity nor solr product schema fields -->
         <implements service="solrProductAttributesSimple"/>
         <implements service="solrProductAttributesComplex"/>
     </service>
@@ -159,6 +162,9 @@ under the License.
         invoke="productsSearch" debug="true" validate="true">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
+        <attribute mode="IN" optional="true" name="includeSubCategories" type="Boolean">
+            <description>default: true (legacy behavior)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="viewSize" type="String"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="String"/>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>

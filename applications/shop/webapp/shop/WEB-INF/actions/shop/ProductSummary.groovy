@@ -62,7 +62,7 @@ context.remove("totalPrice");
 
 // get the product entity
 if (!product && productId) {
-    product = delegator.findByPrimaryKeyCache("Product", [productId : productId]);
+    product = delegator.findOne("Product", [productId : productId], true);
 }
 if (product) {
     //if order is purchase then don't calculate available inventory for product.
@@ -76,7 +76,7 @@ if (product) {
             }
         }*/
     } else {
-       supplierProducts = delegator.findByAndCache("SupplierProduct", [productId : product.productId], ["-availableFromDate"]);
+       supplierProducts = delegator.findByAnd("SupplierProduct", [productId : product.productId], ["-availableFromDate"], true);
        supplierProduct = EntityUtil.getFirst(supplierProducts);
        if (supplierProduct?.standardLeadTimeDays != null) {
            standardLeadTimeDays = supplierProduct.standardLeadTimeDays;
@@ -88,16 +88,20 @@ if (product) {
     productContentWrapper = new ProductContentWrapper(product, request);
     context.productContentWrapper = productContentWrapper;
 } else if (solrProduct) {
-    String country = session.getAttribute("locale");
-    if (!country) 
-        country = request.getLocale().getLanguage();
+    //String country = session.getAttribute("locale");
+    //if (!country) 
+    //    country = request.getLocale().getLanguage();
+    country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCode(context.locale);
+    context.solrTitle = null;
+    context.description = null;
+    context.longdescription = null;
     for (String key in solrProduct.keySet()) {
-        if (key.endsWith("_" + request.getLocale().getLanguage())) {
-            if (key.startsWith("title"))
+        if (key.endsWith("_" + country)) {
+            if (key.startsWith("title_"))
                 context.solrTitle = solrProduct.get(key);
-            else if (key.startsWith("description"))
-                context.description =  solrProduct.get(key);
-            else if (key.startsWith("longdescription"))
+            else if (key.startsWith("description_"))
+                context.description = solrProduct.get(key);
+            else if (key.startsWith("longdescription_"))
                 context.longdescription =  solrProduct.get(key);
         }
     }

@@ -209,4 +209,13 @@ public class ProductContentWrapper implements ContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, productContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, true);
         }
     }
+
+    /**
+     * SCIPIO: Returns the locale this product content wrapper was initialized and intended for.
+     * Added 2017-08-21.
+     */
+    public Locale getLocale() {
+        return locale;
+    }
+
 }

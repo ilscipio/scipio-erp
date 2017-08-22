@@ -52,8 +52,8 @@ import com.ilscipio.solr.SolrUtil;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
-final boolean DEBUG = Debug.verboseOn();
-//final boolean DEBUG = true;
+//final boolean DEBUG = Debug.verboseOn();
+final boolean DEBUG = true;
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 // SCIPIO: this allows to use the script for local scopes without affecting request
@@ -127,7 +127,7 @@ sanitizeUserQueryExpr = { expr ->
     if (expr instanceof String) {
         if (!expr) return expr;
         if (kwsArgs.searchSyntax == "full") return expr;
-        else return SolrUtil.escapeTermAndQuote(expr)
+        else return SolrUtil.escapeTermFull(expr)
     } else if (expr instanceof List) {
         if (!expr) return expr;
         def resExprList = [];
@@ -138,8 +138,8 @@ sanitizeUserQueryExpr = { expr ->
     }
 };
 
-// WARN: this one auto adds quotes
-escapeTerm = { term -> return SolrUtil.escapeTermAndQuote(term); };
+// WARN: this one may add quotes (decision delegated)
+escapeTerm = { term -> return SolrUtil.escapeTermFull(term); };
 
 // allow full solr syntax in input search strings? (if false, searches exact string only)
 // PROBLEM: by allowing full query, user can easily cause crash - it's caught, but is unfriendly.
@@ -161,6 +161,7 @@ kwsArgs.searchFeatures = context.searchFeatures;
 kwsArgs.sortBy = context.searchSortBy;
 kwsArgs.sortByReverse = context.searchSortByReverse;
 kwsArgs.noConditionFind = noConditionFind;
+kwsArgs.searchSortOrderString = context.searchSortOrderString;
 
 ProductSearchOptions kwsParams = context.kwsParams; // user input parameters, only if localVarsOnly==false
 if (!localVarsOnly) {
@@ -211,10 +212,11 @@ if (kwsParams) {
         kwCatalogCnsts = [];
         kwCategoryCnsts = [];
         kwFeatureCnsts = [];
+        kwExcludeVariants = false;
         
         for(ProductSearchConstraint psc in pscList) {
             if (psc instanceof ProductSearch.ExcludeVariantsConstraint) {
-                if (kwsArgs.excludeVariants == null) kwsArgs.excludeVariants = true;
+                kwExcludeVariants = true;
             } else if (psc instanceof ProductSearch.CatalogConstraint) { // SCIPIO: NOTE: we added this one here
                 ProductSearch.CatalogConstraint cc = (ProductSearch.CatalogConstraint) psc;
                 if (kwsArgs.searchCatalogs==null && cc.getProdCatalogId()) {
@@ -358,41 +360,43 @@ if (kwsParams) {
         };
         if (DEBUG) Debug.logInfo("Keyword search params: kwOrExprList: " + kwOrExprList + "; kwAndExprList: " + kwAndExprList, module);
         
-        if (kwOrExprList) {
-            kwAndExprList.add(combineKwExpr(kwOrExprList, "OR"))
-        }
-        if (!kwsArgs.searchString && kwAndExprList) {
-            kwsArgs.searchString = combineKwExpr(kwAndExprList, "AND");
-        }
+        // add OR list as entry of AND list
+        if (kwOrExprList) kwAndExprList.add(combineKwExpr(kwOrExprList, "OR"));
+        // make expression from AND list
+        if (!kwsArgs.searchString && kwAndExprList) kwsArgs.searchString = combineKwExpr(kwAndExprList, "AND");
 
-        if (kwsArgs.searchCatalogs==null && kwCatalogCnsts) {
-            kwsArgs.searchCatalogs = kwCatalogCnsts;
-        }
-        if (kwsArgs.searchCategories==null && kwCategoryCnsts) {
-            kwsArgs.searchCategories = kwCategoryCnsts;
-        }
-        if (kwsArgs.searchFeatures==null && kwFeatureCnsts) {
-            kwsArgs.searchFeatures = kwFeatureCnsts;
-        }
+        if (kwsArgs.searchCatalogs==null && kwCatalogCnsts) kwsArgs.searchCatalogs = kwCatalogCnsts;
+        if (kwsArgs.searchCategories==null && kwCategoryCnsts) kwsArgs.searchCategories = kwCategoryCnsts;
+        if (kwsArgs.searchFeatures==null && kwFeatureCnsts) kwsArgs.searchFeatures = kwFeatureCnsts;
+        if (kwsArgs.excludeVariants == null) kwsArgs.excludeVariants = kwExcludeVariants;
     }
     
     ResultSortOrder sortOrder = kwsParams.getResultSortOrder();
     if (!kwsArgs.sortBy && sortOrder != null) {
         if (sortOrder instanceof SortProductPrice) {
             SortProductPrice so = (SortProductPrice) sortOrder;
-            kwsArgs.sortBy = "defaultPrice"; // TODO: listPrice??
+            if ("LIST_PRICE" == so.getProductPriceTypeId()) {
+                kwsArgs.sortBy = "listPrice";
+            } else {
+                kwsArgs.sortBy = "defaultPrice";
+            }
             kwsArgs.sortByReverse = !so.isAscending();
+            kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
         } else if (sortOrder instanceof SortProductFeature) {
             // TODO?
             //SortProductFeature so = (SortProductFeature) sortOrder;
         } else if (sortOrder instanceof SortKeywordRelevancy) {
-            // do nothing?
-            //SortKeywordRelevancy so = (SortKeywordRelevancy) sortOrder;
+            SortKeywordRelevancy so = (SortKeywordRelevancy) sortOrder;
+            kwsArgs.sortBy = null;
+            kwsArgs.sortByReverse = null;
             //kwsArgs.sortByReverse = !so.isAscending();
+            kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
         } else if (sortOrder instanceof SortProductField) {
             SortProductField so = (SortProductField) sortOrder;
-            kwsArgs.sortBy = so.getFieldName(); //
+            simpleLocale = SolrUtil.getSolrSchemaLangLocale(context.locale) ?: Locale.ENGLISH;
+            kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
             kwsArgs.sortByReverse = !so.isAscending();
+            kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
         } else {
             Debug.logWarning("Solr: Keyword search: unrecognized sort order method: " + sortOrder.getClass().getName(), module);
         }
@@ -401,9 +405,11 @@ if (kwsParams) {
 
 if (!kwsArgs.searchCatalogs) kwsArgs.searchCatalogs = [CatalogWorker.getCurrentCatalogId(request)];
 
+if (!kwsArgs.searchSortOrderString) kwsArgs.searchSortOrderString = new org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy().prettyPrintSortOrder(false, context.locale);
+
 // NOTE: these context assigns are here in case of fail
-// FIXME?: this message assumes searchString is always for "keywords"... the old ProductSearchSession had more options/params
-context.searchSortOrderString = new org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy().prettyPrintSortOrder(false, context.locale);
+// WARN: searchSortOrderString: should always be set to non-null, for the legacy template which crashes without it
+context.searchSortOrderString = kwsArgs.searchSortOrderString;
 context.paging = kwsArgs.paging; // in case fail
 context.noConditionFind = kwsArgs.noConditionFind;
 
@@ -486,19 +492,7 @@ if ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchString) {
                 if (category.exclude != null) {
                     sb.append(category.exclude ? "-" : "+");
                 }
-                sb.append("cat:(");
-                escapedCatId = SolrUtil.escapeTermQuoted(category.productCategoryId); // escaped for INSIDE quotes only!
-                // in both cases, we need to search for: *"/CATID"
-                sb.append("*\"/");
-                sb.append(escapedCatId);
-                sb.append("\"");
-                if (category.includeSub != false) {
-                    // to support sub-categories, must also search for: *"/CATID/"*
-                    sb.append(" *\"/");
-                    sb.append(escapedCatId);
-                    sb.append("/\"*");
-                }
-                sb.append(")");
+                sb.append(SolrUtil.makeCategoryIdFieldQueryEscape("cat", category.productCategoryId, category.includeSub != false));
                 catExprList.add(sb.toString());
             }
             // TODO: REVIEW: should this be a whole filter, or instead add each to searchFilters?

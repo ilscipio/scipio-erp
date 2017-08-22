@@ -273,6 +273,10 @@ public abstract class SolrProductSearch {
         HttpSolrClient client = null;
         Map<String, Object> result;
         try {
+            // DEV NOTE: WARN: 2017-08-22: BEWARE PARSING FIELDS HERE - should be avoided here
+            // the passed values may not be simple fields names, they require complex expressions containing spaces and special chars
+            // (for example the old "queryFilter" parameter was unusable, so now have "queryFilters" list in addition).
+            
             client = SolrUtil.getHttpSolrClient((String) context.get("core"));
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
@@ -357,13 +361,34 @@ public abstract class SolrProductSearch {
             }
 
             // if((Boolean)context.get("sortByReverse"))order.reverse();
-            if ((String) context.get("sortBy") != null && ((String) context.get("sortBy")).length() > 0) {
-                SolrQuery.ORDER order;
-                if (!Boolean.TRUE.equals(context.get("sortByReverse")))
+            String sortBy = (String) context.get("sortBy");
+            if (UtilValidate.isNotEmpty(sortBy)) {
+                SolrQuery.ORDER order = null;
+                Boolean sortByReverse = (Boolean) context.get("sortByReverse");
+                if (sortByReverse != null) {
+                    order = sortByReverse ? SolrQuery.ORDER.desc : SolrQuery.ORDER.asc;
+                }
+                
+                // TODO?: REVIEW?: 2017-08-22: this parsing poses a problem and may interfere with queries.
+                // I have restricted it to only remove the first "-" if it's preceeded by whitespace, but
+                // there's no guarantee it still might not interfere with query too...
+                //sortBy = sortBy.replaceFirst("-", "");
+                
+                // TODO: REVIEW: trim would probably be fine & simplify check, but I don't know for sure
+                //sortBy = sortBy.trim();
+                
+                int dashIndex = sortBy.indexOf('-');
+                if (dashIndex >= 0 && sortBy.substring(0, dashIndex).trim().isEmpty()) { // this checks if dash is first char or preceeded by space only
+                    if (order == null) {
+                        order = SolrQuery.ORDER.desc;
+                    }
+                    sortBy = sortBy.substring(dashIndex + 1);
+                }
+
+                if (order == null) {
                     order = SolrQuery.ORDER.asc;
-                else
-                    order = SolrQuery.ORDER.desc;
-                solrQuery.setSort(((String) context.get("sortBy")).replaceFirst("-", ""), order);
+                }
+                solrQuery.setSort(sortBy, order);
             }
 
             if ((String) context.get("facetQuery") != null) {

@@ -441,4 +441,37 @@ public abstract class SolrUtil {
     public static Locale getSolrSchemaLangLocale(Locale locale) {
         return (locale == null) ? null : Locale.forLanguageTag(getSolrSchemaLangCode(locale));
     }
+    
+    /**
+     * BEST-EFFORT function that attempts to add a prefix ("+" or "-") to every keyword in the given
+     * queryExpr.
+     * TODO: REVIEW: should find a solr expression for this OR will need more work as time goes on...
+     */
+    public static String addPrefixToAllKeywords(String queryExpr, String prefix) {
+        // FIXME: this breaks any kind of complex query! is very bad!
+        String[] kwList = queryExpr.split("\\s+");
+        boolean quoteOpen = false; // BEST-EFFORT attempt to not break quoted strings
+        StringBuilder sb = new StringBuilder();
+        for(String kw : kwList) {
+            if (kw.length() == 0) {
+                continue;
+            } else if (kw.contains("\"")) {
+                // FIXME: does not properly detect escaping!
+                quoteOpen = !quoteOpen;
+                sb.append(" ");
+                sb.append(kw);
+                continue;
+            } else if (quoteOpen) {
+                sb.append(" ");
+                sb.append(kw);
+                continue;
+            } else {
+                sb.append(" ");
+                sb.append(prefix);
+                sb.append(kw);
+            }
+        }
+        return sb.toString().trim();
+    }
+    
 }

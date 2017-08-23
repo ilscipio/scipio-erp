@@ -88,6 +88,7 @@ under the License.
         <!-- DEV NOTE: these should correspond to the old hardcoded list com.ilscipio.solr.SolrUtil.solrProdAttrSimple
             for backward compat, when a field is deprecated, move it back into addToSolrIndex interface -->
         <attribute mode="IN" name="productId" optional="false" type="String" />
+        <attribute mode="IN" name="productTypeId" optional="true" type="String" />
         <attribute mode="IN" name="internalName" optional="true" type="String" />
         <attribute mode="IN" name="manu" optional="true" type="String" />
         <!-- TODO: REVIEW: size was hardcoded in com.ilscipio.solr.SolrUtil.solrProdAttrSimple but was not in interface nor schema...

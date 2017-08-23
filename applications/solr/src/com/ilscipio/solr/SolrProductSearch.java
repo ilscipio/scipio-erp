@@ -909,11 +909,11 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    private static void copyStdServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx) {
+    static void copyStdServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx) {
         copyServiceFieldsNotSet(srcCtx, destCtx, "locale", "userLogin", "timeZone");
     }
     
-    private static void copyServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx, String... fieldNames) {
+    static void copyServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx, String... fieldNames) {
         for(String fieldName : fieldNames) {
             if (!destCtx.containsKey(fieldName)) destCtx.put(fieldName, srcCtx.get(fieldName));
         }

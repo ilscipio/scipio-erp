@@ -94,6 +94,18 @@ public abstract class ProductUtil {
         else return PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY.get(solrFieldName);
     }
     
+    public static String getProductSolrPriceFieldNameFromEntityPriceType(String productPriceTypeId, Locale locale, String logPrefix) {
+        if ("LIST_PRICE".equals(productPriceTypeId)) {
+            return "listPrice";
+        } else {
+            if (!"DEFAULT_PRICE".equals(productPriceTypeId) && logPrefix != null) {
+                Debug.logWarning(logPrefix + "Requested sort price type '" + productPriceTypeId + "' " +
+                        "is not supported in current solr product schema; using defaultPrice (DEFAULT_PRICE) instead", module);
+            }
+            return "defaultPrice";
+        }
+    }
+    
     private static ModelService getModelServiceStaticSafe(String serviceName) {
         try {
             LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
@@ -143,6 +155,8 @@ public abstract class ProductUtil {
                 // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
                 if (product.get("internalName") != null)
                     dispatchContext.put("internalName", product.get("internalName"));
+                if (product.get("productTypeId") != null)
+                    dispatchContext.put("productTypeId", product.get("productTypeId"));
                 // GenericValue manu = product.getRelatedOneCache("Manufacturer");
                 // if (product.get("manu") != null) dispatchContext.put("manu", "");
                 String smallImage = (String) product.get("smallImageUrl");
@@ -236,19 +250,35 @@ public abstract class ProductUtil {
                 // dispatchContext.put("keywords", "");
                 // dispatchContext.put("last_modified", "");
 
+                // this is the currencyUomId that the prices in solr should use...
+                // FIXME: if null, calculateProductPrice is currently reading this from general.properties ALWAYS;
+                // the stored data may not match this!
+                // _may_ be causing problems reading prices...
+                String currencyUomId = null;
+                
                 if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
                     // FIXME: locale should be looked up differently, but shouldn't have any impacts to price selection...
                     //Locale priceConfigLocale = new Locale("de_DE");
-                    Locale priceConfigLocale = (Locale) context.get("locale"); 
-                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, priceConfigLocale, userLogin);
-                    String listPrice = configWrapper.getTotalListPrice().setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
-                    if (listPrice != null)
-                        dispatchContext.put("listPrice", listPrice);
-                    String defaultPrice = configWrapper.getTotalListPrice().setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
-                    if (defaultPrice != null)
-                        dispatchContext.put("defaultPrice", defaultPrice);
+                    //Locale priceConfigLocale = (Locale) context.get("locale");
+                    Locale priceConfigLocale = SolrUtil.getSolrContentLocaleDefault(delegator, productStoreId);
+                    
+                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, currencyUomId, priceConfigLocale, userLogin);
+                    configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
+                    BigDecimal listPrice = configWrapper.getTotalListPrice();
+                    // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and 
+                    // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
+                    //if (listPrice != null) {
+                    if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || configWrapper.hasOriginalListPrice())) {
+                        dispatchContext.put("listPrice", listPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN).toString());
+                    }
+                    BigDecimal defaultPrice = configWrapper.getTotalPrice();
+                    if (defaultPrice != null) {
+                        dispatchContext.put("defaultPrice", defaultPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN).toString());
+                    }
                 } else {
-                    Map<String, GenericValue> priceContext = UtilMisc.toMap("product", product);
+                    Map<String, Object> priceContext = UtilMisc.toMap("product", product);
+                    priceContext.put("currencyUomId", currencyUomId);
+                    SolrProductSearch.copyStdServiceFieldsNotSet(context, priceContext);
                     Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
                     if (priceMap.get("listPrice") != null) {
                         String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();

@@ -88,6 +88,10 @@ public abstract class SolrUtil {
         solrContentLocaleDefault = locale;
     }
     
+    public static String getSolrConfigVersionStatic() {
+        return UtilProperties.getPropertyValue("solrconfig", "solr.config.version");
+    }
+    
     /**
      * Gets content locales. FIXME: currently ignores product store!
      */
@@ -257,7 +261,7 @@ public abstract class SolrUtil {
         return result;
     }
 
-    public static String getSolrDataStatusId(Delegator delegator) {
+    public static GenericValue getSolrStatus(Delegator delegator) {
         GenericValue solrStatus;
         try {
             solrStatus = EntityQuery.use(delegator).from("SolrStatus")
@@ -265,7 +269,7 @@ public abstract class SolrUtil {
             if (solrStatus == null) {
                 Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - seed data missing?", module);
             } else {
-                return solrStatus.getString("dataStatusId");
+                return solrStatus;
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -273,7 +277,12 @@ public abstract class SolrUtil {
         return null;
     }
     
-    public static boolean setSolrDataStatusId(Delegator delegator, String dataStatusId) {
+    public static String getSolrDataStatusId(Delegator delegator) {
+        GenericValue solrStatus = getSolrStatus(delegator);
+        return solrStatus != null ? solrStatus.getString("dataStatusId") : null;
+    }
+    
+    public static boolean setSolrDataStatusId(Delegator delegator, String dataStatusId, boolean updateVersion) {
         GenericValue solrStatus;
         try {
             solrStatus = EntityQuery.use(delegator).from("SolrStatus")
@@ -281,9 +290,15 @@ public abstract class SolrUtil {
             //solrStatus = delegator.findOne("SolrStatus", UtilMisc.toMap("solrId", "SOLR-MAIN"), false);
             if (solrStatus == null) {
                 Debug.logWarning("Could not get SolrStatus for SOLR-MAIN - creating new", module);
-                solrStatus = delegator.create("SolrStatus", "solrId", "SOLR-MAIN", "dataStatusId", dataStatusId);
+                solrStatus = delegator.create("SolrStatus", 
+                        "solrId", "SOLR-MAIN", 
+                        "dataStatusId", dataStatusId, 
+                        "dataCfgVersion", getSolrConfigVersionStatic());
             } else {
                 solrStatus.setString("dataStatusId", dataStatusId);
+                if (updateVersion) {
+                    solrStatus.setString("dataCfgVersion", getSolrConfigVersionStatic());
+                }
                 solrStatus.store();
             }
             return true;
@@ -292,6 +307,10 @@ public abstract class SolrUtil {
             Debug.logError(e, module);
             return false;
         }
+    }
+    
+    public static boolean setSolrDataStatusId(Delegator delegator, String dataStatusId) {
+        return setSolrDataStatusId(delegator, dataStatusId, false);
     }
     
     /**

@@ -33,12 +33,9 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.ServiceValidationException;
 
 /**
  * Base class for OFBiz Test Tools test case implementations.
@@ -115,7 +112,7 @@ public abstract class SolrProductSearch {
                     final String statusMsg = "Did not index productId '" + productId + "'; marking SOLR data as dirty (old)";
                     Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
                 }
-                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD");
+                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD", false);
             }
         }
         
@@ -742,13 +739,48 @@ public abstract class SolrProductSearch {
 
         // 2016-03-29: Only if dirty (or unknown)
         Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
-        if (Boolean.TRUE.equals(onlyIfDirty)) {
-            String dataStatusId = SolrUtil.getSolrDataStatusId(delegator);
-            if ("SOLR_DATA_OK".equals(dataStatusId)) {
-                result = ServiceUtil.returnSuccess("SOLR data is already marked OK; not rebuilding");
-                result.put("numDocs", (int) 0);
-                result.put("executed", Boolean.FALSE);
-                return result;
+        if (onlyIfDirty == null) onlyIfDirty = false;
+        // 2017-08-23: Only if solr.config.version changed
+        Boolean ifConfigChange = (Boolean) context.get("ifConfigChange");
+        if (ifConfigChange == null) ifConfigChange = false;
+        if (onlyIfDirty || ifConfigChange) {
+            GenericValue solrStatus = SolrUtil.getSolrStatus(delegator);
+            String cfgVersion = SolrUtil.getSolrConfigVersionStatic();
+            String dataStatusId = solrStatus != null ? solrStatus.getString("dataStatusId") : null;
+            String dataCfgVersion = solrStatus != null ? solrStatus.getString("dataCfgVersion") : null;
+
+            boolean dataStatusOk = "SOLR_DATA_OK".equals(dataStatusId);
+            boolean dataCfgVerOk = cfgVersion.equals(dataCfgVersion);
+
+            // TODO: simplify this code structure (one more bool and it will be unmaintainable)
+            if (onlyIfDirty && ifConfigChange) {
+                if (dataStatusOk && dataCfgVerOk) {
+                    result = ServiceUtil.returnSuccess("SOLR data is already marked OK; SOLR data is already at config version " + cfgVersion + "; not rebuilding");
+                    result.put("numDocs", (int) 0);
+                    result.put("executed", Boolean.FALSE);
+                    return result;
+                }
+            } else if (onlyIfDirty) {
+                if (dataStatusOk) {
+                    result = ServiceUtil.returnSuccess("SOLR data is already marked OK; not rebuilding");
+                    result.put("numDocs", (int) 0);
+                    result.put("executed", Boolean.FALSE);
+                    return result;
+                }
+            } else if (ifConfigChange) {
+                if (dataCfgVerOk) {
+                    result = ServiceUtil.returnSuccess("SOLR data is already at config version " + cfgVersion + "; not rebuilding");
+                    result.put("numDocs", (int) 0);
+                    result.put("executed", Boolean.FALSE);
+                    return result;
+                }
+            }
+            
+            if (onlyIfDirty && !dataStatusOk) {
+                Debug.logInfo("Solr: rebuildSolrIndex: [onlyIfDirty] Data is marked dirty (status: " + dataStatusId + "); reindexing proceeding...", module);
+            }
+            if (ifConfigChange && !dataCfgVerOk) {
+                Debug.logInfo("Solr: rebuildSolrIndex: [ifConfigChange] Data config version has changed (current: " + cfgVersion + ", previous: " + dataCfgVersion + "); reindexing proceeding...", module);
             }
         }
         
@@ -764,7 +796,7 @@ public abstract class SolrProductSearch {
                 numDocs = products.size();
             }
 
-            Debug.logInfo("Solr: Clearing solr index and rebuilding with " + numDocs + " found products", module);
+            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index and rebuilding with " + numDocs + " found products", module);
 
             Iterator<GenericValue> productIterator = products.iterator();
             while (productIterator.hasNext()) {
@@ -794,43 +826,28 @@ public abstract class SolrProductSearch {
                 final String statusMsg = "Cleared solr index and reindexed " + numDocs + " documents";
                 result = ServiceUtil.returnSuccess(statusMsg);
             }
-        } catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
         } catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = "Failure connecting to solr server to rebuild index; index not updated";
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
-                    Debug.logWarning(e, "Solr: " + statusStr, module);
+                    Debug.logWarning(e, "Solr: rebuildSolrIndex: " + statusStr, module);
                     result = ServiceUtil.returnFailure(statusStr);
                 } else {
-                    Debug.logError(e, "Solr: " + statusStr, module);
+                    Debug.logError(e, "Solr: rebuildSolrIndex: " + statusStr, module);
                     result = ServiceUtil.returnError(statusStr);
                 }
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, "Solr: rebuildSolrIndex: Server error: " + e.getMessage(), module);
                 result = ServiceUtil.returnError(e.toString());
             }
-        } catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
-        } catch (ServiceAuthException e) {
-            Debug.logError(e, e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
-        } catch (ServiceValidationException e) {
-            Debug.logError(e, e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
-        } catch (GenericServiceException e) {
-            Debug.logError(e, e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
         }
         
         // If success, mark data as good
         if (ServiceUtil.isSuccess(result)) {
-            SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OK");
+            SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OK", true);
         }
         result.put("numDocs", numDocs);
         result.put("executed", Boolean.TRUE);
@@ -852,39 +869,43 @@ public abstract class SolrProductSearch {
             if (onlyIfDirty == null) {
                 onlyIfDirty = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.onlyIfDirty", false);
             }
+            Boolean ifConfigChange = (Boolean) context.get("ifConfigChange");
+            if (ifConfigChange == null) {
+                ifConfigChange = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.ifConfigChange", false);
+            }
             
-            Debug.logInfo("Solr: index rebuild (auto-run): starting (onlyIfDirty: " + onlyIfDirty + ")", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")...", module);
 
             Map<String, Object> servCtx;
             try {
                 servCtx = dctx.makeValidContext("rebuildSolrIndex", ModelService.IN_PARAM, context);
                 
                 servCtx.put("onlyIfDirty", onlyIfDirty);
+                servCtx.put("ifConfigChange", ifConfigChange);
                 
                 Map<String, Object> servResult = dispatcher.runSync("rebuildSolrIndex", servCtx);
                 
                 if (ServiceUtil.isSuccess(servResult)) {
                     String respMsg = (String) servResult.get(ModelService.SUCCESS_MESSAGE);
-                    if (respMsg != null) {
-                        Debug.logInfo("Solr: index rebuild (auto-run): rebuildSolrIndex returned success: " + respMsg, module);
+                    if (UtilValidate.isNotEmpty(respMsg)) {
+                        Debug.logInfo("Solr: rebuildSolrIndexAuto: rebuildSolrIndex returned success: " + respMsg, module);
                     } else {
-                        Debug.logInfo("Solr: index rebuild (auto-run): rebuildSolrIndex returned success", module);
+                        Debug.logInfo("Solr: rebuildSolrIndexAuto: rebuildSolrIndex returned success", module);
                     }
                 } else {
-                    Debug.logError("Solr: index rebuild (auto-run): rebuildSolrIndex returned an error: " + 
+                    Debug.logError("Solr: rebuildSolrIndexAuto: rebuildSolrIndex returned an error: " + 
                             ServiceUtil.getErrorMessage(servResult), module);
                 }
 
                 // Just pass it all back, hackish but should work
                 result = new HashMap<>();
                 result.putAll(servResult);
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
+            } catch (Exception e) {
+                Debug.logError(e, "Solr: rebuildSolrIndexAuto: Error: " + e.getMessage(), module);
                 return ServiceUtil.returnError(e.getMessage());
             }
-            
         } else {
-            Debug.logInfo("Solr: index rebuild (auto-run): not running - disabled", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled", module);
             result = ServiceUtil.returnSuccess();
         }
 
@@ -899,7 +920,7 @@ public abstract class SolrProductSearch {
         Map<String, Object> result;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         
-        boolean success = SolrUtil.setSolrDataStatusId(delegator, (String) context.get("dataStatusId"));
+        boolean success = SolrUtil.setSolrDataStatusId(delegator, (String) context.get("dataStatusId"), false);
         if (success) {
             result = ServiceUtil.returnSuccess();
         } else {

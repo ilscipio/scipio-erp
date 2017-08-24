@@ -35,6 +35,7 @@ under the License.
         <!-- 2016-03-29: If this flag is true, only rebuilds if SolrStatus.dataStatusId is not OK
             NOTE: unknown is treated as dirty. -->
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false"/>
+        <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="false"/>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
@@ -43,9 +44,10 @@ under the License.
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndex" debug="true" validate="true">
-        <description>rebuild SOLR Index if data status dirty (or unknown)</description>
+        <description>rebuild SOLR Index if data status dirty (or unknown) OR if config change (2017-08-23)</description>
         <implements service="rebuildSolrIndex" />
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
+        <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="true"/>
     </service>
     
     <service name="rebuildSolrIndexAuto" engine="java"
@@ -55,7 +57,8 @@ under the License.
         <description>rebuild SOLR Index - auto-run service</description>
         <implements service="rebuildSolrIndex" />
         <!-- NOTE: MUST use attribute here, not override, to prevent default-value -->
-        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" /> 
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" />
+        <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean"/>
     </service>
     
     <service name="setSolrDataStatus" engine="java"

@@ -235,6 +235,7 @@
   <copyField source="cat" dest="text"/>
   <copyField source="description" dest="spell"/>
   <copyField source="features" dest="text"/>
+  <copyField source="internalName" dest="alphaNameSort"/>
   <copyField source="internalName" dest="text"/>
   <copyField source="manu" dest="manu_exact"/>
   <copyField source="manu" dest="text"/>

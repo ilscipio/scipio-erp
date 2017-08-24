@@ -645,7 +645,8 @@ that avoids logging every request
     <!-- <copyField source="*_t" dest="text" maxChars="3000"/> -->
 
     <!-- copy name to alphaNameSort, a field designed for sorting by name -->
-    <!-- <copyField source="name" dest="alphaNameSort"/> -->
+    <!-- SCIPIO: 2017-08-23: FIXME: this sort is non-localized and relies on internal string... -->
+    <copyField source="internalName" dest="alphaNameSort"/>
 
     <!-- Similarity is the scoring routine for each document vs. a query.
     A custom similarity may be specified here, but the default is fine

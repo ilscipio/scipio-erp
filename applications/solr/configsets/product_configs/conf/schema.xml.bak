@@ -514,7 +514,7 @@ that avoids logging every request
         <field name="productId" type="string" indexed="true" stored="true" required="true" />
         <field name="productTypeId" type="string" indexed="true" stored="true" />
         <field name="sku" type="text_general" indexed="true" stored="true"/>
-        <field name="internalName" type="text_general" indexed="true" stored="true" multiValued="true"/>
+        <field name="internalName" type="text_general" indexed="true" stored="true" />
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
         <field name="manu" type="text_general" indexed="true" stored="true" omitNorms="true"/>
         <field name="cat" type="string" indexed="true" stored="true" multiValued="true"/>

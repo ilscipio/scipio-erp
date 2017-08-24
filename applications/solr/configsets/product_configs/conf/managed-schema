@@ -181,7 +181,7 @@
   <field name="description" type="text_general" indexed="true" stored="true"/>
   <field name="features" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <field name="inStock" type="int" indexed="true" stored="true"/>
-  <field name="internalName" type="text_general" multiValued="true" indexed="true" stored="true"/>
+  <field name="internalName" type="text_general" indexed="true" stored="true"/>
   <field name="isDigital" type="boolean" indexed="true" stored="true"/>
   <field name="isPhysical" type="boolean" indexed="true" stored="true"/>
   <field name="isVariant" type="boolean" indexed="true" stored="true"/>
@@ -235,6 +235,7 @@
   <copyField source="cat" dest="text"/>
   <copyField source="description" dest="spell"/>
   <copyField source="features" dest="text"/>
+  <copyField source="internalName" dest="alphaNameSort"/>
   <copyField source="internalName" dest="text"/>
   <copyField source="manu" dest="manu_exact"/>
   <copyField source="manu" dest="text"/>

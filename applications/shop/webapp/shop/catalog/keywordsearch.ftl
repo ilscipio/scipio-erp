@@ -41,10 +41,15 @@ under the License.
   </#if>
 </#if>
 <#if !displaySearchString?has_content>
-  <#-- FIXME? not the original string -->
-  <#assign displaySearchString = rawString(currentSearch!searchString!"")><#-- FIXME: can't easily read this from kwsParams? -->
-  <#if !displaySearchString?has_content || displaySearchString == "*:*">
-    <#assign displaySearchString = "(" + rawLabel('CommonAll') + ")">
+  <#-- TODO: REVIEW: this will likely show the solr query string - not the orig keyword string -
+      but this is not all bad because it's informative... -->
+  <#if currentSearch?? || searchString??><#-- FIXME: can't easily read this from kwsParams? -->
+    <#assign displaySearchString = rawString(currentSearch!searchString!"")>
+    <#if !displaySearchString?has_content || displaySearchString == "*:*">
+      <#assign displaySearchString = "(" + rawLabel('CommonAll') + ")">
+    </#if>
+  <#else>
+    <#assign displaySearchString = ""><#-- groovy didn't set, oh well -->
   </#if>
 </#if>
 
@@ -105,7 +110,7 @@ under the License.
 <#macro menuContent menuArgs>
   <@row>
     <@cell columns=6 class="+${styles.text_left!}">
-        <label style="display:inline;">${escapeVal(rawLabel('ProductYouSearchedFor')?cap_first, 'html')}:</label> ${escapeVal(displaySearchString, 'html')} (<a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.action_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
+        <#if displaySearchString?has_content><label style="display:inline;">${escapeVal(rawLabel('ProductYouSearchedFor')?cap_first, 'html')}:</label> ${escapeVal(displaySearchString, 'html')} </#if>(<a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.action_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
     </@cell>
     <@cell columns=6 class="+${styles.text_right!}">
         <@productSortOrderSelect sortOrder=sortOrder sortAscending=sortAscending id="kwssort"/>

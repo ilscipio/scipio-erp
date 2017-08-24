@@ -57,6 +57,8 @@ final boolean DEBUG = Debug.verboseOn();
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;
+kwsArgs = [:];
+ProductSearchOptions kwsParams = null;
 
 handleException = { e ->
     // FIXME?: no clean way at the moment to identify when error is user input or system/code error;
@@ -132,9 +134,6 @@ if (context.useSolr == false || useSolr == false) {
 }
 
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
-
-kwsArgs = [:];
-ProductSearchOptions kwsParams = null;
 
 sanitizeUserQueryExpr = { expr ->
     // TODO: this is extremely limited at the moment, only supports full solr syntax or exact string
@@ -324,8 +323,9 @@ try {
                         if (kc.isAnd()) {
                             // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
                             kwExprList.add(SolrUtil.addPrefixToAllKeywords(kwExpr, "+"));
+                        } else {
+                            kwExprList.add(kwExpr);
                         }
-                        kwExprList.add(kwExpr);
                         // TODO?: handle for cases where no full/solr syntax allowed:
                         //kc.isAnyPrefix()
                         //kc.isAnySuffix()
@@ -437,6 +437,7 @@ if (!kwsArgs.searchSortOrderString) kwsArgs.searchSortOrderString = new org.ofbi
 context.searchSortOrderString = kwsArgs.searchSortOrderString;
 context.paging = kwsArgs.paging; // in case fail
 context.noConditionFind = kwsArgs.noConditionFind;
+context.kwsParams = kwsParams;
 
 if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchString)) {
     try {

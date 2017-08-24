@@ -458,6 +458,10 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         // FIXME?: whitespace escaping appears to not work...
         //else if (!kwsArgs.searchSyntax) kwsArgs.searchString = SolrUtil.escapeTermPlain(kwsArgs.searchString);
         
+        // early assign for info when query throws error
+        context.currentSearch = kwsArgs.searchString; // DEPRECATED?
+        context.currentFilter = kwsArgs.searchFilter; // DEPRECATED?
+        
         // This code was the opposite of the ofbiz query... what we need to return are
         // the virtual products (not its variants) PLUS the products that are neither virtual nor variant.
         // Using " -isVariant:true" should cover these two (~EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y")).

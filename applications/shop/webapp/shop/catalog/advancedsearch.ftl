@@ -70,7 +70,8 @@ under the License.
     </#list>
   -->
     <@field type="generic" label=uiLabelMap.ProductSortedBy>
-          <@field type="select" name="sortOrder">
+        <#-- SCIPIO: NOTE: see also keywordsearch.ftl sort options; may differ -->
+        <@field type="select" name="sortOrder">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
           <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
@@ -89,9 +90,9 @@ under the License.
               </#list>
             </#if>
           -->
-          </@field>
-          <@field type="radio" name="sortAscending" value="Y" checked=true label=uiLabelMap.EcommerceLowToHigh/>
-          <@field type="radio" name="sortAscending" value="N" label=uiLabelMap.EcommerceHighToLow/>
+        </@field>
+        <@field type="radio" name="sortAscending" value="Y" checked=true label=uiLabelMap.EcommerceLowToHigh/>
+        <@field type="radio" name="sortAscending" value="N" label=uiLabelMap.EcommerceHighToLow/>
     </@field>
     <#if searchConstraintStrings?has_content>
       <@field type="generic" label=uiLabelMap.ProductLastSearch>

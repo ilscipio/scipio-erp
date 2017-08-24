@@ -400,7 +400,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/keywordsearch.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/keywordsearch.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

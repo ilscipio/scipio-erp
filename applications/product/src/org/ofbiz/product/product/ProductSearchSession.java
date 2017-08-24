@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -297,6 +298,28 @@ public class ProductSearchSession {
                 }
             }
             return constraintStrings;
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the keyword constraints.
+         * Added 2017-08-24.
+         */
+        public List<KeywordConstraint> getKeywordConstraints() {
+            return Collections.unmodifiableList(extractKeywordConstraints(getConstraintList()));
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the keyword constraints.
+         * Added 2017-08-24.
+         */
+        protected static List<KeywordConstraint> extractKeywordConstraints(List<? extends ProductSearchConstraint> contraintList) {
+            List<ProductSearch.KeywordConstraint> kwcList = new ArrayList<>(); 
+            if (contraintList != null) {
+                for(ProductSearchConstraint constraint : contraintList) {
+                    if (constraint instanceof KeywordConstraint) kwcList.add((KeywordConstraint) constraint);
+                }
+            }
+            return kwcList;
         }
     }
 

@@ -52,8 +52,8 @@ import com.ilscipio.solr.SolrUtil;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
-final boolean DEBUG = Debug.verboseOn();
-//final boolean DEBUG = true;
+//final boolean DEBUG = Debug.verboseOn();
+final boolean DEBUG = true;
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;
@@ -417,6 +417,13 @@ try {
                 SortProductField so = (SortProductField) sortOrder;
                 simpleLocale = SolrUtil.getSolrSchemaLangLocale(context.locale) ?: Locale.ENGLISH;
                 kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
+                if (kwsArgs.sortBy) {
+                    // FIXME: TEMPORARY WORKAROUND: sorting by any of the _i18n_ fields currently fails,
+                    // so sort by internalName instead (non-localized)
+                    if (kwsArgs.sortBy == "internalName" || kwsArgs.sortBy.contains("_i18n_")) {
+                        kwsArgs.sortBy = "alphaNameSort";
+                    }
+                }
                 kwsArgs.sortByReverse = !so.isAscending();
                 kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
             } else {

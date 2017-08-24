@@ -183,5 +183,9 @@
     <property key="CommonErrorOccurredContactSupport">
         <value xml:lang="en">An error occurred. Please contact support.</value>
         <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
-    </property> 
+    </property>
+    <property key="CommonQueryErrorReviewContactSupport">
+        <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
+        <value xml:lang="de">Bei der Abfrage ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Anfrage. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
+    </property>
 </resource>

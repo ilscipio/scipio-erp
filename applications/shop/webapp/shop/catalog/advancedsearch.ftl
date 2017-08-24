@@ -27,11 +27,22 @@ under the License.
   <input type="hidden" name="PAGING" value="Y"/>-->
   <@table type="fields">
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
-    <#if searchCategory?has_content>
+    <#if searchCategory?has_content && (enableDedSearchCat!true) != false>
+        <#-- SCIPIO: NOTE: the Dedicated Search Category is currently just a way to demo store functionality;
+            its use is not enforced (server-size); the header quick search bar may not employ it. 
+            The enableDedSearchCat and allowBypassDedSearchCat booleans can
+            be set in screen to force explicit enable/disable; in their absence (default) we present a drop-down. -->
+      <#if (allowBypassDedSearchCat!true) == true>
+        <@field type="select" label=uiLabelMap.ProductCategory>
+          <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
+          <@field type="option" value=(searchCategoryId!)>${(searchCategory.description)!}</@field>
+        </@field>
+      <#else>
         <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>
         <@field type="display" label=uiLabelMap.ProductCategory>
             ${(searchCategory.description)!}
         </@field>
+      </#if>
         <@field type="generic" label=uiLabelMap.ProductIncludeSubCategories>
             <@field type="radio" name="SEARCH_SUB_CATEGORIES" value="Y" checked=true label=uiLabelMap.CommonYes/>
             <@field type="radio" name="SEARCH_SUB_CATEGORIES" value="N" label=uiLabelMap.CommonNo/>
@@ -40,9 +51,12 @@ under the License.
     <@field type="generic" label=uiLabelMap.ProductKeywords>
         <@field type="text" name="SEARCH_STRING" size="32" value=(requestParameters.SEARCH_STRING!"") />
 
+        <#-- SCIPIO: WARN: 2017-08-22: the "AND" option here may not be entirely reliable with Solr at this time;
+            the parsing needs work; see com.ilscipio.solr.SolrUtil#addPrefixToAllKeywords -->
         <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
         <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
     </@field>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in near future...
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = {"productFeatureTypeId":productFeatureTypeId}>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
@@ -54,20 +68,27 @@ under the License.
         </#list>
       </@field>
     </#list>
+  -->
     <@field type="generic" label=uiLabelMap.ProductSortedBy>
           <@field type="select" name="sortOrder">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+          <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
             <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
             <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
             <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+          -->
             <option value="SortProductPrice:LIST_PRICE">${uiLabelMap.ProductListPrice}</option>
+          <#if (showAdvFields!false) == true><#-- the list price should fall back on the default price -->
             <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
+          </#if>
+          <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in near future...
             <#if productFeatureTypes?? && productFeatureTypes?has_content>
               <#list productFeatureTypes as productFeatureType>
                 <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
               </#list>
             </#if>
+          -->
           </@field>
           <@field type="radio" name="sortAscending" value="Y" checked=true label=uiLabelMap.EcommerceLowToHigh/>
           <@field type="radio" name="sortAscending" value="N" label=uiLabelMap.EcommerceHighToLow/>
@@ -111,4 +132,5 @@ under the License.
     </#list>
     </@section>
   </#if>
+
 </form>

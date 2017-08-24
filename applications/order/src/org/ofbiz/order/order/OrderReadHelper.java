@@ -3331,5 +3331,36 @@ public class OrderReadHelper {
         }
         return true;
     }
+    
+    public BigDecimal getSubscriptionItemsSubTotal() {
+	BigDecimal subscriptionItemsSubTotal = BigDecimal.ZERO;
+	if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
+	    List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
+	    subscriptionItemsSubTotal = getOrderItemsSubTotal(subscriptionItems, getAdjustments());
+	}
+	return subscriptionItemsSubTotal;
+    }
+
+    public BigDecimal getSubscriptionItemSubTotal(GenericValue orderItem) {
+	return getOrderItemSubTotal(orderItem, getAdjustments());
+    }
+
+    public BigDecimal getSubscriptionItemsTotal() {
+
+	BigDecimal subscriptionItemsTotal = BigDecimal.ZERO;
+	if (UtilValidate.isNotEmpty(orderSubscriptionItems)) {
+	    List<GenericValue> subscriptionItems = new ArrayList<GenericValue>(orderSubscriptionItems.keySet());
+	    subscriptionItemsTotal = getOrderItemsTotal(subscriptionItems, getAdjustments());
+	}
+	return subscriptionItemsTotal;
+    }
+
+    public BigDecimal getSubscriptionItemTotal(GenericValue orderItem) {
+	return getOrderItemTotal(orderItem, getAdjustments());
+    }
+
+    public BigDecimal getSubscriptionItemTax(GenericValue orderItem) {
+	return getOrderItemAdjustmentsTotal(orderItem, false, true, false);
+    }
 
 }

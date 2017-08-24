@@ -1089,16 +1089,16 @@ functionality.
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (viewSize <= 0)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was a positive number: " + viewSize!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a positive number: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = 1>
     </#if>  
     <#if (!viewIndex?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex, "htmlUtilitiesPaginate")!>
       <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>

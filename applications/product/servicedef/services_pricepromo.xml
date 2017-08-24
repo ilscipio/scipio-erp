@@ -65,6 +65,11 @@ under the License.
             -->
         </attribute>
         <attribute name="optimizeForLargeRuleSet" type="String" mode="IN" optional="true"/>
+        <!-- 
+            SCIPIO: Introduced getMinimumVariantPrice, a way to get the minimum
+            (variant) price for a type if true, otherwise it will return the first occurrence in the list.
+         -->
+        <attribute name="getMinimumVariantPrice" type="Boolean" mode="IN" optional="true" default-value="false" />
     </service>
 
     <service name="createProductPriceRule" default-entity-name="ProductPriceRule" engine="simple"

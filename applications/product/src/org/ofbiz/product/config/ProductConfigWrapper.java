@@ -68,6 +68,15 @@ public class ProductConfigWrapper implements Serializable {
     protected String configId = null; // Id of persisted ProductConfigWrapper
     protected List<ConfigItem> questions = null; // ProductConfigs
 
+    /**
+     * SCIPIO: If the product had an original list price, this will be non-null.
+     * This will be null if the product does not have an explicit list price.
+     * Required because the listPrice member above is always initialized to ZERO, 
+     * so it can't be used to check this.
+     * Added 2017-08-22.
+     */
+    protected BigDecimal originalListPrice = null; 
+    
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
     }
@@ -117,6 +126,7 @@ public class ProductConfigWrapper implements Serializable {
         Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
         BigDecimal originalListPrice = (BigDecimal) priceMap.get("listPrice");
         BigDecimal price = (BigDecimal) priceMap.get("price");
+        this.originalListPrice = originalListPrice; // SCIPIO: new
         if (originalListPrice != null) {
             listPrice = originalListPrice;
         }
@@ -352,6 +362,25 @@ public class ProductConfigWrapper implements Serializable {
 
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
+    }
+    
+    /**
+     * SCIPIO: Returns the original list price for the product from initialization.
+     * If the product had no list price, this will be null.
+     * Added 2017-08-22.
+     */
+    public BigDecimal getOriginalListPrice() {
+        return originalListPrice;
+    }
+    
+    /**
+     * SCIPIO: Returns true if the product had a list price on initialization.
+     * NOTE: this is sometimes needed as extra check because {@link #getTotalListPrice} always
+     * returns a number (zero) even when there was no original list price.
+     * Added 2017-08-22.
+     */
+    public boolean hasOriginalListPrice() {
+        return originalListPrice != null;
     }
 
     public boolean isCompleted() {

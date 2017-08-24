@@ -859,6 +859,23 @@ public class ProductWorker {
 
         return false;
     }
+    
+    /**
+     * SCIPIO: Checks if isVariant is set on the product (analogous to {@link #isVirtual}).
+     * Added 2017-08-17.
+     */
+    public static boolean isVariant(Delegator delegator, String productId) {
+        try {
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+            if (product != null) {
+                return "Y".equals(product.getString("isVariant"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+        }
+
+        return false;
+    }
 
     public static boolean isAmountRequired(Delegator delegator, String productI) {
         try {

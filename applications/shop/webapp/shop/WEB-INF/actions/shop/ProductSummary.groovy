@@ -32,7 +32,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.store.*;
 import org.ofbiz.service.*;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");
@@ -62,7 +62,7 @@ context.remove("totalPrice");
 
 // get the product entity
 if (!product && productId) {
-    product = delegator.findByPrimaryKeyCache("Product", [productId : productId]);
+    product = delegator.findOne("Product", [productId : productId], true);
 }
 if (product) {
     //if order is purchase then don't calculate available inventory for product.
@@ -76,7 +76,7 @@ if (product) {
             }
         }*/
     } else {
-       supplierProducts = delegator.findByAndCache("SupplierProduct", [productId : product.productId], ["-availableFromDate"]);
+       supplierProducts = delegator.findByAnd("SupplierProduct", [productId : product.productId], ["-availableFromDate"], true);
        supplierProduct = EntityUtil.getFirst(supplierProducts);
        if (supplierProduct?.standardLeadTimeDays != null) {
            standardLeadTimeDays = supplierProduct.standardLeadTimeDays;
@@ -88,19 +88,14 @@ if (product) {
     productContentWrapper = new ProductContentWrapper(product, request);
     context.productContentWrapper = productContentWrapper;
 } else if (solrProduct) {
-    String country = session.getAttribute("locale");
-    if (!country) 
-        country = request.getLocale().getLanguage();
-    for (String key in solrProduct.keySet()) {
-        if (key.endsWith("_" + request.getLocale().getLanguage())) {
-            if (key.startsWith("title"))
-                context.solrTitle = solrProduct.get(key);
-            else if (key.startsWith("description"))
-                context.description =  solrProduct.get(key);
-            else if (key.startsWith("longdescription"))
-                context.longdescription =  solrProduct.get(key);
-        }
-    }
+    //String country = session.getAttribute("locale");
+    //if (!country) 
+    //    country = request.getLocale().getLanguage();
+    country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCode(context.locale);
+    // TODO?: REVIEW: in future will be possible issue of fallback language here if/when schema is amended
+    context.solrTitle = solrProduct["title_i18n_" + country];
+    context.description = solrProduct["description_i18n_" + country];
+    context.longdescription = solrProduct["longdescription_i18n_" + country];
 }
 
 categoryId = null;
@@ -119,6 +114,7 @@ if (product) {
         priceContext.agreementId = cart.getAgreementId();
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: otherwise it'll be calculating prices using the logged in user which could be a CSR instead of the customer
         priceContext.checkIncludeVat = "Y";
+        priceContext.getMinimumVariantPrice = true;
         priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
 
         context.price = priceMap;

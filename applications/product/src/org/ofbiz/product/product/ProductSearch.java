@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -839,7 +840,8 @@ public class ProductSearch {
     // ======================================================================
     // Search Constraint Classes
     // ======================================================================
-
+    // SCIPIO: 2017-08-18: added getters to most ProductSearchConstraint subclasses
+    
     @SuppressWarnings("serial")
     public static abstract class ProductSearchConstraint implements java.io.Serializable {
         public ProductSearchConstraint() { }
@@ -921,6 +923,10 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public String getProdCatalogId() { // SCIPIO: Added 2017-08-18.
+            return prodCatalogId;
         }
     }
 
@@ -1020,6 +1026,18 @@ public class ProductSearch {
                 return false;
             }
         }
+
+        public String getProductCategoryId() { // SCIPIO: Added 2017-08-18.
+            return productCategoryId;
+        }
+
+        public boolean isIncludeSubCategories() { // SCIPIO: Added 2017-08-18.
+            return includeSubCategories;
+        }
+
+        public Boolean getExclude() { // SCIPIO: Added 2017-08-18.
+            return exclude;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -1101,6 +1119,14 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public String getProductFeatureId() { // SCIPIO: Added 2017-08-18.
+            return productFeatureId;
+        }
+
+        public Boolean getExclude() { // SCIPIO: Added 2017-08-18.
+            return exclude;
         }
     }
 
@@ -1184,6 +1210,14 @@ public class ProductSearch {
                 return false;
             }
         }
+
+        public String getProductFeatureCategoryId() { // SCIPIO: Added 2017-08-18.
+            return productFeatureCategoryId;
+        }
+
+        public Boolean getExclude() { // SCIPIO: Added 2017-08-18.
+            return exclude;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -1263,6 +1297,14 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public String getProductFeatureGroupId() { // SCIPIO: Added 2017-08-18.
+            return productFeatureGroupId;
+        }
+
+        public Boolean getExclude() { // SCIPIO: Added 2017-08-18.
+            return exclude;
         }
     }
 
@@ -1358,6 +1400,14 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public Set<String> getProductFeatureIdSet() { // SCIPIO: Added 2017-08-18.
+            return Collections.unmodifiableSet(productFeatureIdSet);
+        }
+
+        public Boolean getExclude() { // SCIPIO: Added 2017-08-18.
+            return exclude;
         }
     }
 
@@ -1480,6 +1530,26 @@ public class ProductSearch {
                 return false;
             }
         }
+
+        public String getKeywordsString() { // SCIPIO: Added 2017-08-18.
+            return keywordsString;
+        }
+
+        public boolean isAnyPrefix() { // SCIPIO: Added 2017-08-18.
+            return anyPrefix;
+        }
+
+        public boolean isAnySuffix() { // SCIPIO: Added 2017-08-18.
+            return anySuffix;
+        }
+
+        public boolean isAnd() { // SCIPIO: Added 2017-08-18.
+            return isAnd;
+        }
+
+        public boolean isRemoveStems() { // SCIPIO: Added 2017-08-18.
+            return removeStems;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -1532,6 +1602,14 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public Timestamp getFromDate() { // SCIPIO: Added 2017-08-18.
+            return fromDate;
+        }
+
+        public Timestamp getThruDate() { // SCIPIO: Added 2017-08-18.
+            return thruDate;
         }
     }
 
@@ -1592,6 +1670,18 @@ public class ProductSearch {
                 }
             }
             return false;
+        }
+
+        public String getProductStoreGroupId() { // SCIPIO: Added 2017-08-18.
+            return productStoreGroupId;
+        }
+
+        public String getProductPriceTypeId() { // SCIPIO: Added 2017-08-18.
+            return productPriceTypeId;
+        }
+
+        public String getCurrencyUomId() { // SCIPIO: Added 2017-08-18.
+            return currencyUomId;
         }
     }
 
@@ -1700,6 +1790,18 @@ public class ProductSearch {
                 return false;
             }
         }
+
+        public BigDecimal getLowPrice() { // SCIPIO: Added 2017-08-18.
+            return lowPrice;
+        }
+
+        public BigDecimal getHighPrice() { // SCIPIO: Added 2017-08-18.
+            return highPrice;
+        }
+
+        public String getCurrencyUomId() { // SCIPIO: Added 2017-08-18.
+            return currencyUomId;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -1750,6 +1852,10 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public String getSupplierPartyId() { // SCIPIO: Added 2017-08-18.
+            return supplierPartyId;
         }
     }
 
@@ -1909,6 +2015,18 @@ public class ProductSearch {
                 return false;
             }
         }
+
+        public String getGoodIdentificationTypeId() { // SCIPIO: Added 2017-08-18.
+            return goodIdentificationTypeId;
+        }
+
+        public String getGoodIdentificationValue() { // SCIPIO: Added 2017-08-18.
+            return goodIdentificationValue;
+        }
+
+        public Boolean getInclude() { // SCIPIO: Added 2017-08-18.
+            return include;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -1952,6 +2070,14 @@ public class ProductSearch {
             } else {
                 return false;
             }
+        }
+
+        public String getKeyword() { // SCIPIO: Added 2017-08-18.
+            return keyword;
+        }
+
+        public String getProductFieldName() { // SCIPIO: Added 2017-08-18.
+            return productFieldName;
         }
     }
 
@@ -2059,6 +2185,10 @@ public class ProductSearch {
         public boolean isAscending() {
             return this.ascending;
         }
+
+        public String getFieldName() { // SCIPIO: Added 2017-08-18.
+            return fieldName;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -2146,6 +2276,18 @@ public class ProductSearch {
         public boolean isAscending() {
             return this.ascending;
         }
+
+        public String getProductPriceTypeId() { // SCIPIO: Added 2017-08-18.
+            return productPriceTypeId;
+        }
+
+        public String getCurrencyUomId() { // SCIPIO: Added 2017-08-18.
+            return currencyUomId;
+        }
+
+        public String getProductStoreGroupId() { // SCIPIO: Added 2017-08-18.
+            return productStoreGroupId;
+        }
     }
 
     @SuppressWarnings("serial")
@@ -2196,6 +2338,10 @@ public class ProductSearch {
         @Override
         public boolean isAscending() {
             return this.ascending;
+        }
+
+        public String getProductFeatureTypeId() { // SCIPIO: Added 2017-08-18.
+            return productFeatureTypeId;
         }
     }
     /** A rather large and verbose method that doesn't use the cool constraint and sort order objects */

@@ -49,11 +49,11 @@ under the License.
     
 
     <fo:table table-layout="fixed" width="100%" space-before="20mm">
+    <fo:table-column column-width="50mm"/>
+    <fo:table-column column-width="55mm"/>
+    <fo:table-column column-width="15mm"/>
     <fo:table-column column-width="25mm"/>
-    <fo:table-column column-width="60mm"/>
     <fo:table-column column-width="25mm"/>
-    <fo:table-column column-width="35mm"/>
-    <fo:table-column column-width="35mm"/>
 
     <fo:table-header height="10mm" font-size="12pt">
       <fo:table-row border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">

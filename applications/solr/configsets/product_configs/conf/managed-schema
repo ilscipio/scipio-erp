@@ -184,6 +184,7 @@
   <field name="internalName" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <field name="isDigital" type="boolean" indexed="true" stored="true"/>
   <field name="isPhysical" type="boolean" indexed="true" stored="true"/>
+  <field name="isVariant" type="boolean" indexed="true" stored="true"/>
   <field name="isVirtual" type="boolean" indexed="true" stored="true"/>
   <field name="keywords" type="text_general" indexed="true" stored="true"/>
   <field name="largeImage" type="text_general" indexed="true" stored="true"/>
@@ -196,6 +197,7 @@
   <field name="payloads" type="payloads" indexed="true" stored="true"/>
   <field name="popularity" type="int" indexed="true" stored="true"/>
   <field name="productId" type="string" indexed="true" required="true" stored="true"/>
+  <field name="productTypeId" type="string" indexed="true" stored="true" />
   <field name="sku" type="text_general" indexed="true" stored="true"/>
   <field name="smallImage" type="text_general" indexed="true" stored="true"/>
   <field name="spell" type="text_general" multiValued="true" indexed="true" stored="true"/>

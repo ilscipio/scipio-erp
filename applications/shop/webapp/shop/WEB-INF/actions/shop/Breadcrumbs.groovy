@@ -26,7 +26,7 @@ import javolution.util.FastList;
 import com.ilscipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
 module = "Breadcrumbs.groovy";
 breadcrumbsList = FastList.newInstance();
@@ -77,10 +77,10 @@ I think there is a conceptual mistake here. The breadcrumbs don't really care if
 They are rather to be seen as a way of leading up to a certain directory
 
 if (curCategoryId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:curCategoryId,productId:null,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
     validBreadcrumb = curCategoryId;
 } else if (curProductId) {
-    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail]);
+    availableBreadcrumbsList = dispatcher.runSync("solrAvailableCategories",[productCategoryId:null,productId:curProductId,displayProducts:false,catalogId:currentCatalogId,currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
 }
 
 

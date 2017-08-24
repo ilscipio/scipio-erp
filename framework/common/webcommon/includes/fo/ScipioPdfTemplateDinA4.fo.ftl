@@ -91,8 +91,8 @@ under the License.
              in the right side cell the "topRight" template is included
         -->
         <fo:static-content flow-name="xsl-region-before">
-            <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-number="1" column-width="proportional-column-width(66)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
+            <fo:table table-layout="fixed" width="100%" >
+                <fo:table-column column-number="1" column-width="proportional-column-width(66)" padding-right="10mm"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-column column-number="2" column-width="proportional-column-width(33)"/><#-- invalid attr: padding-left="5mm" padding-right="5mm" -->
                 <fo:table-body>
                     <fo:table-row>

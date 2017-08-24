@@ -65,8 +65,8 @@ under the License.
     </#if>
 
     <fo:table table-layout="fixed" width="100%" space-before="20mm">
-    <fo:table-column column-width="20mm"/>
-    <fo:table-column column-width="85mm"/>
+    <fo:table-column column-width="50mm"/>
+    <fo:table-column column-width="55mm"/>
     <fo:table-column column-width="15mm"/>
     <fo:table-column column-width="25mm"/>
     <fo:table-column column-width="25mm"/>

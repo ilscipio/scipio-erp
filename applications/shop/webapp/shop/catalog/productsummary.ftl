@@ -56,13 +56,7 @@
     </#assign>
 
     <#assign productPrice>
-        <#if solrProduct??>                   
-            <#if solrProduct.listPrice??>
-                <@ofbizCurrency amount=solrProduct.listPrice />          
-            <#elseif solrProduct.defaultPrice??>                    
-                <@ofbizCurrency amount=solrProduct.defaultPrice />
-            </#if>
-        <#elseif product??>
+        <#if product??>
             <#if totalPrice??>
                 <@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/>
             <#else>
@@ -71,7 +65,7 @@
                 <#else>
                     <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
                 </#if>
-                <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
+                <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
                     <#assign priceSaved = price.listPrice?double - price.price?double>
                     <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
                     <#--<@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/>--> 
@@ -85,7 +79,18 @@
                     </#list>
                 </#if>
             </#if>
-
+        <#-- FIXME: PRICE CANNOT WORK PROPERLY WITHOUT CURRENCY UOM (STORED + TARGET)!
+            don't even try to display until this is resolved, because wrong value is more confusing
+            than no value
+        <#elseif solrProduct??>
+            
+             
+            <#if solrProduct.listPrice??>
+                <@ofbizCurrency amount=solrProduct.listPrice />          
+            <#elseif solrProduct.defaultPrice??>                    
+                <@ofbizCurrency amount=solrProduct.defaultPrice />
+            </#if>
+        -->
         </#if>
     </#assign>
 

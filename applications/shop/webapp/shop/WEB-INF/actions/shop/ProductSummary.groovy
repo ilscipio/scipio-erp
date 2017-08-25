@@ -91,7 +91,7 @@ if (product) {
     //String country = session.getAttribute("locale");
     //if (!country) 
     //    country = request.getLocale().getLanguage();
-    country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCode(context.locale);
+    country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCodeValidOrDefault(context.locale);
     // TODO?: REVIEW: in future will be possible issue of fallback language here if/when schema is amended
     context.solrTitle = solrProduct["title_i18n_" + country];
     context.description = solrProduct["description_i18n_" + country];

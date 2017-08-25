@@ -415,14 +415,11 @@ try {
                 kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
             } else if (sortOrder instanceof SortProductField) {
                 SortProductField so = (SortProductField) sortOrder;
-                simpleLocale = SolrUtil.getSolrSchemaLangLocale(context.locale) ?: Locale.ENGLISH;
+                // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
+                simpleLocale = SolrUtil.getSolrSchemaLangLocaleValidOrDefault(context.locale);
                 kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
                 if (kwsArgs.sortBy) {
-                    // FIXME: TEMPORARY WORKAROUND: sorting by any of the _i18n_ fields currently fails,
-                    // so sort by internalName instead (non-localized)
-                    if (kwsArgs.sortBy == "internalName" || kwsArgs.sortBy.contains("_i18n_")) {
-                        kwsArgs.sortBy = "alphaNameSort";
-                    }
+                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
                 }
                 kwsArgs.sortByReverse = !so.isAscending();
                 kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);

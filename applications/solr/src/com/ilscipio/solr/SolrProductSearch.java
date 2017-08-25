@@ -396,8 +396,14 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnSuccess();
             result.put("queryResult", rsp);
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: runSolrQuery: Error: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
+            if (SolrUtil.isSolrQuerySyntaxError(e)) {
+                result.put("errorType", "query-syntax");
+            } else {
+                result.put("errorType", "general");
+            }
+            // TODO? nestedErrorMessage: did not succeed extracting this reliably
         }
         return result;
     }
@@ -442,9 +448,9 @@ public abstract class SolrProductSearch {
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
-                return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult));
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult)));
             } else if (ServiceUtil.isError(searchResult)) {
-                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult)));
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
             result = ServiceUtil.returnSuccess();
@@ -462,6 +468,12 @@ public abstract class SolrProductSearch {
         return result;
     }
 
+    private static Map<String, Object> copySolrQueryExtraOutParams(Map<String, Object> src, Map<String, Object> dest) {
+        if (src.containsKey("errorType")) dest.put("errorType", src.get("errorType"));
+        if (src.containsKey("nestedErrorMessage")) dest.put("nestedErrorMessage", src.get("nestedErrorMessage"));
+        return dest;
+    }
+    
     /**
      * Performs keyword search.
      * <p>
@@ -503,9 +515,9 @@ public abstract class SolrProductSearch {
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
-                return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult));
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult)));
             } else if (ServiceUtil.isError(searchResult)) {
-                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult)));
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 

@@ -178,6 +178,12 @@ under the License.
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
         <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
+        <attribute name="errorType" type="String" mode="OUT" optional="true">
+            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
+        </attribute>
+        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
+            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
+        </attribute>
     </service>
     
     <service name="solrKeywordSearch" engine="java"
@@ -209,6 +215,12 @@ under the License.
         <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
         <attribute name="queryTime" type="Long" mode="OUT" optional="true"/>
         <attribute name="suggestions" type="List" mode="OUT" optional="true"/>
+        <attribute name="errorType" type="String" mode="OUT" optional="true">
+            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
+        </attribute>
+        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
+            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
+        </attribute>
     </service>
     
     <service name="runSolrQuery" engine="java"
@@ -235,7 +247,13 @@ under the License.
         <attribute mode="IN" optional="true" name="highlight" type="Boolean" default-value="true"/>
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean" default-value="true"/>
         <attribute mode="IN" name="core" optional="true" type="String" />
-        <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="false"/>
+        <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>
+        <attribute name="errorType" type="String" mode="OUT" optional="true">
+            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
+        </attribute>
+        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
+            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
+        </attribute>
     </service>
     
     <service name="solrAvailableCategories" engine="java"

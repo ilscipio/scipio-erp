@@ -52,8 +52,8 @@ import com.ilscipio.solr.SolrUtil;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
-//final boolean DEBUG = Debug.verboseOn();
-final boolean DEBUG = true;
+final boolean DEBUG = Debug.verboseOn();
+//final boolean DEBUG = true;
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;

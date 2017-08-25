@@ -396,6 +396,7 @@ under the License.
                 <!-- 2017-08-17: now using shop-specific script (itself may delegate)
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>-->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/KeywordSearch.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -413,6 +414,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
                 <set field="activeMainMenuItem" value="Advanced Search"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/GetCatalogCategoryTreeForSelect.groovy"/><!-- SCIPIO: new -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

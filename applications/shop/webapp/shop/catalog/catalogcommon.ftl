@@ -216,4 +216,60 @@
     <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
-
+<#-- used by keywordsearch & advancedsearch -->
+<#macro productSortOrderSelectOptions sortOrder sortAscending extraArgs...>
+        <#local sortOrder = rawString(sortOrder)>
+        <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
+            is not used in all sorting methods and it takes space -->
+        <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>>${uiLabelMap.ProductKeywordRelevancy}</option>
+        <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
+      <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+        <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
+        <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
+        <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+      -->
+        <option value="SortProductPrice:LIST_PRICE#ASC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductListPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
+        <option value="SortProductPrice:LIST_PRICE#DESC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductListPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
+      <#if (showAdvFields!false) == true><#-- the list price should fall back on the default price -->
+        <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
+        <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
+      </#if>
+      <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+        <#if productFeatureTypes?? && productFeatureTypes?has_content>
+          <#list productFeatureTypes as productFeatureType>
+            <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
+          </#list>
+        </#if>
+      -->
+</#macro>
+<#macro productSortOrderSelectScript id formId submitForm=true extraArgs...>
+    <@script>
+        jQuery(document).ready(function() {
+            var endsWith = function(str, suffix) {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            };
+            var sortOrderChange = function(elem, submit) {
+                elem = jQuery(elem);
+                var sortOrder = elem.val();
+                var asc = true;
+                if (endsWith(sortOrder, "#ASC")) {
+                    sortOrder = sortOrder.substring(0, sortOrder.length-4);
+                } else if (endsWith(sortOrder, "#DESC")) {
+                    sortOrder = sortOrder.substring(0, sortOrder.length-5);
+                    asc = false;
+                }
+                var formElem = jQuery('#${escapeVal(formId, 'js')}');
+                jQuery('input[name=sortOrder]', formElem).val(sortOrder);
+                jQuery('input[name=sortAscending]', formElem).val(asc ? "Y" : "N");
+              <#if submitForm>
+                if (submit) {
+                    formElem.submit();
+                }
+              </#if>
+            };
+            var sortOrderElem = jQuery('#${escapeVal(id, 'js')}');
+            sortOrderChange(sortOrderElem, false);
+            sortOrderElem.change(function() { sortOrderChange(this, true); });
+        });
+    </@script>
+</#macro>

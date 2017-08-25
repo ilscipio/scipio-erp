@@ -94,6 +94,13 @@ public abstract class ProductUtil {
         else return PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY.get(solrFieldName);
     }
     
+    public static String getProductSolrSortFieldNameFromSolr(String solrFieldName, Locale locale) {
+        if (solrFieldName == null) return null;
+        else if ("internalName".equals(solrFieldName)) return "alphaNameSort";
+        else if (solrFieldName.startsWith("title_i18n_")) return "alphaTitleSort_" + solrFieldName.substring("title_i18n_".length());
+        else return solrFieldName;
+    }
+    
     public static String getProductSolrPriceFieldNameFromEntityPriceType(String productPriceTypeId, Locale locale, String logPrefix) {
         if ("LIST_PRICE".equals(productPriceTypeId)) {
             return "listPrice";

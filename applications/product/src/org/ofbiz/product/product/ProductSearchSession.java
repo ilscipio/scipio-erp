@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -298,6 +299,37 @@ public class ProductSearchSession {
             }
             return constraintStrings;
         }
+        
+        /**
+         * SCIPIO: Returns (only) the keyword constraints.
+         * Added 2017-08-24.
+         */
+        public List<KeywordConstraint> getKeywordConstraints() {
+            return getConstraintsByType(KeywordConstraint.class);
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the constraints of the given class.
+         * Added 2017-08-24.
+         */
+        public <T extends ProductSearchConstraint> List<T> getConstraintsByType(Class<T> constraintCls) {
+            return Collections.unmodifiableList(extractConstraints(getConstraintList(), constraintCls));
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the constraints of specified class.
+         * Added 2017-08-24.
+         */
+        @SuppressWarnings("unchecked")
+        protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
+            List<T> kwcList = new ArrayList<>(); 
+            if (contraintList != null) {
+                for(ProductSearchConstraint constraint : contraintList) {
+                    if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
+                }
+            }
+            return kwcList;
+        }
     }
 
     public static ProductSearchOptions getProductSearchOptions(HttpSession session) {
@@ -559,11 +591,19 @@ public class ProductSearchSession {
 
         // if there is another category, add a constraint for it
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_CATEGORY_ID"))) {
-            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
             String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
             String searchCategoryExc = (String) parameters.get("SEARCH_CATEGORY_EXC");
             Boolean exclude = UtilValidate.isEmpty(searchCategoryExc) ? null : Boolean.valueOf(!"N".equals(searchCategoryExc));
-            searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            // SCIPIO: 2017-08-25: support multiple values for categoryId (the other options applied to each ID equally)
+            if (parameters.get("SEARCH_CATEGORY_ID") instanceof Collection) {
+                Collection<String> searchCategoryIds = UtilGenerics.checkCollection(parameters.get("SEARCH_CATEGORY_ID"));
+                for(String searchCategoryId : searchCategoryIds) {
+                    searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+                }
+            } else {
+                String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
+                searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            }
             constraintsChanged = true;
         }
 

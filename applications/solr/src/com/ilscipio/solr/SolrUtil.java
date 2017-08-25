@@ -3,16 +3,20 @@ package com.ilscipio.solr;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
@@ -36,7 +40,19 @@ public abstract class SolrUtil {
     public static final String solrConfigName = "solrconfig";
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
-
+    
+    private static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT");
+    private static final Set<Character> noPrefixTermCharPrefixes = UtilMisc.unmodifiableHashSet('+', '-');
+    private static final Map<Character, Character> termEnclosingCharMap; 
+    static {
+        Map<Character, Character> map = new HashMap<>();
+        map.put('"', '"');
+        map.put('{', '}');
+        map.put('[', ']');
+        map.put('(', ')');
+        termEnclosingCharMap = Collections.unmodifiableMap(map);
+    }
+    
     private static final String solrContentLocalesStr;
     private static final List<Locale> solrContentLocales;
     static {
@@ -84,6 +100,7 @@ public abstract class SolrUtil {
             Debug.logError("Solr: Error reading default locale: " + e.getMessage(), module);
         }
         if (locale == null) locale = Locale.getDefault();
+        locale = getSolrSchemaLangLocale(locale);
         Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
         solrContentLocaleDefault = locale;
     }
@@ -408,6 +425,166 @@ public abstract class SolrUtil {
     }
     
     /**
+     * BEST-EFFORT function to extract top-level terms in the solr query, quoted and unquoted.
+     * WARN: RELIES ON WHITESPACE to split terms; this can't fully emulate the solr parser, which has a lot of quirks; we rely
+     * on spaces, but solr parser inserts its own logical spaces, so this will never be exact.
+     * can't reliably split on quote or parenthesis because of modifiers, which we're better off not
+     * trying to deal with for now...
+     * FIXME: only supports quotes and parenthesis
+     * TODO: REVIEW: only partial solr syntax support
+     * FIXME?: the quote escaping is probably not handled properly, solr parser may be different
+     */
+    public static List<String> extractTopTerms(String queryExpr) {
+        List<String> terms = new ArrayList<>();
+
+        queryExpr = queryExpr.trim().replaceAll("\\s+", " "); // normalize
+        
+        int backslashCount = 0;
+        StringBuilder term = new StringBuilder();
+        
+        int i = 0;
+        while (i < queryExpr.length()) {
+            char c = queryExpr.charAt(i);
+            int nextBackslashCount = 0;
+            if (c == '\\') {
+             // BEST-EFFORT emulate escaping (solr parser quirky)
+                nextBackslashCount = backslashCount + 1;
+                term.append(c);
+            } else if (isQueryCharEscaped(c, backslashCount)) {
+                term.append(c);
+            } else {
+                if (termEnclosingCharMap.containsKey(c)) {
+                    int endIndex = findTermClosingCharIndex(queryExpr, i, c);
+                    if (endIndex > i) {
+                        term.append(queryExpr.substring(i, endIndex+1));
+                        i = endIndex; // NOTE: gets ++ after
+                    } else { 
+                        // BAD SYNTAX (probably): append the rest, even though it will probably fail...
+                        term.append(queryExpr.substring(i));
+                        i = queryExpr.length(); // abort
+                    }
+                } else if (c == ' ') {
+                    if (term.length() > 0) terms.add(term.toString());
+                    term = new StringBuilder();
+                } else {
+                    term.append(c);
+                }
+            }
+            backslashCount = nextBackslashCount;
+            i++;
+        }
+        if (term.length() > 0) terms.add(term.toString());
+        
+        return terms;
+    }
+    
+    static boolean isQueryCharEscaped(char c, int backslashCount) {
+        // TODO: REVIEW: simplified escaping logic, works in some languages,
+        // but solr parser might not...
+        // WARN: 2017-08-25: solr parser 5 doesn't seem to respect whitespace escaping, but
+        // because not sure if bug, will honor it here for now (not making special case)...
+        return ((backslashCount % 2) != 0);
+    }
+    
+    static boolean isQueryCharEscaped(String queryExpr, int charIndex, char theChar) {
+        int backslashCount = 0;
+        for(int i = (charIndex-1); i >= 0; i--) {
+            char c = queryExpr.charAt(i);
+            if (c == '\\') backslashCount++;
+            else break;
+        }
+        return isQueryCharEscaped(theChar, backslashCount);
+    }
+
+    static boolean isQueryCharEscaped(String queryExpr, int charIndex) {
+        return isQueryCharEscaped(queryExpr, charIndex, queryExpr.charAt(charIndex));
+    }
+    
+    private static int findTermClosingCharIndex(String queryExpr, int start, char openChar) {
+        int i = start + 1;
+        char closingChar = termEnclosingCharMap.get(openChar); // NPE if bad openChar
+        if (openChar == '"') { // for quote, can ignore all chars except quote and backslash
+            int backslashCount = 0;
+            while (i < queryExpr.length()) {
+                char c = queryExpr.charAt(i);
+                if (c == '"' && !isQueryCharEscaped(c, backslashCount)) {
+                    return i;
+                } else if (c == '\\') {
+                    backslashCount += 1;
+                } else {
+                    backslashCount = 0;
+                }
+                i++;
+            }
+        } else { // for parenthesis, must be careful about nested paren AND quotess
+            int backslashCount = 0;
+            while (i < queryExpr.length()) {
+                char c = queryExpr.charAt(i);
+                if (c == '\\') {
+                    backslashCount += 1;
+                } else {
+                    if (!isQueryCharEscaped(c, backslashCount)) {
+                        if (c == closingChar) {
+                            return i;
+                        } else if (c == openChar) {
+                            int endParenIndex = findTermClosingCharIndex(queryExpr, i, c); // RECURSE
+                            if (endParenIndex > i) {
+                                i = endParenIndex; // NOTE: gets ++ after
+                            } else {
+                                return -1; // abort
+                            }
+                        } else if (c == '"') {
+                            int endQuoteIndex = findTermClosingCharIndex(queryExpr, i, c); // RECURSE
+                            if (endQuoteIndex > i) {
+                                i = endQuoteIndex; // NOTE: gets ++ after
+                            } else {
+                                return -1; // abort
+                            }
+                        }
+                    }
+                    backslashCount = 0;
+                }
+                i++;
+            }
+        } 
+        return -1;
+    }
+    
+    /**
+     * BEST-EFFORT function that attempts to add a prefix ("+" or "-") to every term in the given
+     * queryExpr.
+     * TODO: REVIEW: should find a solr expression for this OR will need more work as time goes on...
+     */
+    public static String addPrefixToAllTerms(String queryExpr, String prefix) {
+        return StringUtils.join(addPrefixToAllTerms(extractTopTerms(queryExpr), prefix), " ");
+    }
+    
+    public static List<String> addPrefixToAllTerms(List<String> terms, String prefix) {
+        List<String> newTerms = new ArrayList<>(terms.size());
+        Set<Character> noCharPrefix = noPrefixTermCharPrefixes;
+        if (prefix.length() == 1) { // optimization
+            noCharPrefix = new HashSet<>(noCharPrefix);
+            noCharPrefix.add(prefix.charAt(0));
+            for(String term : terms) {
+                if (!term.isEmpty() && !noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0))) {
+                    newTerms.add(prefix + term);
+                } else {
+                    newTerms.add(term);
+                }
+            }
+        } else {
+            for(String term : terms) {
+                if (!term.isEmpty() && !noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0)) && !term.startsWith(prefix)) {
+                    newTerms.add(prefix + term);
+                } else {
+                    newTerms.add(term);
+                }
+            }
+        }
+        return newTerms;
+    }
+    
+    /**
      * Makes an expression to match a category ID for a special category field, whose values
      * are in the format: <code>X/PARENT/CATEGORY</code> (where X is the category depth); 
      * assumes the passed category ID is already escaped.
@@ -452,6 +629,17 @@ public abstract class SolrUtil {
         return locale.getLanguage();
     }
     
+    public static String getSolrSchemaLangCodeValid(Locale locale) {
+        String res = getSolrSchemaLangCode(locale);
+        if (SolrUtil.solrContentLocales.contains(Locale.forLanguageTag(res))) return res;
+        else return null;
+    }
+    
+    public static String getSolrSchemaLangCodeValidOrDefault(Locale locale) {
+        String res = getSolrSchemaLangCodeValid(locale);
+        return res != null ? res : getSolrSchemaLangCode(SolrUtil.solrContentLocaleDefault);
+    }
+    
     /**
      * Tries to return a field language locale for the solr schema for the locale.
      * For "en_US", returns "en" locale.
@@ -461,36 +649,25 @@ public abstract class SolrUtil {
         return (locale == null) ? null : Locale.forLanguageTag(getSolrSchemaLangCode(locale));
     }
     
-    /**
-     * BEST-EFFORT function that attempts to add a prefix ("+" or "-") to every keyword in the given
-     * queryExpr.
-     * TODO: REVIEW: should find a solr expression for this OR will need more work as time goes on...
-     */
-    public static String addPrefixToAllKeywords(String queryExpr, String prefix) {
-        // FIXME: this breaks any kind of complex query! is very bad!
-        String[] kwList = queryExpr.split("\\s+");
-        boolean quoteOpen = false; // BEST-EFFORT attempt to not break quoted strings
-        StringBuilder sb = new StringBuilder();
-        for(String kw : kwList) {
-            if (kw.length() == 0) {
-                continue;
-            } else if (kw.contains("\"")) {
-                // FIXME: does not properly detect escaping!
-                quoteOpen = !quoteOpen;
-                sb.append(" ");
-                sb.append(kw);
-                continue;
-            } else if (quoteOpen) {
-                sb.append(" ");
-                sb.append(kw);
-                continue;
-            } else {
-                sb.append(" ");
-                sb.append(prefix);
-                sb.append(kw);
-            }
-        }
-        return sb.toString().trim();
+    public static Locale getSolrSchemaLangLocaleValid(Locale locale) {
+        Locale res = getSolrSchemaLangLocale(locale);
+        if (SolrUtil.solrContentLocales.contains(res)) return res;
+        else return null;
     }
     
+    public static Locale getSolrSchemaLangLocaleValidOrDefault(Locale locale) {
+        Locale res = getSolrSchemaLangLocaleValid(locale);
+        return res != null ? res : SolrUtil.solrContentLocaleDefault; 
+    }
+    
+    /**
+     * Checks if the exception extracted by {@link #getSolrNestedException} is a syntax error.
+     * FIXME: AWFUL HEURISTIC
+     */
+    public static boolean isSolrQuerySyntaxError(Throwable t) {
+        // exception message usually contains the string: "org.apache.solr.search.SyntaxError"
+        // hopefully this is accurate enough... how else to check? cause is not set and
+        // the root SyntaxError is from an inaccessible jar (CANNOT add it to classpath)
+        return ((t instanceof SolrException) && t.getMessage().toLowerCase().contains("syntax")); 
+    }
 }

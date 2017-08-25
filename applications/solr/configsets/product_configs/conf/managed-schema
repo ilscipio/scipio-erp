@@ -230,6 +230,7 @@
   <dynamicField name="*_f" type="float" indexed="true" stored="true"/>
   <dynamicField name="*_d" type="double" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
+  <dynamicField name="alphaTitleSort_*" type="alphaOnlySort" indexed="true" stored="false"/>
   <copyField source="attributes" dest="text"/>
   <copyField source="author" dest="spell"/>
   <copyField source="cat" dest="text"/>
@@ -239,6 +240,7 @@
   <copyField source="internalName" dest="text"/>
   <copyField source="manu" dest="manu_exact"/>
   <copyField source="manu" dest="text"/>
+  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
   <copyField source="*_i18n_en" dest="text"/>
   <copyField source="*_i18n_de" dest="text"/>
   <copyField source="*_i18n_fr" dest="text"/>

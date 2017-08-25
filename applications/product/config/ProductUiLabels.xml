@@ -32052,4 +32052,14 @@
         <value xml:lang="fr">Prélèvement</value>
         <value xml:lang="it">Prelievo</value>
     </property>
+    <!-- SCIPIO: TODO: localize -->
+    <property key="ProductRelevance">
+        <value xml:lang="de">Relevanz</value>
+        <value xml:lang="en">Relevance</value>
+        <value xml:lang="es">Relevancia</value>
+        <value xml:lang="fr">Pertinence</value>
+        <value xml:lang="it">Rilevanza</value>
+        <value xml:lang="nl">Relevantie</value>
+        <value xml:lang="ro">Relevare</value>
+    </property>
 </resource>

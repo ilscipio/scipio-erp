@@ -5175,5 +5175,6 @@
     </property>
     <property key="ThankYouForContactingUs">
         <value xml:lang="en">Thank You for contacting us.</value>
+        <value xml:lang="de">Danke, dass Sie uns kontaktiert haben.</value>
     </property>
 </resource>

@@ -591,11 +591,19 @@ public class ProductSearchSession {
 
         // if there is another category, add a constraint for it
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_CATEGORY_ID"))) {
-            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
             String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
             String searchCategoryExc = (String) parameters.get("SEARCH_CATEGORY_EXC");
             Boolean exclude = UtilValidate.isEmpty(searchCategoryExc) ? null : Boolean.valueOf(!"N".equals(searchCategoryExc));
-            searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            // SCIPIO: 2017-08-25: support multiple values for categoryId (the other options applied to each ID equally)
+            if (parameters.get("SEARCH_CATEGORY_ID") instanceof Collection) {
+                Collection<String> searchCategoryIds = UtilGenerics.checkCollection(parameters.get("SEARCH_CATEGORY_ID"));
+                for(String searchCategoryId : searchCategoryIds) {
+                    searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+                }
+            } else {
+                String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
+                searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            }
             constraintsChanged = true;
         }
 

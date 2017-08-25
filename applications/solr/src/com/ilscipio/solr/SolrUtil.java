@@ -84,6 +84,7 @@ public abstract class SolrUtil {
             Debug.logError("Solr: Error reading default locale: " + e.getMessage(), module);
         }
         if (locale == null) locale = Locale.getDefault();
+        locale = getSolrSchemaLangLocale(locale);
         Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
         solrContentLocaleDefault = locale;
     }
@@ -452,6 +453,17 @@ public abstract class SolrUtil {
         return locale.getLanguage();
     }
     
+    public static String getSolrSchemaLangCodeValid(Locale locale) {
+        String res = getSolrSchemaLangCode(locale);
+        if (SolrUtil.solrContentLocales.contains(Locale.forLanguageTag(res))) return res;
+        else return null;
+    }
+    
+    public static String getSolrSchemaLangCodeValidOrDefault(Locale locale) {
+        String res = getSolrSchemaLangCodeValid(locale);
+        return res != null ? res : getSolrSchemaLangCode(SolrUtil.solrContentLocaleDefault);
+    }
+    
     /**
      * Tries to return a field language locale for the solr schema for the locale.
      * For "en_US", returns "en" locale.
@@ -459,6 +471,17 @@ public abstract class SolrUtil {
      */
     public static Locale getSolrSchemaLangLocale(Locale locale) {
         return (locale == null) ? null : Locale.forLanguageTag(getSolrSchemaLangCode(locale));
+    }
+    
+    public static Locale getSolrSchemaLangLocaleValid(Locale locale) {
+        Locale res = getSolrSchemaLangLocale(locale);
+        if (SolrUtil.solrContentLocales.contains(res)) return res;
+        else return null;
+    }
+    
+    public static Locale getSolrSchemaLangLocaleValidOrDefault(Locale locale) {
+        Locale res = getSolrSchemaLangLocaleValid(locale);
+        return res != null ? res : SolrUtil.solrContentLocaleDefault; 
     }
     
     /**

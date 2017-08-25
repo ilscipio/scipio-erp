@@ -305,18 +305,27 @@ public class ProductSearchSession {
          * Added 2017-08-24.
          */
         public List<KeywordConstraint> getKeywordConstraints() {
-            return Collections.unmodifiableList(extractKeywordConstraints(getConstraintList()));
+            return getConstraintsByType(KeywordConstraint.class);
         }
         
         /**
-         * SCIPIO: Returns (only) the keyword constraints.
+         * SCIPIO: Returns (only) the constraints of the given class.
          * Added 2017-08-24.
          */
-        protected static List<KeywordConstraint> extractKeywordConstraints(List<? extends ProductSearchConstraint> contraintList) {
-            List<ProductSearch.KeywordConstraint> kwcList = new ArrayList<>(); 
+        public <T extends ProductSearchConstraint> List<T> getConstraintsByType(Class<T> constraintCls) {
+            return Collections.unmodifiableList(extractConstraints(getConstraintList(), constraintCls));
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the constraints of specified class.
+         * Added 2017-08-24.
+         */
+        @SuppressWarnings("unchecked")
+        protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
+            List<T> kwcList = new ArrayList<>(); 
             if (contraintList != null) {
                 for(ProductSearchConstraint constraint : contraintList) {
-                    if (constraint instanceof KeywordConstraint) kwcList.add((KeywordConstraint) constraint);
+                    if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
                 }
             }
             return kwcList;

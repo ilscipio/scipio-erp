@@ -49,7 +49,7 @@ under the License.
       <#local selCatId = rawString(selCatId)>
       <#list catList as catEntry>
         <#local cat = catEntry.value>
-        <#local catName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(cat, "CATEGORY_NAME", locale, dispatcher, "raw")!>
+        <#local catName = getProductCategoryDisplayName(cat)>
         <#local selStr = "">
         <#if rawString(cat.productCategoryId)==selCatId>
           <#assign selCatFound = true>

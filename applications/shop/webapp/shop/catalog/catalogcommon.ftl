@@ -277,3 +277,20 @@
         });
     </@script>
 </#macro>
+
+<#function getProductCategoryDisplayName cat>
+    <#if isObjectType("string", cat)>
+      <#local cat = delegator.findOne("ProductCategory", {"productCategoryId":cat}, true)!>
+      <#if !cat?has_content>
+        <#return cat>
+      </#if>
+    </#if>
+    <#local catName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(cat, "CATEGORY_NAME", locale, dispatcher, "raw")!>
+    <#if !catName?has_content>
+        <#local catName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(cat, "DESCRIPTION", locale, dispatcher, "raw")!>
+        <#if !catName?has_content>
+           <#local catName = cat.productCategoryId!>
+        </#if>
+    </#if>
+    <#return catName>
+</#function>

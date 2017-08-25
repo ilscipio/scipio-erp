@@ -25,8 +25,7 @@ under the License.
     <#local catIds = [catIds]>
   </#if>
   <#list catIds as catId>
-    ${Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(
-        delegator.findOne("ProductCategory", {"productCategoryId":catId}, true)!, "CATEGORY_NAME", locale, dispatcher, "html")!}<#if catId?has_next>, </#if><#t/>
+    ${escapeVal(getProductCategoryDisplayName(catId), 'html')}<#if catId?has_next>, </#if><#t/>
   </#list>
 </#macro>
 

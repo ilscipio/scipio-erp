@@ -25,7 +25,10 @@
  * <p>
  * 2017-08-16: Script is revamped for fixes + field compatibility with old ofbiz KeywordSearch.groovy +
  * to avoid breaking compatibility with keywordsearch.ftl or other templates that might be using this.
- * TODO/FIXME: 2017-08-17: partial search support only; schema limitations; some parts of templates commented to avoid issues.
+ * <p>
+ * FIXME: This really needs a user query pre-parser BEFORE the solr query itself. the solr query is
+ * not user-friendly and stricter than search engines and treats terms exactly, and we just show generic error when query is bad.
+ * but this is difficult - this could be done in the sanitizeUserQueryExpr call below.
  */
 
 import org.ofbiz.base.util.*;
@@ -322,7 +325,7 @@ try {
                         // but if AND is specified, then we need to add a "+" before every character...
                         if (kc.isAnd()) {
                             // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
-                            kwExprList.add(SolrUtil.addPrefixToAllKeywords(kwExpr, "+"));
+                            kwExprList.add(SolrUtil.addPrefixToAllTerms(kwExpr, "+"));
                         } else {
                             kwExprList.add(kwExpr);
                         }
@@ -465,6 +468,8 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         // early assign for info when query throws error
         context.currentSearch = kwsArgs.searchString; // DEPRECATED?
         context.currentFilter = kwsArgs.searchFilter; // DEPRECATED?
+        // WARN: DO NOT DO THIS!!!
+        //context.searchString = kwsArgs.searchString
         
         // This code was the opposite of the ofbiz query... what we need to return are
         // the virtual products (not its variants) PLUS the products that are neither virtual nor variant.
@@ -530,7 +535,9 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
                 catExprList.add(sb.toString());
             }
             // TODO: REVIEW: should this be a whole filter, or instead add each to searchFilters?
-            kwsArgs.searchFilters.add(catExprList.join(" ")); 
+            kwsArgs.searchFilters.add(catExprList.join(" "));
+            // TODO: (see CommonSearchOptions.groovy)
+            //context.searchCategoryIdEff = ...;
         }
         
         /* TODO/FIXME: missing data in solr, can't implement...
@@ -564,6 +571,10 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         if (DEBUG) Debug.logInfo("Keyword search results: " + result, module);
     
         if (ServiceUtil.isError(result)) {
+            // TODO: handle this case, gave up because the generalized message more or less covers it,
+            // and we can't extract a proper localized error message...
+            //if ("query-syntax" == result.errorType) {
+            //}
             throw new Exception(ServiceUtil.getErrorMessage(result));
         }
         
@@ -592,8 +603,6 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         
         context.suggestions = result.suggestions;
         context.searchConstraintStrings = [];
-        context.currentSearch = kwsArgs.searchString; // DEPRECATED?
-        context.currentFilter = kwsArgs.searchFilter; // DEPRECATED?
         
         // SCIPIO: 2017-08-16: the following context assignments are template compatibility/legacy fields - based on: 
         //   component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy

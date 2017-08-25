@@ -396,6 +396,7 @@ under the License.
                 <!-- 2017-08-17: now using shop-specific script (itself may delegate)
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/KeywordSearch.groovy"/>-->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/KeywordSearch.groovy"/>
+                <set field="resetSearch" type="Boolean" value="false"/><!-- prevent reset search context fields here -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
             </actions>
             <widgets>
@@ -414,6 +415,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleAdvancedSearch"/>
                 <set field="activeMainMenuItem" value="Advanced Search"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/AdvancedSearchOptions.groovy"/>
+                <set field="searchApplyDefaults" type="Boolean" value="true"/><!-- apply the defaults directly in the script (simplifies template) -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/CommonSearchOptions.groovy"/><!-- SCIPIO: new -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/GetCatalogCategoryTreeForSelect.groovy"/><!-- SCIPIO: new -->
             </actions>

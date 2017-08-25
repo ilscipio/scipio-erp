@@ -20,9 +20,20 @@ under the License.
 
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
-<#macro menuContent menuArgs>
+<#macro searchCatNameList catIds>
+  <#if !catIds?is_sequence>
+    <#local catIds = [catIds]>
+  </#if>
+  <#list catIds as catId>
+    ${Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(
+        delegator.findOne("ProductCategory", {"productCategoryId":catId}, true)!, "CATEGORY_NAME", locale, dispatcher, "html")!}<#if catId?has_next>, </#if><#t/>
+  </#list>
+</#macro>
+
+<#macro menuContent menuArgs={}>
   <@row>
-    <@cell columns=6 class="+${styles.text_left!}">
+    <@cell columns=8 medium=8 class="+${styles.text_left!}">
+      <div class="kws-searchinfo"
         <#if !displaySearchString??>
           <#if !searchString!?trim?has_content || searchString == "*:*">
             <#assign displaySearchString = "(" + rawLabel('CommonAll') + ")">
@@ -31,9 +42,13 @@ under the License.
           </#if>
         </#if>
         <#-- this will be read from session, for now: ?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!} -->
-        <#if displaySearchString?has_content><label style="display:inline;">${escapeVal(rawLabel('ProductYouSearchedFor')?cap_first, 'html')}:</label> ${escapeVal(displaySearchString, 'html')} </#if>(<a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="${styles.action_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
+        <#-- FIXME: localization flawed -->
+        <#if displaySearchString?has_content><label style="display:inline;">${escapeVal(rawLabel('ProductYouSearchedFor')?cap_first, 'html')}:</label> ${escapeVal(displaySearchString, 'html')} <#rt/>
+            <#t/><#if searchCategoryIdEff?has_content> <label style="display:inline;">${escapeVal(rawLabel('CommonIn')?lower_case, 'html')}</label> <@searchCatNameList catIds=searchCategoryIdEff /></#if></#if>
+            <#t/>(<a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="${styles.action_nav!} ${styles.action_find!} kws-refinesearch-link" style="white-space:nowrap;">${uiLabelMap.CommonRefineSearch}</a>)
+      </div>
     </@cell>
-    <@cell columns=6 class="+${styles.text_right!}">
+    <@cell columns=4 medium=4 class="+${styles.text_right!}">
         <#-- NOTE: @productSortOrderSelectXxx macros defined in catalogcommon.ftl -->
         <form method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="display:none;" id="kwssort-form"">
             <#-- WARN: TODO: REIMPLEMENT: using clearSearch=N relies on session; this works for single tab,
@@ -44,14 +59,16 @@ under the License.
             ...
             -->
     
-            <@field type="hidden" name="sortOrder" value=sortOrder/>
-            <@field type="hidden" name="sortAscending" value=sortAscending?string("Y","N")/>
+            <@field type="hidden" name="sortOrder" value=(sortOrder!sortOrderDef)/>
+            <@field type="hidden" name="sortAscending" value=(sortAscending!sortAscendingDef)?string("Y","N")/>
         </form>
+      <div class="kwssort-sortOrder-select-wrapper">
         <label for="kwssort-sortOrder-select" style="display:inline;">${uiLabelMap.ProductSortedBy}:</label>
         <@field type="select" inline=true id="kwssort-sortOrder-select" style="display:inline;" label=uiLabelMap.ProductSortedBy>
-            <@productSortOrderSelectOptions sortOrder=sortOrder sortAscending=sortAscending/>
+            <@productSortOrderSelectOptions sortOrder=(sortOrder!sortOrderDef) sortAscending=(sortAscending!sortAscendingDef)/>
         </@field>
         <@productSortOrderSelectScript id="kwssort-sortOrder-select" formId="kwssort-form" submitForm=true/>
+      </div>
     </@cell>
   </@row>
 </#macro>

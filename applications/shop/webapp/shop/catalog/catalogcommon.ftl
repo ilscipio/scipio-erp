@@ -216,31 +216,35 @@
     <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
-<#-- used by keywordsearch & advancedsearch -->
-<#macro productSortOrderSelectOptions sortOrder sortAscending extraArgs...>
-        <#local sortOrder = rawString(sortOrder)>
-        <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
-            is not used in all sorting methods and it takes space -->
-        <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>>${uiLabelMap.ProductKeywordRelevancy}</option>
-        <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
-      <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
-        <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
-        <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
-        <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
-      -->
-        <option value="SortProductPrice:LIST_PRICE#ASC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductListPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
-        <option value="SortProductPrice:LIST_PRICE#DESC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductListPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
-      <#if (showAdvFields!false) == true><#-- the list price should fall back on the default price -->
-        <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
-        <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
-      </#if>
-      <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
-        <#if productFeatureTypes?? && productFeatureTypes?has_content>
-          <#list productFeatureTypes as productFeatureType>
-            <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
-          </#list>
-        </#if>
-      -->
+<#-- Makes options for insert within <@field type="select">. Used by keywordsearch & advancedsearch. WARN: uses context fields. -->
+<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false extraArgs...>
+    <#if !showAdv?is_boolean>
+      <#local showAdv = showAdvFields!showAdvDef><#-- CONTEXT field -->
+    </#if>
+    <#local sortOrder = rawString(sortOrder)>
+    <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
+        is not used in all sorting methods and it takes space -->
+    <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductKeywordRelevancy}<#else>${uiLabelMap.ProductRelevance}</#if></option>
+    <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+    <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
+    <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
+    <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+  -->
+    <#-- NOTE: shorter label if showAdvFields==false -->
+    <option value="SortProductPrice:LIST_PRICE#ASC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceLowToHigh}</option>
+    <option value="SortProductPrice:LIST_PRICE#DESC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && !sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceHighToLow}</option>
+  <#if showAdv><#-- the list price should fall back on the default price -->
+    <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
+    <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
+  </#if>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+    <#if productFeatureTypes?? && productFeatureTypes?has_content>
+      <#list productFeatureTypes as productFeatureType>
+        <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
+      </#list>
+    </#if>
+  -->
 </#macro>
 <#macro productSortOrderSelectScript id formId submitForm=true extraArgs...>
     <@script>

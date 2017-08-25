@@ -27,7 +27,12 @@ under the License.
   <input type="hidden" name="PAGING" value="Y"/>-->
   <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
   
-  <@section title=uiLabelMap.ProductAdvancedSearch><#-- uiLabelMap.ProductAdvancedSearchInCategory -->
+  <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>
+          <@menuitem type="link" href=makeOfbizUrl("advancedsearch?resetSearch=true") text=uiLabelMap.CommonReset class="+${styles.action_nav!} ${styles.action_update!}"/>
+      </@menu>
+  </#macro>
+  <@section title=uiLabelMap.ProductAdvancedSearch menuContent=menuContent><#-- uiLabelMap.ProductAdvancedSearchInCategory -->
   
     <#-- SCIPIO: DEV NOTE: the search supported multiple entries here, with naming SEARCH_STRINGx x=1..9;
         these could be added (js input [+] button), but they are not thoroughly tested with the new groovy code -->
@@ -110,7 +115,7 @@ under the License.
         
         <@field type="select" id="advsort-sortOrder-select"><#-- name="sortOrder" -->
             <#-- NOTE: @productSortOrderSelectXxx macros defined in catalogcommon.ftl -->
-            <@productSortOrderSelectOptions sortOrder=sortOrder! sortAscending=sortAscending/>
+            <@productSortOrderSelectOptions sortOrder=sortOrder sortAscending=sortAscending/>
         </@field>
         <@productSortOrderSelectScript id="advsort-sortOrder-select" formId="advtokeywordsearchform" submitForm=false/>
       <#-- SCIPIO: now integrated into the drop-down options

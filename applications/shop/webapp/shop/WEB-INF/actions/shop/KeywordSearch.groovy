@@ -189,8 +189,7 @@ try {
     kwsArgs.noConditionFind = noConditionFind;
     //kwsArgs.searchSortOrderString = kwsArgs.searchSortOrderString;
     //kwsArgs.searchReturnFields = kwsArgs.searchReturnFields;
-    // NOTE: priceSortField: current default is "min" because Scipio productsummary.ftl performs a "min" between list price and default price 
-    kwsArgs.priceSortField = kwsArgs.priceSortField ?: "min"; // "min", "exists", "exact"
+    kwsArgs.priceSortField = kwsArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
     
     if (!localVarsOnly) {
         // REUSE the stock class where possibly so we might maintain some compatibility, duplicate less code,

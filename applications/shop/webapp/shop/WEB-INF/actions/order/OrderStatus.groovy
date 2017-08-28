@@ -241,8 +241,8 @@ if (orderHeader) {
 
     /*
      * SCIPIO: There is a stock ofbiz bug here, should be fixed if necessary
-     * context.productStore = productStore;
-    context.isDemoStore = isDemoStore;*/
+     * context.productStore = productStore;*/
+    context.isDemoStore = isDemoStore;
 
     context.orderShipmentInfoSummaryList = orderShipmentInfoSummaryList;
     context.customerPoNumberSet = customerPoNumberSet;

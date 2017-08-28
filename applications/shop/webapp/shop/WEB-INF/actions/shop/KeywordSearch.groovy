@@ -60,8 +60,13 @@ final boolean DEBUG = Debug.verboseOn();
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;
-kwsArgs = [:];
-ProductSearchOptions kwsParams = null;
+
+// NOTE: 2017-08-28: The script params are MOVED to a kwsArgs sub-map which caller must create/specify, 
+// because they clash with the output results. These inputs were all added by Scipio and they weren't used anywhere (at time of writing)...
+// See further below for possible values...
+kwsArgs = context.kwsArgs ? new HashMap(context.kwsArgs) : new HashMap();
+
+ProductSearchOptions kwsParams = context.kwsParams; // these usually come from the http request
 
 handleException = { e ->
     // FIXME?: no clean way at the moment to identify when error is user input or system/code error;
@@ -88,7 +93,7 @@ context.remove("localVarsOnly");
 //defaultNoConditionFind = EntityUtilProperties.getPropertyValue("widget", "widget.defaultNoConditionFind", delegator);
 defaultNoConditionFind = EntityUtilProperties.getPropertyValue("shop", "shop.search.defaultNoConditionFind", "Y", delegator);
 
-noConditionFind = context.noConditionFind;
+noConditionFind = kwsArgs.noConditionFind != null ? kwsArgs.noConditionFind : context.noConditionFind;
 if (!localVarsOnly) {
     if (!noConditionFind) {
         noConditionFind = parameters.noConditionFind ? parameters.noConditionFind.toString() : null;
@@ -159,30 +164,34 @@ sanitizeUserQueryExpr = { expr ->
 escapeTerm = { term -> return SolrUtil.escapeTermFull(term); };
 
 try {
-    // allow full solr syntax in input search strings? (if false, searches exact string only)
+    // kwsArgs options - should be set through context.kwsArgs map.
+    // DEV NOTE: even the commented ones are valid to use. they must be set through context.kwsArgs map.
+    
+    // searchSyntax: allow full solr syntax in input search strings? (if false, searches exact string only)
     // PROBLEM: by allowing full query, user can easily cause crash - it's caught, but is unfriendly.
     // TODO?: should support an in-between pre-parsing, for user friendly and potential security reasons.
-    kwsArgs.searchSyntax = context.searchSyntax != null ? context.searchSyntax : "full";
-    kwsArgs.searchString = sanitizeUserQueryExpr(context.searchString); // WARN: setting this here overrides ALL the parameters.SEARCH_STRINGx expressions
-    kwsArgs.searchFilters = context.searchFilters ?: []; // list
-    kwsArgs.searchFilter = context.searchFilter; // string or list; if string, it's split on whitespace to make list
-    kwsArgs.excludeVariants = context.searchExcludeVariants; // NOTE: should usually not specify this; is a ProductStore field
-    kwsArgs.viewSize = context.viewSize;
-    kwsArgs.viewIndex = context.viewIndex;
-    kwsArgs.currIndex = context.currIndex; // TODO: REVIEW: why do we need a currIndex? isn't it same as viewIndex here?
-    // SCIPIO: NOTE: in the original ProductSearchSession code, there was a disconnect between the paging
-    // flag and the actual result paging; here we actually will honor the paging flag (if specified)
-    kwsArgs.paging = context.paging; // Y/N indicator
-    kwsArgs.searchCatalogs = context.searchCatalogs; // this is a LIMIT, for security reasons has to belong to current store
-    kwsArgs.searchCategories = context.searchCategories;
-    kwsArgs.searchFeatures = context.searchFeatures;
-    kwsArgs.sortBy = context.searchSortBy;
-    kwsArgs.sortByReverse = context.searchSortByReverse;
+    kwsArgs.searchSyntax = kwsArgs.searchSyntax ?: "full";
+    kwsArgs.searchString = sanitizeUserQueryExpr(kwsArgs.searchString); // WARN: setting this here overrides ALL the parameters.SEARCH_STRINGx expressions
+    kwsArgs.searchFilters = kwsArgs.searchFilters ? new ArrayList(kwsArgs.searchFilters) : new ArrayList(); // list
+    //kwsArgs.searchFilter = kwsArgs.searchFilter; // string or list; if string, it's split on whitespace to make list
+    //kwsArgs.excludeVariants = kwsArgs.searchExcludeVariants; // NOTE: should usually not specify this; is a ProductStore field
+    kwsArgs.viewSize = kwsArgs.viewSize != null ? kwsArgs.viewSize : context.viewSize;
+    kwsArgs.viewIndex = kwsArgs.viewIndex != null ? kwsArgs.viewIndex : context.viewIndex;
+    kwsArgs.currIndex = kwsArgs.currIndex != null ? kwsArgs.currIndex : context.currIndex; // TODO: REVIEW: why do we need a currIndex? isn't it same as viewIndex here?
+    //// SCIPIO: NOTE: in the original ProductSearchSession code, there was a disconnect between the paging
+    //// flag and the actual result paging; here we actually will honor the paging flag (if specified)
+    //kwsArgs.paging = kwsArgs.paging; // Y/N indicator
+    //kwsArgs.searchCatalogs = kwsArgs.searchCatalogs; // this is a LIMIT, for security reasons has to belong to current store
+    //kwsArgs.searchCategories = kwsArgs.searchCategories;
+    //kwsArgs.searchFeatures = kwsArgs.searchFeatures;
+    //kwsArgs.sortBy = kwsArgs.searchSortBy;
+    //kwsArgs.sortByReverse = kwsArgs.searchSortByReverse;
     kwsArgs.noConditionFind = noConditionFind;
-    kwsArgs.searchSortOrderString = context.searchSortOrderString;
-    kwsArgs.searchReturnFields = context.searchReturnFields;
+    //kwsArgs.searchSortOrderString = kwsArgs.searchSortOrderString;
+    //kwsArgs.searchReturnFields = kwsArgs.searchReturnFields;
+    // NOTE: priceSortField: current default is "min" because Scipio productsummary.ftl performs a "min" between list price and default price 
+    kwsArgs.priceSortField = kwsArgs.priceSortField ?: "min"; // "min", "exists", "exact"
     
-    kwsParams = context.kwsParams; // user input parameters, only if localVarsOnly==false
     if (!localVarsOnly) {
         // REUSE the stock class where possibly so we might maintain some compatibility, duplicate less code,
         // and it does all the session stuff for us.
@@ -403,7 +412,13 @@ try {
                     //kwsArgs.searchReturnFields = (kwsArgs.searchReturnFields ?: "*") + 
                     //    ",sortPrice=if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
                     //kwsArgs.sortBy = "sortPrice";
-                    kwsArgs.sortBy = "if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
+                    if (kwsArgs.priceSortField == "min") {
+                        kwsArgs.sortBy = "if(exists(" + kwsArgs.sortBy + "),min(" + kwsArgs.sortBy + "," + "defaultPrice),defaultPrice)";
+                    } else if (kwsArgs.priceSortField == "exists") {
+                        kwsArgs.sortBy = "if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
+                    } else { // if (kwsArgs.priceSortField == "exact") {
+                        //kwsArgs.sortBy = kwsArgs.sortBy; // redundant
+                    }
                 }
                 kwsArgs.sortByReverse = !so.isAscending();
                 kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);

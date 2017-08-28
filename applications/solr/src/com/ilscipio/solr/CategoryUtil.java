@@ -176,7 +176,7 @@ public abstract class CategoryUtil {
         } else {
             cm = catMember.toString();
         }
-        //Debug.logInfo("catMember "+cm,module);
+        //Debug.logInfo("Solr: getCategoryNameWithTrail: catMember: " + cm,module);
         return cm;
     }
 

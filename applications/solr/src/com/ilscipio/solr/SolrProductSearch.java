@@ -606,7 +606,7 @@ public abstract class SolrProductSearch {
             // context.get("productCategoryId"), catalogId, dctx, currentTrail): null;
             String productCategoryId = (String) context.get("productCategoryId") != null
                     ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
-            Debug.logInfo("productCategoryId " + productCategoryId, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: getAvailableCategories: productCategoryId: " + productCategoryId, module);
             Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
                     viewIndex, viewSize);
 
@@ -656,7 +656,7 @@ public abstract class SolrProductSearch {
                     ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
-            Debug.logInfo("productCategoryId: " + productCategoryId, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: productCategoryId: " + productCategoryId, module);
 
             // Add toplevel categories
             String[] trailElements = productCategoryId.split("/");
@@ -667,7 +667,7 @@ public abstract class SolrProductSearch {
             
             // iterate over actual results
             for (String element : trailElements) {
-                Debug.logInfo("element: " + element, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: iterating element: " + element, module);
                 List<Map<String, Object>> categories = new ArrayList<>();
                 int level;
                 // 2016-03-22: Don't make a query for the first element, which is the count,

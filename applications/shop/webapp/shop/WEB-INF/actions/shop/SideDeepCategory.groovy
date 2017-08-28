@@ -21,8 +21,7 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.*;
-import javolution.util.FastMap;
-import javolution.util.FastList;
+import org.ofbiz.service.*;
 import com.ilscipio.solr.SolrUtil;
 import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
@@ -44,8 +43,20 @@ topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
 
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
-    res = dispatcher.runSync("solrSideDeepCategory",[productCategoryId:curCategoryId, catalogId:currentCatalogId, currentTrail:currentTrail, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone]);
-    catLevel = res.get("categories");
+    try {
+        // TODO?: cache results?
+        result = dispatcher.runSync("solrSideDeepCategory",
+            [productCategoryId:curCategoryId, catalogId:currentCatalogId, 
+             currentTrail:currentTrail, 
+             locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+            -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
+        if (!ServiceUtil.isSuccess(result)) {
+            throw new Exception("Error in solrSideDeepCategory: " + ServiceUtil.getErrorMessage(result));
+        }
+        catLevel = result.categories;
+    } catch(Exception e) {
+        Debug.logError(e, e.getMessage(), module);
+    }
 }
 
 // SCIPIO: promo category (added for testing purposes; uncomment line below to remove again)
@@ -94,11 +105,9 @@ if (topLevelList.size() >= 2) {
             }
         }
     }
-}
-else if (topLevelList.size() >= 1) {
+} else if (topLevelList.size() >= 1) {
     baseCategoryId = topLevelList[0];
-}
-else {
+} else {
     baseCategoryId = null;
 }
 context.baseCategoryId = baseCategoryId;

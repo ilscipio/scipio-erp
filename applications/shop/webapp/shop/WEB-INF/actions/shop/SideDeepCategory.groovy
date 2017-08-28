@@ -31,15 +31,19 @@ import org.apache.commons.lang.StringUtils;
 
 final module = "SideDeepCategory.groovy";
 
+final boolean DEBUG = Debug.verboseOn();
+//final boolean DEBUG = true;
+
 currentTrail = org.ofbiz.product.category.CategoryWorker.getCategoryPathFromTrailAsList(request);
-
-Debug.logInfo("currentTrail: " + currentTrail, module);
-
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 // SCIPIO: IMPORTANT: Check request attribs before parameters map
 curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getAttribute("productCategoryId") ?: parameters.productCategoryId ?: "";
 //curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
 topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
+
+infoMap = [currentTrail:currentTrail, curCategoryId:curCategoryId];
+
+if (DEBUG) Debug.logVerbose("Category (pre-resolve): " + infoMap, module);
 
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
@@ -67,15 +71,18 @@ promoCategoryId = CatalogWorker.getCatalogPromotionsCategoryId(request, currentC
 bestSellCategoryId = CatalogWorker.getCatalogBestSellCategoryId(request, currentCatalogId);
 //bestSellCategoryId = null;
 
-//Debug.logInfo("catList "+catLevel,"");
 currentCategoryPath = null;
 if (curCategoryId) {
     currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, currentCatalogId, false, 
         dispatcher.getDispatchContext(), currentTrail);
 }
 context.currentCategoryPath = currentCategoryPath;
+infoMap.currentCategoryPath = currentCategoryPath;
 
-Debug.logInfo("currentCategoryPath: " + currentCategoryPath, module)
+Debug.logInfo("Current category: " + infoMap, module);
+if (DEBUG) {
+    Debug.logInfo("Side deep categories: " + catLevel, module);
+}
 
 context.catList = catLevel;
 topLevelList = [topCategoryId];

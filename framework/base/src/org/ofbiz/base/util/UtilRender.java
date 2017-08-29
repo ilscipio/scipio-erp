@@ -117,5 +117,34 @@ public abstract class UtilRender {
         }
         return getGlobalRenderExceptionMode();
     }
+    
+    /**
+     * Gets the render exception mode from the exception or its causes that implement RenderExceptionModeHolder.
+     * If skipNull i
+     */
+    public static RenderExceptionMode getRenderExceptionMode(Throwable t, boolean checkCauses, boolean skipNull) {
+        while (t != null) {
+            if (t instanceof UtilRender.RenderExceptionModeHolder) {
+                UtilRender.RenderExceptionMode res = ((UtilRender.RenderExceptionModeHolder) t).getRenderExceptionMode();
+                if (!skipNull || res != null) {
+                    return res;
+                }
+            }
+            t = checkCauses ? t.getCause() : null;
+        }
+        return null;
+    }
+    
+    /**
+     * Tries to get a non-null RenderExceptionMode from the exception or the FIRST cause it finds that
+     * implements RenderExceptionModeHolder (even if it's null). (skipNull==false)
+     * If the exception wants to delegate, it can in turn invoke this call recursively in its implementation.
+     */
+    public static RenderExceptionMode getRenderExceptionMode(Throwable t) {
+        return getRenderExceptionMode(t, true, false);
+    }
 
+    public interface RenderExceptionModeHolder {
+        RenderExceptionMode getRenderExceptionMode();
+    }
 }

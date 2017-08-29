@@ -60,7 +60,7 @@ context.kwsParams = kwsParams;
 
 sortOrder = context.sortOrder;
 if (!sortOrder) {
-    if (!localVarsOnly) sortOrder = kwsParams?.getResultSortOrder()?.getOrderName();
+    sortOrder = kwsParams?.getResultSortOrder()?.getOrderName();
     if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
 }
 sortOrderDef = context.sortOrderDef != null? context.sortOrderDef : "SortKeywordRelevancy";
@@ -71,7 +71,7 @@ context.sortOrder = sortOrder;
 
 sortAscending = context.sortAscending;
 if (sortAscending == null) {
-    if (!localVarsOnly) sortAscending = kwsParams?.getResultSortOrder()?.isAscending();
+    sortAscending = kwsParams?.getResultSortOrder()?.isAscending();
 }
 sortAscendingDef = context.sortAscendingDef != null ? context.sortAscendingDef : true;
 context.sortAscendingDef = sortAscendingDef;
@@ -83,15 +83,13 @@ searchString = context.searchString;
 searchOperator = context.searchOperator;
 if (searchString == null) {
     // NOTE: ofbiz supported multiple of these, but our form currently only sends one
-    if (!localVarsOnly) {
-        keywordConstraints = kwsParams?.getKeywordConstraints();
-        if (keywordConstraints) {
-            keywordConstraint = keywordConstraints[0];
-            searchString = keywordConstraint.getKeywordsString();
-            // NOTE: for advancedsearch, we intentionally override whatever's in context,
-            // because it is just gotten from parameters map in groovy and won't make sense otherwise
-            searchOperator = keywordConstraint.isAnd() ? "AND" : "OR";
-        }
+    keywordConstraints = kwsParams?.getKeywordConstraints();
+    if (keywordConstraints) {
+        keywordConstraint = keywordConstraints[0];
+        searchString = keywordConstraint.getKeywordsString();
+        // NOTE: for advancedsearch, we intentionally override whatever's in context,
+        // because it is just gotten from parameters map in groovy and won't make sense otherwise
+        searchOperator = keywordConstraint.isAnd() ? "AND" : "OR";
     }
 }
 if (resetSearch) searchString = null;
@@ -102,14 +100,7 @@ context.searchOperatorDef = searchOperatorDef;
 if (searchApplyDefaults && !searchOperator) searchOperator = searchOperatorDef;
 context.searchOperator = searchOperator;
 
-categoryConstraints = null;
-categoryConstraint = null;
-if (!localVarsOnly) {
-    categoryConstraints = kwsParams?.getConstraintsByType(CategoryConstraint.class);
-    if (categoryConstraints) {
-        categoryConstraint = categoryConstraints[0];
-    }
-}
+categoryConstraints = kwsParams?.getConstraintsByType(CategoryConstraint.class);
 
 // NOTE: the extra searchCategoryId* are because searchCategoryId is reserved in and used ambiguously by AdvancedSearchOptions.groovy
 // searchCategoryIdEff is the last category ID _actually_ searched
@@ -118,9 +109,13 @@ searchIncludeSubCat = context.searchIncludeSubCat;
 
 searchCategoryIdEff = context.searchCategoryIdEff;
 if (searchCategoryIdEff == null) {
-    if (!localVarsOnly && categoryConstraint) {
-        searchCategoryIdEff = categoryConstraint.getProductCategoryId();
-        searchIncludeSubCat = categoryConstraint.isIncludeSubCategories();
+    if (categoryConstraints) {
+        searchCategoryIdEff = [];
+        for(categoryConstraint in categoryConstraints) {
+            searchCategoryIdEff.add(categoryConstraint.getProductCategoryId());
+        }
+        // WARN: 2017-08-28: currently assume all are using same searchIncludeSubCat flag
+        searchIncludeSubCat = categoryConstraints[0].isIncludeSubCategories();
     }
 }
 if (resetSearch) searchCategoryIdEff = null;

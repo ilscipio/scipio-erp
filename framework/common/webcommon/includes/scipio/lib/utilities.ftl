@@ -628,7 +628,7 @@ NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed
         extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args rawParams=true /></#local>
+    <#local res><@ofbizUrl uri=args rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -698,7 +698,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false extLoginKey=false
-        rawParams=true /></#local>
+        rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -773,7 +773,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" rawParams=true/></#local>
+        controller="" extLoginKey="" rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -918,7 +918,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
         autoVariant=(args.autoVariant!"") width=(args.width!"") height=(args.height!"") variantCfg=(args.variantCfg!"") 
         strict=strict rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=args variant=variant strict=true rawParams=true/></#local>
+    <#local res><@ofbizContentUrl uri=args variant=variant rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>

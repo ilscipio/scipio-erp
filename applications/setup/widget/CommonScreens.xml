@@ -117,6 +117,11 @@
                                 <if-true field="commonSetupAppBasePermCond"/>
                             </condition>
                             <widgets>
+                                <!-- TODO: REMOVE -->
+                                <container>
+                                    <label style="common-msg-warning">WARN: The new /setup application is a Work-In-Progress and may not be fully functional at this time (2017-08).
+                                        The legacy /ofbizsetup component can still be accessed in the meantime.</label>
+                                </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

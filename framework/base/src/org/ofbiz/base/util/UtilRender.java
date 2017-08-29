@@ -24,8 +24,20 @@ public abstract class UtilRender {
     }
 
     public enum RenderExceptionMode {
+        /**
+         * Exceptions are rethrown (and logged); no details are printed to output (secure mode).
+         */
         RETHROW,
-        DEBUG;
+        /**
+         * Exceptions are printed out directly to output in Freemarker templates (insecure).
+         */
+        DEBUG,
+        /**
+         * Where possible (e.g. from Freemarker error handler), exceptions are logged
+         * but nothing is printed; otherwise performs RETHROW (security trade-off, whether acceptable
+         * may depend on application).
+         */
+        BLANK;
 
         /**
          * Gets value permissively or null for any invalid value. 

@@ -46,16 +46,16 @@ under the License.
     </@field>
   
     <#macro categorySelectOptions catList selCatId searchCatId indentPrefix="&nbsp;&nbsp;&nbsp;" depth=0 currPrefix="">
-      <#local selCatId = rawString(selCatId)>
       <#list catList as catEntry>
         <#local cat = catEntry.value>
         <#local catName = getProductCategoryDisplayName(cat)>
         <#local selStr = "">
-        <#if rawString(cat.productCategoryId)==selCatId>
-          <#assign selCatFound = true>
+        <#local catId = rawString(cat.productCategoryId!)>
+        <#if selCatId?seq_contains(catId)>
+          <#assign selCatFound = true><#-- NOTE: this isn't very useful anymore, since this is now a list... -->
           <#local selStr = " selected=selected">
         </#if>
-        <#if rawString(cat.productCategoryId)==searchCatId>
+        <#if catId==searchCatId>
           <#assign searchCatFound = true>
         </#if>
         <option value="${escapeVal(cat.productCategoryId, 'html')}"${selStr}>${currPrefix}${escapeVal(catName, 'html')}</option>
@@ -65,16 +65,24 @@ under the License.
       </#list>
     </#macro>
   
-    <#-- TODO?: this could support multiple categories with multiple=true, but JS needed and java/groovy patches (ProductSearchSession/KeywordSearch) -->
-    <@field type="select" name="SEARCH_CATEGORY_ID" label=uiLabelMap.ProductCategory>
+    <@field type="select" name="SEARCH_CATEGORY_ID" label=uiLabelMap.ProductCategory multiple=true>
       <#if showSearchAnyCat><#-- DEV NOTE: see also "preferDefaultSearchCat" in CommonSearchOptions.groovy -->
         <@field type="option" value="" selected=(!searchCategoryIdSel?has_content)>${uiLabelMap.CommonAny}</@field>
       </#if>
+        <#if searchCategoryIdSel?has_content>
+          <#if searchCategoryIdSel?is_sequence>
+            <#assign selCatId = rewrapObject(searchCategoryIdSel, 'raw-simple')>
+          <#else>
+            <#assign selCatId = [rawString(searchCategoryIdSel)]>
+          </#if>
+        <#else>
+          <#assign selCatId = []>
+        </#if>
         <#assign selCatFound = false>
         <#assign searchCatFound = false>
         <#assign catOptions>
-          <@categorySelectOptions catList=((categoryTree.searchChildren)![]) selCatId=(searchCategoryIdSel!) searchCatId=(searchCategoryId!)/>
-          <@categorySelectOptions catList=((categoryTree.regChildren)![]) selCatId=(searchCategoryIdSel!) searchCatId=(searchCategoryId!)/>
+          <@categorySelectOptions catList=((categoryTree.searchChildren)![]) selCatId=selCatId searchCatId=(searchCategoryId!)/>
+          <@categorySelectOptions catList=((categoryTree.regChildren)![]) selCatId=selCatId searchCatId=(searchCategoryId!)/>
         </#assign>
       <#-- SCIPIO: FIXME: REMOVED: NOT PROPERLY CHECK FOR BELONGING TO CATALOG (SECURITY)
         <#if !searchCatFound && searchCategory?has_content>

@@ -32,13 +32,13 @@ public class OfbizSolrInfoServlet extends HttpServlet {
         super.init(config);
         boolean firstInit = setServletInitStatusReached();
         if (!firstInit) {
-            Debug.logInfo("OfbizSolrInfoServlet: (Non-first) servlet init executed", module);
+            Debug.logInfo("Solr: OfbizSolrInfoServlet: (Non-first) servlet init executed", module);
         }
     }
     
     private static boolean setServletInitStatusReached() {
         if (!isServletInitStatusReached()) {
-            Debug.logInfo("OfbizSolrInfoServlet: First servlet init executed", module);
+            Debug.logInfo("Solr: OfbizSolrInfoServlet: First servlet init executed", module);
             servletInitStatusReached = true;
             return true;
         } else {

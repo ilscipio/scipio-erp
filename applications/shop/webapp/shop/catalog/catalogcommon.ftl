@@ -232,12 +232,12 @@
     <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
   -->
     <#-- NOTE: shorter label if showAdvFields==false -->
+  <#if showAdv>
     <option value="SortProductPrice:LIST_PRICE#ASC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceLowToHigh}</option>
     <option value="SortProductPrice:LIST_PRICE#DESC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && !sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceHighToLow}</option>
-  <#if showAdv><#-- the list price should fall back on the default price -->
-    <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceLowToHigh}</option>
-    <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>>${uiLabelMap.ProductDefaultPrice}: ${uiLabelMap.EcommerceHighToLow}</option>
   </#if>
+    <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductDefaultPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceLowToHigh}</option>
+    <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductDefaultPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceHighToLow}</option>
   <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
     <#if productFeatureTypes?? && productFeatureTypes?has_content>
       <#list productFeatureTypes as productFeatureType>

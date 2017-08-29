@@ -316,7 +316,7 @@ that avoids logging every request
                 <filter class="solr.PorterStemFilterFactory"/>
             </analyzer>
         </fieldType>
-        <!-- i18n fields only DE/EN/FR supported for now (This should be tweaked someday) -->
+        <!-- i18n fields -->
         <fieldType
         name="text_french"
         class="solr.TextField" >

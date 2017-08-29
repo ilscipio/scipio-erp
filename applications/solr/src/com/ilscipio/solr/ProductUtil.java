@@ -199,7 +199,7 @@ public abstract class ProductUtil {
                             catMember.append(trailString);
                             String cm = i +"/"+ catMember.toString();
                             if (!trails.contains(cm)) {
-                                //Debug.logInfo("cm : "+cm, module);
+                                //Debug.logInfo("Solr: getProductContent: cm: " + cm, module);
                                 trails.add(cm);
                             }
                         }
@@ -334,7 +334,7 @@ public abstract class ProductUtil {
             ModelService model = getModelServiceStaticSafe("solrProductAttributesSimple");
             if (model != null) attrList = Collections.unmodifiableList(new ArrayList<>(model.getParameterNames(ModelService.IN_PARAM, true, false)));
             else attrList = Collections.emptyList();
-            Debug.logInfo("Solr: Product attributes simple: " + attrList, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: Product attributes simple: " + attrList, module);
             solrProdAttrSimple = attrList;
         }
         return attrList;

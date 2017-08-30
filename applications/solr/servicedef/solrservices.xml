@@ -28,7 +28,7 @@ under the License.
     <service name="rebuildSolrIndex" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="rebuildSolrIndex" debug="true" validate="true">
+        invoke="rebuildSolrIndex">
         <description>rebuild SOLR Index</description>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
         <attribute mode="IN" name="core" optional="true" type="String" />
@@ -43,7 +43,7 @@ under the License.
     <service name="rebuildSolrIndexIfDirty" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="rebuildSolrIndex" debug="true" validate="true">
+        invoke="rebuildSolrIndex">
         <description>rebuild SOLR Index if data status dirty (or unknown) OR if config change (2017-08-23)</description>
         <implements service="rebuildSolrIndex" />
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
@@ -53,7 +53,7 @@ under the License.
     <service name="rebuildSolrIndexAuto" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="rebuildSolrIndexAuto" debug="true" validate="true">
+        invoke="rebuildSolrIndexAuto">
         <description>rebuild SOLR Index - auto-run service</description>
         <implements service="rebuildSolrIndex" />
         <!-- NOTE: MUST use attribute here, not override, to prevent default-value -->
@@ -63,14 +63,14 @@ under the License.
     
     <service name="setSolrDataStatus" engine="java"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="setSolrDataStatus" debug="true" validate="true">
+        invoke="setSolrDataStatus">
         <description>Set SOLR data status ID</description>
         <attribute mode="IN" name="dataStatusId" optional="false" type="String" />
     </service>
     
     <service name="markSolrDataDirty" engine="java"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="setSolrDataStatus" debug="true" validate="true">
+        invoke="setSolrDataStatus">
         <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
     </service>
 
@@ -78,7 +78,7 @@ under the License.
     <service name="addToSolr" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="addToSolr" debug="true" validate="true">
+        invoke="addToSolr">
         <description>Adds product to solr, with product denoted by productId field in instance attribute
             - intended for use with ECAs/SECAs</description>
         <!-- NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity -->
@@ -134,7 +134,7 @@ under the License.
     <service name="addToSolrIndex" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="addToSolrIndex" debug="true" validate="true">
+        invoke="addToSolrIndex">
         <description>Add a Product to Solr Index</description>
         <implements service="solrProductAttributes"/>
         <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
@@ -151,7 +151,7 @@ under the License.
     <service name="addListToSolrIndex" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="addListToSolrIndex" debug="true" validate="true">
+        invoke="addListToSolrIndex">
         <description>Add a List of Products to Solr Index and flush after all have been added</description>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
         <attribute mode="IN" name="fieldList" optional="false" type="List" />
@@ -163,7 +163,7 @@ under the License.
     <service name="solrProductsSearch" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="productsSearch" debug="true" validate="true">
+        invoke="productsSearch">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="includeSubCategories" type="Boolean">
@@ -189,7 +189,7 @@ under the License.
     <service name="solrKeywordSearch" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="keywordSearch" debug="true" validate="true">
+        invoke="keywordSearch">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="query" type="String"/>
         <attribute mode="IN" optional="true" name="viewSize" type="String"/>
@@ -226,7 +226,7 @@ under the License.
     <service name="runSolrQuery" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="runSolrQuery" debug="true" validate="true">
+        invoke="runSolrQuery">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="query" type="String"/>
         <attribute mode="IN" optional="true" name="start" type="Integer"/><!-- 2016-04-01: may specify either an absolute "start" value or a zero-based viewIndex -->
@@ -259,7 +259,7 @@ under the License.
     <service name="solrAvailableCategories" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="getAvailableCategories" debug="true" validate="true">
+        invoke="getAvailableCategories">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="true" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="productId" type="String"/>
@@ -275,7 +275,7 @@ under the License.
     <service name="solrSideDeepCategory" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="getSideDeepCategories" debug="true" validate="true">
+        invoke="getSideDeepCategories">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>

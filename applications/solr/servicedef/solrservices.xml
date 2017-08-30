@@ -25,10 +25,14 @@ under the License.
     <vendor>Ilscipio GmbH</vendor>
 
     <!-- Rebuild the Solr Tree -->
+    <!-- NOTE: 2017-08-30: Now using semaphore="wait" (same as purgeOldJobs) to try to prevent concurrent executions
+        doing strange things; this is more likely to happen now that SOLR_REBUILD_INIT job attempts retries on error, 
+        but it could easily happen in other existing cases. -->
     <service name="rebuildSolrIndex" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.solr.SolrProductSearch"
-        invoke="rebuildSolrIndex">
+        invoke="rebuildSolrIndex"
+        semaphore="wait">
         <description>rebuild SOLR Index</description>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
         <attribute mode="IN" name="core" optional="true" type="String" />

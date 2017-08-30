@@ -170,10 +170,25 @@ public class UtilProperties implements Serializable {
      * If the specified property name or properties file is not found, the defaultValue is returned.
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
      * @param name The name of the property in the properties file
-     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format.
+     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format. [SCIPIO: 2017-08-29: now boxed type]
      * @return A Boolean-Object of the property; or if not found the defaultValue
      */
     public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue) {
+        String str = getPropertyValue(resource, name);
+        if ("true".equalsIgnoreCase(str)) return Boolean.TRUE;
+        else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
+        else return defaultValue;
+    }
+    
+    /**
+     * Returns a Boolean-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultValue is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Boolean-Object of the property; or if not found the defaultValue
+     */
+    public static Boolean getPropertyAsBoolean(String resource, String name, Boolean defaultValue) {
         String str = getPropertyValue(resource, name);
         if ("true".equalsIgnoreCase(str)) return Boolean.TRUE;
         else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
@@ -191,6 +206,18 @@ public class UtilProperties implements Serializable {
     public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber) {
         return (Integer)getPropertyNumber(resource, name, defaultNumber, "Integer");
     }
+    
+    /**
+     * Returns an Integer-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return An Integer-Object of the property; or if not found the defaultNumber
+     */
+    public static Integer getPropertyAsInteger(String resource, String name, Integer defaultNumber) {
+        return (Integer)getPropertyNumber(resource, name, defaultNumber, "Integer");
+    }
 
     /**
      * Returns a Long-Object of the specified property name from the specified resource/properties file.
@@ -201,6 +228,18 @@ public class UtilProperties implements Serializable {
      * @return A Long-Object of the property; or if not found the defaultNumber
      */
     public static Long getPropertyAsLong(String resource, String name, long defaultNumber) {
+        return (Long)getPropertyNumber(resource, name, defaultNumber, "Long");
+    }
+    
+    /**
+     * Returns a Long-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Long-Object of the property; or if not found the defaultNumber
+     */
+    public static Long getPropertyAsLong(String resource, String name, Long defaultNumber) {
         return (Long)getPropertyNumber(resource, name, defaultNumber, "Long");
     }
 
@@ -215,6 +254,18 @@ public class UtilProperties implements Serializable {
     public static Float getPropertyAsFloat(String resource, String name, float defaultNumber) {
         return (Float)getPropertyNumber(resource, name, defaultNumber, "Float");
     }
+    
+    /**
+     * Returns a Float-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Long-Object of the property; or if not found the defaultNumber
+     */
+    public static Float getPropertyAsFloat(String resource, String name, Float defaultNumber) {
+        return (Float)getPropertyNumber(resource, name, defaultNumber, "Float");
+    }
 
     /**
      * Returns a Double-Object of the specified property name from the specified resource/properties file.
@@ -225,6 +276,18 @@ public class UtilProperties implements Serializable {
      * @return A Double-Object of the property; or if not found the defaultNumber
      */
     public static Double getPropertyAsDouble(String resource, String name, double defaultNumber) {
+        return (Double)getPropertyNumber(resource, name, defaultNumber, "Double");
+    }
+    
+    /**
+     * Returns a Double-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Double-Object of the property; or if not found the defaultNumber
+     */
+    public static Double getPropertyAsDouble(String resource, String name, Double defaultNumber) {
         return (Double)getPropertyNumber(resource, name, defaultNumber, "Double");
     }
 

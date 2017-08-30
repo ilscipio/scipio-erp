@@ -339,7 +339,7 @@ under the License.
                                 <include-screen name="ScipioLastCommunication" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <include-screen name="ScipioSecurityAlerts" location="component://party/widget/partymgr/CommonScreens.xml"/>
+                                <include-screen name="ScipioNewRegistrationsList" location="component://party/widget/partymgr/CommonScreens.xml"/>
                             </container>
                         </container>
                     </decorator-section>
@@ -373,6 +373,32 @@ under the License.
                        <screenlet title="${uiLabelMap.PartyRegistrations}">
                             <platform-specific>
                                 <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrations.ftl"/></html>
+                            </platform-specific>
+                       </screenlet>
+                   </widgets>
+                </section>
+           </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ScipioNewRegistrationsList">
+        <section>
+            <actions>
+               <entity-and entity-name="PartyAndPerson" list="registrations">
+                    <order-by field-name="createdDate"/>
+                </entity-and>
+           </actions>
+           <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="registrations"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://party/webapp/partymgr/party/dashboard/PartyNewRegistrationsList.ftl"/></html>
                             </platform-specific>
                        </screenlet>
                    </widgets>

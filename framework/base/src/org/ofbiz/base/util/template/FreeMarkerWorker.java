@@ -850,9 +850,11 @@ public class FreeMarkerWorker {
     public static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
         public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
             // SCIPIO: 2017-03-23: new switch, split up code
-            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(env);
+            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(te, env);
             if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
                 handleTemplateExceptionDebug(te, env, out);
+            } else if (exMode == UtilRender.RenderExceptionMode.BLANK) {
+                handleTemplateExceptionBlank(te, env, out);
             } else {
                 handleTemplateExceptionRethrow(te, env, out);
             }
@@ -877,6 +879,10 @@ public class FreeMarkerWorker {
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
+        }
+        
+        protected void handleTemplateExceptionBlank(TemplateException te, Environment env, Writer out) throws TemplateException {
+            ; // do nothing, should already be logged by Freemarker
         }
     }
 
@@ -962,5 +968,16 @@ public class FreeMarkerWorker {
             }
         }
         return UtilRender.getGlobalRenderExceptionMode();
+    }
+    
+    /**
+     * SCIPIO: Gets the render exception mode from the exception, environment or more generic variables (best-effort).
+     * NOTE: the exception causes are consulted, but only the FIRST that implements RenderExceptionModeHolder is
+     * consulted (so the wrapping exception controls whether to recurse further down or not).
+     */
+    public static UtilRender.RenderExceptionMode getRenderExceptionMode(Throwable t, Environment env) {
+        UtilRender.RenderExceptionMode res = UtilRender.getRenderExceptionMode(t);
+        if (res != null) return res;
+        return getRenderExceptionMode(env);
     }
 }

@@ -101,7 +101,14 @@ public abstract class SolrUtil {
         }
         if (locale == null) locale = Locale.getDefault();
         locale = getSolrSchemaLangLocale(locale);
-        Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
+        if (!solrContentLocales.contains(locale)) {
+            Locale firstLocale = solrContentLocales != null ? solrContentLocales.get(0) : null;
+            Debug.logError("Solr: Configured content locale default/fallback (" + locale 
+                    + ") is not present in solr locales list! Using first in list as default instead: " + firstLocale, module);
+            locale = firstLocale;
+        } else {
+            Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
+        }
         solrContentLocaleDefault = locale;
     }
     

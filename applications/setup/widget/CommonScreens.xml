@@ -212,6 +212,49 @@
         </section>
     </screen>
     
+    <screen name="CommonSetupWizardDecorator">
+        <section>
+            <actions>
+                <!-- this check to prevent the /viewoverrideuri hack - this should always have been set by the events -->
+                <set field="setupStepAllowed" type="Boolean" value="${groovy:com.ilscipio.scipio.setup.SetupWorker.getWorker(request).isSetupStepEffectiveSafe(context.setupStep);}" />
+                
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://setup/widget/Menus.xml#SetupSteps" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator">
+                    <decorator-section name="body">
+                        <include-screen name="SetupProgress" location="${parameters.mainDecoratorLocation}"/>
+                        <section>
+                            <condition>
+                                <if-compare field="setupStepAllowed" type="Boolean" operator="equals" value="true"/>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.SetupErrorStepNotAccessible}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: widget to display the current progress -->
+    <screen name="SetupProgress">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/wizard/setupprogress.ftl"/></html>
+                </platform-specific>
+           </widgets>
+        </section>
+    </screen>
+    
     <screen name="EntityExportAll">
         <section>
             <actions>

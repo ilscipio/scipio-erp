@@ -41,7 +41,9 @@ public abstract class SolrUtil {
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
     
-    private static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT");
+    // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
+    // it only works if space after is removed. but it shouldn't do any harm here so leaving in...
+    private static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT", "&&", "||", "!", "/*");
     private static final Set<Character> noPrefixTermCharPrefixes = UtilMisc.unmodifiableHashSet('+', '-');
     private static final Map<Character, Character> termEnclosingCharMap; 
     static {

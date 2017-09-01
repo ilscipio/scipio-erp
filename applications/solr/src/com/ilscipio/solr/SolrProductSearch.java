@@ -422,7 +422,7 @@ public abstract class SolrProductSearch {
                 // causes erroneous results for similar-name categories
                 //dispatchMap.put("query", "cat:*" + SolrUtil.escapeTermFull(productCategoryId) + "*");
                 boolean includeSubCategories = !Boolean.FALSE.equals(context.get("includeSubCategories"));
-                dispatchMap.put("query", SolrUtil.makeCategoryIdFieldQueryEscape("cat", productCategoryId, includeSubCategories));
+                dispatchMap.put("query", SolrExprUtil.makeCategoryIdFieldQueryEscape("cat", productCategoryId, includeSubCategories));
             } else {
                 return ServiceUtil.returnError("Missing product category id"); // TODO: localize
             }

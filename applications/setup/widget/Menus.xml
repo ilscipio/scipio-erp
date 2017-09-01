@@ -24,6 +24,9 @@
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
             <link target="initialsetup"/>
         </menu-item>
+        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
+            <link target="setupWizard"/>
+        </menu-item>
         <menu-item name="export" title="${uiLabelMap.PageTitleEntityExportAll}">
             <link target="EntityExportAll"/>
         </menu-item>
@@ -31,6 +34,9 @@
     <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         always-expand-selected-or-ancestor="true">
         <include-elements menu-name="SetupAppBar" recursive="full" />
+        <menu-item name="wizard">
+            <sub-menu name="SetupSteps" include="SetupStepsSideBar"/>
+        </menu-item>
     </menu>
     
     <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -119,6 +125,29 @@
             <link target="editpartygroup">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </link>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: menu entries for wizard -->
+    <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        items-sort-mode="off">
+        <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
+            <link target="setupOrganization"/>
+        </menu-item>
+        <menu-item name="user" title="${uiLabelMap.PartyParty}">
+            <link target="setupUser"/>
+        </menu-item>
+        <menu-item name="accounting" title="${uiLabelMap.AccountingAccounting}">
+            <link target="setupAccounting"/>
+        </menu-item>
+        <menu-item name="facility" title="${uiLabelMap.SetupFacility}">
+            <link target="setupFacility"/>
+        </menu-item>
+        <menu-item name="catalog" title="${uiLabelMap.SetupProductStore}">
+            <link target="setupCatalog"/>
+        </menu-item>
+        <menu-item name="website" title="${uiLabelMap.SetupWebSite}">
+            <link target="setupWebsite"/>
         </menu-item>
     </menu>
 </menus>

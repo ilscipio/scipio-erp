@@ -25,30 +25,38 @@
         they can be duplicated individually if/once they significantly change/diverge. -->
 
     <form name="NewOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="NewCustomer" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="ViewOrganization" extends="ViewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
     </form>
     
     <form name="EditFacility" extends="EditFacility" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="EditProductStore" extends="EditProductStore" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
 
     <form name="EditWebSite" extends="EditWebSite" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="EditProdCatalog" extends="EditProdCatalog" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="EditProductCategory" extends="EditProductCategory" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>  
     
     <form name="EditProduct" extends="EditProduct" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="ListProduct" extends="ListProduct" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
@@ -58,5 +66,6 @@
     </form>
     
     <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
 </forms>

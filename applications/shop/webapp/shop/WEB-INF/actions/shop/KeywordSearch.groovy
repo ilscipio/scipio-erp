@@ -51,6 +51,7 @@ import org.ofbiz.product.product.ProductSearch.SortProductField;
 import org.ofbiz.product.product.ProductSearch.SortProductPrice;
 import org.ofbiz.product.product.ProductSearch.SortProductFeature;
 import org.ofbiz.product.category.CategoryWorker;
+import com.ilscipio.solr.SolrExprUtil;
 import com.ilscipio.solr.SolrUtil;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
@@ -145,11 +146,9 @@ nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 
 sanitizeUserQueryExpr = { expr ->
     // TODO: this is extremely limited at the moment, only supports full solr syntax or exact string
-    // FIXME: we can't use SolrUtil.escapeTermPlain due to issue with backslash-whitespace interpret
+    // FIXME: we can't use SolrExprUtil.escapeTermPlain due to issue with backslash-whitespace interpret
     if (expr instanceof String) {
-        if (!expr) return expr;
-        if (kwsArgs.searchSyntax == "full") return expr;
-        else return SolrUtil.escapeTermFull(expr)
+        return SolrExprUtil.preparseUserQuery(expr, kwsArgs.searchSyntax);
     } else if (expr instanceof List) {
         if (!expr) return expr;
         def resExprList = [];
@@ -161,16 +160,15 @@ sanitizeUserQueryExpr = { expr ->
 };
 
 // WARN: this one may add quotes (decision delegated)
-escapeTerm = { term -> return SolrUtil.escapeTermFull(term); };
+escapeTerm = { term -> return SolrExprUtil.escapeTermFull(term); };
 
 try {
     // kwsArgs options - should be set through context.kwsArgs map.
     // DEV NOTE: even the commented ones are valid to use. they must be set through context.kwsArgs map.
     
-    // searchSyntax: allow full solr syntax in input search strings? (if false, searches exact string only)
-    // PROBLEM: by allowing full query, user can easily cause crash - it's caught, but is unfriendly.
-    // TODO?: should support an in-between pre-parsing, for user friendly and potential security reasons.
-    kwsArgs.searchSyntax = kwsArgs.searchSyntax ?: "full";
+    // searchSyntax: "user", "full", "literal" - see SolrExprUtil.preparseUserQuery for values and known issues
+    // TODO: "user" is not implemented and does same as "full" - see SolrExprUtil.preparseUserQuery
+    kwsArgs.searchSyntax = kwsArgs.searchSyntax ?: "user";
     kwsArgs.searchString = sanitizeUserQueryExpr(kwsArgs.searchString); // WARN: setting this here overrides ALL the parameters.SEARCH_STRINGx expressions
     kwsArgs.searchFilters = kwsArgs.searchFilters ? new ArrayList(kwsArgs.searchFilters) : new ArrayList(); // list
     //kwsArgs.searchFilter = kwsArgs.searchFilter; // string or list; if string, it's split on whitespace to make list
@@ -329,11 +327,12 @@ try {
                     ProductSearch.KeywordConstraint kc = (ProductSearch.KeywordConstraint) psc;
                     kwExpr = (kc.getKeywordsString() ?: "").trim();
                     if (kwExpr) {
+                        kwExpr = sanitizeUserQueryExpr(kwExpr);
                         // NOTE: OR is the usual default - we don't need to do anything in that case;
                         // but if AND is specified, then we need to add a "+" before every character...
                         if (kc.isAnd()) {
                             // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
-                            kwExprList.add(SolrUtil.addPrefixToAllTerms(kwExpr, "+"));
+                            kwExprList.add(SolrExprUtil.addPrefixToAllTerms(kwExpr, "+"));
                         } else {
                             kwExprList.add(kwExpr);
                         }
@@ -373,7 +372,7 @@ try {
             }
             
             combineKwExpr = { exprList, joinOp ->
-                if (exprList.size() == 1) return sanitizeUserQueryExpr(exprList[0]);
+                if (exprList.size() == 1) return exprList[0];
                 StringBuilder sb = new StringBuilder();
                 sb.append("(");
                 sb.append(exprList[0]);
@@ -381,7 +380,7 @@ try {
                 String joinOpFull = " " + joinOp + " (";
                 for(int i=1; i<exprList.size(); i++) {
                     sb.append(joinOpFull);
-                    sb.append(sanitizeUserQueryExpr(exprList[i]));
+                    sb.append(exprList[i]);
                     sb.append(")");
                 }
                 return sb.toString();
@@ -477,7 +476,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         else kwsArgs.searchString = "*:*";
 
         // FIXME?: whitespace escaping appears to not work...
-        //else if (!kwsArgs.searchSyntax) kwsArgs.searchString = SolrUtil.escapeTermPlain(kwsArgs.searchString);
+        //else if (!kwsArgs.searchSyntax) kwsArgs.searchString = SolrExprUtil.escapeTermPlain(kwsArgs.searchString);
         
         // early assign for info when query throws error
         context.currentSearch = kwsArgs.searchString; // DEPRECATED?
@@ -545,7 +544,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
                 if (category.exclude != null) {
                     sb.append(category.exclude ? "-" : "+");
                 }
-                sb.append(SolrUtil.makeCategoryIdFieldQueryEscape("cat", category.productCategoryId, category.includeSub != false));
+                sb.append(SolrExprUtil.makeCategoryIdFieldQueryEscape("cat", category.productCategoryId, category.includeSub != false));
                 catExprList.add(sb.toString());
             }
             // TODO: REVIEW: should this be a whole filter, or instead add each to searchFilters?

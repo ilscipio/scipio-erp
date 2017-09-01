@@ -39,6 +39,96 @@
         <response name="success" type="view" value="initialsetup" save-home-view="true"/>
     </request-map>
 
+    <!-- NEW Setup Steps requests -->
+    
+    <request-map uri="setupWizard">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+    </request-map>
+
+    <request-map uri="nextSetupStep">
+        <security direct-request="false"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getSetupStep"/>
+        <response name="success" type="view" value="SetupFinished"/>
+        <response name="finished" type="view" value="SetupFinished"/>
+        
+        <response name="organization" type="view" value="SetupOrganization"/>
+        <response name="user" type="view" value="SetupUser"/>
+        <response name="accounting" type="view" value="SetupAccounting"/>
+        <response name="facility" type="view" value="SetupFacility"/>
+        <response name="catalog" type="view" value="SetupCatalog"/>
+        <response name="website" type="view" value="SetupWebsite"/>
+        
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    
+    <request-map uri="setupOrganization">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupOrganization"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateOrganization">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupOrganization"/>
+    </request-map>
+    <request-map uri="setupUser">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupUser"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateUser">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupUser"/>
+    </request-map>
+    <request-map uri="setupAccounting">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateAccounting">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupAccounting"/>
+    </request-map>
+    <request-map uri="setupFacility">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupFacility"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupFacility"/>
+    </request-map>
+    <request-map uri="setupCatalog">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupCatalog"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateCatalog">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupCatalog"/>
+    </request-map>
+    <request-map uri="setupWebsite">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupUpdateWebsite">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupWebsite"/>
+    </request-map>
+
     <!-- end of request mappings -->
     
     <!-- View Mappings -->
@@ -60,4 +150,15 @@
     <view-map name="firstproduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProdCatalog"/>
     <view-map name="EditCategory" type="screen" page="component://setup/widget/SetupScreens.xml#EditCategory"/>
     <view-map name="EditProduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProduct"/>
+    
+    <!-- SCIPIO: new setup step definitions (NOTE: the screens themselves will perform the reuse/includes, as needed) -->
+    <view-map name="SetupOrganization" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganization"/>
+    <view-map name="SetupUser" type="screen" page="component://setup/widget/SetupScreens.xml#SetupUser"/>
+    <view-map name="SetupAccounting" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccounting"/>
+    <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
+    <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
+    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
+    <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
+    <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
+
 </site-conf>

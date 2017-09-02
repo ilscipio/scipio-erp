@@ -39,8 +39,7 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemTop">
+    <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
             <condition>
                 <not><if-empty field="partyId"/></not>
@@ -87,8 +86,7 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="activeSubMenuItemTop">
+    <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SetupTabBar" recursive="includes-only" />
     </menu>
     
@@ -131,22 +129,22 @@
     <!-- SCIPIO: menu entries for wizard -->
     <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         items-sort-mode="off">
-        <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
+        <menu-item name="organization" title="${uiLabelMap.SetupOrganization}" disabled="${context.setupStepStates.organization.disabled == true}">
             <link target="setupOrganization"/>
         </menu-item>
-        <menu-item name="user" title="${uiLabelMap.PartyParty}">
+        <menu-item name="user" title="${uiLabelMap.PartyParty}" disabled="${context.setupStepStates.user.disabled == true}">
             <link target="setupUser"/>
         </menu-item>
-        <menu-item name="accounting" title="${uiLabelMap.AccountingAccounting}">
+        <menu-item name="accounting" title="${uiLabelMap.AccountingAccounting}" disabled="${context.setupStepStates.accounting.disabled == true}">
             <link target="setupAccounting"/>
         </menu-item>
-        <menu-item name="facility" title="${uiLabelMap.SetupFacility}">
+        <menu-item name="facility" title="${uiLabelMap.SetupFacility}" disabled="${context.setupStepStates.facility.disabled == true}">
             <link target="setupFacility"/>
         </menu-item>
-        <menu-item name="catalog" title="${uiLabelMap.SetupProductStore}">
+        <menu-item name="catalog" title="${uiLabelMap.SetupProductCatalog}" disabled="${context.setupStepStates.catalog.disabled == true}">
             <link target="setupCatalog"/>
         </menu-item>
-        <menu-item name="website" title="${uiLabelMap.SetupWebSite}">
+        <menu-item name="website" title="${uiLabelMap.SetupWebSite}" disabled="${context.setupStepStates.website.disabled == true}">
             <link target="setupWebsite"/>
         </menu-item>
     </menu>

@@ -212,17 +212,38 @@
         </section>
     </screen>
     
+    <!-- SCIPIO: Setup Wizard common actions, should be included at beginning of each screen after setupStep definition -->
+    <screen name="SetupWizardCommonActions">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                if (context.setupWizardActionsRun != true) {
+                    context.DEBUG = true;
+                    setupWorker = com.ilscipio.scipio.setup.SetupWorker.getWorker(request);
+                    context.setupWorker = setupWorker;
+                    context.setupStepStates = setupWorker.getStepStatePrimitiveMap();
+                    if (context.DEBUG) org.ofbiz.base.util.Debug.logInfo("Setup: Step states: " + context.setupStepStates, "SetupWizardCommonActions.groovy");
+                    context.setupWizardActionsRun = true;
+                }
+            ]]></script>
+        </actions>
+    </screen>
+    
+    <!-- SCIPIO: Setup Wizard decorator
+        NOTE: doesn't extend CommonSetupDecorator because it had a legacy use with party check we don't want to confuse -->
     <screen name="CommonSetupWizardDecorator">
         <section>
             <actions>
                 <!-- this check to prevent the /viewoverrideuri hack - this should always have been set by the events -->
-                <set field="setupStepAllowed" type="Boolean" value="${groovy:com.ilscipio.scipio.setup.SetupWorker.getWorker(request).isSetupStepEffectiveSafe(context.setupStep);}" />
+                <include-screen-actions name="SetupWizardCommonActions"/><!-- fallback only; screens should set it themselves -->
+                <script lang="groovy"><![CDATA[
+                    context.setupStepAllowed = context.setupWorker.isStepEffectiveSafe(context.setupStep);
+                ]]></script>
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://setup/widget/Menus.xml#SetupSteps" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonSetupDecorator">
+                <decorator-screen name="CommonSetupAppDecorator">
                     <decorator-section name="body">
                         <include-screen name="SetupProgress" location="${parameters.mainDecoratorLocation}"/>
                         <section>

@@ -24,7 +24,7 @@
     <screen name="InitialSetup">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" value="organization"/>
+                <set field="activeSubMenuItem" value="organization"/>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
                 <set field="target" value="createOrganization"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
@@ -78,7 +78,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="ProductNewFacility"/>
-                <set field="activeSubMenuItemTop" value="facility"/>
+                <set field="activeSubMenuItem" value="facility"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
             </actions>
@@ -117,7 +117,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductStore"/>
-                <set field="activeSubMenuItemTop" value="productstore"/>
+                <set field="activeSubMenuItem" value="productstore"/>
                 <set field="labelTitleProperty" value="PageTitleEditProductStore"/>
                 
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -166,7 +166,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
-                <set field="activeSubMenuItemTop" value="website"/>
+                <set field="activeSubMenuItem" value="website"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
@@ -309,7 +309,7 @@
     <screen name="CommonFirstProductDecorator">
         <section>
             <actions>
-                <set field="activeSubMenuItemTop" from-field="activeSubMenuItemTop" default-value="firstproduct"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="firstproduct"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
@@ -356,15 +356,22 @@
         <section>
             <actions>
                 <set field="setupStep" value="organization"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
             
-                <set field="activeSubMenuItemTop" value="organization"/>
+                <set field="activeSubMenuItem" value="organization"/>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
                 <set field="target" value="createOrganization"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+                <!-- SCIPIO: get parties from query done in request by worker -->
+                <script lang="groovy"><![CDATA[
+                    context.parties = request.getAttribute("scpOrgPartyRoleList");
+                ]]></script>
+                <!-- 
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
+                -->
                 <set field="partyId" from-field="parties[0].partyId"/>
                 <set field="parameters.partyId" from-field="parties[0].partyId"/>
             </actions>
@@ -373,7 +380,8 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-empty field="parties"/>
+                                <!--<if-empty field="parties"/>-->
+                                <not><if-compare field="setupStepStates.organization.completed" type="Boolean" operator="equals" value="true"/></not>
                             </condition>
                             <widgets>
                                 <section>
@@ -411,11 +419,60 @@
         <section>
             <actions>
                 <set field="setupStep" value="user"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                
+                <set field="titleProperty" value="PartyCreateNewCustomer"/>
+                <set field="target" value="createCustomer"/>
+                <set field="partyId" value="CUST"/>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="CUSTOMER"/>
+                </entity-condition>
+                <set field="partyId" from-field="parties[0].partyId"/>
+                <set field="customerPartyId" from-field="customerRel.partyIdFrom"/>
+                <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="TODO"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-empty field="parties"/>
+                                    </condition>
+                                    <actions>
+                                        <!-- fields for setDependentDropdownValuesJs.ftl -->
+                                        <set field="dependentForm" value="NewCustomer"/>
+                                        <!-- SCIPIO: new field required as workaround for Ofbiz issue with form names -->
+                                        <set field="depFormFieldPrefix" value="NewUser_"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="USER_COUNTRY"/>
+                                        <set field="dependentId" value="USER_STATE"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                        <screenlet>
+                                            <include-form name="NewCustomer" location="component://setup/widget/SetupForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -426,6 +483,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="accounting"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -441,11 +499,37 @@
         <section>
             <actions>
                 <set field="setupStep" value="facility"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                
+                <set field="titleProperty" value="ProductNewFacility"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="TODO"/>
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="facility"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
+                                    </fail-widgets>
+                                </section>
+                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -456,11 +540,26 @@
         <section>
             <actions>
                 <set field="setupStep" value="catalog"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                
+                <set field="titleProperty" value="PageTitleEditProductCatalog"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="TODO"/>
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                                <screenlet>
+                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -471,11 +570,46 @@
         <section>
             <actions>
                 <set field="setupStep" value="website"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                
+                <set field="titleProperty" value="PageTitleEditWebSite"/>
+                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="TODO"/>
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="webSite"/></not></condition>
+                                    <widgets>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" operator="equals" value="message"/>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -486,6 +620,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="finished"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -501,6 +636,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="error"/>
+                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

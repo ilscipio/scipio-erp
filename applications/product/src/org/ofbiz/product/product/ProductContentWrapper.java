@@ -211,6 +211,44 @@ public class ProductContentWrapper implements ContentWrapper {
     }
 
     /**
+     * SCIPIO: Gets the entity field value corresponding to the given productContentTypeId.
+     * DO NOT USE FROM TEMPLATES - NOT CACHED - intended for code that must replicate ProductContentWrapper behavior.
+     * DEV NOTE: LOGIC DUPLICATED FROM getProductContentAsText ABOVE - PLEASE KEEP IN SYNC.
+     * Added 2017-09-05.
+     */
+    public static String getEntityFieldValue(GenericValue product, String productContentTypeId, Locale locale, Delegator delegator, LocalDispatcher dispatcher, boolean useCache) throws GeneralException, IOException {
+        String productId = product.getString("productId");
+
+        if (delegator == null) {
+            delegator = product.getDelegator();
+        }
+
+        if (delegator == null) {
+            throw new GeneralRuntimeException("Unable to find a delegator to use!");
+        }
+
+        String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+        ModelEntity productModel = delegator.getModelEntity("Product");
+        
+        if (productModel.isField(candidateFieldName)) {
+                String candidateValue = product.getString(candidateFieldName);
+                if (UtilValidate.isNotEmpty(candidateValue)) {
+                    return candidateValue;
+                } else if ("Y".equals(product.getString("isVariant"))) {
+                    // look up the virtual product
+                    GenericValue parent = ProductWorker.getParentProduct(productId, delegator, useCache);
+                    if (parent != null) {
+                        candidateValue = parent.getString(candidateFieldName);
+                        if (UtilValidate.isNotEmpty(candidateValue)) {
+                            return candidateValue;
+                        }
+                    }
+                }
+        }
+        return null;
+    }
+    
+    /**
      * SCIPIO: Returns the locale this product content wrapper was initialized and intended for.
      * Added 2017-08-21.
      */

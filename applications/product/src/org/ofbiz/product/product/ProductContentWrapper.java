@@ -216,7 +216,7 @@ public class ProductContentWrapper implements ContentWrapper {
      * DEV NOTE: LOGIC DUPLICATED FROM getProductContentAsText ABOVE - PLEASE KEEP IN SYNC.
      * Added 2017-09-05.
      */
-    public static String getEntityFieldValue(GenericValue product, String productContentTypeId, Locale locale, Delegator delegator, LocalDispatcher dispatcher, boolean useCache) throws GeneralException, IOException {
+    public static String getEntityFieldValue(GenericValue product, String productContentTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache) throws GeneralException, IOException {
         String productId = product.getString("productId");
 
         if (delegator == null) {

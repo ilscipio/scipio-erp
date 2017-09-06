@@ -784,7 +784,7 @@ public class ProductWorker {
     }
 
     //get parent product
-    public static GenericValue getParentProduct(String productId, Delegator delegator) {
+    public static GenericValue getParentProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         GenericValue _parentProduct = null;
         if (productId == null) {
             Debug.logWarning("Bad product id", module);
@@ -815,6 +815,10 @@ public class ProductWorker {
             throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
         }
         return _parentProduct;
+    }
+    
+    public static GenericValue getParentProduct(String productId, Delegator delegator) { // SCIPIO: new delegate 2017-09-05
+        return getParentProduct(productId, delegator, true);
     }
 
     public static boolean isDigital(GenericValue product) {

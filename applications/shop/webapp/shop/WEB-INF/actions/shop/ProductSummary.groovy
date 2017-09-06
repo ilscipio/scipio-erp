@@ -31,6 +31,7 @@ import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.store.*;
 import org.ofbiz.service.*;
+import com.ilscipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
@@ -88,14 +89,11 @@ if (product) {
     productContentWrapper = new ProductContentWrapper(product, request);
     context.productContentWrapper = productContentWrapper;
 } else if (solrProduct) {
-    //String country = session.getAttribute("locale");
-    //if (!country) 
-    //    country = request.getLocale().getLanguage();
-    country = com.ilscipio.solr.SolrUtil.getSolrSchemaLangCodeValidOrDefault(context.locale);
-    // TODO?: REVIEW: in future will be possible issue of fallback language here if/when schema is amended
-    context.solrTitle = solrProduct["title_i18n_" + country];
-    context.description = solrProduct["description_i18n_" + country];
-    context.longdescription = solrProduct["longdescription_i18n_" + country];
+    solrProductWorker = SolrValueWorker.getWorker(solrProduct, context.locale, productStore ?: ProductStoreWorker.getProductStore(request));
+
+    context.solrTitle = solrProductWorker.getFieldValueI18nForDisplay("title");
+    context.description = solrProductWorker.getFieldValueI18nForDisplay("description");
+    context.longdescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
 }
 
 categoryId = null;

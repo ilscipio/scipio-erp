@@ -212,6 +212,7 @@
   <dynamicField name="*_i18n_fr" type="text_french" indexed="true" stored="true"/>
   <dynamicField name="*_i18n_de" type="text_german" indexed="true" stored="true"/>
   <dynamicField name="*_i18n_en" type="text_english" indexed="true" stored="true"/>
+  <dynamicField name="*_i18n_general" type="text_general" indexed="true" stored="true"/>
   <dynamicField name="random_*" type="random"/>
   <dynamicField name="attr_*" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <dynamicField name="*_txt" type="text_general" multiValued="true" indexed="true" stored="true"/>
@@ -241,9 +242,11 @@
   <copyField source="manu" dest="manu_exact"/>
   <copyField source="manu" dest="text"/>
   <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
+  <copyField source="*_i18n_general" dest="text"/>
   <copyField source="*_i18n_en" dest="text"/>
   <copyField source="*_i18n_de" dest="text"/>
   <copyField source="*_i18n_fr" dest="text"/>
+  <copyField source="*_i18n_general" dest="spell"/>
   <copyField source="*_i18n_en" dest="spell"/>
   <copyField source="*_i18n_de" dest="spell"/>
   <copyField source="*_i18n_fr" dest="spell"/>

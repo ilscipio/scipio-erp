@@ -39,6 +39,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.*;
+import org.ofbiz.product.store.*;
 import org.ofbiz.product.product.ProductSearchSession.ProductSearchOptions;
 import org.ofbiz.product.product.ProductSearch.CategoryConstraint;
 import org.ofbiz.product.product.ProductSearch.FeatureConstraint;
@@ -51,8 +52,7 @@ import org.ofbiz.product.product.ProductSearch.SortProductField;
 import org.ofbiz.product.product.ProductSearch.SortProductPrice;
 import org.ofbiz.product.product.ProductSearch.SortProductFeature;
 import org.ofbiz.product.category.CategoryWorker;
-import com.ilscipio.solr.SolrExprUtil;
-import com.ilscipio.solr.SolrUtil;
+import com.ilscipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
@@ -143,6 +143,8 @@ if (context.useSolr == false || useSolr == false) {
 }
 
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
+productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
+locale = context.locale;
 
 sanitizeUserQueryExpr = { expr ->
     // TODO: this is extremely limited at the moment, only supports full solr syntax or exact string
@@ -401,7 +403,7 @@ try {
             if (sortOrder instanceof SortProductPrice) {
                 SortProductPrice so = (SortProductPrice) sortOrder;
                 kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
-                    context.locale, "Keyword search: ");
+                    locale, "Keyword search: ");
                 if (kwsArgs.sortBy != "defaultPrice") {
                     // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
                     // TODO?: REVIEW: query would be faster without function, but unclear if want to create
@@ -419,7 +421,7 @@ try {
                     }
                 }
                 kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
+                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
             } else if (sortOrder instanceof SortProductFeature) {
                 // TODO?
                 //SortProductFeature so = (SortProductFeature) sortOrder;
@@ -428,17 +430,24 @@ try {
                 kwsArgs.sortBy = null;
                 kwsArgs.sortByReverse = null;
                 //kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
+                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
             } else if (sortOrder instanceof SortProductField) {
                 SortProductField so = (SortProductField) sortOrder;
                 // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
-                simpleLocale = SolrUtil.getSolrSchemaLangLocaleValidOrDefault(context.locale);
+                simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
                 kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
                 if (kwsArgs.sortBy) {
                     kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
+                    // 2017-09-05: NEW SORT EXPRESSION needed for locale fallbacks
+                    // FIXME: FIND FASTER WAY TO DO THIS USING SOLR FIELD DEFS
+//                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
+//                            kwsArgs.sortBy, 
+//                            SolrLocaleUtil.getCompatibleLocaleValid(locale),
+//                            SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
+//                        ) ?: kwsArgs.sortBy;
                 }
                 kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, context.locale);
+                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
             } else {
                 Debug.logWarning("Solr: Keyword search: unrecognized sort order method: " + sortOrder.getClass().getName(), module);
             }
@@ -450,7 +459,7 @@ try {
 }
     
    
-if (!kwsArgs.searchSortOrderString) kwsArgs.searchSortOrderString = new org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy().prettyPrintSortOrder(false, context.locale);
+if (!kwsArgs.searchSortOrderString) kwsArgs.searchSortOrderString = new org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy().prettyPrintSortOrder(false, locale);
 
 // NOTE: these context assigns are here in case of fail
 // WARN: searchSortOrderString: should always be set to non-null, for the legacy template which crashes without it
@@ -575,7 +584,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             returnFields:kwsArgs.searchReturnFields,
             sortBy:kwsArgs.sortBy, sortByReverse:kwsArgs.sortByReverse,
             viewSize:kwsArgs.viewSize, viewIndex:kwsArgs.viewIndex, 
-            locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone];
+            locale:locale, userLogin:context.userLogin, timeZone:context.timeZone];
         
         if (DEBUG) Debug.logInfo("Keyword search params: " + kwsArgs, module);
         

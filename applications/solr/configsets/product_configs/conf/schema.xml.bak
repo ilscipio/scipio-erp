@@ -604,6 +604,7 @@ that avoids logging every request
         <dynamicField name="*_i18n_fr" type="text_french" indexed="true" stored="true" />
         <dynamicField name="*_i18n_de" type="text_german" indexed="true" stored="true" />
         <dynamicField name="*_i18n_en" type="text_english" indexed="true" stored="true" />
+        <dynamicField name="*_i18n_general" type="text_general" indexed="true" stored="true" />
         <!-- SCIPIO: 2017-08-24: allows alphanumeric sort on localized titles, together with copyField below -->
         <dynamicField name="alphaTitleSort_*" type="alphaOnlySort" indexed="true" stored="false"/>
         <!-- uncomment the following to ignore any fields that don't already match an existing
@@ -630,10 +631,12 @@ that avoids logging every request
     <copyField source="manu" dest="text"/>
     <copyField source="features" dest="text"/>
     <copyField source="attributes" dest="text"/>
+    <copyField source="*_i18n_general"  dest="text" />
     <copyField source="*_i18n_en"  dest="text" />
     <copyField source="*_i18n_de"  dest="text" />
     <copyField source="*_i18n_fr"  dest="text" />
     <copyField source="manu" dest="manu_exact"/>
+    <copyField source="*_i18n_general"  dest="spell" />
     <copyField source="*_i18n_en"  dest="spell" />
     <copyField source="*_i18n_de"  dest="spell" />
     <copyField source="*_i18n_fr"  dest="spell" />

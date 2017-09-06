@@ -1,10 +1,7 @@
 package com.ilscipio.solr;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,89 +49,13 @@ public abstract class SolrUtil {
         termEnclosingCharMap = Collections.unmodifiableMap(map);
     }
     
-    private static final String solrContentLocalesStr;
-    private static final List<Locale> solrContentLocales;
-    static {
-        String locStr = UtilProperties.getPropertyValue(solrConfigName, "solr.content.locales");
-        if (locStr != null) locStr = locStr.trim();
-        if (UtilValidate.isEmpty(locStr)) {
-            locStr = UtilProperties.getPropertyValue("general", "locales.available");
-        }
-        if (UtilValidate.isEmpty(locStr)) {
-            locStr = "en";
-        }
-        List<Locale> locList = new ArrayList<>();
-        StringBuilder normLocStr = new StringBuilder();
-        try {
-            for(String tag : locStr.split("\\s*,\\s*")) {
-                Locale locale = Locale.forLanguageTag(tag);
-                if (locale == null) throw new IllegalArgumentException("invalid locale: " + tag);
-                if (locList.contains(locale)) {
-                    Debug.logWarning("Solr: Configured locale list contains duplicate locales: " + locStr, module);
-                    continue;
-                }
-                locList.add(locale);
-                if (normLocStr.length() > 0) normLocStr.append(",");
-                normLocStr.append(locale.toString());
-            }
-            Debug.logInfo("Solr: Configured content locales: " + locStr, module);
-        } catch(Exception e) {
-            Debug.logError(e, "Solr: Could not parse content locales: " + locStr + ": " + e.getMessage(), module);
-            locStr = "en";
-            locList = UtilMisc.toList(Locale.ENGLISH);
-        }
-        solrContentLocalesStr = normLocStr.toString();
-        solrContentLocales = Collections.unmodifiableList(locList);
-    }
-    
-    private static final Locale solrContentLocaleDefault;
-    static {
-        Locale locale = null;
-        try {
-            String locStr = UtilProperties.getPropertyValue(solrConfigName, "solr.content.locales.default");
-            if (UtilValidate.isNotEmpty(locStr)) {
-                locale = Locale.forLanguageTag(locStr);
-            }
-        } catch(Exception e) {
-            Debug.logError("Solr: Error reading default locale: " + e.getMessage(), module);
-        }
-        if (locale == null) locale = Locale.getDefault();
-        locale = getSolrSchemaLangLocale(locale);
-        if (!solrContentLocales.contains(locale)) {
-            Locale firstLocale = solrContentLocales != null ? solrContentLocales.get(0) : null;
-            Debug.logWarning("Solr: Configured content locale default/fallback (" + locale 
-                    + ") is not present in solr locales list (you may need extra configuration)! Using first in list as default instead: " + firstLocale, module);
-            locale = firstLocale;
-        } else {
-            Debug.logInfo("Solr: Configured content locale default/fallback: " + locale.toString(), module);
-        }
-        solrContentLocaleDefault = locale;
-    }
+
     
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue("solrconfig", "solr.config.version");
     }
     
-    /**
-     * Gets content locales. FIXME: currently ignores product store!
-     */
-    public static String getSolrContentLocalesString(Delegator delegator, String productStoreId) {
-        return solrContentLocalesStr; 
-    }
     
-    /**
-     * Gets content locales. FIXME: currently ignores product store!
-     */
-    public static List<Locale> getSolrContentLocales(Delegator delegator, String productStoreId) {
-        return solrContentLocales; 
-    }
-    
-    /**
-     * Gets default content locale. FIXME: currently ignores product store!
-     */
-    public static Locale getSolrContentLocaleDefault(Delegator delegator, String productStoreId) {
-        return solrContentLocaleDefault; 
-    }
 
     
     // not currently useful
@@ -355,47 +276,6 @@ public abstract class SolrUtil {
     
     public static HttpSolrClient getHttpSolrClient() {
         return new HttpSolrClient(SolrUtil.solrFullUrl);
-    }
-    
-    /**
-     * Tries to return a field language code for the solr schema for the locale.
-     * For "en_US", returns the "en" part.
-     * TODO: REVIEW: sketchy
-     */
-    public static String getSolrSchemaLangCode(Locale locale) {
-        if (locale == null) return null;
-        return locale.getLanguage();
-    }
-    
-    public static String getSolrSchemaLangCodeValid(Locale locale) {
-        String res = getSolrSchemaLangCode(locale);
-        if (SolrUtil.solrContentLocales.contains(Locale.forLanguageTag(res))) return res;
-        else return null;
-    }
-    
-    public static String getSolrSchemaLangCodeValidOrDefault(Locale locale) {
-        String res = getSolrSchemaLangCodeValid(locale);
-        return res != null ? res : getSolrSchemaLangCode(SolrUtil.solrContentLocaleDefault);
-    }
-    
-    /**
-     * Tries to return a field language locale for the solr schema for the locale.
-     * For "en_US", returns "en" locale.
-     * TODO: REVIEW: sketchy
-     */
-    public static Locale getSolrSchemaLangLocale(Locale locale) {
-        return (locale == null) ? null : Locale.forLanguageTag(getSolrSchemaLangCode(locale));
-    }
-    
-    public static Locale getSolrSchemaLangLocaleValid(Locale locale) {
-        Locale res = getSolrSchemaLangLocale(locale);
-        if (SolrUtil.solrContentLocales.contains(res)) return res;
-        else return null;
-    }
-    
-    public static Locale getSolrSchemaLangLocaleValidOrDefault(Locale locale) {
-        Locale res = getSolrSchemaLangLocaleValid(locale);
-        return res != null ? res : SolrUtil.solrContentLocaleDefault; 
     }
     
     /**

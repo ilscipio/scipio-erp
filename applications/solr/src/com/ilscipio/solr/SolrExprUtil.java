@@ -1,9 +1,11 @@
 package com.ilscipio.solr;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -357,6 +359,37 @@ public abstract class SolrExprUtil {
     
     public static String preparseUserQuery(String userQuery, String mode) throws IllegalArgumentException {
         return preparseUserQuery(userQuery, UtilValidate.isNotEmpty(mode) ? UserQueryMode.fromName(mode) : null);
+    }
+
+    public static String makeSortFieldFallbackExpr(List<String> fieldNames) {
+        if (fieldNames.size() == 0) return null;
+        ListIterator<String> it = fieldNames.listIterator(fieldNames.size());
+        String expr = it.previous();
+        while(it.hasPrevious()) {
+            String fieldName = it.previous();
+            expr = makeIfExistsExpr(fieldName, fieldName, expr);
+        }
+        return expr;
+    }
+    
+    public static String makeSortFieldFallbackExpr(String... fieldNames) {
+        return makeSortFieldFallbackExpr(Arrays.asList(fieldNames));
+    }
+    
+    public static String makeIfExistsExpr(String existsExpr, String trueExpr, String falseExpr) {
+        StringBuilder sb = new StringBuilder();
+        appendIfExistsExpr(sb, existsExpr, trueExpr, falseExpr);
+        return sb.toString();
+    }
+    
+    public static void appendIfExistsExpr(StringBuilder sb, String existsExpr, String trueExpr, String falseExpr) {
+        sb.append("if(exists(");
+        sb.append(existsExpr);
+        sb.append("),");
+        sb.append(trueExpr);
+        sb.append(",");
+        sb.append(falseExpr);
+        sb.append(")");
     }
 
 }

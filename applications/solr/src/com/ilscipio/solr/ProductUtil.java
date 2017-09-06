@@ -1,5 +1,8 @@
 package com.ilscipio.solr;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,13 +16,19 @@ import java.util.Set;
 
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
@@ -101,6 +110,26 @@ public abstract class ProductUtil {
         else return solrFieldName;
     }
     
+    /**
+     * SPECIAL sort expressions needed to fill in locales with missing texts.
+     * WARN: Locales must already be normalized
+     * FIXME: FIND FASTER WAY TO DO THIS USING SOLR FIELD DEFS
+     */
+    public static String makeProductSolrSortFieldExpr(String solrFieldName, Locale locale, Locale fallbackLocale) {
+        if (solrFieldName == null) return null;
+        else if (solrFieldName.startsWith("title_i18n_")) solrFieldName = "title_i18n_";
+        else if (solrFieldName.startsWith("description_i18n_")) solrFieldName = "description_i18n_";
+        else if (solrFieldName.startsWith("longdescription_i18n_")) solrFieldName = "longdescription_i18n_";
+        else if (solrFieldName.startsWith("alphaTitleSort_")) solrFieldName = "alphaTitleSort_";
+        else return solrFieldName;
+        
+        List<String> fieldNames = new ArrayList<>();
+        if (locale != null) fieldNames.add(solrFieldName + locale.toString());
+        if (fallbackLocale != null && (locale == null || !locale.toString().equals(fallbackLocale.toString()))) fieldNames.add(solrFieldName + fallbackLocale.toString());
+        fieldNames.add(solrFieldName + "general");
+        return SolrExprUtil.makeSortFieldFallbackExpr(fieldNames);
+    }
+    
     public static String getProductSolrPriceFieldNameFromEntityPriceType(String productPriceTypeId, Locale locale, String logPrefix) {
         if ("LIST_PRICE".equals(productPriceTypeId)) {
             return "listPrice";
@@ -144,7 +173,7 @@ public abstract class ProductUtil {
             // Generate special ProductContentWrapper for the supported languages
             // FIXME?: ideally this should be configured per-store... 
             Map<String, ProductContentWrapper> pcwMap = new HashMap<>();
-            List<Locale> locales = SolrUtil.getSolrContentLocales(delegator, productStoreId);
+            List<Locale> locales = SolrLocaleUtil.getConfiguredLocales(delegator, productStoreId);
             
             List<ProductContentWrapper> pcwList = new ArrayList<>(locales.size());
             for(Locale locale : locales) {
@@ -249,9 +278,9 @@ public abstract class ProductUtil {
                 if (isPhysical)
                     dispatchContext.put("isPhysical", isPhysical);
 
-                dispatchContext.put("title", getLocalizedContentStringMap("PRODUCT_NAME", product.getString("productName"), defLocale, pcwList));
-                dispatchContext.put("description", getLocalizedContentStringMap("DESCRIPTION", product.getString("description"), defLocale, pcwList));
-                dispatchContext.put("longDescription", getLocalizedContentStringMap("LONG_DESCRIPTION", product.getString("longDescription"), defLocale, pcwList));
+                dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defLocale, pcwList));
+                dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defLocale, pcwList));
+                dispatchContext.put("longDescription", getLocalizedContentStringMap(delegator, dispatcher, product, "LONG_DESCRIPTION", locales, defLocale, pcwList));
 
                 // dispatchContext.put("comments", "");
                 // dispatchContext.put("keywords", "");
@@ -267,7 +296,7 @@ public abstract class ProductUtil {
                     // FIXME: locale should be looked up differently, but shouldn't have any impacts to price selection...
                     //Locale priceConfigLocale = new Locale("de_DE");
                     //Locale priceConfigLocale = (Locale) context.get("locale");
-                    Locale priceConfigLocale = SolrUtil.getSolrContentLocaleDefault(delegator, productStoreId);
+                    Locale priceConfigLocale = SolrLocaleUtil.getConfiguredDefaultLocale(delegator, productStoreId);
                     
                     ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, currencyUomId, priceConfigLocale, userLogin);
                     configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
@@ -306,22 +335,89 @@ public abstract class ProductUtil {
         return dispatchContext;
     }
     
-    private static Map<String, String> getLocalizedContentStringMap(String contentFieldName, String noLocaleValue, Locale defLocale, List<ProductContentWrapper> pcwList) {
+    private static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 
+            String productContentTypeId, List<Locale> locales, Locale defLocale, List<ProductContentWrapper> pcwList) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
-        contentMap.put("default", noLocaleValue); // NEW 2017-08-21 - handled by addLocalizedContentStringMapToSolrDoc
-        for(ProductContentWrapper productContent : pcwList) {
-            String value = productContent.get(contentFieldName);
-            Locale locale = productContent.getLocale();
-            if (value != null) {
-                contentMap.put(locale.toString(), value);
+        contentMap.put("default", ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, false)); // NEW 2017-08-21 - handled by addLocalizedContentStringMapToSolrDoc
+        
+        Map<String, String> localizedContent = getProductContentForLocales(delegator, dispatcher, product, productContentTypeId, locales, false);
+        contentMap.putAll(localizedContent);
+        
+//        for(ProductContentWrapper productContent : pcwList) {
+            // 2017-09-05: this creates problems for the language parsing due to the ProductContentWrapper impl.
+//            String value = productContent.get(productContentTypeId);
+//            Locale locale = productContent.getLocale();
+//            if (value != null) {
+//                contentMap.put(locale.toString(), value);
+//            } else {
+//                // currently no real fallback for this
+////                if (SolrUtil.SOLR_CONTENT_LOCALES_REQUIREALL || locale.equals(defLocale)) {
+////                    contentMap.put(locale.toString(), noLocaleValue);
+////                }
+//                // FIXME?: the productContent.get already gets the field name... so this is probably never called...
+//                // it's possible we don't really want the ProductContentWrapper behavior here...
+//                contentMap.put(locale.toString(), noLocaleValue);
+//            }
+//        }
+        return contentMap;
+    }
+    
+    /**
+     * Based on a mix of
+     * {@link org.ofbiz.product.product.ProductContentWrapper#getProductContentAsText(String, GenericValue, String, Locale, String, String, String, Delegator, LocalDispatcher, Writer)}
+     * and
+     * {@link org.ofbiz.content.content.ContentWorker#findContentForRendering(Delegator, String, Locale, String, String, boolean)}
+     * .
+     * Unlike ProductContentWrapper, this NEVER returns a fallback language for the locales, and
+     * does not consult the entity field - no map entry if there's no text in the given language.
+     */
+    static Map<String, String> getProductContentForLocales(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, String productContentTypeId, Collection<Locale> locales, boolean useCache) throws GeneralException, IOException {
+        Map<String, String> contentMap = new HashMap<>();
+        
+        String productId = product.getString("productId");
+        
+        List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
+        if (UtilValidate.isEmpty(productContentList) && ("Y".equals(product.getString("isVariant")))) {
+            GenericValue parent = ProductWorker.getParentProduct(productId, delegator);
+            if (UtilValidate.isNotEmpty(parent)) {
+                productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", parent.get("productId"), "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
+            }
+        }
+        GenericValue productContent = EntityUtil.getFirst(productContentList);
+        if (productContent == null) {
+            return contentMap;
+        }
+        String contentId = productContent.getString("contentId");
+        
+        GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache(useCache).queryOne();
+        if (content == null) {
+            return contentMap;
+        }
+        
+        String thisLocaleString = (String) content.get("localeString");
+        thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
+        for(Locale locale : locales) {
+            String targetLocaleString = locale.toString();
+            GenericValue targetContent = null;
+            if (targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
+                targetContent = content;
             } else {
-                // currently no real fallback for this
-//                if (SolrUtil.SOLR_CONTENT_LOCALES_REQUIREALL || locale.equals(defLocale)) {
-//                    contentMap.put(locale.toString(), noLocaleValue);
-//                }
-                // FIXME?: the productContent.get already gets the field name... so this is probably never called...
-                // it's possible we don't really want the ProductContentWrapper behavior here...
-                contentMap.put(locale.toString(), noLocaleValue);
+                // FIXME: useCache can't propagate here!
+                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale);
+                if (altContent != null && !contentId.equals(altContent.getString("contentId"))) {
+                    targetContent = altContent;
+                }
+            }
+            if (targetContent != null) {
+                Writer out = new StringWriter();
+                Map<String, Object> inContext = new HashMap<>();
+                inContext.put("product", product);
+                inContext.put("productContent", productContent);
+                ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", false, null);
+                String res = out.toString();
+                if (res.length() > 0) {
+                    contentMap.put(locale.toString(), res);
+                }
             }
         }
         return contentMap;
@@ -359,9 +455,9 @@ public abstract class ProductUtil {
         addStringValuesToSolrDoc(doc, "features", UtilGenerics.<String>checkCollection(context.get("features")));
         addStringValuesToSolrDoc(doc, "attributes", UtilGenerics.<String>checkCollection(context.get("attributes")));
 
-        addLocalizedContentStringMapToSolrDoc(doc, "title_i18n_", null, UtilGenerics.<String, String>checkMap(context.get("title")));
-        addLocalizedContentStringMapToSolrDoc(doc, "description_i18n_", null, UtilGenerics.<String, String>checkMap(context.get("description")));
-        addLocalizedContentStringMapToSolrDoc(doc, "longdescription_i18n_", null, UtilGenerics.<String, String>checkMap(context.get("longDescription")));
+        addLocalizedContentStringMapToSolrDoc(doc, "title_i18n_", "title_i18n_general", UtilGenerics.<String, String>checkMap(context.get("title")));
+        addLocalizedContentStringMapToSolrDoc(doc, "description_i18n_", "description_i18n_general", UtilGenerics.<String, String>checkMap(context.get("description")));
+        addLocalizedContentStringMapToSolrDoc(doc, "longdescription_i18n_", "longdescription_i18n_general", UtilGenerics.<String, String>checkMap(context.get("longDescription")));
     
         return doc;
     }

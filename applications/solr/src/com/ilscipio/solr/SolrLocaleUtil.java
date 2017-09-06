@@ -78,6 +78,9 @@ public abstract class SolrLocaleUtil {
         configuredDefaultLocale = locale;
     }
     
+    // not currently useful
+    //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
+    
     /**
      * Gets content locales. FIXME: currently ignores product store!
      */

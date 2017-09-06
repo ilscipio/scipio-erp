@@ -49,18 +49,9 @@ public abstract class SolrUtil {
         termEnclosingCharMap = Collections.unmodifiableMap(map);
     }
     
-
-    
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue("solrconfig", "solr.config.version");
     }
-    
-    
-
-    
-    // not currently useful
-    //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
-
     
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");

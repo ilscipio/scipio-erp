@@ -23,7 +23,7 @@ System Requirements
 * 4+GB RAM, 2+GB free hard disk space
 
 Software Requirements
-* Java 1.7 (or greater) SDK
+* Java 1.8 (or greater) SDK
 * Apache ANT
 
 Recommended Development Tools
@@ -35,7 +35,7 @@ Recommended Development Tools
 
 Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:
-* Java 1.7 (or greater) SDK
+* Java 1.8 (or greater) SDK
  * Download and Install
  * Set JAVA_HOME Path
  * Validate Settings

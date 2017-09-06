@@ -23,12 +23,13 @@ under the License.
  <antversion property="antversion" atleast="${minimumantversion}"/>
  <fail unless="antversion" message="Please upgrade ant to at least ${minimumantversion}. Current ant version is ${ant.version}"/>
 
- <condition property="javaatleast17">
+ <!-- SCIPIO: 2017-09-06: JDK version minimum requirement is now 1.8 -->
+ <condition property="javaatleast18">
   <not>
-   <matches pattern="^1\.[0-6]($|\..*)" string="${ant.java.version}"/>
+   <matches pattern="^1\.[0-7]($|\..*)" string="${ant.java.version}"/>
   </not>
  </condition>
- <fail unless="javaatleast17" message="Please upgrade java to at least 1.7. Current Java version is ${ant.java.version}"/>
+ <fail unless="javaatleast18" message="Please upgrade java to at least 1.8. Current Java version is ${ant.java.version}"/>
 
  <dirname property="ofbiz.home.dir" file="${ant.file.Ant - Macros}"/>
  <!-- SCIPIO: NOTE: This macro is enhanced to supported nested implicit iterate-subant-args for the subant call -->

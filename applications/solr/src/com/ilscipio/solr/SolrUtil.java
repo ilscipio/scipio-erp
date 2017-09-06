@@ -140,7 +140,7 @@ public abstract class SolrUtil {
      * @deprecated Use {@link ProductUtil#generateSolrProductDocument(Map)} instead
      */
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
-        return ProductUtil.generateSolrProductDocument(context);
+        return ProductUtil.generateSolrProductDocument(null, null, context);
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {

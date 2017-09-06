@@ -113,21 +113,22 @@ public abstract class ProductUtil {
     /**
      * SPECIAL sort expressions needed to fill in locales with missing texts.
      * WARN: Locales must already be normalized
-     * FIXME: FIND FASTER WAY TO DO THIS USING SOLR FIELD DEFS
      */
     public static String makeProductSolrSortFieldExpr(String solrFieldName, Locale locale, Locale fallbackLocale) {
-        if (solrFieldName == null) return null;
-        else if (solrFieldName.startsWith("title_i18n_")) solrFieldName = "title_i18n_";
-        else if (solrFieldName.startsWith("description_i18n_")) solrFieldName = "description_i18n_";
-        else if (solrFieldName.startsWith("longdescription_i18n_")) solrFieldName = "longdescription_i18n_";
-        else if (solrFieldName.startsWith("alphaTitleSort_")) solrFieldName = "alphaTitleSort_";
-        else return solrFieldName;
-        
-        List<String> fieldNames = new ArrayList<>();
-        if (locale != null) fieldNames.add(solrFieldName + locale.toString());
-        if (fallbackLocale != null && (locale == null || !locale.toString().equals(fallbackLocale.toString()))) fieldNames.add(solrFieldName + fallbackLocale.toString());
-        fieldNames.add(solrFieldName + "general");
-        return SolrExprUtil.makeSortFieldFallbackExpr(fieldNames);
+        // SOLVED AT indexing time
+        return solrFieldName;
+//        if (solrFieldName == null) return null;
+//        else if (solrFieldName.startsWith("title_i18n_")) solrFieldName = "title_i18n_";
+//        else if (solrFieldName.startsWith("description_i18n_")) solrFieldName = "description_i18n_";
+//        else if (solrFieldName.startsWith("longdescription_i18n_")) solrFieldName = "longdescription_i18n_";
+//        else if (solrFieldName.startsWith("alphaTitleSort_")) solrFieldName = "alphaTitleSort_";
+//        else return solrFieldName;
+//        
+//        List<String> fieldNames = new ArrayList<>();
+//        if (locale != null) fieldNames.add(solrFieldName + locale.toString());
+//        if (fallbackLocale != null && (locale == null || !locale.toString().equals(fallbackLocale.toString()))) fieldNames.add(solrFieldName + fallbackLocale.toString());
+//        fieldNames.add(solrFieldName + "general");
+//        return SolrExprUtil.makeSortFieldFallbackExpr(fieldNames);
     }
     
     public static String getProductSolrPriceFieldNameFromEntityPriceType(String productPriceTypeId, Locale locale, String logPrefix) {
@@ -338,7 +339,7 @@ public abstract class ProductUtil {
     private static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 
             String productContentTypeId, List<Locale> locales, Locale defLocale, List<ProductContentWrapper> pcwList) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
-        contentMap.put("default", ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, false)); // NEW 2017-08-21 - handled by addLocalizedContentStringMapToSolrDoc
+        contentMap.put("general", ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, false)); // NEW 2017-08-21 - handled by addLocalizedContentStringMapToSolrDoc
         
         Map<String, String> localizedContent = getProductContentForLocales(delegator, dispatcher, product, productContentTypeId, locales, false);
         contentMap.putAll(localizedContent);
@@ -440,7 +441,7 @@ public abstract class ProductUtil {
      * Generates a Solr schema product from the fields of the solrProductAttributes service interface.
      * DEV NOTE: TODO: REVIEW: the solrProductAttributes interface may be an undesirable intermediate...
      */
-    public static SolrInputDocument generateSolrProductDocument(Map<String, Object> context) throws GenericEntityException {
+    public static SolrInputDocument generateSolrProductDocument(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) throws GenericEntityException {
         SolrInputDocument doc = new SolrInputDocument();
     
         // add defined attributes
@@ -455,10 +456,13 @@ public abstract class ProductUtil {
         addStringValuesToSolrDoc(doc, "features", UtilGenerics.<String>checkCollection(context.get("features")));
         addStringValuesToSolrDoc(doc, "attributes", UtilGenerics.<String>checkCollection(context.get("attributes")));
 
-        addLocalizedContentStringMapToSolrDoc(doc, "title_i18n_", "title_i18n_general", UtilGenerics.<String, String>checkMap(context.get("title")));
-        addLocalizedContentStringMapToSolrDoc(doc, "description_i18n_", "description_i18n_general", UtilGenerics.<String, String>checkMap(context.get("description")));
-        addLocalizedContentStringMapToSolrDoc(doc, "longdescription_i18n_", "longdescription_i18n_general", UtilGenerics.<String, String>checkMap(context.get("longDescription")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "title_i18n_", "title_i18n_general", UtilGenerics.<String, String>checkMap(context.get("title")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "description_i18n_", "description_i18n_general", UtilGenerics.<String, String>checkMap(context.get("description")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "longdescription_i18n_", "longdescription_i18n_general", UtilGenerics.<String, String>checkMap(context.get("longDescription")));
     
+        // FIXME?: MANUAL population of the alpha sort field, because it's complex
+        addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_general", "title_i18n_", "title_i18n_general", UtilGenerics.<String, String>checkMap(context.get("title")));
+        
         return doc;
     }
     
@@ -471,16 +475,53 @@ public abstract class ProductUtil {
         }
     }
     
-    private static void addLocalizedContentStringMapToSolrDoc(SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
+    private static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
         if (contentMap == null) return;
         for (Map.Entry<String, String> entry : contentMap.entrySet()) {
-            if ("default".equals(entry.getKey())) {
+            if ("general".equals(entry.getKey())) {
                 if (solrDefaultFieldName != null) {
                     doc.addField(solrDefaultFieldName, entry.getValue());
                 }
             } else {
                 doc.addField(solrFieldNamePrefix + entry.getKey(), entry.getValue());
             }
+        }
+    }
+    
+    /**
+     * FIXME?: this is a homemade replacements for the removal of 
+     * {@code
+     *  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
+     * }
+     * in the solr schema; we should really do this with a solr directive, but not set up for that.
+     */
+    private static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String alphaFieldNamePrefix, String alphaDefaultFieldName, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
+        if (contentMap == null) return;
+        
+        String generalValue = null;
+        if (contentMap.containsKey("general")) {
+            generalValue = contentMap.get("general");
+            doc.addField(alphaDefaultFieldName, generalValue);
+        }
+        
+        String defLocStr = SolrLocaleUtil.getConfiguredDefaultLocale(delegator).toString();
+        
+        // fill in ALL the locales
+        for(Locale locale : SolrLocaleUtil.getConfiguredLocales(delegator)) {
+            String locStr = locale.toString();
+            
+            String value = contentMap.get(solrFieldNamePrefix + locStr);
+            if (UtilValidate.isEmpty(value)) {
+                // if no exact locale, use general next, because there's a chance it's in the right language
+                value = generalValue;
+                if (UtilValidate.isEmpty(value)) {
+                    // if there's nothing else, check entry for sys default lang; even though
+                    // this is sure to be the wrong language, it's better than nothing for sorting...
+                    value = contentMap.get(solrFieldNamePrefix + defLocStr);
+                }
+            }
+            
+            doc.addField(alphaFieldNamePrefix + locStr, value);
         }
     }
 }

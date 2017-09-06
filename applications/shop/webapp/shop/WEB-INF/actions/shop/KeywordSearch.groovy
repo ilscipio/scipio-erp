@@ -438,13 +438,11 @@ try {
                 kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
                 if (kwsArgs.sortBy) {
                     kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
-                    // 2017-09-05: NEW SORT EXPRESSION needed for locale fallbacks
-                    // FIXME: FIND FASTER WAY TO DO THIS USING SOLR FIELD DEFS
-//                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
-//                            kwsArgs.sortBy, 
-//                            SolrLocaleUtil.getCompatibleLocaleValid(locale),
-//                            SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
-//                        ) ?: kwsArgs.sortBy;
+                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
+                            kwsArgs.sortBy, 
+                            SolrLocaleUtil.getCompatibleLocaleValid(locale),
+                            SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
+                        ) ?: kwsArgs.sortBy;
                 }
                 kwsArgs.sortByReverse = !so.isAscending();
                 kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);

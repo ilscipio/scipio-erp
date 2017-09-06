@@ -241,7 +241,8 @@
   <copyField source="internalName" dest="text"/>
   <copyField source="manu" dest="manu_exact"/>
   <copyField source="manu" dest="text"/>
-  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
+  <!-- SCIPIO: FIXME?: manually populated by rebuildSolrIndex - requires custom processor otherwise (https://wiki.apache.org/solr/UpdateRequestProcessor)
+  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
   <copyField source="*_i18n_general" dest="text"/>
   <copyField source="*_i18n_en" dest="text"/>
   <copyField source="*_i18n_de" dest="text"/>

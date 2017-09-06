@@ -651,7 +651,8 @@ that avoids logging every request
 
     <!-- copy name to alphaNameSort, a field designed for sorting by name -->
     <copyField source="internalName" dest="alphaNameSort"/>
-    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
+    <!-- SCIPIO: FIXME?: manually populated by rebuildSolrIndex - requires custom processor otherwise (https://wiki.apache.org/solr/UpdateRequestProcessor)
+    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
 
     <!-- Similarity is the scoring routine for each document vs. a query.
     A custom similarity may be specified here, but the default is fine

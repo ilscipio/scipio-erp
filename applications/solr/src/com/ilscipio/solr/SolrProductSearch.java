@@ -137,7 +137,7 @@ public abstract class SolrProductSearch {
             // Debug.log(server.ping().toString());
 
             // Construct Documents
-            SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(context);
+            SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context);
             Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 
             if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
@@ -206,7 +206,7 @@ public abstract class SolrProductSearch {
                 Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
     
                 for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
-                    SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(fieldListIterator.next());
+                    SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), fieldListIterator.next());
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
                     docs.add(doc1);
                 }

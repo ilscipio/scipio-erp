@@ -91,11 +91,25 @@ public abstract class SolrLocaleUtil {
     public static List<Locale> getConfiguredLocales(Delegator delegator, String productStoreId) {
         return configuredLocales; 
     }
+    
+    /**
+     * Gets content locales. FIXME: currently ignores product store!
+     */
+    public static List<Locale> getConfiguredLocales(Delegator delegator) {
+        return configuredLocales; 
+    }
 
     /**
      * Gets default content locale. FIXME: currently ignores product store!
      */
     public static Locale getConfiguredDefaultLocale(Delegator delegator, String productStoreId) {
+        return configuredDefaultLocale; 
+    }
+    
+    /**
+     * Gets default content locale.
+     */
+    public static Locale getConfiguredDefaultLocale(Delegator delegator) {
         return configuredDefaultLocale; 
     }
 

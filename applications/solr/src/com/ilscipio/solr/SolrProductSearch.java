@@ -280,9 +280,14 @@ public abstract class SolrProductSearch {
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery((String) context.get("query"));
-            // solrQuery.setQueryType("dismax");
-            boolean faceted = (Boolean) context.get("facet");
-            if (faceted) {
+            
+            String queryType = (String) context.get("queryType");
+            if (UtilValidate.isNotEmpty(queryType)) {
+                solrQuery.setRequestHandler(queryType);
+            }
+            
+            Boolean faceted = (Boolean) context.get("facet");
+            if (Boolean.TRUE.equals(faceted)) {
                 solrQuery.setFacet(faceted);
                 solrQuery.addFacetField("manu");
                 solrQuery.addFacetField("cat");
@@ -301,15 +306,15 @@ public abstract class SolrProductSearch {
                 solrQuery.addFacetQuery("listPrice:[50000 TO *]");
             }
 
-            boolean spellCheck = (Boolean) context.get("spellcheck");
-            if (spellCheck) {
+            Boolean spellCheck = (Boolean) context.get("spellcheck");
+            if (Boolean.TRUE.equals(spellCheck)) {
                 solrQuery.setParam("spellcheck", spellCheck);
             }
 
-            boolean highLight = (Boolean) context.get("highlight");
-            if (highLight) {
+            Boolean highlight = (Boolean) context.get("highlight");
+            if (Boolean.TRUE.equals(highlight)) {
                 // FIXME: unhardcode markup
-                solrQuery.setHighlight(highLight);
+                solrQuery.setHighlight(highlight);
                 solrQuery.setHighlightSimplePre("<span class=\"highlight\">");
                 solrQuery.addHighlightField("description");
                 solrQuery.setHighlightSimplePost("</span>");
@@ -446,8 +451,12 @@ public abstract class SolrProductSearch {
                 dispatchMap.put("queryFilters", context.get("queryFilters"));
             }
             dispatchMap.put("facet", false);
-            dispatchMap.put("spellcheck", true);
-            dispatchMap.put("highlight", true);
+            dispatchMap.put("spellcheck", false); // 2017-09: changed to false
+            if (context.get("highlight") != null) {
+                dispatchMap.put("highlight", context.get("highlight"));
+            } else {
+                dispatchMap.put("highlight", false); // 2017-09: changed to false
+            }
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
@@ -514,7 +523,23 @@ public abstract class SolrProductSearch {
                 dispatchMap.put("sortByReverse", context.get("sortByReverse"));
             if (context.get("facetQuery") != null)
                 dispatchMap.put("facetQuery", context.get("facetQuery"));
-            dispatchMap.put("spellcheck", true);
+            if (context.get("queryType") != null)
+                dispatchMap.put("queryType", context.get("queryType"));
+            if (context.get("facet") != null) {
+                dispatchMap.put("facet", context.get("facet"));
+            } else {
+                dispatchMap.put("facet", false); // 2017-09: changed to false
+            }
+            if (context.get("spellcheck") != null) {
+                dispatchMap.put("spellcheck", context.get("spellcheck"));
+            } else {
+                dispatchMap.put("spellcheck", true);
+            }
+            if (context.get("highlight") != null) {
+                dispatchMap.put("highlight", context.get("highlight"));
+            } else {
+                dispatchMap.put("highlight", false); // 2017-09: changed to false
+            }
             copyStdServiceFieldsNotSet(context, dispatchMap);
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
@@ -543,21 +568,28 @@ public abstract class SolrProductSearch {
             result.put("isCorrectlySpelled", isCorrectlySpelled);
 
             Map<String, Integer> facetQuery = queryResult.getFacetQuery();
-            Map<String, String> facetQueries = new HashMap<>();
-            for (String fq : facetQuery.keySet()) {
-                if (facetQuery.get(fq).intValue() > 0)
-                    facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq).intValue() + ")");
+            Map<String, String> facetQueries = null;
+            if (facetQuery != null) {
+                facetQueries = new HashMap<>();
+                for (String fq : facetQuery.keySet()) {
+                    if (facetQuery.get(fq).intValue() > 0)
+                        facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq).intValue() + ")");
+                }
             }
 
-            Map<String, Map<String, Long>> facetFields = new HashMap<>();
             List<FacetField> facets = queryResult.getFacetFields();
-            for (FacetField facet : facets) {
-                Map<String, Long> facetEntry = new HashMap<>();
-                List<FacetField.Count> facetEntries = facet.getValues();
-                if (UtilValidate.isNotEmpty(facetEntries)) {
-                    for (FacetField.Count fcount : facetEntries)
-                        facetEntry.put(fcount.getName(), fcount.getCount());
-                    facetFields.put(facet.getName(), facetEntry);
+            Map<String, Map<String, Long>> facetFields = null;
+            if (facets != null) {
+                facetFields = new HashMap<>();
+                
+                for (FacetField facet : facets) {
+                    Map<String, Long> facetEntry = new HashMap<>();
+                    List<FacetField.Count> facetEntries = facet.getValues();
+                    if (UtilValidate.isNotEmpty(facetEntries)) {
+                        for (FacetField.Count fcount : facetEntries)
+                            facetEntry.put(fcount.getName(), fcount.getCount());
+                        facetFields.put(facet.getName(), facetEntry);
+                    }
                 }
             }
 

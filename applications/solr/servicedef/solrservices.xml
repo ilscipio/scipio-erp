@@ -180,6 +180,7 @@ under the License.
         <attribute mode="IN" optional="true" name="viewIndex" type="String"/>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
@@ -212,6 +213,10 @@ under the License.
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
+        <attribute mode="IN" optional="true" name="queryType" type="String"/>
+        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false -->
+        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
@@ -250,9 +255,10 @@ under the License.
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean" default-value="true"/>
-        <attribute mode="IN" optional="true" name="highlight" type="Boolean" default-value="true"/>
-        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean" default-value="true"/>
+        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
+        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
+        <attribute mode="IN" optional="true" name="queryType" type="String"/>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>
         <attribute name="errorType" type="String" mode="OUT" optional="true">

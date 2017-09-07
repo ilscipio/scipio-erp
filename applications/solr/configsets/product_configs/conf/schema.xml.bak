@@ -317,39 +317,24 @@ that avoids logging every request
             </analyzer>
         </fieldType>
         <!-- i18n fields -->
-        <fieldType
-        name="text_french"
-        class="solr.TextField" >
+        <fieldType name="text_french" class="solr.TextField" >
             <analyzer>
                 <tokenizer class="solr.WhitespaceTokenizerFactory" />
-                <filter
-                class="solr.StopFilterFactory"
-                ignoreCase="true"
-                words="stopwords_fr.txt" />
+                <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_fr.txt" />
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
             </analyzer>
         </fieldType>
-        <fieldType
-        name="text_german"
-        class="solr.TextField" >
+        <fieldType name="text_german" class="solr.TextField" >
             <analyzer>
                 <tokenizer class="solr.WhitespaceTokenizerFactory" />
-                <filter
-                class="solr.StopFilterFactory"
-                ignoreCase="true"
-                words="stopwords_de.txt" />
+                <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_de.txt" />
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
             </analyzer>
         </fieldType>
-        <fieldType
-        name="text_english"
-        class="solr.TextField" >
+        <fieldType name="text_english" class="solr.TextField" >
             <analyzer>
                 <tokenizer class="solr.WhitespaceTokenizerFactory" />
-                <filter
-                class="solr.StopFilterFactory"
-                ignoreCase="true"
-                words="stopwords_en.txt" />
+                <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_en.txt" />
                 <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
             </analyzer>
         </fieldType>

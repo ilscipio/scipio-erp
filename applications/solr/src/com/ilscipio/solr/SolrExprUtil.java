@@ -20,7 +20,6 @@ import org.ofbiz.base.util.UtilValidate;
  * <p>
  * TODO/FIXME (2017-09-01):
  * <ul>
- * <li>{@link #preparseUserQuery} not implemented! user queries use straight solr syntax (+ fewer results vs common search engines).
  * <li>{@link #escapeTermPlain} known issue - solr 5 query parser does not respect whitespace escape! 
  *     and due to parser wierdness, quotes can't be used instead!
  * <li>{@link #extractTopTerms} is makeshift and best-effort only, there should be an ext lib for this.
@@ -337,12 +336,10 @@ public abstract class SolrExprUtil {
     }
     
     /**
-     * [NOT IMPLEMENTED] Pre-parses a user-friendly query expression (e.g. from a shop search)
-     * into a stricter equivalent Solr query expression, depending on mode.
-     * 2017-09-01: currently ONLY handles the allTerms==true case; everything else returned as-is.
-     * TODO: Solr query is not user-friendly and may return fewer results than desirable as result
-     * because does not fully match known search engine behaviors.
-     * WARN: even LITERAL mode may not full work in all cases at this time!! (see {@link #escapeTermFull}).
+     * Applies extra custom pre-parsing to user queries depending on the mode.
+     * This is an extra factoring point for custom pre-parsing at point of input.
+     * NOTE: 2017-09-05: The USER mode currently has no effect; it will be done
+     * via dismax/edismax. 
      */
     public static String preparseUserQuery(String userQuery, UserQueryMode mode) {
         if (UtilValidate.isEmpty(userQuery)) return userQuery;
@@ -352,7 +349,7 @@ public abstract class SolrExprUtil {
             // do nothing
             return userQuery;
         } else {
-            // TODO!!!
+            // leaving to (e)dismax
             return userQuery;
         }
     }

@@ -49,18 +49,9 @@ public abstract class SolrUtil {
         termEnclosingCharMap = Collections.unmodifiableMap(map);
     }
     
-
-    
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue("solrconfig", "solr.config.version");
     }
-    
-    
-
-    
-    // not currently useful
-    //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
-
     
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
@@ -140,7 +131,7 @@ public abstract class SolrUtil {
      * @deprecated Use {@link ProductUtil#generateSolrProductDocument(Map)} instead
      */
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
-        return ProductUtil.generateSolrProductDocument(context);
+        return ProductUtil.generateSolrProductDocument(null, null, context);
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {

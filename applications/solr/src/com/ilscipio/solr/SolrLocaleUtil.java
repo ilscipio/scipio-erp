@@ -78,6 +78,9 @@ public abstract class SolrLocaleUtil {
         configuredDefaultLocale = locale;
     }
     
+    // not currently useful
+    //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
+    
     /**
      * Gets content locales. FIXME: currently ignores product store!
      */
@@ -91,11 +94,25 @@ public abstract class SolrLocaleUtil {
     public static List<Locale> getConfiguredLocales(Delegator delegator, String productStoreId) {
         return configuredLocales; 
     }
+    
+    /**
+     * Gets content locales. FIXME: currently ignores product store!
+     */
+    public static List<Locale> getConfiguredLocales(Delegator delegator) {
+        return configuredLocales; 
+    }
 
     /**
      * Gets default content locale. FIXME: currently ignores product store!
      */
     public static Locale getConfiguredDefaultLocale(Delegator delegator, String productStoreId) {
+        return configuredDefaultLocale; 
+    }
+    
+    /**
+     * Gets default content locale.
+     */
+    public static Locale getConfiguredDefaultLocale(Delegator delegator) {
         return configuredDefaultLocale; 
     }
 

@@ -40,6 +40,7 @@ under the License.
             NOTE: unknown is treated as dirty. -->
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false"/>
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="false"/>
+        <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
@@ -52,6 +53,7 @@ under the License.
         <implements service="rebuildSolrIndex" />
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="true"/>
+        <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
     </service>
     
     <service name="rebuildSolrIndexAuto" engine="java"
@@ -63,6 +65,7 @@ under the License.
         <!-- NOTE: MUST use attribute here, not override, to prevent default-value -->
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" />
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean"/>
+        <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
     </service>
     
     <service name="setSolrDataStatus" engine="java"

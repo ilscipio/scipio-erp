@@ -32,6 +32,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -743,7 +745,7 @@ public abstract class SolrProductSearch {
      */
     public static Map<String, Object> rebuildSolrIndex(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
         HttpSolrClient client = null;
-        Map<String, Object> result;
+        Map<String, Object> result = null;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -799,42 +801,76 @@ public abstract class SolrProductSearch {
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
 
         int numDocs = 0;
+        EntityListIterator prodIt = null;
         try {
+            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
             client = SolrUtil.getHttpSolrClient((String) context.get("core"));
-            // now lets fetch all products
-            List<Map<String, Object>> solrDocs = new ArrayList<>();
-            List<GenericValue> products = delegator.findList("Product", null, null, null, null, true);
-            if (products != null) {
-                numDocs = products.size();
-            }
-
-            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index and rebuilding with " + numDocs + " found products", module);
-
-            Iterator<GenericValue> productIterator = products.iterator();
-            while (productIterator.hasNext()) {
-                GenericValue product = productIterator.next();
-                Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
-                solrDocs.add(dispatchContext);
-            }
-
             // this removes everything from the index
             client.deleteByQuery("*:*");
             client.commit();
-
-            // This adds all products to the Index (instantly)
-            Map<String, Object> servCtx = UtilMisc.toMap("fieldList", solrDocs, "treatConnectErrorNonFatal", treatConnectErrorNonFatal);
-            copyStdServiceFieldsNotSet(context, servCtx);
-            Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
-
-            String runMsg = ServiceUtil.getErrorMessage(runResult);
-            if (UtilValidate.isEmpty(runMsg)) {
-                runMsg = null;
+            
+            Integer bufSize = (Integer) context.get("bufSize");
+            if (bufSize == null) {
+                bufSize = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000);
             }
-            if (ServiceUtil.isError(runResult)) {
-                result = ServiceUtil.returnError(runMsg);
-            } else if (ServiceUtil.isFailure(runResult)) {
-                result = ServiceUtil.returnFailure(runMsg);
-            } else {
+            
+            // now lets fetch all products
+            EntityFindOptions findOptions = new EntityFindOptions();
+            //findOptions.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE); // not needed anymore, only for getPartialList (done manual instead)
+            prodIt = delegator.find("Product", null, null, null, null, findOptions);
+            
+            numDocs = prodIt.getResultsSizeAfterPartialList();
+            int startIndex = 1;
+            int bufNumDocs = 0;
+            
+            // NOTE: use ArrayList instead of LinkedList (EntityListIterator) in buffered mode because it will use less total memory
+            List<Map<String, Object>> solrDocs = (bufSize > 0) ? new ArrayList<Map<String, Object>>(Math.min(bufSize, numDocs)) : new LinkedList<Map<String, Object>>();
+            
+            boolean lastReached = false;
+            while (!lastReached) {
+                startIndex = startIndex + bufNumDocs;
+                
+                // NOTE: the endIndex is actually a prediction, but if it's ever false, there is a serious DB problem
+                int endIndex;
+                if (bufSize > 0) endIndex = startIndex + Math.min(bufSize, numDocs-(startIndex-1)) - 1;
+                else endIndex = numDocs;
+                Debug.logInfo("Solr: rebuildSolrIndex: Reading products " + startIndex + "-" + endIndex + " / " + numDocs + " for indexing", module);
+
+                solrDocs.clear();
+                int numLeft = bufSize;
+                while ((bufSize <= 0 || numLeft > 0) && !lastReached) {
+                    GenericValue product = prodIt.next();
+                    if (product != null) {
+                        Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
+                        solrDocs.add(dispatchContext);
+                        numLeft--;
+                    } else {
+                        lastReached = true;
+                    }
+                }
+                bufNumDocs = solrDocs.size();
+                if (bufNumDocs == 0) {
+                    break;
+                }
+    
+                // This adds all products to the Index (instantly)
+                Map<String, Object> servCtx = UtilMisc.toMap("fieldList", solrDocs, "treatConnectErrorNonFatal", treatConnectErrorNonFatal);
+                copyStdServiceFieldsNotSet(context, servCtx);
+                Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
+                
+                if (ServiceUtil.isError(runResult) || ServiceUtil.isFailure(runResult)) {
+                    String runMsg = ServiceUtil.getErrorMessage(runResult);
+                    if (UtilValidate.isEmpty(runMsg)) {
+                        runMsg = null;
+                    }
+                    if (ServiceUtil.isFailure(runResult)) result = ServiceUtil.returnFailure(runMsg);
+                    else result = ServiceUtil.returnError(runMsg);
+                    break;
+                }
+            }
+            
+            if (result == null) {
+                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + numDocs + " documents indexed", module);
                 final String statusMsg = "Cleared solr index and reindexed " + numDocs + " documents";
                 result = ServiceUtil.returnSuccess(statusMsg);
             }
@@ -855,6 +891,13 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             Debug.logError(e, "Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
+        } finally {
+            if (prodIt != null) {
+                try {
+                    prodIt.close();
+                } catch(Exception e) {
+                }
+            }
         }
         
         // If success, mark data as good

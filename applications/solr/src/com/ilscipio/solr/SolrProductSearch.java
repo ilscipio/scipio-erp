@@ -286,6 +286,11 @@ public abstract class SolrProductSearch {
                 solrQuery.setRequestHandler(queryType);
             }
             
+            String defType = (String) context.get("defType");
+            if (UtilValidate.isNotEmpty(defType)) {
+                solrQuery.set("defType", defType);
+            }
+            
             Boolean faceted = (Boolean) context.get("facet");
             if (Boolean.TRUE.equals(faceted)) {
                 solrQuery.setFacet(faceted);
@@ -525,6 +530,8 @@ public abstract class SolrProductSearch {
                 dispatchMap.put("facetQuery", context.get("facetQuery"));
             if (context.get("queryType") != null)
                 dispatchMap.put("queryType", context.get("queryType"));
+            if (context.get("defType") != null)
+                dispatchMap.put("defType", context.get("defType"));
             if (context.get("facet") != null) {
                 dispatchMap.put("facet", context.get("facet"));
             } else {

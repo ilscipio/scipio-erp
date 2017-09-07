@@ -213,7 +213,12 @@ under the License.
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
         <attribute mode="IN" optional="true" name="returnFields" type="String"/>
         <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
-        <attribute mode="IN" optional="true" name="queryType" type="String"/>
+        <attribute mode="IN" optional="true" name="queryType" type="String">
+            <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defType" type="String">
+            <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
@@ -258,7 +263,12 @@ under the License.
         <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
-        <attribute mode="IN" optional="true" name="queryType" type="String"/>
+        <attribute mode="IN" optional="true" name="queryType" type="String">
+            <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defType" type="String">
+            <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
+        </attribute>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>
         <attribute name="errorType" type="String" mode="OUT" optional="true">

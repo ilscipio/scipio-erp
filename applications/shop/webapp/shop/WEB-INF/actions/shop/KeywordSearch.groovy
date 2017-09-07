@@ -147,8 +147,6 @@ productStore = context.productStore ?: ProductStoreWorker.getProductStore(reques
 locale = context.locale;
 
 sanitizeUserQueryExpr = { expr ->
-    // TODO: this is extremely limited at the moment, only supports full solr syntax or exact string
-    // FIXME: we can't use SolrExprUtil.escapeTermPlain due to issue with backslash-whitespace interpret
     if (expr instanceof String) {
         return SolrExprUtil.preparseUserQuery(expr, kwsArgs.searchSyntax);
     } else if (expr instanceof List) {
@@ -171,6 +169,8 @@ try {
     // searchSyntax: "user", "full", "literal" - see SolrExprUtil.preparseUserQuery for values and known issues
     // TODO: "user" is not implemented and does same as "full" - see SolrExprUtil.preparseUserQuery
     kwsArgs.searchSyntax = kwsArgs.searchSyntax ?: "user";
+    kwsArgs.searchSyntaxQt = (kwsArgs.searchSyntax == "user") ? // used only when searchSyntax=="user"; NOTE: read from shop.properties if not set by screen
+        ((kwsArgs.searchSyntaxQt != null) ? kwsArgs.searchSyntaxQt : UtilProperties.getPropertyValue("shop", "shop.search.solr.queryType")) : null;
     kwsArgs.searchString = sanitizeUserQueryExpr(kwsArgs.searchString); // WARN: setting this here overrides ALL the parameters.SEARCH_STRINGx expressions
     kwsArgs.searchFilters = kwsArgs.searchFilters ? new ArrayList(kwsArgs.searchFilters) : new ArrayList(); // list
     //kwsArgs.searchFilter = kwsArgs.searchFilter; // string or list; if string, it's split on whitespace to make list
@@ -190,6 +190,8 @@ try {
     //kwsArgs.searchSortOrderString = kwsArgs.searchSortOrderString;
     //kwsArgs.searchReturnFields = kwsArgs.searchReturnFields;
     kwsArgs.priceSortField = kwsArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
+    //kwsArgs.spellcheck = kwsArgs.spellcheck; // boolean, default false
+    //kwsArgs.facet = kwsArgs.facet; // boolean, default false
     
     if (!localVarsOnly) {
         // REUSE the stock class where possibly so we might maintain some compatibility, duplicate less code,
@@ -582,6 +584,8 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             returnFields:kwsArgs.searchReturnFields,
             sortBy:kwsArgs.sortBy, sortByReverse:kwsArgs.sortByReverse,
             viewSize:kwsArgs.viewSize, viewIndex:kwsArgs.viewIndex, 
+            queryType:kwsArgs.searchSyntaxQt, 
+            spellcheck:kwsArgs.spellcheck, facet:kwsArgs.facet,
             locale:locale, userLogin:context.userLogin, timeZone:context.timeZone];
         
         if (DEBUG) Debug.logInfo("Keyword search params: " + kwsArgs, module);
@@ -660,9 +664,11 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         else if (!(kwsArgs.currIndex instanceof Integer)) context.currIndex = Integer.parseInt(kwsArgs.currIndex).intValue();    
         
         categoriesTrail = [:];
-        for (facetField in result.facetFields.keySet())
-            if (facetField.equals("cat"))
-                categoriesTrail = result.facetFields.get(facetField);
+        if (result.facetFields) {
+            for (facetField in result.facetFields.keySet())
+                if (facetField.equals("cat"))
+                    categoriesTrail = result.facetFields.get(facetField);
+        }
         context.filterCategories = [:];
         for (categoryTrail in categoriesTrail.keySet()) {
             if (categoryTrail.split("/").length > 0) {

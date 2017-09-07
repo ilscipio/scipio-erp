@@ -459,8 +459,7 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
      </lst>
-
-    </requestHandler>
+  </requestHandler>
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -488,8 +487,19 @@
     </arr>
   </requestHandler>
 
+  <!-- SCIPIO: public user search handler (shop), based on /select. Added 2017-09-06. -->
+  <requestHandler name="/searchpublic" class="solr.SearchHandler">
+    <!-- default values for query parameters can be specified, these
+         will be overridden by parameters in the request
+      -->
+     <lst name="defaults">
+       <str name="echoParams">explicit</str>
+       <int name="rows">10</int>
+       <str name="defType">edismax</str><!-- user-friendly language, no crashing -->
+     </lst>
+  </requestHandler>
 
-  <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell">
+  <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/searchpublic">
     <lst name="defaults">
       <str name="df">text</str>
     </lst>

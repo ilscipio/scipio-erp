@@ -308,6 +308,7 @@ public abstract class SolrProductSearch {
 
             boolean highLight = (Boolean) context.get("highlight");
             if (highLight) {
+                // FIXME: unhardcode markup
                 solrQuery.setHighlight(highLight);
                 solrQuery.setHighlightSimplePre("<span class=\"highlight\">");
                 solrQuery.addHighlightField("description");

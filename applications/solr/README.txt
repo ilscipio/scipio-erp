@@ -1,12 +1,13 @@
 =====================================================
-Solr Component for SCIPIO-ERP
+Solr Component for SCIPIO ERP
 =====================================================
 
-SCIPIO: WARN: 2017-08-17: This document is currently out of date, and several features
-    or locations may be different than the ones described below (e.g., no installation
-    is required).
+SCIPIO: NOTE: 2017-08-17: This document is currently out of date, and several features
+or locations may be different than the ones described below (e.g., no installation
+is required). In SCIPIO ERP, no installation is required, and by default, 
+indexing (rebuildSolrIndex[Auto]) automatically executes on first server run.
 
-****
+**********************************************
 
 This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/)
 implementation of the Apache Solr search platform (http://lucene.apache.org/solr/).

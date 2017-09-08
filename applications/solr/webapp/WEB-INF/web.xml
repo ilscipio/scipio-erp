@@ -57,7 +57,7 @@
     -->
     <init-param>
       <param-name>excludePatterns</param-name>
-      <param-value>/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
+      <param-value>/libs/.+,/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
     </init-param>
   </filter>
 
@@ -150,7 +150,7 @@
 
   <servlet-mapping>
     <servlet-name>LoadAdminUI</servlet-name>
-    <url-pattern>/admin.html</url-pattern>
+    <url-pattern>/old.html</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -170,7 +170,25 @@
   </mime-mapping>
 
   <welcome-file-list>
-    <welcome-file>admin.html</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
+  <!-- Get rid of error message -->
+  <!-- SCIPIO: FIXME: 2017-09-07: this stock solr code is causing 403 for regular access - servlet container compat issue?
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Disable TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method>TRACE</http-method>
+    </web-resource-collection>
+    <auth-constraint/>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Enable everything but TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method-omission>TRACE</http-method-omission>
+    </web-resource-collection>
+  </security-constraint>
+  -->
 </web-app>

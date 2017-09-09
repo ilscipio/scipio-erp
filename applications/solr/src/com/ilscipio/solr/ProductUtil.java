@@ -489,11 +489,18 @@ public abstract class ProductUtil {
     }
     
     /**
-     * FIXME?: this is a homemade replacements for the removal of 
+     * FIXME: This is a WORKAROUND replacement following the removal of 
      * {@code
      *  <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>
      * }
-     * in the solr schema; we should really do this with a solr directive, but not set up for that.
+     * in the solr schema. 
+     * There are 2 problems:
+     * 1) this code should be done by solr, e.g. using existing or custom field processor: https://wiki.apache.org/solr/UpdateRequestProcessor
+     * 2) we should not store strings for missing languages at all anymore, it causes
+     *    unnecessary storage space taken and may give wrong-language processing issues (e.g. deutsch rules applied to english).
+     *    The reason this is being done at indexing is limitations in query sort; it could be
+     *    considered an optimization to do it an indexing (at expense of correct-language),
+     *    but this was done as a workaround.
      */
     private static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String alphaFieldNamePrefix, String alphaDefaultFieldName, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
         if (contentMap == null) return;

@@ -61,27 +61,36 @@ solrAdminApp.controller('QueryController',
       if ($scope.rawParams) {
         var rawParams = $scope.rawParams.split(/[&\n]/);
         for (var i in rawParams) {
-            var param = rawParams[i];
-            var parts = param.split("=");
-            set(parts[0], parts[1]);
+          var param = rawParams[i];
+          var equalPos = param.indexOf("=");
+          if (equalPos > -1) {
+            set(param.substring(0, equalPos), param.substring(equalPos+1));
+          } else {
+            set(param, ""); // Use empty value for params without "="
+          }
         }
       }
 
-      var qt = $scope.qt ? $scope.qt : "select";
+      var qt = $scope.qt ? $scope.qt : "/select";
 
       for (var filter in $scope.filters) {
         copy(params, $scope.filters[filter]);
       }
 
       params.core = $routeParams.core;
-      params.handler = qt;
+      if (qt[0] == '/') {
+        params.handler = qt.substring(1);
+      } else { // Support legacy style handleSelect=true configs
+        params.handler = "select";
+        set("qt", qt);
+      }
       var url = Query.url(params);
       Query.query(params, function(data) {
         $scope.lang = $scope.query.wt;
         $scope.response = data;
-        $scope.url = $location.protocol() + "://" +
-                     $location.host() + ":" +
-                     $location.port() + url;
+        // Use relative URL to make it also work through proxies that may have a different host/port/context
+        $scope.url = url;
+        $scope.hostPortContext = $location.absUrl().substr(0,$location.absUrl().indexOf("#")); // For display only
       });
     };
 

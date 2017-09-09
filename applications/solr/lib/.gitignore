@@ -1,1 +1,3 @@
 /solr-*.jar
+/gmetric4j-*.jar
+/metrics-*.jar

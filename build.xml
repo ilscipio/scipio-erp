@@ -128,6 +128,7 @@ under the License.
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
     <!-- SCIPIO: New properties -->
     <property name="solr.home" value="applications/solr/"/>
+    <property name="solr.log.dir" value="runtime/logs/solr/"/><!-- added 2017-09-08 -->
 
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
@@ -148,6 +149,7 @@ under the License.
         <mkdir dir="runtime/output"/>
         <mkdir dir="runtime/logs"/>
         <mkdir dir="runtime/logs/test-results"/>
+        <mkdir dir="runtime/logs/solr"/><!-- SCIPIO: for solr.log.dir, added 2017-09-08 -->
         <mkdir dir="runtime/data"/>
         <mkdir dir="runtime/data/derby"/>
 
@@ -1026,6 +1028,48 @@ under the License.
     <!-- Start and Stop OFBiz                                                        -->
     <!-- ================================================================== -->
 
+    <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) 
+        TODO?: is not as versatile or friendly as it could be; didn't want to refactor all the task xml at this time -->
+    <macrodef name="exec-scipio-jar">
+        <attribute name="fork" default="true"/>
+        <attribute name="spawn" default=""/>
+        <attribute name="resultproperty" default=""/>
+        <attribute name="secure" default="false"/>
+        <element name="args" optional="true" implicit="true"/>
+        <sequential>
+            <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
+                <equals arg1="@{secure}" arg2="true"/>
+                <then>
+                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
+                        <jvmarg value="${memory.initial.param}"/>
+                        <jvmarg value="${memory.max.param}"/>
+                        <!-- SCIPIO: NOTE: Ofbiz omitted this for secure targets:
+                        <jvmarg value="${memory.maxpermsize.param}"/>-->
+                        <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
+                        <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
+                        <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
+                        <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
+                        <!-- SCIPIO: solr home -->
+                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <args/>
+                    </java>
+                </then>
+                <else>
+                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
+                        <jvmarg value="${memory.initial.param}"/>
+                        <jvmarg value="${memory.max.param}"/>
+                        <jvmarg value="${memory.maxpermsize.param}"/>
+                        <!-- SCIPIO: solr home -->
+                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <args/>
+                    </java>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+    
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
         <!-- SCIPIO: -->
@@ -1033,145 +1077,84 @@ under the License.
         <condition property="spawn" else="false" >
             <isset property="scipio.start.spawn"/>
         </condition>
-        <java jar="ofbiz.jar" fork="true" spawn="${spawn}">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr home -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="${spawn}">
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-secure"
             description="Same than start but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr home -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-batch"
             description="Start OFBiz as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true" spawn="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-batch-secure"
         description="Same than start-batch but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true" spawn="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="true" secure="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-debug"
             description="Start OFBiz in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
+        <exec-scipio-jar>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-debug"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-pos"
             description="Start OFBiz POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-pos-secure"
         description="Same than start-pos but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-both"
             description="Start OFBiz in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-both-secure"
         description="Same than start-both but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="stop"
             description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="status"
             description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
 
     <!-- ================================================================== -->
@@ -1181,105 +1164,60 @@ under the License.
     <target name="load-demo" depends="build"
             description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
         <property name="currentTarget" value="load"/>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-demo-multitenant" depends="build"
             description="Load all data needed for the multi-tenancy demonstration. Caution: this creates three databases, with each one loaded with all demo data.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
-        </java>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        </exec-scipio-jar>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO1"/>
-        </java>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        </exec-scipio-jar>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO2"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-seed" depends="build"
             description="Load ONLY the seed data (not seed-initial, demo, ext* or anything else); meant for use after an update of the code to reload the seed data as it is generally maintained along with the code and needs to be in sync for operation">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-extseed" depends="build"
             description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock OFBiz where the ext data basically replaces the demo data">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-exttest" depends="build"
             description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock OFBiz">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-readers" depends="build"
             description='Load data using the command line argument data-readers that takes a comma separated list of readers (seed, seed-initial, demo, ext, ext-test, ext-demo). On Windows XP (at least) you need top wrap the parameters in double-quotes. For instance: ant load-readers "-Ddata-readers=seed,seed-initial,ext"'>
-        <java jar="ofbiz.jar" fork="true" >
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar >
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-file" depends="build"
             description="Load data using the command line argument 'data-file' to load data from a given file using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
         <property name="delegator" value="default" />
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: load-tenant
@@ -1288,15 +1226,10 @@ under the License.
             description="Load data using tenantId, syntax eg: ant load-tenant -DtenantId=DEMO1 (needs multitenant=Y in general.properties)">
     </target>
     <target name="check-tenant-id">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
-        </java>
+        </exec-scipio-jar>
         <condition property="hasTenant">
             <and>
                 <length string="${tenantId}" trim="true" when="greater" length="0"/>
@@ -1331,27 +1264,17 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-all" depends="check-tenant-reader" if="noReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenant-reader" depends="check-tenant-reader" if="hasReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- load-tenant-component -->
     <target name="load-tenant-component" if="hasTenantComponent" depends="check-tenant-id">
@@ -1369,29 +1292,19 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-component-all" depends="load-tenant-component" if="noComponentReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenant-component-reader" depends="load-tenant-component" if="hasComponentReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
             <arg value="component=${component}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: load-all-tenants
@@ -1401,15 +1314,10 @@ under the License.
     </target>
     <target name="check-tenants-reader">
         <property name="delegator" value="all-tenants"/>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
-        </java>
+        </exec-scipio-jar>
         <condition property="hasReader">
             <and>
                 <length string="${data-readers}" trim="true" when="greater" length="0"/>
@@ -1424,27 +1332,17 @@ under the License.
         </condition>
     </target>
     <target name="load-tenants-all" depends="check-tenants-reader" if="noReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenants-reader" depends="check-tenants-reader" if="hasReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: create-tenant
@@ -1674,16 +1572,11 @@ under the License.
         <echo message="Delegator = default#${tenantId}"/>
         <echo message="Data-readers = ${data-readers}"/>
         <echo>------------------------------------</echo>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-admin-user-login"
             description="Create a user login with admin privileges and a temporary password equal to 'scipio'; after a successful login the user will be prompted for a new password. Example command for the userLogin 'admin': ./ant load-admin-user-login -DuserLoginId=admin">
@@ -1713,16 +1606,11 @@ under the License.
         <echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
         <echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
         <echo>===========================================================</echo>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <mkdir dir="runtime/logs/test-results/html"/>
         <junitreport todir="runtime/logs/test-results">
             <fileset dir="runtime/logs/test-results/">
@@ -1747,33 +1635,23 @@ under the License.
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
     </target>
     <target name="_setup-separated-test-run" depends="_check-separated-tests-already-setup" unless="_separated-tests-already-setup">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="testlist"/>
             <arg file="runtime/test-list-build.xml"/>
             <arg value="-ant"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="run-test"
           description="Run a single test, syntax eg: ant run-test -Dtest.component=service -Dtest.case=service-soap-tests">
         <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
         <fail unless="test.case">test.case is a required parameter: -Dtest.case=testcasename</fail>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-case=${test.case}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <delete dir="runtime/logs/test-results/${test.component}-${test.case}"/>
         <mkdir dir="runtime/logs/test-results/${test.component}-${test.case}"/>
         <move todir="runtime/logs/test-results/${test.component}-${test.case}">
@@ -1791,21 +1669,16 @@ under the License.
             description="Run a single test in debug mode, syntax eg: ant run-test-debug -Dtest.component=service -Dtest.case=service-soap-tests">
       <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
       <fail unless="test.case">test.case is a required parameter: -Dtest.case=testcasename</fail>
-      <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-        <jvmarg value="${memory.initial.param}"/>
-        <jvmarg value="${memory.max.param}"/>
-        <jvmarg value="${memory.maxpermsize.param}"/>
+      <exec-scipio-jar resultproperty="test.result">
         <jvmarg value="-Xnoagent"/>
         <jvmarg value="-Djava.compiler=NONE"/>
         <jvmarg value="-Xdebug"/>
         <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>
-        <!-- SCIPIO: solr path -->
-        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
         <arg value="test"/>
         <arg value="-component=${test.component}"/>
         <arg value="-case=${test.case}"/>
         <env key="LC_ALL" value="C"/>
-      </java>
+      </exec-scipio-jar>
       <delete dir="runtime/logs/test-results/${test.component}-${test.case}"/>
       <mkdir dir="runtime/logs/test-results/${test.component}-${test.case}"/>
       <move todir="runtime/logs/test-results/${test.component}-${test.case}">
@@ -1823,17 +1696,12 @@ under the License.
             description="Run a single test suite, syntax eg: ant run-test-suite -Dtest.component=mycomponent -Dtest.suiteName=mytests">
         <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
         <fail unless="test.suiteName">test.suiteName is a required parameter: -Dtest.suiteName=testsuitename</fail>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-suitename=${test.suiteName}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <fail message="Test run was unsuccessful">
             <condition>
                 <not>

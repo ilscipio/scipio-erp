@@ -316,7 +316,7 @@
    <copyField source="author"  dest="spell" /><!-- TODO: REVIEW: old -->
    <copyField source="description"  dest="spell" /><!-- TODO: REVIEW: old -->
    <copyField source="internalName" dest="alphaNameSort"/>
-   <!-- SCIPIO: FIXME?: manually populated by rebuildSolrIndex - otherwise will requires custom processor (https://wiki.apache.org/solr/UpdateRequestProcessor)
+   <!-- SCIPIO: FIXME: currently manually populated by rebuildSolrIndex/addToSolrIndex - see com.ilscipio.solr.ProductUtil#addAlphaLocalizedContentStringMapToSolrDoc
    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
    
    <!-- SCIPIO: REUSED copy fields (amended/commented) -->

@@ -18,8 +18,9 @@ limitations under the License.
 
 <!--
 ***************************************
-SCIPIO: NOTE: Currently this file is ignored by solr; managed-schema is read instead.
-managed-schema can only be edited by hand while the server is stopped!
+SCIPIO: NOTE: 2017-09-08: THIS FILE IS OBSOLETE
+It is replaced by a new "managed-schema", which now includes all comments.
+TODO: Remove file from trunk entirely
 ***************************************
 This is the Solr schema file. This file should be named "schema.xml" and
 should be in the conf directory under the solr home

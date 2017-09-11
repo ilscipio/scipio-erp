@@ -69,12 +69,6 @@ public class PersistedServiceJob extends GenericServiceJob {
     private final long currentRetryCount;
     private final GenericValue jobValue;
     private final long startTime;
-    /**
-     * SCIPIO: The Job.eventId field that was assigned to the next recurrence.
-     * NOTE: only set AFTER the recurrence is created.
-     * Added 2017-08-30.
-     */
-    private String nextRecurrenceEventId = null;
 
     /**
      * Creates a new PersistedServiceJob
@@ -220,9 +214,17 @@ public class PersistedServiceJob extends GenericServiceJob {
             // SCIPIO: Transfer the special new eventId field
             // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is 
             // a regular recurrence and not a failure retry.
-            String eventId = isRetryOnFailure ? null : jobValue.getString("eventId");
-            newJob.set("eventId", eventId);
-            nextRecurrenceEventId = eventId; // added 2017-08-30
+            String eventId = jobValue.getString("eventId");
+            newJob.set("eventId", isRetryOnFailure ? null : eventId);
+            if (isRetryOnFailure && UtilValidate.isNotEmpty(eventId)) {
+                // SCIPIO: 2017-09-11: if this is a retry for event-specific job,
+                // do not create any recurrences for the retry other than the retries themselves;
+                // otherwise, a successful retry may trigger inappropriate recurrences (at times other than the eventId)
+                newJob.put("maxRecurrenceCount", 0L);
+                newJob.put("currentRecurrenceCount", null);
+                newJob.put("recurrenceInfoId", null);
+                newJob.put("tempExprId", null);
+            }
             
             delegator.createSetNextSeqId(newJob);
             if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
@@ -265,7 +267,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         // but because the retries are not given an event (see createRecurrence), it's at least consistent to have roughly same condition here,
         // and this would probably make sense for other event types...
         //if (nextRecurrence == -1) {
-        if (nextRecurrence == -1 || UtilValidate.isNotEmpty(nextRecurrenceEventId)) {
+        if (nextRecurrence == -1 || UtilValidate.isNotEmpty(jobValue.getString("eventId"))) {
             if (this.canRetry()) {
                 // create a recurrence
                 Calendar cal = Calendar.getInstance();
@@ -280,7 +282,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to re-schedule job [" + getJobId() + "]: ", module);
                 }
-                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + next, module);
+                if (Debug.infoOn()) Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling: " + new Date(next) + " (" + next + ")", module); // SCIPIO: 2017-09-11: improved message
             } else {
                 Debug.logWarning("Persisted Job [" + getJobId() + "] Failed. Max Retry Hit, not re-scheduling", module);
             }

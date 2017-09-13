@@ -31,7 +31,7 @@ import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.store.*;
 import org.ofbiz.service.*;
-import com.ilscipio.solr.*;
+import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 

@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

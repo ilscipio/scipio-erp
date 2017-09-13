@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,13 +80,6 @@ public abstract class SolrLocaleUtil {
     
     // not currently useful
     //public static final boolean SOLR_CONTENT_LOCALES_REQUIREALL = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.content.locales.requireAll", false);
-    
-    /**
-     * Gets content locales. FIXME: currently ignores product store!
-     */
-    public static String getConfiguredLocalesString(Delegator delegator, String productStoreId) {
-        return solrContentLocalesStr; 
-    }
 
     /**
      * Gets content locales. FIXME: currently ignores product store!
@@ -96,7 +89,7 @@ public abstract class SolrLocaleUtil {
     }
     
     /**
-     * Gets content locales. FIXME: currently ignores product store!
+     * Gets content locales.
      */
     public static List<Locale> getConfiguredLocales(Delegator delegator) {
         return configuredLocales; 

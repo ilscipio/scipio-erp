@@ -207,6 +207,40 @@
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
    <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <!-- SCIPIO: Localized catch-all text fields for language-specific general queries -->
+   <field name="text_i18n_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_en" type="text_en" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ar" type="text_ar" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_bg" type="text_bg" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ca" type="text_ca" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_cjk" type="text_cjk" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ckb" type="text_ckb" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_cz" type="text_cz" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_da" type="text_da" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_de" type="text_de" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_el" type="text_el" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_es" type="text_es" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_eu" type="text_eu" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_fa" type="text_fa" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_fi" type="text_fi" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_fr" type="text_fr" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ga" type="text_ga" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_gl" type="text_gl" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_hi" type="text_hi" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_hu" type="text_hu" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_hy" type="text_hy" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_id" type="text_id" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_it" type="text_it" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ja" type="text_ja" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_lv" type="text_lv" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_nl" type="text_nl" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_no" type="text_no" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_pt" type="text_pt" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ro" type="text_ro" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ru" type="text_ru" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_sv" type="text_sv" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_th" type="text_th" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_tr" type="text_tr" indexed="true" stored="false" multiValued="true"/>
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
@@ -228,11 +262,40 @@
        a "*" only at the start or the end.  -->
    
    <!-- SCIPIO: NEW dynamic fields -->
-   <!-- i18n support (DE/EN/FR) -->
-   <dynamicField name="*_i18n_fr" type="text_i18n_fr" indexed="true" stored="true" />
-   <dynamicField name="*_i18n_de" type="text_i18n_de" indexed="true" stored="true" />
-   <dynamicField name="*_i18n_en" type="text_i18n_en" indexed="true" stored="true" />
+   <!-- i18n support -->
    <dynamicField name="*_i18n_general" type="text_general" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_en" type="text_en" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ar" type="text_ar" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_bg" type="text_bg" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ca" type="text_ca" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_cjk" type="text_cjk" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ckb" type="text_ckb" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_cz" type="text_cz" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_da" type="text_da" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_de" type="text_de" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_el" type="text_el" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_es" type="text_es" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_eu" type="text_eu" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_fa" type="text_fa" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_fi" type="text_fi" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_fr" type="text_fr" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ga" type="text_ga" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_gl" type="text_gl" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_hi" type="text_hi" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_hu" type="text_hu" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_hy" type="text_hy" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_id" type="text_id" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_it" type="text_it" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ja" type="text_ja" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_lv" type="text_lv" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_nl" type="text_nl" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_no" type="text_no" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_pt" type="text_pt" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ro" type="text_ro" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ru" type="text_ru" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_sv" type="text_sv" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_th" type="text_th" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_tr" type="text_tr" indexed="true" stored="true" />
    <!-- 2017-08-24: allows alphanumeric sort on localized titles, together with copyField below -->
    <dynamicField name="alphaTitleSort_*" type="alphaOnlySort" indexed="true" stored="false"/>
    
@@ -304,19 +367,113 @@
 
    <!-- SCIPIO: NEW copy fields -->
    <copyField source="internalName" dest="text"/>
-   <copyField source="*_i18n_general"  dest="text" />
-   <copyField source="*_i18n_en"  dest="text" />
-   <copyField source="*_i18n_de"  dest="text" />
-   <copyField source="*_i18n_fr"  dest="text" />
+   <!-- SCIPIO: TODO: IMPROVE: The solr copyField applies the dest analysis to the raw (unanalyzed) value of src; 
+       this means the "text" field loses the language-specific processing that the localized fields receive.
+       This is not a major issue for en/de/fr but for other languages the results may be poor. -->
+   <copyField source="*_i18n_general" dest="text"/>
+   <copyField source="*_i18n_en" dest="text"/>
+   <copyField source="*_i18n_ar" dest="text"/>
+   <copyField source="*_i18n_bg" dest="text"/>
+   <copyField source="*_i18n_ca" dest="text"/>
+   <copyField source="*_i18n_cjk" dest="text"/>
+   <copyField source="*_i18n_ckb" dest="text"/>
+   <copyField source="*_i18n_cz" dest="text"/>
+   <copyField source="*_i18n_da" dest="text"/>
+   <copyField source="*_i18n_de" dest="text"/>
+   <copyField source="*_i18n_el" dest="text"/>
+   <copyField source="*_i18n_es" dest="text"/>
+   <copyField source="*_i18n_eu" dest="text"/>
+   <copyField source="*_i18n_fa" dest="text"/>
+   <copyField source="*_i18n_fi" dest="text"/>
+   <copyField source="*_i18n_fr" dest="text"/>
+   <copyField source="*_i18n_ga" dest="text"/>
+   <copyField source="*_i18n_gl" dest="text"/>
+   <copyField source="*_i18n_hi" dest="text"/>
+   <copyField source="*_i18n_hu" dest="text"/>
+   <copyField source="*_i18n_hy" dest="text"/>
+   <copyField source="*_i18n_id" dest="text"/>
+   <copyField source="*_i18n_it" dest="text"/>
+   <copyField source="*_i18n_ja" dest="text"/>
+   <copyField source="*_i18n_lv" dest="text"/>
+   <copyField source="*_i18n_nl" dest="text"/>
+   <copyField source="*_i18n_no" dest="text"/>
+   <copyField source="*_i18n_pt" dest="text"/>
+   <copyField source="*_i18n_ro" dest="text"/>
+   <copyField source="*_i18n_ru" dest="text"/>
+   <copyField source="*_i18n_sv" dest="text"/>
+   <copyField source="*_i18n_th" dest="text"/>
+   <copyField source="*_i18n_tr" dest="text"/>
    <copyField source="attributes" dest="text"/>
-   <copyField source="*_i18n_general"  dest="spell" />
-   <copyField source="*_i18n_en"  dest="spell" />
-   <copyField source="*_i18n_de"  dest="spell" />
-   <copyField source="*_i18n_fr"  dest="spell" />
-   <copyField source="author"  dest="spell" /><!-- TODO: REVIEW: old -->
-   <copyField source="description"  dest="spell" /><!-- TODO: REVIEW: old -->
+   <copyField source="*_i18n_general" dest="text_i18n_general"/>
+   <copyField source="*_i18n_en" dest="text_i18n_en"/>
+   <copyField source="*_i18n_ar" dest="text_i18n_ar"/>
+   <copyField source="*_i18n_bg" dest="text_i18n_bg"/>
+   <copyField source="*_i18n_ca" dest="text_i18n_ca"/>
+   <copyField source="*_i18n_cjk" dest="text_i18n_cjk"/>
+   <copyField source="*_i18n_ckb" dest="text_i18n_ckb"/>
+   <copyField source="*_i18n_cz" dest="text_i18n_cz"/>
+   <copyField source="*_i18n_da" dest="text_i18n_da"/>
+   <copyField source="*_i18n_de" dest="text_i18n_de"/>
+   <copyField source="*_i18n_el" dest="text_i18n_el"/>
+   <copyField source="*_i18n_es" dest="text_i18n_es"/>
+   <copyField source="*_i18n_eu" dest="text_i18n_eu"/>
+   <copyField source="*_i18n_fa" dest="text_i18n_fa"/>
+   <copyField source="*_i18n_fi" dest="text_i18n_fi"/>
+   <copyField source="*_i18n_fr" dest="text_i18n_fr"/>
+   <copyField source="*_i18n_ga" dest="text_i18n_ga"/>
+   <copyField source="*_i18n_gl" dest="text_i18n_gl"/>
+   <copyField source="*_i18n_hi" dest="text_i18n_hi"/>
+   <copyField source="*_i18n_hu" dest="text_i18n_hu"/>
+   <copyField source="*_i18n_hy" dest="text_i18n_hy"/>
+   <copyField source="*_i18n_id" dest="text_i18n_id"/>
+   <copyField source="*_i18n_it" dest="text_i18n_it"/>
+   <copyField source="*_i18n_ja" dest="text_i18n_ja"/>
+   <copyField source="*_i18n_lv" dest="text_i18n_lv"/>
+   <copyField source="*_i18n_nl" dest="text_i18n_nl"/>
+   <copyField source="*_i18n_no" dest="text_i18n_no"/>
+   <copyField source="*_i18n_pt" dest="text_i18n_pt"/>
+   <copyField source="*_i18n_ro" dest="text_i18n_ro"/>
+   <copyField source="*_i18n_ru" dest="text_i18n_ru"/>
+   <copyField source="*_i18n_sv" dest="text_i18n_sv"/>
+   <copyField source="*_i18n_th" dest="text_i18n_th"/>
+   <copyField source="*_i18n_tr" dest="text_i18n_tr"/>
+   <copyField source="*_i18n_general" dest="spell"/>
+   <copyField source="*_i18n_en" dest="spell"/>
+   <copyField source="*_i18n_ar" dest="spell"/>
+   <copyField source="*_i18n_bg" dest="spell"/>
+   <copyField source="*_i18n_ca" dest="spell"/>
+   <copyField source="*_i18n_cjk" dest="spell"/>
+   <copyField source="*_i18n_ckb" dest="spell"/>
+   <copyField source="*_i18n_cz" dest="spell"/>
+   <copyField source="*_i18n_da" dest="spell"/>
+   <copyField source="*_i18n_de" dest="spell"/>
+   <copyField source="*_i18n_el" dest="spell"/>
+   <copyField source="*_i18n_es" dest="spell"/>
+   <copyField source="*_i18n_eu" dest="spell"/>
+   <copyField source="*_i18n_fa" dest="spell"/>
+   <copyField source="*_i18n_fi" dest="spell"/>
+   <copyField source="*_i18n_fr" dest="spell"/>
+   <copyField source="*_i18n_ga" dest="spell"/>
+   <copyField source="*_i18n_gl" dest="spell"/>
+   <copyField source="*_i18n_hi" dest="spell"/>
+   <copyField source="*_i18n_hu" dest="spell"/>
+   <copyField source="*_i18n_hy" dest="spell"/>
+   <copyField source="*_i18n_id" dest="spell"/>
+   <copyField source="*_i18n_it" dest="spell"/>
+   <copyField source="*_i18n_ja" dest="spell"/>
+   <copyField source="*_i18n_lv" dest="spell"/>
+   <copyField source="*_i18n_nl" dest="spell"/>
+   <copyField source="*_i18n_no" dest="spell"/>
+   <copyField source="*_i18n_pt" dest="spell"/>
+   <copyField source="*_i18n_ro" dest="spell"/>
+   <copyField source="*_i18n_ru" dest="spell"/>
+   <copyField source="*_i18n_sv" dest="spell"/>
+   <copyField source="*_i18n_th" dest="spell"/>
+   <copyField source="*_i18n_tr" dest="spell"/>
+   <copyField source="author" dest="spell"/><!-- TODO: REVIEW: old -->
+   <copyField source="description" dest="spell"/><!-- TODO: REVIEW: old -->
    <copyField source="internalName" dest="alphaNameSort"/>
-   <!-- SCIPIO: FIXME: currently manually populated by rebuildSolrIndex/addToSolrIndex - see com.ilscipio.solr.ProductUtil#addAlphaLocalizedContentStringMapToSolrDoc
+   <!-- SCIPIO: FIXME: currently manually populated by rebuildSolrIndex/addToSolrIndex - see com.ilscipio.scipio.solr.ProductUtil#addAlphaLocalizedContentStringMapToSolrDoc
    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
    
    <!-- SCIPIO: REUSED copy fields (amended/commented) -->
@@ -334,11 +491,13 @@
    <!--<copyField source="title" dest="text"/>-->
    <!--<copyField source="author" dest="text"/>-->
    <!--<copyField source="description" dest="text"/>-->
-   <!--<copyField source="keywords" dest="text"/>-->
+   <copyField source="keywords" dest="text"/>
    <!--<copyField source="content" dest="text"/>-->
    <!--<copyField source="content_type" dest="text"/>-->
    <!--<copyField source="resourcename" dest="text"/>-->
    <!--<copyField source="url" dest="text"/>-->
+   
+   <copyField source="keywords" dest="spell"/><!-- SCIPIO: added -->
    
    <!-- Copy numeric fields to *PointFields implementation -->
    <copyField source="*_i" dest="*_pi"/>
@@ -527,7 +686,12 @@
    removes stop words from case-insensitive "stopwords.txt"
    (empty by default), and down cases.  At query time only, it
    also applies synonyms. -->
-    <!-- SCIPIO: modified to preserve old behavior (pre-6.6.0) -->
+    <!-- SCIPIO: NOTES: 2017-09-08 (for 6.6.0):
+    * the old StandardFilterFactory is said to have no effect in newer solr, so is not re-added
+    * RemoveDuplicatesTokenFilterFactory has only a limited purpose (see https://cwiki.apache.org/confluence/display/solr/Filter+Descriptions#FilterDescriptions-RemoveDuplicatesTokenFilter),
+      so it is re-added but commented below because probably no need and just slows down query
+    TODO?: for performance, might want to wrap index-time vs query-time synonyms? same result not guaranteed...
+    -->
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -536,17 +700,15 @@
         <filter class="solr.SynonymGraphFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
         <filter class="solr.FlattenGraphFilterFactory"/>
         -->
-        <filter class="solr.StandardFilterFactory"/><!-- SCIPIO -->
-        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/><!-- SCIPIO -->
         <filter class="solr.LowerCaseFilterFactory"/>
+        <!--<filter class="solr.RemoveDuplicatesTokenFilterFactory"/> SCIPIO: re-added but commented; probably does nothing -->
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
         <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-        <filter class="solr.StandardFilterFactory"/><!-- SCIPIO -->
-        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/><!-- SCIPIO -->
         <filter class="solr.LowerCaseFilterFactory"/>
+        <!--<filter class="solr.RemoveDuplicatesTokenFilterFactory"/> SCIPIO: re-added but commented; probably does nothing -->
       </analyzer>
     </fieldType>
 
@@ -1231,31 +1393,28 @@
       </analyzer>
     </fieldType>
 
-    <!-- SCIPIO: Old i18n types 
-        TODO: REVIEW: these might not be appropriate anymore and RemoveDuplicatesTokenFilterFactory might not
-            do what is naturally expected from its name https://cwiki.apache.org/confluence/display/solr/Filter+Descriptions#FilterDescriptions-RemoveDuplicatesTokenFilter-->
+    <!-- SCIPIO: Old localized types (from pre-6.6.0 schema, originally called text_english, text_german, text_french)
+        TODO: REVIEW: these are probably not appropriate or wanted anymore
+        DEV NOTE: The old RemoveDuplicatesTokenFilterFactory had no effect here; see text_general for info
     <fieldType name="text_i18n_fr" class="solr.TextField" >
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fr.txt"/>
-            <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
         </analyzer>
     </fieldType>
     <fieldType name="text_i18n_de" class="solr.TextField" >
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_de.txt"/>
-            <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
         </analyzer>
     </fieldType>
     <fieldType name="text_i18n_en" class="solr.TextField" >
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
-            <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
         </analyzer>
     </fieldType>
-    
+    -->
 
     <!-- Pre-analyzed field type, allows inserting arbitrary token streams and stored values. -->
     <fieldType name="preanalyzed" class="solr.PreAnalyzedField">

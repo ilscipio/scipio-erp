@@ -21,7 +21,7 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.*;
-import com.ilscipio.solr.SolrUtil;
+import com.ilscipio.scipio.solr.SolrUtil;
 import org.ofbiz.product.product.ProductContentWrapper;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
@@ -48,7 +48,7 @@ try {
     validBreadcrumb = topCategoryId + "/";
     
     dctx = dispatcher.getDispatchContext();
-    categoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
+    categoryPath = com.ilscipio.scipio.solr.CategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
     breadcrumbs = categoryPath.split("/");
     for (breadcrumb in breadcrumbs) {
         if (!breadcrumb.equals(topCategoryId) && !breadcrumbsList.contains(breadcrumb))

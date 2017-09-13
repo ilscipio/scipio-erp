@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -57,20 +57,33 @@ public abstract class SolrProductSearch {
         // NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity
         //GenericValue productInstance = (GenericValue) context.get("instance");
         GenericEntity productInstance = (GenericEntity) context.get("instance");
+        String productId;
+        if (productInstance != null) {
+            productId = (String) productInstance.get("productId");
+        } else {
+            productId = (String) context.get("productId");
+            if (UtilValidate.isEmpty(productId)) {
+                return ServiceUtil.returnError("missing product or productId");
+            }
+        }
         
-        String productId = (String) productInstance.get("productId");
-
+        boolean manual = Boolean.TRUE.equals(context.get("manual"));
+        
         boolean indexed = false;
         Boolean webappInitPassed = null;
         boolean skippedDueToWebappInit = false;
         
-        if (SolrUtil.isSolrEcaEnabled()) {
+        if (manual || SolrUtil.isSolrEcaEnabled()) {
             webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
             if (webappInitPassed) {
                 if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
 
                 try {
                     GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                    if (product == null) {
+                        // don't mark dirty - we don't even know if the invocation was for a real product
+                        return ServiceUtil.returnError("product not found for productId '" + productId + "'");
+                    }
                     Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
                     dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
                     copyStdServiceFieldsNotSet(context, dispatchContext);
@@ -88,7 +101,7 @@ public abstract class SolrProductSearch {
                         indexed = true;
                     }
                 } catch (Exception e) {
-                    Debug.logError(e, e.getMessage(), module);
+                    Debug.logError(e, "Solr: addToSolr: " + e.getMessage(), module);
                     result = ServiceUtil.returnError(e.toString());
                 }
             } else {
@@ -107,12 +120,76 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnSuccess();
         }
         
-        if (!indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
+        if (!manual && !indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
             boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
             if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
                 if (Debug.verboseOn()) {
                     final String statusMsg = "Did not index productId '" + productId + "'; marking SOLR data as dirty (old)";
                     Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+                }
+                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD", false);
+            }
+        }
+        
+        return result;
+    }
+    
+    public static Map<String, Object> removeFromSolr(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+        Map<String, Object> result;
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        
+        String productId = (String) context.get("productId");
+        if (UtilValidate.isEmpty(productId)) {
+            GenericEntity productInstance = (GenericEntity) context.get("instance");
+            if (productInstance != null) productId = (String) productInstance.get("productId");
+            if (UtilValidate.isEmpty(productId)) {
+                return ServiceUtil.returnError("missing product or productId");
+            }
+        }
+        boolean manual = Boolean.TRUE.equals(context.get("manual"));
+        
+        boolean indexed = false;
+        Boolean webappInitPassed = null;
+        boolean skippedDueToWebappInit = false;
+        
+        if (manual || SolrUtil.isSolrEcaEnabled()) {
+            webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
+            if (webappInitPassed) {
+                // NOTE: log this as info because it's the only log line
+                Debug.logInfo("Solr: removeFromSolr: Removing productId '" + productId + "' from index", module);
+
+                try {
+                    HttpSolrClient client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+                    client.deleteByQuery("productId:" + SolrExprUtil.escapeTermFull(productId));
+                    client.commit();
+                    result = ServiceUtil.returnSuccess();
+                } catch (Exception e) {
+                    Debug.logError(e, "Solr: removeFromSolr: " + e.getMessage(), module);
+                    result = ServiceUtil.returnError(e.toString());
+                }
+            } else {
+                if (Debug.verboseOn()) {
+                    final String statusMsg = "Solr webapp not available; skipping removal for productId '" + productId + "'";
+                    Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
+                }
+                result = ServiceUtil.returnSuccess();
+                skippedDueToWebappInit = true;
+            }
+        } else {
+            if (Debug.verboseOn()) {
+                final String statusMsg = "Solr ECA indexing disabled; skipping removal for productId '" + productId + "'";
+                Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
+            }
+            result = ServiceUtil.returnSuccess();
+        }
+        
+        if (!manual && !indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
+            boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
+            if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
+                if (Debug.verboseOn()) {
+                    final String statusMsg = "Did not remove productId '" + productId + "'; marking SOLR data as dirty (old)";
+                    Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
                 }
                 SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD", false);
             }
@@ -154,7 +231,7 @@ public abstract class SolrProductSearch {
             Debug.logInfo("Solr: " + statusStr, module);
             result = ServiceUtil.returnSuccess(statusStr);
         } catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
         } catch (SolrServerException e) {
@@ -169,12 +246,12 @@ public abstract class SolrProductSearch {
                 }
                 result.put("errorType", "connectError");
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
         } catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
         } finally {
@@ -224,7 +301,7 @@ public abstract class SolrProductSearch {
             Debug.logInfo("Solr: " + statusStr, module);
             result = ServiceUtil.returnSuccess(statusStr);
         } catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
         } catch (SolrServerException e) {
@@ -239,12 +316,12 @@ public abstract class SolrProductSearch {
                 }
                 result.put("errorType", "connectError");
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
         } catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
         } finally {
@@ -369,6 +446,34 @@ public abstract class SolrProductSearch {
             if ((String) context.get("returnFields") != null) {
                 solrQuery.setFields((String) context.get("returnFields"));
             }
+            
+            String defaultOp = (String) context.get("defaultOp");
+            if (UtilValidate.isNotEmpty(defaultOp)) {
+                solrQuery.set("q.op", defaultOp);
+            }
+            
+            Map<String, ?> queryParams = UtilGenerics.checkMap(context.get("queryParams"));
+            if (queryParams != null) {
+                for(Map.Entry<String, ?> entry : queryParams.entrySet()) {
+                    String name = entry.getKey();
+                    Object value = entry.getValue();
+                    if (value == null) {
+                        // NOTE: this removes the param when null
+                        solrQuery.set(name, (String) value);
+                    } else if (value instanceof String) {
+                        solrQuery.set(name, (String) value);
+                    } else if (value instanceof Integer) {
+                        solrQuery.set(name, (Integer) value);
+                    } else if (value instanceof Long) {
+                        solrQuery.set(name, ((Long) value).intValue());
+                    } else if (value instanceof Boolean) {
+                        solrQuery.set(name, (Boolean) value);
+                    } else {
+                        throw new IllegalArgumentException("queryParams entry '" + name 
+                                + "' value unsupported type (supported: String, Integer, Long, Boolean): " + value.getClass().getName());
+                    }
+                }
+            }
 
             // if((Boolean)context.get("sortByReverse"))order.reverse();
             String sortBy = (String) context.get("sortBy");
@@ -429,7 +534,8 @@ public abstract class SolrProductSearch {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         try {
-            Map<String, Object> dispatchMap = new HashMap<>();
+            Map<String, Object> dispatchMap = dctx.makeValidContext("runSolrQuery", ModelService.IN_PARAM, context);
+            
             if (UtilValidate.isNotEmpty(context.get("productCategoryId"))) {
                 String productCategoryId = (String) context.get("productCategoryId");
                 // causes erroneous results for similar-name categories
@@ -437,32 +543,14 @@ public abstract class SolrProductSearch {
                 boolean includeSubCategories = !Boolean.FALSE.equals(context.get("includeSubCategories"));
                 dispatchMap.put("query", SolrExprUtil.makeCategoryIdFieldQueryEscape("cat", productCategoryId, includeSubCategories));
             } else {
-                return ServiceUtil.returnError("Missing product category id"); // TODO: localize
+                return ServiceUtil.returnError("Missing productCategoryId"); // TODO: localize
             }
-            Integer viewSize = null;
-            if (context.get("viewSize") != null) {
-                viewSize = Integer.parseInt((String) context.get("viewSize"));
-                dispatchMap.put("viewSize", viewSize);
-            }
-            Integer viewIndex = null;
-            if (context.get("viewIndex") != null) {
-                viewIndex = Integer.parseInt((String) context.get("viewIndex"));
-                dispatchMap.put("viewIndex", viewIndex);
-            }
-            if (context.get("queryFilter") != null) {
-                dispatchMap.put("queryFilter", context.get("queryFilter"));
-            }
-            if (context.get("queryFilters") != null) {
-                dispatchMap.put("queryFilters", context.get("queryFilters"));
-            }
-            dispatchMap.put("facet", false);
-            dispatchMap.put("spellcheck", false); // 2017-09: changed to false
-            if (context.get("highlight") != null) {
-                dispatchMap.put("highlight", context.get("highlight"));
-            } else {
-                dispatchMap.put("highlight", false); // 2017-09: changed to false
-            }
-            copyStdServiceFieldsNotSet(context, dispatchMap);
+            Integer viewSize = (Integer) dispatchMap.get("viewSize");
+            //Integer viewIndex = (Integer) dispatchMap.get("viewIndex");
+            dispatchMap.put("facet", false); // (always false)
+            dispatchMap.put("spellcheck", false); // 2017-09: changed to false (always false)
+            if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
+
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
                 return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult)));
@@ -479,12 +567,12 @@ public abstract class SolrProductSearch {
             result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
             result.put("viewSize", viewSize);
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: productsSearch: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
         }
         return result;
     }
-
+    
     private static Map<String, Object> copySolrQueryExtraOutParams(Map<String, Object> src, Map<String, Object> dest) {
         if (src.containsKey("errorType")) dest.put("errorType", src.get("errorType"));
         if (src.containsKey("nestedErrorMessage")) dest.put("nestedErrorMessage", src.get("nestedErrorMessage"));
@@ -502,52 +590,17 @@ public abstract class SolrProductSearch {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         try {
-            if (context.get("query") == null || context.get("query").equals("")) {
-                context.put("query", "*:*");
+            Map<String, Object> dispatchMap = dctx.makeValidContext("runSolrQuery", ModelService.IN_PARAM, context);
+            
+            if (UtilValidate.isEmpty((String) dispatchMap.get("query"))) {
+                dispatchMap.put("dispatchMap", "*:*");
             }
-            Map<String, Object> dispatchMap = new HashMap<>();
-            Integer viewSize = null;
-            if (context.get("viewSize") != null) {
-                viewSize = Integer.parseInt((String) context.get("viewSize"));
-                dispatchMap.put("viewSize", viewSize);
-            }
-            Integer viewIndex = null;
-            if (context.get("viewIndex") != null) {
-                viewIndex = Integer.parseInt((String) context.get("viewIndex"));
-                dispatchMap.put("viewIndex", viewIndex);
-            }
-            if (context.get("query") != null)
-                dispatchMap.put("query", context.get("query"));
-            if (context.get("queryFilter") != null)
-                dispatchMap.put("queryFilter", context.get("queryFilter"));
-            if (context.get("queryFilters") != null)
-                dispatchMap.put("queryFilters", context.get("queryFilters"));
-            if (context.get("sortBy") != null)
-                dispatchMap.put("sortBy", context.get("sortBy"));
-            if (context.get("sortByReverse") != null)
-                dispatchMap.put("sortByReverse", context.get("sortByReverse"));
-            if (context.get("facetQuery") != null)
-                dispatchMap.put("facetQuery", context.get("facetQuery"));
-            if (context.get("queryType") != null)
-                dispatchMap.put("queryType", context.get("queryType"));
-            if (context.get("defType") != null)
-                dispatchMap.put("defType", context.get("defType"));
-            if (context.get("facet") != null) {
-                dispatchMap.put("facet", context.get("facet"));
-            } else {
-                dispatchMap.put("facet", false); // 2017-09: changed to false
-            }
-            if (context.get("spellcheck") != null) {
-                dispatchMap.put("spellcheck", context.get("spellcheck"));
-            } else {
-                dispatchMap.put("spellcheck", true);
-            }
-            if (context.get("highlight") != null) {
-                dispatchMap.put("highlight", context.get("highlight"));
-            } else {
-                dispatchMap.put("highlight", false); // 2017-09: changed to false
-            }
-            copyStdServiceFieldsNotSet(context, dispatchMap);
+            Integer viewSize = (Integer) dispatchMap.get("viewSize");
+            //Integer viewIndex = (Integer) dispatchMap.get("viewIndex");
+            if (dispatchMap.get("facet") == null) dispatchMap.put("facet", false); // 2017-09: default changed to false
+            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", true);
+            if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
+            
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
                 return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult)));
@@ -613,7 +666,7 @@ public abstract class SolrProductSearch {
             result.put("suggestions", suggestions);
 
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, "Solr: keywordSearch: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
         }
         return result;

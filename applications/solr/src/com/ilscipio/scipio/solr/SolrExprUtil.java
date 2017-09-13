@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import java.util.ArrayList;
 import java.util.Arrays;

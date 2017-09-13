@@ -40,7 +40,7 @@ under the License.
         <@field type="text" name="SEARCH_STRING" size="32" value=(requestParameters.SEARCH_STRING!searchString!"") />
 
         <#-- SCIPIO: WARN: 2017-08-22: the "AND" option here may not be entirely reliable with Solr at this time;
-            the parsing needs work; see com.ilscipio.solr.SolrUtil#addPrefixToAllKeywords -->
+            the parsing needs work; see com.ilscipio.scipio.solr.SolrUtil#addPrefixToAllKeywords -->
         <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label=uiLabelMap.CommonAny />
         <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label=uiLabelMap.CommonAll/>
     </@field>

@@ -481,8 +481,8 @@
     <DataResource dataResourceId="CAM-2644DESCDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="CAM-2644DESCEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Die retro analoge Nikon-Kamera mit FM2 Film"/>
-    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="The retro analog Nikon camera with FM2 film"/>
+    <ElectronicText dataResourceId="CAM-2644DESCDE" textData="Die Nikon retro Analogkamera mit FM2 Film"/>
+    <ElectronicText dataResourceId="CAM-2644DESCEN" textData="The Nikon retro analog camera with FM2 film"/>
 
     <Content contentId="CAM-2644DESCDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>
     <Content contentId="CAM-2644DESCEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644DESCEN" description="DESCRIPTION EN Nikon Analog Camera" localeString="en"/>
@@ -494,7 +494,7 @@
     <DataResource dataResourceId="CAM-2644NAMEDE" dataResourceTypeId="ELECTRONIC_TEXT" localeString="de"/>
     <DataResource dataResourceId="CAM-2644NAMEEN" dataResourceTypeId="ELECTRONIC_TEXT" localeString="en"/>
 
-    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Nikon Analog Camera"/>
+    <ElectronicText dataResourceId="CAM-2644NAMEDE" textData="Nikon Analogkamera"/>
     <ElectronicText dataResourceId="CAM-2644NAMEEN" textData="Nikon Analog Camera"/>
 
     <Content contentId="CAM-2644NAMEDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644NAMEDE" description="DESCRIPTION DE Nikon Analog Camera" localeString="de"/>

@@ -129,7 +129,13 @@ under the License.
     <!-- SCIPIO: New properties -->
     <property name="solr.home" value="applications/solr/"/>
     <property name="solr.log.dir" value="runtime/logs/solr/"/><!-- added 2017-09-08 -->
-
+    <!-- Solr instance locking - see solrconfig.xml for details -->
+    <!-- 2017-09-12: FIXME?: Ideally we should use native, but issues have been encountered with write.lock;
+        as workaround, use file-less single instance lock - there should no issues because running
+        two ofbiz instances always fails before webapps due to ports-in-use
+    <property name="solr.lock.type" value="native"/> -->
+    <property name="solr.lock.type" value="single"/>
+    
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
     <import file="applications/build.xml" optional="true"/>
@@ -1052,6 +1058,7 @@ under the License.
                         <!-- SCIPIO: solr home -->
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <args/>
                     </java>
                 </then>
@@ -1063,6 +1070,7 @@ under the License.
                         <!-- SCIPIO: solr home -->
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <args/>
                     </java>
                 </else>

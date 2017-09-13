@@ -233,6 +233,7 @@
          More details on the nuances of each LockFactory...
          http://wiki.apache.org/lucene-java/AvailableLockFactories
     -->
+    <!-- SCIPIO: NOTE: 2011-09-11: This is now specified through build.xml -->
     <lockType>${solr.lock.type:native}</lockType>
 
     <!-- Commit Deletion Policy

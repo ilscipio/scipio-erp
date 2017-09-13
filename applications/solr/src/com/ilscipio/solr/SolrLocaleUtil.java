@@ -87,6 +87,13 @@ public abstract class SolrLocaleUtil {
     public static String getConfiguredLocalesString(Delegator delegator, String productStoreId) {
         return solrContentLocalesStr; 
     }
+    
+    /**
+     * Gets content locales.
+     */
+    public static String getConfiguredLocalesString(Delegator delegator) {
+        return solrContentLocalesStr; 
+    }
 
     /**
      * Gets content locales. FIXME: currently ignores product store!

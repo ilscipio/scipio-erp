@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import java.io.IOException;
 import java.net.ConnectException;

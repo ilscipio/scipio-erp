@@ -1,4 +1,4 @@
-package com.ilscipio.solr;
+package com.ilscipio.scipio.solr;
 
 import java.util.Collections;
 import java.util.HashMap;

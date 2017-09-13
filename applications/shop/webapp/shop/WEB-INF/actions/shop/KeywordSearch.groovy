@@ -52,7 +52,7 @@ import org.ofbiz.product.product.ProductSearch.SortProductField;
 import org.ofbiz.product.product.ProductSearch.SortProductPrice;
 import org.ofbiz.product.product.ProductSearch.SortProductFeature;
 import org.ofbiz.product.category.CategoryWorker;
-import com.ilscipio.solr.*;
+import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
@@ -430,7 +430,7 @@ try {
         if (!kwsArgs.sortBy && sortOrder != null) {
             if (sortOrder instanceof SortProductPrice) {
                 SortProductPrice so = (SortProductPrice) sortOrder;
-                kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
+                kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
                     locale, "Keyword search: ");
                 if (kwsArgs.sortBy != "defaultPrice") {
                     // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
@@ -463,10 +463,10 @@ try {
                 SortProductField so = (SortProductField) sortOrder;
                 // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
                 simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
-                kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
+                kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
                 if (kwsArgs.sortBy) {
-                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
-                    kwsArgs.sortBy = com.ilscipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
+                    kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
+                    kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
                             kwsArgs.sortBy, 
                             SolrLocaleUtil.getCompatibleLocaleValid(locale),
                             SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)

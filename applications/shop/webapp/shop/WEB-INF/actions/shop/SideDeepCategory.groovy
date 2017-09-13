@@ -22,7 +22,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.*;
 import org.ofbiz.service.*;
-import com.ilscipio.solr.SolrUtil;
+import com.ilscipio.scipio.solr.SolrUtil;
 import org.apache.solr.client.solrj.*;
 import org.apache.solr.client.solrj.response.*;
 import org.apache.commons.lang.StringUtils;
@@ -73,7 +73,7 @@ bestSellCategoryId = CatalogWorker.getCatalogBestSellCategoryId(request, current
 
 currentCategoryPath = null;
 if (curCategoryId) {
-    currentCategoryPath = com.ilscipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, currentCatalogId, false, 
+    currentCategoryPath = com.ilscipio.scipio.solr.CategoryUtil.getCategoryNameWithTrail(curCategoryId, currentCatalogId, false, 
         dispatcher.getDispatchContext(), currentTrail);
 }
 context.currentCategoryPath = currentCategoryPath;

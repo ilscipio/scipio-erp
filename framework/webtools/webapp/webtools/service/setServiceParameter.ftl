@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#include "component://webtools/webapp/webtools/service/servicecommon.ftl">
+
 <form name="scheduleForm" method="post" action="<@ofbizUrl>scheduleService</@ofbizUrl>">
 
     <#list scheduleOptions as scheduleOption>
@@ -24,12 +26,7 @@ under the License.
 
   <#-- SCIPIO: leave room for the label area because service parameter names can be long -->
   <@fields fieldArgs={"labelColumns":4}>
-    <#list serviceParameters as serviceParameter>
-      <#-- NOTE: defaultValue is actually a private member and getDefaultValue is invoked instead -->
-      <#assign defaultValStr = serviceParameter.defaultValue!?string>
-      <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#assign>
-      <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=(serviceParameter.optional == "N")/>
-    </#list>
+    <@serviceFields serviceParameters=(serviceParameters!)/>
   </@fields>
 
     <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_begin!}" />

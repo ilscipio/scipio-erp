@@ -44,6 +44,7 @@ context.POOL_NAME = ServiceConfigUtil.getServiceEngine().getThreadPool().getSend
 
 scheduleOptions = [];
 serviceParameters = [];
+serviceParameterNames = []; // SCIPIO: added 2017-09-13
 e = request.getParameterNames();
 while (e.hasMoreElements()) {
     paramName = e.nextElement();
@@ -74,7 +75,9 @@ if (serviceName) {
                 serviceParam = [name : par.name, type : par.type, optional : par.optional ? "Y" : "N", defaultValue : par.defaultValue];
             }
             serviceParameters.add(serviceParam);
+            serviceParameterNames.add(par.name); // SCIPIO: added 2017-09-13
         }
     }
 }
 context.serviceParameters = serviceParameters;
+context.serviceParameterNames = serviceParameterNames; // SCIPIO: added 2017-09-13

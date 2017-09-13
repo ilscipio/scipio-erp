@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -27,6 +28,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -327,6 +329,31 @@ public abstract class ProductUtil {
                             dispatchContext.put("defaultPrice", defaultPrice);
                     }
                 }
+                
+                // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
+                List<EntityCondition> condList = new ArrayList<>();
+                condList.add(EntityCondition.makeCondition("productId", productId));
+                // IMPORTANT: ONLY add keywords IF auto-generation by ofbiz is disabled for the product
+                
+                // FIXME?: we can only index a subset of cases; we use simplest condition possible; see eecas.xml for details
+                //condList.add(EntityCondition.makeCondition("keywordTypeId", KWT_KEYWORD));
+//                EntityCondition tagCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_TAG"),
+//                        EntityOperator.AND,
+//                        EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", null),
+//                                EntityOperator.OR,
+//                                EntityCondition.makeCondition("statusId", "KW_APPROVED")));
+//                EntityCondition keywordCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_KEYWORD"),
+//                        EntityOperator.AND,
+//                        EntityCondition.makeCondition("statusId", "KW_APPROVED")); // DO NOT allow empty status, because it might be auto-generated
+//                condList.add(EntityCondition.makeCondition(tagCond, EntityOperator.OR, keywordCond));
+                condList.add(EntityCondition.makeCondition("statusId", "KW_APPROVED"));
+                List<GenericValue> productKeywords = delegator.findList("ProductKeyword", 
+                        EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+                List<String> keywords = new ArrayList<>(productKeywords.size());
+                for(GenericValue productKeyword : productKeywords) {
+                    keywords.add(productKeyword.getString("keyword"));
+                }
+                dispatchContext.put("keywords", keywords);
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, e.getMessage(), module);
@@ -451,10 +478,14 @@ public abstract class ProductUtil {
             }
         }
     
-        addStringValuesToSolrDoc(doc, "catalog", UtilGenerics.<String>checkCollection(context.get("catalog")));
-        addStringValuesToSolrDoc(doc, "cat", UtilGenerics.<String>checkCollection(context.get("category")));
-        addStringValuesToSolrDoc(doc, "features", UtilGenerics.<String>checkCollection(context.get("features")));
-        addStringValuesToSolrDoc(doc, "attributes", UtilGenerics.<String>checkCollection(context.get("attributes")));
+        addStringValuesToSolrDoc(doc, "catalog", asStringCollection(context.get("catalog")));
+        addStringValuesToSolrDoc(doc, "cat", asStringCollection(context.get("category")));
+        addStringValuesToSolrDoc(doc, "features", asStringCollection(context.get("features")));
+        addStringValuesToSolrDoc(doc, "attributes", asStringCollection(context.get("attributes")));
+        // TODO: REVIEW: for now concatenating the keywords into one string and letting solr re-split it afterward
+        // this could be more efficient storage-wise than using multiValued="true", and it's what the solr demo implies to do,
+        // but unclear which is optimal...
+        addConcatenatedStringValuesToSolrDoc(doc, "keywords", asStringCollection(context.get("keywords")), " ");
 
         addLocalizedContentStringMapToSolrDoc(delegator, doc, "title_i18n_", "title_i18n_general", UtilGenerics.<String, String>checkMap(context.get("title")));
         addLocalizedContentStringMapToSolrDoc(delegator, doc, "description_i18n_", "description_i18n_general", UtilGenerics.<String, String>checkMap(context.get("description")));
@@ -466,6 +497,12 @@ public abstract class ProductUtil {
         return doc;
     }
     
+    private static Collection<String> asStringCollection(Object value) {
+        if (value instanceof Collection) return UtilGenerics.checkCollection(value);
+        else if (value instanceof String) return UtilMisc.<String>toList((String)value);
+        else return null;
+    }
+    
     private static void addStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values) {
         if (values == null) return;
         Iterator<?> attrIter = values.iterator();
@@ -473,6 +510,11 @@ public abstract class ProductUtil {
             Object attr = attrIter.next();
             doc.addField(solrFieldName, attr.toString());
         }
+    }
+    
+    private static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr) {
+        if (values == null) return;
+        doc.addField(solrFieldName, StringUtils.join(values, joinStr));
     }
     
     private static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {

@@ -89,7 +89,24 @@ under the License.
         <description>Adds product to solr, with product denoted by productId field in instance attribute
             - intended for use with ECAs/SECAs</description>
         <!-- NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity -->
-        <attribute mode="IN" name="instance" optional="false" type="org.ofbiz.entity.GenericEntity" />
+        <attribute mode="IN" name="instance" optional="true" type="org.ofbiz.entity.GenericEntity" />
+        <attribute mode="IN" name="productId" optional="true" type="String" />
+        <attribute mode="IN" name="manual" optional="true" type="Boolean">
+            <description>If true, add even if solr ECAs are configured off and don't mark dirty on fail (manual/debugging)</description>
+        </attribute>
+    </service>
+    
+    <service name="removeFromSolr" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.solr.SolrProductSearch"
+        invoke="removeFromSolr">
+        <description>Removes product from solr, with product denoted by productId field in instance attribute OR by productId
+            - intended for use with ECAs/SECAs</description>
+        <attribute mode="IN" name="instance" optional="true" type="org.ofbiz.entity.GenericEntity" />
+        <attribute mode="IN" name="productId" optional="true" type="String" />
+        <attribute mode="IN" name="manual" optional="true" type="Boolean">
+            <description>If true, remove even if solr ECAs are configured off and don't mark dirty on fail (manual/debugging)</description>
+        </attribute>
     </service>
 
     <service name="solrProductAttributesSimple" engine="interface">
@@ -129,6 +146,7 @@ under the License.
         <attribute mode="IN" name="features" optional="true" type="Set" />
         <attribute mode="IN" name="attributes" optional="true" type="List" />
         <attribute mode="IN" name="catalog" optional="true" type="List" />
+        <attribute mode="IN" name="keywords" optional="true" type="Object" /><!-- NOTE: un-deprecated 2017-09-12: can be String or List -->
     </service>
 
     <service name="solrProductAttributes" engine="interface">
@@ -147,7 +165,6 @@ under the License.
         <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
         <attribute mode="IN" name="sku" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
         <attribute mode="IN" name="cat" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
-        <attribute mode="IN" name="keywords" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
         <attribute mode="IN" name="image" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
         <!-- SERVICE FIELDS -->
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
@@ -176,10 +193,17 @@ under the License.
         <attribute mode="IN" optional="true" name="includeSubCategories" type="Boolean">
             <description>default: true (legacy behavior)</description>
         </attribute>
-        <attribute mode="IN" optional="true" name="viewSize" type="String"/>
-        <attribute mode="IN" optional="true" name="viewIndex" type="String"/>
+        <attribute mode="IN" optional="true" name="viewSize" type="Object">
+            <description>Supports String, Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
+            <description>Supports String, Integer (2017-09-11)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="queryParams" type="Map">
+            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
@@ -200,8 +224,12 @@ under the License.
         invoke="keywordSearch">
         <description>Run a query on Solr and return the results</description>
         <attribute mode="IN" optional="false" name="query" type="String"/>
-        <attribute mode="IN" optional="true" name="viewSize" type="String"/>
-        <attribute mode="IN" optional="true" name="viewIndex" type="String"/>
+        <attribute mode="IN" optional="true" name="viewSize" type="Object">
+            <description>Supports String or Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
+            <description>Supports String or Integer (2017-09-11)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="queryFilter" type="String">
             <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
                     To avoid splitting, use queryFilters instead (with one entry).</description>
@@ -218,6 +246,12 @@ under the License.
         </attribute>
         <attribute mode="IN" optional="true" name="defType" type="String">
             <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defaultOp" type="String">
+            <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryParams" type="Map">
+            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
         <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
@@ -268,6 +302,12 @@ under the License.
         </attribute>
         <attribute mode="IN" optional="true" name="defType" type="String">
             <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defaultOp" type="String">
+            <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryParams" type="Map">
+            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>

@@ -56,8 +56,8 @@ import com.ilscipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
-final boolean DEBUG = Debug.verboseOn();
-//final boolean DEBUG = true;
+boolean DEBUG = Debug.verboseOn();
+//DEBUG = true;
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;
@@ -167,7 +167,6 @@ try {
     // DEV NOTE: even the commented ones are valid to use. they must be set through context.kwsArgs map.
     
     // searchSyntax: "user", "full", "literal" - see SolrExprUtil.preparseUserQuery for values and known issues
-    // TODO: "user" is not implemented and does same as "full" - see SolrExprUtil.preparseUserQuery
     kwsArgs.searchSyntax = kwsArgs.searchSyntax ?: "user";
     kwsArgs.searchSyntaxQt = (kwsArgs.searchSyntax == "user") ? // used only when searchSyntax=="user"; NOTE: read from shop.properties if not set by screen
         ((kwsArgs.searchSyntaxQt != null) ? kwsArgs.searchSyntaxQt : UtilProperties.getPropertyValue("shop", "shop.search.solr.queryType")) : null;
@@ -236,6 +235,8 @@ try {
             // NOTE: basically, at the end, the OR list becomes a single entry of the AND list (this is ofbiz behavior,
             // and because the interface is ambiguous, better to preserve something known than introduce more randomness)
             kwExprList = [];
+            kwExprIsAndList = [];
+            kwExprAllIsAnd = true;
             
             kwCatalogCnsts = [];
             kwCategoryCnsts = [];
@@ -332,14 +333,9 @@ try {
                     kwExpr = (kc.getKeywordsString() ?: "").trim();
                     if (kwExpr) {
                         kwExpr = sanitizeUserQueryExpr(kwExpr);
-                        // NOTE: OR is the usual default - we don't need to do anything in that case;
-                        // but if AND is specified, then we need to add a "+" before every character...
-                        if (kc.isAnd()) {
-                            // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
-                            kwExprList.add(SolrExprUtil.addPrefixToAllTerms(kwExpr, "+"));
-                        } else {
-                            kwExprList.add(kwExpr);
-                        }
+                        kwExprList.add(kwExpr);
+                        kwExprIsAndList.add(kc.isAnd());
+                        kwExprAllIsAnd = kwExprAllIsAnd && kc.isAnd();
                         // TODO?: handle for cases where no full/solr syntax allowed:
                         //kc.isAnyPrefix()
                         //kc.isAnySuffix()
@@ -375,6 +371,37 @@ try {
                 }
             }
             
+            resolveKwExprListIsAndManual = { forceOp ->
+                if (forceOp == "OR") return;
+                kwExprListPrev = kwExprList;
+                kwExprList = [];
+                for(int i=0; i<kwExprListPrev.size(); i++) {
+                    if (kwExprIsAndList[i] || forceOp == "AND") {
+                        // WARN: FIXME: this is BEST-EFFORT - may break queries - see function
+                        kwExprList.add(SolrExprUtil.addPrefixToAllTerms(kwExprListPrev[i], "+"));
+                    } else {
+                        kwExprList.add(kwExprListPrev[i]);
+                    }
+                }
+            };
+            // here we decide how we'll handle the default operator
+            // if user query and all search strings are AND we can use defaultOp on solrKeywordSearch for edismax,
+            // otherwise we have to use a custom method (much less reliable).
+            // NOTE: if defaultOp was already set in context (override), it is treated as an override (forceOp)
+            // and we always respect it (i.e. it overrides every isAnd() of every SEARCH_STRING)
+            if (kwsArgs.searchSyntax == "user") {
+                if (kwExprAllIsAnd) {
+                    if (!kwsArgs.defaultOp) kwsArgs.defaultOp = "AND";
+                    else if (kwsArgs.defaultOp != "AND") {
+                        resolveKwExprListIsAndManual(kwsArgs.defaultOp);
+                    }
+                } else {
+                    resolveKwExprListIsAndManual(kwsArgs.defaultOp);
+                }
+            } else {
+                resolveKwExprListIsAndManual(kwsArgs.defaultOp);
+            }
+
             combineKwExpr = { exprList, joinOp ->
                 if (exprList.size() == 1) return exprList[0];
                 StringBuilder sb = new StringBuilder();
@@ -389,11 +416,10 @@ try {
                 }
                 return sb.toString();
             };
-            if (DEBUG) Debug.logInfo("Keyword search params: kwExprList: " + kwExprList, module);
-            
             // make expression from AND list
             if (!kwsArgs.searchString && kwExprList) kwsArgs.searchString = combineKwExpr(kwExprList, "AND");
-    
+            if (DEBUG) Debug.logInfo("Keyword search string: " + kwsArgs.searchString, module);
+            
             if (kwsArgs.searchCatalogs==null && kwCatalogCnsts) kwsArgs.searchCatalogs = kwCatalogCnsts;
             if (kwsArgs.searchCategories==null && kwCategoryCnsts) kwsArgs.searchCategories = kwCategoryCnsts;
             if (kwsArgs.searchFeatures==null && kwFeatureCnsts) kwsArgs.searchFeatures = kwFeatureCnsts;
@@ -586,9 +612,10 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             viewSize:kwsArgs.viewSize, viewIndex:kwsArgs.viewIndex, 
             queryType:kwsArgs.searchSyntaxQt, 
             spellcheck:kwsArgs.spellcheck, facet:kwsArgs.facet,
+            defaultOp:kwsArgs.defaultOp?:"OR", // TODO: REVIEW: hardcoding the default hardcoded here to follow the search param logic (not the solr config)
             locale:locale, userLogin:context.userLogin, timeZone:context.timeZone];
         
-        if (DEBUG) Debug.logInfo("Keyword search params: " + kwsArgs, module);
+        if (DEBUG) Debug.logInfo("Keyword search params: " + solrKwsServCtx, module);
         
         result = dispatcher.runSync("solrKeywordSearch", solrKwsServCtx, -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
         

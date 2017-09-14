@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -185,6 +186,12 @@ public abstract class ProductUtil {
                 pcwList.add(pcw);
             }
             
+            String parentProductId = null;
+            if ("Y".equals(product.getString("isVariant"))) {
+                // IMPORTANT: same parent lookup logic as used by ProductContentWrapper
+                parentProductId = ProductWorker.getParentProductId(productId, delegator, false);
+            }
+            
             // FIXME: this should REALLY be configured per-store...
             // but looking up the ProductStore for Product is inexact and slow...
             Locale defLocale = Locale.getDefault();
@@ -331,29 +338,10 @@ public abstract class ProductUtil {
                 }
                 
                 // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
-                List<EntityCondition> condList = new ArrayList<>();
-                condList.add(EntityCondition.makeCondition("productId", productId));
-                // IMPORTANT: ONLY add keywords IF auto-generation by ofbiz is disabled for the product
-                
-                // FIXME?: we can only index a subset of cases; we use simplest condition possible; see eecas.xml for details
-                //condList.add(EntityCondition.makeCondition("keywordTypeId", KWT_KEYWORD));
-//                EntityCondition tagCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_TAG"),
-//                        EntityOperator.AND,
-//                        EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", null),
-//                                EntityOperator.OR,
-//                                EntityCondition.makeCondition("statusId", "KW_APPROVED")));
-//                EntityCondition keywordCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_KEYWORD"),
-//                        EntityOperator.AND,
-//                        EntityCondition.makeCondition("statusId", "KW_APPROVED")); // DO NOT allow empty status, because it might be auto-generated
-//                condList.add(EntityCondition.makeCondition(tagCond, EntityOperator.OR, keywordCond));
-                condList.add(EntityCondition.makeCondition("statusId", "KW_APPROVED"));
-                List<GenericValue> productKeywords = delegator.findList("ProductKeyword", 
-                        EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-                List<String> keywords = new ArrayList<>(productKeywords.size());
-                for(GenericValue productKeyword : productKeywords) {
-                    keywords.add(productKeyword.getString("keyword"));
-                }
-                dispatchContext.put("keywords", keywords);
+                Set<String> keywords = new LinkedHashSet<>();
+                // NOTE: for variant products, we also include the keywords from the virtual/parent
+                getProductKeywords(keywords, delegator, false, productId, parentProductId);
+                dispatchContext.put("keywords", new ArrayList<>(keywords));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, e.getMessage(), module);
@@ -361,6 +349,35 @@ public abstract class ProductUtil {
             Debug.logError(e, e.getMessage(), module);
         }
         return dispatchContext;
+    }
+    
+    public static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
+        List<EntityCondition> condList = new ArrayList<>();
+        
+        List<EntityCondition> productIdOrList = new ArrayList<>(productIds.length);
+        for(String productId : productIds) {
+            if (productId != null) productIdOrList.add(EntityCondition.makeCondition("productId", productId));
+        }
+        condList.add(productIdOrList.size() == 1 ? productIdOrList.get(0) : EntityCondition.makeCondition(productIdOrList, EntityOperator.OR));
+        // IMPORTANT: ONLY add keywords IF auto-generation by ofbiz is disabled for the product
+        
+        // FIXME?: we can only index a subset of cases; we use simplest condition possible; see eecas.xml for details
+        //condList.add(EntityCondition.makeCondition("keywordTypeId", KWT_KEYWORD));
+//        EntityCondition tagCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_TAG"),
+//                EntityOperator.AND,
+//                EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", null),
+//                        EntityOperator.OR,
+//                        EntityCondition.makeCondition("statusId", "KW_APPROVED")));
+//        EntityCondition keywordCond = EntityCondition.makeCondition(EntityCondition.makeCondition("keywordTypeId", "KWT_KEYWORD"),
+//                EntityOperator.AND,
+//                EntityCondition.makeCondition("statusId", "KW_APPROVED")); // DO NOT allow empty status, because it might be auto-generated
+//        condList.add(EntityCondition.makeCondition(tagCond, EntityOperator.OR, keywordCond));
+        condList.add(EntityCondition.makeCondition("statusId", "KW_APPROVED"));
+        List<GenericValue> productKeywords = delegator.findList("ProductKeyword", 
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+        for(GenericValue productKeyword : productKeywords) {
+            keywords.add(productKeyword.getString("keyword"));
+        }
     }
     
     private static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 

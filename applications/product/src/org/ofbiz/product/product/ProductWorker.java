@@ -783,9 +783,12 @@ public class ProductWorker {
         return categories;
     }
 
-    //get parent product
-    public static GenericValue getParentProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
-        GenericValue _parentProduct = null;
+    /**
+     * SCIPIO: Gets the product's parent (virtual or other association) ProductAssoc to itself.
+     * Factored out from {@link #getParentProduct}.
+     * Added 2017-09-12.
+     */
+    public static GenericValue getParentProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         if (productId == null) {
             Debug.logWarning("Bad product id", module);
         }
@@ -794,7 +797,7 @@ public class ProductWorker {
             List<GenericValue> virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
                     .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")
                     .orderBy("-fromDate")
-                    .cache(true)
+                    .cache(useCache)
                     .filterByDate()
                     .queryList();
             if (UtilValidate.isEmpty(virtualProductAssocs)) {
@@ -802,14 +805,28 @@ public class ProductWorker {
                 virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
                         .where("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM")
                         .orderBy("-fromDate")
-                        .cache(true)
+                        .cache(useCache)
                         .filterByDate()
                         .queryList();
             }
             if (UtilValidate.isNotEmpty(virtualProductAssocs)) {
                 //found one, set this first as the parent product
-                GenericValue productAssoc = EntityUtil.getFirst(virtualProductAssocs);
-                _parentProduct = productAssoc.getRelatedOne("MainProduct", true);
+                return EntityUtil.getFirst(virtualProductAssocs);
+            }
+        } catch (GenericEntityException e) {
+            throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
+        }
+        return null;
+    }
+    
+    //get parent product
+    public static GenericValue getParentProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        // SCIPIO: 2017-09-12: factored out into getParentProductAssoc
+        GenericValue _parentProduct = null;
+        try {
+            GenericValue productAssoc = getParentProductAssoc(productId, delegator, useCache);
+            if (productAssoc != null) {
+                _parentProduct = productAssoc.getRelatedOne("MainProduct", useCache);
             }
         } catch (GenericEntityException e) {
             throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
@@ -817,8 +834,25 @@ public class ProductWorker {
         return _parentProduct;
     }
     
-    public static GenericValue getParentProduct(String productId, Delegator delegator) { // SCIPIO: new delegate 2017-09-05
+    public static GenericValue getParentProduct(String productId, Delegator delegator) {
+        // SCIPIO: 2017-09-05: now delegates 
         return getParentProduct(productId, delegator, true);
+    }
+    
+    /**
+     * SCIPIO: Gets the parent product ID (only).
+     */
+    public static String getParentProductId(String productId, Delegator delegator, boolean useCache) {
+        String parentProductId = null;
+        //try {
+        GenericValue productAssoc = getParentProductAssoc(productId, delegator, useCache);
+        if (productAssoc != null) {
+            parentProductId = productAssoc.getString("productId");
+        }
+        //} catch (GenericEntityException e) {
+        //    throw new RuntimeException("Entity Engine error getting Parent Product (" + e.getMessage() + ")");
+        //}
+        return parentProductId;
     }
 
     public static boolean isDigital(GenericValue product) {

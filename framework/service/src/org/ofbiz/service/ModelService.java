@@ -110,6 +110,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     public static final String resource = "ServiceErrorUiLabels";
 
+    // SCIPIO: new 2017-09-13
+    private static final int logParamLevel;
+    static {
+        Integer level = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "run.logParamLevel"));
+        logParamLevel = (level != null) ? level : Debug.INFO;
+    }
+    
     /** The name of this service */
     public String name;
 
@@ -482,7 +489,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     Object defaultValueObj = param.getDefaultValue();
                     if (defaultValueObj != null && context.get(param.name) == null) {
                         context.put(param.name, defaultValueObj);
-                        Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
+                        // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
+                        // it makes developers avoid the default-value attribute altogether.
+                        // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
+                        //Debug.logInfo(...);
+                        if (Debug.isOn(logParamLevel) || this.debug) {
+                            Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
+                        }
                     }
                 }
             }

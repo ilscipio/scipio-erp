@@ -127,8 +127,8 @@ under the License.
     <property name="memory.max.param" value="-Xmx3512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
     <!-- SCIPIO: New properties -->
-    <property name="solr.home" value="applications/solr/"/>
-    <property name="solr.log.dir" value="runtime/logs/solr/"/><!-- added 2017-09-08 -->
+    <property name="solr.home" value="applications/solr"/>
+    <property name="solr.log.dir" value="runtime/logs/solr"/><!-- added 2017-09-08 -->
     <!-- Solr instance locking - see solrconfig.xml for details -->
     <!-- 2017-09-12: FIXME?: Ideally we should use native, but issues have been encountered with write.lock;
         as workaround, use file-less single instance lock - there should no issues because running

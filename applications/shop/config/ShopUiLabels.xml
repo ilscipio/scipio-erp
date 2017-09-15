@@ -84,4 +84,9 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="de">Abonnementdetails</value>
         <value xml:lang="en">Subscription Details</value>
     </property>
+    <property key="ShopDidYouMean">
+        <value xml:lang="de">Hast du gemeint</value>
+        <value xml:lang="en">Did you mean</value>
+        <value xml:lang="fr">Vouliez-vous dire</value>
+    </property>
 </resource>

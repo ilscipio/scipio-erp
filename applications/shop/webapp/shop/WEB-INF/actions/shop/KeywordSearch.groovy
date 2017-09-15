@@ -54,6 +54,8 @@ import org.ofbiz.product.product.ProductSearch.SortProductFeature;
 import org.ofbiz.product.category.CategoryWorker;
 import com.ilscipio.scipio.solr.*;
 
+// SCIPIO: TODO?: this script has become huge; should move core to a util class somewhere for better reuse
+
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
 boolean DEBUG = Debug.verboseOn();
@@ -145,6 +147,7 @@ if (context.useSolr == false || useSolr == false) {
 nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
 locale = context.locale;
+searchStringCount = 1;
 
 sanitizeUserQueryExpr = { expr ->
     if (expr instanceof String) {
@@ -417,7 +420,10 @@ try {
                 return sb.toString();
             };
             // make expression from AND list
-            if (!kwsArgs.searchString && kwExprList) kwsArgs.searchString = combineKwExpr(kwExprList, "AND");
+            if (!kwsArgs.searchString && kwExprList) {
+                kwsArgs.searchString = combineKwExpr(kwExprList, "AND");
+                searchStringCount = kwExprList.size();
+            }
             if (DEBUG) Debug.logInfo("Keyword search string: " + kwsArgs.searchString, module);
             
             if (kwsArgs.searchCatalogs==null && kwCatalogCnsts) kwsArgs.searchCatalogs = kwCatalogCnsts;
@@ -660,8 +666,10 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         context.listSize = result.listSize;
         context.viewIndex = result.viewIndex;
         context.viewSize = result.viewSize;
-        
-        context.suggestions = result.suggestions;
+
+        context.tokenSuggestions = result.tokenSuggestions; // NOTE: 2017-09-14: this is unusable... use collations
+        // NOTE: collations display only supported if there was only one search string, because otherwise they won't match
+        context.fullSuggestions = (searchStringCount == 1) ? result.fullSuggestions : null;
         context.searchConstraintStrings = [];
         
         // SCIPIO: 2017-08-16: the following context assignments are template compatibility/legacy fields - based on: 

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.SpellCheckResponse;
+import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
@@ -390,7 +393,8 @@ public abstract class SolrProductSearch {
 
             Boolean spellCheck = (Boolean) context.get("spellcheck");
             if (Boolean.TRUE.equals(spellCheck)) {
-                solrQuery.setParam("spellcheck", spellCheck);
+                solrQuery.setParam("spellcheck", true);
+                solrQuery.setParam("spellcheck.collate", true);
             }
 
             Boolean highlight = (Boolean) context.get("highlight");
@@ -614,19 +618,27 @@ public abstract class SolrProductSearch {
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
-            List<List<String>> suggestions = new ArrayList<>();
-            if (queryResult.getSpellCheckResponse() != null && queryResult.getSpellCheckResponse().getSuggestions() != null) {
-                Iterator<Suggestion> iter = queryResult.getSpellCheckResponse().getSuggestions().iterator();
-                while (iter.hasNext()) {
-                    Suggestion resultDoc = iter.next();
-                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Suggestion: " + resultDoc.getAlternatives(), module);
-                    suggestions.add(resultDoc.getAlternatives());
+            Boolean isCorrectlySpelled = Boolean.TRUE.equals(dispatchMap.get("spellcheck")) ? Boolean.TRUE : null;
+            Map<String, List<String>> tokenSuggestions = null;
+            List<String> fullSuggestions = null;
+            SpellCheckResponse spellResp = queryResult.getSpellCheckResponse();
+            if (spellResp != null) {
+                isCorrectlySpelled = spellResp.isCorrectlySpelled();
+                if (spellResp.getSuggestions() != null) {
+                    tokenSuggestions = new LinkedHashMap<>();
+                    for(Suggestion suggestion : spellResp.getSuggestions()) {
+                        tokenSuggestions.put(suggestion.getToken(), suggestion.getAlternatives());
+                    }
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Spelling: Token suggestions: " + tokenSuggestions, module);
                 }
-            }
-
-            Boolean isCorrectlySpelled = true;
-            if (queryResult.getSpellCheckResponse() != null) {
-                isCorrectlySpelled = queryResult.getSpellCheckResponse().isCorrectlySpelled();
+                // collations 2017-09-14, much more useful than the individual word suggestions
+                if (spellResp.getCollatedResults() != null) {
+                    fullSuggestions = new ArrayList<>();
+                    for(Collation collation : spellResp.getCollatedResults()) {
+                        fullSuggestions.add(collation.getCollationQueryString());
+                    }
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Spelling: Collations: " + fullSuggestions, module);
+                }
             }
 
             result = ServiceUtil.returnSuccess();
@@ -668,7 +680,8 @@ public abstract class SolrProductSearch {
             result.put("start", queryResult.getResults().getStart());
             result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
             result.put("viewSize", viewSize);
-            result.put("suggestions", suggestions);
+            result.put("tokenSuggestions", tokenSuggestions);
+            result.put("fullSuggestions", fullSuggestions);
 
         } catch (Exception e) {
             Debug.logError(e, "Solr: keywordSearch: " + e.getMessage(), module);

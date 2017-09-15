@@ -22,7 +22,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
@@ -493,9 +492,7 @@ public abstract class SolrProductUtil {
         Map<String, String> contentMap = new HashMap<>();
         contentMap.put("general", ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, false)); // NEW 2017-08-21 - handled by addLocalizedContentStringMapToSolrDoc
         
-        Map<String, String> localizedContent = getProductContentForLocales(delegator, dispatcher, product, productContentTypeId, locales, false);
-        contentMap.putAll(localizedContent);
-        
+        getProductContentForLocales(contentMap, delegator, dispatcher, product, productContentTypeId, locales, false);
 //        for(ProductContentWrapper productContent : pcwList) {
             // 2017-09-05: this creates problems for the language parsing due to the ProductContentWrapper impl.
 //            String value = productContent.get(productContentTypeId);
@@ -524,9 +521,8 @@ public abstract class SolrProductUtil {
      * Unlike ProductContentWrapper, this NEVER returns a fallback language for the locales, and
      * does not consult the entity field - no map entry if there's no text in the given language.
      */
-    static Map<String, String> getProductContentForLocales(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, String productContentTypeId, Collection<Locale> locales, boolean useCache) throws GeneralException, IOException {
-        Map<String, String> contentMap = new HashMap<>();
-        
+    static void getProductContentForLocales(Map<String, String> contentMap, Delegator delegator, LocalDispatcher dispatcher, 
+            GenericValue product, String productContentTypeId, Collection<Locale> locales, boolean useCache) throws GeneralException, IOException {
         String productId = product.getString("productId");
         
         List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
@@ -538,17 +534,26 @@ public abstract class SolrProductUtil {
         }
         GenericValue productContent = EntityUtil.getFirst(productContentList);
         if (productContent == null) {
-            return contentMap;
+            return;
         }
         String contentId = productContent.getString("contentId");
         
         GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache(useCache).queryOne();
         if (content == null) {
-            return contentMap;
+            return;
         }
         
         String thisLocaleString = (String) content.get("localeString");
         thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
+        // special case: no locale string: treat as general (NOTE: here give the EntityFieldValue prio like orig ProductContentWrapper)
+        if (thisLocaleString.isEmpty() && UtilValidate.isEmpty((String) contentMap.get("general"))) {
+            GenericValue targetContent = content;
+            Locale locale = SolrLocaleUtil.getConfiguredDefaultLocale(delegator, null); // FIXME?: this is technically wrong (should be product store default)
+            String res = getContentText(delegator, dispatcher, targetContent, product, productContent, locale, useCache);
+            if (res.length() > 0) {
+                contentMap.put(locale.toString(), res);
+            }
+        }
         for(Locale locale : locales) {
             String targetLocaleString = locale.toString();
             GenericValue targetContent = null;
@@ -562,18 +567,22 @@ public abstract class SolrProductUtil {
                 }
             }
             if (targetContent != null) {
-                Writer out = new StringWriter();
-                Map<String, Object> inContext = new HashMap<>();
-                inContext.put("product", product);
-                inContext.put("productContent", productContent);
-                ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", false, null);
-                String res = out.toString();
+                String res = getContentText(delegator, dispatcher, targetContent, product, productContent, locale, useCache);
                 if (res.length() > 0) {
                     contentMap.put(locale.toString(), res);
                 }
             }
         }
-        return contentMap;
+    }
+    
+    static String getContentText(Delegator delegator, LocalDispatcher dispatcher, GenericValue targetContent, 
+            GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
+        Writer out = new StringWriter();
+        Map<String, Object> inContext = new HashMap<>();
+        inContext.put("product", product);
+        inContext.put("productContent", productContent);
+        ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", useCache, null);
+        return out.toString();
     }
     
 

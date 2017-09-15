@@ -1030,7 +1030,14 @@
       <str name="df">text</str>
     </lst>
   </initParams>
-
+  
+  <!-- SCIPIO: 2017-09-14: Must append this for inline spellcheck support -->
+  <initParams path="/select,/searchpublic">
+     <arr name="last-components">
+       <str>spellcheck</str>
+     </arr>
+  </initParams>
+  
   <!-- The following are implicitly added
   <requestHandler name="/update/json" class="solr.UpdateRequestHandler">
         <lst name="invariants">
@@ -1191,8 +1198,12 @@
 
     <!-- a spellchecker built from a field of the main index -->
     <lst name="spellchecker">
+      <!-- SCIPIO: NOTE: currently leaving this as default, in part because index checker below has issues
+      <str name="name">direct</str>-->
       <str name="name">default</str>
-      <str name="field">text</str>
+      <!-- SCIPIO: use dedicated spell field
+      <str name="field">text</str>-->
+      <str name="field">spell</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
       <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
       <str name="distanceMeasure">internal</str>
@@ -1212,12 +1223,27 @@
         <float name="thresholdTokenFrequency">.01</float>
       -->
     </lst>
+      
+    <!-- SCIPIO: a legacy index spellchecker that uses "spell" field -->
+    <lst name="spellchecker">
+        <!-- NOTE: 2017-09-14: cannot use as Scipio default because of FIXME below - without the spellcheckIndexDir
+            the index will stay in RAM which could be bad in some setups
+        <str name="name">default</str>-->
+        <str name="name">index</str>
+        <str name="classname">solr.IndexBasedSpellChecker</str>
+        <str name="field">spell</str>
+        <!-- SCIPIO: 2017-09-14: FIXME: not currently supported due to errors with write.lock
+            on the index (does not respect solr.lock.type) - write.lock does not get cleared
+        <str name="spellcheckIndexDir">./spellchecker</str>-->
+        <str name="buildOnCommit">true</str>
+        <str name="accuracy">0.5</str>
+    </lst>
     
     <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
     <lst name="spellchecker">
       <str name="name">wordbreak</str>
-      <str name="classname">solr.WordBreakSolrSpellChecker</str>      
-      <str name="field">name</str>
+      <str name="classname">solr.WordBreakSolrSpellChecker</str>
+      <str name="field">spell</str><!-- SCIPIO: use "spell" field -->
       <str name="combineWords">true</str>
       <str name="breakWords">true</str>
       <int name="maxChanges">10</int>

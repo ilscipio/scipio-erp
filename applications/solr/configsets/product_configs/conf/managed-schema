@@ -255,7 +255,7 @@
    <field name="payloads" type="payloads" indexed="true" stored="true"/>
 
    <!-- SCIPIO: NEW special static fields -->
-   <field name="spell" type="text_general" indexed="true" stored="true" multiValued="true"/><!-- spellcheck -->
+   <field name="spell" type="text_general" indexed="true" stored="true" multiValued="true"/><!-- dedicated spellcheck -->
 
    <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -405,7 +405,8 @@
    <copyField source="*_i18n_sv" dest="text"/>
    <copyField source="*_i18n_th" dest="text"/>
    <copyField source="*_i18n_tr" dest="text"/>
-   <copyField source="attributes" dest="text"/>
+   <!--<copyField source="attributes" dest="text"/> REMOVED: 2017-09-14: unclear on this; currently we don't populate it -->
+   <copyField source="internalName" dest="text_i18n_general"/><!-- TODO: REVIEW: is this appropriate? -->
    <copyField source="*_i18n_general" dest="text_i18n_general"/>
    <copyField source="*_i18n_en" dest="text_i18n_en"/>
    <copyField source="*_i18n_ar" dest="text_i18n_ar"/>
@@ -439,6 +440,7 @@
    <copyField source="*_i18n_sv" dest="text_i18n_sv"/>
    <copyField source="*_i18n_th" dest="text_i18n_th"/>
    <copyField source="*_i18n_tr" dest="text_i18n_tr"/>
+   <copyField source="internalName" dest="spell"/>
    <copyField source="*_i18n_general" dest="spell"/>
    <copyField source="*_i18n_en" dest="spell"/>
    <copyField source="*_i18n_ar" dest="spell"/>
@@ -472,8 +474,9 @@
    <copyField source="*_i18n_sv" dest="spell"/>
    <copyField source="*_i18n_th" dest="spell"/>
    <copyField source="*_i18n_tr" dest="spell"/>
-   <copyField source="author" dest="spell"/><!-- TODO: REVIEW: old -->
-   <copyField source="description" dest="spell"/><!-- TODO: REVIEW: old -->
+   <copyField source="keywords" dest="spell"/><!-- SCIPIO: added -->
+   <!--<copyField source="author" dest="spell"/> TODO: REVIEW: old -->
+   <!--<copyField source="description" dest="spell"/> TODO: REVIEW: old -->
    <copyField source="internalName" dest="alphaNameSort"/>
    <!-- SCIPIO: FIXME: currently manually populated by rebuildSolrIndex/addToSolrIndex - see com.ilscipio.scipio.solr.ProductUtil#addAlphaLocalizedContentStringMapToSolrDoc
    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
@@ -498,8 +501,6 @@
    <!--<copyField source="content_type" dest="text"/>-->
    <!--<copyField source="resourcename" dest="text"/>-->
    <!--<copyField source="url" dest="text"/>-->
-   
-   <copyField source="keywords" dest="spell"/><!-- SCIPIO: added -->
    
    <!-- Copy numeric fields to *PointFields implementation -->
    <copyField source="*_i" dest="*_pi"/>

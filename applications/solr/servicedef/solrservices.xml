@@ -260,7 +260,11 @@ under the License.
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
-        <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
+            <description>Correctly-spelled flag - set if spellcheck was enabled
+                WARN: May not behave as you might expect: https://issues.apache.org/jira/browse/SOLR-4278
+                Can return false even if tokenSuggestions and fullSuggestions are empty</description>
+        </attribute>
         <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
         <attribute name="facetFields" type="Map" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
@@ -268,7 +272,13 @@ under the License.
         <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
         <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
         <attribute name="queryTime" type="Long" mode="OUT" optional="true"/>
-        <attribute name="suggestions" type="List" mode="OUT" optional="true"/>
+        <attribute name="suggestions" type="List" mode="OUT" optional="true"/><!-- DEPRECATED (2017-09-14): always returns null -->
+        <attribute name="tokenSuggestions" type="Map" mode="OUT" optional="true">
+            <description>Maps token to lists of suggestions - set if spellcheck was enabled (added 2017-09-14)</description>
+        </attribute>
+        <attribute name="fullSuggestions" type="List" mode="OUT" optional="true">
+            <description>List of strings - spellcheck suggestions in collated format - set if spellcheck was enabled (added 2017-09-14)</description>
+        </attribute>
         <attribute name="errorType" type="String" mode="OUT" optional="true">
             <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
         </attribute>

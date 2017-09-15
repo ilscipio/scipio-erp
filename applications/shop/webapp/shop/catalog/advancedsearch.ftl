@@ -136,11 +136,15 @@ under the License.
             <#list searchConstraintStrings as searchConstraintString>
                 <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
+            
+         <#-- SCIPIO: 2017-09-14: REMOVED this option - it works in completely counter-intuitive way
             <div>${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div>
               <@field type="radio" name="clearSearch" value="Y" checked=true label=uiLabelMap.ProductNewSearch/>
               <@field type="radio" name="clearSearch" value="N" label=uiLabelMap.CommonRefineSearch/>
             </div>
+         -->
+            <@field type="hidden" name="clearSearch" value="Y"/>
       </@field>
     </#if>
     <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />

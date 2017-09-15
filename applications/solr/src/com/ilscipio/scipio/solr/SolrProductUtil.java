@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
@@ -32,6 +34,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
@@ -43,8 +46,8 @@ import org.ofbiz.service.ServiceDispatcher;
 /**
  * Product utility class for solr.
  */
-public abstract class ProductUtil {
-    public static final String module = ProductUtil.class.getName();
+public abstract class SolrProductUtil {
+    public static final String module = SolrProductUtil.class.getName();
 
     /**
      * Maps a few simple Product entity fields to solr product fields.
@@ -81,6 +84,8 @@ public abstract class ProductUtil {
         }
         PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY = Collections.unmodifiableMap(solrEntMap);
     }
+    
+    private static final Set<String> defaultCommonUserSearchFields = UtilMisc.unmodifiableLinkedHashSet("keywords"); 
     
     /**
      * Cached names of solrProductAttributesSimple service interface field names.
@@ -144,6 +149,109 @@ public abstract class ProductUtil {
             }
             return "defaultPrice";
         }
+    }
+    
+    /**
+     * Returns set of query fields (with optional power expressions, e.g. ^2) for user/public searches
+     * appropriate for locale and store and according to config, to use instead of the default search field ("text").
+     * FOR USE WITH USER MODE AND EDISMAX ONLY
+     * 
+     * @see #readUserProductSearchConfig for config
+     */
+    public static Set<String> determineUserProductSearchQueryFields(Delegator delegator, Locale userLocale, GenericValue productStore, Map<String, ?> config) {
+        String i18nFieldsSelect = (String) config.get("i18nFieldsSelect");
+        
+        Object i18nForceLocalesObj = config.get("i18nForceLocales");
+        Collection<Locale> i18nForceLocales;
+        if (i18nForceLocalesObj instanceof String) {
+            if (((String) i18nForceLocalesObj).length() == 0 || "NONE".equals(i18nForceLocalesObj)) {
+                i18nForceLocales = Collections.emptySet();
+            } else {
+                i18nForceLocales = SolrLocaleUtil.parseCompatibleLocalesValidSpecial((String) i18nForceLocalesObj);
+            }
+        } else {
+            i18nForceLocales = UtilGenerics.checkCollection(i18nForceLocalesObj);
+        }
+        
+        String userLocalePower = (String) config.get("userLocalePower");
+        
+        Object forceFieldsObj = config.get("forceFields");
+        Collection<String> forceFields;
+        if (forceFieldsObj instanceof String) {
+            if (((String) forceFieldsObj).length() == 0 || "NONE".equals(forceFieldsObj)) {
+                forceFields = Collections.emptySet();
+            } else {
+                forceFields = Arrays.asList(((String) forceFieldsObj).split("\\s*,\\s*"));
+            }
+        } else {
+            forceFields = UtilGenerics.checkCollection(forceFieldsObj);
+        }
+        
+        Object commonFieldsObj = config.get("commonFields");
+        Collection<String> commonFields;
+        if (commonFieldsObj == null) {
+            commonFields = defaultCommonUserSearchFields;
+        } else if (commonFieldsObj instanceof String) {
+            if (((String) commonFieldsObj).length() == 0 || "NONE".equals(commonFieldsObj)) {
+                commonFields = Collections.emptySet();
+            } else {
+                commonFields = Arrays.asList(((String) commonFieldsObj).split("\\s*,\\s*"));
+            }
+        } else {
+            commonFields = UtilGenerics.checkCollection(commonFieldsObj);
+        }
+
+        Set<String> queryFields;
+        if ("both".equals(i18nFieldsSelect)) {
+            // FIXME: Set strings are not check for power e.g. ^2 suffix
+            queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserAndStoreLocale(userLocale, productStore, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
+            if (commonFields != null) queryFields.addAll(commonFields);
+        } else if ("user".equals(i18nFieldsSelect)) {
+            queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, i18nForceLocales, "text_i18n_", userLocalePower, null);
+            if (commonFields != null) queryFields.addAll(commonFields);
+        } else if ("all".equals(i18nFieldsSelect)) {
+            queryFields = new LinkedHashSet<>();
+            queryFields.add("text");
+        } else { // "NONE"
+            if (UtilValidate.isNotEmpty(i18nFieldsSelect) && !"NONE".equals(i18nFieldsSelect)) {
+                Debug.logError("Solr: Unrecognized i18nFieldsSelect config value (may be from properties or screen): " 
+                        + i18nFieldsSelect + " (using \"NONE\" instead)", module);
+            }
+            // return nothing; indicates use default and don't use qf param
+            queryFields = new LinkedHashSet<>();
+        }
+        if (forceFields != null) queryFields.addAll(forceFields);
+        return queryFields;
+    }
+    
+    /**
+     * Reads common solr user search options from a properties file.
+     * Example/Reference: Scipio shop.properties values having "shop.search.solr." prefix.
+     */
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix) {
+        Map<String, Object> config = new HashMap<>();
+        // TODO: optimize
+        config.put("queryType", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "queryType", null, delegator));
+        config.put("i18nFieldsSelect", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "i18nFieldsSelect", null, delegator));
+        config.put("i18nForceLocales", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "i18nForceLocales", null, delegator));
+        config.put("userLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "userLocalePower", null, delegator));
+        config.put("commonFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "commonFields", null, delegator));
+        config.put("forceFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "forceFields", null, delegator));
+        return config;
+    }
+    
+    /**
+     * Reads common user search options from a properties file plus overrides.
+     * Example: Scipio shop.properties values having "shop.search.solr." prefix.
+     */
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, Map<String, ?> overrideConfig) {
+        Map<String, Object> config = readUserProductSearchConfig(delegator, propResource, propNamePrefix);
+        if (overrideConfig != null) {
+            for(Map.Entry<String, ?> entry : overrideConfig.entrySet()) {
+                if (entry.getValue() != null) config.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return config;
     }
     
     private static ModelService getModelServiceStaticSafe(String serviceName) {
@@ -223,7 +331,7 @@ public abstract class ProductUtil {
                 for (Iterator<GenericValue> catIterator = category.iterator(); catIterator.hasNext();) {
                     GenericValue cat = (GenericValue) catIterator.next();
                     String productCategoryId = (String) cat.get("productCategoryId");
-                    List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
+                    List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx);
                     for (List<String> trailElement : trailElements) {
                         StringBuilder catMember = new StringBuilder();
                         int i = 0;
@@ -251,7 +359,7 @@ public abstract class ProductUtil {
                 List<String> catalogs = new ArrayList<>();
                 for (String trail : trails) {
                     String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
-                    List<String> catalogMembers = CategoryUtil.getCatalogIdsByCategoryId(delegator, productCategoryId);
+                    List<String> catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(delegator, productCategoryId);
                     for (String catalogMember : catalogMembers)
                         if (!catalogs.contains(catalogMember))
                             catalogs.add(catalogMember);

@@ -1,10 +1,14 @@
 package com.ilscipio.scipio.solr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -19,7 +23,6 @@ public abstract class SolrLocaleUtil {
     protected SolrLocaleUtil() {
     }
 
-    static final String solrContentLocalesStr;
     static final List<Locale> configuredLocales;
     static {
         String locStr = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.locales");
@@ -30,27 +33,11 @@ public abstract class SolrLocaleUtil {
         if (UtilValidate.isEmpty(locStr)) {
             locStr = "en";
         }
-        List<Locale> locList = new ArrayList<>();
-        StringBuilder normLocStr = new StringBuilder();
-        try {
-            for(String tag : locStr.split("\\s*,\\s*")) {
-                Locale locale = UtilMisc.parseLocale(tag);
-                if (locale == null) throw new IllegalArgumentException("invalid locale: " + tag);
-                if (locList.contains(locale)) {
-                    Debug.logWarning("Solr: Configured locale list contains duplicate locales: " + locStr, module);
-                    continue;
-                }
-                locList.add(locale);
-                if (normLocStr.length() > 0) normLocStr.append(",");
-                normLocStr.append(locale.toString());
-            }
-            Debug.logInfo("Solr: Configured content locales: " + locStr, module);
-        } catch(Exception e) {
-            Debug.logError(e, "Solr: Could not parse content locales: " + locStr + ": " + e.getMessage(), module);
-            locStr = "en";
-            locList = UtilMisc.toList(Locale.ENGLISH);
+        List<Locale> locList = parseCompatibleLocalesValid(locStr);
+        if (locList.size() == 0) {
+            locList.add(Locale.ENGLISH);
         }
-        solrContentLocalesStr = normLocStr.toString();
+        Debug.logInfo("Solr: Configured content locales: " + joinLocales(locList, ","), module);
         configuredLocales = Collections.unmodifiableList(locList);
     }
     
@@ -145,7 +132,7 @@ public abstract class SolrLocaleUtil {
         if (configuredLocales.contains(res)) return res;
         else return null;
     }
-
+    
     public static Locale getCompatibleLocaleValidOrDefault(Locale locale) {
         Locale res = getCompatibleLocaleValid(locale);
         return res != null ? res : configuredDefaultLocale; 
@@ -174,4 +161,127 @@ public abstract class SolrLocaleUtil {
         return res != null ? res : configuredDefaultLocale; 
     }
 
+    public static List<Locale> parseCompatibleLocalesValid(String locStr, boolean allowSpecial) {
+        List<Locale> locList = new ArrayList<>();
+        if (UtilValidate.isNotEmpty(locStr)) {
+            try {
+                for(String tag : locStr.split("\\s*,\\s*")) {
+                    Locale locale;
+                    if (allowSpecial && "general".equals(tag)) {
+                        locale = new Locale("general"); // FAKE locale
+                    } else {
+                        locale = UtilMisc.parseLocale(tag);
+                    }
+                    if (locale == null) throw new IllegalArgumentException("invalid locale: " + tag);
+                    locList.add(locale);
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: Could not parse content locales: " + locStr + ": " + e.getMessage(), module);
+            }
+        }
+        return locList;
+    }
+    
+    public static List<Locale> parseCompatibleLocalesValid(String locStr) {
+        return parseCompatibleLocalesValid(locStr, false);
+    }
+    
+    public static List<Locale> parseCompatibleLocalesValidSpecial(String locStr) {
+        return parseCompatibleLocalesValid(locStr, true);
+    }
+
+    public static String joinLocales(Collection<Locale> locales, String delim) {
+        StringBuilder sb = new StringBuilder();
+        for(Locale locale : locales) {
+            sb.append(delim);
+            sb.append(locale.toString());
+        }
+        return (sb.length() > 0) ? sb.substring(delim.length()) : "";
+    }
+    
+    public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, 
+            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String forceLocalePower) {
+        Set<String> fields = new LinkedHashSet<>();
+        
+        Locale locale = getCompatibleLocaleValid(userLocale);
+        Locale storeLocale = SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore);
+        
+        if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
+        
+        if (locale == null) {
+            // NOTE: this shouldn't really happen unless store is misconfigured
+            fields.add(fieldPrefix + "general");
+        } else {
+            if (userLocalePower == null) userLocalePower = "";
+            
+            // add user (or store) locale
+            fields.add(fieldPrefix + locale.toString() + userLocalePower);
+    
+            // if user locale is same as store locale, then also search general, because it should be in default store language
+            if (storeLocale != null && locale.toString().equals(storeLocale.toString())) {
+                fields.add(fieldPrefix + "general" + userLocalePower);
+            }
+        }
+        addAllI18nQueryFields(fields, forceLocales, fieldPrefix, forceLocalePower);
+        return fields;
+    }
+    
+    public static Set<String> determineI18nQueryFieldsForUserAndStoreLocale(Locale userLocale, GenericValue productStore, 
+            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower) {
+        Set<String> fields = new LinkedHashSet<>();
+ 
+        Locale locale = getCompatibleLocaleValid(userLocale);
+        Locale storeLocale = SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore);
+        
+        if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
+
+        if (locale == null) {
+            // NOTE: this shouldn't really happen unless store is misconfigured
+            fields.add(fieldPrefix + "general");
+        } else {
+            if (userLocalePower == null) userLocalePower = "";
+            
+            if (storeLocale == null || locale.toString().equals(storeLocale.toString())) {
+                // NOTE: am adding userLocalePower here always in case the result set is combined with other stuff
+                
+                // add user locale
+                fields.add(fieldPrefix + locale.toString() + userLocalePower);
+                
+                // add general
+                fields.add(fieldPrefix + "general" + userLocalePower);
+            } else {
+                if (storeLocalePower == null) storeLocalePower = "";
+                
+                // add user locale, with power 
+                fields.add(fieldPrefix + locale.toString() + userLocalePower);
+                
+                // add store locale
+                fields.add(fieldPrefix + storeLocale.toString() + storeLocalePower);
+                
+                // add general
+                fields.add(fieldPrefix + "general" + storeLocalePower);
+            }
+        }
+        
+        addAllI18nQueryFields(fields, forceLocales, fieldPrefix, forceLocalePower);
+        return fields;
+    }
+
+
+    public static void addAllI18nQueryFields(Set<String> out, Collection<Locale> locales, String fieldPrefix, String fieldSuffix, boolean checkCompatible) {
+        if (locales == null) return;
+        if (fieldPrefix == null) fieldPrefix = "";
+        if (fieldSuffix == null) fieldSuffix = "";
+        for(Locale locale : locales) {
+            if (checkCompatible) locale = getCompatibleLocaleValid(locale);
+            if (locale != null) out.add(fieldPrefix + locale.toString());
+        }
+    }
+    
+    /**
+     * WARN: assumes locales already compatible
+     */
+    public static void addAllI18nQueryFields(Set<String> out, Collection<Locale> locales, String fieldPrefix, String fieldSuffix) {
+        addAllI18nQueryFields(out, locales, fieldPrefix, fieldSuffix, false);
+    }
 }

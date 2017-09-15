@@ -1025,6 +1025,8 @@
 
   <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/browse,update,/searchpublic">
     <lst name="defaults">
+      <!-- SCIPIO: NOTE: 2017-09-13: instead of catch-all "text" we may now use specific query fields via 
+          edismax "qf" (see SolrProductUtil, shop.properties for example) -->
       <str name="df">text</str>
     </lst>
   </initParams>

@@ -84,7 +84,7 @@ public abstract class SolrProductSearch {
                         // don't mark dirty - we don't even know if the invocation was for a real product
                         return ServiceUtil.returnError("product not found for productId '" + productId + "'");
                     }
-                    Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
+                    Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, context);
                     dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
                     copyStdServiceFieldsNotSet(context, dispatchContext);
                     Map<String, Object> runResult = dispatcher.runSync("addToSolrIndex", dispatchContext);
@@ -216,7 +216,7 @@ public abstract class SolrProductSearch {
             // Debug.log(server.ping().toString());
 
             // Construct Documents
-            SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context);
+            SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context);
             Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 
             if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
@@ -285,7 +285,7 @@ public abstract class SolrProductSearch {
                 Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
     
                 for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
-                    SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), fieldListIterator.next());
+                    SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), fieldListIterator.next());
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
                     docs.add(doc1);
                 }
@@ -450,6 +450,11 @@ public abstract class SolrProductSearch {
             String defaultOp = (String) context.get("defaultOp");
             if (UtilValidate.isNotEmpty(defaultOp)) {
                 solrQuery.set("q.op", defaultOp);
+            }
+            
+            String queryFields = (String) context.get("queryFields");
+            if (UtilValidate.isNotEmpty(queryFields)) {
+                solrQuery.set("qf", queryFields);
             }
             
             Map<String, ?> queryParams = UtilGenerics.checkMap(context.get("queryParams"));
@@ -700,7 +705,7 @@ public abstract class SolrProductSearch {
             // CategoryUtil.getCategoryNameWithTrail((String)
             // context.get("productCategoryId"), catalogId, dctx, currentTrail): null;
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getAvailableCategories: productCategoryId: " + productCategoryId, module);
             Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
                     viewIndex, viewSize);
@@ -748,7 +753,7 @@ public abstract class SolrProductSearch {
             // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
             // instead of check in loop...
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: productCategoryId: " + productCategoryId, module);
@@ -773,10 +778,10 @@ public abstract class SolrProductSearch {
                     level = 0;
                     isFirstElement = false;
                 } else {
-                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, catalogId, dctx, currentTrail);
+                    String categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(element, catalogId, dctx, currentTrail);
                     String[] categoryPathArray = categoryPath.split("/");
                     level = Integer.parseInt(categoryPathArray[0]);
-                    String facetPrefix = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                    String facetPrefix = SolrCategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
                     // 2016-03-22: IMPORTANT: the facetPrefix MUST end with / otherwise it will return unrelated categories!
                     // solr facetPrefix is not aware of our path delimiters
                     if (!facetPrefix.endsWith("/")) {
@@ -934,7 +939,7 @@ public abstract class SolrProductSearch {
                 while ((bufSize <= 0 || numLeft > 0) && !lastReached) {
                     GenericValue product = prodIt.next();
                     if (product != null) {
-                        Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
+                        Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, context);
                         solrDocs.add(dispatchContext);
                         numLeft--;
                     } else {

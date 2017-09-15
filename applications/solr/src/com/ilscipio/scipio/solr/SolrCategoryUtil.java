@@ -20,9 +20,9 @@ import org.ofbiz.service.DispatchContext;
 /**
  * Product category util class for solr.
  */
-public abstract class CategoryUtil {
+public abstract class SolrCategoryUtil {
     
-    public static final String module = CategoryUtil.class.getName();
+    public static final String module = SolrCategoryUtil.class.getName();
 
     /**
      * Gets catalog IDs for specified product category.
@@ -138,7 +138,7 @@ public abstract class CategoryUtil {
      * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getCategoryPathFromTrailAsList}.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
-        List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
+        List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx);
         StringBuilder catMember = new StringBuilder();
         String cm = "";
         int i = 0;

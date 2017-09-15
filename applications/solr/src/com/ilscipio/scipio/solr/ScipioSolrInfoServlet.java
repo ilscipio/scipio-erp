@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServlet;
 import org.ofbiz.base.util.Debug;
 
 /**
- * Ofbiz Solr info/helper servlet.
+ * Scipio Solr info/helper servlet.
  */
 @SuppressWarnings("serial")
-public class OfbizSolrInfoServlet extends HttpServlet {
+public class ScipioSolrInfoServlet extends HttpServlet {
 
-    public static final String module = OfbizSolrInfoServlet.class.getName();
+    public static final String module = ScipioSolrInfoServlet.class.getName();
     
     /**
      * Used to deduce whether the solr webapp initialization step was reached
@@ -20,7 +20,7 @@ public class OfbizSolrInfoServlet extends HttpServlet {
      */
     private static volatile boolean servletInitStatusReached = false;
     
-    public OfbizSolrInfoServlet() {
+    public ScipioSolrInfoServlet() {
         super();
     }
     
@@ -32,13 +32,13 @@ public class OfbizSolrInfoServlet extends HttpServlet {
         super.init(config);
         boolean firstInit = setServletInitStatusReached();
         if (!firstInit) {
-            Debug.logInfo("Solr: OfbizSolrInfoServlet: (Non-first) servlet init executed", module);
+            Debug.logInfo("Solr: ScipioSolrInfoServlet: (Non-first) servlet init executed", module);
         }
     }
     
     private static boolean setServletInitStatusReached() {
         if (!isServletInitStatusReached()) {
-            Debug.logInfo("Solr: OfbizSolrInfoServlet: First servlet init executed", module);
+            Debug.logInfo("Solr: ScipioSolrInfoServlet: First servlet init executed", module);
             servletInitStatusReached = true;
             return true;
         } else {

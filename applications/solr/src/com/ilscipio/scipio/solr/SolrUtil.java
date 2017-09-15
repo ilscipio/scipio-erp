@@ -23,6 +23,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 /**
  * Solr utility class.
@@ -118,7 +119,7 @@ public abstract class SolrUtil {
     }
     
     public static boolean isSolrWebappInitialized() {
-        return OfbizSolrInfoServlet.isServletInitStatusReached();
+        return ScipioSolrInfoServlet.isServletInitStatusReached();
     }
     
     public static boolean isEcaTreatConnectErrorNonFatal() {
@@ -128,10 +129,10 @@ public abstract class SolrUtil {
     
     
     /**
-     * @deprecated Use {@link ProductUtil#generateSolrProductDocument(Map)} instead
+     * @deprecated Use {@link SolrProductUtil#generateSolrProductDocument(Map)} instead
      */
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
-        return ProductUtil.generateSolrProductDocument(null, null, context);
+        return SolrProductUtil.generateSolrProductDocument(null, null, context);
     }
     
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {

@@ -430,7 +430,7 @@ try {
         if (!kwsArgs.sortBy && sortOrder != null) {
             if (sortOrder instanceof SortProductPrice) {
                 SortProductPrice so = (SortProductPrice) sortOrder;
-                kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
+                kwsArgs.sortBy = SolrProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
                     locale, "Keyword search: ");
                 if (kwsArgs.sortBy != "defaultPrice") {
                     // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
@@ -463,10 +463,10 @@ try {
                 SortProductField so = (SortProductField) sortOrder;
                 // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
                 simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
-                kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
+                kwsArgs.sortBy = SolrProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
                 if (kwsArgs.sortBy) {
-                    kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
-                    kwsArgs.sortBy = com.ilscipio.scipio.solr.ProductUtil.makeProductSolrSortFieldExpr(
+                    kwsArgs.sortBy = SolrProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
+                    kwsArgs.sortBy = SolrProductUtil.makeProductSolrSortFieldExpr(
                             kwsArgs.sortBy, 
                             SolrLocaleUtil.getCompatibleLocaleValid(locale),
                             SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
@@ -606,6 +606,14 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
         if (kwsArgs.viewSize != null) kwsArgs.viewSize = kwsArgs.viewSize.toString();
         if (kwsArgs.viewIndex != null) kwsArgs.viewIndex = kwsArgs.viewIndex.toString();
         
+        queryFields = kwsArgs.queryFields;
+        if (queryFields == null && kwsArgs.searchSyntax == "user") {
+            def queryFieldsSet = SolrProductUtil.determineUserProductSearchQueryFields(delegator, 
+                locale, productStore, 
+                SolrProductUtil.readUserProductSearchConfig(delegator, "shop", "shop.search.solr.", kwsArgs));
+            queryFields = queryFieldsSet ? queryFieldsSet.join(" ") : null;
+        }
+        
         solrKwsServCtx = [query:kwsArgs.searchString, queryFilters:kwsArgs.searchFilters, 
             returnFields:kwsArgs.searchReturnFields,
             sortBy:kwsArgs.sortBy, sortByReverse:kwsArgs.sortByReverse,
@@ -613,6 +621,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             queryType:kwsArgs.searchSyntaxQt, 
             spellcheck:kwsArgs.spellcheck, facet:kwsArgs.facet,
             defaultOp:kwsArgs.defaultOp?:"OR", // TODO: REVIEW: hardcoding the default hardcoded here to follow the search param logic (not the solr config)
+            queryFields:queryFields?:null,
             locale:locale, userLogin:context.userLogin, timeZone:context.timeZone];
         
         if (DEBUG) Debug.logInfo("Keyword search params: " + solrKwsServCtx, module);

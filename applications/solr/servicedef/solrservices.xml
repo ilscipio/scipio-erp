@@ -250,6 +250,9 @@ under the License.
         <attribute mode="IN" optional="true" name="defaultOp" type="String">
             <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
         </attribute>
+        <attribute mode="IN" optional="true" name="queryFields" type="String">
+            <description>For edismax defType only: the target fields to query, usually space-separated ("qf" parameter)</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
@@ -305,6 +308,9 @@ under the License.
         </attribute>
         <attribute mode="IN" optional="true" name="defaultOp" type="String">
             <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryFields" type="String">
+            <description>For edismax defType only: the target fields to query, usually space-separated ("qf" parameter)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>

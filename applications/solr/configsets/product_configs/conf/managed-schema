@@ -206,6 +206,8 @@
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
+   <!-- SCIPIO: NOTE: 2017-09-13: instead of catch-all "text" we may now use specific query fields via 
+       edismax "qf" (see SolrProductUtil, shop.properties for example) -->
    <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <!-- SCIPIO: Localized catch-all text fields for language-specific general queries -->
    <field name="text_i18n_general" type="text_general" indexed="true" stored="false" multiValued="true"/>

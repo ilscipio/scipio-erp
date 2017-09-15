@@ -958,12 +958,30 @@ public class UtilMisc {
     }
     
     /**
+     * SCIPIO: Returns an unmodifiable linked hash set.
+     * we use this pattern constantly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> unmodifiableLinkedHashSet(T... elems) {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(elems)));
+    }
+    
+    /**
      * SCIPIO: Returns an unmodifiable array list
      * we use this pattern constantly.
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableArrayList(T... elems) {
         return Collections.unmodifiableList(new ArrayList<>(Arrays.asList(elems)));
+    }
+    
+    /**
+     * SCIPIO: Returns an unmodifiable linked list
+     * we use this pattern constantly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> unmodifiableLinkedList(T... elems) {
+        return Collections.unmodifiableList(new LinkedList<>(Arrays.asList(elems)));
     }
     
     /**

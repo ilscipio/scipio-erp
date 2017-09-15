@@ -950,7 +950,7 @@ public class UtilMisc {
 
     /**
      * SCIPIO: Returns an unmodifiable hash set.
-     * we use this pattern constantly.
+     * (We use this pattern constantly.)
      */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> unmodifiableHashSet(T... elems) {
@@ -958,8 +958,14 @@ public class UtilMisc {
     }
     
     /**
+     * SCIPIO: Returns an unmodifiable hash set copied from the given collection.
+     */
+    public static <T> Set<T> unmodifiableHashSetCopy(Collection<? extends T> collection) {
+        return Collections.unmodifiableSet(new HashSet<T>(collection));
+    }
+    
+    /**
      * SCIPIO: Returns an unmodifiable linked hash set.
-     * we use this pattern constantly.
      */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> unmodifiableLinkedHashSet(T... elems) {
@@ -967,8 +973,14 @@ public class UtilMisc {
     }
     
     /**
-     * SCIPIO: Returns an unmodifiable array list
-     * we use this pattern constantly.
+     * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection.
+     */
+    public static <T> Set<T> unmodifiableLinkedHashSetCopy(Collection<? extends T> collection) {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(collection));
+    }
+    
+    /**
+     * SCIPIO: Returns an unmodifiable array list.
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableArrayList(T... elems) {
@@ -976,12 +988,25 @@ public class UtilMisc {
     }
     
     /**
-     * SCIPIO: Returns an unmodifiable linked list
-     * we use this pattern constantly.
+     * SCIPIO: Returns an unmodifiable array list copied from the given collection.
+     */
+    public static <T> List<T> unmodifiableArrayListCopy(Collection<? extends T> collection) {
+        return Collections.unmodifiableList(new ArrayList<>(collection));
+    }
+    
+    /**
+     * SCIPIO: Returns an unmodifiable linked list.
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableLinkedList(T... elems) {
         return Collections.unmodifiableList(new LinkedList<>(Arrays.asList(elems)));
+    }
+    
+    /**
+     * SCIPIO: Returns an unmodifiable linked list copied from the given collection.
+     */
+    public static <T> List<T> unmodifiableLinkedListCopy(Collection<? extends T> collection) {
+        return Collections.unmodifiableList(new LinkedList<>(collection));
     }
     
     /**

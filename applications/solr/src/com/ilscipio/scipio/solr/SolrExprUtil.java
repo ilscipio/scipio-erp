@@ -14,7 +14,8 @@ import org.apache.solr.client.solrj.util.ClientUtils;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
- * SCIPIO: Util dedicated for solr query expression and term manipulation.
+ * SCIPIO: Util dedicated for low-level solr query expression and string/term/phrase manipulation.
+ * For higher-level query ops, see {@link SolrQueryUtil}.
  * <p>
  * NOTE: Some methods are Scipio-schema specific.
  * <p>

@@ -148,6 +148,7 @@
    <field name="internalName" type="text_general" indexed="true" stored="true"/>
    <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
    <field name="catalog" type="string" indexed="true" stored="true" multiValued="true"/>
+   <field name="productStore" type="string" indexed="true" stored="true" multiValued="true"/><!-- WARN: some code expects one store per product (added 2017-09-14) -->
    <field name="attributes" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="listPrice"  type="pfloat" indexed="true" stored="true"/>
    <field name="defaultPrice"  type="pfloat" indexed="true" stored="true"/>
@@ -173,7 +174,7 @@
    <field name="popularity" type="pint" indexed="true" stored="true" />
    <field name="inStock" type="pint" indexed="true" stored="true" /><!-- type="boolean" -->
 
-   <field name="store" type="location" indexed="true" stored="true"/>
+   <!--<field name="store" type="location" indexed="true" stored="true"/> REMOVED: unused, and the type is strange for the name -->
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.
@@ -209,12 +210,16 @@
    <!-- SCIPIO: NOTE: 2017-09-13: instead of catch-all "text" we may now use specific query fields via 
        edismax "qf" (see SolrProductUtil, shop.properties for example) -->
    <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
-   <!-- SCIPIO: Localized catch-all text fields for language-specific general queries -->
+   <!-- SCIPIO: Localized catch-all text fields for language-specific general queries 
+       NOTE: text_i18n_general should not be used for production/public queries anymore - use
+           the appropriate locale instead - the store-default locale will now (2017-09-14) contain the general text as well - 
+           see solrconfig.properties and SolrProductUtil#refineLocalizedContentValues -->
    <field name="text_i18n_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_en" type="text_en" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ar" type="text_ar" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_bg" type="text_bg" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ca" type="text_ca" indexed="true" stored="false" multiValued="true"/>
+   <!-- SCIPIO: TODO: REVIEW: 3-letter code languages may not be mapped properly in framework? (see SolrLocaleUtil) -->
    <field name="text_i18n_cjk" type="text_cjk" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ckb" type="text_ckb" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_cz" type="text_cz" indexed="true" stored="false" multiValued="true"/>

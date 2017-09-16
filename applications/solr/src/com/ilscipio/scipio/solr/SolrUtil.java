@@ -5,13 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
@@ -25,7 +19,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 
 /**
- * Solr utility class.
+ * Generic Solr utility class, and helpers to get HttpSolrClient for the Scipio Solr instance.
  */
 public abstract class SolrUtil {
     
@@ -50,7 +44,7 @@ public abstract class SolrUtil {
     }
     
     public static String getSolrConfigVersionStatic() {
-        return UtilProperties.getPropertyValue("solrconfig", "solr.config.version");
+        return UtilProperties.getPropertyValue(solrConfigName, "solr.config.version");
     }
     
     public static String makeSolrWebappUrl() {
@@ -63,10 +57,19 @@ public abstract class SolrUtil {
         if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
             solrPort = solrWebappPortOverride;
         } else {
-            solrPort = UtilProperties.getPropertyValue("url.properties", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"));
+            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"));
         }
-        
-        return solrWebappProtocol + "://" + solrWebappDomainName + ":" + solrPort + solrWebappPath;
+        StringBuilder sb = new StringBuilder();
+        sb.append(solrWebappProtocol);
+        sb.append("://");
+        sb.append(solrWebappDomainName);
+        sb.append(":");
+        sb.append(solrPort);
+        sb.append(solrWebappPath);
+        if (sb.charAt(sb.length() - 1) == '/') {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
     }
     
     public static String makeFullSolrWebappUrl() {
@@ -125,76 +128,7 @@ public abstract class SolrUtil {
         Boolean treatConnectErrorNonFatal = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.treatConnectErrorNonFatal", true);
         return Boolean.TRUE.equals(treatConnectErrorNonFatal);
     }
-    
-    
-    /**
-     * @deprecated Use {@link SolrProductUtil#generateSolrProductDocument(Map)} instead
-     */
-    public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
-        return SolrProductUtil.generateSolrProductDocument(null, null, context);
-    }
-    
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize) {
-        return categoriesAvailable(catalogId,categoryId,productId,null,displayproducts,viewIndex,viewSize, null);
-    }
-    
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize) {
-        return categoriesAvailable(catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize, null);
-    }
-
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, String core) {
-        // create the data model
-        Map<String, Object> result = new HashMap<>();
-        HttpSolrClient client = null;
-        QueryResponse returnMap = new QueryResponse();
-        try {
-            // do the basic query
-            client = getHttpSolrClient(core);
-            // create Query Object
-            String query = "inStock[1 TO *]";
-            if (categoryId != null)
-                query += " +cat:"+ SolrExprUtil.escapeTermFull(categoryId);
-            else if (productId != null)
-                query += " +productId:" + SolrExprUtil.escapeTermFull(productId);
-            SolrQuery solrQuery = new SolrQuery();
-            solrQuery.setQuery(query);
-
-            if (catalogId != null)
-                solrQuery.setFilterQueries("catalog:" + SolrExprUtil.escapeTermFull(catalogId));
-            if (displayproducts) {
-                if (viewSize > -1) {
-                    solrQuery.setRows(viewSize);
-                } else
-                    solrQuery.setRows(50000);
-                if (viewIndex > -1) {
-                    // 2016-04-01: This must be calculated
-                    //solrQuery.setStart(viewIndex);
-                    if (viewSize > 0) {
-                        solrQuery.setStart(viewSize * viewIndex);
-                    }
-                }
-            } else {
-                solrQuery.setFields("cat");
-                solrQuery.setRows(0);
-            }
-            
-            if(UtilValidate.isNotEmpty(facetPrefix)){
-                solrQuery.setFacetPrefix(facetPrefix);
-            }
-            
-            solrQuery.setFacetMinCount(0);
-            solrQuery.setFacet(true);
-            solrQuery.addFacetField("cat");
-            solrQuery.setFacetLimit(-1);
-            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
-            returnMap = client.query(solrQuery,METHOD.POST);
-            result.put("rows", returnMap);
-            result.put("numFound", returnMap.getResults().getNumFound());
-        } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
-        }
-        return result;
-    }
+ 
 
     public static GenericValue getSolrStatus(Delegator delegator) {
         GenericValue solrStatus;
@@ -248,36 +182,22 @@ public abstract class SolrUtil {
         return setSolrDataStatusId(delegator, dataStatusId, false);
     }
     
-    /**
-     * Returns the closest whole viewIndex.
-     */
-    public static Integer calcResultViewIndex(SolrDocumentList results, Integer viewSize) {
-        Integer viewIndex = null;
-        if (results != null && viewSize != null && viewSize > 0) {
-            long start = results.getStart();
-            viewIndex = (int) (start / (long) viewSize);
-        }
-        return viewIndex;
-    }
-    
     public static HttpSolrClient getHttpSolrClient(String core) {
-        if (UtilValidate.isNotEmpty(core)) return new HttpSolrClient(SolrUtil.solrUrl + "/" + core);
-        else return getHttpSolrClient();
+        if (UtilValidate.isNotEmpty(core)) {
+            return makeHttpSolrClientFromUrl(SolrUtil.solrUrl + "/" + core);
+        }
+        else {
+            return getHttpSolrClient();
+        }
     }
     
     public static HttpSolrClient getHttpSolrClient() {
-        return new HttpSolrClient(SolrUtil.solrFullUrl);
+        return makeHttpSolrClientFromUrl(SolrUtil.solrFullUrl);
     }
     
-    /**
-     * Checks if the exception extracted by {@link #getSolrNestedException} is a syntax error.
-     * FIXME: AWFUL HEURISTIC
-     */
-    public static boolean isSolrQuerySyntaxError(Throwable t) {
-        // exception message usually contains the string: "org.apache.solr.search.SyntaxError"
-        // hopefully this is accurate enough... how else to check? cause is not set and
-        // the root SyntaxError is from an inaccessible jar (CANNOT add it to classpath)
-        return ((t instanceof SolrException) && t.getMessage().toLowerCase().contains("syntax")); 
+    public static HttpSolrClient makeHttpSolrClientFromUrl(String url) {
+        // TODO: REVIEW: .allowCompression(false)
+        return new HttpSolrClient.Builder(url).build();
     }
     
 }

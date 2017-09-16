@@ -48,7 +48,7 @@ try {
     validBreadcrumb = topCategoryId + "/";
     
     dctx = dispatcher.getDispatchContext();
-    categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(productCategoryId,currentCatalogId,dctx,currentTrail);
+    categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(productCategoryId, currentCatalogId, dctx, currentTrail);
     breadcrumbs = categoryPath.split("/");
     for (breadcrumb in breadcrumbs) {
         if (!breadcrumb.equals(topCategoryId) && !breadcrumbsList.contains(breadcrumb))

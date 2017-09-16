@@ -59,7 +59,7 @@ import com.ilscipio.scipio.solr.*;
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final String module = "KeywordSearch.groovy";
 boolean DEBUG = Debug.verboseOn();
-//DEBUG = true;
+DEBUG = true;
 final boolean useSolr = ("Y" == EntityUtilProperties.getPropertyValue("shop", "shop.useSolr", "Y", delegator)); // (TODO?: in theory this should be a ProductStore flag)
 
 errorOccurred = false;
@@ -248,6 +248,7 @@ try {
             
             for(ProductSearchConstraint psc in pscList) {
                 if (psc instanceof ProductSearch.ExcludeVariantsConstraint) {
+                    // NOTE: 2017-09: even if this is not set, the default is now true
                     kwExcludeVariants = true;
                 } else if (psc instanceof ProductSearch.CatalogConstraint) { // SCIPIO: NOTE: we added this one here
                     ProductSearch.CatalogConstraint cc = (ProductSearch.CatalogConstraint) psc;
@@ -474,7 +475,7 @@ try {
                     kwsArgs.sortBy = SolrProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
                     kwsArgs.sortBy = SolrProductUtil.makeProductSolrSortFieldExpr(
                             kwsArgs.sortBy, 
-                            SolrLocaleUtil.getCompatibleLocaleValid(locale),
+                            SolrLocaleUtil.getCompatibleLocaleValid(locale, productStore),
                             SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
                         ) ?: kwsArgs.sortBy;
                 }
@@ -538,23 +539,6 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             } else {
                 kwsArgs.searchFilters.addAll(kwsArgs.searchFilter);
             }
-        } 
-        
-        if (kwsArgs.excludeVariants) {
-            hasVariantExpr = false;
-            for(filter in kwsArgs.searchFilters) {
-                // FIXME: heuristic regexp for isVariant: is unreliable and may be wrong... 
-                // should defer to a parsing utility...
-                if (filter.matches("^.*(\\+|-|\\b)isVariant:.*\$")) {
-                    hasVariantExpr = true;
-                    break;
-                }
-            }
-            if (!hasVariantExpr) {
-                // emulate ProductSearchSession EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y"),
-                // which was roughly correct
-                kwsArgs.searchFilters.add("-isVariant:true");
-            }
         }
         
         searchCatalogIds = new HashSet<>();
@@ -594,6 +578,16 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             //context.searchCategoryIdEff = ...;
         }
         
+        // TODO: REVIEW: added this initially, but upon further review the +catalog: filter above should be sufficient,
+        // AS LONG AS catalog is not accepted from request parameters (incl. security)
+//        if (kwsArgs.searchProductStoreId != "NONE") {
+//            // NOTE: this must NOT be a request parameter - always search within store - only screen could override
+//            def searchProductStoreId = kwsArgs.searchProductStoreId ?: productStoreId;
+//            if (productStoreId) {
+//                kwsArgs.searchFilters.add("+productStore:"+SolrExprUtil.escapeTermFull(productStoreId));
+//            }
+//        }
+        
         /* TODO/FIXME: missing data in solr, can't implement...
         if (kwsArgs.searchFeatures) {
             catExprList = [];
@@ -628,6 +622,7 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             spellcheck:kwsArgs.spellcheck, facet:kwsArgs.facet,
             defaultOp:kwsArgs.defaultOp?:"OR", // TODO: REVIEW: hardcoding the default hardcoded here to follow the search param logic (not the solr config)
             queryFields:queryFields?:null,
+            excludeVariants:kwsArgs.excludeVariants,
             locale:locale, userLogin:context.userLogin, timeZone:context.timeZone];
         
         if (DEBUG) Debug.logInfo("Keyword search params: " + solrKwsServCtx, module);

@@ -1,10 +1,19 @@
 package com.ilscipio.scipio.solr;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest.METHOD;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -13,12 +22,14 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.DispatchContext;
 
 /**
  * Product category util class for solr.
+ * TODO: some of these method belong in non-solr classes
  */
 public abstract class SolrCategoryUtil {
     
@@ -29,29 +40,85 @@ public abstract class SolrCategoryUtil {
      * <p>
      * This method is a supplement to CatalogWorker methods.
      */
-    public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
+        List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, useCache);
+        return getStringFieldList(catalogs, "prodCatalogId");
+    }
+    
+    static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
+        return getCatalogIdsByCategoryId(delegator, productCategoryId, false); // legacy
+    }
+    
+    static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
         List<GenericValue> catalogs = null;
         try {
             EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("productCategoryId", productCategoryId));
-            // catalogs = delegator.findList("ProdCatalog", null, null, UtilMisc.toList("catalogName"), null, false);
-            catalogs = delegator.findList("ProdCatalogCategory", condition, null, null, null, false);
+            condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
+            catalogs = delegator.findList("ProdCatalogCategory", condition, null, UtilMisc.toList("sequenceNum"), null, useCache);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up all catalogs", module);
+            Debug.logError(e, "Solr: Error looking up catalogs for productCategoryId: " + productCategoryId, module);
+            catalogs = new ArrayList<>();
         }
-        List<String> catalogIds;
-        if (UtilValidate.isNotEmpty(catalogs)) {
-            catalogIds = new ArrayList<>(catalogs.size());
-            for (GenericValue c : catalogs) {
-                catalogIds.add(c.getString("prodCatalogId"));
+        return catalogs;
+    }
+    
+    static Map<String, List<String>> getCatalogIdsByCategoryIdMap(Delegator delegator, List<String> categoryIds, boolean useCache) {
+        Map<String, List<String>> map = new HashMap<>();
+        if (categoryIds == null) return map;
+        for(String categoryId : categoryIds) {
+            map.put(categoryId, getStringFieldList(getProdCatalogCategoryByCategoryId(delegator, categoryId, useCache), "prodCatalogId"));
+        }
+        return map;
+    }
+    
+    // FIXME: doesn't belong in solr
+    static List<String> getStringFieldList(List<GenericValue> values, String fieldName) {
+        List<String> fieldList;
+        if (UtilValidate.isNotEmpty(values)) {
+            fieldList = new ArrayList<>(values.size());
+            for (GenericValue c : values) {
+                fieldList.add(c.getString(fieldName));
             }
         } else {
-            catalogIds = new ArrayList<>();
+            fieldList = new ArrayList<>();
         }
-        return catalogIds;
+        return fieldList;
+    }
+    
+    static void addAllStringFieldList(Collection<String> out, List<GenericValue> values, String fieldName) {
+        if (values != null) {
+            for (GenericValue c : values) {
+                out.add(c.getString(fieldName));
+            }
+        }
+    }
+    
+    /**
+     * Best-effort.
+     */
+    static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+        List<GenericValue> stores = new ArrayList<>();
+        Set<String> storeIds = new HashSet<>();
+        for(String catalogId : catalogIds) {
+            try {
+                EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("prodCatalogId", catalogId));
+                condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
+                List<GenericValue> productStoreCatalogs = delegator.findList("ProductStoreCatalog", condition, null, null, null, useCache);
+                for(GenericValue productStoreCatalog : productStoreCatalogs) {
+                    if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
+                        stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
+                        storeIds.add(productStoreCatalog.getString("productStoreId"));
+                    }
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: Error looking up ProductStore for catalogId: " + catalogId, module);
+            }
+        }
+        return stores;
     }
     
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
-       GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = new ArrayList<>();
         // 2016-03-22: don't need a loop here due to change below
         //String parentProductCategoryId = productCategoryId;
@@ -106,7 +173,7 @@ public abstract class SolrCategoryUtil {
             //}
 
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot generate trail from product category; SOLR query or data may be incomplete!", module);
+            Debug.logError(e, "Solr: Cannot generate trail from product category; SOLR query or data may be incomplete!", module);
         }
         //}
         if (trailElements.isEmpty()) {
@@ -345,4 +412,73 @@ public abstract class SolrCategoryUtil {
         }
     }
     
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+            boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
+        return categoriesAvailable(catalogId, categoryId, productId, null, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
+    }
+    
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+            String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
+        return categoriesAvailable(catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
+    }
+
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
+            String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants, String core) {
+        // create the data model
+        Map<String, Object> result = new HashMap<>();
+        HttpSolrClient client = null;
+        QueryResponse returnMap = new QueryResponse();
+        try {
+            // do the basic query
+            client = SolrUtil.getHttpSolrClient(core);
+            // create Query Object
+            String query = "inStock[1 TO *]";
+            if (categoryId != null)
+                query += " +cat:"+ SolrExprUtil.escapeTermFull(categoryId);
+            else if (productId != null)
+                query += " +productId:" + SolrExprUtil.escapeTermFull(productId);
+            SolrQuery solrQuery = new SolrQuery();
+            solrQuery.setQuery(query);
+
+            if (catalogId != null)
+                solrQuery.addFilterQuery("+catalog:" + SolrExprUtil.escapeTermFull(catalogId));
+            
+            if (excludeVariants == null) excludeVariants = SolrProductSearch.excludeVariantsDefault;
+            if (excludeVariants)
+                SolrProductUtil.addExcludeVariantsFilter(solrQuery);
+            
+            if (displayproducts) {
+                if (viewSize > -1) {
+                    solrQuery.setRows(viewSize);
+                } else
+                    solrQuery.setRows(50000);
+                if (viewIndex > -1) {
+                    // 2016-04-01: This must be calculated
+                    //solrQuery.setStart(viewIndex);
+                    if (viewSize > 0) {
+                        solrQuery.setStart(viewSize * viewIndex);
+                    }
+                }
+            } else {
+                solrQuery.setFields("cat");
+                solrQuery.setRows(0);
+            }
+            
+            if(UtilValidate.isNotEmpty(facetPrefix)){
+                solrQuery.setFacetPrefix(facetPrefix);
+            }
+            
+            solrQuery.setFacetMinCount(0);
+            solrQuery.setFacet(true);
+            solrQuery.addFacetField("cat");
+            solrQuery.setFacetLimit(-1);
+            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            returnMap = client.query(solrQuery,METHOD.POST);
+            result.put("rows", returnMap);
+            result.put("numFound", returnMap.getResults().getNumFound());
+        } catch (Exception e) {
+            Debug.logError(e.getMessage(), module);
+        }
+        return result;
+    }
 }

@@ -41,6 +41,9 @@ under the License.
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="false"/>
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="false"/>
         <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
+        <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
+            <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
+        </attribute>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
@@ -48,12 +51,15 @@ under the License.
     <service name="rebuildSolrIndexIfDirty" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="rebuildSolrIndex">
+        invoke="rebuildSolrIndexIfDirty">
         <description>rebuild SOLR Index if data status dirty (or unknown) OR if config change (2017-08-23)</description>
         <implements service="rebuildSolrIndex" />
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="true"/>
         <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
+        <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
+            <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
+        </attribute>
     </service>
     
     <service name="rebuildSolrIndexAuto" engine="java"
@@ -66,6 +72,9 @@ under the License.
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" />
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean"/>
         <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
+        <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
+            <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
+        </attribute>
     </service>
     
     <service name="setSolrDataStatus" engine="java"
@@ -147,6 +156,7 @@ under the License.
         <attribute mode="IN" name="attributes" optional="true" type="List" />
         <attribute mode="IN" name="catalog" optional="true" type="List" />
         <attribute mode="IN" name="keywords" optional="true" type="Object" /><!-- NOTE: un-deprecated 2017-09-12: can be String or List -->
+        <attribute mode="IN" name="productStore" optional="true" type="List" /><!-- 2017-09-14 -->
     </service>
 
     <service name="solrProductAttributes" engine="interface">
@@ -168,6 +178,7 @@ under the License.
         <attribute mode="IN" name="image" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>
         <!-- SERVICE FIELDS -->
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
+        <attribute mode="IN" name="useCache" optional="true" type="Boolean" /><!-- default false; used for extra entity lookups -->
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>
@@ -179,6 +190,7 @@ under the License.
         <description>Add a List of Products to Solr Index and flush after all have been added</description>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" />
         <attribute mode="IN" name="fieldList" optional="false" type="List" />
+        <attribute mode="IN" name="useCache" optional="true" type="Boolean" /><!-- default false; used for extra entity lookups -->
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>
@@ -201,10 +213,15 @@ under the License.
         </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="queryFilters" type="List">
+            <description>List of strings, each used as-is as a filter (no splitting).
+                NOTE: excludeVariants param adds a filter to this list, pass excludeVariants=false to prevent</description>
+        </attribute>
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
+        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
@@ -235,7 +252,8 @@ under the License.
                     To avoid splitting, use queryFilters instead (with one entry).</description>
         </attribute>
         <attribute mode="IN" optional="true" name="queryFilters" type="List">
-            <description>List of strings, each used as-is as a filter (no splitting).</description>
+            <description>List of strings, each used as-is as a filter (no splitting).
+                NOTE: excludeVariants param adds a filter to this list, pass excludeVariants=false to prevent</description>
         </attribute>
         <attribute mode="IN" optional="true" name="sortBy" type="String"/>
         <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
@@ -259,6 +277,7 @@ under the License.
         <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
+        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
             <description>Correctly-spelled flag - set if spellcheck was enabled
@@ -347,6 +366,7 @@ under the License.
         <attribute mode="IN" optional="true" name="displayProducts" type="Boolean"/>
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
+        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
@@ -359,6 +379,7 @@ under the License.
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
         <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
+        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>

@@ -42,10 +42,6 @@ public class SolrValueWorker {
         return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(currentLocale), SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)); 
     }
     
-    public static SolrValueWorker getWorker(SolrDocument solrDoc, Locale locale) {
-        return new SolrValueWorker(solrDoc, SolrLocaleUtil.getCompatibleLocale(locale), null); 
-    }
-    
     public static SolrValueWorker getWorker(SolrDocument solrDoc) {
         return new SolrValueWorker(solrDoc, null, null); 
     }
@@ -111,7 +107,7 @@ public class SolrValueWorker {
      */
     public Object getFieldValueI18nStrict(String name) {
         for(Locale locale : lookupLocales) {
-            Object value = solrDoc.getFieldValue(name + "_i18n_" + locale.toString());
+            Object value = solrDoc.getFieldValue(name + "_i18n_" + SolrLocaleUtil.getLangCode(locale));
             if (value != null) return value;
         }
         return null;
@@ -121,7 +117,7 @@ public class SolrValueWorker {
      * Abstracted method to return the default non-localized version of the given <code>*_i18n_*</code> field.
      */
     public Object getFieldValueGeneral(String name) {
-        return solrDoc.getFieldValue(name + "_i18n_general");
+        return solrDoc.getFieldValue(name + "_i18n_" + SolrLocaleUtil.FIELD_I18N_GENERAL);
     }
     
     /**

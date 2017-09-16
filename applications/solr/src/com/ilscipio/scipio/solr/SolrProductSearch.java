@@ -53,6 +53,9 @@ public abstract class SolrProductSearch {
     
     static final boolean excludeVariantsDefault = true;
     
+    private static boolean reindexAutoForceRan = false;
+    private static final String reindexAutoForcePropName = "scipio.solr.reindex.auto.force";
+    
     /**
      * Adds product to solr, with product denoted by productId field in instance
      * attribute - intended for use with ECAs/SECAs.
@@ -405,6 +408,17 @@ public abstract class SolrProductSearch {
             if (Boolean.TRUE.equals(spellCheck)) {
                 solrQuery.setParam("spellcheck", true);
                 solrQuery.setParam("spellcheck.collate", true);
+                
+                Object spellDictObj = context.get("spellDict");
+                if (spellDictObj instanceof String) {
+                    if (UtilValidate.isNotEmpty((String) spellDictObj)) {
+                        solrQuery.setParam("spellcheck.dictionary", (String) spellDictObj);
+                    }
+                } else if (spellDictObj instanceof Collection) {
+                    for(String spellDict : UtilGenerics.<String>checkCollection(spellDictObj)) {
+                        solrQuery.add("spellcheck.dictionary", spellDict);
+                    }
+                }
             }
 
             Boolean highlight = (Boolean) context.get("highlight");
@@ -638,7 +652,7 @@ public abstract class SolrProductSearch {
             Integer viewSize = (Integer) dispatchMap.get("viewSize");
             //Integer viewIndex = (Integer) dispatchMap.get("viewIndex");
             if (dispatchMap.get("facet") == null) dispatchMap.put("facet", false); // 2017-09: default changed to false
-            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", true);
+            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", false); // 2017-09: default changed to false
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
 
             List<String> queryFilters = getEnsureQueryFiltersList(dispatchMap);
@@ -1076,16 +1090,40 @@ public abstract class SolrProductSearch {
         return result;
     }
     
+    private static boolean isReindexAutoForce(Delegator delegator, LocalDispatcher dispatcher) {
+        boolean autoForce = false;
+        if (!reindexAutoForceRan) {
+            synchronized(SolrProductSearch.class) {
+                if (!reindexAutoForceRan) {
+                    autoForce = Boolean.TRUE.equals(getReindexAutoForceProperty(delegator, dispatcher));
+                    reindexAutoForceRan = true;
+                }
+            }
+        }
+        return autoForce;
+    }
+    
+    private static Boolean getReindexAutoForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
+        return UtilMisc.booleanValueVersatile(System.getProperty(reindexAutoForcePropName));
+    }
+    
     /**
      * Rebuilds the solr index - auto run.
      */
     public static Map<String, Object> rebuildSolrIndexAuto(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
+        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        boolean autoForce = isReindexAutoForce(delegator, dispatcher);
+        if (autoForce) {
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by system property " + reindexAutoForcePropName + "=true", module);
+        }
+        boolean force = autoForce;
 
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
         
-        if (autoRunEnabled) {
+        if (force || autoRunEnabled) {
             Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
             if (onlyIfDirty == null) {
                 onlyIfDirty = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.onlyIfDirty", false);
@@ -1094,8 +1132,12 @@ public abstract class SolrProductSearch {
             if (ifConfigChange == null) {
                 ifConfigChange = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.ifConfigChange", false);
             }
+            if (force) {
+                onlyIfDirty = false;
+                ifConfigChange = false;
+            }
             
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")...", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")", module);
 
             Map<String, Object> servCtx;
             try {

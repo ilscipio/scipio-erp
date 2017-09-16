@@ -117,7 +117,7 @@ public class SolrValueWorker {
      * Abstracted method to return the default non-localized version of the given <code>*_i18n_*</code> field.
      */
     public Object getFieldValueGeneral(String name) {
-        return solrDoc.getFieldValue(name + "_i18n_" + SolrLocaleUtil.FIELD_I18N_GENERAL);
+        return solrDoc.getFieldValue(name + "_i18n_" + SolrLocaleUtil.I18N_GENERAL);
     }
     
     /**

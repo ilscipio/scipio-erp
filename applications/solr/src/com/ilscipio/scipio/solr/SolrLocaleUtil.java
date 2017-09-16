@@ -29,8 +29,10 @@ public abstract class SolrLocaleUtil {
      * field for content values not explicitly given a locale (in the original entities).
      * In other words the "*_i18n_general" fields in the solr schema.
      */
-    public static final String FIELD_I18N_GENERAL = "general";
+    public static final String I18N_GENERAL = "general";
     
+    private static final String spellcheckI18nDictBaseName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.spellcheck.localDictBaseName", "default");
+
     protected SolrLocaleUtil() {
     }
 
@@ -244,8 +246,8 @@ public abstract class SolrLocaleUtil {
             try {
                 for(String tag : locStr.split("\\s*,\\s*")) {
                     Locale locale;
-                    if (allowSpecial && SolrLocaleUtil.FIELD_I18N_GENERAL.equals(tag)) {
-                        locale = new Locale(SolrLocaleUtil.FIELD_I18N_GENERAL); // FAKE locale
+                    if (allowSpecial && SolrLocaleUtil.I18N_GENERAL.equals(tag)) {
+                        locale = new Locale(SolrLocaleUtil.I18N_GENERAL); // FAKE locale
                     } else {
                         locale = UtilMisc.parseLocale(tag);
                     }
@@ -280,20 +282,8 @@ public abstract class SolrLocaleUtil {
         return (sb.length() > 0) ? sb.substring(delim.length()) : "";
     }
     
-    public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, 
-            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String forceLocalePower) {
-        return determineI18nQueryFieldsForUserAndStoreLocale(userLocale, productStore, forceLocales, fieldPrefix,
-                userLocalePower, null, forceLocalePower, false);
-    }
-    
-    public static Set<String> determineI18nQueryFieldsForUserAndStoreLocale(Locale userLocale, GenericValue productStore, 
+    public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, boolean useStoreLocale,
             Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower) {
-        return determineI18nQueryFieldsForUserAndStoreLocale(userLocale, productStore, forceLocales, fieldPrefix,
-                userLocalePower, storeLocalePower, forceLocalePower, true);
-    }
-    
-    private static Set<String> determineI18nQueryFieldsForUserAndStoreLocale(Locale userLocale, GenericValue productStore, 
-            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower, boolean useStore) {
         Set<String> fields = new LinkedHashSet<>();
  
         Locale locale = getCompatibleLocaleValid(userLocale, productStore);
@@ -303,7 +293,7 @@ public abstract class SolrLocaleUtil {
 
         if (locale == null) {
             // NOTE: this shouldn't happen unless store is misconfigured
-            fields.add(fieldPrefix + SolrLocaleUtil.FIELD_I18N_GENERAL);
+            fields.add(fieldPrefix + SolrLocaleUtil.I18N_GENERAL);
         } else {
             // NOTE: 2017-09-14: no need to include the "*_i18n_general" field here anymore because
             // its content will have been merged into the proper locale already (if applicable)
@@ -313,7 +303,7 @@ public abstract class SolrLocaleUtil {
             // add user locale
             fields.add(fieldPrefix + getLangCode(locale) + userLocalePower);
             
-            if (useStore && storeLocale != null && !isSameLangCode(locale, storeLocale)) {
+            if (useStoreLocale && storeLocale != null && !isSameLangCode(locale, storeLocale)) {
                 if (storeLocalePower == null) storeLocalePower = "";
  
                 // add store locale
@@ -321,14 +311,14 @@ public abstract class SolrLocaleUtil {
             }
         }
         
-        addAllI18nQueryFields(fields, forceLocales, fieldPrefix, forceLocalePower);
+        addAllI18nValuePrefixSuffix(fields, forceLocales, fieldPrefix, forceLocalePower);
         return fields;
     }
     
     /**
      * WARN: assumes locales already compatible
      */
-    public static void addAllI18nQueryFields(Set<String> out, Collection<Locale> locales, String fieldPrefix, String fieldSuffix) {
+    public static void addAllI18nValuePrefixSuffix(Set<String> out, Collection<Locale> locales, String fieldPrefix, String fieldSuffix) {
         if (locales == null) return;
         if (fieldPrefix == null) fieldPrefix = "";
         if (fieldSuffix == null) fieldSuffix = "";
@@ -336,4 +326,34 @@ public abstract class SolrLocaleUtil {
             if (locale != null) out.add(fieldPrefix + getLangCode(locale));
         }
     }
+    
+    public static String getSpellcheckI18nDictBaseName(GenericValue productStore) {
+        return spellcheckI18nDictBaseName;
+    }
+    
+    /**
+     * Determines the dictionary names should use for user locale.
+     * Similar logic to {@link #determineI18nQueryFieldsForUserLocale} but implemented differently
+     * due to spellchecker limitations.
+     */
+    public static Set<String> determineSpellcheckI18nDictNames(Locale userLocale, GenericValue productStore, boolean useStoreLocale, String customDictBaseName) {
+        if (UtilValidate.isEmpty(customDictBaseName)) customDictBaseName = getSpellcheckI18nDictBaseName(productStore);
+        
+        Set<String> fields = new LinkedHashSet<>();
+        
+        Locale locale = getCompatibleLocaleValid(userLocale, productStore);
+        Locale storeLocale = SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore);
+        
+        if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
+
+        if (locale == null) {
+            // NOTE: this shouldn't happen unless store is misconfigured
+            fields.add(customDictBaseName + SolrLocaleUtil.I18N_GENERAL);
+        } else {
+            // add user locale
+            fields.add(customDictBaseName + (useStoreLocale ? "_dlang_" : "_lang_") + getLangCode(locale));
+        }
+        return fields;
+    }
+    
 }

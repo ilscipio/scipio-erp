@@ -85,7 +85,18 @@ public abstract class SolrProductUtil {
         PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY = Collections.unmodifiableMap(solrEntMap);
     }
     
-    private static final Set<String> defaultCommonUserSearchFields = UtilMisc.unmodifiableLinkedHashSet("keywords"); 
+    private static final Map<String, Object> defaultUserProductSearchConfig;
+    static {
+        Map<String, Object> config = null;
+        try {
+            config = readUserProductSearchConfig(DelegatorFactory.getDelegator("default"), 
+                    SolrUtil.solrConfigName, "solr.search.user.");
+        } catch(Exception e) {
+            Debug.logError(e, "Solr: Could not read default user product search config from solr.properties: " + e.getMessage(), module);
+            config = new HashMap<>();
+        }
+        defaultUserProductSearchConfig = Collections.unmodifiableMap(config); // FIXME: contents are not properly unmodifiable
+    }
     
     /**
      * Cached names of solrProductAttributesSimple service interface field names.
@@ -163,6 +174,10 @@ public abstract class SolrProductUtil {
         }
     }
     
+    public static Map<String, Object> getDefaultUserProductSearchConfig(GenericValue productStore) {
+        return defaultUserProductSearchConfig;
+    }
+    
     /**
      * Returns set of query fields (with optional power expressions, e.g. ^2) for user/public searches
      * appropriate for locale and store and according to config, to use instead of the default search field ("text").
@@ -172,57 +187,22 @@ public abstract class SolrProductUtil {
      * 
      * @see #readUserProductSearchConfig for config
      */
-    public static Set<String> determineUserProductSearchQueryFields(Delegator delegator, Locale userLocale, GenericValue productStore, Map<String, ?> config) {
+    public static Set<String> determineUserProductSearchQueryFields(Delegator delegator, Locale userLocale, GenericValue productStore, Map<String, Object> config) {
+        setDefaultsUserProductSearchConfig(config, getDefaultUserProductSearchConfig(productStore));
+        
         String i18nFieldsSelect = (String) config.get("i18nFieldsSelect");
-        
-        Object i18nForceLocalesObj = config.get("i18nForceLocales");
-        Collection<Locale> i18nForceLocales;
-        if (i18nForceLocalesObj instanceof String) {
-            if (((String) i18nForceLocalesObj).length() == 0 || "NONE".equals(i18nForceLocalesObj)) {
-                i18nForceLocales = Collections.emptySet();
-            } else {
-                i18nForceLocales = SolrLocaleUtil.parseCompatibleLocalesValidSpecial((String) i18nForceLocalesObj);
-            }
-        } else {
-            i18nForceLocales = UtilGenerics.checkCollection(i18nForceLocalesObj);
-        }
-        
+        Collection<Locale> i18nForceLocales = UtilGenerics.checkCollection(config.get("i18nForceLocales"));
         String userLocalePower = (String) config.get("userLocalePower");
+        Collection<String> commonFields = UtilGenerics.checkCollection(config.get("product.commonFields"));
         
-        Object forceFieldsObj = config.get("forceFields");
-        Collection<String> forceFields;
-        if (forceFieldsObj instanceof String) {
-            if (((String) forceFieldsObj).length() == 0 || "NONE".equals(forceFieldsObj)) {
-                forceFields = Collections.emptySet();
-            } else {
-                forceFields = Arrays.asList(((String) forceFieldsObj).split("\\s*,\\s*"));
-            }
-        } else {
-            forceFields = UtilGenerics.checkCollection(forceFieldsObj);
-        }
-        
-        Object commonFieldsObj = config.get("commonFields");
-        Collection<String> commonFields;
-        if (commonFieldsObj == null) {
-            commonFields = defaultCommonUserSearchFields;
-        } else if (commonFieldsObj instanceof String) {
-            if (((String) commonFieldsObj).length() == 0 || "NONE".equals(commonFieldsObj)) {
-                commonFields = Collections.emptySet();
-            } else {
-                commonFields = Arrays.asList(((String) commonFieldsObj).split("\\s*,\\s*"));
-            }
-        } else {
-            commonFields = UtilGenerics.checkCollection(commonFieldsObj);
-        }
-
         Set<String> queryFields = null;
         if (UtilValidate.isNotEmpty(i18nFieldsSelect)) {
             if ("user-store".equals(i18nFieldsSelect)) {
                 // FIXME: Set strings are not check for power e.g. ^2 suffix
-                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserAndStoreLocale(userLocale, productStore, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
+                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, true, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
                 if (commonFields != null) queryFields.addAll(commonFields);
             } else if ("user".equals(i18nFieldsSelect)) {
-                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, i18nForceLocales, "text_i18n_", userLocalePower, null);
+                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, false, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
                 
             } else if ("all".equals(i18nFieldsSelect)) {
                 queryFields = new LinkedHashSet<>();
@@ -242,7 +222,6 @@ public abstract class SolrProductUtil {
             // return nothing; indicates use default and don't use qf param
             queryFields = new LinkedHashSet<>();
         }
-        if (forceFields != null) queryFields.addAll(forceFields);
         return queryFields;
     }
     
@@ -250,30 +229,79 @@ public abstract class SolrProductUtil {
      * Reads common solr user search options from a properties file.
      * Example/Reference: Scipio shop.properties values having "shop.search.solr." prefix.
      */
-    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix) {
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, boolean parseCfg) {
         Map<String, Object> config = new HashMap<>();
         // TODO: optimize
         config.put("queryType", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "queryType", null, delegator));
         config.put("i18nFieldsSelect", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "i18nFieldsSelect", null, delegator));
         config.put("i18nForceLocales", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "i18nForceLocales", null, delegator));
         config.put("userLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "userLocalePower", null, delegator));
-        config.put("commonFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "commonFields", null, delegator));
-        config.put("forceFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "forceFields", null, delegator));
+        config.put("product.commonFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.commonFields", null, delegator));
+        
+        if (parseCfg) parseUserProductSearchConfig(delegator, config);
         return config;
+    }
+    
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix) {
+        return readUserProductSearchConfig(delegator, propResource, propNamePrefix, true);
     }
     
     /**
      * Reads common user search options from a properties file plus overrides.
      * Example: Scipio shop.properties values having "shop.search.solr." prefix.
      */
-    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, Map<String, ?> overrideConfig) {
-        Map<String, Object> config = readUserProductSearchConfig(delegator, propResource, propNamePrefix);
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, Map<String, Object> overrideConfig, boolean parseCfg) {
+        Map<String, Object> config = readUserProductSearchConfig(delegator, propResource, propNamePrefix, false);
         if (overrideConfig != null) {
-            for(Map.Entry<String, ?> entry : overrideConfig.entrySet()) {
-                if (entry.getValue() != null) config.put(entry.getKey(), entry.getValue());
+            overrideUserProductSearchConfig(config, overrideConfig);
+        }
+        if (parseCfg) parseUserProductSearchConfig(delegator, config);
+        return config;
+    }
+    
+    public static Map<String, Object> readUserProductSearchConfig(Delegator delegator, String propResource, String propNamePrefix, Map<String, Object> overrideConfig) {
+        return readUserProductSearchConfig(delegator, propResource, propNamePrefix, overrideConfig, true);
+    }
+    
+    public static void overrideUserProductSearchConfig(Map<String, Object> destConfig, Map<String, Object> overrideConfig) {
+        for(Map.Entry<String, ?> entry : overrideConfig.entrySet()) {
+            if (entry.getValue() != null) destConfig.put(entry.getKey(), entry.getValue());
+        }
+    }
+    
+    public static void setDefaultsUserProductSearchConfig(Map<String, Object> destConfig, Map<String, Object> defaultsConfig) {
+        for(Map.Entry<String, Object> entry : defaultsConfig.entrySet()) {
+            if (entry.getValue() != null) {
+                Object oldValue = destConfig.get(entry.getKey());
+                if (oldValue == null) {
+                    destConfig.put(entry.getKey(), entry.getValue());
+                }
             }
         }
-        return config;
+    }
+    
+    public static void parseUserProductSearchConfig(Delegator delegator, Map<String, Object> config) {
+        Object i18nForceLocalesObj = config.get("i18nForceLocales");
+        if (i18nForceLocalesObj instanceof String) {
+            Collection<Locale> i18nForceLocales;
+            if (((String) i18nForceLocalesObj).length() == 0 || "NONE".equals(i18nForceLocalesObj)) {
+                i18nForceLocales = Collections.emptySet();
+            } else {
+                i18nForceLocales = SolrLocaleUtil.parseCompatibleLocalesValidSpecial((String) i18nForceLocalesObj);
+            }
+            config.put("i18nForceLocales", i18nForceLocales);
+        }
+
+        Object commonFieldsObj = config.get("product.commonFields");
+        if (commonFieldsObj instanceof String) {
+            Collection<String> commonFields;
+            if (((String) commonFieldsObj).length() == 0 || "NONE".equals(commonFieldsObj)) {
+                commonFields = Collections.emptySet();
+            } else {
+                commonFields = Arrays.asList(((String) commonFieldsObj).split("\\s*,\\s*"));
+            }
+            config.put("product.commonFields", commonFields);
+        }
     }
     
     private static ModelService getModelServiceStaticSafe(String serviceName) {
@@ -566,7 +594,7 @@ public abstract class SolrProductUtil {
             String productContentTypeId, List<Locale> locales, Locale defaultProductLocale, List<ProductContentWrapper> pcwList, boolean useCache) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
         
-        contentMap.put(SolrLocaleUtil.FIELD_I18N_GENERAL, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, useCache));
+        contentMap.put(SolrLocaleUtil.I18N_GENERAL, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, delegator, dispatcher, useCache));
         
         getProductContentForLocales(contentMap, delegator, dispatcher, product, productContentTypeId, locales, defaultProductLocale, useCache);
         
@@ -588,7 +616,7 @@ public abstract class SolrProductUtil {
      */
     public static void refineLocalizedContentValues(Map<String, String> contentMap, List<Locale> locales, Locale defaultProductLocale) {
         if (defaultProductLocale != null) {
-            String generalValue = contentMap.get(SolrLocaleUtil.FIELD_I18N_GENERAL);
+            String generalValue = contentMap.get(SolrLocaleUtil.I18N_GENERAL);
             String defaultLangValue = contentMap.get(SolrLocaleUtil.getLangCode(defaultProductLocale));
             
             if (UtilValidate.isEmpty(defaultLangValue)) {
@@ -597,7 +625,7 @@ public abstract class SolrProductUtil {
                 }
             } else if (UtilValidate.isEmpty(generalValue)) {
                 if (UtilValidate.isNotEmpty(defaultLangValue)) {
-                    contentMap.put(SolrLocaleUtil.FIELD_I18N_GENERAL, defaultLangValue);
+                    contentMap.put(SolrLocaleUtil.I18N_GENERAL, defaultLangValue);
                 }
             }
         }
@@ -638,7 +666,7 @@ public abstract class SolrProductUtil {
         String thisLocaleString = (String) content.get("localeString");
         thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
         // special case: no locale string: treat as general (NOTE: here give the EntityFieldValue prio like orig ProductContentWrapper)
-        if (thisLocaleString.isEmpty() && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.FIELD_I18N_GENERAL))) {
+        if (thisLocaleString.isEmpty() && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.I18N_GENERAL))) {
             GenericValue targetContent = content;
             Locale locale = defaultProductLocale;
             String res = getContentText(delegator, dispatcher, targetContent, product, productContent, locale, useCache);
@@ -726,12 +754,12 @@ public abstract class SolrProductUtil {
         // but unclear which is optimal...
         addConcatenatedStringValuesToSolrDoc(doc, "keywords", asStringCollection(context, "keywords"), " ");
 
-        addLocalizedContentStringMapToSolrDoc(delegator, doc, "title_i18n_", "title_i18n_"+SolrLocaleUtil.FIELD_I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("title")));
-        addLocalizedContentStringMapToSolrDoc(delegator, doc, "description_i18n_", "description_i18n_"+SolrLocaleUtil.FIELD_I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("description")));
-        addLocalizedContentStringMapToSolrDoc(delegator, doc, "longdescription_i18n_", "longdescription_i18n_"+SolrLocaleUtil.FIELD_I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("longDescription")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("title")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "description_i18n_", "description_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("description")));
+        addLocalizedContentStringMapToSolrDoc(delegator, doc, "longdescription_i18n_", "longdescription_i18n_"+SolrLocaleUtil.I18N_GENERAL, UtilGenerics.<String, String>checkMap(context.get("longDescription")));
     
         // FIXME?: MANUAL population of the alpha sort field, because it's complex
-        addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.FIELD_I18N_GENERAL, "title_i18n_", "title_i18n_"+SolrLocaleUtil.FIELD_I18N_GENERAL, 
+        addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.I18N_GENERAL, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, 
                 UtilGenerics.<String, String>checkMap(context.get("title")), locales, defaultLocale);
         
         return doc;
@@ -769,7 +797,7 @@ public abstract class SolrProductUtil {
     private static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
         if (contentMap == null) return;
         for (Map.Entry<String, String> entry : contentMap.entrySet()) {
-            if (SolrLocaleUtil.FIELD_I18N_GENERAL.equals(entry.getKey())) {
+            if (SolrLocaleUtil.I18N_GENERAL.equals(entry.getKey())) {
                 if (solrDefaultFieldName != null) {
                     doc.addField(solrDefaultFieldName, entry.getValue());
                 }
@@ -799,8 +827,8 @@ public abstract class SolrProductUtil {
         if (contentMap == null) return;
         
         String generalValue = null;
-        if (contentMap.containsKey(SolrLocaleUtil.FIELD_I18N_GENERAL)) {
-            generalValue = contentMap.get(SolrLocaleUtil.FIELD_I18N_GENERAL);
+        if (contentMap.containsKey(SolrLocaleUtil.I18N_GENERAL)) {
+            generalValue = contentMap.get(SolrLocaleUtil.I18N_GENERAL);
             doc.addField(alphaDefaultFieldName, generalValue);
         }
         

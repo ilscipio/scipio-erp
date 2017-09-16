@@ -274,9 +274,10 @@ under the License.
         <attribute mode="IN" optional="true" name="queryParams" type="Map">
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false -->
-        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: true -->
-        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
+        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (changed 2017-09) -->
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
@@ -329,6 +330,7 @@ under the License.
         <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
         <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (REMOVED 2017-09: default-value="true") -->
+        <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
         <attribute mode="IN" optional="true" name="queryType" type="String">
             <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
         </attribute>

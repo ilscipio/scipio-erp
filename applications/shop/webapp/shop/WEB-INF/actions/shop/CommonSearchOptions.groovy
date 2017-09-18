@@ -26,7 +26,7 @@ import org.ofbiz.product.product.ProductSearch.SortProductField;
 import org.ofbiz.product.product.ProductSearch.SortProductPrice;
 import org.ofbiz.product.product.ProductSearch.SortProductFeature;
 import org.ofbiz.product.category.CategoryWorker;
-import com.ilscipio.scipio.solr.SolrUtil;
+import com.ilscipio.scipio.solr.*;
  
 localVarsOnly = context.localVarsOnly;
 if (localVarsOnly == null) localVarsOnly = false;

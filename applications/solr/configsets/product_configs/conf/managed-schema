@@ -148,6 +148,7 @@
    <field name="internalName" type="text_general" indexed="true" stored="true"/>
    <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
    <field name="catalog" type="string" indexed="true" stored="true" multiValued="true"/>
+   <field name="productStore" type="string" indexed="true" stored="true" multiValued="true"/><!-- WARN: some code expects one store per product (added 2017-09-14) -->
    <field name="attributes" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="listPrice"  type="pfloat" indexed="true" stored="true"/>
    <field name="defaultPrice"  type="pfloat" indexed="true" stored="true"/>
@@ -173,7 +174,7 @@
    <field name="popularity" type="pint" indexed="true" stored="true" />
    <field name="inStock" type="pint" indexed="true" stored="true" /><!-- type="boolean" -->
 
-   <field name="store" type="location" indexed="true" stored="true"/>
+   <!--<field name="store" type="location" indexed="true" stored="true"/> REMOVED: unused, and the type is strange for the name -->
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.
@@ -203,16 +204,32 @@
         highlighting document content. Use the "text" field to search the content. -->
    <!-- SCIPIO: doesn't apply to products: <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>-->
    
+   <!-- SCIPIO: Handy list of all the locales for the text_* types:
+     en,ar,bg,ca,cjk,ckb,cz,da,de,el,es,eu,fa,fi,fr,ga,gl,hi,hu,hy,id,it,ja,lv,nl,no,pt,ro,ru,sv,th,tr
+   -->
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
+   <!-- SCIPIO: NOTE: 2017-09-13: instead of catch-all "text" we may now use specific query fields via 
+       edismax "qf" (see SolrProductUtil, shop.properties for example) -->
    <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
-   <!-- SCIPIO: Localized catch-all text fields for language-specific general queries -->
+   
+   <!-- SCIPIO: Special aggregate fields for source fields to treat as common to all languages
+       Currently using this for utilities like productId and keywords. 
+       Two are needed because text_general doesn't support utility terms like productId very well -->
+   <field name="text_common" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_common_simple" type="text_simple" indexed="true" stored="false" multiValued="true"/>
+   
+   <!-- SCIPIO: Localized catch-all text fields for language-specific general queries 
+       NOTE: text_i18n_general should not be used for production/public queries anymore - use
+           the appropriate locale instead - the store-default locale will now (2017-09-14) contain the general text as well - 
+           see solrconfig.properties and SolrProductUtil#refineLocalizedContentValues -->
    <field name="text_i18n_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_en" type="text_en" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ar" type="text_ar" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_bg" type="text_bg" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ca" type="text_ca" indexed="true" stored="false" multiValued="true"/>
+   <!-- SCIPIO: TODO: REVIEW: 3-letter code languages may not be mapped properly in framework? (see SolrLocaleUtil) -->
    <field name="text_i18n_cjk" type="text_cjk" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ckb" type="text_ckb" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_cz" type="text_cz" indexed="true" stored="false" multiValued="true"/>
@@ -253,7 +270,89 @@
    <field name="payloads" type="payloads" indexed="true" stored="true"/>
 
    <!-- SCIPIO: NEW special static fields -->
-   <field name="spell" type="text_general" indexed="true" stored="true" multiValued="true"/><!-- spellcheck -->
+   
+   <!-- dedicated spell fields -->
+   
+   <!-- default spell field - may not be used much in production --> 
+   <field name="spell" type="text_general" indexed="true" stored="false" multiValued="true"/><!-- default spellcheck field (no localization) -->
+
+   <!-- localized spell fields -->
+   <!-- There is lang and dlang; selection can be set in shop.properties.
+   TODO: REVIEW: Using text_general for all spell_[d]lang_* due to solr recommendations.
+   FIXME: Very heavy indexing and field copies (see further below) are currently required to make 
+       localized spell and variations work correctly; this is due to drastic limitations of spellchecker 
+       compared to edismax.
+       In production systems, you may want to comment out unneeded parts and languages.
+       See solrconfig.xml and solrconfig.properties. -->
+   <!-- single-language spell -->
+   <field name="spell_lang_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_en" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ar" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_bg" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ca" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_cjk" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ckb" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_cz" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_da" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_de" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_el" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_es" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_eu" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_fa" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_fi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_fr" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ga" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_gl" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_hi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_hu" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_hy" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_id" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_it" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ja" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_lv" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_nl" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_no" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_pt" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ro" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ru" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_sv" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_th" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_tr" type="text_general" indexed="true" stored="false" multiValued="true"/>
+
+   <!-- dual-language spell -->
+   <field name="spell_dlang_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_en" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ar" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_bg" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ca" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_cjk" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ckb" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_cz" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_da" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_de" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_el" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_es" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_eu" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_fa" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_fi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_fr" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ga" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_gl" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_hi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_hu" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_hy" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_id" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_it" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ja" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_lv" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_nl" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_no" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_pt" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ro" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ru" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_sv" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_th" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_tr" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
    <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -296,6 +395,7 @@
    <dynamicField name="*_i18n_sv" type="text_sv" indexed="true" stored="true" />
    <dynamicField name="*_i18n_th" type="text_th" indexed="true" stored="true" />
    <dynamicField name="*_i18n_tr" type="text_tr" indexed="true" stored="true" />
+   
    <!-- 2017-08-24: allows alphanumeric sort on localized titles, together with copyField below -->
    <dynamicField name="alphaTitleSort_*" type="alphaOnlySort" indexed="true" stored="false"/>
    
@@ -366,11 +466,17 @@
         or to add multiple fields to the same field for easier/faster searching.  -->
 
    <!-- SCIPIO: NEW copy fields -->
-   <copyField source="internalName" dest="text"/>
+   
+   <!-- default text -->
+   <copyField source="productId" dest="text"/>
+   <copyField source="keywords" dest="text"/>
+   <!--<copyField source="internalName" dest="text"/> may not want this public -->
    <!-- SCIPIO: TODO: IMPROVE: The solr copyField applies the dest analysis to the raw (unanalyzed) value of src; 
        this means the "text" field loses the language-specific processing that the localized fields receive.
        This is not a major issue for en/de/fr but for other languages the results may be poor. -->
    <copyField source="*_i18n_general" dest="text"/>
+   <!-- NOTE: having all languages in a single text field is a rare use case - feel free to comment
+       these lines directly below to speed up indexing if you don't need this -->
    <copyField source="*_i18n_en" dest="text"/>
    <copyField source="*_i18n_ar" dest="text"/>
    <copyField source="*_i18n_bg" dest="text"/>
@@ -403,7 +509,13 @@
    <copyField source="*_i18n_sv" dest="text"/>
    <copyField source="*_i18n_th" dest="text"/>
    <copyField source="*_i18n_tr" dest="text"/>
-   <copyField source="attributes" dest="text"/>
+   <!--<copyField source="attributes" dest="text"/> REMOVED: 2017-09-14: unclear on this; currently we don't populate it -->
+
+   <!-- common text: populating utility stuff for now -->
+   <copyField source="productId" dest="text_common_simple"/><!-- simple to avoid breaking up the ID -->
+   <copyField source="keywords" dest="text_common"/>
+
+   <!-- single-language text -->
    <copyField source="*_i18n_general" dest="text_i18n_general"/>
    <copyField source="*_i18n_en" dest="text_i18n_en"/>
    <copyField source="*_i18n_ar" dest="text_i18n_ar"/>
@@ -437,41 +549,250 @@
    <copyField source="*_i18n_sv" dest="text_i18n_sv"/>
    <copyField source="*_i18n_th" dest="text_i18n_th"/>
    <copyField source="*_i18n_tr" dest="text_i18n_tr"/>
+   
+   <!-- default spell (not really bothering with this) -->
+   <!--<copyField source="internalName" dest="spell"/> may not want this public -->
+   <copyField source="keywords" dest="spell"/>
+   <copyField source="productId" dest="spell"/>
    <copyField source="*_i18n_general" dest="spell"/>
-   <copyField source="*_i18n_en" dest="spell"/>
-   <copyField source="*_i18n_ar" dest="spell"/>
-   <copyField source="*_i18n_bg" dest="spell"/>
-   <copyField source="*_i18n_ca" dest="spell"/>
-   <copyField source="*_i18n_cjk" dest="spell"/>
-   <copyField source="*_i18n_ckb" dest="spell"/>
-   <copyField source="*_i18n_cz" dest="spell"/>
-   <copyField source="*_i18n_da" dest="spell"/>
-   <copyField source="*_i18n_de" dest="spell"/>
-   <copyField source="*_i18n_el" dest="spell"/>
-   <copyField source="*_i18n_es" dest="spell"/>
-   <copyField source="*_i18n_eu" dest="spell"/>
-   <copyField source="*_i18n_fa" dest="spell"/>
-   <copyField source="*_i18n_fi" dest="spell"/>
-   <copyField source="*_i18n_fr" dest="spell"/>
-   <copyField source="*_i18n_ga" dest="spell"/>
-   <copyField source="*_i18n_gl" dest="spell"/>
-   <copyField source="*_i18n_hi" dest="spell"/>
-   <copyField source="*_i18n_hu" dest="spell"/>
-   <copyField source="*_i18n_hy" dest="spell"/>
-   <copyField source="*_i18n_id" dest="spell"/>
-   <copyField source="*_i18n_it" dest="spell"/>
-   <copyField source="*_i18n_ja" dest="spell"/>
-   <copyField source="*_i18n_lv" dest="spell"/>
-   <copyField source="*_i18n_nl" dest="spell"/>
-   <copyField source="*_i18n_no" dest="spell"/>
-   <copyField source="*_i18n_pt" dest="spell"/>
-   <copyField source="*_i18n_ro" dest="spell"/>
-   <copyField source="*_i18n_ru" dest="spell"/>
-   <copyField source="*_i18n_sv" dest="spell"/>
-   <copyField source="*_i18n_th" dest="spell"/>
-   <copyField source="*_i18n_tr" dest="spell"/>
-   <copyField source="author" dest="spell"/><!-- TODO: REVIEW: old -->
-   <copyField source="description" dest="spell"/><!-- TODO: REVIEW: old -->
+  
+   <!-- single-language spell -->
+   <!-- WARN: these may be the wrong lang; we have to relax this due to spellchecker limitations -->
+      <copyField source="productId" dest="spell_lang_general"/>
+   <copyField source="productId" dest="spell_lang_en"/>
+   <copyField source="productId" dest="spell_lang_ar"/>
+   <copyField source="productId" dest="spell_lang_bg"/>
+   <copyField source="productId" dest="spell_lang_ca"/>
+   <copyField source="productId" dest="spell_lang_cjk"/>
+   <copyField source="productId" dest="spell_lang_ckb"/>
+   <copyField source="productId" dest="spell_lang_cz"/>
+   <copyField source="productId" dest="spell_lang_da"/>
+   <copyField source="productId" dest="spell_lang_de"/>
+   <copyField source="productId" dest="spell_lang_el"/>
+   <copyField source="productId" dest="spell_lang_es"/>
+   <copyField source="productId" dest="spell_lang_eu"/>
+   <copyField source="productId" dest="spell_lang_fa"/>
+   <copyField source="productId" dest="spell_lang_fi"/>
+   <copyField source="productId" dest="spell_lang_fr"/>
+   <copyField source="productId" dest="spell_lang_ga"/>
+   <copyField source="productId" dest="spell_lang_gl"/>
+   <copyField source="productId" dest="spell_lang_hi"/>
+   <copyField source="productId" dest="spell_lang_hu"/>
+   <copyField source="productId" dest="spell_lang_hy"/>
+   <copyField source="productId" dest="spell_lang_id"/>
+   <copyField source="productId" dest="spell_lang_it"/>
+   <copyField source="productId" dest="spell_lang_ja"/>
+   <copyField source="productId" dest="spell_lang_lv"/>
+   <copyField source="productId" dest="spell_lang_nl"/>
+   <copyField source="productId" dest="spell_lang_no"/>
+   <copyField source="productId" dest="spell_lang_pt"/>
+   <copyField source="productId" dest="spell_lang_ro"/>
+   <copyField source="productId" dest="spell_lang_ru"/>
+   <copyField source="productId" dest="spell_lang_sv"/>
+   <copyField source="productId" dest="spell_lang_th"/>
+   <copyField source="productId" dest="spell_lang_tr"/>
+   <copyField source="keywords" dest="spell_lang_general"/>
+   <copyField source="keywords" dest="spell_lang_en"/>
+   <copyField source="keywords" dest="spell_lang_ar"/>
+   <copyField source="keywords" dest="spell_lang_bg"/>
+   <copyField source="keywords" dest="spell_lang_ca"/>
+   <copyField source="keywords" dest="spell_lang_cjk"/>
+   <copyField source="keywords" dest="spell_lang_ckb"/>
+   <copyField source="keywords" dest="spell_lang_cz"/>
+   <copyField source="keywords" dest="spell_lang_da"/>
+   <copyField source="keywords" dest="spell_lang_de"/>
+   <copyField source="keywords" dest="spell_lang_el"/>
+   <copyField source="keywords" dest="spell_lang_es"/>
+   <copyField source="keywords" dest="spell_lang_eu"/>
+   <copyField source="keywords" dest="spell_lang_fa"/>
+   <copyField source="keywords" dest="spell_lang_fi"/>
+   <copyField source="keywords" dest="spell_lang_fr"/>
+   <copyField source="keywords" dest="spell_lang_ga"/>
+   <copyField source="keywords" dest="spell_lang_gl"/>
+   <copyField source="keywords" dest="spell_lang_hi"/>
+   <copyField source="keywords" dest="spell_lang_hu"/>
+   <copyField source="keywords" dest="spell_lang_hy"/>
+   <copyField source="keywords" dest="spell_lang_id"/>
+   <copyField source="keywords" dest="spell_lang_it"/>
+   <copyField source="keywords" dest="spell_lang_ja"/>
+   <copyField source="keywords" dest="spell_lang_lv"/>
+   <copyField source="keywords" dest="spell_lang_nl"/>
+   <copyField source="keywords" dest="spell_lang_no"/>
+   <copyField source="keywords" dest="spell_lang_pt"/>
+   <copyField source="keywords" dest="spell_lang_ro"/>
+   <copyField source="keywords" dest="spell_lang_ru"/>
+   <copyField source="keywords" dest="spell_lang_sv"/>
+   <copyField source="keywords" dest="spell_lang_th"/>
+   <copyField source="keywords" dest="spell_lang_tr"/>
+   <copyField source="*_i18n_general" dest="spell_lang_general"/>
+   <copyField source="*_i18n_en" dest="spell_lang_en"/>
+   <copyField source="*_i18n_ar" dest="spell_lang_ar"/>
+   <copyField source="*_i18n_bg" dest="spell_lang_bg"/>
+   <copyField source="*_i18n_ca" dest="spell_lang_ca"/>
+   <copyField source="*_i18n_cjk" dest="spell_lang_cjk"/>
+   <copyField source="*_i18n_ckb" dest="spell_lang_ckb"/>
+   <copyField source="*_i18n_cz" dest="spell_lang_cz"/>
+   <copyField source="*_i18n_da" dest="spell_lang_da"/>
+   <copyField source="*_i18n_de" dest="spell_lang_de"/>
+   <copyField source="*_i18n_el" dest="spell_lang_el"/>
+   <copyField source="*_i18n_es" dest="spell_lang_es"/>
+   <copyField source="*_i18n_eu" dest="spell_lang_eu"/>
+   <copyField source="*_i18n_fa" dest="spell_lang_fa"/>
+   <copyField source="*_i18n_fi" dest="spell_lang_fi"/>
+   <copyField source="*_i18n_fr" dest="spell_lang_fr"/>
+   <copyField source="*_i18n_ga" dest="spell_lang_ga"/>
+   <copyField source="*_i18n_gl" dest="spell_lang_gl"/>
+   <copyField source="*_i18n_hi" dest="spell_lang_hi"/>
+   <copyField source="*_i18n_hu" dest="spell_lang_hu"/>
+   <copyField source="*_i18n_hy" dest="spell_lang_hy"/>
+   <copyField source="*_i18n_id" dest="spell_lang_id"/>
+   <copyField source="*_i18n_it" dest="spell_lang_it"/>
+   <copyField source="*_i18n_ja" dest="spell_lang_ja"/>
+   <copyField source="*_i18n_lv" dest="spell_lang_lv"/>
+   <copyField source="*_i18n_nl" dest="spell_lang_nl"/>
+   <copyField source="*_i18n_no" dest="spell_lang_no"/>
+   <copyField source="*_i18n_pt" dest="spell_lang_pt"/>
+   <copyField source="*_i18n_ro" dest="spell_lang_ro"/>
+   <copyField source="*_i18n_ru" dest="spell_lang_ru"/>
+   <copyField source="*_i18n_sv" dest="spell_lang_sv"/>
+   <copyField source="*_i18n_th" dest="spell_lang_th"/>
+   <copyField source="*_i18n_tr" dest="spell_lang_tr"/>
+   
+   <!-- dual-language spell -->
+   <copyField source="productId" dest="spell_dlang_general"/>
+   <copyField source="productId" dest="spell_dlang_en"/>
+   <copyField source="productId" dest="spell_dlang_ar"/>
+   <copyField source="productId" dest="spell_dlang_bg"/>
+   <copyField source="productId" dest="spell_dlang_ca"/>
+   <copyField source="productId" dest="spell_dlang_cjk"/>
+   <copyField source="productId" dest="spell_dlang_ckb"/>
+   <copyField source="productId" dest="spell_dlang_cz"/>
+   <copyField source="productId" dest="spell_dlang_da"/>
+   <copyField source="productId" dest="spell_dlang_de"/>
+   <copyField source="productId" dest="spell_dlang_el"/>
+   <copyField source="productId" dest="spell_dlang_es"/>
+   <copyField source="productId" dest="spell_dlang_eu"/>
+   <copyField source="productId" dest="spell_dlang_fa"/>
+   <copyField source="productId" dest="spell_dlang_fi"/>
+   <copyField source="productId" dest="spell_dlang_fr"/>
+   <copyField source="productId" dest="spell_dlang_ga"/>
+   <copyField source="productId" dest="spell_dlang_gl"/>
+   <copyField source="productId" dest="spell_dlang_hi"/>
+   <copyField source="productId" dest="spell_dlang_hu"/>
+   <copyField source="productId" dest="spell_dlang_hy"/>
+   <copyField source="productId" dest="spell_dlang_id"/>
+   <copyField source="productId" dest="spell_dlang_it"/>
+   <copyField source="productId" dest="spell_dlang_ja"/>
+   <copyField source="productId" dest="spell_dlang_lv"/>
+   <copyField source="productId" dest="spell_dlang_nl"/>
+   <copyField source="productId" dest="spell_dlang_no"/>
+   <copyField source="productId" dest="spell_dlang_pt"/>
+   <copyField source="productId" dest="spell_dlang_ro"/>
+   <copyField source="productId" dest="spell_dlang_ru"/>
+   <copyField source="productId" dest="spell_dlang_sv"/>
+   <copyField source="productId" dest="spell_dlang_th"/>
+   <copyField source="productId" dest="spell_dlang_tr"/>
+   <copyField source="keywords" dest="spell_dlang_general"/>
+   <copyField source="keywords" dest="spell_dlang_en"/>
+   <copyField source="keywords" dest="spell_dlang_ar"/>
+   <copyField source="keywords" dest="spell_dlang_bg"/>
+   <copyField source="keywords" dest="spell_dlang_ca"/>
+   <copyField source="keywords" dest="spell_dlang_cjk"/>
+   <copyField source="keywords" dest="spell_dlang_ckb"/>
+   <copyField source="keywords" dest="spell_dlang_cz"/>
+   <copyField source="keywords" dest="spell_dlang_da"/>
+   <copyField source="keywords" dest="spell_dlang_de"/>
+   <copyField source="keywords" dest="spell_dlang_el"/>
+   <copyField source="keywords" dest="spell_dlang_es"/>
+   <copyField source="keywords" dest="spell_dlang_eu"/>
+   <copyField source="keywords" dest="spell_dlang_fa"/>
+   <copyField source="keywords" dest="spell_dlang_fi"/>
+   <copyField source="keywords" dest="spell_dlang_fr"/>
+   <copyField source="keywords" dest="spell_dlang_ga"/>
+   <copyField source="keywords" dest="spell_dlang_gl"/>
+   <copyField source="keywords" dest="spell_dlang_hi"/>
+   <copyField source="keywords" dest="spell_dlang_hu"/>
+   <copyField source="keywords" dest="spell_dlang_hy"/>
+   <copyField source="keywords" dest="spell_dlang_id"/>
+   <copyField source="keywords" dest="spell_dlang_it"/>
+   <copyField source="keywords" dest="spell_dlang_ja"/>
+   <copyField source="keywords" dest="spell_dlang_lv"/>
+   <copyField source="keywords" dest="spell_dlang_nl"/>
+   <copyField source="keywords" dest="spell_dlang_no"/>
+   <copyField source="keywords" dest="spell_dlang_pt"/>
+   <copyField source="keywords" dest="spell_dlang_ro"/>
+   <copyField source="keywords" dest="spell_dlang_ru"/>
+   <copyField source="keywords" dest="spell_dlang_sv"/>
+   <copyField source="keywords" dest="spell_dlang_th"/>
+   <copyField source="keywords" dest="spell_dlang_tr"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_general"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_en"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ar"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_bg"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ca"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_cjk"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ckb"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_cz"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_da"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_de"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_el"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_es"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_eu"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_fa"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_fi"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_fr"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ga"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_gl"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_hi"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_hu"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_hy"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_id"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_it"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ja"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_lv"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_nl"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_no"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_pt"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ro"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ru"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_sv"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_th"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_tr"/>
+   <!--<copyField source="*_i18n_general" dest="spell_dlang_general"/> covered above -->
+   <copyField source="*_i18n_en" dest="spell_dlang_en"/>
+   <copyField source="*_i18n_ar" dest="spell_dlang_ar"/>
+   <copyField source="*_i18n_bg" dest="spell_dlang_bg"/>
+   <copyField source="*_i18n_ca" dest="spell_dlang_ca"/>
+   <copyField source="*_i18n_cjk" dest="spell_dlang_cjk"/>
+   <copyField source="*_i18n_ckb" dest="spell_dlang_ckb"/>
+   <copyField source="*_i18n_cz" dest="spell_dlang_cz"/>
+   <copyField source="*_i18n_da" dest="spell_dlang_da"/>
+   <copyField source="*_i18n_de" dest="spell_dlang_de"/>
+   <copyField source="*_i18n_el" dest="spell_dlang_el"/>
+   <copyField source="*_i18n_es" dest="spell_dlang_es"/>
+   <copyField source="*_i18n_eu" dest="spell_dlang_eu"/>
+   <copyField source="*_i18n_fa" dest="spell_dlang_fa"/>
+   <copyField source="*_i18n_fi" dest="spell_dlang_fi"/>
+   <copyField source="*_i18n_fr" dest="spell_dlang_fr"/>
+   <copyField source="*_i18n_ga" dest="spell_dlang_ga"/>
+   <copyField source="*_i18n_gl" dest="spell_dlang_gl"/>
+   <copyField source="*_i18n_hi" dest="spell_dlang_hi"/>
+   <copyField source="*_i18n_hu" dest="spell_dlang_hu"/>
+   <copyField source="*_i18n_hy" dest="spell_dlang_hy"/>
+   <copyField source="*_i18n_id" dest="spell_dlang_id"/>
+   <copyField source="*_i18n_it" dest="spell_dlang_it"/>
+   <copyField source="*_i18n_ja" dest="spell_dlang_ja"/>
+   <copyField source="*_i18n_lv" dest="spell_dlang_lv"/>
+   <copyField source="*_i18n_nl" dest="spell_dlang_nl"/>
+   <copyField source="*_i18n_no" dest="spell_dlang_no"/>
+   <copyField source="*_i18n_pt" dest="spell_dlang_pt"/>
+   <copyField source="*_i18n_ro" dest="spell_dlang_ro"/>
+   <copyField source="*_i18n_ru" dest="spell_dlang_ru"/>
+   <copyField source="*_i18n_sv" dest="spell_dlang_sv"/>
+   <copyField source="*_i18n_th" dest="spell_dlang_th"/>
+   <copyField source="*_i18n_tr" dest="spell_dlang_tr"/>
+   
+   <!-- sort fields -->
    <copyField source="internalName" dest="alphaNameSort"/>
    <!-- SCIPIO: FIXME: currently manually populated by rebuildSolrIndex/addToSolrIndex - see com.ilscipio.scipio.solr.ProductUtil#addAlphaLocalizedContentStringMapToSolrDoc
    <copyField source="title_i18n_*" dest="alphaTitleSort_*"/>-->
@@ -491,13 +812,11 @@
    <!--<copyField source="title" dest="text"/>-->
    <!--<copyField source="author" dest="text"/>-->
    <!--<copyField source="description" dest="text"/>-->
-   <copyField source="keywords" dest="text"/>
+   <!--<copyField source="keywords" dest="text"/>-->
    <!--<copyField source="content" dest="text"/>-->
    <!--<copyField source="content_type" dest="text"/>-->
    <!--<copyField source="resourcename" dest="text"/>-->
    <!--<copyField source="url" dest="text"/>-->
-   
-   <copyField source="keywords" dest="spell"/><!-- SCIPIO: added -->
    
    <!-- Copy numeric fields to *PointFields implementation -->
    <copyField source="*_i" dest="*_pi"/>
@@ -710,6 +1029,14 @@
         <filter class="solr.LowerCaseFilterFactory"/>
         <!--<filter class="solr.RemoveDuplicatesTokenFilterFactory"/> SCIPIO: re-added but commented; probably does nothing -->
       </analyzer>
+    </fieldType>
+
+    <!-- SCIPIO: simple text type for things like product IDs and manual keywords -->
+    <fieldType name="text_simple" class="solr.TextField">
+        <analyzer>
+            <tokenizer class="solr.WhitespaceTokenizerFactory" />
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
     </fieldType>
 
     <!-- A text field with defaults appropriate for English: it
@@ -1396,19 +1723,19 @@
     <!-- SCIPIO: Old localized types (from pre-6.6.0 schema, originally called text_english, text_german, text_french)
         TODO: REVIEW: these are probably not appropriate or wanted anymore
         DEV NOTE: The old RemoveDuplicatesTokenFilterFactory had no effect here; see text_general for info
-    <fieldType name="text_i18n_fr" class="solr.TextField" >
+    <fieldType name="text_i18n_fr" class="solr.TextField">
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fr.txt"/>
         </analyzer>
     </fieldType>
-    <fieldType name="text_i18n_de" class="solr.TextField" >
+    <fieldType name="text_i18n_de" class="solr.TextField">
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_de.txt"/>
         </analyzer>
     </fieldType>
-    <fieldType name="text_i18n_en" class="solr.TextField" >
+    <fieldType name="text_i18n_en" class="solr.TextField">
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>

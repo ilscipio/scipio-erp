@@ -45,6 +45,23 @@ under the License.
         <#if displaySearchString?has_content><label style="display:inline;">${escapeVal(rawLabel('ProductYouSearchedFor')?cap_first, 'html')}:</label> ${escapeVal(displaySearchString, 'html')} <#rt/>
             <#t/><#if searchCategoryIdEff?has_content> <label style="display:inline;">${escapeVal(rawLabel('CommonIn')?lower_case, 'html')}</label> <@searchCatNameList catIds=searchCategoryIdEff /></#if></#if>
             <#t/>(<a href="<@ofbizUrl>advancedsearch</@ofbizUrl>" class="${styles.action_nav!} ${styles.action_find!} kws-refinesearch-link" style="white-space:nowrap;">${uiLabelMap.CommonRefineSearch}</a>)
+        <#if displaySearchString?has_content && fullSuggestions?has_content>
+          <br/><span class="kws-suggestion"><em><label style="display:inline;">${uiLabelMap.ShopDidYouMean}:</label> <a href="javascript:jQuery('#kws-suggestion-form').submit();void(0);">${fullSuggestions[0]!}</a></em></span>
+            <form method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="display:none;" id="kws-suggestion-form"">
+                <#-- WARN: TODO: REIMPLEMENT: using clearSearch=N relies on session; this works for single tab,
+                    but frustrates polyvalent web users; ideally should do it parameter-based (requires revisit advancedsearch at same time) -->
+                <@field type="hidden" name="clearSearch" value="N"/>
+                <#-- TODO: use parameters to reproduce query
+                <@field type="hidden" name="clearSearch" value="Y"/>
+                ...
+                -->
+                <#-- SCIPIO: WARN: 2017-09-14: replaceConstraints only partially implemented, see ProductSearchSession -->
+                <@field type="hidden" name="replaceConstraints" value="Y"/>
+        
+                <@field type="hidden" name="SEARCH_STRING" value=(fullSuggestions[0]!)/>
+                <@field type="hidden" name="SEARCH_OPERATOR" value=(searchOperator!)/>
+            </form>
+        </#if>
       </div>
     </@cell>
     <@cell columns=4 medium=4 class="+${styles.text_right!}">

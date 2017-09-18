@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.SpellCheckResponse;
+import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
@@ -30,7 +33,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -46,11 +48,19 @@ public abstract class SolrProductSearch {
 
     public static final String module = SolrProductSearch.class.getName();
 
+    private static final boolean rebuildClearAndUseCacheDefault = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, 
+            "solr.index.rebuild.clearAndUseCache", false);
+    
+    static final boolean excludeVariantsDefault = true;
+    
+    private static boolean reindexAutoForceRan = false;
+    private static final String reindexAutoForcePropName = "scipio.solr.reindex.auto.force";
+    
     /**
      * Adds product to solr, with product denoted by productId field in instance
      * attribute - intended for use with ECAs/SECAs.
      */
-    public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -84,7 +94,7 @@ public abstract class SolrProductSearch {
                         // don't mark dirty - we don't even know if the invocation was for a real product
                         return ServiceUtil.returnError("product not found for productId '" + productId + "'");
                     }
-                    Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
+                    Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, context);
                     dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
                     copyStdServiceFieldsNotSet(context, dispatchContext);
                     Map<String, Object> runResult = dispatcher.runSync("addToSolrIndex", dispatchContext);
@@ -134,7 +144,7 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    public static Map<String, Object> removeFromSolr(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> removeFromSolr(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -201,7 +211,7 @@ public abstract class SolrProductSearch {
     /**
      * Adds product to solr index.
      */
-    public static Map<String, Object> addToSolrIndex(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> addToSolrIndex(DispatchContext dctx, Map<String, Object> context) {
         HttpSolrClient client = null;
         Map<String, Object> result;
         String productId = (String) context.get("productId");
@@ -209,6 +219,7 @@ public abstract class SolrProductSearch {
         // may be considered normal that solr server is unavailable;
         // don't want to return error and abort transactions in these cases.
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         try {
             Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", module);
 
@@ -216,7 +227,7 @@ public abstract class SolrProductSearch {
             // Debug.log(server.ping().toString());
 
             // Construct Documents
-            SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context);
+            SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context, useCache);
             Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 
             if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
@@ -254,6 +265,10 @@ public abstract class SolrProductSearch {
             Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);
+            result = ServiceUtil.returnError(e.toString());
+            result.put("errorType", "general");
         } finally {
             try {
                 if (UtilValidate.isNotEmpty(client))
@@ -271,34 +286,32 @@ public abstract class SolrProductSearch {
      * <p>
      * This is faster than reflushing the index each time.
      */
-    public static Map<String, Object> addListToSolrIndex(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> addListToSolrIndex(DispatchContext dctx, Map<String, Object> context) {
         HttpSolrClient client = null;
         Map<String, Object> result;
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         try {
             Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
-
-            // Construct Documents
             List<Map<String, Object>> fieldList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
 
             if (fieldList.size() > 0) {
-                Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
+                Debug.logInfo("Solr: addListToSolrIndex: Generating and adding " + fieldList.size() + " documents to solr index", module);
     
-                for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
-                    SolrInputDocument doc1 = ProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), fieldListIterator.next());
-                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                // Construct Documents
+                for (Map<String, Object> productContent : fieldList) {
+                    SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), productContent, useCache);
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: addListToSolrIndex: Processed document for indexing: " + doc1.toString(), module);
                     docs.add(doc1);
                 }
                 // push Documents to server
                 client = SolrUtil.getHttpSolrClient((String) context.get("core"));
                 client.add(docs);
                 client.commit();
-            } else {
-                Debug.logInfo("Solr: No documents to index", module);
             }
 
             final String statusStr = "Added " + fieldList.size() + " documents to solr index";
-            Debug.logInfo("Solr: " + statusStr, module);
+            Debug.logInfo("Solr: addListToSolrIndex: " + statusStr, module);
             result = ServiceUtil.returnSuccess(statusStr);
         } catch (MalformedURLException e) {
             Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
@@ -308,10 +321,10 @@ public abstract class SolrProductSearch {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = "Failure connecting to solr server to commit product list; products not updated";
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
-                    Debug.logWarning(e, "Solr: " + statusStr, module);
+                    Debug.logWarning(e, "Solr: addListToSolrIndex: " + statusStr, module);
                     result = ServiceUtil.returnFailure(statusStr);
                 } else {
-                    Debug.logError(e, "Solr: " + statusStr, module);
+                    Debug.logError(e, "Solr: addListToSolrIndex: " + statusStr, module);
                     result = ServiceUtil.returnError(statusStr);
                 }
                 result.put("errorType", "connectError");
@@ -324,10 +337,13 @@ public abstract class SolrProductSearch {
             Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: addListToSolrIndex: " + e.getMessage(), module);
+            result = ServiceUtil.returnError(e.toString());
+            result.put("errorType", "general");
         } finally {
             try {
-                if (UtilValidate.isNotEmpty(client))
-                    client.close();
+                if (client != null) client.close();
             } catch (IOException e) {
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "ioError");
@@ -390,7 +406,19 @@ public abstract class SolrProductSearch {
 
             Boolean spellCheck = (Boolean) context.get("spellcheck");
             if (Boolean.TRUE.equals(spellCheck)) {
-                solrQuery.setParam("spellcheck", spellCheck);
+                solrQuery.setParam("spellcheck", true);
+                solrQuery.setParam("spellcheck.collate", true);
+                
+                Object spellDictObj = context.get("spellDict");
+                if (spellDictObj instanceof String) {
+                    if (UtilValidate.isNotEmpty((String) spellDictObj)) {
+                        solrQuery.setParam("spellcheck.dictionary", (String) spellDictObj);
+                    }
+                } else if (spellDictObj instanceof Collection) {
+                    for(String spellDict : UtilGenerics.<String>checkCollection(spellDictObj)) {
+                        solrQuery.add("spellcheck.dictionary", spellDict);
+                    }
+                }
             }
 
             Boolean highlight = (Boolean) context.get("highlight");
@@ -438,11 +466,8 @@ public abstract class SolrProductSearch {
                 solrQuery.addFilterQuery(((String) queryFilter).trim().split("\\s+"));
             } 
             Collection<String> queryFilters = UtilGenerics.checkCollection(context.get("queryFilters"));
-            if (queryFilters != null) {
-                for(String filter : queryFilters) {
-                    solrQuery.addFilterQuery(filter);
-                }
-            }
+            SolrQueryUtil.addFilterQueries(solrQuery, queryFilters);
+            
             if ((String) context.get("returnFields") != null) {
                 solrQuery.setFields((String) context.get("returnFields"));
             }
@@ -450,6 +475,11 @@ public abstract class SolrProductSearch {
             String defaultOp = (String) context.get("defaultOp");
             if (UtilValidate.isNotEmpty(defaultOp)) {
                 solrQuery.set("q.op", defaultOp);
+            }
+            
+            String queryFields = (String) context.get("queryFields");
+            if (UtilValidate.isNotEmpty(queryFields)) {
+                solrQuery.set("qf", queryFields);
             }
             
             Map<String, ?> queryParams = UtilGenerics.checkMap(context.get("queryParams"));
@@ -516,7 +546,7 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             Debug.logError(e, "Solr: runSolrQuery: Error: " + e.getMessage(), module);
             result = ServiceUtil.returnError(e.toString());
-            if (SolrUtil.isSolrQuerySyntaxError(e)) {
+            if (SolrQueryUtil.isSolrQuerySyntaxError(e)) {
                 result.put("errorType", "query-syntax");
             } else {
                 result.put("errorType", "general");
@@ -550,7 +580,10 @@ public abstract class SolrProductSearch {
             dispatchMap.put("facet", false); // (always false)
             dispatchMap.put("spellcheck", false); // 2017-09: changed to false (always false)
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
-
+            
+            List<String> queryFilters = getEnsureQueryFiltersList(dispatchMap);
+            checkAddExcludeVariantsFilter(queryFilters, context);
+            
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
                 return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(searchResult)));
@@ -564,7 +597,7 @@ public abstract class SolrProductSearch {
             // 2016-04-01: Need to translate this
             //result.put("viewIndex", queryResult.getResults().getStart());
             result.put("start", queryResult.getResults().getStart());
-            result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
+            result.put("viewIndex", SolrQueryUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
             result.put("viewSize", viewSize);
         } catch (Exception e) {
             Debug.logError(e, "Solr: productsSearch: " + e.getMessage(), module);
@@ -577,6 +610,27 @@ public abstract class SolrProductSearch {
         if (src.containsKey("errorType")) dest.put("errorType", src.get("errorType"));
         if (src.containsKey("nestedErrorMessage")) dest.put("nestedErrorMessage", src.get("nestedErrorMessage"));
         return dest;
+    }
+    
+    private static List<String> getEnsureQueryFiltersList(Map<String, Object> context) {
+        List<String> queryFilters = UtilGenerics.checkList(context.get("queryFilters"));
+        if (queryFilters != null) queryFilters = new ArrayList<>(queryFilters);
+        else queryFilters = new ArrayList<>();
+        context.put("queryFilters", queryFilters);
+        return queryFilters;
+    }
+    
+    /**
+     * 2017-09: IMPORTANT: checks flag to exclude variants, true by default
+     * needed because the categories/catalog/productStore have been corrected for variants but as side effect
+     * they must be excluded in queries like this.
+     */
+    static void checkAddExcludeVariantsFilter(List<String> queryFilters, Map<String, Object> context) {
+        Boolean excludeVariants = (Boolean) context.get("excludeVariants");
+        if (excludeVariants == null) excludeVariants = excludeVariantsDefault;
+        if (excludeVariants) {
+            SolrProductUtil.addExcludeVariantsFilter(queryFilters);
+        }
     }
     
     /**
@@ -598,8 +652,11 @@ public abstract class SolrProductSearch {
             Integer viewSize = (Integer) dispatchMap.get("viewSize");
             //Integer viewIndex = (Integer) dispatchMap.get("viewIndex");
             if (dispatchMap.get("facet") == null) dispatchMap.put("facet", false); // 2017-09: default changed to false
-            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", true);
+            if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", false); // 2017-09: default changed to false
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
+
+            List<String> queryFilters = getEnsureQueryFiltersList(dispatchMap);
+            checkAddExcludeVariantsFilter(queryFilters, context);
             
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
@@ -609,19 +666,27 @@ public abstract class SolrProductSearch {
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
-            List<List<String>> suggestions = new ArrayList<>();
-            if (queryResult.getSpellCheckResponse() != null && queryResult.getSpellCheckResponse().getSuggestions() != null) {
-                Iterator<Suggestion> iter = queryResult.getSpellCheckResponse().getSuggestions().iterator();
-                while (iter.hasNext()) {
-                    Suggestion resultDoc = iter.next();
-                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Suggestion: " + resultDoc.getAlternatives(), module);
-                    suggestions.add(resultDoc.getAlternatives());
+            Boolean isCorrectlySpelled = Boolean.TRUE.equals(dispatchMap.get("spellcheck")) ? Boolean.TRUE : null;
+            Map<String, List<String>> tokenSuggestions = null;
+            List<String> fullSuggestions = null;
+            SpellCheckResponse spellResp = queryResult.getSpellCheckResponse();
+            if (spellResp != null) {
+                isCorrectlySpelled = spellResp.isCorrectlySpelled();
+                if (spellResp.getSuggestions() != null) {
+                    tokenSuggestions = new LinkedHashMap<>();
+                    for(Suggestion suggestion : spellResp.getSuggestions()) {
+                        tokenSuggestions.put(suggestion.getToken(), suggestion.getAlternatives());
+                    }
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Spelling: Token suggestions: " + tokenSuggestions, module);
                 }
-            }
-
-            Boolean isCorrectlySpelled = true;
-            if (queryResult.getSpellCheckResponse() != null) {
-                isCorrectlySpelled = queryResult.getSpellCheckResponse().isCorrectlySpelled();
+                // collations 2017-09-14, much more useful than the individual word suggestions
+                if (spellResp.getCollatedResults() != null) {
+                    fullSuggestions = new ArrayList<>();
+                    for(Collation collation : spellResp.getCollatedResults()) {
+                        fullSuggestions.add(collation.getCollationQueryString());
+                    }
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Spelling: Collations: " + fullSuggestions, module);
+                }
             }
 
             result = ServiceUtil.returnSuccess();
@@ -661,9 +726,10 @@ public abstract class SolrProductSearch {
             // 2016-04-01: Need to translate this
             //result.put("viewIndex", queryResult.getResults().getStart());
             result.put("start", queryResult.getResults().getStart());
-            result.put("viewIndex", SolrUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
+            result.put("viewIndex", SolrQueryUtil.calcResultViewIndex(queryResult.getResults(), viewSize));
             result.put("viewSize", viewSize);
-            result.put("suggestions", suggestions);
+            result.put("tokenSuggestions", tokenSuggestions);
+            result.put("fullSuggestions", fullSuggestions);
 
         } catch (Exception e) {
             Debug.logError(e, "Solr: keywordSearch: " + e.getMessage(), module);
@@ -693,6 +759,8 @@ public abstract class SolrProductSearch {
             if (UtilValidate.isNotEmpty(context.get("catalogId")))
                 catalogId = (String) context.get("catalogId");
             
+            Boolean excludeVariants = (Boolean) context.get("excludeVariants");
+            
             List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
 
             // String productCategoryId = (String)
@@ -700,10 +768,10 @@ public abstract class SolrProductSearch {
             // CategoryUtil.getCategoryNameWithTrail((String)
             // context.get("productCategoryId"), catalogId, dctx, currentTrail): null;
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getAvailableCategories: productCategoryId: " + productCategoryId, module);
-            Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
-                    viewIndex, viewSize);
+            Map<String, Object> query = SolrCategoryUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
+                    viewIndex, viewSize, null, excludeVariants);
 
             QueryResponse cat = (QueryResponse) query.get("rows");
             result = ServiceUtil.returnSuccess();
@@ -748,13 +816,15 @@ public abstract class SolrProductSearch {
             // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
             // instead of check in loop...
             String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: productCategoryId: " + productCategoryId, module);
 
             // Add toplevel categories
             String[] trailElements = productCategoryId.split("/");
+            
+            Boolean excludeVariants = (Boolean) context.get("excludeVariants");
 
             long numFound = 0;
             
@@ -773,10 +843,10 @@ public abstract class SolrProductSearch {
                     level = 0;
                     isFirstElement = false;
                 } else {
-                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(element, catalogId, dctx, currentTrail);
+                    String categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(element, catalogId, dctx, currentTrail);
                     String[] categoryPathArray = categoryPath.split("/");
                     level = Integer.parseInt(categoryPathArray[0]);
-                    String facetPrefix = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                    String facetPrefix = SolrCategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
                     // 2016-03-22: IMPORTANT: the facetPrefix MUST end with / otherwise it will return unrelated categories!
                     // solr facetPrefix is not aware of our path delimiters
                     if (!facetPrefix.endsWith("/")) {
@@ -784,7 +854,8 @@ public abstract class SolrProductSearch {
                     }
                     // Debug.logInfo("categoryPath: "+categoryPath + "
                     // facetPrefix: "+facetPrefix,module);
-                    Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetPrefix, false, 0, 0);
+                    Map<String, Object> query = SolrCategoryUtil.categoriesAvailable(catalogId, categoryPath,
+                            null, facetPrefix, false, 0, 0, null, excludeVariants);
                     QueryResponse cat = (QueryResponse) query.get("rows");
                     Long subNumFound = (Long) query.get("numFound");
                     if (subNumFound != null) {
@@ -796,17 +867,17 @@ public abstract class SolrProductSearch {
                         List<Count> catL = (List<Count>) field.getValues();
                         if (catL != null) {
                             for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                                FacetField.Count f = (FacetField.Count) catIter.next();
-                                if (f.getCount() > 0) {
+                                FacetField.Count facet = (FacetField.Count) catIter.next();
+                                if (facet.getCount() > 0) {
                                     Map<String, Object> catMap = new HashMap<>();
                                     List<String> iName = new LinkedList<>();
-                                    iName.addAll(Arrays.asList(f.getName().split("/")));
+                                    iName.addAll(Arrays.asList(facet.getName().split("/")));
                                     // Debug.logInfo("topLevel "+topLevel,"");
                                     // int l = Integer.parseInt((String)
                                     // iName.getFirst());
                                     catMap.put("catId", iName.get(iName.size() - 1)); // get last
                                     iName.remove(0); // remove first
-                                    String path = f.getName();
+                                    String path = facet.getName();
                                     catMap.put("path", path);
                                     if (level > 0) {
                                         iName.remove(iName.size() - 1); // remove last
@@ -814,7 +885,7 @@ public abstract class SolrProductSearch {
                                     } else {
                                         catMap.put("parentCategory", null);
                                     }
-                                    catMap.put("count", Long.toString(f.getCount()));
+                                    catMap.put("count", Long.toString(facet.getCount()));
                                     categories.add(catMap);
                                 }
                             }
@@ -836,7 +907,7 @@ public abstract class SolrProductSearch {
     /**
      * Rebuilds the solr index.
      */
-    public static Map<String, Object> rebuildSolrIndex(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> rebuildSolrIndex(DispatchContext dctx, Map<String, Object> context) {
         HttpSolrClient client = null;
         Map<String, Object> result = null;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -892,7 +963,9 @@ public abstract class SolrProductSearch {
         }
         
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
-
+        Boolean clearAndUseCache = (Boolean) context.get("clearAndUseCache");
+        if (clearAndUseCache == null) clearAndUseCache = rebuildClearAndUseCacheDefault;
+        
         int numDocs = 0;
         EntityListIterator prodIt = null;
         try {
@@ -901,6 +974,13 @@ public abstract class SolrProductSearch {
             // this removes everything from the index
             client.deleteByQuery("*:*");
             client.commit();
+            
+            // NEW 2017-09-14: clear all entity caches at beginning, and then enable caching during 
+            // the product reading - this should significantly speed up the process
+            // NOTE: we also clear it again at the end to avoid filling up entity cache with rarely-accessed records
+            if (clearAndUseCache) {
+                SolrProductUtil.clearProductEntityCaches(delegator, dispatcher);
+            }
             
             Integer bufSize = (Integer) context.get("bufSize");
             if (bufSize == null) {
@@ -919,6 +999,9 @@ public abstract class SolrProductSearch {
             // NOTE: use ArrayList instead of LinkedList (EntityListIterator) in buffered mode because it will use less total memory
             List<Map<String, Object>> solrDocs = (bufSize > 0) ? new ArrayList<Map<String, Object>>(Math.min(bufSize, numDocs)) : new LinkedList<Map<String, Object>>();
             
+            Map<String, Object> productContext = new HashMap<>(context);
+            productContext.put("useCache", clearAndUseCache);
+            
             boolean lastReached = false;
             while (!lastReached) {
                 startIndex = startIndex + bufNumDocs;
@@ -934,7 +1017,7 @@ public abstract class SolrProductSearch {
                 while ((bufSize <= 0 || numLeft > 0) && !lastReached) {
                     GenericValue product = prodIt.next();
                     if (product != null) {
-                        Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
+                        Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, productContext);
                         solrDocs.add(dispatchContext);
                         numLeft--;
                     } else {
@@ -948,6 +1031,7 @@ public abstract class SolrProductSearch {
     
                 // This adds all products to the Index (instantly)
                 Map<String, Object> servCtx = UtilMisc.toMap("fieldList", solrDocs, "treatConnectErrorNonFatal", treatConnectErrorNonFatal);
+                servCtx.put("useCache", clearAndUseCache);
                 copyStdServiceFieldsNotSet(context, servCtx);
                 Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", servCtx);
                 
@@ -991,6 +1075,9 @@ public abstract class SolrProductSearch {
                 } catch(Exception e) {
                 }
             }
+            if (clearAndUseCache) {
+                SolrProductUtil.clearProductEntityCaches(delegator, dispatcher);
+            }
         }
         
         // If success, mark data as good
@@ -1003,16 +1090,40 @@ public abstract class SolrProductSearch {
         return result;
     }
     
+    private static boolean isReindexAutoForce(Delegator delegator, LocalDispatcher dispatcher) {
+        boolean autoForce = false;
+        if (!reindexAutoForceRan) {
+            synchronized(SolrProductSearch.class) {
+                if (!reindexAutoForceRan) {
+                    autoForce = Boolean.TRUE.equals(getReindexAutoForceProperty(delegator, dispatcher));
+                    reindexAutoForceRan = true;
+                }
+            }
+        }
+        return autoForce;
+    }
+    
+    private static Boolean getReindexAutoForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
+        return UtilMisc.booleanValueVersatile(System.getProperty(reindexAutoForcePropName));
+    }
+    
     /**
      * Rebuilds the solr index - auto run.
      */
-    public static Map<String, Object> rebuildSolrIndexAuto(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> rebuildSolrIndexAuto(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
+        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        boolean autoForce = isReindexAutoForce(delegator, dispatcher);
+        if (autoForce) {
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by system property " + reindexAutoForcePropName + "=true", module);
+        }
+        boolean force = autoForce;
 
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
         
-        if (autoRunEnabled) {
+        if (force || autoRunEnabled) {
             Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
             if (onlyIfDirty == null) {
                 onlyIfDirty = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.onlyIfDirty", false);
@@ -1021,8 +1132,12 @@ public abstract class SolrProductSearch {
             if (ifConfigChange == null) {
                 ifConfigChange = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.ifConfigChange", false);
             }
+            if (force) {
+                onlyIfDirty = false;
+                ifConfigChange = false;
+            }
             
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")...", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")", module);
 
             Map<String, Object> servCtx;
             try {
@@ -1060,11 +1175,17 @@ public abstract class SolrProductSearch {
         return result;
     }    
     
+    /**
+     * Rebuilds the solr index - only if dirty.
+     */
+    public static Map<String, Object> rebuildSolrIndexIfDirty(DispatchContext dctx, Map<String, Object> context) {
+        return rebuildSolrIndex(dctx, context);
+    }
     
     /**
      * Marks SOLR data as dirty.
      */
-    public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
+    public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         

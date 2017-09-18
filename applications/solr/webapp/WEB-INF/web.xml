@@ -119,10 +119,10 @@
     </init-param>
   </servlet>
 
-  <!-- Custom Ofbiz solr addition: OfbizSolrInfoServlet -->
+  <!-- Custom Ofbiz solr addition: ScipioSolrInfoServlet -->
   <servlet>
-    <servlet-name>OfbizSolrInfoServlet</servlet-name>
-    <servlet-class>com.ilscipio.scipio.solr.OfbizSolrInfoServlet</servlet-class>
+    <servlet-name>ScipioSolrInfoServlet</servlet-name>
+    <servlet-class>com.ilscipio.scipio.solr.ScipioSolrInfoServlet</servlet-class>
     <!-- Note: load-on-startup with value 0 is essential for this servlet -->
     <load-on-startup>0</load-on-startup>
   </servlet> 

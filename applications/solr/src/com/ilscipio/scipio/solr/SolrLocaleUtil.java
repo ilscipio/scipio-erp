@@ -12,6 +12,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
 /**
@@ -83,17 +84,26 @@ public abstract class SolrLocaleUtil {
      * NOTE: Currently (2017-09-14) this never uses product store configuration for this, but you should
      * pass the productStore anyway for future use.
      */
-    public static List<Locale> getConfiguredLocales(GenericValue productStore) {
+    public static List<Locale> getConfiguredLocales(Delegator delegator, GenericValue productStore) {
         return configuredLocales; 
     }
 
+    /**
+     * Gets content locales.
+     * NOTE: Currently (2017-09-14) this never uses product store configuration for this, but you should
+     * pass the productStore anyway for future use.
+     */
+    public static List<Locale> getConfiguredLocales(GenericValue productStore) {
+        return getConfiguredLocales(null, productStore); 
+    }
+    
     /**
      * Gets default content locale for the store.
      * This is the locale that the inline titles and descriptions that do have an explicit locale
      * should be written in (such as Product.description entity field or Content records with no localeString).
      * Uses forced default first, then ProductStore.defaultLocaleString, then fallback default, in that order.
      */
-    public static Locale getConfiguredDefaultLocale(GenericValue productStore) {
+    public static Locale getConfiguredDefaultLocale(Delegator delegator, GenericValue productStore) {
         if (configuredForceDefaultLocale != null) return configuredForceDefaultLocale;
         if (productStore != null) {
             Locale storeLocale = getCompatibleProductStoreLocaleStrictValid(productStore);
@@ -103,11 +113,37 @@ public abstract class SolrLocaleUtil {
     }
     
     /**
+     * Gets default content locale for the store.
+     * This is the locale that the inline titles and descriptions that do have an explicit locale
+     * should be written in (such as Product.description entity field or Content records with no localeString).
+     * Uses forced default first, then ProductStore.defaultLocaleString, then fallback default, in that order.
+     */
+    public static Locale getConfiguredDefaultLocale(GenericValue productStore) {
+        return getConfiguredDefaultLocale(null, productStore);
+    }
+    
+    /**
+     * Gets the force default content locale (only).
+     * WARN: Avoid using in client code.
+     */
+    public static Locale getConfiguredForceDefaultLocale(Delegator delegator, GenericValue productStore) {
+        return configuredForceDefaultLocale; 
+    }
+    
+    /**
      * Gets the force default content locale (only).
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredForceDefaultLocale(GenericValue productStore) {
-        return configuredForceDefaultLocale; 
+        return getConfiguredForceDefaultLocale(null, productStore); 
+    }
+    
+    /**
+     * Gets the fallback default content locale (only).
+     * WARN: Avoid using in client code.
+     */
+    public static Locale getConfiguredFallbackDefaultLocale(Delegator delegator, GenericValue productStore) {
+        return configuredFallbackDefaultLocale; 
     }
     
     /**
@@ -115,7 +151,7 @@ public abstract class SolrLocaleUtil {
      * WARN: Avoid using in client code.
      */
     public static Locale getConfiguredFallbackDefaultLocale(GenericValue productStore) {
-        return configuredFallbackDefaultLocale; 
+        return getConfiguredFallbackDefaultLocale(null, productStore); 
     }
 
     /**

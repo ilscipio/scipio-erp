@@ -23,6 +23,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
@@ -98,6 +99,10 @@ public abstract class SolrProductUtil {
         defaultUserProductSearchConfig = Collections.unmodifiableMap(config); // FIXME: contents are not properly unmodifiable
     }
     
+    private static final String configuredFallbackDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.fallback", null);
+    private static final String configuredForceDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.force", null);
+
+    
     /**
      * Cached names of solrProductAttributesSimple service interface field names.
      * DEV NOTE: there used to be a hardcoded list here (well, in SolrUtil), 
@@ -105,6 +110,22 @@ public abstract class SolrProductUtil {
      * TODO: REVIEW: ideally might want to get rid of this third layer of naming...
      */
     private static List<String> solrProdAttrSimple = null;
+    
+    
+    public static String getConfiguredDefaultCurrency(Delegator delegator, GenericValue productStore) {
+        if (configuredForceDefaultCurrency != null) return configuredForceDefaultCurrency;
+        if (productStore != null) {
+            String currency = productStore.getString("defaultCurrencyUomId");
+            if (UtilValidate.isNotEmpty(currency)) return currency;
+        }
+        if (configuredFallbackDefaultCurrency != null) return configuredFallbackDefaultCurrency;
+        return EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", 
+                delegator != null ? delegator : (productStore != null ? productStore.getDelegator() : null));
+    }
+    
+    public static String getConfiguredDefaultCurrency(GenericValue productStore) {
+        return getConfiguredDefaultCurrency(null, productStore);
+    }
     
     /**
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
@@ -512,10 +533,7 @@ public abstract class SolrProductUtil {
             // dispatchContext.put("last_modified", "");
 
             // this is the currencyUomId that the prices in solr should use...
-            // FIXME: if null, calculateProductPrice is currently reading this from general.properties ALWAYS;
-            // the stored data may not match this!
-            // _may_ be causing problems reading prices...
-            String currencyUomId = null;
+            String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
             
             if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
                 Locale priceConfigLocale = defaultProductLocale;

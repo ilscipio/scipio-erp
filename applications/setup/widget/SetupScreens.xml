@@ -356,17 +356,15 @@
         <section>
             <actions>
                 <set field="setupStep" value="organization"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
             
                 <set field="activeSubMenuItem" value="organization"/>
                 <set field="titleProperty" value="SetupCreateNewOrganization"/>
                 <set field="target" value="createOrganization"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
-                <!-- SCIPIO: get parties from query done in request by worker -->
-                <script lang="groovy"><![CDATA[
-                    context.parties = request.getAttribute("scpOrgPartyRoleList");
-                ]]></script>
+                <!-- SCIPIO: get parties from query done by worker -->
+                <set field="parties" from-field="setupStepStates.organization.stepData.orgPartyRoleList"/>
                 <!-- 
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
@@ -419,7 +417,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="user"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
                 <set field="target" value="createCustomer"/>
@@ -483,7 +481,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="accounting"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -499,7 +497,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="facility"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <set field="titleProperty" value="ProductNewFacility"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -540,7 +538,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="catalog"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <set field="titleProperty" value="PageTitleEditProductCatalog"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -570,7 +568,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="website"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
@@ -620,7 +618,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="finished"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -636,7 +634,7 @@
         <section>
             <actions>
                 <set field="setupStep" value="error"/>
-                <include-screen-actions name="SetupWizardCommonActions" location="component://setup/widget/CommonScreens.xml"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

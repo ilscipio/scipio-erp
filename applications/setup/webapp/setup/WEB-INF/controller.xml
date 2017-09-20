@@ -45,23 +45,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="request" value="nextSetupStep"/>
     </request-map>
-
-    <request-map uri="nextSetupStep">
-        <security direct-request="false"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getSetupStep"/>
-        <response name="success" type="view" value="SetupFinished"/>
-        <response name="finished" type="view" value="SetupFinished"/>
-        
-        <response name="organization" type="view" value="SetupOrganization"/>
-        <response name="user" type="view" value="SetupUser"/>
-        <response name="accounting" type="view" value="SetupAccounting"/>
-        <response name="facility" type="view" value="SetupFacility"/>
-        <response name="catalog" type="view" value="SetupCatalog"/>
-        <response name="website" type="view" value="SetupWebsite"/>
-        
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
     
+    <!-- DEV NOTE: To simplify the code, the setupUpdate[Step] server-side events below do not perform a step
+        validity check before committing (though theoretically should). This check is already done in the screens 
+        and since security is not an issue here it will practically never cause an issue. -->
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
@@ -128,6 +115,23 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupWebsite"/>
     </request-map>
+
+    <request-map uri="nextSetupStep">
+        <security direct-request="false"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getNextSetupStep"/>
+        <response name="success" type="view" value="SetupFinished"/>
+        <response name="finished" type="view" value="SetupFinished"/>
+        
+        <response name="organization" type="view" value="SetupOrganization"/>
+        <response name="user" type="view" value="SetupUser"/>
+        <response name="accounting" type="view" value="SetupAccounting"/>
+        <response name="facility" type="view" value="SetupFacility"/>
+        <response name="catalog" type="view" value="SetupCatalog"/>
+        <response name="website" type="view" value="SetupWebsite"/>
+        
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+
 
     <!-- end of request mappings -->
     

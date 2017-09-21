@@ -32,7 +32,8 @@ public abstract class SetupDataUtil {
             List<GenericValue> partyRoles = delegator.findByAnd("PartyRole", fields, null, useCache);
             if (UtilValidate.isNotEmpty(partyRoles)) {
                 result.put("partyValid", true);
-                result.put("orgPartyId", orgPartyId);
+                // this isn't needed - see SetupWizardCommonActions.groovy
+                //result.put("orgPartyId", orgPartyId);
                 result.put("completed", true);
                 return result;
             }

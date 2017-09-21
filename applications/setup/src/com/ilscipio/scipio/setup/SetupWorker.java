@@ -946,15 +946,26 @@ public abstract class SetupWorker implements Serializable {
             return request.getSession();
         }
 
+        protected String getStrParamOrNull(String name) {
+            String value = (String) request.getAttribute(name);
+            if (value != null) return value;
+            return request.getParameter("partyId");
+        }
+        
+        protected String getStrParamNonEmpty(String name) {
+            String value = (String) request.getAttribute(name);
+            if (UtilValidate.isNotEmpty(value)) return value;
+            value = request.getParameter("partyId");
+            if (UtilValidate.isNotEmpty(value)) return value;
+            return null;
+        }
+        
         public String getRawOrgPartyId() {
             if (staticWorker.rawOrgPartyId == null) {
-                String partyId = (String) request.getAttribute("partyId");
-                if (UtilValidate.isNotEmpty(partyId)) staticWorker.rawOrgPartyId = partyId;
-                else {
-                    partyId = request.getParameter("partyId");
-                    if (UtilValidate.isNotEmpty(partyId)) staticWorker.rawOrgPartyId = partyId;
-                    else staticWorker.rawOrgPartyId = "";
-                }
+                // NOTE: first check orgPartyId because some screen use partyId for something else
+                String partyId = getStrParamNonEmpty("orgPartyId");
+                if (partyId == null) partyId = getStrParamNonEmpty("partyId");
+                staticWorker.rawOrgPartyId = (partyId != null) ? partyId : null;
             }
             return staticWorker.rawOrgPartyId.length() > 0 ? staticWorker.rawOrgPartyId : null;
         }

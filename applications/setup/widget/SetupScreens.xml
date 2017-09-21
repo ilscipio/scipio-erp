@@ -463,7 +463,6 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
-                <set field="target" value="createCustomer"/>
                 <!-- FIXME: everything here squashes the org party ID
                 <set field="partyId" value="CUST"/>
                 <entity-condition entity-name="PartyRole" list="parties">
@@ -472,7 +471,7 @@
                 <set field="partyId" from-field="parties[0].partyId"/>
                  -->
                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/>
-                <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
+                <!-- why? <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

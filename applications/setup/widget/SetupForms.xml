@@ -33,7 +33,7 @@
     </form>
     
     <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
-        target="${target}?partyId=${partyId}">
+        target="${target}?orgPartyId=${partyId}">
         <actions>
             <entity-and entity-name="ProductStore" list="productStoreList">
                 <field-map field-name="productStoreId"/>

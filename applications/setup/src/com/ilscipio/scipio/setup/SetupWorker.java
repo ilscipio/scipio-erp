@@ -946,16 +946,16 @@ public abstract class SetupWorker implements Serializable {
             return request.getSession();
         }
 
-        protected String getStrParamOrNull(String name) {
+        protected String getStrParamWithEmpty(String name) {
             String value = (String) request.getAttribute(name);
             if (value != null) return value;
-            return request.getParameter("partyId");
+            return request.getParameter(name);
         }
         
         protected String getStrParamNonEmpty(String name) {
             String value = (String) request.getAttribute(name);
             if (UtilValidate.isNotEmpty(value)) return value;
-            value = request.getParameter("partyId");
+            value = request.getParameter(name);
             if (UtilValidate.isNotEmpty(value)) return value;
             return null;
         }
@@ -963,9 +963,9 @@ public abstract class SetupWorker implements Serializable {
         public String getRawOrgPartyId() {
             if (staticWorker.rawOrgPartyId == null) {
                 // NOTE: first check orgPartyId because some screen use partyId for something else
-                String partyId = getStrParamNonEmpty("orgPartyId");
-                if (partyId == null) partyId = getStrParamNonEmpty("partyId");
-                staticWorker.rawOrgPartyId = (partyId != null) ? partyId : null;
+                String partyId = getStrParamWithEmpty("orgPartyId"); // if orgPartyId is empty string, take that as meaning we shouldn't check partyId
+                if (partyId == null) partyId = getStrParamWithEmpty("partyId");
+                staticWorker.rawOrgPartyId = (partyId != null) ? partyId : "";
             }
             return staticWorker.rawOrgPartyId.length() > 0 ? staticWorker.rawOrgPartyId : null;
         }

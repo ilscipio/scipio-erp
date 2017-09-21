@@ -34,7 +34,22 @@
     
     <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}?partyId=${partyId}">
+        <actions>
+            <entity-and entity-name="ProductStore" list="productStoreList">
+                <field-map field-name="productStoreId"/>
+                <order-by field-name="productStoreId"/>
+            </entity-and>
+        </actions>
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <!-- SCIPIO: 
+        use-when="${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(productStoreList)} 
+        makes the field defined in the parent form to be rendered, which is not desired. So, for now just setting this as not required. 
+        -->
+        <field name="PRODUCT_STORE_ID" title="Product Store" required-field="false">
+            <drop-down>
+                <list-options description="${storeName} (${productStoreId})" key-name="productStoreId" list-name="productStoreList"></list-options>
+            </drop-down>
+        </field>
     </form>
     
     <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">

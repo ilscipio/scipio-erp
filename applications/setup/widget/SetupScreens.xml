@@ -386,6 +386,8 @@
                     </then>
                 </if>
                 -->
+
+                <set field="target" value="${groovy: context.party != null ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -419,7 +421,6 @@
                             <widgets>
                                 <section>
                                     <actions>
-                                        <set field="target" value="setupCreateOrganization"/>
                                         <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
                                         <set field="dependentForm" value="NewOrganization"/>
                                         <set field="paramKey" value="countryGeoId"/>                                        
@@ -442,7 +443,6 @@
                             <fail-widgets>
                                 <section>
                                     <actions>
-                                        <set field="target" value="setupUpdateOrganization"/>
                                     </actions>
                                     <widgets>
                                         <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
@@ -472,6 +472,8 @@
                  -->
                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/>
                 <!-- why? <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
+                
+                <set field="target" value="${groovy: context.parties ? 'setupUpdateUser' : 'setupCreateUser'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -486,7 +488,6 @@
                                         <if-empty field="parties"/>
                                     </condition>
                                     <actions>
-                                        <set field="target" value="setupCreateUser"/>
                                         <!-- fields for setDependentDropdownValuesJs.ftl -->
                                         <set field="dependentForm" value="NewCustomer"/>
                                         <!-- SCIPIO: new field required as workaround for Ofbiz issue with form names -->
@@ -509,7 +510,6 @@
                                     <fail-widgets>
                                         <section>
                                             <actions>
-                                                <set field="target" value="setupUpdateUser"/>
                                             </actions>
                                             <widgets>
                                                 <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
@@ -552,6 +552,8 @@
                 
                 <set field="titleProperty" value="ProductNewFacility"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
+                
+                <set field="target" value="${groovy: context.facility != null ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -566,28 +568,10 @@
                                         <not><if-empty field="facility"/></not>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <actions>
-                                                <set field="target" value="setupUpdateFacility"/>
-                                            </actions>
-                                            <widgets>
-                                                <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
-                                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
-                                            </widgets>
-                                        </section>
+                                        <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
                                     </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <actions>
-                                                <set field="target" value="setupCreateFacility"/>
-                                            </actions>
-                                            <widgets>
-                                                <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
-                                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
                                 </section>
+                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
@@ -609,6 +593,8 @@
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
                 <!-- TODO: what is this? -->
                 <set field="showScreen" value="origin"/>
+                
+                <set field="target" value="${groovy: context.prodCatalog != null ? 'setupUpdateCatalog' : 'setupCreateCatalog'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -622,27 +608,10 @@
                                     <section>
                                         <condition><not><if-empty field="prodCatalog"/></not></condition>
                                         <widgets>
-                                            <section>
-                                                <actions>
-                                                    <set field="target" value="setupUpdateCatalog"/>
-                                                </actions>
-                                                <widgets>
-                                                    <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
-                                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
-                                                </widgets>
-                                            </section>
+                                            <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                         </widgets>
-                                        <fail-widgets>
-                                            <section>
-                                                <actions>
-                                                    <set field="target" value="setupCreateCatalog"/>
-                                                </actions>
-                                                <widgets>
-                                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
-                                                </widgets>
-                                            </section>
-                                        </fail-widgets>
                                     </section>
+                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -661,10 +630,10 @@
                 <set field="titleProperty" value="PageTitleEditWebSite"/>
                 <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
                 <!-- TODO: what is this? -->
                 <set field="showScreen" value="origin"/>
+                
+                <set field="target" value="${groovy: context.productStore != null ? 'setupUpdateStore' : 'setupCreateStore'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -674,32 +643,49 @@
                                 <if-compare field="showScreen" operator="equals" value="origin"/>
                             </condition>
                             <widgets>
+                                <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
                                 <section>
-                                    <condition><not><if-empty field="webSite"/></not></condition>
+                                    <condition>
+                                        <if-compare field="showScreen" operator="equals" value="message"/>
+                                    </condition>
                                     <widgets>
-                                        <section>
-                                            <actions>
-                                                <set field="target" value="setupUpdateStore"/>
-                                            </actions>
-                                            <widgets>
-                                                <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
-                                                <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
-                                                <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
-                                            </widgets>
-                                        </section>
+                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
                                     </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <actions>
-                                                <set field="target" value="setupCreateStore"/>
-                                            </actions>
-                                            <widgets>
-                                                <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
-                                                <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
                                 </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupWebsite">
+        <section>
+            <actions>
+                <set field="setupStep" value="website"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                
+                <set field="titleProperty" value="PageTitleEditWebSite"/>
+                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+                <!-- TODO: what is this? -->
+                <set field="showScreen" value="origin"/>
+                
+                <set field="target" value="${groovy: context.webSite != null ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
+                                <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
                             </widgets>
                             <fail-widgets>
                                 <section>

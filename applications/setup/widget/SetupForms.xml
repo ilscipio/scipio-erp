@@ -19,13 +19,13 @@
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <!-- SCIPIO: NOTE: 2017-08-09: These form definitions were created to simply extend the originals from ofbizsetup for now;
         they can be duplicated individually if/once they significantly change/diverge. -->
 
     <form name="EditOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
-        target="${target}?partyId=${partyId}">
+        target="${target}" id="NewOrganization">        
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     

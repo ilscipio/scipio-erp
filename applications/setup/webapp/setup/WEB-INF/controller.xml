@@ -55,8 +55,15 @@
         <response name="success" type="view" value="SetupOrganization"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    <request-map uri="setupCreateOrganization">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createOrganization"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupOrganization"/>
+    </request-map>
     <request-map uri="setupUpdateOrganization">
         <security https="true" auth="true"/>
+        <!-- TODO -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupOrganization"/>
     </request-map>
@@ -66,8 +73,15 @@
         <response name="success" type="view" value="SetupUser"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    <request-map uri="setupCreateUser">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupUser"/>
+    </request-map>
     <request-map uri="setupUpdateUser">
         <security https="true" auth="true"/>
+        <!-- TODO -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupUser"/>
     </request-map>
@@ -77,8 +91,15 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    <request-map uri="setupCreateAccounting">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupAccounting"/>
+    </request-map>
     <request-map uri="setupUpdateAccounting">
         <security https="true" auth="true"/>
+        <!-- TODO -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupAccounting"/>
     </request-map>
@@ -88,8 +109,15 @@
         <response name="success" type="view" value="SetupFacility"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    <request-map uri="setupCreateFacility">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupFacility"/>
+    </request-map>
     <request-map uri="setupUpdateFacility">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFacility"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupFacility"/>
     </request-map>
@@ -98,6 +126,11 @@
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
         <response name="success" type="view" value="SetupCatalog"/>
         <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateCatalog">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCatalog">
         <security https="true" auth="true"/>
@@ -110,8 +143,15 @@
         <response name="success" type="view" value="SetupWebsite"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    <request-map uri="setupCreateWebsite">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSetting"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupWebsite"/>
+    </request-map>
     <request-map uri="setupUpdateWebsite">
         <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductStore"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupWebsite"/>
     </request-map>

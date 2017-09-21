@@ -45,7 +45,7 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
-        result.put("completed", true);
+        result.put("completed", false);
         return result;
     }
     

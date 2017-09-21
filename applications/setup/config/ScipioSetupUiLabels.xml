@@ -37,6 +37,16 @@
         <value xml:lang="de">Setup-Schritt nicht verfügbar - Bitte vorherige Setup-Schritte ausfüllen.</value>
         <value xml:lang="fr">L'étape de configuration n'est pas disponible - Veuillez compléter d'abord les étapes de configuration précédentes.</value>
     </property>
+    <property key="SetupError">
+        <value xml:lang="en">Setup error</value>
+        <value xml:lang="de">Setup-Fehler</value>
+        <value xml:lang="fr">Erreur durant la configuration</value>
+    </property>
+    <property key="SetupSettingUpOrganization">
+        <value xml:lang="en">Setting up organization</value>
+        <value xml:lang="de">Organisation einrichten</value>
+        <value xml:lang="fr">Configuration de l'organization</value>
+    </property>
     <property key="SetupSetupWizard">
         <value xml:lang="en">Setup Wizard</value>
         <value xml:lang="de">Setup-Assistent</value>

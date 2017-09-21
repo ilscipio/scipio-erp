@@ -232,6 +232,13 @@
                     <decorator-section name="body">
                         <include-screen name="SetupProgress" location="${parameters.mainDecoratorLocation}"/>
                         <section>
+                            <condition><not><if-empty field="party"/></not></condition>
+                            <widgets>
+                                <!-- TODO?: merge into titles instead -->
+                                <label style="heading+1">${uiLabelMap.SetupSettingUpOrganization}: ${partyGroup.groupName} [${partyId}]</label>
+                            </widgets>
+                        </section>
+                        <section>
                             <condition>
                                 <if-compare field="setupStepAllowed" type="Boolean" operator="equals" value="true"/>
                             </condition>

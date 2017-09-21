@@ -137,23 +137,23 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupCatalog"/>
     </request-map>
-    <request-map uri="setupWebsite">
+    <request-map uri="setupStore">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupWebsite"/>
+        <response name="success" type="view" value="SetupStore"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
-    <request-map uri="setupCreateWebsite">
+    <request-map uri="setupCreateStore">
         <security https="true" auth="true"/>
         <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSetting"/>
         <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupStore"/>
     </request-map>
-    <request-map uri="setupUpdateWebsite">
+    <request-map uri="setupUpdateStore">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateProductStore"/>
         <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupStore"/>
     </request-map>
 
     <request-map uri="nextSetupStep">
@@ -167,7 +167,7 @@
         <response name="accounting" type="view" value="SetupAccounting"/>
         <response name="facility" type="view" value="SetupFacility"/>
         <response name="catalog" type="view" value="SetupCatalog"/>
-        <response name="website" type="view" value="SetupWebsite"/>
+        <response name="store" type="view" value="SetupStore"/>
         
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -201,7 +201,7 @@
     <view-map name="SetupAccounting" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccounting"/>
     <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
     <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
-    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
+    <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
 

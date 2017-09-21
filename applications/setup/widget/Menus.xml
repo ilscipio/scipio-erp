@@ -129,23 +129,36 @@
     <!-- SCIPIO: menu entries for wizard -->
     <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         items-sort-mode="off">
+        <!-- FIXME?: why is link-type default not anchor here? -->
         <menu-item name="organization" title="${uiLabelMap.SetupOrganization}" disabled="${context.setupStepStates.organization.disabled == true}">
-            <link target="setupOrganization"/>
+            <link target="setupOrganization" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
         <menu-item name="user" title="${uiLabelMap.PartyParty}" disabled="${context.setupStepStates.user.disabled == true}">
-            <link target="setupUser"/>
+            <link target="setupUser" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
         <menu-item name="accounting" title="${uiLabelMap.AccountingAccounting}" disabled="${context.setupStepStates.accounting.disabled == true}">
-            <link target="setupAccounting"/>
+            <link target="setupAccounting" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
         <menu-item name="facility" title="${uiLabelMap.SetupFacility}" disabled="${context.setupStepStates.facility.disabled == true}">
-            <link target="setupFacility"/>
+            <link target="setupFacility" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
         <menu-item name="catalog" title="${uiLabelMap.SetupProductCatalog}" disabled="${context.setupStepStates.catalog.disabled == true}">
-            <link target="setupCatalog"/>
+            <link target="setupCatalog" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
-        <menu-item name="website" title="${uiLabelMap.SetupWebSite}" disabled="${context.setupStepStates.website.disabled == true}">
-            <link target="setupWebsite"/>
+        <menu-item name="store" title="${uiLabelMap.CommonStore}" disabled="${context.setupStepStates.store.disabled == true}">
+            <link target="setupStore" link-type="anchor">
+                <parameter param-name="partyId"/>
+            </link>
         </menu-item>
     </menu>
 </menus>

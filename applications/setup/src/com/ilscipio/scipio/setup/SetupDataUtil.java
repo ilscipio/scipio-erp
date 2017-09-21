@@ -1,12 +1,10 @@
 package com.ilscipio.scipio.setup;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -24,53 +22,54 @@ public abstract class SetupDataUtil {
     protected SetupDataUtil() {
     }
 
-    public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         
-        List<GenericValue> partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "INTERNAL_ORGANIZATIO"), null, false);
-        if (UtilValidate.isNotEmpty(partyRoles)) {
-            List<String> scpOrgPartyIdList = new ArrayList<>(partyRoles.size());
-            for(GenericValue partyRole : partyRoles) {
-                scpOrgPartyIdList.add(partyRole.getString("partyId"));
+        if (UtilValidate.isNotEmpty(orgPartyId)) {
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("roleTypeId", "INTERNAL_ORGANIZATIO");
+            fields.put("partyId", orgPartyId);
+            List<GenericValue> partyRoles = delegator.findByAnd("PartyRole", fields, null, useCache);
+            if (UtilValidate.isNotEmpty(partyRoles)) {
+                result.put("partyValid", true);
+                result.put("completed", true);
+                return result;
             }
-            result.put("orgPartyIdList", scpOrgPartyIdList);
-            result.put("orgPartyRoleList", partyRoles);
-            result.put("completed", true);
-            return result;
+            result.put("partyValid", false);
         }
         result.put("completed", false);
         return result;
     }
     
-    public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
     
-    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
     
-    public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
     
-    public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
     
-    public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher) throws GeneralException {
+    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);

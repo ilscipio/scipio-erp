@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -69,7 +70,7 @@ public abstract class SetupWorker implements Serializable {
      * NOTE: see Step States further below for specific implementations.
      */
     private static final List<String> stepsList = UtilMisc.unmodifiableArrayList(
-            "organization", "user", "accounting", "facility", "catalog", "website"
+            "organization", "user", "accounting", "facility", "catalog", "store"
     );
     private static final Set<String> stepsSet = Collections.unmodifiableSet(new HashSet<String>(stepsList));
     
@@ -207,6 +208,8 @@ public abstract class SetupWorker implements Serializable {
     
     public abstract void clearCached();
     
+    public abstract String getOrgPartyId();
+    
     /**
      * Returns last submitted setup step (rather than "current"/"next").
      */
@@ -295,9 +298,15 @@ public abstract class SetupWorker implements Serializable {
     protected static class StaticSetupWorker extends SetupWorker {
         private Map<String, StepState> stepStateMap = new HashMap<>();
         private String autoDetStep = null;
+        private String rawOrgPartyId = null;
+        private String orgPartyId = null;
         
         @Override
         public void clearCached() {
+        }
+        @Override
+        public String getOrgPartyId() {
+            return orgPartyId != null ? (orgPartyId.length() > 0 ? orgPartyId : null) : null;
         }
         @Override
         public String getSubmittedStep() {
@@ -431,6 +440,7 @@ public abstract class SetupWorker implements Serializable {
         private HttpServletRequest request;
         private Delegator delegator = null;
         private LocalDispatcher dispatcher = null;
+        private Map<String, Object> params = null;
         /**
          * NOTE: each entry in this map references an entry in staticWorker.stepStateMap,
          * so it auto-populates the cache.
@@ -465,6 +475,7 @@ public abstract class SetupWorker implements Serializable {
         public void clearCached() {
             if (useReqCache) SetupWorker.clearCached(request);
             this.staticWorker = getEnsureStaticWorker(request, useReqCache);
+            this.params = null;
         }
         
         protected Map<String, StepState> getStepStateMapPriv() {
@@ -700,7 +711,7 @@ public abstract class SetupWorker implements Serializable {
             m.put("accounting", AccountingStepState.class);
             m.put("facility", FacilityStepState.class);
             m.put("catalog", CatalogStepState.class);
-            m.put("website", WebsiteStepState.class);
+            m.put("store", StoreStepState.class);
             
             stepStateClsMap = Collections.unmodifiableMap(m);
         }
@@ -838,7 +849,7 @@ public abstract class SetupWorker implements Serializable {
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getOrganizationStepData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getOrganizationStepData(getDelegator(), getDispatcher(), getRawOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
         
@@ -850,7 +861,7 @@ public abstract class SetupWorker implements Serializable {
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getUserStepData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getUserStepData(getDelegator(), getDispatcher(), getOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
         
@@ -862,7 +873,7 @@ public abstract class SetupWorker implements Serializable {
             
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getAccountingStepData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getAccountingStepData(getDelegator(), getDispatcher(), getOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
         
@@ -874,7 +885,7 @@ public abstract class SetupWorker implements Serializable {
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getFacilityStepData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getFacilityStepData(getDelegator(), getDispatcher(), getOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
         
@@ -886,19 +897,19 @@ public abstract class SetupWorker implements Serializable {
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getCatalogStepStateData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getCatalogStepStateData(getDelegator(), getDispatcher(), getOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
         
-        protected class WebsiteStepState extends CommonStepState {
-            public WebsiteStepState(StaticStepState partial) { super(partial); }
+        protected class StoreStepState extends CommonStepState {
+            public StoreStepState(StaticStepState partial) { super(partial); }
             
-            @Override public String getName() { return "website"; }
+            @Override public String getName() { return "store"; }
             @Override protected boolean isSkippableImpl() { return true; }
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getWebsiteStepStateData(getDelegator(), getDispatcher());
+                return SetupDataUtil.getStoreStepStateData(getDelegator(), getDispatcher(), getOrgPartyId(), getParams(), isUseEntityCache());
             }
         }
     
@@ -934,6 +945,47 @@ public abstract class SetupWorker implements Serializable {
         protected HttpSession getSession() {
             return request.getSession();
         }
-    
+
+        public String getRawOrgPartyId() {
+            if (staticWorker.rawOrgPartyId == null) {
+                String partyId = (String) request.getAttribute("partyId");
+                if (UtilValidate.isNotEmpty(partyId)) staticWorker.rawOrgPartyId = partyId;
+                else {
+                    partyId = request.getParameter("partyId");
+                    if (UtilValidate.isNotEmpty(partyId)) staticWorker.rawOrgPartyId = partyId;
+                    else staticWorker.rawOrgPartyId = "";
+                }
+            }
+            return staticWorker.rawOrgPartyId.length() > 0 ? staticWorker.rawOrgPartyId : null;
+        }
+        
+        @Override
+        public String getOrgPartyId() {
+            if (staticWorker.orgPartyId == null) {
+                String partyId = getRawOrgPartyId();
+                if (partyId != null) {
+                    if (Boolean.TRUE.equals(getStepState("organization").getStepData().get("partyValid"))) {
+                        staticWorker.orgPartyId = partyId;
+                    } else {
+                        staticWorker.orgPartyId = "";
+                    }
+                } else {
+                    staticWorker.orgPartyId = "";
+                }
+            }
+            return staticWorker.orgPartyId.length() > 0 ? staticWorker.orgPartyId : null;
+        }
+        
+        protected boolean isUseEntityCache() {
+            return false;
+        }
+        
+        protected Map<String, Object> getParams() {
+            if (params == null) {
+                params = UtilHttp.getParameterMap(request);
+                params.putAll(UtilHttp.getAttributeMap(request));
+            }
+            return params;
+        }
     }
 }

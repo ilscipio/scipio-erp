@@ -24,30 +24,40 @@
     <!-- SCIPIO: NOTE: 2017-08-09: These form definitions were created to simply extend the originals from ofbizsetup for now;
         they can be duplicated individually if/once they significantly change/diverge. -->
 
-    <form name="NewOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
-        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-    </form>
-    
-    <form name="NewCustomer" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    <form name="EditOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
     <form name="ViewOrganization" extends="ViewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
     </form>
     
-    <form name="EditFacility" extends="EditFacility" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
-    <form name="EditProductStore" extends="EditProductStore" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+    </form>
+    
+    <form name="EditFacility" extends="EditFacility" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+    </form>
+    
+    <form name="EditProductStore" extends="EditProductStore" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
 
-    <form name="EditWebSite" extends="EditWebSite" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    <form name="EditWebSite" extends="EditWebSite" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
-    <form name="EditProdCatalog" extends="EditProdCatalog" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    <form name="EditProdCatalog" extends="EditProdCatalog" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}?partyId=${partyId}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
     
@@ -63,9 +73,5 @@
     </form>
     
     <form name="ListOrganizations" extends="ListOrganizations" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
-    </form>
-    
-    <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
-        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
     </form>
 </forms>

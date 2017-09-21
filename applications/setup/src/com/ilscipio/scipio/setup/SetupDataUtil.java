@@ -32,6 +32,7 @@ public abstract class SetupDataUtil {
             List<GenericValue> partyRoles = delegator.findByAnd("PartyRole", fields, null, useCache);
             if (UtilValidate.isNotEmpty(partyRoles)) {
                 result.put("partyValid", true);
+                result.put("orgPartyId", orgPartyId);
                 result.put("completed", true);
                 return result;
             }
@@ -44,7 +45,7 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, String orgPartyId, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
-        result.put("completed", false);
+        result.put("completed", true);
         return result;
     }
     

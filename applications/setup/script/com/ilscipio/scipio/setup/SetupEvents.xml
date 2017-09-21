@@ -24,5 +24,17 @@
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
+          
+    <simple-method method-name="createUser" short-description="Create Customer" login-required="false">
+        <set field="require_email" value="true"/>
+        <set field="require_phone" value="false"/>
+        <set field="require_login" value="false"/>
+        <!-- this parameter must be set to true or the createUser method below will use a default password instead of the one entered by user -->
+        <set field="create_allow_password" value="true"/>
+        <set field="parameters.roleTypeId" value="OWNER"/>
+        <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
+        <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
+        <call-simple-method method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+    </simple-method>
     
 </simple-methods>

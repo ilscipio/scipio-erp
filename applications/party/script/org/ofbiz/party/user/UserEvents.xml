@@ -409,14 +409,17 @@ under the License.
         <field-to-request field="tempMap.partyId" request-name="partyId"/>
 
         <!-- Associated to Product Store -->
-        <entity-one entity-name="UserLogin" value-field="userLogin">
-            <field-map field-name="userLoginId" value="system"/>
-        </entity-one>
-        <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
-        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
-        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
-        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
-        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+        <!-- SCIPIO: A user may not be associated to a store. (ie: organization owner) -->
+        <if-not-empty field="parameters.PRODUCT_STORE_ID">
+	        <entity-one entity-name="UserLogin" value-field="userLogin">
+	            <field-map field-name="userLoginId" value="system"/>
+	        </entity-one>
+	        <set field="createProductStoreRoleMap.userLogin" from-field="userLogin"/>
+	        <set field="createProductStoreRoleMap.partyId" from-field="tempMap.partyId"/>
+	        <set field="createProductStoreRoleMap.roleTypeId" from-field="parameters.roleTypeId"/>
+	        <set field="createProductStoreRoleMap.productStoreId" from-field="parameters.PRODUCT_STORE_ID"/>
+	        <call-service service-name="createProductStoreRole" in-map-name="createProductStoreRoleMap"/>
+        </if-not-empty>
 
         <!--send New User Email Notification-->
         <set field="emailContext.partyId" from-field="partyId"/>

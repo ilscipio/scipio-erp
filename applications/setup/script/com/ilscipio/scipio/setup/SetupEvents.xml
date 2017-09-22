@@ -25,7 +25,7 @@
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
           
-    <simple-method method-name="createUser" short-description="Create Customer" login-required="false">
+    <simple-method method-name="createUser" short-description="Create Owner User" login-required="true">
         <set field="require_email" value="true"/>
         <set field="require_phone" value="false"/>
         <set field="require_login" value="false"/>
@@ -34,7 +34,13 @@
         <set field="parameters.roleTypeId" value="OWNER"/>
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
-        <call-simple-method method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+        <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml">
+            <result-to-field field="newPartyId" result-name="tempMap.partyId"/>
+        </call-simple-method>
+        <request-to-field field="userPartyId" request-name="partyId"/>        
+
+        <field-to-request request-name="userPartyId" field="userPartyId"/>
+        
     </simple-method>
     
 </simple-methods>

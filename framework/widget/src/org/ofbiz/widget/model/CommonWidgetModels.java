@@ -33,6 +33,7 @@ import java.util.TimeZone;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
@@ -335,6 +336,7 @@ public final class CommonWidgetModels {
         private final String height;
         private final String width;
         private final FlexibleStringExpander useWhenExdr; // SCIPIO: new
+        private final AutoParameterMap autoParameterMap; // SCIPIO: new
 
         public Link(Element linkElement) {
             this.textExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("text"));
@@ -384,6 +386,13 @@ public final class CommonWidgetModels {
             } else {
                 this.autoEntityParameters = null;
             }
+            // SCIPIO: new parameter-map (added 2017-09-21)
+            Element parameterMapElement = UtilXml.firstChildElement(linkElement, "parameter-map");
+            if (parameterMapElement != null) {
+                this.autoParameterMap = new AutoParameterMap(parameterMapElement);
+            } else {
+                this.autoParameterMap = null;
+            }
             Integer size = null;
             String sizeAttr = linkElement.getAttribute("size");
             if (!sizeAttr.isEmpty()) {
@@ -417,6 +426,7 @@ public final class CommonWidgetModels {
             this.width = "";
             this.height = "";
             this.useWhenExdr = FlexibleStringExpander.getInstance("");
+            this.autoParameterMap = null; // SCIPIO
         }
 
         public AutoEntityParameters getAutoEntityParameters() {
@@ -473,6 +483,9 @@ public final class CommonWidgetModels {
 
         public Map<String, String> getParameterMap(Map<String, Object> context) {
             Map<String, String> fullParameterMap = new HashMap<String, String>();
+            if (autoParameterMap != null) { // SCIPIO: new parameter-map
+                autoParameterMap.putAllParametersMap(fullParameterMap, context);
+            }
             for (Parameter parameter : this.parameterList) {
                 fullParameterMap.put(parameter.getName(), parameter.getValue(context));
             }
@@ -487,6 +500,9 @@ public final class CommonWidgetModels {
 
         public Map<String, String> getParameterMap(Map<String, Object> context, String defaultEntityName, String defaultServiceName) {
             Map<String, String> fullParameterMap = new HashMap<String, String>();
+            if (autoParameterMap != null) { // SCIPIO: new parameter-map
+                autoParameterMap.putAllParametersMap(fullParameterMap, context);
+            }
             for (Parameter parameter : this.parameterList) {
                 fullParameterMap.put(parameter.getName(), parameter.getValue(context));
             }
@@ -649,6 +665,43 @@ public final class CommonWidgetModels {
                 return returnValue;
             } else {
                 return null;
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Reads a parameter map from a context field.
+     * Added 2017-09-21.
+     */
+    @SuppressWarnings("serial")
+    public static class AutoParameterMap implements Serializable  {
+        protected FlexibleMapAccessor<Object> fromField;
+        
+        public AutoParameterMap(Element element) {
+            this.fromField = UtilValidate.isNotEmpty(element.getAttribute("from-field")) ? FlexibleMapAccessor
+                    .getInstance(element.getAttribute("from-field")) : null;
+        }
+        
+        public FlexibleMapAccessor<Object> getFromField() {
+            return fromField;
+        }
+        
+        public void putAllParametersMap(Map<String, String> out, Map<String, Object> context) {
+            Object retVal = null;
+            if (this.fromField != null && this.fromField.get(context) != null) {
+                retVal = this.fromField.get(context);
+            }
+            if (retVal != null) {
+                if (!(retVal instanceof Map)) {
+                    Debug.logError("Widget link: cannot use context field-from '" + this.fromField.toString()
+                        + "' as parameter-map - is not instance of Map (is a: " + retVal.getClass().getName() + ")", module);
+                } else {
+                    Map<String, ?> map = UtilGenerics.checkMap(retVal);
+                    for(Map.Entry<String, ?> entry : map.entrySet()) {
+                        Object value = entry.getValue();
+                        out.put(entry.getKey(), value != null ? value.toString() : null);
+                    }
+                }
             }
         }
     }

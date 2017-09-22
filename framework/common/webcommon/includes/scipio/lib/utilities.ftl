@@ -1555,7 +1555,23 @@ Adds parameters from a hash to a URL param string (no full URL logic).
     </#if>
   </#list>
   <#return res>
-</#function> 
+</#function>
+
+<#-- 
+*************
+* addUrlEncParamsToStr
+************
+Adds url-encoded parameters from a hash to a URL param string (no full URL logic).
+                    
+  * Parameters *
+    paramStr                = (required) Param string
+    paramMap                = ((map), required) Map of keys to values to add
+    paramDelim              = (default: "&amp;") Param delimiter
+    includeEmpty            = ((boolean), default: true) If true, include empty values; if false, omit empty values
+-->
+<#function addUrlEncParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
+  <#return addParamsToStr(paramStr, paramMap, paramDelim, includeEmpty, true)>
+</#function>
 
 <#-- 
 *************

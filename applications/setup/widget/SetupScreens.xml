@@ -357,10 +357,7 @@
             <actions>
                 <set field="setupStep" value="organization"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-            
-                <set field="activeSubMenuItem" value="organization"/>
-                <set field="titleProperty" value="SetupCreateNewOrganization"/>
-                
+
                 <!-- why?: <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
                 
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
@@ -387,6 +384,7 @@
                 </if>
                 -->
 
+                <set field="titleProperty" value="${groovy: context.party != null ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
                 <set field="target" value="${groovy: context.party != null ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
             </actions>
             <widgets>
@@ -473,6 +471,8 @@
                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/>
                 <!-- why? <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
                 
+                <!-- FIXME: context.parties check is bad -->
+                <set field="titleProperty" value="${groovy: context.parties != null ? 'PartyChangeParty' : 'PartyNewUser'}" />
                 <set field="target" value="${groovy: context.parties ? 'setupUpdateUser' : 'setupCreateUser'}" />
             </actions>
             <widgets>
@@ -550,9 +550,9 @@
                 <set field="setupStep" value="facility"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
-                <set field="titleProperty" value="ProductNewFacility"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
                 
+                <set field="titleProperty" value="${groovy: context.facility != null ? 'ProductEditFacility' : 'ProductNewFacility'}" />
                 <set field="target" value="${groovy: context.facility != null ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
             </actions>
             <widgets>
@@ -589,11 +589,11 @@
                 <set field="setupStep" value="catalog"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
-                <set field="titleProperty" value="PageTitleEditProductCatalog"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
                 <!-- TODO: what is this? -->
                 <set field="showScreen" value="origin"/>
                 
+                <set field="titleProperty" value="${groovy: context.prodCatalog != null ? 'ProductEditCatalog' : 'ProductNewCatalog'}" />
                 <set field="target" value="${groovy: context.prodCatalog != null ? 'setupUpdateCatalog' : 'setupCreateCatalog'}" />
             </actions>
             <widgets>
@@ -627,12 +627,12 @@
                 <set field="setupStep" value="store"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
-                <set field="titleProperty" value="PageTitleEditWebSite"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+                
                 <!-- TODO: what is this? -->
                 <set field="showScreen" value="origin"/>
                 
+                <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
                 <set field="target" value="${groovy: context.productStore != null ? 'setupUpdateStore' : 'setupCreateStore'}" />
             </actions>
             <widgets>
@@ -668,12 +668,12 @@
                 <set field="setupStep" value="website"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
-                <set field="titleProperty" value="PageTitleEditWebSite"/>
-                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+                
                 <!-- TODO: what is this? -->
                 <set field="showScreen" value="origin"/>
                 
+                <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
                 <set field="target" value="${groovy: context.webSite != null ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
             </actions>
             <widgets>

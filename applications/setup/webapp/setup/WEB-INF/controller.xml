@@ -155,6 +155,24 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupStore"/>
     </request-map>
+    <request-map uri="setupWebsite">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <response name="success" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateWebsite">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createDefaultWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupWebsite"/>
+    </request-map>
+    <request-map uri="setupUpdateWebsite">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="view" value="SetupWebsite"/>
+    </request-map>
 
     <request-map uri="nextSetupStep">
         <security direct-request="false"/>
@@ -202,6 +220,7 @@
     <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
     <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
     <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
+    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
 

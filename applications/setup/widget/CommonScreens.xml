@@ -226,16 +226,24 @@
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://setup/widget/Menus.xml#SetupSteps" />
+                
+                <set field="noTitle" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator">
                     <decorator-section name="body">
                         <include-screen name="SetupProgress" location="${parameters.mainDecoratorLocation}"/>
                         <section>
-                            <condition><not><if-empty field="party"/></not></condition>
+                            <condition><not><if-empty field="orgPartyGroup"/></not></condition>
                             <widgets>
-                                <!-- TODO?: merge into titles instead -->
-                                <label style="heading+1">${uiLabelMap.SetupSettingUpOrganization}: ${partyGroup.groupName} [${partyId}]</label>
+                                <platform-specific>
+                                    <html>
+                                        <html-template><![CDATA[
+                                          <@heading>${uiLabelMap.SetupSettingUp}: ${orgPartyGroup.groupName} [${orgPartyGroup.partyId}]<#t/>
+                                            <#t/><#if productStore?has_content> - ${productStore.storeName!productStore.productStoreId}</#if></@heading>
+                                        ]]></html-template>
+                                    </html>
+                                </platform-specific>
                             </widgets>
                         </section>
                         <section>

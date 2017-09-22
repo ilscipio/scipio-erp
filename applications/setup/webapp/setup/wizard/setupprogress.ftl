@@ -1,15 +1,28 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
+<#macro setupNavStep name icon="fa fa-info">
+  <#-- NOTE: the "disabled" logic is overridden and determined by SetupWorker -->
+  <#local stepState = (setupStepStates[name])!{}>
+  <#local paramStr = addParamsToStrUrlEnc("", stepState.stepParams!)>
+  <#if paramStr?has_content>
+    <#local paramStr = "?" + paramStr>
+  </#if>
+  <@step name=name 
+    icon=icon 
+    href=makeOfbizUrl("setup"+name?cap_first + paramStr) 
+    completed=((stepState.completed)!false) 
+    disabled=((stepState.disabled)!true)
+    ><#nested></@step>
+</#macro>
+
 <@section>
     <@nav type="steps" activeElem=(setupStep!"organization")>
-        <#-- NOTE: the "disabled" logic is overridden and determined by SetupWorker -->
-        <#assign states = setupStepStates!>
-        <#assign paramStr = "?partyId=" + rawString(partyId!)>
-        <@step name="organization" icon="fa fa-info" href=makeOfbizUrl("setupOrganization"+paramStr) completed=((states.organization.completed)!false) disabled=((states.organization.disabled)!false)>${uiLabelMap.SetupOrganization}</@step>
-        <@step name="user" icon="fa fa-info" href=makeOfbizUrl("setupUser"+paramStr) completed=((states.user.completed)!false) disabled=((states.user.disabled)!false)>${uiLabelMap.PartyParty}</@step>
-        <@step name="accounting" icon="fa fa-credit-card" href=makeOfbizUrl("setupAccounting"+paramStr) completed=((states.accounting.completed)!false) disabled=((states.accounting.disabled)!false)>${uiLabelMap.AccountingAccounting}</@step>
-        <@step name="facility" icon="fa fa-building" href=makeOfbizUrl("setupFacility"+paramStr) completed=((states.facility.completed)!false) disabled=((states.facility.disabled)!false)>${uiLabelMap.SetupFacility}</@step>
-        <@step name="catalog" icon="fa fa-info" href=makeOfbizUrl("setupCatalog"+paramStr) completed=((states.catalog.completed)!false) disabled=((states.catalog.disabled)!false)>${uiLabelMap.SetupProductCatalog}</@step>
-        <@step name="store" icon="fa fa-info" href=makeOfbizUrl("setupStore"+paramStr) completed=((states.store.completed)!false) disabled=((states.store.disabled)!false)>${uiLabelMap.CommonStore}</@step>
+        <@setupNavStep name="organization" icon="fa fa-info">${uiLabelMap.SetupOrganization}</@setupNavStep>
+        <@setupNavStep name="store" icon="fa fa-info">${uiLabelMap.CommonStore}</@setupNavStep>
+        <@setupNavStep name="user" icon="fa fa-info">${uiLabelMap.PartyParty}</@setupNavStep>
+        <@setupNavStep name="accounting" icon="fa fa-credit-card">${uiLabelMap.AccountingAccounting}</@setupNavStep>
+        <@setupNavStep name="facility" icon="fa fa-building">${uiLabelMap.SetupFacility}</@setupNavStep>
+        <@setupNavStep name="catalog" icon="fa fa-info">${uiLabelMap.ProductCatalog}</@setupNavStep>
+        <@setupNavStep name="website" icon="fa fa-info">${uiLabelMap.SetupWebSite}</@setupNavStep>
     </@nav>
 </@section>

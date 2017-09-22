@@ -1537,8 +1537,9 @@ Adds parameters from a hash to a URL param string (no full URL logic).
     paramMap                = ((map), required) Map of keys to values to add
     paramDelim              = (default: "&amp;") Param delimiter
     includeEmpty            = ((boolean), default: true) If true, include empty values; if false, omit empty values
+    urlEncode               = ((boolean), default: false) If true, URL-encode each value.
 -->
-<#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
+<#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true urlEncode=false>
   <#local res = paramStr>
   <#local paramMap = toSimpleMap(paramMap)>
   <#list mapKeys(paramMap) as key>
@@ -1546,7 +1547,11 @@ Adds parameters from a hash to a URL param string (no full URL logic).
       <#local res = res + paramDelim>
     </#if>
     <#if includeEmpty || paramMap[key]?has_content>
-      <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+      <#if urlEncode>
+        <#local res = res + key + "=" + rawString(paramMap[key]!"")?url>
+      <#else>
+        <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+      </#if>
     </#if>
   </#list>
   <#return res>

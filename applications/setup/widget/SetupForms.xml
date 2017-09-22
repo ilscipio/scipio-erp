@@ -19,7 +19,7 @@
 -->
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <!-- SCIPIO: NOTE: 2017-08-09: These form definitions were created to simply extend the originals from ofbizsetup for now;
         they can be duplicated individually if/once they significantly change/diverge. -->
@@ -37,7 +37,7 @@
     </form>
     
     <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
-        target="${target}">
+        target="${target}" >
         <actions>
             <entity-and entity-name="ProductStore" list="productStoreList">
                 <field-map field-name="productStoreId"/>
@@ -45,6 +45,39 @@
             </entity-and>
         </actions>
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        
+        <!-- SCIPIO: Overriding mobile/phone/fax fields so we can render them in a single row -->
+        <field>
+            <container />
+        </field>
+        
+        <field name="HomePhoneTitle" title="${uiLabelMap.PartyHomePhone}" title-area-style="group-label" widget-style="tooltip"><display description="${uiLabelMap.PartyPhoneNumberRequired}" also-hidden="false"/></field>
+        <field name="USER_HOME_COUNTRY" title="${uiLabelMap.CommonCountryCode}" widget-area-style="input-group"><text size="4" maxlength="10" /></field>
+        <field name="USER_HOME_AREA" title="${uiLabelMap.PartyAreaCode}" widget-area-style="input-group"><text size="4" maxlength="10"/></field>
+        <field name="USER_HOME_CONTACT" title="${uiLabelMap.PartyPhoneNumber}" widget-area-style="input-group"><text size="15" maxlength="15"/></field>
+        <field name="USER_HOME_EXT" title="${uiLabelMap.PartyContactExt}" widget-area-style="input-group"><text size="6" maxlength="10"/></field>
+        <!-- <field name="USER_HOME_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field> -->
+        
+        <field name="WorkPhoneTitle" title="${uiLabelMap.PartyContactWorkPhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="USER_WORK_COUNTRY" title="${uiLabelMap.CommonCountryCode}" ><text size="4" maxlength="10" /></field>
+        <field name="USER_WORK_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
+        <field name="USER_WORK_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
+        <field name="USER_WORK_EXT" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
+        <!-- <field name="USER_WORK_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field> -->
+        
+        <field name="FaxPhoneTitle" title="${uiLabelMap.PartyContactFaxPhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="USER_FAX_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
+        <field name="USER_FAX_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
+        <field name="USER_FAX_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
+        <field name="USER_FAX_EXT" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
+        <!-- <field name="USER_FAX_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field> -->
+        
+        <field name="MobilePhoneTitle" title="${uiLabelMap.PartyContactMobilePhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="USER_MOBILE_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
+        <field name="USER_MOBILE_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
+        <field name="USER_MOBILE_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
+        <!-- <field name="USER_MOBILE_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field> -->
+        
         <!-- SCIPIO: 
         use-when="${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(productStoreList)} 
         makes the field defined in the parent form to be rendered, which is not desired. So, for now just setting this as not required. 

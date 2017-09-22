@@ -23,14 +23,12 @@ public abstract class SetupDataUtil {
     protected SetupDataUtil() {
     }
 
-    // WARN: params map may contain unvalidated user input - others in the map
-    // may be already validated.
-    // The SetupWorker.StepState subclasses handle the implicit deps and decides
-    // which params must be pre-validated.
+    // WARN: params map may contain unvalidated user input - others in the map may be already validated.
+    // The SetupWorker.StepState subclasses handle the implicit deps and decides which params must be pre-validated.
     // DO NOT call these methods from screen - all must go through SetupWorker.
 
-    public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
 
         String orgPartyId = (String) params.get("orgPartyId");
@@ -52,8 +50,8 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
 
         String userPartyId = (String) params.get("userPartyId");
@@ -74,32 +72,32 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
 
-    public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
 
-    public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);
         return result;
     }
 
-    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
 
         String productStoreId = (String) params.get("productStoreId");
@@ -126,10 +124,8 @@ public abstract class SetupDataUtil {
                 result.put("storeValid", false);
             }
         } else if (!UtilMisc.booleanValueVersatile(params.get("newProductStore"), false)) {
-            // Unless asked to create a new store, read the first store by
-            // default;
-            // in majority cases clients will create one store per company, so
-            // this saves some reloading.
+            // Unless asked to create a new store, read the first store by default;
+            // in majority cases clients will create one store per company, so this saves some reloading.
             if (UtilValidate.isNotEmpty(orgPartyId)) {
                 Map<String, Object> fields = new HashMap<>();
                 fields.put("payToPartyId", orgPartyId);
@@ -148,8 +144,8 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
+            Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
         // TODO
         result.put("completed", false);

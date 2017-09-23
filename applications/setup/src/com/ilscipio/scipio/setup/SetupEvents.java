@@ -26,7 +26,7 @@ public abstract class SetupEvents {
             // NOTE: this code will throw exception if REQ_SETUP_STEP_ATTR in params is invalid;
             // will not fallback to valid value in that case because that might be even more confusing (e.g. URL
             // doesn't match screen shown) - but we could also do a 302 redirect instead (TODO: REVIEW)...
-            return worker.getStep();
+            return worker.determineStepAndUpdate();
         } catch(Exception e) {
             final String enErrMsg = "Error determining next setup step";
             Debug.logError(e, "Setup: " + enErrMsg + ": " + e.getMessage(), module);
@@ -50,7 +50,7 @@ public abstract class SetupEvents {
      * This uses a hack to force the effective step to the name of the request uri, in the form:
      * setup[stepname] which gets lowercased.
      */
-    public static String setSubmittedSetupStep(HttpServletRequest request, HttpServletResponse response) {
+    public static String setEffectiveSetupStep(HttpServletRequest request, HttpServletResponse response) {
         SetupWorker worker = SetupWorker.getWorker(request);
         
         worker.setEffectiveStep(SetupWorker.ERROR_STEP); // in case fail

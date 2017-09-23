@@ -28,7 +28,6 @@
     <form name="EditOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}" id="NewOrganization">        
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
@@ -44,8 +43,6 @@
                 <order-by field-name="productStoreId"/>
             </entity-and>
         </actions>
-        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <!-- SCIPIO: Overriding mobile/phone/fax fields so we can render them in a single row -->
         <field>
             <container />
@@ -88,13 +85,13 @@
             </drop-down>
         </field>
         
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
     
     <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
@@ -102,17 +99,16 @@
     <form name="EditFacility" extends="EditFacility" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
     
     <form name="EditProductStore" extends="EditProductStore" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}">
-        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
         
         <!-- TODO: populate the inventoryFacilityId field here to satisfy the service -->
         
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
@@ -120,7 +116,6 @@
     <form name="EditWebSite" extends="EditWebSite" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
@@ -128,21 +123,18 @@
     <form name="EditProdCatalog" extends="EditProdCatalog" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
         target="${target}">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>
     
     <form name="EditProductCategory" extends="EditProductCategory" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>  
     
     <form name="EditProduct" extends="EditProduct" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
         <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
-        
         <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
         <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
     </form>

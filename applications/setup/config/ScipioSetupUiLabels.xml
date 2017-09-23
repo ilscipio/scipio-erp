@@ -28,9 +28,19 @@
         <value xml:lang="de">Dummy Label</value>
     </property>
     <property key="SetupCompleteMsg">
-        <value xml:lang="en">Setup Complete!</value>
-        <value xml:lang="de">Setup abgeschlossen!</value>
-        <value xml:lang="fr">Installation terminée!</value>
+        <value xml:lang="en">All setup steps completed. Setup Complete!</value>
+        <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
+        <value xml:lang="fr">Toutes les étapes d'installation sont terminées. Installation terminée!</value>
+    </property>
+    <property key="SetupIncompleteMsgStart">
+        <value xml:lang="en">You have reached the end of Setup. However, some setup steps are incomplete:</value>
+        <value xml:lang="de">Sie haben das Ende des Setups erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
+        <value xml:lang="fr">Vous avez terminé la configuration. Cependant, certaines étapes de configuration sont incomplètes:</value>
+    </property>
+    <property key="SetupIncompleteMsgEnd">
+        <value xml:lang="en">Some functionality may be impaired until these steps are completed.</value>
+        <value xml:lang="de">Einige Funktionalitäten können beeinträchtigt werden, wenn diese Schritte nicht abgeschlossen sind.</value>
+        <value xml:lang="fr">Certaines fonctionnalités peuvent être compromises à moins que ces étapes ne soient terminées.</value>
     </property>
     <property key="SetupErrorStepNotAccessible">
         <value xml:lang="en">Setup step unavailable - Please complete previous setup steps first.</value>
@@ -42,14 +52,34 @@
         <value xml:lang="de">Setup-Fehler</value>
         <value xml:lang="fr">Erreur durant la configuration</value>
     </property>
+    <property key="SetupErrorOccurredInfo">
+        <value xml:lang="en">An error occured during Setup. Please review the error, try restarting the wizard using the link below, or contact support.</value>
+        <value xml:lang="de">Beim Setup ist ein Fehler aufgetreten. Bitte überprüfen Sie den Fehler, versuchen Sie, den Assistenten mit dem unten stehenden Link neu zu starten, oder wenden Sie sich an den Support.</value>
+        <value xml:lang="fr">Une erreur s'est produite pendant le programme d'installation. Veuillez examiner l'erreur, essayez de redémarrer l'assistant en utilisant le lien ci-dessous ou contactez l'assistance.</value>
+    </property>
     <property key="SetupSettingUp">
         <value xml:lang="en">Setting up</value>
         <value xml:lang="de">Einrichten</value>
         <value xml:lang="fr">Configuration</value>
     </property>
+    <property key="SetupSetupCompleteFor">
+        <value xml:lang="en">Setup complete for</value>
+        <value xml:lang="de">Setup abgeschlossen für</value>
+        <value xml:lang="fr">Installation achevée pour</value>
+    </property>
+    <property key="SetupSetupEndReachedFor">
+        <value xml:lang="en">Setup end reached for</value>
+        <value xml:lang="de">Setup-Ende erreicht</value>
+        <value xml:lang="fr">Fin de l'installation atteinte pour</value>
+    </property>
     <property key="SetupSetupWizard">
         <value xml:lang="en">Setup Wizard</value>
         <value xml:lang="de">Setup-Assistent</value>
         <value xml:lang="fr">Assistant de configuration</value>
+    </property>
+    <property key="SetupSkip">
+        <value xml:lang="en">Skip</value>
+        <value xml:lang="de">Überspringen</value>
+        <value xml:lang="fr">Sauter</value>
     </property>
 </resource>

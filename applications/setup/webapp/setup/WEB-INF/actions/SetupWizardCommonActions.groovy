@@ -13,15 +13,42 @@ if (context.setupWizardActionsRun != true) {
     if (context.debugMode == null) {
         context.debugMode = UtilMisc.booleanValueVersatile(parameters.debugMode, false);
     }
+    
+    context.setupStepTitlePropMap = [
+        organization: "SetupOrganization",
+        store: "CommonStore",
+        user: "PartyParty",
+        accounting: "AccountingAccounting",
+        facility: "SetupFacility",
+        catalog: "ProductCatalog",
+        website: "SetupWebSite"
+    ];
+    context.setupStepDisabledMap = [ // special map for Menus.xml, needed for crashes
+        organization:true,
+        store:true,
+        user:true,
+        accounting:true,
+        facility:true,
+        catalog:true,
+        website:true
+    ];
+    
     // compat
     context.partyId = null
     
     try {
         def setupStep = context.setupStep;
         
-        def setupWorker = SetupWorker.getWorker(request);
+        SetupWorker setupWorker = SetupWorker.getWorker(request);
         context.setupWorker = setupWorker;
         context.setupStepStates = setupWorker.getStepStatePrimitiveMap();
+        
+        for(name in context.setupStepDisabledMap.keySet()) {
+            disabled = context.setupStepStates[name]?.disabled;
+            if (disabled != null) {
+                context.setupStepDisabledMap[name] = disabled;
+            }
+        }
         
         def partyId = null;
         if (setupWorker.isValidStepOrFinished(setupStep) ) {
@@ -48,13 +75,23 @@ if (context.setupWizardActionsRun != true) {
         
         def productStoreId = null;
         def productStore = null;
-        if (setupWorker.isValidStep(setupStep) && setupWorker.getStepState(setupStep).getStepParamInfo().getSupported().contains("productStoreId")) {
+        if (setupStep == SetupWorker.FINISHED_STEP || (setupWorker.isValidStep(setupStep) && setupWorker.getStepState(setupStep).getStepParamInfo().getSupported().contains("productStoreId"))) {
             productStoreId = setupWorker.getProductStoreId();
             productStore = setupWorker.getProductStore();
         }
         context.productStoreId = productStoreId;
         parameters.productStoreId = productStoreId;
         context.productStore = productStore;
+        
+        setupStepSkippable = false;
+        nextSetupStep = null;
+        if (setupWorker.isValidStep(setupStep)) {
+            nextSetupStep = setupWorker.getStepAfter(setupStep);
+            setupStepSkippable = setupWorker.getStepState(setupStep).isSkippableEffective();
+        }
+        context.setupStepSkippable = setupStepSkippable;
+        context.nextSetupStep = nextSetupStep;
+        //Debug.logInfo("Setup: nextSetupStep: " + nextSetupStep, module);
         
         if (context.debugMode) Debug.logInfo("Setup: Step states: " + context.setupStepStates, module);
     } catch(Exception e) {

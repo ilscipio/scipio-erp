@@ -4,17 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
- * Raw setup step data check logic. USE {@link SetupWorker} TO INVOKE THESE
- * DURING REAL SETUP. This is for general reuse and to keep the core logic
- * clear/separate.
+ * Raw setup step data check logic. 
+ * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP.
+ * This is for general reuse and to keep the core logic clear/separate.
  */
 public abstract class SetupDataUtil {
 
@@ -23,8 +25,14 @@ public abstract class SetupDataUtil {
     protected SetupDataUtil() {
     }
 
+    /* 
+     * *******************************************
+     * Setup step elemental data state queries
+     * *******************************************
+     */
+    
     // WARN: params map may contain unvalidated user input - others in the map may be already validated.
-    // The SetupWorker.StepState subclasses handle the implicit deps and decides which params must be pre-validated.
+    // The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
     // DO NOT call these methods from screen - all must go through SetupWorker.
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, 
@@ -83,6 +91,9 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
+        
+        String productStoreId = (String) params.get("productStoreId");
+        
         // TODO
         result.put("completed", false);
         return result;
@@ -91,6 +102,9 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
+        
+        String productStoreId = (String) params.get("productStoreId");
+        
         // TODO
         result.put("completed", false);
         return result;
@@ -131,8 +145,13 @@ public abstract class SetupDataUtil {
                 fields.put("payToPartyId", orgPartyId);
                 List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
                 if (UtilValidate.isNotEmpty(productStores)) {
+                    productStoreId = productStores.get(0).getString("productStoreId");
+                    if (productStores.size() >= 2) {
+                        Debug.logInfo("Setup: Organization '" + orgPartyId + "' has multiple ProductStores (" + productStores.size() 
+                            + "); auto-selecting first for the setup process (productStoreId: " + productStoreId + ")", module);
+                    }
                     result.put("storeValid", true);
-                    result.put("productStoreId", productStores.get(0).getString("productStoreId"));
+                    result.put("productStoreId", productStoreId);
                     result.put("productStore", productStores.get(0));
                     result.put("completed", true);
                     return result;
@@ -147,8 +166,36 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = new HashMap<>();
-        // TODO
+        
+        String productStoreId = (String) params.get("productStoreId");
+        
+        Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
+        GenericValue webSite = getFirstMaxOneExpected(delegator.findByAnd("WebSite", fields, null, useCache), fields);
+        if (webSite != null) {
+            result.put("webSiteId", webSite.getString("webSiteId"));
+            result.put("webSite", webSite);
+            result.put("completed", true);
+            return result;
+        }
+        
         result.put("completed", false);
         return result;
+    }
+    
+    /* 
+     * *******************************************
+     * Generic helpers
+     * *******************************************
+     */
+    
+    private static GenericValue getFirstMaxOneExpected(List<GenericValue> values, Object query) {
+        GenericValue value = EntityUtil.getFirst(values);
+        if (values != null && values.size() >= 2) {
+            // essential for debugging
+            Debug.logWarning("Setup: Expected one " + value.getEntityName() + " record at most, but found " 
+                    + values.size() + " records matching for query: " + query 
+                    + "; using first only (" + value.getPkShortValueString() + ")", module);
+        }
+        return value;
     }
 }

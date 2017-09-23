@@ -390,62 +390,72 @@
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template><![CDATA[
-                                  <@section>
-                                      <#-- NOTE: sending to setupWizard instead of setupOrganization so it automatically goes to the next unfinished step -->
-                                      <form method="get" action="<@ofbizUrl>setupWizard</@ofbizUrl>" id="setupOrg-selectOrg-form">
-                                        <@field type="select" name="partyId" label=uiLabelMap.SetupOrganization onChange="jQuery('#setupOrg-selectOrg-form').submit(); void(0);">
-                                            <option value="">[${uiLabelMap.SetupCreateNewOrganization}]</option>
-                                            <option value="" disabled="disabled"></option>
-                                            <#if partyRoles?has_content>
-                                              <#list partyRoles as partyRole>
-                                                <#assign curPartyGroup = delegator.findOne("PartyGroup", {"partyId":partyRole.partyId}, true)>
-                                                <#assign selected = (rawString(partyRole.partyId) == rawString(partyId!))>
-                                                <option value="${partyRole.partyId}"<#if selected> selected="selected"</#if>>${curPartyGroup.groupName} [${partyRole.partyId}]</option>
-                                              </#list>
-                                            </#if>
-                                        </@field>
-                                      </form>
-                                  </@section>
-                                ]]></html-template>
-                            </html>
-                        </platform-specific>
                         <section>
                             <condition>
-                                <if-empty field="party"/>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template><![CDATA[
+                                          <@section>
+                                              <#-- NOTE: sending to setupWizard instead of setupOrganization so it automatically goes to the next unfinished step -->
+                                              <form method="get" action="<@ofbizUrl>setupWizard</@ofbizUrl>" id="setupOrg-selectOrg-form">
+                                                <@field type="select" name="partyId" label=uiLabelMap.SetupOrganization onChange="jQuery('#setupOrg-selectOrg-form').submit(); void(0);">
+                                                    <option value="">[${uiLabelMap.SetupCreateNewOrganization}]</option>
+                                                    <option value="" disabled="disabled"></option>
+                                                    <#if partyRoles?has_content>
+                                                      <#list partyRoles as partyRole>
+                                                        <#assign curPartyGroup = delegator.findOne("PartyGroup", {"partyId":partyRole.partyId}, true)>
+                                                        <#assign selected = (rawString(partyRole.partyId) == rawString(partyId!))>
+                                                        <option value="${partyRole.partyId}"<#if selected> selected="selected"</#if>>${curPartyGroup.groupName} [${partyRole.partyId}]</option>
+                                                      </#list>
+                                                    </#if>
+                                                </@field>
+                                              </form>
+                                          </@section>
+                                        ]]></html-template>
+                                    </html>
+                                </platform-specific>
                                 <section>
-                                    <actions>
-                                        <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
-                                        <set field="dependentForm" value="NewOrganization"/>
-                                        <set field="paramKey" value="countryGeoId"/>                                        
-                                        <set field="mainId" value="USER_COUNTRY"/>
-                                        <set field="dependentId" value="USER_STATE"/>
-                                        <set field="requestName" value="getAssociatedStateList"/>
-                                        <set field="responseName" value="stateList"/>
-                                        <set field="dependentKeyName" value="geoId"/>
-                                        <set field="descName" value="geoName"/>
-                                        <set field="selectedDependentOption" value="_none_"/>
-                                    </actions>
+                                    <condition>
+                                        <if-empty field="party"/>
+                                    </condition>
                                     <widgets>
-                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                        <screenlet>
-                                            <include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>
-                                        </screenlet>
+                                        <section>
+                                            <actions>
+                                                <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
+                                                <set field="dependentForm" value="NewOrganization"/>
+                                                <set field="paramKey" value="countryGeoId"/>                                        
+                                                <set field="mainId" value="USER_COUNTRY"/>
+                                                <set field="dependentId" value="USER_STATE"/>
+                                                <set field="requestName" value="getAssociatedStateList"/>
+                                                <set field="responseName" value="stateList"/>
+                                                <set field="dependentKeyName" value="geoId"/>
+                                                <set field="descName" value="geoName"/>
+                                                <set field="selectedDependentOption" value="_none_"/>
+                                            </actions>
+                                            <widgets>
+                                                <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                                <screenlet>
+                                                    <include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>
+                                                </screenlet>
+                                            </widgets>
+                                        </section>
                                     </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <actions>
+                                            </actions>
+                                            <widgets>
+                                                <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
+                                            </widgets>
+                                        </section>
+                                    </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <section>
-                                    <actions>
-                                    </actions>
-                                    <widgets>
-                                        <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
-                                    </widgets>
-                                </section>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -560,21 +570,23 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="facility"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
-                                    </widgets>
-                                </section>
-                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
+                                <screenlet>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="facility"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                        </widgets>
+                                    </section>
+                                    <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -590,8 +602,6 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
-                <!-- TODO: what is this? -->
-                <set field="showScreen" value="origin"/>
                 
                 <set field="titleProperty" value="${groovy: context.prodCatalog != null ? 'ProductEditCatalog' : 'ProductNewCatalog'}" />
                 <set field="target" value="${groovy: context.prodCatalog != null ? 'setupUpdateCatalog' : 'setupCreateCatalog'}" />
@@ -601,19 +611,22 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                                <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
                                 <screenlet>
                                     <section>
                                         <condition><not><if-empty field="prodCatalog"/></not></condition>
                                         <widgets>
-                                            <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                                            <label style="heading+2">${uiLabelMap.ProductCatalog}: "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                         </widgets>
                                     </section>
                                     <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -627,11 +640,10 @@
                 <set field="setupStep" value="store"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
+                <!-- do not need this - store already loaded by groovy and SetupWorker
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                
-                <!-- TODO: what is this? -->
-                <set field="showScreen" value="origin"/>
-                
+                 -->
+                 
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
                 <set field="target" value="${groovy: context.productStore != null ? 'setupUpdateStore' : 'setupCreateStore'}" />
             </actions>
@@ -640,20 +652,15 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                                <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
+                                <screenlet>
+                                    <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <section>
-                                    <condition>
-                                        <if-compare field="showScreen" operator="equals" value="message"/>
-                                    </condition>
-                                    <widgets>
-                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
-                                    </widgets>
-                                </section>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -668,10 +675,11 @@
                 <set field="setupStep" value="website"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
+                <!-- turns out we can skip this and instead get everything from the worker
+                <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                
-                <!-- TODO: what is this? -->
-                <set field="showScreen" value="origin"/>
+                -->
+                <set field="webSite" from-field="setupStepStates.website.stepData.webSite"/>
                 
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
                 <set field="target" value="${groovy: context.webSite != null ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
@@ -681,19 +689,21 @@
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                                <if-has-permission permission="CONTENTMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
-                                <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
+                                <screenlet>
+                                    <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
+                                    <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <section>
-                                    <condition>
-                                        <if-compare field="showScreen" operator="equals" value="message"/>
-                                    </condition>
+                                    <actions>
+                                        <set field="resourceDescription" value=""/>
+                                    </actions>
                                     <widgets>
-                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                                        <label style="common-msg-error-perm">${uiLabelMap.ContentSecurityCreatePermission}</label>
                                     </widgets>
                                 </section>
                             </fail-widgets>
@@ -709,11 +719,17 @@
             <actions>
                 <set field="setupStep" value="finished"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <script lang="groovy"><![CDATA[
+                    context.incompleteSteps = context.setupWorker?.getIncompleteSteps();
+                ]]></script>
+                <set field="settingUpLabelProp" value="${groovy: context.incompleteSteps ? 'SetupSetupEndReachedFor': 'SetupSetupCompleteFor'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="common-msg-info-important" text="${uiLabelMap.SetupCompleteMsg}"/>
+                        <platform-specific>
+                            <html><html-template location="component://setup/webapp/setup/wizard/setupfinished.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -729,7 +745,14 @@
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="setupWizard" text="${SetupInitialSetup}"/>
+                        <section>
+                            <actions>
+                                <set field="setupErrorMsg" value="${uiLabelMap.SetupErrorOccurredInfo}"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="SetupErrorMsg" location="component://setup/widget/CommonScreens.xml"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

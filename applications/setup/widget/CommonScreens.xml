@@ -221,13 +221,15 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/><!-- fallback only; screens should set it themselves -->
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.base.util.*;
-                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) || context.setupWorker.isStepEffectiveAllowedSafe(context.setupStep);
+                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) || context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
                 ]]></script>
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://setup/widget/Menus.xml#SetupSteps" />
                 
                 <set field="noTitle" value="true"/>
+                
+                <set field="settingUpLabelProp" from-field="settingUpLabelProp" default-value="SetupSettingUp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator">
@@ -239,7 +241,7 @@
                                 <platform-specific>
                                     <html>
                                         <html-template><![CDATA[
-                                          <@heading>${uiLabelMap.SetupSettingUp}: ${orgPartyGroup.groupName} [${orgPartyGroup.partyId}]<#t/>
+                                          <@heading>${uiLabelMap[rawString(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${orgPartyGroup.partyId}]<#t/>
                                             <#t/><#if productStore?has_content> - ${productStore.storeName!productStore.productStoreId}</#if></@heading>
                                         ]]></html-template>
                                     </html>
@@ -252,13 +254,61 @@
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
+                                <section>
+                                    <condition>
+                                        <if-compare field="setupStepSkippable" operator="equals" type="Boolean" value="true"/>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template><![CDATA[
+                                                  <#include "component://setup/webapp/setup/common/common.ftl">
+                                                  <@row>
+                                                    <@cell class="+${styles.text_right!}">
+                                                      <a href="${escapeFullUrl(makeSetupStepUrl(nextSetupStep), 'html')}"<#t/>
+                                                         <#t/> class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.SetupSkip}</a>
+                                                    </@cell>
+                                                  </@row>
+                                                ]]></html-template>
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error" text="${uiLabelMap.SetupErrorStepNotAccessible}"/>
+                                <section>
+                                    <actions>
+                                        <set field="setupErrorMsg" value="${uiLabelMap.SetupErrorStepNotAccessible}"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="SetupErrorMsg" location="component://setup/widget/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="SetupErrorMsg">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    // this is best-effort to get a 
+                    context.autoNextSetupStep = null;
+                    try {
+                        context.autoNextSetupStep = context.setupWorker?.determineStepAuto();
+                    } catch(Exception e) {
+                        org.ofbiz.base.util.Debug.logError(e, "Setup: Error trying to display error message!", "SetupErrorMsg.groovy");
+                    }
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/wizard/setuperrormsg.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

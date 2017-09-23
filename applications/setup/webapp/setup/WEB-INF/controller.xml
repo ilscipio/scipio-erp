@@ -51,7 +51,7 @@
         and since security is not an issue here it will practically never cause an issue. -->
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupOrganization"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -69,7 +69,7 @@
     </request-map>
     <request-map uri="setupUser">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupUser"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -87,7 +87,7 @@
     </request-map>
     <request-map uri="setupAccounting">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -105,7 +105,7 @@
     </request-map>
     <request-map uri="setupFacility">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupFacility"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -123,7 +123,7 @@
     </request-map>
     <request-map uri="setupCatalog">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupCatalog"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -139,7 +139,7 @@
     </request-map>
     <request-map uri="setupStore">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupStore"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -157,7 +157,7 @@
     </request-map>
     <request-map uri="setupWebsite">
         <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupWebsite"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
@@ -172,6 +172,12 @@
         <event type="service" path="" invoke="updateWebSite"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupWebsite"/>
+    </request-map>
+    <request-map uri="setupFinished">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupFinished"/>
+        <response name="error" type="view" value="SetupError"/>
     </request-map>
 
     <request-map uri="nextSetupStep">

@@ -19,7 +19,7 @@
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
     
     <screen name="InitialSetup">
         <section>
@@ -484,6 +484,7 @@
                 <!-- FIXME: context.parties check is bad -->
                 <set field="titleProperty" value="${groovy: context.parties != null ? 'PartyChangeParty' : 'PartyNewUser'}" />
                 <set field="target" value="${groovy: context.parties ? 'setupUpdateUser' : 'setupCreateUser'}" />
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupUser.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -514,7 +515,10 @@
                                     <widgets>
                                         <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                         <screenlet>
-                                            <include-form name="EditUser" location="component://setup/widget/SetupForms.xml"/>
+                                            <!-- <include-form name="EditUser" location="component://setup/widget/SetupForms.xml"/> -->
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
+                                            </platform-specific>
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>

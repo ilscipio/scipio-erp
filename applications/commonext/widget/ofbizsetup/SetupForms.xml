@@ -87,7 +87,7 @@
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="facility==null" target="CreateFacility"/>
 
-        <field use-when="facility!=null" name="facilityId" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}"><display/></field>
+        <field use-when="facility!=null" name="facilityId" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}"><display/></field><!-- SCIPIO: fixed label 2017-09-25 -->
         <field use-when="facility==null" name="facilityId" required-field="true"><text default-value="${partyId}"/></field>
 
         <field name="facilityName" title="${uiLabelMap.ProductName}" required-field="true"><text size="30" maxlength="60"/></field>

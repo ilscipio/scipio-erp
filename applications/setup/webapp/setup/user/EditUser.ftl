@@ -124,7 +124,7 @@ under the License.
   </#if>
 </#macro>
 
-<form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
+<form method="post" action="<@ofbizUrl>${target}</@ofbizUrl>" id="NewUser" name="NewUser">
   
   <@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 <#-- 
@@ -344,7 +344,7 @@ under the License.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
     </#macro>
-    <@field type="select" name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId" label=uiLabelMap.CommonCountry 
+    <@field type="select" name="CUSTOMER_COUNTRY" id="NewUser_countryGeoId" label=uiLabelMap.CommonCountry 
         required=true postWidgetContent=extraFieldContent>
         <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={
             "currentCountryGeoId":parameters.CUSTOMER_COUNTRY!""
@@ -354,7 +354,7 @@ under the License.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="CUSTOMER_STATE"/>
     </#macro>
-    <@field type="select" name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId" required=true 
+    <@field type="select" name="CUSTOMER_STATE" id="NewUser_stateProvinceGeoId" required=true 
         label=uiLabelMap.PartyState postWidgetContent=extraFieldContent>
         <#-- Populated by JS -->
         <#if parameters.CUSTOMER_STATE?has_content>

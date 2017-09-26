@@ -34,13 +34,11 @@
         <set field="parameters.roleTypeId" value="OWNER"/>
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
-        <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml">
-            <result-to-field field="newPartyId" result-name="tempMap.partyId"/>
-        </call-simple-method>
-        <request-to-field field="userPartyId" request-name="partyId"/>        
-
-        <field-to-request request-name="userPartyId" field="userPartyId"/>
-        
+        <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
+        <field-to-request request-name="userPartyId" field="tempMap.partyId" />
+    </simple-method>
+    
+    <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
     </simple-method>
     
 </simple-methods>

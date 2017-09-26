@@ -117,7 +117,9 @@ under the License.
 	    <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value="Y"/>
 	    <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value="Y"/>
 	    
-	    <@field type="hidden" name="productStoreId" value="${productStoreId}"/>
+	    <@field type="hidden" name="PRODUCT_STORE_ID" value="${productStoreId}"/>
+	    
+        <@field type="hidden" name="scpSubmitSetupStep" value="${setupStep}"/>
 	  
 	  	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 	
@@ -135,7 +137,7 @@ under the License.
 		        onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true 
 		        />
 		
-		    <#if getUsername>
+		    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>
 		      <#if parameters.preferredUsername?has_content>
 		        <#macro extraFieldContent args={}>
 		          <@fieldErrors fieldName="USERNAME"/>
@@ -159,7 +161,7 @@ under the License.
 		      </#if>
 		    </#if>
 		
-		    <#if createAllowPassword>
+		    <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>
 		      <#macro extraFieldContent args={}>
 		        <@fieldErrors fieldName="PASSWORD"/>
 		      </#macro>

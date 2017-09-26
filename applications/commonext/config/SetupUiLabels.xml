@@ -306,4 +306,10 @@
         <value xml:lang="zh">网站</value>
         <value xml:lang="zh_TW">網站</value>
     </property>
+    <property key="SetupUseEmailAddress">
+    	<value xml:lang="en">Use email address</value>
+    </property>
+    <property key="SetupAccountInformation">
+    	<value xml:lang="en">Account information</value>
+    </property>
 </resource>

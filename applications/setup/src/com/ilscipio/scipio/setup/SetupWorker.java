@@ -1220,7 +1220,7 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo accountingStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
+                StepParamInfo.fromRequiredAndOptional(nameSet("userPartyId"), nameSet());
         protected class AccountingStepState extends CommonStepState {
             public AccountingStepState(StaticStepState partial) { super(partial); }
             

@@ -1,8 +1,11 @@
 package com.ilscipio.scipio.setup;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -37,7 +40,7 @@ public abstract class SetupDataUtil {
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         String orgPartyId = (String) params.get("orgPartyId");
 
@@ -50,17 +53,16 @@ public abstract class SetupDataUtil {
                 result.put("partyValid", true);
                 result.put("orgPartyId", orgPartyId);
                 result.put("completed", true);
-                return result;
+            } else {
+                result.put("partyValid", false);
             }
-            result.put("partyValid", false);
         }
-        result.put("completed", false);
         return result;
     }
 
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         String userPartyId = (String) params.get("userPartyId");
         if (UtilValidate.isNotEmpty(userPartyId)) {
@@ -71,101 +73,172 @@ public abstract class SetupDataUtil {
                 result.put("userValid", true);
                 result.put("userPartyId", userPartyId);
                 result.put("completed", true);
-                return result;
+            } else {
+                result.put("userValid", false);
             }
-            result.put("userValid", false);
         }
-
-        result.put("completed", false);
         return result;
     }
 
     public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        
         // TODO
-        result.put("completed", false);
+
         return result;
     }
 
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
         
+        // NOTE: the orig ofbiz FindFacility.groovy did this: delegator.findByAnd("Facility", [ownerPartyId: partyId], null, false);
+        // we won't do this bec
+        String facilityId = (String) params.get("facilityId");
+        String orgPartyId = (String) params.get("orgPartyId");
         String productStoreId = (String) params.get("productStoreId");
         
-        // TODO
-        result.put("completed", false);
+        GenericValue facility = null;
+        if (UtilValidate.isNotEmpty(orgPartyId)) {
+            if (UtilValidate.isNotEmpty(facilityId)) {
+                // filter by owner to prevent editing other companies's facilities
+                Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId, "ownerPartyId", orgPartyId);
+                facility = EntityUtil.getFirst(delegator.findByAnd("Facility", fields, null, useCache));
+            } else if (!UtilMisc.booleanValueVersatile(params.get("newFacility"), false)) {
+                if (UtilValidate.isNotEmpty(productStoreId)) {
+                    Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "payToPartyId", orgPartyId);
+                    GenericValue productStore = EntityUtil.getFirst(delegator.findByAnd("ProductStore", fields, null, useCache));
+                    if (productStore != null) {
+                        facilityId = productStore.getString("inventoryFacilityId");
+                        if (UtilValidate.isNotEmpty(facilityId)) {
+                            fields = UtilMisc.toMap("facilityId", facilityId, "ownerPartyId", orgPartyId);
+                            facility = EntityUtil.getFirst(delegator.findByAnd("Facility", fields, null, useCache));
+                            if (facility != null) {
+                                result.put("facilityId", facility.getString("facilityId"));
+                                result.put("facility", facility);
+                                result.put("completed", true);
+                                return result;
+                            } else {
+                                Debug.logError("Setup: Warehouse '" + facilityId + "'"
+                                        + " does not exist or does not belong to organization '" + orgPartyId + "'; ignoring", module);
+                            }
+                        } else {
+                            // TODO: REVIEW: there are multiple reasons for this;
+                            // * does not support ProductStoreFacility-only or multi-facility for now;
+                            // * product store was created without a facility 
+                            Debug.logWarning("Setup: Cannot get warehouse for store '" + productStoreId + "'"
+                                    + " because ProductStore.inventoryFacilityId is not set", module);
+                        }
+                    } else {
+                        Debug.logError("Setup: ProductStore '" + productStoreId + "' does not appear to belong to"
+                                + " organization '" + orgPartyId + "'; ignoring", module);
+                    }
+                } else {
+                    Map<String, Object> fields = UtilMisc.toMap("ownerPartyId", orgPartyId);
+                    facility = getFirstMaxOneExpected(delegator.findByAnd("Facility", fields, null, useCache), fields);
+                }
+            }
+        }
+        if (facility != null) {
+            facilityId = facility.getString("facilityId");
+            result.put("facilityId", facilityId);
+            result.put("facility", facility);
+            
+            Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
+            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", fields, UtilMisc.toList("-fromDate"), useCache));
+            result.put("facilityContactMechPurposeList", contactMechPurposes);
+            
+            Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
+            boolean completed = true;
+            if (!purposeTypes.contains("SHIPPING_LOCATION")) {
+                Debug.logInfo("Setup: Warehouse '" + facilityId + "' has no SHIPPING_LOCATION contact mech; treating as incomplete", module);
+                completed = false;
+            }
+            if (!purposeTypes.contains("SHIP_ORIG_LOCATION")) {
+                Debug.logInfo("Setup: Warehouse '" + facilityId + "' has no SHIP_ORIG_LOCATION contact mech; treating as incomplete", module);
+                completed = false;
+            }
+            result.put("completed", completed);
+        }
         return result;
     }
 
     public static Map<String, Object> getCatalogStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
         
         String productStoreId = (String) params.get("productStoreId");
         
         // TODO
-        result.put("completed", false);
+
         return result;
     }
 
     public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         String productStoreId = (String) params.get("productStoreId");
         String orgPartyId = (String) params.get("orgPartyId");
 
+        GenericValue productStore = null;
         if (UtilValidate.isNotEmpty(productStoreId)) {
             if (UtilValidate.isNotEmpty(orgPartyId)) {
-                Map<String, Object> fields = new HashMap<>();
-                fields.put("productStoreId", productStoreId);
-                fields.put("payToPartyId", orgPartyId);
+                Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "payToPartyId", orgPartyId);
                 List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
                 if (UtilValidate.isNotEmpty(productStores)) {
-                    result.put("storeValid", true);
-                    result.put("productStoreId", productStores.get(0).getString("productStoreId"));
-                    result.put("productStore", productStores.get(0));
-                    result.put("completed", true);
-                    return result;
-                } else {
-                    result.put("storeValid", false);
+                    productStore = productStores.get(0);
                 }
             } else {
                 // we'll require a non-null orgPartyId here to simplify, so both
                 // parameters should be passed around
-                result.put("storeValid", false);
             }
-        } else if (!UtilMisc.booleanValueVersatile(params.get("newProductStore"), false)) {
+        } else if (!UtilMisc.booleanValueVersatile(params.get("newStore"), false)) {
             // Unless asked to create a new store, read the first store by default;
             // in majority cases clients will create one store per company, so this saves some reloading.
             if (UtilValidate.isNotEmpty(orgPartyId)) {
-                Map<String, Object> fields = new HashMap<>();
-                fields.put("payToPartyId", orgPartyId);
+                Map<String, Object> fields = UtilMisc.toMap("payToPartyId", orgPartyId);
                 List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
                 if (UtilValidate.isNotEmpty(productStores)) {
-                    productStoreId = productStores.get(0).getString("productStoreId");
+                    productStore = productStores.get(0);
                     if (productStores.size() >= 2) {
                         Debug.logInfo("Setup: Organization '" + orgPartyId + "' has multiple ProductStores (" + productStores.size() 
-                            + "); auto-selecting first for the setup process (productStoreId: " + productStoreId + ")", module);
+                            + "); auto-selecting first for the setup process (productStoreId: " + productStore.getString("productStoreId") + ")", module);
                     }
-                    result.put("storeValid", true);
-                    result.put("productStoreId", productStoreId);
-                    result.put("productStore", productStores.get(0));
-                    result.put("completed", true);
-                    return result;
                 }
             }
         }
-
-        result.put("completed", false);
+        
+        if (productStore != null) {
+            productStoreId = productStore.getString("productStoreId");
+            result.put("productStoreId", productStoreId);
+            result.put("productStore", productStore);
+            
+            String facilityId = productStore.getString("inventoryFacilityId");
+            if (UtilValidate.isNotEmpty(facilityId)) {
+                Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "facilityId", facilityId);
+                List<GenericValue> productFacilityList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreFacility", fields, UtilMisc.toList("sequenceNum ASC"), useCache));
+                if (UtilValidate.isNotEmpty(productFacilityList)) {
+                    result.put("completed", true);
+                } else {
+                    Debug.logWarning("Setup: ProductStore '" + productStoreId 
+                            + "' has no ProductStoreFacility relation for warehouse '"
+                            + facilityId + "'; treating store as incomplete"
+                            + " (NOTE: may require manually fixing the schema)", module);
+                }
+            } else {
+                Debug.logWarning("Setup: ProductStore '" + productStoreId 
+                        + "' has no inventoryFacilityId field; treating store as incomplete", module);
+            }
+            result.put("facilityId", facilityId);
+        }
         return result;
     }
 
     public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, 
             Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = UtilMisc.toMap("completed", false);
         
         String productStoreId = (String) params.get("productStoreId");
         
@@ -175,10 +248,7 @@ public abstract class SetupDataUtil {
             result.put("webSiteId", webSite.getString("webSiteId"));
             result.put("webSite", webSite);
             result.put("completed", true);
-            return result;
         }
-        
-        result.put("completed", false);
         return result;
     }
     
@@ -197,5 +267,13 @@ public abstract class SetupDataUtil {
                     + "; using first only (" + value.getPkShortValueString() + ")", module);
         }
         return value;
+    }
+    
+    private static <T extends Collection<String>> T getEntityStringFieldValues(List<GenericValue> values, String fieldName, T out) {
+        for(GenericValue value : values) {
+            String str = value.getString(fieldName);
+            if (str != null) out.add(str);
+        }
+        return out;
     }
 }

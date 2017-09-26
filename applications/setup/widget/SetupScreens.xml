@@ -560,7 +560,26 @@
                 <set field="setupStep" value="facility"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 
+                <!-- already looked up by worker
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
+                -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.util.*;
+                    facilityId = null;
+                    facility = context.setupWorker?.getStepState("facility").getStepData().get("facility");
+                    context.facility = facility;
+                    if (facility) {
+                        facilityId = facility.facilityId;
+                        facilityType = facility.getRelatedOne("FacilityType", false);
+                        context.facilityType = facilityType;
+                    }
+                    context.facilityId = facilityId;
+                    
+                    // FIXME: bad
+                    listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
+                    partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
+                    context.partyPostalAddress = partyPostalAddress;
+                ]]></script>
                 
                 <set field="titleProperty" value="${groovy: context.facility != null ? 'ProductEditFacility' : 'ProductNewFacility'}" />
                 <set field="target" value="${groovy: context.facility != null ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
@@ -574,14 +593,15 @@
                             </condition>
                             <widgets>
                                 <screenlet>
+                                    <!-- redundant
                                     <section>
                                         <condition>
                                             <not><if-empty field="facility"/></not>
                                         </condition>
                                         <widgets>
-                                            <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                            <label style="heading" text="${uiLabelMap.ProductEditFacility}: ${facility.facilityName} [${facility.facilityId}]"></label>
                                         </widgets>
-                                    </section>
+                                    </section>-->
                                     <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -615,12 +635,13 @@
                             </condition>
                             <widgets>
                                 <screenlet>
+                                    <!-- redundant
                                     <section>
                                         <condition><not><if-empty field="prodCatalog"/></not></condition>
                                         <widgets>
                                             <label style="heading+2">${uiLabelMap.ProductCatalog}: "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                         </widgets>
-                                    </section>
+                                    </section>-->
                                     <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
                                 </screenlet>
                             </widgets>

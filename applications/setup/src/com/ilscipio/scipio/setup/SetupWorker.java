@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,12 +79,37 @@ public abstract class SetupWorker implements Serializable {
      * NOTE: see Step States further below for specific implementations.
      */
     private static final List<String> stepsList = UtilMisc.unmodifiableArrayList(
-            "organization", "store", "user", "accounting", "facility", "catalog", "website"
+            "organization", "facility", "store", "user", "accounting", "catalog", "website"
     );
     private static final Set<String> stepsSet = Collections.unmodifiableSet(new HashSet<String>(stepsList));
     
     public static final String FINISHED_STEP = "finished";
     public static final String ERROR_STEP = "error";
+    
+    /**
+     * If orgPartyId set, it uses that as "orgPartyId". Otherwise falls back on the next.
+     * NOTE: in the internal param map, 
+     */
+    private static final List<String> ORGPARTYID_ATTRLIST = UtilMisc.unmodifiableArrayList(
+            "orgPartyId", "partyId"
+    );
+    protected static final String ORGPARTYID_ATTR = "orgPartyId";
+    
+    /**
+     * If orgProductStoreId set, it uses that as "productStoreId". Otherwise falls back on the next.
+     */
+    private static final List<String> PRODUCTSTOREID_ATTRLIST = UtilMisc.unmodifiableArrayList(
+            "orgProductStoreId", "productStoreId"
+    );
+    protected static final String PRODUCTSTOREID_ATTR = "productStoreId";
+    
+    protected static final List<String> ALL_PARAM_ATTR;
+    static {
+        Set<String> all = new LinkedHashSet<>();
+        all.addAll(ORGPARTYID_ATTRLIST);
+        all.addAll(PRODUCTSTOREID_ATTRLIST);
+        ALL_PARAM_ATTR = Collections.unmodifiableList(new ArrayList<>(all));
+    }
     
     private static final Set<String> specialStepValues = UtilMisc.unmodifiableHashSet(
             FINISHED_STEP, ERROR_STEP
@@ -190,6 +216,10 @@ public abstract class SetupWorker implements Serializable {
     
     public boolean isStepEqualOrComesAfter(String beforeStep, String step) {
         return getStepIndexWithFinished(step) >= getStepIndexWithFinished(beforeStep);
+    }
+    
+    public static List<String> getStepsStatic() {
+        return stepsList;
     }
     
     /* 
@@ -1147,7 +1177,7 @@ public abstract class SetupWorker implements Serializable {
             // helpers
             
             protected final boolean isAllRequiredParamsPresent() {
-                return isEveryValidParamNonEmpty(getStepParamInfo().getRequired());
+                return isEveryParamValidNonEmpty(getStepParamInfo().getRequired());
             }
             
             protected final Map<String, Object> getStepDataParamsArg() {
@@ -1156,7 +1186,10 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo organizationStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet(), nameSet("orgPartyId"));
+                StepParamInfo.fromRequiredAndOptional(nameSet(), nameSet(
+                        "orgPartyId",
+                        "productStoreId" // NOTE: this is not used by the screen, it's merely passed around like a session attr, for now
+                        ));
         protected class OrganizationStepState extends CommonStepState {
 
             public OrganizationStepState(StaticStepState partial) { super(partial); }
@@ -1202,7 +1235,7 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo facilityStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
+                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet("facilityId", "productStoreId"));
         protected class FacilityStepState extends CommonStepState {
             public FacilityStepState(StaticStepState partial) { super(partial); }
             
@@ -1232,7 +1265,7 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo storeStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet("productStoreId"));
+                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet("productStoreId", "facilityId"));
         protected class StoreStepState extends CommonStepState {
             public StoreStepState(StaticStepState partial) { super(partial); }
             
@@ -1303,57 +1336,21 @@ public abstract class SetupWorker implements Serializable {
             
             // TODO: REVIEW: to avoid certain kinds of crashes, for now
             // do not allow collections on some parameters (they come from UtilHttp.getParameterMap)
-            preventCollections(params, "partyId", "orgPartyId", "productStoreId");
+            preventCollections(params, ALL_PARAM_ATTR, "Setup: preprocessParams: ");
             
-            // SPECIAL: set partyId as orgPartyId if applicable, to support both ?orgPartyId= and ?partyId=
-            params.put("orgPartyId", getOrgPartyIdParam(params));
-        }
-        
-        protected static void preventCollections(Map<String, Object> params, String... paramNames) {
-            preventCollections(params, Arrays.asList(paramNames));
+            // DEV NOTE: THESE FALLBACKS INTENTIONALLY CHECK FOR NON-NULL, NOT NON-EMPTY
+            // if the param is specified but empty ?orgPartyId= then it will not check for ?partyId=
+            // If there are issues, fix them in the screen not here.
+            
+            // SPECIAL: reads orgPartyId from original params map, but if orgPartyId is null,
+            // uses partyId as param instead.
+            putFirstNonNull(params, ORGPARTYID_ATTRLIST, params, ORGPARTYID_ATTR);
+            
+            // SPECIAL: need to recognize orgProductStoreId as a workaround for screen issues.
+            // NOTE: we don't use orgProductStoreId internally (for now...)
+            putFirstNonNull(params, PRODUCTSTOREID_ATTRLIST, params, PRODUCTSTOREID_ATTR);
         }
 
-        protected static void preventCollections(Map<String, Object> params, Collection<String> paramNames) {
-            for(String name : paramNames) {
-                if (params.get(name) instanceof Collection) {
-                    Iterator<?> it = UtilGenerics.checkCollection(params.get(name)).iterator();
-                    Debug.logWarning("Setup: preprocessParams: request parameter/attribute '" + name 
-                            + "' was found to be a collection (multiple request parameters with same name?); using first value only", module);
-                    Object firstValue = it.hasNext() ? it.next() : null;
-                    params.put(name, firstValue);
-                }
-            }
-        }
-        
-        /**
-         * SPECIAL: reads orgPartyId from original params map, but if orgPartyId is null,
-         * uses partyId as param instead.
-         */
-        protected static String getOrgPartyIdParam(Map<String, Object> params) {
-            String orgPartyId = (String) params.get("orgPartyId");
-            if (orgPartyId == null) orgPartyId = (String) params.get("partyId");
-            return orgPartyId;
-        }
-        
-        /**
-         * SPECIAL: need to recognize orgProductStoreId as a workaround for screen issues.
-         * NOTE: we don't use orgProductStoreId internally (for now...)
-         * If both are specified, they should always have the same value.
-         */
-        protected static String getOrgProductStoreIdParam(Map<String, Object> params) {
-            String orgProductStoreId = (String) params.get("orgProductStoreId");
-            String productStoreId = (String) params.get("productStoreId");
-            
-            if (UtilValidate.isNotEmpty(orgProductStoreId) && UtilValidate.isNotEmpty(productStoreId) &&
-                    !orgProductStoreId.equals(productStoreId)) {
-                Debug.logError("Setup: preprocessParams: the values of orgProductStoreId (" + orgProductStoreId 
-                        + ") and productStoreId (" + productStoreId 
-                        + ") parameters/attributes are different; they are expected to be the same", module);
-            }
-
-            return orgProductStoreId != null ? orgProductStoreId : productStoreId;
-        }
-        
         /**
          * Returns the validated params map. No invalid IDs in here, unless they have no {@link ParamValidator}.
          * This map is only populated as-needed by {@link #getValidParam} and {@link #ensureParamsValidated}.
@@ -1410,9 +1407,11 @@ public abstract class SetupWorker implements Serializable {
         }
         
         /**
+         * Returns true if all the named parameters are 1) non-empty 2) valid values.
          * FIXME: doesn't handle types, only works with Strings.
          */
-        protected boolean isEveryValidParamNonEmpty(Collection<String> paramNames) {
+        protected boolean isEveryParamValidNonEmpty(Collection<String> paramNames) {
+            ensureParamsValidated(paramNames);
             Map<String, Object> validParams = getValidParams();
             for(String name : paramNames) {
                 Object val = validParams.get(name);
@@ -1454,7 +1453,7 @@ public abstract class SetupWorker implements Serializable {
                         
                         // NOTE: the value gets implicitly passed here (confusing), so not using the value arg
                         Map<String, Object> storeStepData = setupWorker.getStepState("store").getStepData();
-                        if (Boolean.TRUE.equals(storeStepData.get("storeValid"))) {
+                        if (storeStepData.get("productStore") != null) {
                             productStoreId = (String) storeStepData.get("productStoreId");
                         }
                         
@@ -1525,21 +1524,69 @@ public abstract class SetupWorker implements Serializable {
      * *******************************************
      */
     
-    protected static String getNonNull(String value) {
+    private static String getNonNull(String value) {
         return (value != null) ? value : "";
     }
     
-    protected static String getNonEmptyOrNull(String value) {
+    private static String getNonEmptyOrNull(String value) {
         if (value == null) return null;
         else return (value.length() > 0) ? value : null;
     }
     
-    protected static Set<String> nameSet(String... values) {
+    private static Set<String> nameSet(String... values) {
         return StepParamInfo.nameSet(values);
     }
     
     private static boolean strEquals(String first, String second) {
         if (first != null) return first.equals(second);
         else return second == null;
+    }
+    
+    private static boolean containsOneOf(Map<String, Object> params, Iterable<String> names) {
+        for(String name : names) {
+            if (params.containsKey(name)) return true;
+        }
+        return false;
+    }
+    
+    private static String getFirstNonNull(Map<String, Object> params, Iterable<String> names) {
+        for(String name : names) {
+            Object value = params.get(name);
+            if (value != null) return null;
+        }
+        return null;
+    }
+    
+    private static Object putFirstNonNull(Map<String, Object> params, Iterable<String> names, Map<String, Object> destMap, String destName) {
+        for(String name : names) {
+            Object value = params.get(name);
+            if (value != null) {
+                destMap.put((destName != null) ? destName : name, value);
+                return value;
+            }
+        }
+        return null;
+    }
+    
+    private static void preventCollections(Map<String, Object> params, String... paramNames) {
+        preventCollections(params, Arrays.asList(paramNames), null);
+    }
+
+    private static void preventCollections(Map<String, Object> params, Collection<String> paramNames) {
+        preventCollections(params, paramNames, null);
+    }
+    
+    private static void preventCollections(Map<String, Object> params, Collection<String> paramNames, String logPrefix) {
+        for(String name : paramNames) {
+            if (params.get(name) instanceof Collection) {
+                Iterator<?> it = UtilGenerics.checkCollection(params.get(name)).iterator();
+                if (logPrefix != null) {
+                    Debug.logWarning(logPrefix+"Request parameter/attribute '" + name 
+                            + "' was found to be a collection (multiple request parameters with same name?); using first value only", module);
+                }
+                Object firstValue = it.hasNext() ? it.next() : null;
+                params.put(name, firstValue);
+            }
+        }
     }
 }

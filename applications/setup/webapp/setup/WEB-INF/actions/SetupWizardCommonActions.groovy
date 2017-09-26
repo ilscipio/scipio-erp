@@ -19,7 +19,7 @@ if (context.setupWizardActionsRun != true) {
         store: "CommonStore",
         user: "PartyParty",
         accounting: "AccountingAccounting",
-        facility: "SetupFacility",
+        facility: "ProductFacility",
         catalog: "ProductCatalog",
         website: "SetupWebSite"
     ];
@@ -35,6 +35,7 @@ if (context.setupWizardActionsRun != true) {
     
     // compat
     context.partyId = null
+    context.setupStepList = SetupWorker.getStepsStatic(); // in case rest crashes
     
     try {
         def setupStep = context.setupStep;

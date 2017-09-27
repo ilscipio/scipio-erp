@@ -20,9 +20,9 @@ import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
- * Raw setup step data check logic. USE {@link SetupWorker} TO INVOKE THESE
- * DURING REAL SETUP. This is for general reuse and to keep the core logic
- * clear/separate.
+ * Raw setup step data check logic. 
+ * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP. 
+ * This is for general reuse and to keep the core logic clear/separate.
  */
 public abstract class SetupDataUtil {
 
@@ -32,14 +32,13 @@ public abstract class SetupDataUtil {
     }
 
     /*
-     * ******************************************* Setup step elemental data
-     * state queries *******************************************
+     * ******************************************* 
+     * Setup step elemental data state queries 
+     * *******************************************
      */
 
-    // WARN: params map may contain unvalidated user input - others in the map
-    // may be already validated.
-    // The caller (SetupWorker.CommonStepState subclasses) handles the implicit
-    // deps and decides which params must be pre-validated.
+    // WARN: params map may contain unvalidated user input - others in the map may be already validated.
+    // The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
     // DO NOT call these methods from screen - all must go through SetupWorker.
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
@@ -112,10 +111,6 @@ public abstract class SetupDataUtil {
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
-        // NOTE: the orig ofbiz FindFacility.groovy did this:
-        // delegator.findByAnd("Facility", [ownerPartyId: partyId], null,
-        // false);
-        // we won't do this bec
         String facilityId = (String) params.get("facilityId");
         String orgPartyId = (String) params.get("orgPartyId");
         String productStoreId = (String) params.get("productStoreId");
@@ -123,8 +118,7 @@ public abstract class SetupDataUtil {
         GenericValue facility = null;
         if (UtilValidate.isNotEmpty(orgPartyId)) {
             if (UtilValidate.isNotEmpty(facilityId)) {
-                // filter by owner to prevent editing other companies's
-                // facilities
+                // filter by owner to prevent editing other companies's facilities
                 Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId, "ownerPartyId", orgPartyId);
                 facility = EntityUtil.getFirst(delegator.findByAnd("Facility", fields, null, useCache));
             } else if (!UtilMisc.booleanValueVersatile(params.get("newFacility"), false)) {
@@ -142,23 +136,21 @@ public abstract class SetupDataUtil {
                                 result.put("completed", true);
                                 return result;
                             } else {
-                                Debug.logError("Setup: Warehouse '" + facilityId + "'" + " does not exist or does not belong to organization '" + orgPartyId
-                                        + "'; ignoring", module);
+                                Debug.logError("Setup: Warehouse '" + facilityId + "'" 
+                                        + " does not exist or does not belong to organization '" 
+                                        + orgPartyId + "'; ignoring", module);
                             }
                         } else {
-                            // TODO: REVIEW: there are multiple reasons for
-                            // this;
-                            // * does not support ProductStoreFacility-only or
-                            // multi-facility for now;
+                            // TODO: REVIEW: there are multiple reasons for this;
+                            // * does not support ProductStoreFacility-only or multi-facility for now;
                             // * product store was created without a facility
-                            Debug.logWarning(
-                                    "Setup: Cannot get warehouse for store '" + productStoreId + "'" + " because ProductStore.inventoryFacilityId is not set",
-                                    module);
+                            Debug.logWarning("Setup: Cannot get warehouse for store '" 
+                                    + productStoreId + "'" + " because ProductStore.inventoryFacilityId is not set", module);
                         }
                     } else {
-                        Debug.logError(
-                                "Setup: ProductStore '" + productStoreId + "' does not appear to belong to" + " organization '" + orgPartyId + "'; ignoring",
-                                module);
+                        Debug.logError("Setup: ProductStore '" + productStoreId 
+                                + "' does not appear to belong to" + " organization '" 
+                                + orgPartyId + "'; ignoring", module);
                     }
                 } else {
                     Map<String, Object> fields = UtilMisc.toMap("ownerPartyId", orgPartyId);
@@ -205,8 +197,8 @@ public abstract class SetupDataUtil {
             fields.put("prodCatalogId", prodCatalogId);
             specCatalog = true;
         }
-        List<GenericValue> productStoreCatalogList = EntityUtil
-                .filterByDate(delegator.findByAnd("ProductStoreCatalog", fields, UtilMisc.toList("sequenceNum ASC"), useCache));
+        List<GenericValue> productStoreCatalogList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreCatalog", 
+                fields, UtilMisc.toList("sequenceNum ASC"), useCache));
         result.put("productStoreCatalogList", productStoreCatalogList);
 
         GenericValue productStoreCatalog = EntityUtil.getFirst(productStoreCatalogList);
@@ -215,8 +207,7 @@ public abstract class SetupDataUtil {
 
             if (!specCatalog && productStoreCatalogList.size() >= 2) {
                 Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('" + prodCatalogId + "') for setup"
-                        + " (catalogs: "
-                        + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
+                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
                         prodCatalogId);
             }
 
@@ -245,24 +236,21 @@ public abstract class SetupDataUtil {
                     productStore = productStores.get(0);
                 }
             } else {
-                // we'll require a non-null orgPartyId here to simplify, so both
-                // parameters should be passed around
+                // we'll require a non-null orgPartyId here to simplify, so both parameters should be passed around
             }
         } else if (!UtilMisc.booleanValueVersatile(params.get("newStore"), false)) {
-            // Unless asked to create a new store, read the first store by
-            // default;
-            // in majority cases clients will create one store per company, so
-            // this saves some reloading.
+            // Unless asked to create a new store, read the first store by default;
+            // in majority cases clients will create one store per company, so this saves some reloading.
             if (UtilValidate.isNotEmpty(orgPartyId)) {
                 Map<String, Object> fields = UtilMisc.toMap("payToPartyId", orgPartyId);
                 List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
                 if (UtilValidate.isNotEmpty(productStores)) {
                     productStore = productStores.get(0);
                     if (productStores.size() >= 2) {
-                        Debug.logInfo(
-                                "Setup: Organization '" + orgPartyId + "' has multiple ProductStores (" + productStores.size()
-                                        + "); auto-selecting first for the setup process (productStoreId: " + productStore.getString("productStoreId") + ")",
-                                module);
+                        Debug.logInfo("Setup: Organization '" + orgPartyId 
+                            + "' has multiple ProductStores (" + productStores.size()
+                            + "); auto-selecting first for the setup process (productStoreId: "
+                            + productStore.getString("productStoreId") + ")", module);
                     }
                 }
             }
@@ -276,8 +264,8 @@ public abstract class SetupDataUtil {
             String facilityId = productStore.getString("inventoryFacilityId");
             if (UtilValidate.isNotEmpty(facilityId)) {
                 Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "facilityId", facilityId);
-                List<GenericValue> productFacilityList = EntityUtil
-                        .filterByDate(delegator.findByAnd("ProductStoreFacility", fields, UtilMisc.toList("sequenceNum ASC"), useCache));
+                List<GenericValue> productFacilityList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreFacility", 
+                        fields, UtilMisc.toList("sequenceNum ASC"), useCache));
                 if (UtilValidate.isNotEmpty(productFacilityList)) {
                     result.put("completed", true);
                 } else {
@@ -309,7 +297,8 @@ public abstract class SetupDataUtil {
     }
 
     /*
-     * ******************************************* Generic helpers
+     * ******************************************* 
+     * Generic helpers
      * *******************************************
      */
 
@@ -317,8 +306,9 @@ public abstract class SetupDataUtil {
         GenericValue value = EntityUtil.getFirst(values);
         if (values != null && values.size() >= 2) {
             // essential for debugging
-            Debug.logWarning("Setup: Expected one " + value.getEntityName() + " record at most, but found " + values.size() + " records matching for query: "
-                    + query + "; using first only (" + value.getPkShortValueString() + ")", module);
+            Debug.logWarning("Setup: Expected one " + value.getEntityName() 
+                + " record at most, but found " + values.size() + " records matching for query: "
+                + query + "; using first only (" + value.getPkShortValueString() + ")", module);
         }
         return value;
     }

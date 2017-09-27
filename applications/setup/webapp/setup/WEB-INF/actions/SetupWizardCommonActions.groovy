@@ -23,7 +23,7 @@ if (context.setupWizardActionsRun != true) {
         catalog: "ProductCatalog",
         website: "SetupWebSite"
     ];
-    context.setupStepDisabledMap = [ // special map for Menus.xml, needed for crashes
+    context.setupStepDisabledMap = [ // special map for Menus.xml, true default needed in case crash
         organization:true,
         store:true,
         user:true,
@@ -33,8 +33,11 @@ if (context.setupWizardActionsRun != true) {
         website:true
     ];
     
-    // compat
-    context.partyId = null
+    // defaults in case crash
+    context.partyId = null;
+    parameters.partyId = null;
+    context.orgPartyId = null;
+    parameters.orgPartyId = null;
     context.setupStepList = SetupWorker.getStepsStatic(); // in case rest crashes
     
     try {
@@ -43,6 +46,10 @@ if (context.setupWizardActionsRun != true) {
         SetupWorker setupWorker = SetupWorker.getWorker(request);
         context.setupWorker = setupWorker;
         context.setupStepStates = setupWorker.getStepStatePrimitiveMap();
+        
+        setupStepState = setupWorker.getStepState(setupStep);
+        setupStepData = setupWorker.getStepState(setupStep)?.getStepData();
+        //context.setupStepData = setupStepData;
         
         for(name in context.setupStepDisabledMap.keySet()) {
             disabled = context.setupStepStates[name]?.disabled;
@@ -76,7 +83,7 @@ if (context.setupWizardActionsRun != true) {
         
         def productStoreId = null;
         def productStore = null;
-        if (setupStep == SetupWorker.FINISHED_STEP || (setupWorker.isValidStep(setupStep) && setupWorker.getStepState(setupStep).getStepParamInfo().getSupported().contains("productStoreId"))) {
+        if (setupStep == SetupWorker.FINISHED_STEP || setupStepState.getStepParamInfo().getSupported().contains("productStoreId")) {
             productStoreId = setupWorker.getProductStoreId();
             productStore = setupWorker.getProductStore();
         }

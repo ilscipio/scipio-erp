@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.setup;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,9 +170,36 @@ public abstract class SetupDataUtil {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
         
         String productStoreId = (String) params.get("productStoreId");
+        String prodCatalogId = (String) params.get("prodCatalogId");
         
-        // TODO
-
+        boolean specCatalog = false;
+        
+        Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
+        if (UtilValidate.isNotEmpty(prodCatalogId)) {
+            fields.put("prodCatalogId", prodCatalogId);
+            specCatalog = true;
+        }
+        List<GenericValue> productStoreCatalogList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreCatalog", 
+                fields, UtilMisc.toList("sequenceNum ASC"), useCache));
+        result.put("productStoreCatalogList", productStoreCatalogList);
+        
+        GenericValue productStoreCatalog = EntityUtil.getFirst(productStoreCatalogList);
+        if (productStoreCatalog != null) {
+            prodCatalogId = productStoreCatalog.getString("prodCatalogId");
+            
+            if (!specCatalog && productStoreCatalogList.size() >= 2) {
+                Debug.logInfo("Setup: Store '" + productStoreId 
+                        + "' has multiple active catalogs, selecting first ('" + prodCatalogId + "') for setup"
+                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", 
+                                new ArrayList<String>(productStoreCatalogList.size())) + ")", prodCatalogId);
+            }
+            
+            GenericValue prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", useCache);
+ 
+            result.put("productStoreCatalog", productStoreCatalog);
+            result.put("prodCatalog", prodCatalog);
+            result.put("completed", true);
+        }
         return result;
     }
 

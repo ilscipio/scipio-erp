@@ -357,7 +357,8 @@
             <actions>
                 <set field="setupStep" value="organization"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-
+                <set field="organizationData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                
                 <!-- why?: <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
                 
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
@@ -469,6 +470,7 @@
             <actions>
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
                 
                 <set field="titleProperty" value="PartyCreateNewCustomer"/>
                 <!-- FIXME: everything here squashes the org party ID
@@ -547,6 +549,7 @@
             <actions>
                 <set field="setupStep" value="accounting"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -563,27 +566,11 @@
             <actions>
                 <set field="setupStep" value="facility"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                
-                <!-- already looked up by worker
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
-                -->
-                <script lang="groovy"><![CDATA[
-                    import org.ofbiz.entity.util.*;
-                    facilityId = null;
-                    facility = context.setupWorker?.getStepState("facility").getStepData().get("facility");
-                    context.facility = facility;
-                    if (facility) {
-                        facilityId = facility.facilityId;
-                        facilityType = facility.getRelatedOne("FacilityType", false);
-                        context.facilityType = facilityType;
-                    }
-                    context.facilityId = facilityId;
-                    
-                    // FIXME: bad
-                    listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
-                    partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
-                    context.partyPostalAddress = partyPostalAddress;
-                ]]></script>
+                <set field="facilityData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
+                <!-- not appropriate
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupFacility.groovy"/>
                 
                 <set field="titleProperty" value="${groovy: context.facility != null ? 'ProductEditFacility' : 'ProductNewFacility'}" />
                 <set field="target" value="${groovy: context.facility != null ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
@@ -624,8 +611,11 @@
             <actions>
                 <set field="setupStep" value="catalog"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
+                <set field="catalogData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
+                <!-- not appropriate
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupCatalog.groovy"/>
                 
                 <set field="titleProperty" value="${groovy: context.prodCatalog != null ? 'ProductEditCatalog' : 'ProductNewCatalog'}" />
                 <set field="target" value="${groovy: context.prodCatalog != null ? 'setupUpdateCatalog' : 'setupCreateCatalog'}" />
@@ -664,10 +654,10 @@
             <actions>
                 <set field="setupStep" value="store"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                
+                <set field="storeData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
                 <!-- do not need this - store already loaded by groovy and SetupWorker
-                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                 -->
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>-->
                  
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
                 <set field="target" value="${groovy: context.productStore != null ? 'setupUpdateStore' : 'setupCreateStore'}" />
@@ -681,7 +671,10 @@
                             </condition>
                             <widgets>
                                 <screenlet>
-                                    <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
+                                    <!--<include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/store/EditProductStore.ftl"/></html>
+                                    </platform-specific>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -699,12 +692,13 @@
             <actions>
                 <set field="setupStep" value="website"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                
+                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
                 <!-- turns out we can skip this and instead get everything from the worker
                 <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
                 -->
-                <set field="webSite" from-field="setupStepStates.website.stepData.webSite"/>
+                <set field="webSite" from-field="websiteData.webSite"/>
                 
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
                 <set field="target" value="${groovy: context.webSite != null ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />

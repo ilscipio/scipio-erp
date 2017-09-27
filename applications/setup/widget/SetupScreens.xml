@@ -534,6 +534,9 @@
                 <set field="setupStep" value="accounting"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                
+                <set field="titleProperty" value="${groovy: context.userParty != null ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: context.accounting ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

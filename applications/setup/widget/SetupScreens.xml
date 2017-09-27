@@ -472,7 +472,7 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
                 
-                <set field="titleProperty" value="PartyCreateNewCustomer"/>
+                <!-- <set field="titleProperty" value="PartyCreateNewCustomer"/> -->
                 <!-- FIXME: everything here squashes the org party ID
                 <set field="partyId" value="CUST"/>
                 <entity-condition entity-name="PartyRole" list="parties">
@@ -495,10 +495,7 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <if-empty field="parties"/>
-                                    </condition>
+                                <section>                                   
                                     <actions>
                                         <!-- fields for setDependentDropdownValuesJs.ftl -->
                                         <set field="dependentForm" value="NewUser"/>
@@ -514,23 +511,11 @@
                                         <set field="selectedDependentOption" value="_none_"/>
                                     </actions>
                                     <widgets>
-                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                         <screenlet>
-                                            <!-- <include-form name="EditUser" location="component://setup/widget/SetupForms.xml"/> -->
-                                            <platform-specific>
-                                                <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
-                                            </platform-specific>
+                                        	<platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                            <platform-specific><html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html></platform-specific>
                                         </screenlet>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <actions>
-                                            </actions>
-                                            <widgets>
-                                                <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
+                                    </widgets>                                    
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -553,7 +538,9 @@
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label text="TODO"/>
+                        <platform-specific>
+                            <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

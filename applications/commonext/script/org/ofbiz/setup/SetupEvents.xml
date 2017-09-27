@@ -368,10 +368,25 @@
         <create-value value-field="newEntity"/>
 
         <!-- create  Facility ContactMech-->
-        <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
-            <field-map field-name="partyId" from-field="parameters.partyId"/>
-        </entity-and>
-        <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+        <!-- SCIPIO: 2017-09-27: support a specific contact mech ID -->
+        <if>
+            <condition><not><if-empty field="parameters.postalAddressContactMechId"/></not></condition>
+            <then>
+                <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <field-map field-name="contactMechId" from-field="parameters.postalAddressContactMechId"/>
+                </entity-and>
+                <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+            </then>
+            <else>
+                <!-- stock ofbiz -->
+                <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                </entity-and>
+                <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+            </else>
+        </if>
+        
         <sequenced-id sequence-name="ContactMech" field="partyPostalAddress.contactMechId"/>
         <set-service-fields service-name="createPostalAddress" map="partyPostalAddress" to-map="addressContext"/>
         <call-service service-name="createPostalAddress" in-map-name="addressContext">

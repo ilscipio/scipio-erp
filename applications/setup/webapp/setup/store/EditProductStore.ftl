@@ -74,7 +74,7 @@
 
       <#if productStore?has_content>
         <@field type="display" label=uiLabelMap.CommonId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore value=(params.productStoreId!)/>
-        <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/>
+        <#-- @field type="hidden" name="productStoreId" value=(params.productStoreId!)/ --> 
       <#else>
         <@field type="input" name="productStoreId" label=uiLabelMap.CommonId value=(params.productStoreId!)/>
       </#if>

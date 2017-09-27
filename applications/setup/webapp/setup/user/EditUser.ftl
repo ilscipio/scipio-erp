@@ -31,13 +31,37 @@ under the License.
         "productStoreId": "${productStoreId}"
 }>
 
-<#assign paramMaps = getWizardFormFieldValueMaps({
+<#assign userPartyParamMaps = getWizardFormFieldValueMaps({
     "record":userParty!true, <#-- NOTE: must fallback with boolean true -->
     "defaults":defaultParams,
     "strictRecord":true <#-- TODO: REMOVE (debugging) -->
 })>
-<#assign params = paramMaps.values>
-<#assign fixedParams = paramMaps.fixedValues>
+<#assign userPartyParams = userPartyParamMaps.values>
+<#assign fixedParams = userPartyParamMaps.fixedValues>
+
+<#assign userPersonParamMaps = getWizardFormFieldValueMaps({
+    "record":userPerson!true, <#-- NOTE: must fallback with boolean true -->    
+    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
+})>
+<#assign userPersonParams = userPersonParamMaps.values>
+
+<#assign userPostalAddressParamMaps = getWizardFormFieldValueMaps({
+    "record":userPostalAddress!true, <#-- NOTE: must fallback with boolean true -->    
+    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
+})>
+<#assign userPostalAddressParams = userPostalAddressParamMaps.values>
+
+<#assign userEmailAddressParamMaps = getWizardFormFieldValueMaps({
+    "record":userEmailAddress!true, <#-- NOTE: must fallback with boolean true -->    
+    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
+})>
+<#assign userEmailAddressParams = userEmailAddressParamMaps.values>
+
+<#assign userTelecomNumberParamMaps = getWizardFormFieldValueMaps({
+    "record":userTelecomNumber!true, <#-- NOTE: must fallback with boolean true -->    
+    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
+})>
+<#assign userTelecomNumberParams = userTelecomNumberParamMaps.values>
 
 <@script>
     <#if getUsername>    
@@ -87,13 +111,16 @@ under the License.
 <@form method="post" action=makeOfbizUrl(target) id="NewUser" name="NewUser">
     <@defaultWizardFormFields/>
     
-	<@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.addressAllowSol!) />
+    <#-- 
+    	<@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.addressAllowSol!) />
     <@field type="hidden" name="USER_HOME_ALLOW_SOL" value=(fixedParams.homeAllowSol!) />
     <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.workAllowSol!) />
     <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.faxAllowSol!) />
     <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.mobileAllowSol!) />
     <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.emailAllowSol!) />        
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.productStoreId!) />
+    
+    -->
   
   	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 
@@ -102,23 +129,21 @@ under the License.
     	  <fieldset>
     	    <legend>${uiLabelMap.SetupAccountInformation}</legend>
     	    
-    	    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(params.USER_EMAIL!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true />
+    	    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(userEmailAddressParams.infoString!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true />
     	
     	    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>
     	      <#if parameters.preferredUsername?has_content>		        
-    	        <input type="hidden" name="USERNAME" id="USERNAME" value="${params.USERNAME!}"/>
-    	        <@field type="text" name="showUserName" id="showUserName" value=(params.USERNAME!) disabled="disabled" label=uiLabelMap.CommonUsername required=true />
+    	        <input type="hidden" name="USERNAME" id="USERNAME" value="${userPartyParams.userLoginId!}"/>
+    	        <@field type="text" name="showUserName" id="showUserName" value=(userPartyParams.userLoginId!) disabled="disabled" label=uiLabelMap.CommonUsername required=true />
     	      <#else>
     	        <#macro extraFieldContent args={}>	          
-    	          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" 
-    	            onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress 
-    	            checked=((parameters.UNUSEEMAIL!) == "on")/>
+    	          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
     	        </#macro>
     	        <#assign fieldStyle = "">
     	        <#if ((parameters.UNUSEEMAIL!) == "on")>
     	          <#assign fieldStyle = "display:none;">
     	        </#if>
-    	        <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(params.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
+    	        <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(userPartyParams.userLoginId!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
     	      </#if>
     	    </#if>
     	
@@ -136,8 +161,8 @@ under the License.
     	    <legend>${uiLabelMap.PartyPersonalInformation}</legend>
     	    <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
     	    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle /> 
-    	    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(params.USER_FIRST_NAME!) label=uiLabelMap.PartyFirstName required=true />
-    	    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(params.USER_LAST_NAME!) label=uiLabelMap.PartyLastName required=true />
+    	    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(userPersonParams.firstName!) label=uiLabelMap.PartyFirstName required=true />
+    	    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(userPersonParams.lastName!) label=uiLabelMap.PartyLastName required=true />
     	  </fieldset>
 	  </@cell>
 	</@row>
@@ -146,19 +171,19 @@ under the License.
 	  <@cell columns=6>
     	  <fieldset>
     	    <legend>${uiLabelMap.CommonLocation}</legend>
-    	    <@field type="input" name="USER_ADDRESS1" id="USER_ADDRESS1" value=(params.USER_ADDRESS1!) label=uiLabelMap.PartyAddressLine1 required=true />    
-    	    <@field type="input" name="USER_ADDRESS2" id="USER_ADDRESS2" value=(params.USER_ADDRESS2!) label=uiLabelMap.PartyAddressLine2 />
-    	    <@field type="input" name="USER_CITY" id="USER_CITY" value=(params.USER_CITY!) label=uiLabelMap.PartyCity required=true />
-    	    <@field type="input" name="USER_POSTAL_CODE" id="USER_POSTAL_CODE" value=(params.USER_POSTAL_CODE!) label=uiLabelMap.PartyZipCode required=true />  
+    	    <@field type="input" name="USER_ADDRESS1" id="USER_ADDRESS1" value=(userPostalAddressParams.address1!) label=uiLabelMap.PartyAddressLine1 required=true />    
+    	    <@field type="input" name="USER_ADDRESS2" id="USER_ADDRESS2" value=(userPostalAddressParams.address2!) label=uiLabelMap.PartyAddressLine2 />
+    	    <@field type="input" name="USER_CITY" id="USER_CITY" value=(userPostalAddressParams.city!) label=uiLabelMap.PartyCity required=true />
+    	    <@field type="input" name="USER_POSTAL_CODE" id="USER_POSTAL_CODE" value=(userPostalAddressParams.postalCode!) label=uiLabelMap.PartyZipCode required=true />  
     	    <@field type="select" name="USER_COUNTRY" id="NewUser_USER_COUNTRY" label=uiLabelMap.CommonCountry required=true>
     	        <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={
-    	            "currentCountryGeoId":params.USER_COUNTRY!""
+    	            "currentCountryGeoId":userPostalAddressParams.contryGeoId!""
     	        }/>  
     	    </@field>
     	    <@field type="select" name="USER_STATE" id="NewUser_USER_STATE" required=true label=uiLabelMap.PartyState>
     	        <#-- Populated by JS -->
-    	        <#if params.USER_STATE?has_content>
-    	          <option value="${params.USER_STATE?html}">${params.USER_STATE?html}</option>
+    	        <#if userPostalAddressParams.stateProvinceGeoId?has_content>
+    	          <option value="${userPostalAddressParams.stateProvinceGeoId?html}">${userPostalAddressParams.stateProvinceGeoId?html}</option>
     	        </#if>
     	    </@field>
     	  </fieldset>
@@ -167,9 +192,9 @@ under the License.
 	  <@cell columns=6>
     	  <fieldset>    
     	    <legend>${getLabel("CommunicationEventType.description.PHONE_COMMUNICATION", "PartyEntityLabels")}</legend>
-    	        <@field type="input" label=uiLabelMap.PartyHomePhone size="8" maxlength="25" name="USER_HOME_CONTACT" value=(params.USER_HOME_CONTACT!) tooltip=uiLabelMap.PartyContactNumber required=false/>
-    	        <@field type="input" label=uiLabelMap.PartyMobilePhone size="8" maxlength="25" name="USER_MOBILE_CONTACT" value=(params.USER_MOBILE_CONTACT!) tooltip=uiLabelMap.PartyContactNumber required=false/>
-    	        <@field type="input" label=uiLabelMap.PartyFaxNumber size="8" maxlength="25" name="USER_FAX_CONTACT" value=(params.USER_FAX_CONTACT!) tooltip=uiLabelMap.PartyContactNumber required=false/>
+    	        <@field type="input" label=uiLabelMap.PartyHomePhone size="8" maxlength="25" name="USER_HOME_CONTACT" value=(userTelecomNumberParams.contactNumber!) tooltip=uiLabelMap.PartyContactNumber required=false/>
+    	        <@field type="input" label=uiLabelMap.PartyMobilePhone size="8" maxlength="25" name="USER_MOBILE_CONTACT" value=(userTelecomNumberParams.contactNumber!) tooltip=uiLabelMap.PartyContactNumber required=false/>
+    	        <@field type="input" label=uiLabelMap.PartyFaxNumber size="8" maxlength="25" name="USER_FAX_CONTACT" value=(userTelecomNumberParams.contactNumber!) tooltip=uiLabelMap.PartyContactNumber required=false/>
     	  </fieldset>
 	  </@cell>
 	</@row>

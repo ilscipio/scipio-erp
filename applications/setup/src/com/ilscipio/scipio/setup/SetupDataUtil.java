@@ -73,6 +73,7 @@ public abstract class SetupDataUtil {
             if (UtilValidate.isNotEmpty(party)) {
                 result.put("userValid", true);
                 result.put("userPartyId", userPartyId);
+                result.put("userParty", party);
                 result.put("completed", true);
             } else {
                 result.put("userValid", false);

@@ -480,13 +480,12 @@
                 </entity-condition>
                 <set field="partyId" from-field="parties[0].partyId"/>
                  -->
-                <set field="customerPartyId" from-field="customerRel.partyIdFrom"/>
-                <!-- why? <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
+<!--                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/> -->
+
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupUser.groovy"/>                
                 
-                <!-- FIXME: context.parties check is bad -->
-                <set field="titleProperty" value="${groovy: context.parties != null ? 'PartyChangeParty' : 'PartyNewUser'}" />
-                <set field="target" value="${groovy: context.parties ? 'setupUpdateUser' : 'setupCreateUser'}" />
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupUser.groovy"/>
+                <set field="titleProperty" value="${groovy: context.userParty != null ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: context.userParty ? 'setupUpdateUser' : 'setupCreateUser'}" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

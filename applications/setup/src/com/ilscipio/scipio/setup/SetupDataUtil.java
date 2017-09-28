@@ -108,23 +108,35 @@ public abstract class SetupDataUtil {
             }
         }
         if (party != null) {
+            userPartyId = party.getString("partyId");
             GenericValue userUserLogin = EntityUtil.getFirst(party.getRelated("UserLogin", UtilMisc.toMap("partyId", userPartyId), null, false));
-            GenericValue userPerson = party.getRelatedOne("Person", false);
-            GenericValue postalAddress = PartyWorker.findPartyLatestPostalAddress(userPartyId, delegator);
-            GenericValue emailAddress = PartyWorker.findPartyLatestContactMech(userPartyId, "EMAIL_ADDRESS", delegator);
-            GenericValue telecomNumber = PartyWorker.findPartyLatestContactMech(userPartyId, "TELECOM_NUMBER", delegator);
-
+            GenericValue userPerson = party.getRelatedOne("Person", false);            
+            Map<String, Object> fields = UtilMisc.toMap("partyId", userPartyId);
+            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
+                    fields, UtilMisc.toList("-fromDate"), useCache));
+            
             result.put("userUserLogin", userUserLogin);
-            result.put("userPerson", userPerson);
-            result.put("userPostalAddress", postalAddress);
-            result.put("userEmailAddress", emailAddress);
-            result.put("userTelecomNumber", telecomNumber);
+            result.put("userPerson", userPerson);            
+            result.put("userContactMechPurposeList", contactMechPurposes);
 
-            List<GenericValue> userPartyContactMechList = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userPartyId), null, false);
+            Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
+            boolean completed = true;
+            if (!purposeTypes.contains("GENERAL_LOCATION")) {
+                Debug.logInfo("Setup: User '" + userPartyId + "' has no GENERAL_LOCATION contact mech; treating as incomplete", module);
+                completed = false;
+            }
+            if (!purposeTypes.contains("PHONE_HOME") && !purposeTypes.contains("PHONE_MOBILE")) {
+                Debug.logInfo("Setup: User '" + userPartyId + "' has no PHONE_HOME and PHONE_MOBILE contact mech; treating as incomplete", module);
+                completed = false;
+            }
+            if (!purposeTypes.contains("PRIMARY_EMAIL")) {
+                Debug.logInfo("Setup: User '" + userPartyId + "' has no PRIMARY_EMAIL contact mech; treating as incomplete", module);
+                completed = false;
+            }
             
             result.put("userPartyId", userPartyId);
             result.put("userParty", party);
-            result.put("completed", true);       
+            result.put("completed", completed);       
         }
         return result;
     }

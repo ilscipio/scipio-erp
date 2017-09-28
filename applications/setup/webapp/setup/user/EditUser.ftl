@@ -34,23 +34,23 @@ under the License.
     "defaults":defaultParams
 })>
 <#assign params = paramMaps.values>
+<#assign fixedParams = paramMaps.fixedValues>
+
 <#assign userUserLogin = getWizardFormFieldValueMaps({"record" : params.userUserLogin!}).values!>
 <#assign userPerson = getWizardFormFieldValueMaps({"record" : params.userPerson!}).values!>
 <#assign userPostalAddress = getWizardFormFieldValueMaps({"record" : params.userPostalAddress!}).values!>
 <#assign userEmailAddress = getWizardFormFieldValueMaps({"record" : params.userEmailAddress!}).values!>
-<#assign userTelecomNumber = getWizardFormFieldValueMaps({"record" : params.userTelecomNumber!}).values!>
-<#--  if params?has_content>
-    <#list params?keys as paramKey>
-        ${Static["org.ofbiz.base.util.Debug"].log("EditUser param key =================> " + paramKey)}
-    </#list>
-</#if-->
-<#if userPostalAddress?has_content>
-    <#list userPostalAddress?keys as paramKey>
-        ${Static["org.ofbiz.base.util.Debug"].log("EditUser userPostalAddress key =================> " + paramKey)}
+<#assign userWorkNumber = getWizardFormFieldValueMaps({"record" : params.userWorkNumber!}).values!>
+<#assign userMobileNumber = getWizardFormFieldValueMaps({"record" : params.userMobileNumber!}).values!>
+<#assign userFaxNumber = getWizardFormFieldValueMaps({"record" : params.userFaxNumber!}).values!>
+
+<#if userWorkNumber?has_content>
+    <#list userWorkNumber?keys as paramKey>
+        <#if userWorkNumber[paramKey]?has_content && userWorkNumber[paramKey]?is_string>
+            ${Static["org.ofbiz.base.util.Debug"].log("arg key =================> " + paramKey + "   arg value ===============> " + userWorkNumber[paramKey])}
+        </#if>
     </#list>
 </#if>
-
-<#assign fixedParams = paramMaps.fixedValues>
 
 <@script>
     <#if getUsername>    
@@ -150,6 +150,7 @@ under the License.
                     "pafFieldIdPrefix":"EditUser_",
                     "pafUseScripts":true,
                     "pafFallbacks":({}),
+                    "postalAddressData": userPostalAddress,
                     "pafParams":userPostalAddress,
                     "pafFieldNameMap": {
                       "stateProvinceGeoId": "STATE",
@@ -168,21 +169,21 @@ under the License.
 	  <@cell columns=6>
     	  <fieldset>    
     	    <legend>${getLabel("CommunicationEventType.description.PHONE_COMMUNICATION", "PartyEntityLabels")}</legend>
-    	         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userTelecomNumber
-                    fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+    	         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userWorkNumber
+                    fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT" userWorkNumber=userWorkNumber>
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>
                   </@fields>
                 </@telecomNumberField>
                 
-                <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userTelecomNumber
+                <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userMobileNumber
                     fieldNamePrefix="USER_MOBILE_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>
                   </@fields>
                 </@telecomNumberField>
                 
-                <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userTelecomNumber
+                <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userFaxNumber
                     fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>

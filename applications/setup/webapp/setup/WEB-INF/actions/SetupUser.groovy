@@ -20,23 +20,45 @@ context.userPartyId = userPartyId;
 
 context.userUserLogin = userData.userUserLogin;
 context.userPerson = userData.userPerson;
-context.userPostalAddress = userData.userPostalAddress;
-context.userEmailAddress = userData.userEmailAddress;
-context.userTelecomNumber = userData.userTelecomNumber;
 
-//if (userParty) {
-//    Debug.log("userParty =================> " + userParty);
-//
-//    userUserLogin = EntityUtil.getFirst(delegator.findByAnd("UserLogin", ["partyId" : userData.userPartyId], null, false));
-//    userPerson = delegator.findOne("Person", ["partyId" : userData.userPartyId], false);
-//    userPartyContactMechList = delegator.findByAnd("PartyContactMech", ["partyId" : userData.userPartyId], null, false);
-//    
-//    Debug.log("userUserLogin ====================> " + userUserLogin);
-//    Debug.log("userPerson ====================> " + userPerson);
-//    for (GenericValue userPartyContactMech in userPartyContactMechList) {
-//        Debug.log("userPartyContactMech ======================> " + userPartyContactMech);
-//    }
-//    
-//}
+userContactMechPurposeList = userData.userContactMechPurposeList;
+context.userContactMechPurposeList = userContactMechPurposeList;
 
-//Debug.log("userData =========> " + userData);
+userContactMechsByPurpose = [:];
+userContactMechsById = [:];
+userContactMechPurposes = [:];
+for(purpose in userContactMechPurposeList) {
+    // WARN: can't use findByOne because the fromDate may not match!
+    def contactMech = EntityUtil.getFirst(delegator.findByAnd("PartyAndContactMech",
+            [partyId: purpose.partyId, contactMechId:purpose.contactMechId], null, false));
+    userContactMechsByPurpose[purpose.contactMechPurposeTypeId] = contactMech;
+    userContactMechsById[purpose.contactMechId] = contactMech;
+    purposeSet = userContactMechPurposes[purpose.contactMechId];
+    if (!purposeSet) {
+        purposeSet = new HashSet();
+        userContactMechPurposes[purpose.contactMechId] = purposeSet;
+    }
+    purposeSet.add(purpose.contactMechPurposeTypeId);
+}
+
+context.userContactMechsByPurpose = userContactMechsByPurpose;
+context.userContactMechsById = userContactMechsById;
+context.userContactMechs = userContactMechsById.values() as List;
+context.userContactMechPurposes = userContactMechPurposes;
+
+if (userContactMechsByPurpose["PHONE_WORK"]) {
+    context.userWorkNumber = userContactMechsByPurpose["PHONE_WORK"].getRelatedOne("TelecomNumber", false);
+    Debug.log("context.userWorkNumber ============> " + context.userWorkNumber);
+}
+if (userContactMechsByPurpose["PHONE_MOBILE"]) {
+    context.userMobileNumber = userContactMechsByPurpose["PHONE_MOBILE"].getRelatedOne("TelecomNumber", false);
+}
+if (userContactMechsByPurpose["FAX_NUMBER"]) {
+    context.userFaxNumber = userContactMechsByPurpose["FAX_NUMBER"].getRelatedOne("TelecomNumber", false);
+}
+if (userContactMechsByPurpose["PRIMARY_EMAIL"]) {
+    context.userEmailAddress = userContactMechsByPurpose["PRIMARY_EMAIL"];
+}
+if (userContactMechsByPurpose["GENERAL_LOCATION"]) {
+    context.userPostalAddress = userContactMechsByPurpose["GENERAL_LOCATION"].getRelatedOne("PostalAddress", false);    
+}

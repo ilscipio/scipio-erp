@@ -283,6 +283,7 @@ public abstract class SetupWorker implements Serializable {
 //        }
         
         public void toMap(Map<String, Object> map) {
+            map.put("name", getName());
             map.put("stepData", getStepData());
             map.put("skippable", isSkippable());
             map.put("completed", isCompleted());
@@ -1265,7 +1266,10 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo storeStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet("productStoreId", "facilityId"));
+                StepParamInfo.fromRequiredAndOptional(nameSet(
+                        "orgPartyId", 
+                        "facilityId" // NOTE: 2017-09-27: making this required because too many things require it
+                        ), nameSet("productStoreId"));
         protected class StoreStepState extends CommonStepState {
             public StoreStepState(StaticStepState partial) { super(partial); }
             
@@ -1458,6 +1462,21 @@ public abstract class SetupWorker implements Serializable {
                         }
                         
                         return productStoreId;
+                    }
+                });
+                
+                map.put("facilityId", new ParamValidator() {
+                    @Override
+                    public Object getValidatedParam(RequestSetupWorker setupWorker, String paramName, Object value) {
+                        String facilityId = null;
+                        
+                        // NOTE: the value gets implicitly passed here (confusing), so not using the value arg
+                        Map<String, Object> facilityStepData = setupWorker.getStepState("facility").getStepData();
+                        if (facilityStepData.get("facility") != null) {
+                            facilityId = (String) facilityStepData.get("facilityId");
+                        }
+                        
+                        return facilityId;
                     }
                 });
                 

@@ -63,7 +63,7 @@
     </request-map>
     <request-map uri="setupUpdateOrganization">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateOrganization"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="view" value="SetupOrganization"/>
     </request-map>

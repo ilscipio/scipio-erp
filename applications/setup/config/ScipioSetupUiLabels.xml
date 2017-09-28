@@ -82,4 +82,19 @@
         <value xml:lang="de">Überspringen</value>
         <value xml:lang="fr">Sauter</value>
     </property>
+    <property key="SetupInvalidFacilityForStore">
+        <value xml:lang="en">Warehouse currently configured is invalid for this store. It may belong to the wrong organization or other problem.</value>
+        <value xml:lang="de">Das derzeit konfigurierte Warehouse ist für diesen Speicher ungültig. Es kann zu der falschen Organisation oder einem anderen Problem gehören.</value>
+        <value xml:lang="fr">L'entrepôt actuellement configuré n'est pas valable pour ce magasin. Il peut appartenir à une mauvaise organisation ou à un autre problème.</value>
+    </property>
+    <property key="SetupNoAddressOrganizationSetupIncomplete">
+        <value xml:lang="en">No postal address available to use; please complete organization setup first.</value>
+        <value xml:lang="de">Keine Postanschrift vorhanden bitte zuerst die Einrichtung des Unternehmens ausfüllen.</value>
+        <value xml:lang="fr">Aucune adresse postale disponible pour l'utilisation; veuillez compléter la configuration de l'organisation en premier.</value>
+    </property>
+    <property key="SetupStoreMissingFacility">
+        <value xml:lang="en">Store record is missing a facility. Setup may fail until a facility is created and assigned.</value>
+        <value xml:lang="de">Store-Rekord fehlt eine Anlage. Setup kann fehlschlagen, bis eine Einrichtung erstellt und zugewiesen wird.</value>
+        <value xml:lang="fr">Le dossier de magasin manque d'une installation. Le programme d'installation peut échouer jusqu'à ce qu'une installation soit créée et attribuée.</value>
+    </property>
 </resource>

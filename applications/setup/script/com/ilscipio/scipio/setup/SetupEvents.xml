@@ -25,6 +25,13 @@
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
           component://commonext/script/org/ofbiz/setup/SetupEvents.xml -->
           
+    <simple-method method-name="updateOrganization" short-description="Update Organization" login-required="true">
+        <!-- update groupName -->
+        <set-service-fields service-name="updatePartyGroup" map="parameters" to-map="updatePartyGroupCtx"/>
+        <call-service service-name="updatePartyGroup" in-map-name="updatePartyGroupCtx"/>
+        <check-errors/>
+    </simple-method>
+          
     <simple-method method-name="createUser" short-description="Create Owner User" login-required="true">
         <set field="require_email" value="true"/>
         <set field="require_phone" value="false"/>

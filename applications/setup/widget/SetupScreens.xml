@@ -358,32 +358,8 @@
                 <set field="setupStep" value="organization"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="organizationData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
-                
-                <!-- why?: <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>-->
-                
-                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
 
-                <entity-condition entity-name="PartyRole" list="partyRoles">
-                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-condition>
-                <!-- user must select one to edit first, otherwise can't switch to "create new"
-                <if>
-                    <condition>
-                        <and>
-                            <if-empty field="partyId"/>
-                            <not><if-empty field="partyRoles"/></not>
-                        </and>
-                    </condition>
-                    <then>
-                        <!- - select the first party, sometimes this works out - ->
-                        <set field="partyId" from-field="partyRoles[0].partyId"/>
-                        <set field="parameters.partyId" from-field="partyId"/>
-                        <entity-one entity-name="Party" value-field="party">
-                            <field-map field-name="partyId" from-field="partyId"/>
-                        </entity-one>
-                    </then>
-                </if>
-                -->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupOrganization.groovy"/>                
 
                 <set field="titleProperty" value="${groovy: context.party != null ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
                 <set field="target" value="${groovy: context.party != null ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
@@ -396,63 +372,46 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template><![CDATA[
-                                          <@section>
-                                              <#-- NOTE: sending to setupWizard instead of setupOrganization so it automatically goes to the next unfinished step -->
-                                              <form method="get" action="<@ofbizUrl>setupWizard</@ofbizUrl>" id="setupOrg-selectOrg-form">
-                                                <@field type="select" name="partyId" label=uiLabelMap.SetupOrganization onChange="jQuery('#setupOrg-selectOrg-form').submit(); void(0);">
-                                                    <option value="">[${uiLabelMap.SetupCreateNewOrganization}]</option>
-                                                    <option value="" disabled="disabled"></option>
-                                                    <#if partyRoles?has_content>
-                                                      <#list partyRoles as partyRole>
-                                                        <#assign curPartyGroup = delegator.findOne("PartyGroup", {"partyId":partyRole.partyId}, true)>
-                                                        <#assign selected = (rawString(partyRole.partyId) == rawString(partyId!))>
-                                                        <option value="${partyRole.partyId}"<#if selected> selected="selected"</#if>>${curPartyGroup.groupName} [${partyRole.partyId}]</option>
-                                                      </#list>
-                                                    </#if>
-                                                </@field>
-                                              </form>
-                                          </@section>
-                                        ]]></html-template>
-                                    </html>
-                                </platform-specific>
+                                <screenlet>
+                                    <include-screen name="SelectOrganization"/>
+                                </screenlet>
+                                <section>
+                                    <actions>
+                                        <!-- SCIPIO: using postalAddressFields/geoAutoCompleter.js instead
+                                        <set field="dependentForm" value="EditOrganization"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="USER_COUNTRY"/>
+                                        <set field="dependentId" value="USER_STATE"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                        -->
+                                    </actions>
+                                    <widgets>
+                                        <!-- SCIPIO: using postalAddressFields/geoAutoCompleter.js instead
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                        -->
+                                        <screenlet>
+                                            <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/organization/EditOrganization.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                                 <section>
                                     <condition>
-                                        <if-empty field="party"/>
+                                        <not><if-empty field="party"/></not>
                                     </condition>
                                     <widgets>
-                                        <section>
-                                            <actions>
-                                                <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
-                                                <set field="dependentForm" value="NewOrganization"/>
-                                                <set field="paramKey" value="countryGeoId"/>                                        
-                                                <set field="mainId" value="USER_COUNTRY"/>
-                                                <set field="dependentId" value="USER_STATE"/>
-                                                <set field="requestName" value="getAssociatedStateList"/>
-                                                <set field="responseName" value="stateList"/>
-                                                <set field="dependentKeyName" value="geoId"/>
-                                                <set field="descName" value="geoName"/>
-                                                <set field="selectedDependentOption" value="_none_"/>
-                                            </actions>
-                                            <widgets>
-                                                <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
-                                                <screenlet>
-                                                    <include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>
-                                                </screenlet>
-                                            </widgets>
-                                        </section>
+                                        <!-- original:
+                                        <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>-->
+                                        <!-- not sure this adds anything
+                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
+                                        <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                     </widgets>
-                                    <fail-widgets>
-                                        <section>
-                                            <actions>
-                                            </actions>
-                                            <widgets>
-                                                <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -461,6 +420,23 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectOrganization">
+        <section>
+            <actions>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-condition>
+                <!-- TODO: REVIEW: for now, when select org, go to next incomplete step
+                <set field="selectOrgTarget" value="setupOrganization"/>-->
+                <set field="selectOrgTarget" value="setupWizard"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/organization/SelectOrganization.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -582,7 +558,10 @@
                                             <label style="heading" text="${uiLabelMap.ProductEditFacility}: ${facility.facilityName} [${facility.facilityId}]"></label>
                                         </widgets>
                                     </section>-->
-                                    <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
+                                    <!--<include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/facility/EditFacility.ftl"/></html>
+                                    </platform-specific>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -644,9 +623,11 @@
                 <set field="setupStep" value="store"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="storeData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="facilityData" from-field="setupStepStates.facility.stepData"/>
 
                 <!-- do not need this - store already loaded by groovy and SetupWorker
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupStore.groovy"/>
                  
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
                 <set field="target" value="${groovy: context.productStore != null ? 'setupUpdateStore' : 'setupCreateStore'}" />

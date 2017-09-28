@@ -119,42 +119,65 @@ public abstract class SetupDataUtil {
         if (UtilValidate.isNotEmpty(orgPartyId)) {
             if (UtilValidate.isNotEmpty(facilityId)) {
                 // filter by owner to prevent editing other companies's facilities
-                Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId, "ownerPartyId", orgPartyId);
-                facility = EntityUtil.getFirst(delegator.findByAnd("Facility", fields, null, useCache));
-            } else if (!UtilMisc.booleanValueVersatile(params.get("newFacility"), false)) {
-                if (UtilValidate.isNotEmpty(productStoreId)) {
-                    Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "payToPartyId", orgPartyId);
-                    GenericValue productStore = EntityUtil.getFirst(delegator.findByAnd("ProductStore", fields, null, useCache));
-                    if (productStore != null) {
-                        facilityId = productStore.getString("inventoryFacilityId");
-                        if (UtilValidate.isNotEmpty(facilityId)) {
-                            fields = UtilMisc.toMap("facilityId", facilityId, "ownerPartyId", orgPartyId);
-                            facility = EntityUtil.getFirst(delegator.findByAnd("Facility", fields, null, useCache));
-                            if (facility != null) {
-                                result.put("facilityId", facility.getString("facilityId"));
-                                result.put("facility", facility);
-                                result.put("completed", true);
-                                return result;
-                            } else {
-                                Debug.logError("Setup: Warehouse '" + facilityId + "'" 
-                                        + " does not exist or does not belong to organization '" 
-                                        + orgPartyId + "'; ignoring", module);
-                            }
-                        } else {
-                            // TODO: REVIEW: there are multiple reasons for this;
-                            // * does not support ProductStoreFacility-only or multi-facility for now;
-                            // * product store was created without a facility
-                            Debug.logWarning("Setup: Cannot get warehouse for store '" 
-                                    + productStoreId + "'" + " because ProductStore.inventoryFacilityId is not set", module);
-                        }
+                facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), useCache);
+                if (facility != null) {
+                    if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
+                        ;
                     } else {
-                        Debug.logError("Setup: ProductStore '" + productStoreId 
-                                + "' does not appear to belong to" + " organization '" 
-                                + orgPartyId + "'; ignoring", module);
+                        Debug.logError("Setup: Facility '" + facilityId + "' does not belong to organization '" + orgPartyId + "'; ignoring", module);
+                        facility = null;
                     }
                 } else {
-                    Map<String, Object> fields = UtilMisc.toMap("ownerPartyId", orgPartyId);
-                    facility = getFirstMaxOneExpected(delegator.findByAnd("Facility", fields, null, useCache), fields);
+                    Debug.logError("Setup: Facility '" + facilityId + "' not found; ignoring", module);
+                }
+            } else if (!UtilMisc.booleanValueVersatile(params.get("newFacility"), false)) {
+                if (UtilValidate.isNotEmpty(productStoreId)) {
+                    // this case selects the best facility for the passed store
+                    // TODO: REVIEW: this is not reusing the getStoreStepStateData for now because
+                    // facility step now comes first and will create endless loop 
+                    GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
+                    if (productStore != null) {
+                        if (orgPartyId.equals(productStore.getString("payToPartyId"))) {
+                            facilityId = productStore.getString("inventoryFacilityId");
+                            if (UtilValidate.isNotEmpty(facilityId)) {
+                                facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), useCache);
+                                if (facility != null) {
+                                    if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
+                                        result.put("facilityId", facility.getString("facilityId"));
+                                        result.put("facility", facility);
+                                        result.put("completed", true);
+                                        return result;
+                                    } else {
+                                        Debug.logError("Setup: Warehouse '" + facilityId + "'" 
+                                                + " does not belong to organization '" 
+                                                + orgPartyId + "'; ignoring", module);
+                                        facility = null;
+                                    }
+                                } else {
+                                    Debug.logError("Setup: Warehouse '" + facilityId + "' not found; ignoring", module);
+                                }
+                            } else {
+                                // TODO: REVIEW: there are multiple reasons for this;
+                                // * does not support ProductStoreFacility-only or multi-facility for now;
+                                // * product store was created without a facility
+                                Debug.logWarning("Setup: Cannot get warehouse for store '" 
+                                        + productStoreId + "'" + " because ProductStore.inventoryFacilityId is not set", module);
+                            }
+                        } else {
+                            Debug.logError("Setup: ProductStore '" + productStoreId + "' does not appear to belong to"
+                                    + " organization '" + orgPartyId + "'; ignoring", module);
+                            productStore = null;
+                        }
+                    } else {
+                        Debug.logError("Setup: ProductStore '" + productStoreId + "' not found; ignoring", module);
+                    }
+                } else {
+                    List<GenericValue> facilities = delegator.findByAnd("Facility", UtilMisc.toMap("ownerPartyId", orgPartyId), null, useCache);
+                    facility = EntityUtil.getFirst(facilities);
+                    if (facilities.size() >= 2) {
+                        Debug.logInfo("Setup: Multiple warehouses found for organization '" + orgPartyId 
+                                + "'; selecting first ('" + facility.getString("facilityId") + "')", module);
+                    }
                 }
             }
         }
@@ -164,8 +187,8 @@ public abstract class SetupDataUtil {
             result.put("facility", facility);
 
             Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
-            List<GenericValue> contactMechPurposes = EntityUtil
-                    .filterByDate(delegator.findByAnd("FacilityContactMechPurpose", fields, UtilMisc.toList("-fromDate"), useCache));
+            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", 
+                    fields, UtilMisc.toList("-fromDate"), useCache));
             result.put("facilityContactMechPurposeList", contactMechPurposes);
 
             Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());

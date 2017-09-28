@@ -1,64 +1,65 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
 <#assign defaultParams = {
-        "companyName": (partyGroup.groupName)!"",
-        "payToPartyId": partyId!"",
-        <#--"partyId": partyId!"",-->
-        "inventoryFacilityId": parameters.facilityId!, <#-- FIXME -->
-        "visualThemeId": "EC_DEFAULT",
-        "manualAuthIsCapture": "N",
-        "prorateShipping": "Y",
-        "prorateTaxes": "Y",
-        "viewCartOnAdd": "N",
-        "autoSaveCart": "N",
-        "autoApproveReviews": "N",
-        "autoInvoiceDigitalItems": "Y",
-        "reqShipAddrForDigItems": "Y",
-        "isDemoStore": "Y",
-        "isImmediatelyFulfilled": "N",
-        "checkInventory": "Y",
-        "requireInventory": "N",
-        "reserveInventory": "Y",
-        "reserveOrderEnumId": "INVRO_FIFO_REC",
-        "balanceResOnOrderCreation": "Y",
-        "oneInventoryFacility": "Y",
-        "defaultSalesChannelEnumId": "WEB_SALES_CHANNEL",
-        "allowPassword": "Y",
-        "retryFailedAuths": "Y",
-        "headerApprovedStatus": "ORDER_APPROVED",
-        "itemApprovedStatus": "ITEM_APPROVED",
-        "digitalItemApprovedStatus": "ITEM_APPROVED",
-        "headerDeclinedStatus": "ORDER_REJECTED",
-        "itemDeclinedStatus": "ITEM_REJECTED",
-        "headerCancelStatus": "ORDER_CANCELLED",
-        "itemCancelStatus": "ITEM_CANCELLED",
-        "storeCreditAccountEnumId": "FIN_ACCOUNT",
-        "explodeOrderItems": "N",
-        "checkGcBalance": "N",
-        "usePrimaryEmailUsername": "N",
-        "requireCustomerRole": "N",
-        "showCheckoutGiftOptions": "Y",
-        "selectPaymentTypePerItem": "N",
-        "showPricesWithVatTax": "N",
-        "showTaxIsExempt": "Y",
-        "prodSearchExcludeVariants": "Y",
-        "enableDigProdUpload": "N",
-        "autoOrderCcTryExp": "Y",
-        "autoOrderCcTryOtherCards": "Y",
-        "autoOrderCcTryLaterNsf": "Y",
-        "autoApproveInvoice": "Y",
-        "autoApproveOrder": "Y",
-        "shipIfCaptureFails": "Y",
-        "reqReturnInventoryReceive": "N",
+    "companyName": (partyGroup.groupName)!"",
+    "payToPartyId": partyId!"",
+    <#--"partyId": partyId!"",-->
+    <#-- "inventoryFacilityId": facilityId!, // not this way - instead we set parameters.inventoryFacilityId in SetupStore.groovy -->
+    "visualThemeId": "EC_DEFAULT",
+    "manualAuthIsCapture": "N",
+    "prorateShipping": "Y",
+    "prorateTaxes": "Y",
+    "viewCartOnAdd": "N",
+    "autoSaveCart": "N",
+    "autoApproveReviews": "N",
+    "autoInvoiceDigitalItems": "Y",
+    "reqShipAddrForDigItems": "Y",
+    "isDemoStore": "Y",
+    "isImmediatelyFulfilled": "N",
+    "checkInventory": "Y",
+    "requireInventory": "N",
+    "reserveInventory": "Y",
+    "reserveOrderEnumId": "INVRO_FIFO_REC",
+    "balanceResOnOrderCreation": "Y",
+    "oneInventoryFacility": "Y", <#-- NOTE: currently forcing one facility required per store, as was in ofbizsetup (TODO: REVIEW);
+                                      this is also forced by store step depends on facilityId in SetupWorker -->
+    "defaultSalesChannelEnumId": "WEB_SALES_CHANNEL",
+    "allowPassword": "Y",
+    "retryFailedAuths": "Y",
+    "headerApprovedStatus": "ORDER_APPROVED",
+    "itemApprovedStatus": "ITEM_APPROVED",
+    "digitalItemApprovedStatus": "ITEM_APPROVED",
+    "headerDeclinedStatus": "ORDER_REJECTED",
+    "itemDeclinedStatus": "ITEM_REJECTED",
+    "headerCancelStatus": "ORDER_CANCELLED",
+    "itemCancelStatus": "ITEM_CANCELLED",
+    "storeCreditAccountEnumId": "FIN_ACCOUNT",
+    "explodeOrderItems": "N",
+    "checkGcBalance": "N",
+    "usePrimaryEmailUsername": "N",
+    "requireCustomerRole": "N",
+    "showCheckoutGiftOptions": "Y",
+    "selectPaymentTypePerItem": "N",
+    "showPricesWithVatTax": "N",
+    "showTaxIsExempt": "Y",
+    "prodSearchExcludeVariants": "Y",
+    "enableDigProdUpload": "N",
+    "autoOrderCcTryExp": "Y",
+    "autoOrderCcTryOtherCards": "Y",
+    "autoOrderCcTryLaterNsf": "Y",
+    "autoApproveInvoice": "Y",
+    "autoApproveOrder": "Y",
+    "shipIfCaptureFails": "Y",
+    "reqReturnInventoryReceive": "N",
 
-        "orderNumberPrefix": "WS",
-        "defaultLocaleString": "en_US",
-        "showOutOfStockProducts": "Y",
-        "authDeclinedMessage": "There has been a problem with your method of payment. Please try a different method or call customer service.",
-        "authFraudMessage": "Your order has been rejected and your account has been disabled due to fraud.",
-        "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email."
-        
-        <#--"paymentList": paymentList![]-->
+    "orderNumberPrefix": "WS",
+    "defaultLocaleString": "en_US",
+    "showOutOfStockProducts": "Y",
+    "authDeclinedMessage": "There has been a problem with your method of payment. Please try a different method or call customer service.",
+    "authFraudMessage": "Your order has been rejected and your account has been disabled due to fraud.",
+    "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email."
+    
+    <#--"paymentList": paymentList![]-->
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -70,15 +71,52 @@
 <#assign fixedParams = paramMaps.fixedValues>
 
     <@form id="EditProductStore" action=makeOfbizUrl(target) method="post">
-        <@defaultWizardFormFields/>
+        <@defaultWizardFormFields exclude=["productStoreId"]/>
 
-      <#if productStore?has_content>
-        <@field type="display" label=uiLabelMap.CommonId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore value=(params.productStoreId!)/>
-        <#-- @field type="hidden" name="productStoreId" value=(params.productStoreId!)/ --> 
+      <#if productStore??>
+        <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore value=(params.productStoreId!)/>
+        <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> 
       <#else>
-        <@field type="input" name="productStoreId" label=uiLabelMap.CommonId value=(params.productStoreId!)/>
+        <@field type="input" name="productStoreId" label=uiLabelMap.FormFieldTitle_productStoreId value=(params.productStoreId!)/>
       </#if>
         <@field type="input" name="storeName" label=uiLabelMap.ProductStoreName required=true size="30" maxlength="60" value=(params.storeName!)/>
+        
+        <#macro facilityOption facility selected=false>
+            <option value="${facility.facilityId}"<#if selected> selected="selected"</#if>><#rt/>
+              <#if facility.facilityName?has_content>
+                ${facility.facilityName} [${facility.facilityId}]<#t/>
+              <#else>
+                ${facility.facilityId}<#t/>
+              </#if>
+            </option><#lt/>
+        </#macro>
+        <@field type="generic" label=uiLabelMap.ProductFacility>
+          <#-- DEV NOTE: all the checks below were done before I decided to make Store step fully
+              depend on facility step (inventoryFacilityId cannot be null anymore), but these
+              will help against bad configurations -->
+          <#-- NOTE: here fixedParams.inventoryFacilityId returns the 
+              productStore.inventoryFacilityId field if productStore != null,
+              otherwise it gives the parameter facilityId -->
+          <@field type="select" name="inventoryFacilityId" label=uiLabelMap.ProductFacility>
+            <#if productStoreFacilityMissing>
+              <option value="">(${uiLabelMap.CommonNone})</option>
+            <#elseif !storeInventoryFacilityOk>
+              <#-- special case to show weird value without squashing it silently -->
+              <@facilityOption facility=inventoryFacility selected=true/>
+            </#if>
+            <#if facilities?has_content>
+              <#list (facilities![]) as currFacility>
+                <#assign selected = rawString(currFacility.facilityId) == rawString(params.inventoryFacilityId!)>
+                <@facilityOption facility=currFacility selected=selected/>
+              </#list>
+            </#if>
+          </@field>
+          <#if productStoreFacilityMissing>
+            <@alert type="error">${uiLabelMap.SetupStoreMissingFacility}</@alert>
+          <#elseif !storeInventoryFacilityOk>
+            <@alert type="warning">${uiLabelMap.SetupInvalidFacilityForStore} (${inventoryFacility.facilityId})</@alert>
+          </#if>
+         </@field>
         
         <#-- NOTE: some of these use fixedParams, others use params, it is based on whether original
            form widget specified a hidden value="..." (fixedParams) or not (params) -->
@@ -87,7 +125,8 @@
         <@field type="hidden" name="title" value=(params.title!)/>
         <@field type="hidden" name="subtitle" value=(params.subtitle!)/>
         <@field type="hidden" name="payToPartyId" value=(fixedParams.payToPartyId!)/>
-        <@field type="hidden" name="inventoryFacilityId" value=(fixedParams.inventoryFacilityId!)/>
+        <#-- SCIPIO: need drop-down in case org has multiple facility
+        <@field type="hidden" name="inventoryFacilityId" value=(fixedParams.inventoryFacilityId!)/>-->
         <@field type="hidden" name="visualThemeId" value=(fixedParams.visualThemeId!)/>
         <@field type="hidden" name="manualAuthIsCapture" value=(fixedParams.manualAuthIsCapture!)/>
         <@field type="hidden" name="prorateShipping" value=(fixedParams.prorateShipping!)/>
@@ -157,6 +196,6 @@
         <@field type="hidden" name="inventoryFacilityAction" value=(inventoryFacilityAction!)/>
         <@field type="hidden" name="paymentList" value=(paymentList!)/><#-- SPECIAL: not a ProductStore field -->
         
-        <@field type="submit" title=uiLabelMap.CommonUpdate class="+${styles.link_run_sys} ${styles.action_update}"/>
+        <@field type="submit" text=uiLabelMap[(productStore??)?then('CommonUpdate', 'CommonSave')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>
     

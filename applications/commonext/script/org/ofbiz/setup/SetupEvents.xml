@@ -669,7 +669,7 @@
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="createDefaultWebSite" short-description="Create a WebSite, default webSiteId is WebStore.">
+    <simple-method method-name="createDefaultWebSite" short-description="Create a WebSite, default webSiteId is ScipioWebStore.">
         <!-- SCIPIO: don't override the webSiteId if one is passed
         <set field="parameters.webSiteId" value="ScipioWebStore"/>-->
         <set field="parameters.webSiteId" from-field="parameters.webSiteId" default-value="ScipioWebStore"/><!-- SCIPIO: new default value -->

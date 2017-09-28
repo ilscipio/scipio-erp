@@ -83,3 +83,10 @@
         cursor: default;
     }
 }
+
+// SCIPIO: 2017-09-27: styles for menu items that are equivalent to steps
+.side-nav li.menustep-complete > a:after {
+    content: " \2714";
+}
+
+

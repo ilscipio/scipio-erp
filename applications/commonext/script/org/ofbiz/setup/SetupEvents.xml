@@ -670,7 +670,7 @@
     </simple-method>
 
     <simple-method method-name="createDefaultWebSite" short-description="Create a WebSite, default webSiteId is WebStore.">
-        <set field="parameters.webSiteId" value="WebStore"/>
+        <set field="parameters.webSiteId" value="ScipioWebStore"/><!-- SCIPIO: new default value -->
         <call-service service-name="createWebSite" in-map-name="parameters"/>
     </simple-method>
 

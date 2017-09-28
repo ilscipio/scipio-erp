@@ -67,33 +67,64 @@ public abstract class SetupDataUtil {
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
+        String orgPartyId = (String) params.get("orgPartyId");        
         String userPartyId = (String) params.get("userPartyId");
-        if (UtilValidate.isNotEmpty(userPartyId)) {
-            Map<String, Object> fields = new HashMap<>();
-            fields.put("partyId", userPartyId);
-            GenericValue party = delegator.findOne("Party", fields, useCache);
-            if (UtilValidate.isNotEmpty(party)) {
-                GenericValue userUserLogin = EntityUtil.getFirst(party.getRelated("UserLogin", UtilMisc.toMap("partyId", userPartyId), null, false));
-                GenericValue userPerson = party.getRelatedOne("Person", false);
-                GenericValue postalAddress = PartyWorker.findPartyLatestPostalAddress(userPartyId, delegator);
-                GenericValue emailAddress = PartyWorker.findPartyLatestContactMech(userPartyId, "EMAIL_ADDRESS", delegator);
-                GenericValue telecomNumber = PartyWorker.findPartyLatestContactMech(userPartyId, "TELECOM_NUMBER", delegator);
-                
-                result.put("userUserLogin", userUserLogin);
-                result.put("userPerson", userPerson);
-                result.put("userPostalAddress", postalAddress);
-                result.put("userEmailAddress", emailAddress);
-                result.put("userTelecomNumber", telecomNumber);
-                
-                List<GenericValue> userPartyContactMechList = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userPartyId), null, false);
-                
-                result.put("userValid", true);
-                result.put("userPartyId", userPartyId);
-                result.put("userParty", party);
-                result.put("completed", true);
-            } else {
-                result.put("userValid", false);
+        
+        GenericValue party = null;        
+        if (UtilValidate.isNotEmpty(orgPartyId)) {
+            if (UtilValidate.isNotEmpty(userPartyId)) {                
+                party = delegator.findOne("Party", UtilMisc.toMap("partyId", userPartyId), useCache);
+                if (party != null) {
+                    List<GenericValue> partyRelationshipOwnerList = party.getRelated("ToPartyRelationship",
+                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO", "partyRelationshipTypeId", "OWNER"),
+                            UtilMisc.toList("fromDate DESC"), false);
+                    if (UtilValidate.isNotEmpty(partyRelationshipOwnerList)) {
+                        if (partyRelationshipOwnerList.size() > 1) {
+                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" 
+                                    + orgPartyId + "'", module);
+                        }
+                    } else {
+                        Debug.logError("Setup: User '" + userPartyId + "'" + " is not an owner of organization '" + orgPartyId + "'; ignoring", module);
+                        party = null;
+                    }
+                } else {
+                    Debug.logError("Setup: User '" + userPartyId + "' not found; ignoring", module);
+                }
+            } else if (!UtilMisc.booleanValueVersatile(params.get("newUser"), false)) {
+                GenericValue orgParty = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
+                if (orgParty != null) {
+                    List<GenericValue> partyRelationshipOwnerList = orgParty.getRelated("FromPartyRelationship",
+                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO", "partyRelationshipTypeId", "OWNER"),
+                            UtilMisc.toList("fromDate DESC"), false);
+                    if (UtilValidate.isNotEmpty(partyRelationshipOwnerList)) {
+                        if (partyRelationshipOwnerList.size() > 1) {
+                           Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" 
+                                    + orgPartyId + "'", module);
+                        }
+                        GenericValue partyRelationshipOwner = EntityUtil.getFirst(partyRelationshipOwnerList);
+                        party = partyRelationshipOwner.getRelatedOne("ToParty", false);
+                    }
+                }
             }
+        }
+        if (party != null) {
+            GenericValue userUserLogin = EntityUtil.getFirst(party.getRelated("UserLogin", UtilMisc.toMap("partyId", userPartyId), null, false));
+            GenericValue userPerson = party.getRelatedOne("Person", false);
+            GenericValue postalAddress = PartyWorker.findPartyLatestPostalAddress(userPartyId, delegator);
+            GenericValue emailAddress = PartyWorker.findPartyLatestContactMech(userPartyId, "EMAIL_ADDRESS", delegator);
+            GenericValue telecomNumber = PartyWorker.findPartyLatestContactMech(userPartyId, "TELECOM_NUMBER", delegator);
+
+            result.put("userUserLogin", userUserLogin);
+            result.put("userPerson", userPerson);
+            result.put("userPostalAddress", postalAddress);
+            result.put("userEmailAddress", emailAddress);
+            result.put("userTelecomNumber", telecomNumber);
+
+            List<GenericValue> userPartyContactMechList = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userPartyId), null, false);
+            
+            result.put("userPartyId", userPartyId);
+            result.put("userParty", party);
+            result.put("completed", true);       
         }
         return result;
     }

@@ -474,9 +474,9 @@
                                 <section>                                   
                                     <actions>
                                         <!-- fields for setDependentDropdownValuesJs.ftl -->
-                                        <set field="dependentForm" value="NewUser"/>
+                                        <!-- <set field="dependentForm" value="NewUser"/> -->
                                         <!-- SCIPIO: new field required as workaround for Ofbiz issue with form names -->
-                                        <set field="depFormFieldPrefix" value="NewUser_"/>
+                <!--                         <set field="depFormFieldPrefix" value="NewUser_"/>
                                         <set field="paramKey" value="countryGeoId"/>                                        
                                         <set field="mainId" value="USER_COUNTRY"/>
                                         <set field="dependentId" value="USER_STATE"/>
@@ -484,11 +484,11 @@
                                         <set field="responseName" value="stateList"/>
                                         <set field="dependentKeyName" value="geoId"/>
                                         <set field="descName" value="geoName"/>
-                                        <set field="selectedDependentOption" value="_none_"/>
+                                        <set field="selectedDependentOption" value="_none_"/> -->
                                     </actions>
                                     <widgets>
                                         <screenlet>
-                                        	<platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                        	<!-- <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific> -->
                                             <platform-specific><html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html></platform-specific>
                                         </screenlet>
                                     </widgets>                                    

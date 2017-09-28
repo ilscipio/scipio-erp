@@ -42,7 +42,19 @@
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
         <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
-        <field-to-request request-name="userPartyId" field="tempMap.partyId" />
+        
+        <if-not-empty field="tempMap.partyId">
+            <field-to-request request-name="userPartyId" field="tempMap.partyId" />
+
+            <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
+            <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
+            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" value="OWNER" />
+            <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" value="OWNER" />
+            <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" /> 
+            <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+            <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />            
+        </if-not-empty>
     </simple-method>
     
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">

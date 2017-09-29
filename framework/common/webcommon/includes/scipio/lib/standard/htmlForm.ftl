@@ -41,6 +41,7 @@ Defines a form. Analogous to <form> HTML element.
     type                    = (input|display, default: input) Form type
                               DEV NOTE: "display" is special for time being, probably rare or unused;
                                   maybe it should cause to omit <form> element
+    id                      = Form ID                              
     class                   = ((css-class)) CSS classes on form element itself
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -48,12 +49,19 @@ Defines a form. Analogous to <form> HTML element.
     attribs                 = ((map)) Extra attributes for HTML <form> element 
                               Needed for names containing dashes.
                               NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
+    validate                = ((boolean), default: -implicit-) If true, adds an explicit default validation script to the form (e.g. jQuery validate)
+                              NOTE: in many cases forms receive this automatically through submit button even if this is false (through global JS);
+                                  this is only needed in special cases.
+                              NOTE: only works if {{{id}}} or {{{name}}} present
     inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
                               NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
+                              
+  * History *
+    Added explicit validate option (1.14.4).
 -->
 <#assign form_defaultArgs = {
-  "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 
+  "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, "validate":"",
   "attribs":{}, "passArgs":{}
 }>
 <#macro form args={} inlineArgs...>
@@ -76,6 +84,9 @@ Defines a form. Analogous to <form> HTML element.
     <#local dummy = localsPutAll(stackValues)>
   </#if>
   <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
+  <#if validate?is_boolean && validate == true>
+      <@form_validate_markup type=type name=name id=id origArgs=origArgs passArgs=passArgs/>
+  </#if>
   <#if close>
     <#local dummy = popRequestStack("scipioFormInfoStack")>
   </#if>
@@ -91,6 +102,20 @@ Defines a form. Analogous to <form> HTML element.
       <#nested>
   <#if close>
     </form>
+  </#if>
+</#macro>
+
+<#-- @form validate script markup - theme override -->
+<#macro form_validate_markup type="" name="" id="" origArgs={} passArgs={} catchArgs...>
+  <#if id?has_content || name?has_content>
+    <@script>
+      <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js-html')}'])</#if>.validate({
+        submitHandler:
+          function(form) {
+            form.submit();
+          }
+      });
+    </@script>
   </#if>
 </#macro>
 

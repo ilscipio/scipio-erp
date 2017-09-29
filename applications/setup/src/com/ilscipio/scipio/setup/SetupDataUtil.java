@@ -83,9 +83,11 @@ public abstract class SetupDataUtil {
         String orgPartyId = (String) params.get("orgPartyId");        
         String userPartyId = (String) params.get("userPartyId");
         
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "User");
+        
         GenericValue party = null;        
         if (UtilValidate.isNotEmpty(orgPartyId)) {
-            if (UtilValidate.isNotEmpty(userPartyId)) {                
+            if (UtilValidate.isNotEmpty(userPartyId) && !isNewOrFailedCreate) {                
                 party = delegator.findOne("Party", UtilMisc.toMap("partyId", userPartyId), useCache);
                 if (party != null) {
                     List<GenericValue> partyRelationshipOwnerList = party.getRelated("ToPartyRelationship",
@@ -128,9 +130,11 @@ public abstract class SetupDataUtil {
             List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
                     fields, UtilMisc.toList("-fromDate"), useCache));
             
-            result.put("userUserLogin", userUserLogin);
-            result.put("userPerson", userPerson);            
-            result.put("userContactMechPurposeList", contactMechPurposes);
+            if (!isNewOrFailedCreate) {
+                result.put("userUserLogin", userUserLogin);
+                result.put("userPerson", userPerson);
+                result.put("userContactMechPurposeList", contactMechPurposes);
+            }
 
             Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
             boolean completed = true;
@@ -147,9 +151,11 @@ public abstract class SetupDataUtil {
                 completed = false;
             }
             
-            result.put("userPartyId", userPartyId);
-            result.put("userParty", party);
-            result.put("completed", completed);       
+            if (!isNewOrFailedCreate) {
+                result.put("userPartyId", userPartyId);
+                result.put("userParty", party);
+                result.put("completed", completed);
+            }
         }
         return result;
     }

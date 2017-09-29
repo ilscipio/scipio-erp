@@ -58,6 +58,44 @@
     </simple-method>
     
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
+        <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />
+        
+        <log level="always" message="parameters.USER_EMAIL_CONTACT_MECH_ID          =================> ${parameters.USER_EMAIL_CONTACT_MECH_ID}" />
+        <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID =================> ${parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID}" />
+        <log level="always" message="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID    =================> ${parameters.USER_WORK_NUMBER_CONTACT_MECH_ID}" />
+        <log level="always" message="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID  =================> ${parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID}" />
+        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />
+
+        <log level="always" message="personMap      =================> ${personMap}" />
+        <log level="always" message="emailMap       =================> ${emailMap}" />
+        <log level="always" message="personMap      =================> ${addressMap}" />
+        <log level="always" message="workPhoneMap   =================> ${workPhoneMap}" />
+        <log level="always" message="mobilePhoneMap =================> ${mobileMap}" />
+        <log level="always" message="faxPMap        =================> ${faxMap}" />
+        
+        <entity-one value-field="person" entity-name="Person"><field-map field-name="partyId" from-field="parameters.userPartyId"/></entity-one>
+        <entity-one value-field="postalAddress" entity-name="PostalAddress"><field-map field-name="contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID"/></entity-one>
+        
+        <call-simple-method method-name="validateUser"/>
+        
+        <if-not-empty field="addressChanged">
+        </if-not-empty>
+        <!-- see if we should continue now... -->
+        <!-- <check-errors/> -->
+        
+        
+        <if-compare operator="equals" value="" field=""></if-compare>
+        <set field="personMap.partyId" from-field="parameters.userPartyId" />
+        <call-service service-name="updatePerson" in-map-name="personMap" />        
+        
+        <set field="emailMap.contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID" />
+        <call-service service-name="updateEmailAddress" in-map-name="emailMap" />
+        
+        
+        <set field="addressMap.postalAddress" from-field="postalAddress" />
+        <call-service service-name="updatePostalAddress" in-map-name="addressMap" />
+        
+        
     </simple-method>
     
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
@@ -113,4 +151,128 @@
         </call-service>
         <check-errors/>
     </simple-method>
+    
+    
+    <simple-method method-name="validateUser" short-description="Validate User" login-required="false">
+        <!-- timestamp to be used -->
+        <now-timestamp field="nowStamp"/>
+
+        <!-- setup the party/person -->
+        <call-map-processor in-map-name="parameters" out-map-name="personMap">
+            <simple-map-processor name="person">
+                <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
+                <process field="USER_FIRST_NAME">
+                    <copy to-field="firstName"/>
+                    <not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty>
+                </process>
+                <process field="USER_LAST_NAME">
+                    <copy to-field="lastName"/>
+                    <not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty>
+                </process>
+            </simple-map-processor>
+        </call-map-processor>
+
+        <!-- setup the email -->
+        <call-map-processor in-map-name="parameters" out-map-name="emailMap">
+            <simple-map-processor name="email">
+                <process field="USER_EMAIL_ADDRESS">
+                    <copy to-field="infoString"/>
+                    <validate-method method="isEmail"><fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></validate-method>
+                </process>
+                <process field="USER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+
+        <!-- setup the Postal Address -->
+        <call-map-processor in-map-name="parameters" out-map-name="addressMap" error-list-name="addressChanged">
+            <simple-map-processor name="address">
+                <process field="USER_ADDRESS1">
+                    <compare-field operator="not-equals" field="postalAddress.address1"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="address1"/>                    
+                    <not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1MissingError"/></not-empty>
+                </process>
+                <process field="USER_ADDRESS2">
+                    <compare-field operator="not-equals" field="postalAddress.address2"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="address2" />
+                </process>
+                <process field="USER_CITY">
+                    <compare-field operator="not-equals" field="postalAddress.city"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="city"/>
+                    <not-empty><fail-property resource="PartyUiLabels" property="PartyCityMissing"/></not-empty>
+                </process>
+                <process field="USER_STATE">
+                    <compare-field operator="not-equals" field="postalAddress.stateProvinceGeoId"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="stateProvinceGeoId"/>
+                </process>
+                <process field="USER_POSTAL_CODE">
+                    <compare-field operator="not-equals" field="postalAddress.stateProvinceGeoId"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="postalCode"/>
+                    <not-empty><fail-property resource="PartyUiLabels" property="PartyZipCodeMissing"/></not-empty>
+                </process>
+                <process field="USER_COUNTRY">
+                    <compare-field operator="not-equals" field="postalAddress.countryGeoId"><fail-message message="addressDiffers"/></compare-field>
+                    <copy to-field="countryGeoId"/>
+                    <not-empty><fail-property resource="CommonUiLabels" property="CommonCountryMissing"/></not-empty>
+                </process>
+                <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <!-- <if-compare value="USA" operator="equals" field="parameters.countryGeoId">
+            <if-empty field="parameters.stateProvinceGeoId">
+                <add-error>
+                    <fail-property resource="PartyUiLabels" property="PartyStateInUsMissing"/>
+                </add-error>
+            </if-empty>
+        </if-compare>
+        <if-compare value="CAN" operator="equals" field="parameters.countryGeoId">
+            <if-empty field="parameters.stateProvinceGeoId">
+                <add-error>
+                    <fail-property resource="PartyUiLabels" property="PartyProvinceInCanadaMissing"/>
+                </add-error>
+            </if-empty>
+        </if-compare> -->
+
+        <!-- Setup the Work Phone -->
+        <call-map-processor in-map-name="parameters" out-map-name="workPhoneMap">
+            <simple-map-processor name="workPhone">
+                <process field="USER_WORK_COUNTRY"><copy to-field="countryCode"/></process>
+                <process field="USER_WORK_AREA"><copy to-field="areaCode"/></process>
+                <process field="USER_WORK_CONTACT">
+                    <copy to-field="contactNumber"/>
+                    <!-- <not-empty><fail-property resource="PartyUiLabels" property="PartyWorkPhoneContactNumberMissing"/></not-empty> -->
+                </process>
+                <process field="USER_WORK_EXT"><copy to-field="extension"/></process>
+                <process field="USER_WORK_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+
+        <!-- Setup the Mobile Phone -->
+        <call-map-processor in-map-name="parameters" out-map-name="mobileMap">
+            <simple-map-processor name="mobile">
+                <process field="USER_MOBILE_COUNTRY"><copy to-field="countryCode"/></process>
+                <process field="USER_MOBILE_AREA"><copy to-field="areaCode"/></process>
+                <process field="USER_MOBILE_CONTACT">
+                    <copy to-field="contactNumber"/>
+                    <!-- <not-empty><fail-property resource="PartyUiLabels" property="PartyMobilePhoneContactNumberMissing"/></not-empty> -->
+                </process>
+                <process field="USER_MOBILE_EXT"><copy to-field="extension"/></process>
+                <process field="USER_MOBILE_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        
+        <!-- Setup the Mobile Phone -->
+        <call-map-processor in-map-name="parameters" out-map-name="faxMap">
+            <simple-map-processor name="fax">
+                <process field="USER_FAX_COUNTRY"><copy to-field="countryCode"/></process>
+                <process field="USER_FAX_AREA"><copy to-field="areaCode"/></process>
+                <process field="USER_FAX_CONTACT">
+                    <copy to-field="contactNumber"/>                    
+                    <!-- <not-empty><fail-property resource="PartyUiLabels" property="PartyFaxPhoneContactNumberMissing"/></not-empty> -->
+                </process>
+                <process field="USER_FAX_EXT"><copy to-field="extension"/></process>
+                <process field="USER_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+    </simple-method>
+    
 </simple-methods>

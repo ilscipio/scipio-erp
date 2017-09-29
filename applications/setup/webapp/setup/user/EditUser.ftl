@@ -90,39 +90,46 @@ under the License.
     
 
 <@form method="post" action=makeOfbizUrl(target) id="NewUser" name="NewUser">
-    <@defaultWizardFormFields/>
+    <@defaultWizardFormFields exclude=["userPartyId"] />
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
+    
+    <#if userParty??>
+        <@field type="hidden" name="userPartyId" value=(params.userPartyId!)/>
+    </#if>
 
 	<@row>
 	  <@cell columns=6>
     	  <fieldset>
     	    <legend>${uiLabelMap.SetupAccountInformation}</legend>
-    	    
-    	    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(userEmailAddress.infoString!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true />
-    	    <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
     	
     	    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      
     	        <#macro extraFieldContent args={}>	          
     	          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
     	        </#macro>
     	        <#assign fieldStyle = "">    	        
-    	        <#if userUserLogin?has_content>
+    	        <#if !userUserLogin?has_content>
     	           <#if ((parameters.UNUSEEMAIL!) == "on")>
                       <#assign fieldStyle = "display:none;">
                     </#if>
     	           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(userUserLogin.userLoginId!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
     	        <#else>
-    	           <@field type="display" name="USERNAME" id="USERNAME" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername required=true  />
+    	           <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
+    	           <@field type="hidden" name="USERNAME" value=(userUserLogin.userLoginId!)/>
     	        </#if>    	      
     	    </#if>
     	
     	    <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
-    	      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=userUserLogin?has_content />      
-    	      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=userUserLogin?has_content />		      
+    	      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!userUserLogin?has_content)!true />      
+    	      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!userUserLogin?has_content)!true />		      
     	    <#else>
     	      <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     	    </#if>
+            <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(userEmailAddress.infoString!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true />            
+            <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
+            <#if userEmailAddress?has_content>
+                <@field type="hidden" name="USER_EMAIL_CONTACT_MECH_ID" value=(userEmailAddress.contactMechId!)/>
+            </#if>    	    
     	  </fieldset>
 	  </@cell>
 	
@@ -161,7 +168,7 @@ under the License.
                   }/>
             <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>
             <#if userPostalAddress?has_content>
-                <@field type="hidden" name="userPostalAddressContactMechId" value=(userPostalAddress.contactMechId!)/>
+                <@field type="hidden" name="USER_POSTAL_ADDRESS_CONTACT_MECH_ID" value=(userPostalAddress.contactMechId!)/>
             </#if>
     	  </fieldset>
 	  </@cell>
@@ -174,7 +181,7 @@ under the License.
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>
                     <#if userWorkNumber?has_content>
-                        <@field type="hidden" name="userWorkNumberContactMechId" value=(userWorkNumber.contactMechId!)/>
+                        <@field type="hidden" name="USER_WORK_NUMBER_CONTACT_MECH_ID" value=(userWorkNumber.contactMechId!)/>
                     </#if>
                   </@fields>
                 </@telecomNumberField>
@@ -184,7 +191,7 @@ under the License.
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>
                     <#if userMobileNumber?has_content>
-                        <@field type="hidden" name="userMobileNumberContactMechId" value=(userMobileNumber.contactMechId!)/>
+                        <@field type="hidden" name="USER_MOBILE_NUMBER_CONTACT_MECH_ID" value=(userMobileNumber.contactMechId!)/>
                     </#if>
                   </@fields>
                 </@telecomNumberField>
@@ -194,7 +201,7 @@ under the License.
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>
                     <#if userFaxNumber?has_content>
-                        <@field type="hidden" name="userFaxNumberContactMechId" value=(userFaxNumber.contactMechId!)/>
+                        <@field type="hidden" name="USER_FAX_NUMBER_CONTACT_MECH_ID" value=(userFaxNumber.contactMechId!)/>
                     </#if>
                   </@fields>
                 </@telecomNumberField>

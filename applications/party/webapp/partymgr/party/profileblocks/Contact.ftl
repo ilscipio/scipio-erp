@@ -19,6 +19,7 @@ under the License.
 
 <#-- SCIPIO: 2017-09-29: this can be set to show non-interactive details info; and title -->
 <#assign partyInfoViewOnly = partyInfoViewOnly!false>
+<#assign partyInfoSimpleFuncOnly = partyInfoSimpleFuncOnly!false>
 <#assign partyContactInfoTitle = partyContactInfoTitle!uiLabelMap.PartyContactInformation>
 <#assign partyContactInfoUseSection = partyContactInfoUseSection!true>
 
@@ -92,7 +93,7 @@ under the License.
                 <#elseif "EMAIL_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
-                  <#if !partyInfoViewOnly>
+                  <#if !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
                     <#assign emailFormName = 'createEmail${contactMech.infoString?replace("&#64;","")?replace("&#x40;","")?replace(".","")?replace("@","")}'>
                     <form method="post" action="<@ofbizUrl>NewDraftCommunicationEvent</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${emailFormName}">
                       <#if userLogin.partyId?has_content>
@@ -119,7 +120,7 @@ under the License.
                 <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate})</div>
                 <#if partyContactMech.thruDate?has_content><div><b>${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${partyContactMech.thruDate}</b></div></#if>
                 <#-- create cust request -->
-                <#if custRequestTypes?? && !partyInfoViewOnly>
+                <#if custRequestTypes?? && !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
                   <form name="createCustRequestForm" action="<@ofbizUrl>createCustRequest</@ofbizUrl>" method="post" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input type="hidden" name="partyId" value="${partyId}"/>
                     <input type="hidden" name="fromPartyId" value="${partyId}"/>

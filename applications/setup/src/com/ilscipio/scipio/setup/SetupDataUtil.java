@@ -15,8 +15,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.party.content.PartyContentWrapper;
-import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -37,9 +35,21 @@ public abstract class SetupDataUtil {
      * *******************************************
      */
 
-    // WARN: params map may contain unvalidated user input - others in the map may be already validated.
-    // The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
-    // DO NOT call these methods from screen - all must go through SetupWorker.
+    /*
+     * These serve as partial substitutes for the screen groovy scripts.
+     * 
+     * These methods return 2-3 different things at the same time (TODO: maybe separate in future; combined for performance reasons):
+     * * the "completed" state boolean (always)
+     * * generic queries needed for all screens
+     * * the requested object (facility/store/etc) if explicit ID requested OR a default if none requested
+     *   -> if the ID requested is invalid or inapplicable (new/create), the method must NOT return
+     *      any main record (facility/store/etc), but it must still evaluate the "completed" boolean.
+     *      it may return extra records if needed (e.g. defaultFacility)
+     *      
+     * WARN: params map may contain unvalidated user input - others in the map may be already validated.
+     * The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
+     * DO NOT call these methods from screen - all must go through SetupWorker.
+     */
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
@@ -47,7 +57,9 @@ public abstract class SetupDataUtil {
 
         String orgPartyId = (String) params.get("orgPartyId");
 
-        if (UtilValidate.isNotEmpty(orgPartyId)) {
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Organization");
+        
+        if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
             Map<String, Object> fields = new HashMap<>();
             fields.put("roleTypeId", "INTERNAL_ORGANIZATIO");
             fields.put("partyId", orgPartyId);
@@ -60,6 +72,7 @@ public abstract class SetupDataUtil {
                 result.put("partyValid", false);
             }
         }
+
         return result;
     }
 
@@ -158,14 +171,18 @@ public abstract class SetupDataUtil {
         String orgPartyId = (String) params.get("orgPartyId");
         String productStoreId = (String) params.get("productStoreId");
 
+        // if new or failed create, we must still determine if overall "completed", but we cannot return
+        // a specific facility ID - see the result map assignments below
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Facility");
+        
         GenericValue facility = null;
         if (UtilValidate.isNotEmpty(orgPartyId)) {
-            if (UtilValidate.isNotEmpty(facilityId)) {
+            if (UtilValidate.isNotEmpty(facilityId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
                 // filter by owner to prevent editing other companies's facilities
                 facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), useCache);
                 if (facility != null) {
                     if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
-                        ;
+                        ; // ok
                     } else {
                         Debug.logError("Setup: Facility '" + facilityId + "' does not belong to organization '" + orgPartyId + "'; ignoring", module);
                         facility = null;
@@ -173,7 +190,7 @@ public abstract class SetupDataUtil {
                 } else {
                     Debug.logError("Setup: Facility '" + facilityId + "' not found; ignoring", module);
                 }
-            } else if (!UtilMisc.booleanValueVersatile(params.get("newFacility"), false)) {
+            } else {
                 if (UtilValidate.isNotEmpty(productStoreId)) {
                     // this case selects the best facility for the passed store
                     // TODO: REVIEW: this is not reusing the getStoreStepStateData for now because
@@ -186,10 +203,7 @@ public abstract class SetupDataUtil {
                                 facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), useCache);
                                 if (facility != null) {
                                     if (orgPartyId.equals(facility.getString("ownerPartyId"))) {
-                                        result.put("facilityId", facility.getString("facilityId"));
-                                        result.put("facility", facility);
-                                        result.put("completed", true);
-                                        return result;
+                                        ; // ok
                                     } else {
                                         Debug.logError("Setup: Warehouse '" + facilityId + "'" 
                                                 + " does not belong to organization '" 
@@ -226,13 +240,17 @@ public abstract class SetupDataUtil {
         }
         if (facility != null) {
             facilityId = facility.getString("facilityId");
-            result.put("facilityId", facilityId);
-            result.put("facility", facility);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("facilityId", facilityId);
+                result.put("facility", facility);
+            }
 
             Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
             List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", 
                     fields, UtilMisc.toList("-fromDate"), useCache));
-            result.put("facilityContactMechPurposeList", contactMechPurposes);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("facilityContactMechPurposeList", contactMechPurposes);
+            }
 
             Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
             boolean completed = true;
@@ -256,33 +274,40 @@ public abstract class SetupDataUtil {
         String productStoreId = (String) params.get("productStoreId");
         String prodCatalogId = (String) params.get("prodCatalogId");
 
-        boolean specCatalog = false;
-
-        Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
-        if (UtilValidate.isNotEmpty(prodCatalogId)) {
-            fields.put("prodCatalogId", prodCatalogId);
-            specCatalog = true;
-        }
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Catalog");
+        
         List<GenericValue> productStoreCatalogList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreCatalog", 
-                fields, UtilMisc.toList("sequenceNum ASC"), useCache));
+                UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum ASC"), useCache));
         result.put("productStoreCatalogList", productStoreCatalogList);
-
-        GenericValue productStoreCatalog = EntityUtil.getFirst(productStoreCatalogList);
-        if (productStoreCatalog != null) {
-            prodCatalogId = productStoreCatalog.getString("prodCatalogId");
-
-            if (!specCatalog && productStoreCatalogList.size() >= 2) {
-                Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('" + prodCatalogId + "') for setup"
-                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
-                        prodCatalogId);
+        
+        GenericValue productStoreCatalog = null;
+        if (UtilValidate.isNotEmpty(prodCatalogId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
+            List<GenericValue> filteredList = EntityUtil.filterByAnd(productStoreCatalogList, UtilMisc.toMap("prodCatalogId", prodCatalogId));
+            productStoreCatalog = EntityUtil.getFirst(filteredList);
+            if (productStoreCatalog == null) {
+                Debug.logError("Setup: Could not find catalog '" + prodCatalogId + "' for store '" + productStoreId + "'", module);
             }
-
+        } else {
+            productStoreCatalog = EntityUtil.getFirst(productStoreCatalogList);
+            if (productStoreCatalogList.size() >= 2) {
+                Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('" 
+                        + productStoreCatalog.getString("prodCatalogId") + "') as default for setup"
+                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
+                        productStoreCatalog.getString("prodCatalogId"));
+            } else if (productStoreCatalogList.size() == 0) {
+                Debug.logInfo("Setup: Store '" + productStoreId + "' has no active catalog", module);
+            }
+        }
+        
+        if (productStoreCatalog != null) {
             GenericValue prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", useCache);
-
-            result.put("productStoreCatalog", productStoreCatalog);
-            result.put("prodCatalog", prodCatalog);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("productStoreCatalog", productStoreCatalog);
+                result.put("prodCatalog", prodCatalog);
+            }
             result.put("completed", true);
         }
+        
         return result;
     }
 
@@ -293,8 +318,10 @@ public abstract class SetupDataUtil {
         String productStoreId = (String) params.get("productStoreId");
         String orgPartyId = (String) params.get("orgPartyId");
 
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Store");
+        
         GenericValue productStore = null;
-        if (UtilValidate.isNotEmpty(productStoreId)) {
+        if (UtilValidate.isNotEmpty(productStoreId) && !isNewOrFailedCreate) { // ignore ID if new or failed create
             if (UtilValidate.isNotEmpty(orgPartyId)) {
                 Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "payToPartyId", orgPartyId);
                 List<GenericValue> productStores = delegator.findByAnd("ProductStore", fields, null, useCache);
@@ -304,7 +331,7 @@ public abstract class SetupDataUtil {
             } else {
                 // we'll require a non-null orgPartyId here to simplify, so both parameters should be passed around
             }
-        } else if (!UtilMisc.booleanValueVersatile(params.get("newStore"), false)) {
+        } else {
             // Unless asked to create a new store, read the first store by default;
             // in majority cases clients will create one store per company, so this saves some reloading.
             if (UtilValidate.isNotEmpty(orgPartyId)) {
@@ -315,7 +342,7 @@ public abstract class SetupDataUtil {
                     if (productStores.size() >= 2) {
                         Debug.logInfo("Setup: Organization '" + orgPartyId 
                             + "' has multiple ProductStores (" + productStores.size()
-                            + "); auto-selecting first for the setup process (productStoreId: "
+                            + "); assume first as default for the setup process (productStoreId: "
                             + productStore.getString("productStoreId") + ")", module);
                     }
                 }
@@ -324,8 +351,10 @@ public abstract class SetupDataUtil {
 
         if (productStore != null) {
             productStoreId = productStore.getString("productStoreId");
-            result.put("productStoreId", productStoreId);
-            result.put("productStore", productStore);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("productStoreId", productStoreId);
+                result.put("productStore", productStore);
+            }
 
             String facilityId = productStore.getString("inventoryFacilityId");
             if (UtilValidate.isNotEmpty(facilityId)) {
@@ -341,7 +370,9 @@ public abstract class SetupDataUtil {
             } else {
                 Debug.logWarning("Setup: ProductStore '" + productStoreId + "' has no inventoryFacilityId field; treating store as incomplete", module);
             }
-            result.put("facilityId", facilityId);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("facilityId", facilityId);
+            }
         }
         return result;
     }
@@ -351,12 +382,18 @@ public abstract class SetupDataUtil {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         String productStoreId = (String) params.get("productStoreId");
-
+        
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Website");
+        
+        GenericValue webSite = null;
         Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
-        GenericValue webSite = getFirstMaxOneExpected(delegator.findByAnd("WebSite", fields, null, useCache), fields);
+        webSite = getFirstMaxOneExpected(delegator.findByAnd("WebSite", fields, null, useCache), fields);
+        
         if (webSite != null) {
-            result.put("webSiteId", webSite.getString("webSiteId"));
-            result.put("webSite", webSite);
+            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+                result.put("webSiteId", webSite.getString("webSiteId"));
+                result.put("webSite", webSite);
+            }
             result.put("completed", true);
         }
         return result;
@@ -386,5 +423,41 @@ public abstract class SetupDataUtil {
                 out.add(str);
         }
         return out;
+    }
+    
+    private static boolean isEventError(Map<String, Object> params) {
+        return SetupEvents.isPreviousEventSavedError(params);
+    }
+    
+    /**
+     * Returns true if "new" form was requested 
+     * OR if a form was submitted as create and creation failed
+     * OR it's a delete request.
+     * <p>
+     * For second case, if create form was submitted with a specific ID requested but error because the ID already exists, 
+     * we don't want the page to look up existing, because it discards the user input.
+     * <p>
+     * newXxx: passed when loading the page/form
+     * isCreateXxx: passed with form submit
+     * isDeleteXxx: passed with delete form submit
+     */
+    static boolean isUnspecificRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        //stepName = stepName.substring(0, 1).toUpperCase() + stepName.substring(1);
+        
+        return isNewRecordRequest(params, stepNameCamel) || 
+                isFailedCreateRecordRequest(params, stepNameCamel) || 
+                isDeleteRecordRequest(params, stepNameCamel);
+    }
+    
+    static boolean isNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("new" + stepNameCamel), false);
+    }
+    
+    static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false) && isEventError(params);
+    }
+    
+    static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
     }
 }

@@ -25,7 +25,7 @@
             <!-- SCIPIO: link to wizard with no parameters for now so goes to create new org
             <link target="initialsetup"/>-->
             <link target="setupWizard">
-                <parameter param-name="newOrg" value="true"/>
+                <parameter param-name="newOrganization" value="Y"/>
             </link>
         </menu-item>
         <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">

@@ -597,6 +597,26 @@
                             </condition>
                             <widgets>
                                 <screenlet>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="prodCatalog"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <platform-specific>
+                                                <html><html-template><![CDATA[
+                                                  <#include "component://setup/webapp/setup/common/common.ftl">
+                                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id="setupCatalog-newCatalog">
+                                                    <@defaultWizardFormFields exclude=["prodCatalogId"]/>
+                                                    <@field type="hidden" name="setupAdvance" value="N"/>
+                                                    <@field type="hidden" name="newCatalog" value="Y"/>
+                                                  </@form>
+                                                  <@menu type="button">
+                                                    <@menuitem type="link" href="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);" text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                                  </@menu>
+                                                ]]></html-template></html>
+                                            </platform-specific>
+                                        </widgets>
+                                    </section>
                                     <!-- redundant
                                     <section>
                                         <condition><not><if-empty field="prodCatalog"/></not></condition>
@@ -604,7 +624,13 @@
                                             <label style="heading+2">${uiLabelMap.ProductCatalog}: "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
                                         </widgets>
                                     </section>-->
-                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
+                                    <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                                <screenlet>
+                                    <include-screen name="ListCatalogs"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -613,6 +639,21 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListCatalogs">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    productStoreCatalogList = catalogData.productStoreCatalogList;
+                    context.productStoreCatalogList = productStoreCatalogList;
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/ListCatalogs.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -668,7 +709,7 @@
                 <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
                 -->
-                <set field="webSite" from-field="websiteData.webSite"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWebsite.groovy"/>
                 
                 <set field="titleProperty" value="${groovy: context.productStore != null ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
                 <set field="target" value="${groovy: context.webSite != null ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
@@ -683,7 +724,10 @@
                             <widgets>
                                 <screenlet>
                                     <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
-                                    <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
+                                    <!--<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/website/EditWebsite.ftl"/></html>
+                                    </platform-specific>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>

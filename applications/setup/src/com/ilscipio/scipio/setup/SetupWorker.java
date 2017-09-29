@@ -420,10 +420,14 @@ public abstract class SetupWorker implements Serializable {
      * NOTE: Upon review, screens don't need to call this (only events); they set a context var and just
      * need to validate it with {@link #isStepEffectiveSafe}.
      * <p>
+     * If submitted step is used, whether to stay or go to next step is controlled by the
+     * <code>setupAdvance=Y/N</code> request parameter (default: Y).
+     * <p>
      * @param useRequested if TRUE check requested and error if invalid; if FALSE ignore requested; 
      *                     if null check requested but fallback if invalid
-     * @param useSubmitted if TRUE or null check submitted step and return the next step; if FALSE ignore submitted
-     *                     if the next step is not accessible, it returns the next auto-determined step that must be filled
+     * @param useSubmitted if TRUE or null check submitted step and return the next step (depending on setupAdvance Y/N parameter; 
+     *                     if FALSE ignore submitted;
+     *                     if the next step is not accessible, returns the next auto-determined step that must be filled
      * @param updateEffective if TRUE always update effective even if exception (sets "error"); if FALSE never update;
      *                        if null only update if non-exception
      * @see #getSubmittedStep()
@@ -484,6 +488,11 @@ public abstract class SetupWorker implements Serializable {
     public abstract boolean isAllStepsCompleted();
     
     public abstract List<String> getIncompleteSteps();
+    
+    public abstract boolean isNewRecordRequest(String step);
+    public abstract boolean isFailedCreateRecordRequest(String step);
+    public abstract boolean isDeleteRecordRequest(String step);
+    public abstract boolean isUnspecificRecordRequest(String step);
     
     /* 
      * *******************************************
@@ -595,7 +604,22 @@ public abstract class SetupWorker implements Serializable {
         public List<String> getIncompleteSteps() {
             throw new UnsupportedOperationException(); // TODO?
         }
-        
+        @Override
+        public boolean isNewRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isFailedCreateRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isDeleteRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isUnspecificRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
         protected static class StaticStepState extends StepState { // WARN: this one MUST be static
             protected String name;
             // NOTE: are boxed types instead of primitives due to reuse for caching
@@ -802,12 +826,21 @@ public abstract class SetupWorker implements Serializable {
                 // because this is part of the automatic process
                 String submittedStep = getSubmittedStep();
                 if (UtilValidate.isNotEmpty(submittedStep)) {
-                    String nextStep = getStepAfter(submittedStep);
-                    if (isStepAllowed(nextStep)) return nextStep;
-                    else {
-                        Debug.logInfo("Setup: The next setup step (" + nextStep + ") after the "
-                                + " submitted step (" + submittedStep + ") is not accessible"
-                                + "; returning auto-determined next step instead", module);
+                    if (Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(getParams().get("setupAdvance")))) {
+                        if (isStepAllowed(submittedStep)) return submittedStep;
+                        else {
+                            Debug.logWarning("Setup: The submitted setup step (" + submittedStep
+                                    + ") is not re-accessible for some reason"
+                                    + "; returning auto-determined next step instead", module);
+                        }
+                    } else {
+                        String nextStep = getStepAfter(submittedStep);
+                        if (isStepAllowed(nextStep)) return nextStep;
+                        else {
+                            Debug.logInfo("Setup: The next setup step (" + nextStep + ") after the "
+                                    + " submitted step (" + submittedStep + ") is not accessible"
+                                    + "; returning auto-determined next step instead", module);
+                        }
                     }
                 }
             }
@@ -987,6 +1020,23 @@ public abstract class SetupWorker implements Serializable {
                 if (!stepState.isCompleted()) missing.add(stepState.getName());
             }
             return Collections.unmodifiableList(missing);
+        }
+        
+        @Override
+        public boolean isNewRecordRequest(String step) {
+            return SetupDataUtil.isNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
+        public boolean isFailedCreateRecordRequest(String step) {
+            return SetupDataUtil.isFailedCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
+        public boolean isDeleteRecordRequest(String step) {
+            return SetupDataUtil.isDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
+        public boolean isUnspecificRecordRequest(String step) {
+            return SetupDataUtil.isUnspecificRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
         
         /* 

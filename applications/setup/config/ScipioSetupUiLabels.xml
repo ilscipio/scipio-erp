@@ -23,10 +23,6 @@
           component://commonext/config/SetupUiLabels.xml 
         for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
         WARN: both files share the same Setup* prefix for label names; beware overriding. (same issue occurred with filename) -->
-    <property key="SetupDummyLabel">
-        <value xml:lang="en">Dummy Label</value>
-        <value xml:lang="de">Dummy Label</value>
-    </property>
     <property key="SetupCompleteMsg">
         <value xml:lang="en">All setup steps completed. Setup Complete!</value>
         <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
@@ -41,21 +37,6 @@
         <value xml:lang="en">Some functionality may be impaired until these steps are completed.</value>
         <value xml:lang="de">Einige Funktionalitäten können beeinträchtigt werden, wenn diese Schritte nicht abgeschlossen sind.</value>
         <value xml:lang="fr">Certaines fonctionnalités peuvent être compromises à moins que ces étapes ne soient terminées.</value>
-    </property>
-    <property key="SetupErrorStepNotAccessible">
-        <value xml:lang="en">Setup step unavailable - Please complete previous setup steps first.</value>
-        <value xml:lang="de">Setup-Schritt nicht verfügbar - Bitte vorherige Setup-Schritte ausfüllen.</value>
-        <value xml:lang="fr">L'étape de configuration n'est pas disponible - Veuillez compléter d'abord les étapes de configuration précédentes.</value>
-    </property>
-    <property key="SetupError">
-        <value xml:lang="en">Setup error</value>
-        <value xml:lang="de">Setup-Fehler</value>
-        <value xml:lang="fr">Erreur durant la configuration</value>
-    </property>
-    <property key="SetupErrorOccurredInfo">
-        <value xml:lang="en">An error occured during Setup. Please review the error, try restarting the wizard using the link below, or contact support.</value>
-        <value xml:lang="de">Beim Setup ist ein Fehler aufgetreten. Bitte überprüfen Sie den Fehler, versuchen Sie, den Assistenten mit dem unten stehenden Link neu zu starten, oder wenden Sie sich an den Support.</value>
-        <value xml:lang="fr">Une erreur s'est produite pendant le programme d'installation. Veuillez examiner l'erreur, essayez de redémarrer l'assistant en utilisant le lien ci-dessous ou contactez l'assistance.</value>
     </property>
     <property key="SetupSettingUp">
         <value xml:lang="en">Setting up</value>
@@ -82,19 +63,9 @@
         <value xml:lang="de">Überspringen</value>
         <value xml:lang="fr">Sauter</value>
     </property>
-    <property key="SetupInvalidFacilityForStore">
-        <value xml:lang="en">Warehouse currently configured is invalid for this store. It may belong to the wrong organization or other problem.</value>
-        <value xml:lang="de">Das derzeit konfigurierte Warehouse ist für diesen Speicher ungültig. Es kann zu der falschen Organisation oder einem anderen Problem gehören.</value>
-        <value xml:lang="fr">L'entrepôt actuellement configuré n'est pas valable pour ce magasin. Il peut appartenir à une mauvaise organisation ou à un autre problème.</value>
-    </property>
-    <property key="SetupNoAddressOrganizationSetupIncomplete">
-        <value xml:lang="en">No postal address available to use; please complete organization setup first.</value>
-        <value xml:lang="de">Keine Postanschrift vorhanden bitte zuerst die Einrichtung des Unternehmens ausfüllen.</value>
-        <value xml:lang="fr">Aucune adresse postale disponible pour l'utilisation; veuillez compléter la configuration de l'organisation en premier.</value>
-    </property>
-    <property key="SetupStoreMissingFacility">
-        <value xml:lang="en">Store record is missing a facility. Setup may fail until a facility is created and assigned.</value>
-        <value xml:lang="de">Store-Rekord fehlt eine Anlage. Setup kann fehlschlagen, bis eine Einrichtung erstellt und zugewiesen wird.</value>
-        <value xml:lang="fr">Le dossier de magasin manque d'une installation. Le programme d'installation peut échouer jusqu'à ce qu'une installation soit créée et attribuée.</value>
+    <property key="SetupCatalogStoreAssocRemoved">
+        <value xml:lang="en">Catalog and store association successfully removed.</value>
+        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
+        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
     </property>
 </resource>

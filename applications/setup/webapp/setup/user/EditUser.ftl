@@ -99,6 +99,9 @@ under the License.
 
 <@form method="post" action=makeOfbizUrl(target) id="NewUser" name="NewUser">
     <@defaultWizardFormFields/>
+    <#-- TODO
+    <@field type="hidden" name="isCreateUser" value=(XXXXXX??)?string("N","Y")/>
+    -->
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
 
 	<@row>

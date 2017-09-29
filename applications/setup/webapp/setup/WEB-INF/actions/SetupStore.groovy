@@ -1,3 +1,4 @@
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
 
 facilityData = context.facilityData ?: [:];

@@ -1,4 +1,7 @@
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
+
+final module = "SetupFacility.groovy";
 
 facilityData = context.facilityData ?: [:];
 
@@ -35,6 +38,12 @@ context.facilityContactMechsByPurpose = facilityContactMechsByPurpose;
 context.facilityContactMechsById = facilityContactMechsById;
 context.facilityContactMechs = facilityContactMechsById.values() as List;
 context.facilityContactMechPurposes = facilityContactMechPurposes;
+
+if (facility != null) {
+    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "' with contact mechs and purposes: " + facilityContactMechPurposes, module);
+} else {
+    Debug.logInfo("Setup: Setting up new warehouse", module);
+}
 
 listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
 partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));

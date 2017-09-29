@@ -8,14 +8,16 @@
     "USER_EMAIL_ALLOW_SOL": "Y"
 }>
 <#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":true,
-    "defaults":defaultParams
+    "record":partyGroup!true,
+    "defaults":defaultParams,
+    "strictRecord":false <#-- may be extra fields not on partyGroup -->
 })>
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
     <@form id="EditOrganization" name="EditOrganization" action=makeOfbizUrl(target) method="post">
         <@defaultWizardFormFields exclude=["orgPartyId", "partyId"]/><#-- these will conflict with SetupWorker -->
+        <@field type="hidden" name="isCreateOrganization" value=(partyGroup??)?string("N","Y")/>
         
       <#if party??>
         <@field type="display" name="partyId" value=(params.partyId!) label=uiLabelMap.PartyPartyId />
@@ -111,5 +113,5 @@
         
       </#if>
         
-        <@field type="submit" text=uiLabelMap[(party??)?then('CommonUpdate', 'CommonSave')] class="+${styles.link_run_sys} ${styles.action_update}"/>
+        <@field type="submit" text=uiLabelMap[(party??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>

@@ -72,7 +72,8 @@
 
     <@form id="EditProductStore" action=makeOfbizUrl(target) method="post">
         <@defaultWizardFormFields exclude=["productStoreId"]/>
-
+        <@field type="hidden" name="isCreateStore" value=(productStore??)?string("N","Y")/>
+        
       <#if productStore??>
         <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore value=(params.productStoreId!)/>
         <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> 
@@ -196,6 +197,6 @@
         <@field type="hidden" name="inventoryFacilityAction" value=(inventoryFacilityAction!)/>
         <@field type="hidden" name="paymentList" value=(paymentList!)/><#-- SPECIAL: not a ProductStore field -->
         
-        <@field type="submit" text=uiLabelMap[(productStore??)?then('CommonUpdate', 'CommonSave')] class="+${styles.link_run_sys} ${styles.action_update}"/>
+        <@field type="submit" text=uiLabelMap[(productStore??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>
     

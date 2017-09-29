@@ -67,11 +67,16 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     <#local values = toSimpleMap(parameters)>
     <#local fixedValues = defaults><#-- this is stock ofbizsetup behavior -->
   <#else>
-    <#if recordIsContext && !(useReqParams?is_boolean && useReqParams == false)>
-      <#-- SPECIAL: this allows to pre-fill some fields when accessing New/Create screen initially -->
-      <#local values = toSimpleMap(parameters) + record>
+    <#if recordIsContext>
+      <#-- when (record==context gotten from above), should be OK to use defaults (to prevent this, pass context explicitly as record) -->
+      <#if !(useReqParams?is_boolean && useReqParams == false)>
+        <#-- SPECIAL: this allows to pre-fill some fields from parameters when accessing New/Create screen initially -->
+        <#local values = defaults + toSimpleMap(parameters) + record>
+      <#else>
+        <#local values = defaults + record>
+      </#if>
     <#else>
-      <#local values = record><#-- DON'T use defaults if record is present -->
+      <#local values = record><#-- DON'T use defaults or parameters if real record is present (record!=context) -->
     </#if>
     <#if !recordIsContext>
       <#-- SPECIAL: different from stock ofbizsetup: we keep the values from the record so we 

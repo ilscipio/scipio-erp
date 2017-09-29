@@ -60,4 +60,57 @@
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
     </simple-method>
     
+    <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
+    <simple-method method-name="createWebSite" short-description="Create a WebSite, default webSiteId is ScipioWebStore.">
+        <if-empty field="parameters.webSiteId">
+            <property-to-field resource="scipiosetup" property="website.defaultInitialWebSiteId" field="defaultInitialWebSiteId"/>
+            <if-not-empty field="defaultInitialWebSiteId">
+                <entity-one entity-name="WebSite" value-field="defaultWebSite">
+                    <field-map field-name="webSiteId" from-field="defaultInitialWebSiteId"/>
+                </entity-one>
+            </if-not-empty>
+            <if-empty field="defaultWebSite">
+                <set field="parameters.webSiteId" from-field="defaultInitialWebSiteId"/><!-- SCIPIO: new default value -->
+                <else>
+                    <sequenced-id field="parameters.webSiteId" sequence-name="WebSite"/>
+                </else>
+            </if-empty>
+            <else>
+                <!-- check if already exists so can give friendlier message -->
+                <entity-one entity-name="WebSite" value-field="webSite">
+                    <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
+                </entity-one>
+                <if-not-empty field="webSite">
+                    <add-error>
+                        <fail-property resource="ScipioSetupErrorUiLabels" property="SetupWebSiteIdAlreadyInUse"/>
+                    </add-error>
+                    <check-errors/>
+                </if-not-empty>
+            </else>
+        </if-empty>
+        <call-service service-name="createWebSite" in-map-name="parameters"/>
+        <field-to-request request-name="webSiteId" field="parameters.webSiteId"/>
+    </simple-method>
+    
+    <simple-method method-name="updateProdCatalogAndProductStoreCatalog" short-description="update ProdCatalog And ProductStoreCatalog">
+        <set-service-fields service-name="updateProdCatalog" map="parameters" to-map="updateProdCatalogCtx"/>
+        <call-service service-name="updateProdCatalog" in-map-name="updateProdCatalogCtx"/>
+        <check-errors/>
+        
+        <set-service-fields service-name="updateProductStoreCatalog" map="parameters" to-map="updateProductStoreCatalogCtx"/>
+        <call-service service-name="updateProductStoreCatalog" in-map-name="updateProductStoreCatalogCtx"/>
+        <check-errors/>
+    </simple-method>
+    
+    <simple-method method-name="deleteProdCatalogAndProductStoreCatalog" short-description="delete ProdCatalog And ProductStoreCatalog">
+        <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteProductStoreCatalogCtx"/>
+        <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteProductStoreCatalogCtx"/>
+        <check-errors/>
+
+        <set-service-fields service-name="deleteProdCatalog" map="parameters" to-map="deleteProdCatalogCtx"/>
+        <call-service service-name="deleteProdCatalog" in-map-name="deleteProdCatalogCtx">
+            <default-message resource="ScipioSetupUiLabels" property="SetupCatalogStoreAssocRemoved"/>
+        </call-service>
+        <check-errors/>
+    </simple-method>
 </simple-methods>

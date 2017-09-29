@@ -17,6 +17,7 @@
 
     <@form id="EditFacility" action=makeOfbizUrl(target) method="post">
         <@defaultWizardFormFields exclude=["facilityId"]/>
+        <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
         
       <#if facility??>
         <@field type="display" label=uiLabelMap.FormFieldTitle_facilityId tooltip=uiLabelMap.ProductNotModificationRecrationFacility value=(params.facilityId!)/>
@@ -60,5 +61,5 @@
             </#if>
         </@field>
         
-        <@field type="submit" text=uiLabelMap[(facility??)?then('CommonUpdate', 'CommonSave')] class="+${styles.link_run_sys} ${styles.action_update}" disabled=(!facilitySubmitOk)/>
+        <@field type="submit" text=uiLabelMap[(facility??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}" disabled=(!facilitySubmitOk)/>
     </@form>

@@ -1,7 +1,23 @@
+<#include "component://setup/webapp/setup/common/common.ftl">
 
-<#-- NOTE: sending to setupWizard instead of setupOrganization so it automatically goes to the next unfinished step -->
+<@script>
+  jQuery(document).ready(function() {
+    jQuery('#setupOrg-selectOrg-select').change(function() {
+        var val = jQuery(this).val();
+        if (val) {
+            jQuery('#setupOrg-selectOrg-form').submit();
+        } else {
+            jQuery('#setupOrg-newOrg-form').submit();
+        }
+    });
+  });
+</@script>
+
   <@form method="get" action=makeOfbizUrl(selectOrgTarget) id="setupOrg-selectOrg-form">
-    <@field type="select" name="partyId" label=uiLabelMap.SetupOrganization onChange="jQuery('#setupOrg-selectOrg-form').submit(); void(0);">
+    <#-- TODO: REVIEW
+    <@defaultWizardFormFields exclude=[]/> -->
+  
+    <@field type="select" name="partyId" id="setupOrg-selectOrg-select" label=uiLabelMap.SetupOrganization>
         <option value="">[${uiLabelMap.SetupCreateNewOrganization}]</option>
         <option value="" disabled="disabled"></option>
         <#if parties?has_content>
@@ -13,4 +29,12 @@
         </#if>
     </@field>
   </@form>
+  
+  <@form method="get" action=makeOfbizUrl("setupOrganization") id="setupOrg-newOrg-form">
+    <#-- TODO: REVIEW
+    <@defaultWizardFormFields exclude=[]/> -->
+    
+    <@field type="hidden" name="newOrganization" value="Y"/>
+  </@form>
+  
   

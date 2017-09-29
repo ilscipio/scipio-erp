@@ -109,7 +109,7 @@ if (context.setupWizardActionsRun != true) {
             errorMessageList = [];
             context.errorMessageList = errorMessageList;
         }
-        final errorMsgPrefix = UtilProperties.getMessage("ScipioSetupUiLabels", "SetupError", context.locale);
+        final errorMsgPrefix = UtilProperties.getMessage("ScipioSetupErrorUiLabels", "SetupError", context.locale);
         errorMessageList.add(errorMsgPrefix + ": " + e.getMessage());
     }
     

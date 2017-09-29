@@ -109,7 +109,7 @@ Defines a form. Analogous to <form> HTML element.
 <#macro form_validate_markup type="" name="" id="" origArgs={} passArgs={} catchArgs...>
   <#if id?has_content || name?has_content>
     <@script>
-      <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js-html')}'])</#if>.validate({
+      <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js')}'])</#if>.validate({
         submitHandler:
           function(form) {
             form.submit();

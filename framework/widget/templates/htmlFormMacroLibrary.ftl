@@ -243,7 +243,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       if (jQuery(form).find(".required").length > 0) {
           <#-- SCIPIO: 2017-09-29: now delegating this
           jQuery(form).validate();-->
-          <@form_validate_markup id=containerId name=formName htmlwrap=false/>
+          <@formValidateScript formExpr="form" htmlwrap=false/>
       }
     </@script><#lt/>
   </#if>
@@ -257,7 +257,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
           }
       });
     </@script>-->
-    <@form_validate_markup id=containerId name=formName htmlwrap=true/>
+    <@formValidateScript id=containerId name=formName htmlwrap=true/>
   </#if>
 <#--
 <#else>

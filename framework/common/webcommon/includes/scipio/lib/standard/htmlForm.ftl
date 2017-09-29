@@ -86,7 +86,7 @@ Defines a form. Analogous to <form> HTML element.
   </#if>
   <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
   <#if validate?is_boolean && validate == true>
-      <@form_validate_markup type=type name=name id=id htmlwrap=true origArgs=origArgs passArgs=passArgs/>
+      <@formValidateScript type=type name=name id=id htmlwrap=true/>
   </#if>
   <#if close>
     <#local dummy = popRequestStack("scipioFormInfoStack")>
@@ -106,16 +106,26 @@ Defines a form. Analogous to <form> HTML element.
   </#if>
 </#macro>
 
-<#-- @form validate script markup - theme override 
+<#-- @form validate script - (TODO: document once better established)
     NOTE: the code may be enclosed in another javascript code block by caller - beware -->
-<#macro form_validate_markup type="" name="" id="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
+<#macro formValidateScript formExpr="" name="" id="" htmlwrap=true onload=true catchArgs...>
   <@script htmlwrap=htmlwrap>
-    <#if id?has_content || name?has_content>
-      <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js')}'])</#if>.validate({
-          submitHandler: function(form) {
-              form.submit();
-          }
-      });
+    <#if !formExpr?has_content>
+      <#if id?has_content>
+        <#local formExpr>"#${escapeVal(id, 'js')}"</#local>
+      <#elseif name?has_content>
+        <#local formExpr>document['${escapeVal(name, 'js')}']</#local>
+      </#if>
+    </#if>
+    <#if formExpr?has_content>
+      <#-- NOTE: 2017-09-29: this onload trigger is new, may have been an error in stock ofbiz -->
+      <#if onload>jQuery(document).ready(function() {</#if>
+          jQuery(${formExpr}).validate({
+              submitHandler: function(form) {
+                  form.submit();
+              }
+          });
+      <#if onload>});</#if>
     </#if>
   </@script>
 </#macro>

@@ -53,6 +53,7 @@ Defines a form. Analogous to <form> HTML element.
                               NOTE: in many cases forms receive this automatically through submit button even if this is false (through global JS);
                                   this is only needed in special cases.
                               NOTE: only works if {{{id}}} or {{{name}}} present
+                              Added 2017-09-29.
     inlineAttribs...        = ((inline-args)) Extra attributes for HTML <form> element
                               NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
                               NOTE: These are automatically HTML-escaped, but not escaped for javascript or other languages (caller responsible for these).
@@ -105,7 +106,8 @@ Defines a form. Analogous to <form> HTML element.
   </#if>
 </#macro>
 
-<#-- @form validate script markup - theme override -->
+<#-- @form validate script markup - theme override 
+    NOTE: the code may be enclosed in another javascript code block by caller - beware -->
 <#macro form_validate_markup type="" name="" id="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
   <@script htmlwrap=htmlwrap>
     <#if id?has_content || name?has_content>

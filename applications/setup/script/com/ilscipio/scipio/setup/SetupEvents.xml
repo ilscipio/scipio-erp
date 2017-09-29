@@ -64,38 +64,35 @@
         <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID =================> ${parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID}" />
         <log level="always" message="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID    =================> ${parameters.USER_WORK_NUMBER_CONTACT_MECH_ID}" />
         <log level="always" message="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID  =================> ${parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />
-
-        <log level="always" message="personMap      =================> ${personMap}" />
-        <log level="always" message="emailMap       =================> ${emailMap}" />
-        <log level="always" message="personMap      =================> ${addressMap}" />
-        <log level="always" message="workPhoneMap   =================> ${workPhoneMap}" />
-        <log level="always" message="mobilePhoneMap =================> ${mobileMap}" />
-        <log level="always" message="faxPMap        =================> ${faxMap}" />
+        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />       
         
         <entity-one value-field="person" entity-name="Person"><field-map field-name="partyId" from-field="parameters.userPartyId"/></entity-one>
         <entity-one value-field="postalAddress" entity-name="PostalAddress"><field-map field-name="contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID"/></entity-one>
+        <entity-one value-field="workNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID"/></entity-one>
+        <entity-one value-field="mobileNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID"/></entity-one>
+        <entity-one value-field="faxNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID"/></entity-one>
         
-        <call-simple-method method-name="validateUser"/>
-        
-        <if-not-empty field="addressChanged">
-        </if-not-empty>
+        <call-simple-method method-name="validateUser"/>        
+        <log level="always" message="personMap      =================> ${personMap}" />
+        <log level="always" message="emailMap       =================> ${emailMap}" />
+        <log level="always" message="addressMap     =================> ${addressMap}" />
+        <log level="always" message="workPhoneMap   =================> ${workPhoneMap}" />
+        <log level="always" message="mobilePhoneMap =================> ${mobileMap}" />
+        <log level="always" message="faxPMap        =================> ${faxMap}" />
         <!-- see if we should continue now... -->
-        <!-- <check-errors/> -->
-        
-        
-        <if-compare operator="equals" value="" field=""></if-compare>
-        <set field="personMap.partyId" from-field="parameters.userPartyId" />
+        <!-- <check-errors/> -->        
+<!--         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />        
         
         <set field="emailMap.contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID" />
-        <call-service service-name="updateEmailAddress" in-map-name="emailMap" />
-        
-        
-        <set field="addressMap.postalAddress" from-field="postalAddress" />
-        <call-service service-name="updatePostalAddress" in-map-name="addressMap" />
-        
-        
+        <call-service service-name="updateEmailAddress" in-map-name="emailMap" /> -->
+        <set field="addressChanged" value="${groovy: return(addressMessages != null &amp;&amp; addressMessages.size() == 1 &amp;&amp; addressMessages.get(0).getMessage().equals(&quot;addressDiffers&quot;))}" type="Boolean" />
+        <log level="always" message="address changed =================> ${addressChanged}" />
+        <if-compare field="addressChanged" operator="equals" value="true" type="Boolean">
+			<set field="addressMap.contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID" />
+			<set field="addressMap.partyId" from-field="parameters.userPartyId" />
+			<call-service service-name="updatePartyPostalAddress" in-map-name="addressMap" />
+        </if-compare>
     </simple-method>
     
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
@@ -184,7 +181,7 @@
         </call-map-processor>
 
         <!-- setup the Postal Address -->
-        <call-map-processor in-map-name="parameters" out-map-name="addressMap" error-list-name="addressChanged">
+        <call-map-processor in-map-name="parameters" out-map-name="addressMap" error-list-name="addressMessages">        
             <simple-map-processor name="address">
                 <process field="USER_ADDRESS1">
                     <compare-field operator="not-equals" field="postalAddress.address1"><fail-message message="addressDiffers"/></compare-field>

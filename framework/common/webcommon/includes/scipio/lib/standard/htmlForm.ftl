@@ -85,7 +85,7 @@ Defines a form. Analogous to <form> HTML element.
   </#if>
   <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
   <#if validate?is_boolean && validate == true>
-      <@form_validate_markup type=type name=name id=id origArgs=origArgs passArgs=passArgs/>
+      <@form_validate_markup type=type name=name id=id htmlwrap=true origArgs=origArgs passArgs=passArgs/>
   </#if>
   <#if close>
     <#local dummy = popRequestStack("scipioFormInfoStack")>
@@ -106,9 +106,9 @@ Defines a form. Analogous to <form> HTML element.
 </#macro>
 
 <#-- @form validate script markup - theme override -->
-<#macro form_validate_markup type="" name="" id="" origArgs={} passArgs={} catchArgs...>
+<#macro form_validate_markup type="" name="" id="" htmlwrap=true origArgs={} passArgs={} catchArgs...>
   <#if id?has_content || name?has_content>
-    <@script>
+    <@script htmlwrap=htmlwrap>
       <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js')}'])</#if>.validate({
         submitHandler:
           function(form) {

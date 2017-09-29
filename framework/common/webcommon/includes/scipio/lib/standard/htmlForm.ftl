@@ -110,9 +110,8 @@ Defines a form. Analogous to <form> HTML element.
   <@script htmlwrap=htmlwrap>
     <#if id?has_content || name?has_content>
       <#if id?has_content>jQuery("#${escapeVal(id, 'js')}")<#else>jQuery(document['${escapeVal(name, 'js')}'])</#if>.validate({
-        submitHandler:
-          function(form) {
-            form.submit();
+          submitHandler: function(form) {
+              form.submit();
           }
       });
     </#if>

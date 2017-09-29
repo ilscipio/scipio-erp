@@ -15,15 +15,17 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id="EditOrganization" name="EditOrganization" action=makeOfbizUrl(target) method="post">
+    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["orgPartyId", "partyId"]/><#-- these will conflict with SetupWorker -->
         <@field type="hidden" name="isCreateOrganization" value=(partyGroup??)?string("N","Y")/>
         
       <#if party??>
-        <@field type="display" name="partyId" value=(params.partyId!) label=uiLabelMap.PartyPartyId />
+        <@field type="display" name="partyId" label=uiLabelMap.PartyPartyId><#rt/>
+            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=(params.partyId!)/><#t/>
+        </@field><#lt/>
         <@field type="hidden" name="partyId" value=(params.partyId!)/> 
       <#else>
-        <@field type="input" name="partyId" value=(params.partyId!) label=uiLabelMap.PartyPartyId />
+        <@field type="input" name="partyId" value=(params.partyId!) label=uiLabelMap.PartyPartyId placeholder="Company"/>
       </#if>
 
         <@field type="hidden" name="USE_ADDRESS" value=(USE_ADDRESS!)/>
@@ -33,7 +35,6 @@
         
       <#-- TODO: REVIEW: current handling by viewprofile... -->
       <#if !party??>
-        
         <@field type="generic" label=uiLabelMap.PartyAddressMailingShipping>
           <@fields args={"type":"default", "ignoreParentField":true}>
             <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
@@ -110,8 +111,5 @@
             <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail required=true size="60" maxlength="250"/>
             <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(params.USER_EMAIL_ALLOW_SOL!)/>
         </@field>-->
-        
       </#if>
-        
-        <@field type="submit" text=uiLabelMap[(party??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>

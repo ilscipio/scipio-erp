@@ -262,24 +262,25 @@
                                 <decorator-section-include name="body"/>
                                 <section>
                                     <condition>
-                                        <if-compare field="setupStepSkippable" operator="equals" type="Boolean" value="true"/>
+                                        <and>
+                                            <not><if-compare field="useDefaultSetupSubmitBar" operator="equals" type="Boolean" value="false"/></not>
+                                            <not><if-empty field="submitFormId"/></not>
+                                        </and>
                                     </condition>
                                     <widgets>
                                         <platform-specific>
                                             <html>
                                                 <html-template><![CDATA[
                                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                                  <@row>
-                                                    <@cell class="+${styles.text_right!}">
-                                                      <a href="${escapeFullUrl(makeSetupStepUrl(nextSetupStep), 'html')}"<#t/>
-                                                         <#t/> class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.SetupSkip}</a>
-                                                    </@cell>
-                                                  </@row>
+                                                  <@setupSubmitBar submitFormId=submitFormId isCreate=(isCreate!false)>
+                                                    <@render type="section" name="menu-functions"/>
+                                                  </@setupSubmitBar>
                                                 ]]></html-template>
                                             </html>
                                         </platform-specific>
                                     </widgets>
                                 </section>
+                                <decorator-section-include name="extra-body"/>
                             </widgets>
                             <fail-widgets>
                                 <section>
@@ -297,17 +298,25 @@
             </widgets>
         </section>
     </screen>
-
+    
     <screen name="SetupErrorMsg">
         <section>
             <actions>
                 <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "SetupError.groovy";
+                    
+                    // Log this because caller might not have (WARN: setupErrorMsg is already localized; oh well)
+                    if (context.logSetupErrorMsg != false) {
+                        Debug.logError("Setup: Error occurred (displaying): " + (context.setupErrorMsg ?: "(message missing)"), module);
+                    }
+                    
                     // this is best-effort to get a 
                     context.autoNextSetupStep = null;
                     try {
                         context.autoNextSetupStep = context.setupWorker?.determineStepAuto();
                     } catch(Exception e) {
-                        org.ofbiz.base.util.Debug.logError(e, "Setup: Error trying to display error message!", "SetupErrorMsg.groovy");
+                        Debug.logError(e, "Setup: Error trying to display error message: " + e.getMessage(), "SetupErrorMsg.groovy");
                     }
                 ]]></script>
             </actions>

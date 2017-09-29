@@ -68,4 +68,9 @@
         <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
         <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
     </property>
+    <property key="SetupSaveAndContinue">
+        <value xml:lang="en">Save &amp; Continue</value>
+        <value xml:lang="de">Enregistrer et continuer</value>
+        <value xml:lang="fr">Speichern fortsetzen</value>
+    </property>
 </resource>

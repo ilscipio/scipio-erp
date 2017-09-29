@@ -16,3 +16,4 @@ if (!delegator.findOne("WebSite", [webSiteId:defaultInitialWebSiteId], false)) {
 context.defaultWebSiteId = defaultWebSiteId;
 context.defaultInitialWebSiteId = defaultInitialWebSiteId;
 
+context.defaultVisualThemeSetId = UtilProperties.getPropertyValue("scipiosetup", "website.visualThemeSetId", "ECOMMERCE");

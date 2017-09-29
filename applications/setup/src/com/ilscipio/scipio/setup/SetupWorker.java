@@ -386,6 +386,16 @@ public abstract class SetupWorker implements Serializable {
     }
     
     /**
+     * Helper to read current org party; only non-null if valid.
+     */
+    public abstract GenericValue getOrgParty();
+    
+    /**
+     * Helper to read current org party; only non-null if valid.
+     */
+    public abstract GenericValue getOrgPartyGroup();
+    
+    /**
      * Helper to read current product store; only non-null if valid.
      */
     public abstract GenericValue getProductStore();
@@ -421,11 +431,11 @@ public abstract class SetupWorker implements Serializable {
      * need to validate it with {@link #isStepEffectiveSafe}.
      * <p>
      * If submitted step is used, whether to stay or go to next step is controlled by the
-     * <code>setupAdvance=Y/N</code> request parameter (default: Y).
+     * <code>setupContinue=Y/N</code> request parameter (default: Y).
      * <p>
      * @param useRequested if TRUE check requested and error if invalid; if FALSE ignore requested; 
      *                     if null check requested but fallback if invalid
-     * @param useSubmitted if TRUE or null check submitted step and return the next step (depending on setupAdvance Y/N parameter; 
+     * @param useSubmitted if TRUE or null check submitted step and return the next step (depending on setupContinue Y/N parameter; 
      *                     if FALSE ignore submitted;
      *                     if the next step is not accessible, returns the next auto-determined step that must be filled
      * @param updateEffective if TRUE always update effective even if exception (sets "error"); if FALSE never update;
@@ -531,6 +541,14 @@ public abstract class SetupWorker implements Serializable {
         @Override
         public Object getParam(String name) {
             return params.get(name);
+        }
+        @Override
+        public GenericValue getOrgParty() {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public GenericValue getOrgPartyGroup() {
+            throw new UnsupportedOperationException(); // TODO?
         }
         @Override
         public GenericValue getProductStore() {
@@ -826,7 +844,7 @@ public abstract class SetupWorker implements Serializable {
                 // because this is part of the automatic process
                 String submittedStep = getSubmittedStep();
                 if (UtilValidate.isNotEmpty(submittedStep)) {
-                    if (Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(getParams().get("setupAdvance")))) {
+                    if (Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(getParams().get("setupContinue")))) {
                         if (isStepAllowed(submittedStep)) return submittedStep;
                         else {
                             Debug.logWarning("Setup: The submitted setup step (" + submittedStep
@@ -1492,7 +1510,7 @@ public abstract class SetupWorker implements Serializable {
                         
                         // NOTE: the value gets implicitly passed here (confusing), so not using the value arg
                         Map<String, Object> storeStepData = setupWorker.getStepState("organization").getStepData();
-                        if (Boolean.TRUE.equals(storeStepData.get("partyValid"))) {
+                        if (storeStepData.get("partyGroup") != null) {
                             partyId = (String) storeStepData.get("orgPartyId");
                         }
                         
@@ -1540,14 +1558,33 @@ public abstract class SetupWorker implements Serializable {
             public abstract Object getValidatedParam(RequestSetupWorker setupWorker, String paramName, Object value);
         }
         
-        @Override
-        public GenericValue getProductStore() {
-            String productStoreId = getProductStoreId();
-            if (UtilValidate.isNotEmpty(productStoreId)) {
-                Map<String, Object> storeStepData = getStepState("store").getStepData();
-                return (GenericValue) storeStepData.get("productStore");
+
+        private GenericValue getStepDataValueIfValid(String step, String valueName, String paramName) {
+            String paramVal = (String) getValidParam(paramName);
+            if (UtilValidate.isNotEmpty(paramVal)) {
+                return getStepDataValue(step, valueName);
             }
             return null;
+        }
+        
+        private GenericValue getStepDataValue(String step, String valueName) {
+            Map<String, Object> storeStepData = getStepState(step).getStepData();
+            return (GenericValue) storeStepData.get(valueName);
+        }
+        
+        @Override
+        public GenericValue getOrgParty() {
+            return getStepDataValueIfValid("organization", "party", "orgPartyId");
+        }
+
+        @Override
+        public GenericValue getOrgPartyGroup() {
+            return getStepDataValueIfValid("organization", "partyGroup", "orgPartyId");
+        }
+        
+        @Override
+        public GenericValue getProductStore() {
+            return getStepDataValueIfValid("store", "productStore", "productStoreId");
         }
         
         /* 

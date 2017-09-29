@@ -24,7 +24,7 @@
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
             <!-- SCIPIO: link to wizard with no parameters for now so goes to create new org
             <link target="initialsetup"/>-->
-            <link target="setupWizard">
+            <link target="setupOrganization" link-type="anchor">
                 <parameter param-name="newOrganization" value="Y"/>
             </link>
         </menu-item>
@@ -148,6 +148,8 @@
                 context.stepStyles = stepStyles;
             ]]></script>
         </actions>
+        <menu-item-alias name="finished" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="error" for="PARENT-WITHSUB"/>
         <menu-item name="organization" title="${uiLabelMap[setupStepTitlePropMap['organization']]}" disabled="${context.setupStepDisabledMap.organization == true}" widget-style="+${context.stepStyles.organization}">
             <link target="setupOrganization" link-type="anchor">
                 <parameter-map from-field="setupStepStates.organization.stepParams"/>

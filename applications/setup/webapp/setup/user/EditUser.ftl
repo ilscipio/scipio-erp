@@ -89,7 +89,7 @@ under the License.
 </@script>
     
 
-<@form method="post" action=makeOfbizUrl(target) id="NewUser" name="NewUser">
+<@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=["userPartyId"] />
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
@@ -209,6 +209,5 @@ under the License.
 	  </@cell>
 	</@row>
 
-    <@field type="submit" text=uiLabelMap[(userParty??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}" />
 </@form>
 

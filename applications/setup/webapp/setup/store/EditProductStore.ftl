@@ -5,7 +5,7 @@
     "payToPartyId": partyId!"",
     <#--"partyId": partyId!"",-->
     <#-- "inventoryFacilityId": facilityId!, // not this way - instead we set parameters.inventoryFacilityId in SetupStore.groovy -->
-    "visualThemeId": "EC_DEFAULT",
+    "visualThemeId": defaultVisualThemeId!,
     "manualAuthIsCapture": "N",
     "prorateShipping": "Y",
     "prorateTaxes": "Y",
@@ -53,13 +53,16 @@
     "reqReturnInventoryReceive": "N",
 
     "orderNumberPrefix": "WS",
-    "defaultLocaleString": "en_US",
+    "defaultLocaleString": defaultDefaultLocaleString!,
     "showOutOfStockProducts": "Y",
     "authDeclinedMessage": "There has been a problem with your method of payment. Please try a different method or call customer service.",
     "authFraudMessage": "Your order has been rejected and your account has been disabled due to fraud.",
-    "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email."
+    "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email.",
     
     <#--"paymentList": paymentList![]-->
+    
+    <#-- SCIPIO: newly added defaults -->
+    "defaultCurrencyUomId": defaultDefaultCurrencyUomId!
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -70,15 +73,17 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id="EditProductStore" action=makeOfbizUrl(target) method="post">
+    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productStoreId"]/>
         <@field type="hidden" name="isCreateStore" value=(productStore??)?string("N","Y")/>
         
       <#if productStore??>
-        <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore value=(params.productStoreId!)/>
+        <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore><#rt/>
+            <@setupExtAppLink uri="/catalog/control/EditProductStore?productStoreId=${rawString(params.productStoreId!)}" text=(params.productStoreId!)/><#t/>
+        </@field><#lt/>
         <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> 
       <#else>
-        <@field type="input" name="productStoreId" label=uiLabelMap.FormFieldTitle_productStoreId value=(params.productStoreId!)/>
+        <@field type="input" name="productStoreId" label=uiLabelMap.FormFieldTitle_productStoreId value=(params.productStoreId!) placeholder="ScipioShop"/>
       </#if>
         <@field type="input" name="storeName" label=uiLabelMap.ProductStoreName required=true size="30" maxlength="60" value=(params.storeName!)/>
         
@@ -117,8 +122,27 @@
           <#elseif !storeInventoryFacilityOk>
             <@alert type="warning">${uiLabelMap.SetupInvalidFacilityForStore} (${inventoryFacility.facilityId})</@alert>
           </#if>
-         </@field>
+        </@field>
         
+        <@field type="input" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString value=(params.defaultLocaleString!) placeholder="en_US"/>
+        <@field type="select" name="defaultCurrencyUomId" label=uiLabelMap.FormFieldTitle_defaultCurrencyUomId>
+          <@field type="option" value=""></@field>
+          <#list (currencyUomList!) as currencyUom>
+            <@field type="option" value=currencyUom.uomId
+                selected=(rawString(params.defaultCurrencyUomId!)==rawString(currencyUom.uomId))
+                >${currencyUom.get("description", locale)!} (${currencyUom.abbreviation!})</@field>
+          </#list>
+        </@field>
+
+        <@field type="select" name="visualThemeId" label=uiLabelMap.FormFieldTitle_visualThemeId>
+          <@field type="option" value=""></@field>
+          <#list (visualThemeList!) as visualTheme>
+            <@field type="option" value=visualTheme.visualThemeId
+                selected=(rawString(params.visualThemeId!)==rawString(visualTheme.visualThemeId))
+                >${visualTheme.get("description", locale)!} [${visualTheme.visualThemeId!}]</@field>
+          </#list>
+        </@field>
+
         <#-- NOTE: some of these use fixedParams, others use params, it is based on whether original
            form widget specified a hidden value="..." (fixedParams) or not (params) -->
         <@field type="hidden" name="companyName" value=(fixedParams.companyName!)/>
@@ -128,7 +152,7 @@
         <@field type="hidden" name="payToPartyId" value=(fixedParams.payToPartyId!)/>
         <#-- SCIPIO: need drop-down in case org has multiple facility
         <@field type="hidden" name="inventoryFacilityId" value=(fixedParams.inventoryFacilityId!)/>-->
-        <@field type="hidden" name="visualThemeId" value=(fixedParams.visualThemeId!)/>
+        <#--<@field type="hidden" name="visualThemeId" value=(fixedParams.visualThemeId!)/> configurable -->
         <@field type="hidden" name="manualAuthIsCapture" value=(fixedParams.manualAuthIsCapture!)/>
         <@field type="hidden" name="prorateShipping" value=(fixedParams.prorateShipping!)/>
         <@field type="hidden" name="prorateTaxes" value=(fixedParams.prorateTaxes!)/>
@@ -146,7 +170,7 @@
         <@field type="hidden" name="balanceResOnOrderCreation" value=(fixedParams.balanceResOnOrderCreation!)/>
         <@field type="hidden" name="oneInventoryFacility" value=(fixedParams.oneInventoryFacility!)/>
         <@field type="hidden" name="requirementMethodEnumId" value=(params.requirementMethodEnumId!)/>
-        <@field type="hidden" name="defaultCurrencyUomId" value=(params.defaultCurrencyUomId!)/>
+        <#--<@field type="hidden" name="defaultCurrencyUomId" value=(params.defaultCurrencyUomId!)/> configurable -->
         <@field type="hidden" name="defaultSalesChannelEnumId" value=(fixedParams.defaultSalesChannelEnumId!)/>
         <@field type="hidden" name="allowPassword" value=(fixedParams.allowPassword!)/>
         <@field type="hidden" name="retryFailedAuths" value=(fixedParams.retryFailedAuths!)/>
@@ -184,7 +208,7 @@
         <@field type="hidden" name="splitPayPrefPerShpGrp" value=(params.splitPayPrefPerShpGrp!)/>
         <@field type="hidden" name="autoOrderCcTryLaterMax" value=(params.autoOrderCcTryLaterMax!)/>
         <@field type="hidden" name="orderNumberPrefix" value=(fixedParams.orderNumberPrefix!)/>
-        <@field type="hidden" name="defaultLocaleString" value=(fixedParams.defaultLocaleString!)/>
+        <#--<@field type="hidden" name="defaultLocaleString" value=(fixedParams.defaultLocaleString!)/> configurable -->
         <@field type="hidden" name="enableAutoSuggestionList" value=(params.enableAutoSuggestionList!)/>
         <@field type="hidden" name="showOutOfStockProducts" value=(fixedParams.showOutOfStockProducts!)/>
         <@field type="hidden" name="authDeclinedMessage" value=(fixedParams.authDeclinedMessage!)/>
@@ -196,7 +220,5 @@
         <@field type="hidden" name="partyId" value=(partyId!)/>
         <@field type="hidden" name="inventoryFacilityAction" value=(inventoryFacilityAction!)/>
         <@field type="hidden" name="paymentList" value=(paymentList!)/><#-- SPECIAL: not a ProductStore field -->
-        
-        <@field type="submit" text=uiLabelMap[(productStore??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>
-    
+

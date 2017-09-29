@@ -41,3 +41,39 @@ context.productStoreFacilityMissing = (context.productStore && !inventoryFacilit
 if (!productStore && !parameters.inventoryFacilityId) {
     parameters.inventoryFacilityId = facilityId;
 }
+
+partyAcctgPref = context.partyAcctgPref;
+if (partyId && partyAcctgPref == null) {
+    partyAcctgPref = context.setupStepStates?.accounting?.stepData.partyAcctgPref;
+    // TODO: REMOVE THIS FALLBACK ONCE ACCOUNTING WORKS
+    if (partyAcctgPref == null && context.setupStepStates?.accounting?.completed != true) {
+        partyAcctgPref = delegator.findOne("PartyAcctgPreference", [partyId:partyId], false);
+    }
+}
+context.partyAcctgPref = partyAcctgPref;
+
+/*
+<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+<entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+    <entity-order-by field-name="description"/>
+</entity-options>
+</drop-down>
+*/
+currencyUomList = delegator.findByAnd("Uom", [uomTypeId:"CURRENCY_MEASURE"], ["description"], true);
+context.currencyUomList = currencyUomList;
+
+defaultDefaultCurrencyUomId = partyAcctgPref?.baseCurrencyUomId ?: context.defaultSystemCurrencyUomId;
+context.defaultDefaultCurrencyUomId = defaultDefaultCurrencyUomId;
+
+defaultDefaultLocaleString = UtilProperties.getPropertyValue("scipiosetup", "store.defaultLocaleString");
+context.defaultDefaultLocaleString = defaultDefaultLocaleString;
+
+defaultVisualThemeSetId = UtilProperties.getPropertyValue("scipiosetup", "website.visualThemeSetId", "ECOMMERCE");
+context.defaultVisualThemeSetId = defaultVisualThemeSetId;
+
+defaultVisualThemeId = UtilProperties.getPropertyValue("scipiosetup", "store.visualThemeId", "EC_DEFAULT");
+context.defaultVisualThemeId = defaultVisualThemeId;
+
+visualThemeList = delegator.findByAnd("VisualTheme", [visualThemeSetId:defaultVisualThemeSetId], ["description"], false);
+context.visualThemeList = visualThemeList;

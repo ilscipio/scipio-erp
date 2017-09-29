@@ -49,6 +49,8 @@ public abstract class SetupDataUtil {
      * WARN: params map may contain unvalidated user input - others in the map may be already validated.
      * The caller (SetupWorker.CommonStepState subclasses) handles the implicit deps and decides which params must be pre-validated.
      * DO NOT call these methods from screen - all must go through SetupWorker.
+     * 
+     * TODO: these could return error message via ServiceUtil.returnError + let caller log, but not much point yet.
      */
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
@@ -60,19 +62,27 @@ public abstract class SetupDataUtil {
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Organization");
         
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
-            Map<String, Object> fields = new HashMap<>();
-            fields.put("roleTypeId", "INTERNAL_ORGANIZATIO");
-            fields.put("partyId", orgPartyId);
-            List<GenericValue> partyRoles = delegator.findByAnd("PartyRole", fields, null, useCache);
-            if (UtilValidate.isNotEmpty(partyRoles)) {
-                result.put("partyValid", true);
-                result.put("orgPartyId", orgPartyId);
-                result.put("completed", true);
+            GenericValue party = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
+            if (party != null) {
+                GenericValue partyRole = delegator.findOne("PartyRole", 
+                        UtilMisc.toMap("partyId", orgPartyId, "roleTypeId", "INTERNAL_ORGANIZATIO"), useCache);
+                if (partyRole != null) {
+                    GenericValue partyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", orgPartyId), useCache);
+                    if (partyGroup != null) {
+                        result.put("orgPartyId", orgPartyId);
+                        result.put("party", party);
+                        result.put("partyGroup", partyGroup);
+                        result.put("completed", true);
+                    } else {
+                        Debug.logError("Setup: Organization: Party '" + orgPartyId + "' does not have a PartyGroup record (invalid organization)", module);
+                    }
+                } else {
+                    Debug.logError("Setup: Organization: Party '" + orgPartyId + "' does not have INTERNAL_ORGANIZATIO role (invalid organization)", module);
+                }
             } else {
-                result.put("partyValid", false);
+                Debug.logError("Setup: Organization: Party '" + orgPartyId + "' does not exist (invalid organization)", module);
             }
         }
-
         return result;
     }
 
@@ -300,7 +310,7 @@ public abstract class SetupDataUtil {
                         + productStoreCatalog.getString("prodCatalogId") + "') as default for setup"
                         + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
                         productStoreCatalog.getString("prodCatalogId"));
-            } else if (productStoreCatalogList.size() == 0) {
+            } else if (productStoreCatalogList.size() == 0 && UtilValidate.isNotEmpty(prodCatalogId)) {
                 Debug.logInfo("Setup: Store '" + productStoreId + "' has no active catalog", module);
             }
         }

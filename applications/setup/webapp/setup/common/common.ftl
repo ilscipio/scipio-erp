@@ -1,5 +1,9 @@
 <#-- Common setup macros, definitions, etc. -->
 
+<#-- TODO: REVIEW: this validate flag is a workaround for the loss of validate going from
+    form widget to link-triggered forms -->
+<#assign setupFormValidate = true>
+
 <#function makeSetupStepUrl name stepState=true>
   <#if stepState?is_boolean>
     <#local stepState = (setupStepStates[name])!{}>
@@ -10,6 +14,25 @@
   </#if>
   <#return makeOfbizUrl("setup"+name?cap_first + paramStr)>
 </#function>
+
+<#function makeSetupStepUri name stepState=true>
+  <#if stepState?is_boolean>
+    <#local stepState = (setupStepStates[name])!{}>
+  </#if>
+  <#return "setup"+name?cap_first>
+</#function>
+
+<#macro setupStepFields name stepState=true exclude=[]>
+  <#if stepState?is_boolean>
+    <#local stepState = (setupStepStates[name])!{}>
+  </#if>
+  <#local stepParams = toSimpleMap(stepState.stepParams!)>
+  <#list stepParams?keys as paramName>
+    <#if !exclude?seq_contains(paramName)>
+      <@field type="hidden" name=paramName value=(stepParams[paramName]!)/>
+    </#if>
+  </#list>
+</#macro>
 
 <#macro defaultWizardFormFields stepName=true stepState=true exclude=[]>
   <#if stepName?is_boolean && stepName == true>
@@ -59,6 +82,8 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   </#if>
   <#local defaults = toSimpleMap(defaults)>
   
+  <#local isRecord = false>
+  
   <#if useReqParams?is_number>
     <#local useReqParams = useRequestParameters!"">
   </#if>
@@ -77,16 +102,18 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
       </#if>
     <#else>
       <#local values = record><#-- DON'T use defaults or parameters if real record is present (record!=context) -->
+      <#local isRecord = true>
     </#if>
     <#if !recordIsContext>
       <#-- SPECIAL: different from stock ofbizsetup: we keep the values from the record so we 
           don't corrupt existing records - only new ones should get the defaults -->
       <#local fixedValues = record>
+      <#local isRecord = true>
     <#else>
       <#local fixedValues = defaults><#-- this is stock ofbizsetup behavior -->
     </#if>
   </#if>
-  <#return {"values":values, "fixedValues":fixedValues}>
+  <#return {"values":values, "fixedValues":fixedValues, "isRecord":values}>
 </#function>
 
 <#-- copied from shop -->
@@ -141,3 +168,67 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
   </@field>
 </#macro>
+
+<#macro setupSubmitMenu submitFormId allowSkip="" isCreate=false>
+  <#if !allowSkip?is_boolean>
+    <#local allowSkip = setupStepSkippable!false>
+  </#if>
+  <#local submitFormIdJs = escapeVal(submitFormId, 'js')>
+  <@menu type="button">
+    <#if submitFormId?has_content && setupStep?has_content>
+      <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
+      <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
+    </#if>
+    <#if allowSkip && nextSetupStep?has_content>
+      <@menuitem type="link" href=makeSetupStepUrl(nextSetupStep) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}"/>
+    </#if>
+  </@menu>
+  <@script>
+    var setupControlMenu_${submitFormIdJs} = { <#-- FIXME: bad escaping use -->
+        "submitSave" : function() {
+            this.setSetupContinue('N');
+            this.submit();
+        },
+        "submitSaveContinue" : function() {
+            this.setSetupContinue('Y');
+            this.submit();
+        },
+        "setSetupContinue" : function(value) {
+            var field = jQuery('#${submitFormIdJs} input[name=setupContinue]');
+            if (field.length) {
+                field.val(value);
+            } else {
+                field = jQuery('<input type="hidden" name="setupContinue" value=""/>');
+                field.val(value);
+                jQuery('#${submitFormIdJs}').append(field);
+            }
+        },
+        "submit" : function() {
+            jQuery('#${submitFormIdJs}').submit();
+        }
+    };
+  </@script>
+  <#-- old, wont' work here:
+      <@field type="submit" text=uiLabelMap[(party??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
+    -->
+</#macro>
+
+<#macro setupSubmitBar submitFormId allowSkip="" isCreate=false>
+  <@row>
+    <@cell columns=6>
+      <#nested>
+    </@cell>
+    <@cell columns=6 class="+${styles.text_right!}">
+      <@setupSubmitMenu submitFormId=submitFormId allowSkip=allowSkip isCreate=isCreate/>
+    </@cell>
+  </@row>
+</#macro>
+
+<#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
+  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
+    <#if class?has_content> class="${class}"</#if><#t/>
+    <#if target?has_content> target="${target}"</#if><#t/>
+    ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
+</#macro>
+
+

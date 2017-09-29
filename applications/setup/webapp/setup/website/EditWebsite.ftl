@@ -1,7 +1,7 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
 <#assign defaultParams = {
-    "visualThemeSetId": "ECOMMERCE",
+    "visualThemeSetId": defaultVisualThemeSetId!,
     "webSiteId": defaultWebSiteId!
 }>
 <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -12,7 +12,7 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id="EditWebSite" action=makeOfbizUrl(target) method="post">
+    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["webSiteId", "partyId", "productStoreId"]/>
         <@field type="hidden" name="isCreateWebsite" value=(webSite??)?string("N","Y")/>
 
@@ -21,7 +21,9 @@
         <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId" required-field="true"><text default-value="ScipioWebStore"/></field>
         -->
       <#if webSite??>
-        <@field type="display" label=uiLabelMap.FormFieldTitle_webSiteId value=(params.webSiteId!)/>
+        <@field type="display" label=uiLabelMap.FormFieldTitle_webSiteId><#rt/>
+            <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${rawString(params.webSiteId!)}" text=(params.webSiteId!)/><#t/>
+        </@field><#lt/>
         <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
       <#else>
         <@field type="input" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId value=(params.webSiteId!) placeholder=(defaultInitialWebSiteId!)/>
@@ -41,6 +43,5 @@
         <@field type="hidden" name="cookieDomain" value=(params.cookieDomain!)/>
         <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/>
         <@field type="hidden" name="allowProductStoreChange" value=(params.allowProductStoreChange!)/>
-        
-        <@field type="submit" text=uiLabelMap[(webSite??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>
+

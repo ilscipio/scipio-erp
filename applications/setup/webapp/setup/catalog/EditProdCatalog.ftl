@@ -14,14 +14,15 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id="EditProdCatalog" action=makeOfbizUrl(target) method="post">
+    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
-        <@field type="hidden" name="setupAdvance" value=(parameters.setupAdvance!)/><#-- special: use parameters map directly -->
         <@field type="hidden" name="isCreateCatalog" value=(prodCatalog??)?string("N","Y")/>
         
         <#--<field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId" required-field="true"><text default-value="${partyId}"/>-->
       <#if prodCatalog??>
-        <@field type="display" label=uiLabelMap.FormFieldTitle_prodCatalogId value=(params.prodCatalogId!)/>
+        <@field type="display" label=uiLabelMap.FormFieldTitle_prodCatalogId><#rt/>
+            <@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${rawString(params.prodCatalogId!)}" text=params.prodCatalogId!/><#t/>
+        </@field><#lt/>
         <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!)/> 
       <#else>
         <#-- TODO: REVIEW: required=true -->
@@ -45,6 +46,5 @@
         
         <@field type="hidden" name="viewAllowPermReqd" value=(fixedParams.viewAllowPermReqd!)/>
         <@field type="hidden" name="purchaseAllowPermReqd" value=(fixedParams.purchaseAllowPermReqd!)/>
-        
-        <@field type="submit" text=uiLabelMap[(prodCatalog??)?then('CommonUpdate', 'CommonCreate')] class="+${styles.link_run_sys} ${styles.action_update}"/>
     </@form>
+

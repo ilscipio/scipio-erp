@@ -423,6 +423,18 @@
         </if-compare>
         <check-errors/>
 
+        <!-- SCIPIO: 2017-09-29: check if store already exists for given ID -->
+        <if-not-empty field="parameters.productStoreId">
+            <entity-one entity-name="ProductStore" value-field="existingProductStore">
+                <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
+            </entity-one>
+            <if-not-empty field="existingProductStore">
+                <set field="productStoreId" from-field="parameters.productStoreId"/>
+                <add-error><fail-property property="productevents.productstore_already_exists_for_id" resource="ProductErrorUiLabels"/></add-error>
+                <check-errors/>
+            </if-not-empty>
+        </if-not-empty>
+
         <!-- Create ProductStore -->
         <make-value value-field="newEntity" entity-name="ProductStore"/>
         <set-nonpk-fields value-field="newEntity" map="parameters"/>

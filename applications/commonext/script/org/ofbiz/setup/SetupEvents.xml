@@ -482,6 +482,7 @@
         </call-service>
 
         <set field="newProductStoreCatalog.productStoreId" from-field="parameters.productStoreId"/>
+        <set field="newProductStoreCatalog.sequenceNum" from-field="parameters.sequenceNum"/><!-- SCIPIO: 2017-09-28: support create with sequence num -->
         <call-service service-name="createProductStoreCatalog" in-map-name="newProductStoreCatalog"/>
     </simple-method>
     

@@ -120,11 +120,11 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
   <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params.countryCode)!(params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params.areaCode)!(params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params.contactNumber)!(params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
       <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name=extensionName 
-        value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
+        value=((params.extension)!(params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
     <#nested>
   </@field>
 </#macro>

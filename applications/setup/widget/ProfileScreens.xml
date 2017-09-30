@@ -105,6 +105,7 @@
                 <set field="useScripts" from-field="pafUseScripts" type="Boolean" default-value="true" />
                 <set field="fieldNameMap" from-field="pafFieldNameMap"/>
                 <set field="useToAttnName" from-field="pafUseToAttnName" default-value="true"/>
+                <set field="markRequired" type="Boolean" from-field="pafMarkRequired" default-value="true"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://setup/webapp/setup/user/postaladdressfields.ftl"/></html></platform-specific>

@@ -75,10 +75,10 @@ jQuery(document).ready(function() {
   <@field type="input" label=uiLabelMap.PartyToName size="30" maxlength="60" name="${fieldNamePrefix}${fieldNameMap.toName}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.toName}"]!(postalAddressData.toName)!(pafFallbacks.toName)!) />
   <@field type="input" label=uiLabelMap.PartyAttentionName size="30" maxlength="60" name="${fieldNamePrefix}${fieldNameMap.attnName}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.attnName}"]!(postalAddressData.attnName)!(pafFallbacks.attnName)!) containerClass="+${styles.field_extra!}"/>
 </#if>
-  <@field type="input" label=uiLabelMap.PartyAddressLine1 required=true size="30" maxlength="30" name="${fieldNamePrefix}${fieldNameMap.address1}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.address1}"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
+  <@field type="input" label=uiLabelMap.PartyAddressLine1 required=markRequired size="30" maxlength="30" name="${fieldNamePrefix}${fieldNameMap.address1}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.address1}"]!(postalAddressData.address1)!(pafFallbacks.address1)!) />
   <@field type="input" label=uiLabelMap.PartyAddressLine2 size="30" maxlength="30" name="${fieldNamePrefix}${fieldNameMap.address2}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.address2}"]!(postalAddressData.address2)!(pafFallbacks.address2)!) />
-  <@field type="input" label=uiLabelMap.PartyCity required=true size="30" maxlength="30" name="${fieldNamePrefix}${fieldNameMap.city}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.city}"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
-  <@field type="input" label=uiLabelMap.PartyZipCode required=true size="12" maxlength="10" name="${fieldNamePrefix}${fieldNameMap.postalCode}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.postalCode}"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
+  <@field type="input" label=uiLabelMap.PartyCity required=markRequired size="30" maxlength="30" name="${fieldNamePrefix}${fieldNameMap.city}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.city}"]!(postalAddressData.city)!(pafFallbacks.city)!) />    
+  <@field type="input" label=uiLabelMap.PartyZipCode required=markRequired size="12" maxlength="10" name="${fieldNamePrefix}${fieldNameMap.postalCode}" value=(pafParams["${fieldNamePrefix}${fieldNameMap.postalCode}"]!(postalAddressData.postalCode)!(pafFallbacks.postalCode)!) />
   <@field type="select" label=uiLabelMap.CommonCountry name="${fieldNamePrefix}${fieldNameMap.countryGeoId}" id="${fieldIdPrefix}countryGeoId">
       <#if pafParams["${fieldNamePrefix}${fieldNameMap.countryGeoId}"]??>    
         <#assign currentCountryGeoId = pafParams["${fieldNamePrefix}${fieldNameMap.countryGeoId}"]>

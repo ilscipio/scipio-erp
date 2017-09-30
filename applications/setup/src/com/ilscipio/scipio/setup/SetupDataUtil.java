@@ -2,7 +2,6 @@ package com.ilscipio.scipio.setup;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,10 @@ public abstract class SetupDataUtil {
 
     public static final String module = SetupDataUtil.class.getName();
 
+    public static final Set<String> ORGANIZATION_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
+            "PAYMENT_LOCATION", "GENERAL_LOCATION", "BILLING_LOCATION"
+    );
+    
     protected SetupDataUtil() {
     }
 
@@ -72,7 +75,46 @@ public abstract class SetupDataUtil {
                         result.put("orgPartyId", orgPartyId);
                         result.put("party", party);
                         result.put("partyGroup", partyGroup);
-                        result.put("completed", true);
+                        
+                        // TODO?: check for CARRIER roleTypeId??
+                        
+                        PartyContactMechInfo contactMechInfo = PartyContactMechInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: Organization: ");
+                        contactMechInfo.resultsToMap(result);
+                        
+                        GenericValue mailShipAddressContactMech = null;
+                        Set<String> mailShipAddressContactMechPurposes = null;
+                        GenericValue workPhoneContactMech = null;
+                        GenericValue faxPhoneContactMech = null;
+                        GenericValue primaryEmailContactMech = null;
+                        
+                        mailShipAddressContactMech = contactMechInfo.getClosestContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
+                        if (mailShipAddressContactMech != null) {
+                            mailShipAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(mailShipAddressContactMech.getString("contactMechId"));
+                        }
+                        
+                        workPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PHONE_WORK", useCache);
+                        faxPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+                        primaryEmailContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
+
+                        result.put("mailShipAddressContactMech", mailShipAddressContactMech);
+                        result.put("mailShipAddressContactMechPurposes", mailShipAddressContactMechPurposes);
+                        boolean mailShipAddressCompleted = (mailShipAddressContactMech != null) && setContainsAll(mailShipAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
+                        result.put("mailShipAddressCompleted", mailShipAddressCompleted);
+                        
+                        result.put("workPhoneContactMech", workPhoneContactMech);
+                        result.put("faxPhoneContactMech", faxPhoneContactMech);
+                        result.put("primaryEmailContactMech", primaryEmailContactMech);
+                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) && 
+                                (faxPhoneContactMech != null) &&
+                                (primaryEmailContactMech != null);
+                        result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
+                        
+                        boolean contactMechsCompleted = mailShipAddressCompleted && simpleContactMechsCompleted;
+                        result.put("contactMechsCompleted", contactMechsCompleted);
+                        
+                        if (contactMechsCompleted) {
+                            result.put("completed", true);
+                        }
                     } else {
                         Debug.logError("Setup: Organization: Party '" + orgPartyId + "' does not have a PartyGroup record (invalid organization)", module);
                     }
@@ -85,7 +127,7 @@ public abstract class SetupDataUtil {
         }
         return result;
     }
-
+    
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
@@ -115,7 +157,7 @@ public abstract class SetupDataUtil {
                 } else {
                     Debug.logError("Setup: User '" + userPartyId + "' not found; ignoring", module);
                 }
-            } else if (!UtilMisc.booleanValueVersatile(params.get("newUser"), false)) {
+            } else {
                 GenericValue orgParty = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
                 if (orgParty != null) {
                     List<GenericValue> partyRelationshipOwnerList = orgParty.getRelated("FromPartyRelationship",
@@ -475,5 +517,13 @@ public abstract class SetupDataUtil {
     
     static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
         return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
+    }
+    
+    private static <T> boolean setContainsAll(Set<T> set, Iterable<T> values) {
+        if (set == null) return false;
+        for(T value : values) {
+            if (!set.contains(value)) return false;
+        }
+        return true;
     }
 }

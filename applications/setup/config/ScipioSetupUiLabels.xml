@@ -73,4 +73,14 @@
         <value xml:lang="de">Enregistrer et continuer</value>
         <value xml:lang="fr">Speichern fortsetzen</value>
     </property>
+    <property key="SetupUpdateAddress">
+        <value xml:lang="en">Update Address</value>
+        <value xml:lang="de">Adresse aktualisieren</value>
+        <value xml:lang="fr">Mettre à jour l'adresse</value>
+    </property>
+    <property key="SetupCreateMissingAddressPurposes">
+        <value xml:lang="en">Create missing address purposes</value>
+        <value xml:lang="de">Erstellen Sie fehlende Adresse Zwecke</value>
+        <value xml:lang="fr">Créer des objectifs d'adresse manquants</value>
+    </property>
 </resource>

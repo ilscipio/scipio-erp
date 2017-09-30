@@ -157,21 +157,24 @@
         <call-service service-name="createCustomTimePeriod" in-map-name="customTimePeriodCtx"/>
 
         <!-- Create partyId for UserLogin -->
-        <session-to-field field="userLoginCtx" session-name="userLogin"/>
-        <if-empty field="userLoginCtx.partyId">
-            <make-value value-field="newEntity" entity-name="Party"/>
-            <set field="newEntity.partyId" from-field="userLoginCtx.userLoginId"/>
-            <set field="newEntity.partyTypeId" value="PERSON"/>
-            <create-value value-field="newEntity"/>
-            <clear-field field="newEntity"/>
-            <make-value value-field="newPerson" entity-name="Person"/>
-            <set field="newPerson.partyId" from-field="userLoginCtx.userLoginId"/>
-            <create-value value-field="newPerson"/>
-            <clear-field field="newPerson"/>
-            
-            <set field="userLoginCtx.partyId" from-field="userLoginCtx.userLoginId"/>
-            <store-value value-field="userLoginCtx"/>
-        </if-empty>
+        <!-- SCIPIO: 2017-09-29: not sure this is always wanted, so allow to skip this behavior -->
+        <if-compare field="parameters.update_current_userlogin_party" operator="not-equals" value="false">
+            <session-to-field field="userLoginCtx" session-name="userLogin"/>
+            <if-empty field="userLoginCtx.partyId">
+                <make-value value-field="newEntity" entity-name="Party"/>
+                <set field="newEntity.partyId" from-field="userLoginCtx.userLoginId"/>
+                <set field="newEntity.partyTypeId" value="PERSON"/>
+                <create-value value-field="newEntity"/>
+                <clear-field field="newEntity"/>
+                <make-value value-field="newPerson" entity-name="Person"/>
+                <set field="newPerson.partyId" from-field="userLoginCtx.userLoginId"/>
+                <create-value value-field="newPerson"/>
+                <clear-field field="newPerson"/>
+                
+                <set field="userLoginCtx.partyId" from-field="userLoginCtx.userLoginId"/>
+                <store-value value-field="userLoginCtx"/>
+            </if-empty>
+        </if-compare>
 
         <!-- set the partyId in the request -->
         <field-to-request field="tempMap.partyId" request-name="partyId"/>

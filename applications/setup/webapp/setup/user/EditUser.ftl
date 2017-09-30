@@ -36,13 +36,20 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<#assign userUserLogin = getWizardFormFieldValueMaps({"record" : params.userUserLogin!}).values!>
-<#assign userPerson = getWizardFormFieldValueMaps({"record" : params.userPerson!}).values!>
-<#assign userPostalAddress = getWizardFormFieldValueMaps({"record" : params.userPostalAddress!}).values!>
-<#assign userEmailAddress = getWizardFormFieldValueMaps({"record" : params.userEmailAddress!}).values!>
-<#assign userWorkNumber = getWizardFormFieldValueMaps({"record" : params.userWorkNumber!}).values!>
-<#assign userMobileNumber = getWizardFormFieldValueMaps({"record" : params.userMobileNumber!}).values!>
-<#assign userFaxNumber = getWizardFormFieldValueMaps({"record" : params.userFaxNumber!}).values!>
+<#assign userUserLoginMaps = getWizardFormFieldValueMaps({"record" : params.userUserLogin!})!>
+<#assign userUserLogin = userUserLoginMaps.values!>
+<#assign userPersonMaps = getWizardFormFieldValueMaps({"record" : params.userPerson!})!>
+<#assign userPerson = userPersonMaps.values!>
+<#assign userPostalAddressMaps = getWizardFormFieldValueMaps({"record" : params.userPostalAddress!})!>
+<#assign userPostalAddress = userPostalAddressMaps.values!>
+<#assign userEmailAddressMaps = getWizardFormFieldValueMaps({"record" : params.userEmailAddress!})!>
+<#assign userEmailAddress = userEmailAddressMaps.values!>
+<#assign userWorkNumberMaps = getWizardFormFieldValueMaps({"record" : params.userWorkNumber!})!>
+<#assign userWorkNumber = userWorkNumberMaps.values!>
+<#assign userMobileNumberMaps = getWizardFormFieldValueMaps({"record" : params.userMobileNumber!})!>
+<#assign userMobileNumber = userMobileNumberMaps.values!>
+<#assign userFaxNumberMaps = getWizardFormFieldValueMaps({"record" : params.userFaxNumber!})!>
+<#assign userFaxNumber = userFaxNumberMaps.values!>
 
 <@script>
     <#if getUsername>    
@@ -176,7 +183,7 @@ under the License.
 	  <@cell columns=6>
     	  <fieldset>    
     	    <legend>${getLabel("CommunicationEventType.description.PHONE_COMMUNICATION", "PartyEntityLabels")}</legend>
-    	         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userWorkNumber
+    	         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userWorkNumber useAltNames=userWorkNumberMaps.isRecord
                     fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>
@@ -186,7 +193,7 @@ under the License.
                   </@fields>
                 </@telecomNumberField>
                 
-                <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userMobileNumber
+                <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userMobileNumber useAltNames=userMobileNumberMaps.isRecord
                     fieldNamePrefix="USER_MOBILE_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>
@@ -196,7 +203,7 @@ under the License.
                   </@fields>
                 </@telecomNumberField>
                 
-                <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userFaxNumber
+                <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userFaxNumber useAltNames=userFaxNumberMaps.isRecord
                     fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
                   <@fields type="default-compact" ignoreParentField=true>                    
                     <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>

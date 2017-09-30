@@ -113,7 +113,7 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
       <#local fixedValues = defaults><#-- this is stock ofbizsetup behavior -->
     </#if>
   </#if>
-  <#return {"values":values, "fixedValues":fixedValues, "isRecord":values}>
+  <#return {"values":values, "fixedValues":fixedValues, "isRecord":isRecord}>
 </#function>
 
 <#-- copied from shop -->
@@ -137,21 +137,32 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
 </#macro>
 
 <#-- copied from shop -->
-<#macro telecomNumberField params=true label="" fieldNamePrefix="" required=false showExt=true tooltip=false inlineArgs...>
+<#-- FIXME: only support one set of altNames - this will be solved in the future when getAutoValue is implemented everywhere. 
+    Make map copies otherwise. -->
+<#macro telecomNumberField params=true label="" fieldNamePrefix="" required=false showExt=true tooltip=false 
+    useAltNames=false altNamePrefix="" altNames={"countryCodeName":"countryCode", "areaCodeName":"areaCode", "contactNumberName":"contactNumber", "extensionName":"extension"} 
+    inlineArgs...>
   <#if params?is_boolean>
     <#local params = parameters>
   </#if>
   <#local args = inlineArgs>
-  <#local countryCodeName = fieldNamePrefix + (args.countryCodeName)!"countryCode">
-  <#local areaCodeName = fieldNamePrefix + (args.areaCodeName)!"areaCode">
-  <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
-  <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
+  <#if useAltNames>
+    <#local countryCodeName = altNamePrefix + (altNames.countryCodeName)!"countryCode">
+    <#local areaCodeName = altNamePrefix + (altNames.areaCodeName)!"areaCode">
+    <#local contactNumberName = altNamePrefix + (altNames.contactNumberName)!"contactNumber">
+    <#local extensionName = altNamePrefix + (altNames.extensionName)!"extension">
+  <#else>
+    <#local countryCodeName = fieldNamePrefix + (args.countryCodeName)!"countryCode">
+    <#local areaCodeName = fieldNamePrefix + (args.areaCodeName)!"areaCode">
+    <#local contactNumberName = fieldNamePrefix + (args.contactNumberName)!"contactNumber">
+    <#local extensionName = fieldNamePrefix + (args.extensionName)!"extension">
+  </#if>
   <@field type="generic" label=label tooltip=tooltip required=required args=args>
-      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params.countryCode)!(params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params.areaCode)!(params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
-      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params.contactNumber)!(params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
+      <@field type="input" inline=true size="1" maxlength="10" name=countryCodeName value=((params[countryCodeName])!(args.countryCode)!) tooltip=uiLabelMap.CommonCountryCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="2" maxlength="10" name=areaCodeName value=((params[areaCodeName])!(args.areaCode)!) tooltip=uiLabelMap.PartyAreaCode required=required/>
+      -&nbsp;<@field type="input" inline=true size="8" maxlength="15" name=contactNumberName value=((params[contactNumberName])!(args.contactNumber)!) tooltip=uiLabelMap.PartyContactNumber required=required/>
       <#if showExt>&nbsp;<span style="white-space: nowrap;">${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="4" maxlength="10" name=extensionName 
-        value=((params.extension)!(params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
+        value=((params[extensionName])!(args.extension)!) tooltip=uiLabelMap.PartyExtension /></span></#if>
     <#nested>
   </@field>
 </#macro>

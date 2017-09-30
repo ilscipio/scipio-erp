@@ -271,18 +271,20 @@
                     </simple-map-processor>
                 </call-map-processor>
             </if-empty>
-            <if-not-empty field="emailContext.emailAddress">
-                <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
-                    <simple-map-processor name="checkRequiredEmailFormat">
-                        <process field="emailAddress">
-                            <validate-method method="isEmail">
-                                <fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/>
-                            </validate-method>
-                        </process>
-                    </simple-map-processor>
-                </call-map-processor>
-            </if-not-empty>
         </if-compare>
+        <!-- SCIPIO: 2017-09-29: MOVED this check outside of the require_email condition; must always check
+            email validity when non-empty -->
+        <if-not-empty field="emailContext.emailAddress">
+            <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
+                <simple-map-processor name="checkRequiredEmailFormat">
+                    <process field="emailAddress">
+                        <validate-method method="isEmail">
+                            <fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/>
+                        </validate-method>
+                    </process>
+                </simple-map-processor>
+            </call-map-processor>
+        </if-not-empty>
     </simple-method>
 
     <simple-method method-name="setupDefaultGeneralLedger" short-description="General Ledger Setup for the new organization">

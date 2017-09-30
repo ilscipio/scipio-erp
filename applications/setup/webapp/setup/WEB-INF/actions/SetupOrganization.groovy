@@ -7,7 +7,9 @@ organizationData = context.organizationData ?: [:];
 
 context.mailShipAddressContactMech = organizationData.mailShipAddressContactMech;
 context.mailShipAddressContactMechPurposes = organizationData.mailShipAddressContactMechPurposes;
-context.mailShipAddressCompleted = organizationData.mailShipAddressCompleted;
+context.mailShipAddressStandaloneCompleted = organizationData.mailShipAddressStandaloneCompleted;
+
+context.locationAddressesCompleted = organizationData.locationAddressesCompleted;
 
 context.workPhoneContactMech = organizationData.workPhoneContactMech;
 context.faxPhoneContactMech = organizationData.faxPhoneContactMech;

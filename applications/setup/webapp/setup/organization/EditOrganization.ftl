@@ -108,16 +108,23 @@
           </div>
           
           <#if partyId??>
-            <#if mailShipAddressContactMech??>
-              <#if (mailShipAddressCompleted!false) == false>
-                <#-- TODO: localize & more detail - could make better check - this is hard to manage -->
-                <@alert type="info">The mailing/shipping/billing address defined above for the organization could be incomplete,
-                    because it does not have all the standard contact purposes.
-                    If you have intentionally defined different addresses for each purpose, feel free to ignore this message.</@alert>
-              </#if>
+            <#if !mailShipAddressContactMech??>
+                <#-- TODO: localize -->
+                <@alert type="warning">No general/payment/billing address is currently defined for the organization.</@alert>
             <#else>
-              <#-- TODO: localize -->
-              <@alert type="warning">No mailing/shipping/billing address is currently defined for the organization.</@alert>
+              <#if (mailShipAddressStandaloneCompleted!false) == false>
+                <#if (locationAddressesCompleted!false) == true>
+                  <@alert type="info">Note: This organization appears to have different addresses defined for 
+                    different purposes (general/payment/billing). This form may be insufficient to update all of them.
+                    You may need to use the <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyParty/>
+                    manager instead.</@alert>
+                <#else>
+                  <@alert type="warning">This organization appears to be missing one or more of the standard address locations
+                    (general/payment/billing). Note: If you need multiple addresses, you may need to use
+                    the <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyParty/>
+                    manager instead.</@alert>
+                </#if>
+              </#if>
             </#if>
           </#if>
         </@field>

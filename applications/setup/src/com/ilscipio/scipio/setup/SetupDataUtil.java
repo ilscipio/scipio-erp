@@ -2,6 +2,7 @@ package com.ilscipio.scipio.setup;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -81,26 +82,30 @@ public abstract class SetupDataUtil {
                         PartyContactMechInfo contactMechInfo = PartyContactMechInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: Organization: ");
                         contactMechInfo.resultsToMap(result);
                         
-                        GenericValue mailShipAddressContactMech = null;
                         Set<String> mailShipAddressContactMechPurposes = null;
-                        GenericValue workPhoneContactMech = null;
-                        GenericValue faxPhoneContactMech = null;
-                        GenericValue primaryEmailContactMech = null;
-                        
-                        mailShipAddressContactMech = contactMechInfo.getClosestContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
+                        GenericValue mailShipAddressContactMech = contactMechInfo.getClosestContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
                         if (mailShipAddressContactMech != null) {
                             mailShipAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(mailShipAddressContactMech.getString("contactMechId"));
                         }
-                        
-                        workPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PHONE_WORK", useCache);
-                        faxPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
-                        primaryEmailContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
-
                         result.put("mailShipAddressContactMech", mailShipAddressContactMech);
                         result.put("mailShipAddressContactMechPurposes", mailShipAddressContactMechPurposes);
-                        boolean mailShipAddressCompleted = (mailShipAddressContactMech != null) && setContainsAll(mailShipAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
-                        result.put("mailShipAddressCompleted", mailShipAddressCompleted);
+                        boolean mailShipAddressStandaloneCompleted = (mailShipAddressContactMech != null) && setContainsAll(mailShipAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
+                        result.put("mailShipAddressStandaloneCompleted", mailShipAddressStandaloneCompleted);
                         
+                        result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
+                        Map<String, GenericValue> locationContactMechs = new HashMap<>();
+                        for(String purpose : ORGANIZATION_MAINADDR_PURPOSES) {
+                            GenericValue contactMech = contactMechInfo.getContactMechForPurpose(delegator, purpose, useCache);
+                            if (contactMech != null) {
+                                locationContactMechs.put(purpose, contactMech);
+                            }
+                        }
+                        boolean locationAddressesCompleted = (locationContactMechs.size() == ORGANIZATION_MAINADDR_PURPOSES.size());
+ 
+                        GenericValue workPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PHONE_WORK", useCache);
+                        GenericValue faxPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+                        GenericValue primaryEmailContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
+
                         result.put("workPhoneContactMech", workPhoneContactMech);
                         result.put("faxPhoneContactMech", faxPhoneContactMech);
                         result.put("primaryEmailContactMech", primaryEmailContactMech);
@@ -109,7 +114,7 @@ public abstract class SetupDataUtil {
                                 (primaryEmailContactMech != null);
                         result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
                         
-                        boolean contactMechsCompleted = mailShipAddressCompleted && simpleContactMechsCompleted;
+                        boolean contactMechsCompleted = locationAddressesCompleted && simpleContactMechsCompleted;
                         result.put("contactMechsCompleted", contactMechsCompleted);
                         
                         if (contactMechsCompleted) {

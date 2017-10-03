@@ -146,27 +146,28 @@
     </simple-method>
     
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
-        <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />
+<!--         <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />
         
         <log level="always" message="parameters.USER_EMAIL_CONTACT_MECH_ID          =================> ${parameters.USER_EMAIL_CONTACT_MECH_ID}" />
         <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID =================> ${parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID}" />
         <log level="always" message="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID    =================> ${parameters.USER_WORK_NUMBER_CONTACT_MECH_ID}" />
         <log level="always" message="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID  =================> ${parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />       
+        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />   -->     
         
         <entity-one value-field="person" entity-name="Person"><field-map field-name="partyId" from-field="parameters.userPartyId"/></entity-one>
         <entity-one value-field="postalAddress" entity-name="PostalAddress"><field-map field-name="contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID"/></entity-one>
         <entity-one value-field="workNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID"/></entity-one>
         <entity-one value-field="mobileNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID"/></entity-one>
         <entity-one value-field="faxNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID"/></entity-one>
+        <entity-one value-field="email" entity-name="ContactMech"><field-map field-name="contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID"/></entity-one>
         
         <call-simple-method method-name="validateUser"/>        
-        <log level="always" message="personMap      =================> ${personMap}" />
-        <log level="always" message="emailMap       =================> ${emailMap}" />
-        <log level="always" message="addressMap     =================> ${addressMap}" />
-        <log level="always" message="workPhoneMap   =================> ${workPhoneMap}" />
-        <log level="always" message="mobilePhoneMap =================> ${mobileMap}" />
-        <log level="always" message="faxPMap        =================> ${faxMap}" />
+        
+        <!-- <log level="always" message="emailMap       =================> ${emailMap}  | current email ========> ${email}" />
+        <log level="always" message="addressMap     =================> ${addressMap} | current address ========> ${postalAddress}" />
+        <log level="always" message="workPhoneMap   =================> ${workPhoneMap} | current work phone ========> ${workNumber}" />
+        <log level="always" message="mobilePhoneMap =================> ${mobileMap} | current mobile phone ========> ${mobileNumber}" />
+        <log level="always" message="faxPMap        =================> ${faxMap} | current fax ========> ${faxNumber}" /> -->
         <!-- see if we should continue now... -->
         <!-- <check-errors/> -->        
 <!--         <set field="personMap.partyId" from-field="parameters.userPartyId" />
@@ -180,6 +181,20 @@
 			<set field="addressMap.contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID" />
 			<set field="addressMap.partyId" from-field="parameters.userPartyId" />
 			<call-service service-name="updatePartyPostalAddress" in-map-name="addressMap" />
+        </if-compare>
+        
+        <set field="emailChanged" value="${groovy: return(emailMessages != null &amp;&amp; emailMessages.size() == 1 &amp;&amp; emailMessages.get(0).getMessage().equals(&quot;emailDiffers&quot;))}" type="Boolean" />
+        <log level="always" message="email changed =================> ${emailChanged}" />
+        <if-compare field="emailChanged" operator="equals" value="true" type="Boolean">
+            <set field="emailMap.contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID" />
+            <set field="emailMap.partyId" from-field="parameters.userPartyId" />
+            <call-service service-name="updatePartyEmailAddress" in-map-name="emailMap" />
+        </if-compare>
+        
+        
+        <if-compare field="personChanged" operator="equals" value="true" type="Boolean">            
+            <set field="personMap.partyId" from-field="parameters.userPartyId" />
+            <call-service service-name="updatePartyEmailAddress" in-map-name="personMap" />
         </if-compare>
     </simple-method>
     
@@ -242,26 +257,51 @@
         <!-- timestamp to be used -->
         <now-timestamp field="nowStamp"/>
 
-        <!-- setup the party/person -->
+        <!-- setup the party/person --> 
+        <log level="always" message="current person ========> ${person}" />       
         <call-map-processor in-map-name="parameters" out-map-name="personMap">
-            <simple-map-processor name="person">
-                <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
+            <simple-map-processor name="personValid">
+                <process field="USER_TITLE">
+                    <copy to-field="personalTitle"/>
+                </process>
                 <process field="USER_FIRST_NAME">
+                    <compare operator="not-equals" value="${person.firstName}"><fail-message message="personDiffers"/></compare>
                     <copy to-field="firstName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty>
                 </process>
                 <process field="USER_LAST_NAME">
+                    <compare operator="not-equals" value="${person.lastName}"><fail-message message="personDiffers"/></compare>
                     <copy to-field="lastName"/>
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty>
                 </process>
             </simple-map-processor>
         </call-map-processor>
+        <check-errors/>
+        <log level="always" message="personMap      =================> ${personMap}" />
+        <call-map-processor in-map-name="personMap" out-map-name="personMap" error-list-name="personMessages">
+            <simple-map-processor name="personChanges">
+                <process field="personalTitle">
+                    <compare operator="not-equals" value="${person.personalTitle}"><fail-message message="personDiffers"/></compare>                    
+                </process>
+                <process field="firstName">
+                    <compare operator="not-equals" value="${person.firstName}"><fail-message message="personDiffers"/></compare>                    
+                </process>
+                <process field="lastName">
+                    <compare operator="not-equals" value="${person.lastName}"><fail-message message="personDiffers"/></compare>                    
+                </process>
+            </simple-map-processor>
+        </call-map-processor>
+        
+        <log level="always" message="personMessages =================> ${personMessages}" />
+        <set field="personChanged" value="${groovy: return(personMessages != null &amp;&amp; personMessages.size() == 1 &amp;&amp; personMessages.get(0).getMessage().equals(&quot;personDiffers&quot;))}" type="Boolean" />
+        <log level="always" message="person changed =================> ${personChanged}" />
 
         <!-- setup the email -->
-        <call-map-processor in-map-name="parameters" out-map-name="emailMap">
+        <call-map-processor in-map-name="parameters" out-map-name="emailMap" error-list-name="emailMessages">
             <simple-map-processor name="email">
-                <process field="USER_EMAIL_ADDRESS">
-                    <copy to-field="infoString"/>
+                <process field="USER_EMAIL">
+                    <compare-field operator="not-equals" field="email.infoString"><fail-message message="emailDiffers"/></compare-field>
+                    <copy to-field="emailAddress"/>
                     <validate-method method="isEmail"><fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></validate-method>
                 </process>
                 <process field="USER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>

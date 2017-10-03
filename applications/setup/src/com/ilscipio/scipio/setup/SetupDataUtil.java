@@ -152,15 +152,15 @@ public abstract class SetupDataUtil {
                             UtilMisc.toList("fromDate DESC"), false);
                     if (UtilValidate.isNotEmpty(partyRelationshipOwnerList)) {
                         if (partyRelationshipOwnerList.size() > 1) {
-                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" 
+                            Debug.logWarning("Setup: User: party " + userPartyId + "' got multiple owner relationships for organization '" 
                                     + orgPartyId + "'", module);
                         }
                     } else {
-                        Debug.logError("Setup: User '" + userPartyId + "'" + " is not an owner of organization '" + orgPartyId + "'; ignoring", module);
+                        Debug.logError("Setup: User: party '" + userPartyId + "'" + " is not an owner of organization '" + orgPartyId + "'; ignoring", module);
                         party = null;
                     }
                 } else {
-                    Debug.logError("Setup: User '" + userPartyId + "' not found; ignoring", module);
+                    Debug.logError("Setup: User: party '" + userPartyId + "' not found; ignoring", module);
                 }
             } else {
                 GenericValue orgParty = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
@@ -196,15 +196,15 @@ public abstract class SetupDataUtil {
             Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
             boolean completed = true;
             if (!purposeTypes.contains("GENERAL_LOCATION")) {
-                Debug.logInfo("Setup: User '" + userPartyId + "' has no GENERAL_LOCATION contact mech; treating as incomplete", module);
+                Debug.logInfo("Setup: User: party '" + userPartyId + "' has no GENERAL_LOCATION contact mech; treating as incomplete", module);
                 completed = false;
             }
             if (!purposeTypes.contains("PHONE_HOME") && !purposeTypes.contains("PHONE_MOBILE")) {
-                Debug.logInfo("Setup: User '" + userPartyId + "' has no PHONE_HOME and PHONE_MOBILE contact mech; treating as incomplete", module);
+                Debug.logInfo("Setup: User: party '" + userPartyId + "' has no PHONE_HOME and PHONE_MOBILE contact mech; treating as incomplete", module);
                 completed = false;
             }
             if (!purposeTypes.contains("PRIMARY_EMAIL")) {
-                Debug.logInfo("Setup: User '" + userPartyId + "' has no PRIMARY_EMAIL contact mech; treating as incomplete", module);
+                Debug.logInfo("Setup: User: party '"  + userPartyId + "' has no PRIMARY_EMAIL contact mech; treating as incomplete", module);
                 completed = false;
             }
             

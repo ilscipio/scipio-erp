@@ -75,7 +75,7 @@ under the License.
              }
          }
          function setEmailUsername(noreset) {
-             if (document.getElementById('UNUSEEMAIL').checked) {
+             if (document.getElementById('UNUSEEMAIL') != null && document.getElementById('UNUSEEMAIL').checked) {
                  document.getElementById('USERNAME').value = jQuery('#USER_EMAIL').val();
                  <#-- don't disable, make the browser not submit the field: document.getElementById('USERNAME').disabled=true; -->
                  <#-- SCIPIO: ... but DO set disabled class so user sees as if was disabled -->
@@ -102,7 +102,7 @@ under the License.
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     
     <#if userParty??>
-        <@field type="hidden" name="userPartyId" value=(params.userPartyId!)/>
+        <@field type="hidden" name="userPartyId" value=(userParty.partyId!)/>
     </#if>
 
 	<@row>
@@ -160,9 +160,8 @@ under the License.
                     "pafFieldNamePrefix":"USER_",
                     "pafFieldIdPrefix":"EditUser_",
                     "pafUseScripts":true,
-                    "pafFallbacks":({}),
-                    "postalAddressData": userPostalAddress,
-                    "pafParams":userPostalAddress,
+                    "pafFallbacks":({"countryGeoId" : (userPostalAddress["countryGeoId"])!}),
+                    "postalAddressData": userPostalAddress,                    
                     "pafFieldNameMap": {
                       "stateProvinceGeoId": "STATE",
                       "countryGeoId": "COUNTRY",

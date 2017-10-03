@@ -48,7 +48,6 @@ context.userContactMechPurposes = userContactMechPurposes;
 
 if (userContactMechsByPurpose["PHONE_WORK"]) {
     context.userWorkNumber = userContactMechsByPurpose["PHONE_WORK"].getRelatedOne("TelecomNumber", false);
-    Debug.log("context.userWorkNumber ============> " + context.userWorkNumber);
 }
 if (userContactMechsByPurpose["PHONE_MOBILE"]) {
     context.userMobileNumber = userContactMechsByPurpose["PHONE_MOBILE"].getRelatedOne("TelecomNumber", false);
@@ -60,5 +59,5 @@ if (userContactMechsByPurpose["PRIMARY_EMAIL"]) {
     context.userEmailAddress = userContactMechsByPurpose["PRIMARY_EMAIL"];
 }
 if (userContactMechsByPurpose["GENERAL_LOCATION"]) {
-    context.userPostalAddress = userContactMechsByPurpose["GENERAL_LOCATION"].getRelatedOne("PostalAddress", false);    
+    context.userPostalAddress = userContactMechsByPurpose["GENERAL_LOCATION"].getRelatedOne("PostalAddress", false);
 }

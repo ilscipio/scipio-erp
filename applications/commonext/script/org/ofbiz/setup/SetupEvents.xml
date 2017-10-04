@@ -22,7 +22,9 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <simple-method method-name="createOrganization" short-description="Create Organization" login-required="false">
-        <set field="require_email" value="true"/>
+        <!-- SCIPIO: 2017-10-04: don't know why this was forced here (it is specified by forms)
+        <set field="require_email" value="true"/>-->
+        <set field="require_email" from-field="parameters.require_email" default-value="true"/>
         <set field="require_phone" value="false"/>
         <set field="require_login" value="false"/>
         <!-- this parameter must be set to true or the createUser method below will use a default password instead of the one entered by user -->

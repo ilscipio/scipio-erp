@@ -365,6 +365,13 @@
                 <set field="titleProperty" value="${groovy: !isCreate ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
                 <set field="target" value="${groovy: !isCreate ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
                 <set field="submitFormId" value="EditOrganization"/>
+                
+                <if>
+                    <condition><not><if-true field="organizationSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -378,6 +385,9 @@
                                     <include-screen name="SelectOrganization"/>
                                 </screenlet>
                                 <section>
+                                    <condition>
+                                        <if-true field="organizationSelected"/>
+                                    </condition>
                                     <widgets>
                                         <screenlet>
                                             <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->

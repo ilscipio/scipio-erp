@@ -1,21 +1,12 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
-<#assign setupStepIconMap = {
-    "organization": "fa fa-info", 
-    "store": "fa fa-info", 
-    "user": "fa fa-info", 
-    "accounting": "fa fa-credit-card", 
-    "facility": "fa fa-building", 
-    "catalog": "fa fa-info", 
-    "website": "fa fa-info"
-}>
-<#assign setupStepIconDef = "fa fa-info">
+<#-- NOTE: for icons and labels, see SetupWizardStaticProperties.groovy -->
 
-<#macro setupNavStep name icon=setupStepIconDef>
+<#macro setupNavStep name>
   <#-- NOTE: the "disabled" logic is overridden and determined by SetupWorker -->
   <#local stepState = (setupStepStates[name])!{}>
   <@step name=name 
-    icon=icon 
+    icon=("fa "+rawString((setupStepIconMap[name])!(setupStepIconMap["default"])!))
     href=makeSetupStepUrl(name, stepState)
     completed=((stepState.completed)!false) 
     disabled=((setupStepDisabledMap[name])!true)
@@ -25,7 +16,7 @@
 <@section>
     <@nav type="steps" activeElem=(setupStep!"")>
       <#list setupStepList as stepName>
-        <@setupNavStep name=stepName icon=(setupStepIconMap[stepName]!setupStepIconDef)/>
+        <@setupNavStep name=stepName/>
       </#list>
     </@nav>
 </@section>

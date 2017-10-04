@@ -14,18 +14,10 @@ if (context.setupWizardActionsRun != true) {
         context.debugMode = UtilMisc.booleanValueVersatile(parameters.debugMode, false);
     }
     
+    GroovyUtil.runScriptAtLocation("component://setup/webapp/setup/WEB-INF/actions/SetupWizardStaticProperties.groovy", null, context);
+    
     def setupStepList = SetupWorker.getStepsStatic(); // (excludes "finished")
-    
-    def setupStepTitlePropMap = [
-        organization: "SetupOrganization",
-        store: "CommonStore",
-        user: "PartyParty",
-        accounting: "AccountingAccounting",
-        facility: "ProductFacility",
-        catalog: "ProductCatalog",
-        website: "SetupWebSite"
-    ];
-    
+
     def setupStepDisabledMap = [:]; // special map for Menus.xml, true defaults needed in case crash
     for(step in setupStepList) {
         setupStepDisabledMap[step] = true;
@@ -97,7 +89,6 @@ if (context.setupWizardActionsRun != true) {
     // assign all after try block so context/parameters clean even if fail
     
     context.setupStepList = setupStepList;
-    context.setupStepTitlePropMap = setupStepTitlePropMap;
     context.setupStepDisabledMap = setupStepDisabledMap;
     
     context.setupWorker = setupWorker;

@@ -1234,6 +1234,7 @@ context.styles = [
         "order" : "fa-recycle",
         "party" : "fa-users",
         "catalog" : "fa-sitemap",
+        "setup" : "fa-cog",
         "shop" : "fa-shopping-cart",
         "solr" : "fa-search",
         "workeffort" : "fa-sliders"

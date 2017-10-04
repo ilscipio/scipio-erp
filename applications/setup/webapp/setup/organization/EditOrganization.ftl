@@ -79,6 +79,9 @@
             <#-- NOTE: this flag could be destructive, that's why it's false by default -->
             <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_UPDATEROLES" label=uiLabelMap.SetupCreateMissingAddressPurposes
                 id="USER_ADDRESS_UPDATEROLES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_UPDATEROLES!"false")/>
+            <#if mailShipAddressContactMech??>
+              <@field type="hidden" name="USER_ADDRESS_CONTACTMECHID" value=mailShipAddressContactMech.contactMechId/>
+            </#if>
           <#else>
             <@field type="hidden" name="USE_ADDRESS" value=(USE_ADDRESS!"true")/>
           </#if>
@@ -110,25 +113,26 @@
           <#if partyId??>
             <#if !mailShipAddressContactMech??>
                 <#-- TODO: localize -->
-                <@alert type="warning">No general/payment/billing address is currently defined for the organization.</@alert>
+                <@alert type="warning">${uiLabelMap.SetupNoShipMailAddressDefinedForOrganizationNotice}</@alert>
             <#else>
               <#if (mailShipAddressStandaloneCompleted!false) == false>
                 <#if (locationAddressesCompleted!false) == true>
-                  <@alert type="info">Note: This organization appears to have different addresses defined for 
-                    different purposes (general/payment/billing). This form may be insufficient to update all of them.
-                    You may need to use the <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyParty/>
-                    manager instead.</@alert>
+                  <@alert type="info">${uiLabelMap.SetupSplitShipMailAddressPurposesForOrganizationNotice}
+                    <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  </@alert>
                 <#else>
-                  <@alert type="warning">This organization appears to be missing one or more of the standard address locations
-                    (general/payment/billing). Note: If you need multiple addresses, you may need to use
-                    the <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyParty/>
-                    manager instead.</@alert>
+                  <@alert type="warning">${uiLabelMap.SetupMissingShipMailAddressPurposesForOrganizationNotice}
+                    <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  </@alert>
                 </#if>
               </#if>
             </#if>
           </#if>
         </@field>
         
+        <#if workPhoneContactMech??>
+          <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=workPhoneContactMech.contactMechId/>
+        </#if>
         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=params
             fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
@@ -137,6 +141,9 @@
           </@fields>
         </@telecomNumberField>
         
+        <#if faxPhoneContactMech??>
+          <@field type="hidden" name="USER_FAX_CONTACTMECHID" value=faxPhoneContactMech.contactMechId/>
+        </#if>
         <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=params
             fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
@@ -145,12 +152,17 @@
           </@fields>
         </@telecomNumberField>
         
+        <#-- SCIPIO: probably can get away with not requiring email
         <#if partyId??>
           <@field type="hidden" name="require_email" value=(require_email!"true")/>
         <#else>
           <@field type="hidden" name="require_email" value=(require_email!"false")/>
+        </#if>-->
+        <@field type="hidden" name="require_email" value="false"/>
+        <#if primaryEmailContactMech??>
+          <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=primaryEmailContactMech.contactMechId/>
         </#if>
-        <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail required=fieldsRequired size="60" maxlength="250"/>
+        <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail size="60" maxlength="250"/><#-- required=fieldsRequired  -->
         <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
         <#-- no point
         <@field type="generic" label=uiLabelMap.PartyEmailAddress>

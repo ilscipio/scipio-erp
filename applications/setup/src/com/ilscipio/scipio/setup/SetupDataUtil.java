@@ -492,6 +492,26 @@ public abstract class SetupDataUtil {
         return SetupEvents.isPreviousEventSavedError(params);
     }
     
+    // Exact request states
+    
+    static boolean isNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("new" + stepNameCamel), false);
+    }
+    
+    static boolean isCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false);
+    }
+    
+    static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return isCreateRecordRequest(params, stepNameCamel) && isEventError(params);
+    }
+    
+    static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
+    }
+    
+    // Aggregate/high-level states
+    
     /**
      * Returns true if "new" form was requested 
      * OR if a form was submitted as create and creation failed
@@ -512,17 +532,11 @@ public abstract class SetupDataUtil {
                 isDeleteRecordRequest(params, stepNameCamel);
     }
     
-    static boolean isNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("new" + stepNameCamel), false);
+    static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return isNewRecordRequest(params, stepNameCamel) || 
+                isFailedCreateRecordRequest(params, stepNameCamel);
     }
     
-    static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false) && isEventError(params);
-    }
-    
-    static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
-    }
     
     private static <T> boolean setContainsAll(Set<T> set, Iterable<T> values) {
         if (set == null) return false;

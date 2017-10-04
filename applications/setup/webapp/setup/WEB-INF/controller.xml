@@ -34,11 +34,11 @@
     
     <request-map uri="main">
         <security https="true" auth="true"/>
-        <response name="success" type="request" value="setupOrganization" save-home-view="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
     </request-map>
     <request-map uri="initialsetup">
         <security https="true" auth="true"/>
-        <response name="success" type="request" value="setupOrganization" save-home-view="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
     </request-map>
 
     <!-- Modified requests -->
@@ -79,6 +79,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="request" value="nextSetupStep"/>
     </request-map>
+    <request-map uri="setupWizardStart"><!-- always goes back to start of wizard (as long as don't mess it up with parameters) -->
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="setupOrganization"/>
+    </request-map>
     
     <!-- DEV NOTE: To simplify the code, the setupUpdate[Step] server-side events below do not perform a step
         validity check before committing (though theoretically should). This check is already done in the screens 
@@ -88,7 +92,7 @@
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
-        <response name="success" type="view" value="SetupOrganization" save-home-view="true"/>
+        <response name="success" type="view" value="SetupOrganization" save-home-view="true"/><!-- save-home-view is needed in case EditContactMech is accessed -->
         <response name="error" type="view" value="SetupError"/>
     </request-map>
     <request-map uri="setupCreateOrganization">

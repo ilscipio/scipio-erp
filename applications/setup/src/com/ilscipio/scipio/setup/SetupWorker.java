@@ -499,10 +499,31 @@ public abstract class SetupWorker implements Serializable {
     
     public abstract List<String> getIncompleteSteps();
     
+    // Exact request states 
+    
+    /**
+     * Returns true if new record form requested - this controls if form should show create or update.
+     */
     public abstract boolean isNewRecordRequest(String step);
+    /**
+     * Returns true if a create form was submitted.
+     * NOTE: when this is true, isNewRecordRequest may return false because only one of these gets
+     * passed. You may need check both.
+     */
+    public abstract boolean isCreateRecordRequest(String step);
     public abstract boolean isFailedCreateRecordRequest(String step);
     public abstract boolean isDeleteRecordRequest(String step);
+    
+    // Aggregate/high-level states
+    
     public abstract boolean isUnspecificRecordRequest(String step);
+    
+    /**
+     * This is basically isNewRecordRequest+isFailedCreateRecordRequest for now.
+     * Couldn't find a better name.
+     */
+    public abstract boolean isEffectiveNewRecordRequest(String step);
+    
     
     /* 
      * *******************************************
@@ -627,6 +648,10 @@ public abstract class SetupWorker implements Serializable {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
+        public boolean isCreateRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
         public boolean isFailedCreateRecordRequest(String step) {
             throw new UnsupportedOperationException(); // TODO?
         }
@@ -636,6 +661,10 @@ public abstract class SetupWorker implements Serializable {
         }
         @Override
         public boolean isUnspecificRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isEffectiveNewRecordRequest(String step) {
             throw new UnsupportedOperationException(); // TODO?
         }
         protected static class StaticStepState extends StepState { // WARN: this one MUST be static
@@ -1045,6 +1074,10 @@ public abstract class SetupWorker implements Serializable {
             return SetupDataUtil.isNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
         @Override
+        public boolean isCreateRecordRequest(String step) {
+            return SetupDataUtil.isCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
         public boolean isFailedCreateRecordRequest(String step) {
             return SetupDataUtil.isFailedCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
@@ -1052,9 +1085,14 @@ public abstract class SetupWorker implements Serializable {
         public boolean isDeleteRecordRequest(String step) {
             return SetupDataUtil.isDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
+        
         @Override
         public boolean isUnspecificRecordRequest(String step) {
             return SetupDataUtil.isUnspecificRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
+        public boolean isEffectiveNewRecordRequest(String step) {
+            return SetupDataUtil.isEffectiveNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
         
         /* 

@@ -83,4 +83,24 @@
         <value xml:lang="de">Erstellen Sie fehlende Adresse Zwecke</value>
         <value xml:lang="fr">Créer des objectifs d'adresse manquants</value>
     </property>
+    <property key="SetupNoShipMailAddressDefinedForOrganizationNotice">
+        <value xml:lang="en">No general/payment/billing address is currently defined for the organization.</value>
+        <value xml:lang="de">Für die Organisation ist derzeit keine allgemeine/Zahlungs-/Rechnungsadresse definiert.</value>
+        <value xml:lang="fr">Aucune adresse générale/paiement/facturation n'est définie pour l'organisation.</value>
+    </property>
+    <property key="SetupSplitShipMailAddressPurposesForOrganizationNotice">
+        <value xml:lang="en">This organization appears to have different addresses defined for different purposes (general/payment/billing). This form may be insufficient to update all of them. You may need to use the User Manager instead.</value>
+        <value xml:lang="de">Für die Organisation ist derzeit keine allgemeine/Zahlungs-/Rechnungsadresse definiert.</value>
+        <value xml:lang="fr">Aucune adresse générale/paiement/facturation n'est définie pour l'organisation.</value>
+    </property>
+    <property key="SetupMissingShipMailAddressPurposesForOrganizationNotice">
+        <value xml:lang="en">This organization appears to be missing one or more of the standard address locations (general/payment/billing). Note: If you need multiple addresses, you may need to use the User Manager instead.</value>
+        <value xml:lang="de">Diese Organisation scheint eine oder mehrere der Standardadressen (allgemein / Zahlung / Abrechnung) zu fehlen. Hinweis: Wenn Sie mehrere Adressen benötigen, müssen Sie stattdessen den User Manager verwenden.</value>
+        <value xml:lang="fr">Cette organisation semble manquer une ou plusieurs des adresses standard (général / paiement / facturation). Remarque: si vous avez besoin de plusieurs adresses, vous devrez peut-être utiliser le gestionnaire d'utilisateurs à la place.</value>
+    </property>
+    <property key="SetupSelectOrganizationForSetup">
+        <value xml:lang="en">Select Organization for Setup</value>
+        <value xml:lang="de">Wählen Sie Organisation für Setup</value>
+        <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
+    </property>
 </resource>

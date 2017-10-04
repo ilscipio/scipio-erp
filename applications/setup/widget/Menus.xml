@@ -21,16 +21,16 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
     <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: not wanted?
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
-            <!-- SCIPIO: link to wizard with no parameters for now so goes to create new org
-            <link target="initialsetup"/>-->
-            <link target="setupOrganization" link-type="anchor">
-                <parameter param-name="newOrganization" value="Y"/>
-            </link>
-        </menu-item>
+            <!- - SCIPIO: link to wizard with no parameters for now so goes to create new org
+            <link target="initialsetup"/>- ->
+            <link target="setupWizardNew" link-type="anchor"/>
+        </menu-item>-->
         <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
-            <link target="setupWizard">
-                <!-- TODO: REVIEW: for now linking this so that it goes to the "current" step -->
+            <!-- TODO: REVIEW: for now linking this to the "current" step (instead of starting over),
+                    but could want setupWizardNew here instead... -->
+            <link target="setupWizard" link-type="anchor">
                 <parameter-map from-field="setupStepStates.finished.stepParams"/>
             </link>
         </menu-item>

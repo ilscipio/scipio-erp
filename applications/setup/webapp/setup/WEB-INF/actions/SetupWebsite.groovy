@@ -1,5 +1,8 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
+import com.ilscipio.scipio.setup.*;
+
+final module = "SetupWebsite.groovy";
 
 final defaultInitialWebSiteId = UtilProperties.getPropertyValue("scipiosetup", "website.defaultInitialWebSiteId");
 

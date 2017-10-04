@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1116,7 +1117,13 @@ public class RequestHandler {
             // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
             Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
-            paramMap.putAll(UtilHttp.getAttributeMap(req));
+            // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
+            Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(req.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
+            if (viewSaveAttrExcl != null) {
+                viewSaveAttrExcl.add("_SCP_VIEW_SAVE_ATTR_EXCL_");
+            }
+            //paramMap.putAll(UtilHttp.getAttributeMap(req));
+            paramMap.putAll(UtilHttp.getAttributeMap(req, viewSaveAttrExcl));
             UtilMisc.makeMapSerializable(paramMap);
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
                 req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));

@@ -18,11 +18,11 @@
 # under the License.
 #####################################################################
 #
-# ofbiz        This shell script takes care of starting and stopping
-#              the OFBiz subsystem
+# scipio       This shell script takes care of starting and stopping
+#              the Scipio ERP server
 #
 # chkconfig: - 80 10
-# description: OFBiz server
+# description: Scipio ERP
 
 # Source function library
 # this does not exist in Debian/Ubuntu/etc. => see  rc.ofbiz.for.debian
@@ -34,12 +34,12 @@
 . /etc/sysconfig/network
 
 # Paths - Edit for your locations
-JAVA_BINARY=/usr/java/j2sdk1.4.2/bin/java
+JAVA_BINARY=$JAVA_HOME/bin/java
 OFBIZ_HOME=/home/ofbiz/ofbiz
 OFBIZ_LOG=$OFBIZ_HOME/runtime/logs/console.log
 
 # VM Options
-JAVA_VMOPTIONS="-Xms128M -Xmx512M -XX:MaxPermSize=512m"
+JAVA_VMOPTIONS="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
 
 # Java arguments
 JAVA_ARGS="-jar ofbiz.jar"

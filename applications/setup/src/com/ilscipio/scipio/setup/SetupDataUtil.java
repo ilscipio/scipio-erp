@@ -579,4 +579,29 @@ public abstract class SetupDataUtil {
         }
         return true;
     }
+    
+    /*
+     * ******************************************* 
+     * Misc public helpers
+     * *******************************************
+     */
+    
+    // TODO: these belong somewhere else
+    
+    public static List<String> reserveEntitySeqIdList(Delegator delegator, String seqName, Integer count) {
+        List<String> list = new ArrayList<>(count);
+        for(int i = 0; i < count; i++) {
+            list.add(delegator.getNextSeqId(seqName, 1));
+        }
+        return list;
+    }
+    
+    public static List<String> makeConsecutiveEntitySeqIdList(Long baseId, Integer count) {
+        List<String> list = new ArrayList<>(count);
+        for(long i = baseId; i < (baseId + count); i++) {
+            list.add(String.valueOf(i));
+        }
+        return list;
+    }
+
 }

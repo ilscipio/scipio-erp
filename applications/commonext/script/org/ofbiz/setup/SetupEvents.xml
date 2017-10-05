@@ -490,12 +490,76 @@
             <check-errors/>
         </if-empty>
 
+        <!-- SCIPIO: 2017-10-05: new reservation handling -->
+        <call-simple-method method-name="createProductStoreShipMethIdRange"/>
+        <check-errors/>
+        <if-empty field="productStoreShipMethIdList">
+            <!-- this should never happen, just a sanity check to prevent ever corrupting anything -->
+            <add-error>
+                <fail-message message="Internal error: no productStoreShipMethIdList range reservation was created - please contact support"/>
+            </add-error>
+            <check-errors/>
+        </if-empty>
+        <set field="placeholderValues.productStoreShipMethIdList" from-field="productStoreShipMethIdList"/>
+
         <!-- Import Default ProductStore & Shipment data -->
         <set field="placeholderValues.orgPartyId" from="organizationPartyId"/>
         <set field="placeholderValues.productStoreId" from="productStoreId"/>
         <set field="importFileCtx.filename" value="${sys:getProperty('ofbiz.home')}/applications/commonext/data/ProductStoreData.xml"/>
         <set field="importFileCtx.placeholderValues" from="placeholderValues"/>
         <call-service service-name="entityImport" in-map-name="importFileCtx"/>
+        <check-errors/>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-10-05: new productStoreShipMethIdList reservation handling for ProductStoreData.xml -->
+    <simple-method method-name="createProductStoreShipMethIdRange" short-description="creates a ProductStoreShipmentMeth ID range list in productStoreShipMethIdList">
+        <!-- SCIPIO: 2017-10-05: NEW WORKAROUND for productStoreShipMethId uniqueness issue;
+            productStoreId is not part of the ProductStoreShipmentMeth primary key so we must determine
+            a unique base that is not in use.
+            Due to several limitations the only way we can safely do this is to pre-reserve a bank
+            of IDs. This is not great but there is currently no other safe way.
+            If an explicit productStoreShipMethIdBase is passed, we use that instead, but it
+            is risky, see warning below.
+            If there are no ProductStoreShipmentMeth in the system yet, then we use 9000 instead
+            of generating, for simplicity for simple setups. -->
+        
+        <property-to-field resource="scipiosetup" property="store.productStoreData.productStoreShipMethId.bankSize" field="pssmBankSize" default="100"/>
+        <set field="pssmBankSize" type="Integer" from-field="pssmBankSize"/>
+        
+        <set field="productStoreShipMethIdBase" type="Long" value=""/>
+        <if-not-empty field="parameters.productStoreShipMethIdBase">
+            <set field="productStoreShipMethIdBase" type="Long" from-field="parameters.productStoreShipMethIdBase"/>
+            <log level="warning" message="ProductStoreData.xml: caller passed an explicit productStoreShipMethIdBase to use as base for ProductStoreShipmentMeth ID (${groovy:productStoreShipMethIdBase+''}) - if this value is wrongly selected, it could crush existing store records!"/>
+            <else>
+                <!-- If there are no ProductStoreShipmentMeth records in the system, we'll use the stock default 9000;
+                    otherwise use new sequence -->
+                <entity-condition entity-name="ProductStoreShipmentMeth" list="productStoreShipmentMethList">
+                </entity-condition>
+                <if-empty field="productStoreShipmentMethList">
+                    <log level="info" message="ProductStoreData.xml: There are no ProductStoreShipmentMeth records in the system yet (first store), so we will use ID base 9000"/>
+                    <set field="productStoreShipMethIdBase" type="Long" value="9000"/>
+                </if-empty>
+            </else>
+        </if-not-empty>
+        <check-errors/>
+        <if-not-empty field="productStoreShipMethIdBase">
+            <log level="info" message="ProductStoreData.xml: Using fixed productStoreShipMethId range: ${groovy:productStoreShipMethIdBase+''}-${groovy:(productStoreShipMethIdBase+(pssmBankSize as Long)-1)+''}"/>
+            <call-class-method method-name="makeConsecutiveEntitySeqIdList" class-name="com.ilscipio.scipio.setup.SetupDataUtil"
+                ret-field="productStoreShipMethIdList">
+                <field field="productStoreShipMethIdBase" type="Long"/>
+                <field field="pssmBankSize" type="Integer"/>
+            </call-class-method>
+            <else>
+                <log level="info" message="ProductStoreData.xml: Using dynamically reserved productStoreShipMethId range of ${groovy:pssmBankSize+''} entries"/>
+                <call-class-method method-name="reserveEntitySeqIdList" class-name="com.ilscipio.scipio.setup.SetupDataUtil"
+                    ret-field="productStoreShipMethIdList">
+                    <field field="delegator" type="org.ofbiz.entity.Delegator"/>
+                    <string value="ProductStoreShipmentMeth"/>
+                    <field field="pssmBankSize" type="Integer"/>
+                </call-class-method>
+                <!--<sequenced-id sequence-name="ProductStoreShipmentMeth" field="productStoreShipMethIdBase" get-long-only="true"/>-->
+            </else>
+        </if-not-empty>
         <check-errors/>
     </simple-method>
 

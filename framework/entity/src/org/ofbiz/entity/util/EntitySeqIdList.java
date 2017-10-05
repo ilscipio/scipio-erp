@@ -25,7 +25,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
 
     public static final String module = EntitySeqIdList.class.getName();
     
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     protected EntitySeqIdList() {
     }
@@ -45,29 +45,29 @@ public abstract class EntitySeqIdList<E> implements List<E> {
             this.delegator = delegator;
             this.seqName = seqName;
             this.seqIdList = new ArrayList<>(initialSize);
-            //ensureIndexAccessible(initialSize - 1); // we can do this on the size() call
+            //ensureIndexAccessible(initialSize - 1); // we can delay this, only needed by some operations, cleaner without
             this.size = initialSize;
         }
 
         protected abstract E getNextSeqId();
         
+        /**
+         * Automatically grows the list to the given index (both capacity AND size).
+         */
         protected void ensureIndexAccessible(int index) {
             while(seqIdList.size() <= index) {
                 seqIdList.add(null);
             }
+            // NOTE: this is the only place that this.size is adjusted, and size is never decreased.
             if (size < seqIdList.size()) size = seqIdList.size();
         }
         
         protected void forcePreload() {
-            for(int i=0; i < seqIdList.size(); i++) {
-                if (seqIdList.get(i) == null) {
-                    seqIdList.set(i, getNextSeqId());
-                }
-            }
-            if (size < seqIdList.size()) size = seqIdList.size();
+            forcePreload(0, size);
         }
         
         protected void forcePreload(int fromIndex, int toIndex) {
+            // TODO: optimize this
             if (toIndex > seqIdList.size()) {
                 ensureIndexAccessible(toIndex - 1);
             }
@@ -414,7 +414,7 @@ public abstract class EntitySeqIdList<E> implements List<E> {
 
         @Override
         public List<E> subList(int fromIndex, int toIndex) {
-            throw new UnsupportedOperationException("TODO - NOT YET IMPLEMENTED");
+            throw new UnsupportedOperationException("TODO - NOT YET IMPLEMENTED"); // TODO
         }
     }
     

@@ -1,5 +1,16 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
+
+    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+        <@defaultWizardFormFields exclude=[
+            "productStoreId", <#-- ProductStore excludes -->
+            "partyId", "webSiteId"  <#-- WebSite excludes -->
+            ]/>
+
+<#-- 
+  ProductStore parameters
+-->
+
 <#assign defaultParams = {
     "companyName": (partyGroup.groupName)!"",
     "payToPartyId": partyId!"",
@@ -72,9 +83,9 @@
 })>
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
+<#assign storeParams = params>
+<#assign storeFixedParams = fixedParams>
 
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
-        <@defaultWizardFormFields exclude=["productStoreId"]/>
         <@field type="hidden" name="isCreateStore" value=(productStore??)?string("N","Y")/>
         
       <#if productStore??>
@@ -134,7 +145,7 @@
           </#list>
         </@field>
 
-        <@field type="select" name="visualThemeId" label=uiLabelMap.FormFieldTitle_visualThemeId>
+        <@field type="select" name="visualThemeId" label=uiLabelMap.FormFieldTitle_visualThemeId tooltip=uiLabelMap.SetupProductStoreVisualThemeIdInfo>
           <@field type="option" value=""></@field>
           <#list (visualThemeList!) as visualTheme>
             <@field type="option" value=visualTheme.visualThemeId
@@ -220,5 +231,134 @@
         <@field type="hidden" name="partyId" value=(partyId!)/>
         <@field type="hidden" name="inventoryFacilityAction" value=(inventoryFacilityAction!)/>
         <@field type="hidden" name="paymentList" value=(paymentList!)/><#-- SPECIAL: not a ProductStore field -->
+
+      <#-- TODO?
+      <@fieldset title=uiLabelMap.CommonAdvanced collapsed=true>
+    
+      </@fieldset>
+      -->
+       
+<#if (useWebsiteFields!true) == true>
+
+<#-- 
+  WebSite parameters
+-->
+
+<#assign defaultParams = {
+    "visualThemeSetId": defaultVisualThemeSetId!,
+    "visualThemeSelectorScript": defaultVisualThemeSelectorScript!,
+    "webSiteId": defaultWebSiteId!
+}>
+<#assign paramMaps = getWizardFormFieldValueMaps({
+    "record":webSite!true, <#-- NOTE: must fallback with boolean true -->
+    "defaults":defaultParams,
+    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
+})>
+<#assign params = paramMaps.values>
+<#assign fixedParams = paramMaps.fixedValues>
+<#assign websiteParams = params>
+<#assign websiteFixedParams = fixedParams>
+
+    <@script>
+        jQuery(document).ready(function() {
+            <#assign submitFormIdJs = escapeVal(submitFormId, 'js')>
+            
+            var storeNameVirgin = <#if storeParams.storeName?has_content>false<#else>true</#if>;
+            var siteNameVirgin = <#if websiteParams.siteName?has_content>false<#else>true</#if>;
+            
+            var storeNameUpdate = function() {
+                if (siteNameVirgin) {
+                    var storeNameElem = jQuery('#${submitFormIdJs} input[name=storeName]');
+                    var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
+                    siteNameElem.val(storeNameElem.val());
+                }
+            };
+            var siteNameUpdate = function() {
+                if (storeNameVirgin) {
+                    var storeNameElem = jQuery('#${submitFormIdJs} input[name=storeName]');
+                    var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
+                    storeNameElem.val(siteNameElem.val());
+                }
+            };
+            
+            var storeNameElem = jQuery('#${submitFormIdJs} input[name=storeName]');
+            var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
+            
+            storeNameElem.on('input', function() {
+                storeNameUpdate();
+                storeNameVirgin = false;
+            });
+            siteNameElem.on('input', function() {
+                siteNameUpdate();
+                siteNameVirgin = false;
+            });
+          
+        });
+    </@script>
+
+        <@heading>${uiLabelMap[setupStepTitlePropMap['website']]}</@heading>
+
+        <#if webSiteCount?? && (webSiteCount >= 2)>
+          <@alert type="warning">${uiLabelMap.SetupMultipleWebSitesForProductStore}</@alert>
+        </#if>
+
+        <@field type="hidden" name="isCreateWebsite" value=(webSite??)?string("N", "Y")/>
+
+        <#--
+        <actions><set field="webSiteId" from-field="webSite.webSiteId"/></actions>
+        <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId" required-field="true"><text default-value="ScipioWebStore"/></field>
+        -->
+      <#if webSite??>
+        <@field type="display" label=uiLabelMap.FormFieldTitle_webSiteId><#rt/>
+            <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${rawString(params.webSiteId!)}&productStoreId=${rawString(params.productStoreId!)}" text=(params.webSiteId!)/><#t/>
+        </@field><#lt/>
+        <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
+      <#else>
+        <@field type="input" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId value=(params.webSiteId!) placeholder=(defaultInitialWebSiteId!)/>
+      </#if>
+        
+        <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!) required=true size="30" maxlength="60"/>
+        <@field type="hidden" name="visualThemeSetId" value=(fixedParams.visualThemeSetId!)/>
+
+        <#--<@field type="hidden" name="partyId" value=(partyId!)/> // already set above -->
+                
+        <#--
+        <@field type="hidden" name="httpHost" value=(params.httpHost!)/>
+        <@field type="hidden" name="httpPort" value=(params.httpPort!)/>
+        <@field type="hidden" name="httpsHost" value=(params.httpsHost!)/>
+        <@field type="hidden" name="httpsPort" value=(params.httpsPort!)/>
+        <@field type="hidden" name="enableHttps" value=(params.enableHttps!)/>
+        <@field type="hidden" name="standardContentPrefix" value=(params.standardContentPrefix!)/>
+        <@field type="hidden" name="secureContentPrefix" value=(params.secureContentPrefix!)/>
+        <@field type="hidden" name="cookieDomain" value=(params.cookieDomain!)/>
+        -->
+      <@fieldset title=uiLabelMap.CommonAdvanced collapsed=true>
+        <@field type="input" name="visualThemeSelectorScript" label=uiLabelMap.FormFieldTitle_visualThemeSelectorScript value=(params.visualThemeSelectorScript!) placeholder=(defaultVisualThemeSelectorScript!)/>
+
+        <@field type="input" name="httpHost" label=uiLabelMap.FormFieldTitle_httpHost value=(params.httpHost!)/>
+        <@field type="input" name="httpPort" label=uiLabelMap.FormFieldTitle_httpPort value=(params.httpPort!)/>
+        <@field type="input" name="httpsHost" label=uiLabelMap.FormFieldTitle_httpsHost value=(params.httpsHost!)/>
+        <@field type="input" name="httpsPort" label=uiLabelMap.FormFieldTitle_httpsPort value=(params.httpsPort!)/>
+        <@field type="select" name="enableHttps" label=uiLabelMap.FormFieldTitle_enableHttps>
+            <@field type="option" value=""></@field>
+            <@field type="option" value="Y" selected=("Y" == params.enableHttps!)>Y</@field>
+            <@field type="option" value="N" selected=("N" == params.enableHttps!)>N</@field>
+        </@field>
+        <@field type="input" name="standardContentPrefix" label=uiLabelMap.FormFieldTitle_standardContentPrefix value=(params.standardContentPrefix!)/>
+        <@field type="input" name="secureContentPrefix" label=uiLabelMap.FormFieldTitle_secureContentPrefix value=(params.secureContentPrefix!)/>
+        <@field type="input" name="cookieDomain" label=uiLabelMap.FormFieldTitle_cookieDomain value=(params.cookieDomain!)/>
+      </@fieldset>
+        
+        <#--<@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> // already set above -->
+        <@field type="hidden" name="allowProductStoreChange" value=(params.allowProductStoreChange!)/>
+
+        <#-- NOT doing this one for now, setting on ProductStore instead... 
+            FIXME: this has a name problem too, so the below would not work as-is...
+        <@field type="hidden" name="webSite_visualThemeId" value=(params.webSite_visualThemeId!)/> -->
+
+</#if>
+
     </@form>
+
+
 

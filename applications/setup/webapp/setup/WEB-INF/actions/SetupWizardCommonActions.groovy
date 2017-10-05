@@ -40,6 +40,7 @@ if (context.setupWizardActionsRun != true) {
     
     def setupStepSkippable = false;
     def nextSetupStep = null;
+    def nextAvailSetupStep = null;
     
     try {
         setupWorker = SetupWorker.getWorker(request);
@@ -71,7 +72,8 @@ if (context.setupWizardActionsRun != true) {
 
         if (setupWorker.isValidStep(setupStep)) {
             nextSetupStep = setupWorker.getStepAfter(setupStep);
-            setupStepSkippable = setupWorker.getStepState(setupStep).isSkippableEffective();
+            nextAvailSetupStep = setupStepState.getNextAccessibleStep();
+            setupStepSkippable = setupStepState.isSkippableEffective();
         }
         
         if (context.debugMode) Debug.logInfo("Setup: Step states: " + context.setupStepStates, module);
@@ -112,6 +114,7 @@ if (context.setupWizardActionsRun != true) {
     
     context.setupStepSkippable = setupStepSkippable;
     context.nextSetupStep = nextSetupStep;
+    context.nextAvailSetupStep = nextAvailSetupStep;
     
     context.defaultCountryGeoId = EntityUtilProperties.getPropertyValue("general", "country.geo.id.default", "USA", delegator);
     context.defaultSystemCurrencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);

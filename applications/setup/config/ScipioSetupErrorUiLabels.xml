@@ -58,4 +58,9 @@
         <value xml:lang="de">Die übergebene Website-ID wird bereits verwendet.</value>
         <value xml:lang="fr">L'ID pour ce site web est déjà utilisé.</value>
     </property>
+    <property key="SetupCannotCreateWebSiteMissingProductStoreId">
+        <value xml:lang="en">Cannot create website: missing productStoreId</value>
+        <value xml:lang="de">Kann keine Website erstellen: fehlendes ProduktStoreId</value>
+        <value xml:lang="fr">Impossible de créer le site Web: productStoreId manquant</value>
+    </property>
 </resource>

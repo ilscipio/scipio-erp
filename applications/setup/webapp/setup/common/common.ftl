@@ -190,9 +190,8 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
       <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
     </#if>
-    <#if allowSkip && nextSetupStep?has_content>
-      <@menuitem type="link" href=makeSetupStepUrl(nextSetupStep) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}"/>
-    </#if>
+    <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
+        disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
   </@menu>
   <@script>
     var setupControlMenu_${submitFormIdJs} = { <#-- FIXME: bad escaping use -->

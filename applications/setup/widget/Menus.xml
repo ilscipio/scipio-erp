@@ -155,6 +155,11 @@
                 <parameter-map from-field="setupStepStates.organization.stepParams"/>
             </link>
         </menu-item>
+        <menu-item name="accounting" title="${uiLabelMap[setupStepTitlePropMap['accounting']]}" disabled="${context.setupStepDisabledMap.accounting == true}" widget-style="+${context.stepStyles.accounting}">
+            <link target="setupAccounting" link-type="anchor">
+                <parameter-map from-field="setupStepStates.accounting.stepParams"/>
+            </link>
+        </menu-item>
         <menu-item name="facility" title="${uiLabelMap[setupStepTitlePropMap['facility']]}" disabled="${context.setupStepDisabledMap.facility == true}" widget-style="+${context.stepStyles.facility}">
             <link target="setupFacility" link-type="anchor">
                 <parameter-map from-field="setupStepStates.facility.stepParams"/>
@@ -165,25 +170,22 @@
                 <parameter-map from-field="setupStepStates.store.stepParams"/>
             </link>
         </menu-item>
-        <menu-item name="user" title="${uiLabelMap[setupStepTitlePropMap['user']]}" disabled="${context.setupStepDisabledMap.user == true}" widget-style="+${context.stepStyles.user}">
-            <link target="setupUser" link-type="anchor">
-                <parameter-map from-field="setupStepStates.user.stepParams"/>
-            </link>
-        </menu-item>
-        <menu-item name="accounting" title="${uiLabelMap[setupStepTitlePropMap['accounting']]}" disabled="${context.setupStepDisabledMap.accounting == true}" widget-style="+${context.stepStyles.accounting}">
-            <link target="setupAccounting" link-type="anchor">
-                <parameter-map from-field="setupStepStates.accounting.stepParams"/>
-            </link>
-        </menu-item>
         <menu-item name="catalog" title="${uiLabelMap[setupStepTitlePropMap['catalog']]}" disabled="${context.setupStepDisabledMap.catalog == true}" widget-style="+${context.stepStyles.catalog}">
             <link target="setupCatalog" link-type="anchor">
                 <parameter-map from-field="setupStepStates.catalog.stepParams"/>
             </link>
         </menu-item>
+        <menu-item name="user" title="${uiLabelMap[setupStepTitlePropMap['user']]}" disabled="${context.setupStepDisabledMap.user == true}" widget-style="+${context.stepStyles.user}">
+            <link target="setupUser" link-type="anchor">
+                <parameter-map from-field="setupStepStates.user.stepParams"/>
+            </link>
+        </menu-item>
+        <!-- 
         <menu-item name="website" title="${uiLabelMap[setupStepTitlePropMap['website']]}" disabled="${context.setupStepDisabledMap.website == true}" widget-style="+${context.stepStyles.website}">
             <link target="setupWebsite" link-type="anchor">
                 <parameter-map from-field="setupStepStates.website.stepParams"/>
             </link>
         </menu-item>
+        -->
     </menu>
 </menus>

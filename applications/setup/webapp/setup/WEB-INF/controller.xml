@@ -193,16 +193,17 @@
     </request-map>
     <request-map uri="setupCreateStore">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSetting"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSettingAndWebSite"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
     <request-map uri="setupUpdateStore">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateProductStore"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProductStoreAndWebSite"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupStore"/>
     </request-map>
+    <!-- merged into store step
     <request-map uri="setupWebsite">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -221,6 +222,7 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupWebsite"/>
     </request-map>
+    -->
     <request-map uri="setupFinished">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>

@@ -10,6 +10,7 @@ websiteData = context.websiteData ?: [:];
 
 context.webSite = websiteData.webSite;
 context.webSiteId = websiteData.webSiteId;
+context.webSiteCount = websiteData.webSiteCount;
 
 defaultWebSiteId = null;
 if (!delegator.findOne("WebSite", [webSiteId:defaultInitialWebSiteId], false)) {
@@ -20,3 +21,5 @@ context.defaultWebSiteId = defaultWebSiteId;
 context.defaultInitialWebSiteId = defaultInitialWebSiteId;
 
 context.defaultVisualThemeSetId = UtilProperties.getPropertyValue("scipiosetup", "website.visualThemeSetId", "ECOMMERCE");
+
+context.defaultVisualThemeSelectorScript = UtilProperties.getPropertyValue("scipiosetup", "website.visualThemeSelectorScript");

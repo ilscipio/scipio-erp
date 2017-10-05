@@ -59,7 +59,9 @@ public abstract class SetupDataUtil {
 
     public static Map<String, Object> getOrganizationStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
-        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        // NOTE: coreCompleted is required for cases where need to recognized half-completed
+        // it means just the core entities
+        Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         String orgPartyId = (String) params.get("orgPartyId");
 
@@ -76,6 +78,7 @@ public abstract class SetupDataUtil {
                         result.put("orgPartyId", orgPartyId);
                         result.put("party", party);
                         result.put("partyGroup", partyGroup);
+                        result.put("coreCompleted", true);
                         
                         // TODO?: check for CARRIER roleTypeId??
                         
@@ -374,13 +377,13 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
+    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean includeWebsite, boolean useCache)
             throws GeneralException {
-        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         String productStoreId = (String) params.get("productStoreId");
         String orgPartyId = (String) params.get("orgPartyId");
-
+        
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Store");
         
         GenericValue productStore = null;
@@ -413,19 +416,21 @@ public abstract class SetupDataUtil {
         }
 
         if (productStore != null) {
+            result.put("coreCompleted", true);
             productStoreId = productStore.getString("productStoreId");
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
                 result.put("productStoreId", productStoreId);
                 result.put("productStore", productStore);
             }
 
+            boolean productStoreCompleted = false;
             String facilityId = productStore.getString("inventoryFacilityId");
             if (UtilValidate.isNotEmpty(facilityId)) {
                 Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "facilityId", facilityId);
                 List<GenericValue> productFacilityList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreFacility", 
                         fields, UtilMisc.toList("sequenceNum ASC"), useCache));
                 if (UtilValidate.isNotEmpty(productFacilityList)) {
-                    result.put("completed", true);
+                    productStoreCompleted = true;
                 } else {
                     Debug.logWarning("Setup: ProductStore '" + productStoreId + "' has no ProductStoreFacility relation for warehouse '" + facilityId
                             + "'; treating store as incomplete" + " (NOTE: may require manually fixing the schema)", module);
@@ -436,10 +441,30 @@ public abstract class SetupDataUtil {
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
                 result.put("facilityId", facilityId);
             }
+            result.put("productStoreCompleted", productStoreCompleted);
+            
+            if (includeWebsite) {
+                Map<String, Object> websiteParams = new HashMap<>(params);
+                websiteParams.put("productStoreId", productStoreId);
+                // TODO: REVIEW: not sure if will be needed
+                //websiteParams.put("unspecReqWebsite", isNewOrFailedCreate);
+                Map<String, Object> websiteResult = getWebsiteStepStateData(delegator, dispatcher, websiteParams, useCache);
+                result.putAll(websiteResult); // this magically works for now
+                
+                boolean websiteCompleted = Boolean.TRUE.equals(websiteResult.get("completed"));
+                result.put("websiteCompleted", websiteCompleted);
+                
+                result.put("completed", productStoreCompleted && websiteCompleted);
+            } else {
+                result.put("completed", productStoreCompleted);
+            }
         }
         return result;
     }
-
+    public static Map<String, Object> getStoreStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
+        return getStoreStepStateData(delegator, dispatcher, params, true, useCache);
+    }
+    
     public static Map<String, Object> getWebsiteStepStateData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
@@ -450,7 +475,12 @@ public abstract class SetupDataUtil {
         
         GenericValue webSite = null;
         Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
-        webSite = getFirstMaxOneExpected(delegator.findByAnd("WebSite", fields, null, useCache), fields);
+        List<GenericValue> webSiteList = delegator.findByAnd("WebSite", fields, null, useCache);
+        webSite = getFirstMaxOneExpected(webSiteList, fields);
+        if (!isNewOrFailedCreate) {
+            result.put("webSiteList", webSiteList);
+        }
+        result.put("webSiteCount", webSiteList.size());
         
         if (webSite != null) {
             if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
@@ -526,6 +556,10 @@ public abstract class SetupDataUtil {
      */
     static boolean isUnspecificRecordRequest(Map<String, Object> params, String stepNameCamel) {
         //stepName = stepName.substring(0, 1).toUpperCase() + stepName.substring(1);
+        
+        // SPECIAL: this can be used internally to override
+        Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + stepNameCamel));
+        if (unspecific != null) return unspecific;
         
         return isNewRecordRequest(params, stepNameCamel) || 
                 isFailedCreateRecordRequest(params, stepNameCamel) || 

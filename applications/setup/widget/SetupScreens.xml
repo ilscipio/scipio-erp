@@ -676,6 +676,11 @@
                 <!-- do not need this - store already loaded by groovy and SetupWorker
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>-->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupStore.groovy"/>
+                
+                <!-- NOTE: currently storeData==websiteData -->
+                <set field="websiteData" from-field="storeData"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWebsite.groovy"/>
                  
                 <set field="isCreate" type="Boolean" value="${context.productStore == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
@@ -714,17 +719,18 @@
         </section>
     </screen>
     
+    <!-- merging into store page
     <screen name="SetupWebsite">
         <section>
             <actions>
                 <set field="setupStep" value="website"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!- - result from StepDataUtil.java - ->
 
-                <!-- turns out we can skip this and instead get everything from the worker
+                <!- - turns out we can skip this and instead get everything from the worker
                 <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
-                -->
+                - ->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWebsite.groovy"/>
                 
                 <set field="isCreate" type="Boolean" value="${context.webSite == null}"/>
@@ -741,8 +747,8 @@
                             </condition>
                             <widgets>
                                 <screenlet>
-                                    <!--<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>-->
-                                    <!--<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <!- -<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>- ->
+                                    <!- -<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>- ->
                                     <platform-specific>
                                         <html><html-template location="component://setup/webapp/setup/website/EditWebsite.ftl"/></html>
                                     </platform-specific>
@@ -764,6 +770,7 @@
             </widgets>
         </section>
     </screen>
+    -->
     
     <screen name="SetupFinished">
         <section>

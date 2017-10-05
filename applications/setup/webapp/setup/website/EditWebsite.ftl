@@ -1,5 +1,7 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
+<#-- DEPRECATED: form merged into store page - unmaintained, reference only -->
+
 <#assign defaultParams = {
     "visualThemeSetId": defaultVisualThemeSetId!,
     "webSiteId": defaultWebSiteId!

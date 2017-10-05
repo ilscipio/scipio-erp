@@ -200,8 +200,63 @@
         
     </simple-method>
     
+    <simple-method method-name="createProductStoreWithDefaultSettingAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
+        <call-simple-method method-name="createProductStoreWithDefaultSetting" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+        
+        <request-to-field field="productStoreId" request-name="productStoreId"/>
+        <set field="parameters.productStoreId" from-field="productStoreId"/>
+        
+        <!-- SPECIAL: name conflict on visualThemeId field -->
+        <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
+        
+        <if-compare field="parameters.isCreateWebsite" operator="equals" value="Y">
+            <call-simple-method method-name="createWebSite"/>
+            <check-errors/>
+            <else>
+                <log message="isCreateWebsite is not specified; skipping WebSite creation" level="info"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="updateProductStoreAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
+        <set-service-fields service-name="updateProductStore" map="parameters" to-map="updateProductStoreCtx"/>
+        <call-service service-name="updateProductStore" in-map-name="updateProductStoreCtx"/>
+        <check-errors/>
+        
+        <!-- SPECIAL: name conflict on visualThemeId field -->
+        <set field="parameters.visualThemeId" from-field="parameters.webSite_visualThemeId"/>
+        
+        <!-- TODO: REVIEW: isCreateWebsite switch delegates the create-vs-update decision to the form;
+            although it's better to handle server-side, for setup it might be better to be explicit
+            so the behavior is exactly what the user sees and we can't accidentally update the wrong record
+            downside: in rare case could have confusing error -->
+        <if-compare field="parameters.isCreateWebsite" operator="equals" value="Y">
+            <call-simple-method method-name="createWebSite"/>
+            <check-errors/>
+            <else>
+                <if-not-empty field="parameters.webSiteId">
+                    <set-service-fields service-name="updateWebSite" map="parameters" to-map="updateWebSiteCtx"/>
+                    <call-service service-name="updateWebSite" in-map-name="updateWebSiteCtx"/>
+                    <check-errors/>
+                    <else>
+                        <log message="No webSiteId specified for update; skipping WebSite update" level="info"/>
+                    </else>
+                </if-not-empty>
+            </else>
+        </if-compare>
+    </simple-method>
+    
     <!-- SCIPIO: based on component://commonext/script/org/ofbiz/setup/SetupEvents.xml#createDefaultWebsite -->
     <simple-method method-name="createWebSite" short-description="Create a WebSite, default webSiteId is ScipioWebStore.">
+        <!-- SCIPIO: new check needed to make sure productStoreId was passed -->
+        <if-empty field="parameters.productStoreId">
+            <add-error>
+                <fail-property resource="ScipioSetupErrorUiLabels" property="SetupCannotCreateWebSiteMissingProductStoreId"/>
+            </add-error>
+            <check-errors/>
+        </if-empty>
+        
         <if-empty field="parameters.webSiteId">
             <property-to-field resource="scipiosetup" property="website.defaultInitialWebSiteId" field="defaultInitialWebSiteId"/>
             <if-not-empty field="defaultInitialWebSiteId">

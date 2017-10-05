@@ -21,7 +21,7 @@ under the License.
 
 
 <#assign defaultParams = {
-	"productStoreId": "${productStoreId}"
+	<#--"productStoreId": productStoreId! // not avail/crash -->
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({

@@ -71,16 +71,23 @@ public abstract class SetupWorker implements Serializable {
 
     /**
      * Name of req attribute that holds a StaticSetupWorker for caching.
+     * <p>
+     * WARN: This must not be stored in the session; the RequestSetupWorker now tries to prevent RequestHandler
+     * from doing this. See {@link RequestSetupWorker#getEnsureStaticWorker}.
      */
-    protected static final String STATIC_WORKER_ATTR =  "scpStaticSetupWorker";
+    protected static final String STATIC_WORKER_ATTR = "scpStaticSetupWorker";
     
     /**
-     * Full list of visible steps.
+     * Full list of visible steps and their order.
      * NOTE: see Step States further below for specific implementations.
      */
     private static final List<String> stepsList = UtilMisc.unmodifiableArrayList(
-            "organization", "facility", "store", "user", "accounting", "catalog", "website"
+            "organization", "accounting", "facility", "store", "catalog", "user"
+            // "website" // merged into store step
     );
+    /**
+     * Unordered set of the visible steps.
+     */
     private static final Set<String> stepsSet = Collections.unmodifiableSet(new HashSet<String>(stepsList));
     
     public static final String FINISHED_STEP = "finished";
@@ -162,9 +169,11 @@ public abstract class SetupWorker implements Serializable {
     
     public List<String> getSteps() { return stepsList; }
     public Set<String> getStepsSet() { return stepsSet; }
+    public int getStepsCount() { return stepsList.size(); }
     public Set<String> getAllStepValues() { return allStepValues; }
     public List<String> getStepsAndFinished() { return stepsAndFinList; }
     public Set<String> getStepsAndFinishedSet() { return stepsAndFinSet; }
+    public int getStepsAndFinishedCount() { return stepsAndFinList.size(); }
     public String getInitialStep() { return initialStep; }
     
     public int getStepIndex(String step) { return stepsList.indexOf(step); }
@@ -241,6 +250,7 @@ public abstract class SetupWorker implements Serializable {
         public abstract String getName();
         public abstract boolean isSkippable();
         public abstract boolean isCompleted();
+        public abstract boolean isCoreCompleted();
         public abstract boolean isAccessible();
         // REMOVED: managed to avoid session marks for skipping for now - keeping simple
         //public abstract boolean isSkipped();
@@ -260,6 +270,8 @@ public abstract class SetupWorker implements Serializable {
          * even if {@link #isSkippable} returns false.
          */
         public abstract boolean isSkippableEffective();
+        
+        public abstract String getNextAccessibleStep();
         
         // does not work out due to lack of encoding
 //        /**
@@ -462,6 +474,10 @@ public abstract class SetupWorker implements Serializable {
     
     public String determineStepAuto() {
         return determineStepAuto(true);
+    }
+    
+    public String getNextAccessibleStep(String step) {
+        return getStepState(step).getNextAccessibleStep();
     }
     
     // REMOVED: managed to avoid session marks for skipping for now - keeping simple
@@ -672,6 +688,7 @@ public abstract class SetupWorker implements Serializable {
             // NOTE: are boxed types instead of primitives due to reuse for caching
             protected Boolean skippable;
             protected Boolean completed;
+            protected Boolean coreCompleted;
             //protected Boolean skipped;
             protected Boolean accessible;
             protected Map<String, Object> stepData;
@@ -684,6 +701,7 @@ public abstract class SetupWorker implements Serializable {
                 this.name = other.getName();
                 this.skippable = other.isSkippable();
                 this.completed = other.isCompleted();
+                this.coreCompleted = other.isCoreCompleted();
                 //this.skipped = other.isSkipped();
                 this.accessible = other.isAccessible();
                 this.stepData = other.getStepData();
@@ -695,6 +713,7 @@ public abstract class SetupWorker implements Serializable {
                 this.name = partial.name != null ? partial.name : other.getName();
                 this.skippable = partial.skippable != null ? partial.skippable : other.isSkippable();
                 this.completed = partial.completed != null ? partial.completed : other.isCompleted();
+                this.coreCompleted = partial.coreCompleted != null ? partial.coreCompleted : other.isCoreCompleted();
                 //this.skipped = partial.skipped != null ? partial.skipped : other.isSkipped();
                 this.accessible = partial.accessible != null ? partial.accessible : other.isAccessible();
                 this.stepData = partial.stepData != null ? partial.stepData : other.getStepData();
@@ -706,6 +725,7 @@ public abstract class SetupWorker implements Serializable {
                 this.name = partial.name;
                 this.skippable = partial.skippable;
                 this.completed = partial.completed;
+                this.coreCompleted = partial.coreCompleted;
                 //this.skipped = partial.skipped;
                 this.accessible = partial.accessible;
                 this.stepData = partial.stepData;
@@ -716,6 +736,7 @@ public abstract class SetupWorker implements Serializable {
             @Override public String getName() { return name; }
             @Override public boolean isSkippable() { return skippable; }
             @Override public boolean isCompleted() { return completed; }
+            @Override public boolean isCoreCompleted() { return coreCompleted; }
             //@Override public boolean isSkipped() { return skipped; }
             @Override public boolean isAccessible() { return accessible; }
             @Override public Map<String, Object> getStepData() { return stepData; }
@@ -731,6 +752,11 @@ public abstract class SetupWorker implements Serializable {
 
             @Override
             public boolean isSkippableEffective() {
+                throw new UnsupportedOperationException(); // impossible
+            }
+
+            @Override
+            public String getNextAccessibleStep() {
                 throw new UnsupportedOperationException(); // impossible
             }
         }
@@ -777,6 +803,14 @@ public abstract class SetupWorker implements Serializable {
                 if (staticWorker == null) {
                     staticWorker = new StaticSetupWorker();
                     request.setAttribute(STATIC_WORKER_ATTR, staticWorker);
+                    
+                    // SPECIAL: this prevents the cached data from getting saved into the session
+                    Set<String> saveViewAttrExcl = UtilGenerics.checkSet(request.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
+                    if (saveViewAttrExcl == null) {
+                        saveViewAttrExcl = new HashSet<>();
+                    }
+                    saveViewAttrExcl.add(STATIC_WORKER_ATTR);
+                    request.setAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_", saveViewAttrExcl);
                 }
                 return staticWorker;
             } else {
@@ -881,12 +915,11 @@ public abstract class SetupWorker implements Serializable {
                                     + "; returning auto-determined next step instead", module);
                         }
                     } else {
-                        String nextStep = getStepAfter(submittedStep);
-                        if (isStepAllowed(nextStep)) return nextStep;
+                        String nextStep = getNextAccessibleStep(submittedStep);
+                        if (nextStep != null) return nextStep;
                         else {
-                            Debug.logInfo("Setup: The next setup step (" + nextStep + ") after the "
-                                    + " submitted step (" + submittedStep + ") is not accessible"
-                                    + "; returning auto-determined next step instead", module);
+                            Debug.logInfo("Setup: There is no accessible setup step after the submitted step (" 
+                                    + submittedStep + "); returning auto-determined next step instead", module);
                         }
                     }
                 }
@@ -1111,7 +1144,7 @@ public abstract class SetupWorker implements Serializable {
             m.put("facility", FacilityStepState.class);
             m.put("catalog", CatalogStepState.class);
             m.put("store", StoreStepState.class);
-            m.put("website", WebsiteStepState.class);
+            //m.put("website", WebsiteStepState.class); // merged into store step
             
             // pseudo-steps
             m.put(FINISHED_STEP, FinishedStepState.class);
@@ -1145,6 +1178,7 @@ public abstract class SetupWorker implements Serializable {
                 getStepParams();
                 isSkippable();
                 isCompleted();
+                isCoreCompleted();
                 // REMOVED: managed to avoid session marks for skipping for now - keeping simple
                 //isSkipped();
                 isAccessible();
@@ -1176,6 +1210,18 @@ public abstract class SetupWorker implements Serializable {
                     }
                 } 
                 return staticState.completed;
+            }
+            @Override 
+            public boolean isCoreCompleted() { 
+                if (staticState.coreCompleted == null) {
+                    try {
+                        staticState.coreCompleted = isCoreCompletedImpl();
+                    } catch (GeneralException e) {
+                        handleEx(e);
+                        staticState.coreCompleted = false; // prevents multi-failures
+                    }
+                } 
+                return staticState.coreCompleted;
             }
 //            @Override 
 //            public boolean isSkipped() { 
@@ -1233,16 +1279,35 @@ public abstract class SetupWorker implements Serializable {
                 }
                 return staticState.stepParams;
             }
-            
+
             @Override
             public boolean isSkippableEffective() {
-                // NOTE: once completed, it becomes effectively skippable
-                if (!isSkippable() && !isCompleted()) return false;
+                if (!isSkippable()) return false;
                 
+                // this was too limited
                 // check if the next step is accessible
-                String nextStep = getStepAfter(getName());
-                if (FINISHED_STEP.equals(nextStep)) return true;
-                else return getStepState(nextStep).isAccessible();
+                //String nextStep = getStepAfter(getName());
+                //if (FINISHED_STEP.equals(nextStep)) return true;
+                //else return getStepState(nextStep).isAccessible();
+                String nextStep = getNextAccessibleStep();
+                return nextStep != null;
+            }
+            
+            @Override
+            public String getNextAccessibleStep() {
+                String nextStep = getStepAfter(this.getName());
+                if (nextStep == null || FINISHED_STEP.equals(nextStep)) return nextStep;
+                
+                StepState nextState = getStepState(nextStep);
+                if (nextState.isAccessible()) {
+                    return nextStep;
+                } else {
+                    if (!isSkippable()) {
+                        return null;
+                    } else {
+                        return nextState.getNextAccessibleStep();
+                    }
+                }
             }
 
             private void handleEx(Exception e) {
@@ -1263,6 +1328,12 @@ public abstract class SetupWorker implements Serializable {
             protected boolean isCompletedImpl() throws GeneralException {
                 Map<String, Object> stepData = getStepData();
                 return Boolean.TRUE.equals(stepData.get("completed"));
+            }
+            
+            protected boolean isCoreCompletedImpl() throws GeneralException {
+                Map<String, Object> stepData = getStepData();
+                if (Boolean.TRUE.equals(stepData.get("completed"))) return true;
+                else return (Boolean.TRUE.equals(stepData.get("coreCompleted")));
             }
             
             // REMOVED: managed to avoid session marks for skipping for now - keeping simple
@@ -1302,7 +1373,7 @@ public abstract class SetupWorker implements Serializable {
             public OrganizationStepState(StaticStepState partial) { super(partial); }
             
             @Override public String getName() { return "organization"; }
-            @Override protected boolean isSkippableImpl() { return false; }
+            @Override protected boolean isSkippableImpl() { return isCoreCompleted(); }
             @Override public StepParamInfo getStepParamInfo() { return organizationStepParamInfo; }
             
             @Override
@@ -1327,7 +1398,7 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo accountingStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId", "userPartyId"), nameSet());
+                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet()); // "productStoreId", "userPartyId"
         protected class AccountingStepState extends CommonStepState {
             public AccountingStepState(StaticStepState partial) { super(partial); }
             
@@ -1380,29 +1451,30 @@ public abstract class SetupWorker implements Serializable {
             public StoreStepState(StaticStepState partial) { super(partial); }
             
             @Override public String getName() { return "store"; }
-            @Override protected boolean isSkippableImpl() { return false; }
+            @Override protected boolean isSkippableImpl() { return isCoreCompleted(); }
             @Override public StepParamInfo getStepParamInfo() { return storeStepParamInfo; }
     
             @Override
             protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getStoreStepStateData(getDelegator(), getDispatcher(), getStepDataParamsArg(), isUseEntityCache());
+                return SetupDataUtil.getStoreStepStateData(getDelegator(), getDispatcher(), getStepDataParamsArg(), true, isUseEntityCache());
             }
         }
         
-        private static final StepParamInfo websiteStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
-        protected class WebsiteStepState extends CommonStepState {
-            public WebsiteStepState(StaticStepState partial) { super(partial); }
-            
-            @Override public String getName() { return "website"; }
-            @Override protected boolean isSkippableImpl() { return true; }
-            @Override public StepParamInfo getStepParamInfo() { return websiteStepParamInfo; }
-    
-            @Override
-            protected Map<String, Object> getStepDataImpl() throws GeneralException {
-                return SetupDataUtil.getWebsiteStepStateData(getDelegator(), getDispatcher(), getStepDataParamsArg(), isUseEntityCache());
-            }
-        }
+        // merged into store step
+//        private static final StepParamInfo websiteStepParamInfo =
+//                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId", "productStoreId"), nameSet());
+//        protected class WebsiteStepState extends CommonStepState {
+//            public WebsiteStepState(StaticStepState partial) { super(partial); }
+//            
+//            @Override public String getName() { return "website"; }
+//            @Override protected boolean isSkippableImpl() { return true; }
+//            @Override public StepParamInfo getStepParamInfo() { return websiteStepParamInfo; }
+//    
+//            @Override
+//            protected Map<String, Object> getStepDataImpl() throws GeneralException {
+//                return SetupDataUtil.getWebsiteStepStateData(getDelegator(), getDispatcher(), getStepDataParamsArg(), isUseEntityCache());
+//            }
+//        }
         
         // NOTE: this is a "pseudo" step; it typically doesn't get listed as part of the main steps.
         private static final StepParamInfo finishedStepParamInfo =

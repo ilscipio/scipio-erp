@@ -45,9 +45,8 @@
     
     <!-- SCIPIO: 2017-10-05: This now supports productStoreShipMethIdList containing an array of IDs reserved
         in advance for this file.
-        WARN: by default, this array contains at most 100 entries - if you need more, you must configure scipiosetup.properties.
-        This manipulation is needed because the productStoreShipMethId field is the single primary key
-        for ProductStoreShipmentMeth, so it must be uniquely generated for every new store.
+        NOTE: The productStoreShipMethIdList should be an instance of org.ofbiz.entity.util.EntitySeqIdList,
+            and only the get(int) method should be called for it; these classes automatically reserve new IDs through the get(int) call.
         WARN: if productStoreShipMethIdList is omitted by caller, a fixed value (9000) is used instead.
         WARN: the extra groovy fluff is required to prevent localized formatting of numbers.
     -->

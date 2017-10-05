@@ -516,8 +516,8 @@
         <!-- SCIPIO: 2017-10-05: NEW WORKAROUND for productStoreShipMethId uniqueness issue;
             productStoreId is not part of the ProductStoreShipmentMeth primary key so we must determine
             a unique base that is not in use.
-            Due to several limitations the only way we can safely do this is to pre-reserve a bank
-            of IDs. This is not great but there is currently no other safe way.
+            We now use EntitySeqIdList classes which generate and cache new IDs when accessed through the get(int) method
+            by ProductStoreData.xml.
             If an explicit productStoreShipMethIdBase is passed, we use that instead, but it
             is risky, see warning below.
             If there are no ProductStoreShipmentMeth in the system yet, then we use 9000 instead
@@ -543,20 +543,20 @@
         </if-not-empty>
         <check-errors/>
         <if-not-empty field="productStoreShipMethIdBase">
-            <log level="info" message="ProductStoreData.xml: Using fixed productStoreShipMethId range: ${groovy:productStoreShipMethIdBase+''}-${groovy:(productStoreShipMethIdBase+(pssmBankSize as Long)-1)+''}"/>
-            <call-class-method method-name="makeConsecutiveEntitySeqIdList" class-name="com.ilscipio.scipio.setup.SetupDataUtil"
-                ret-field="productStoreShipMethIdList">
-                <field field="productStoreShipMethIdBase" type="Long"/>
-                <field field="pssmBankSize" type="Integer"/>
-            </call-class-method>
+            <log level="info" message="ProductStoreData.xml: Using fixed productStoreShipMethId range starting from: ${groovy:productStoreShipMethIdBase+''}"/>
+            <create-object class-name="org.ofbiz.entity.util.EntitySeqIdList$FixedEntitySeqIdStringList" 
+                field="productStoreShipMethIdList">
+                <field field="productStoreShipMethIdBase" type="Object"/>
+                <field field="pssmBankSize" type="int"/>
+            </create-object>
             <else>
-                <log level="info" message="ProductStoreData.xml: Using dynamically reserved productStoreShipMethId range of ${groovy:pssmBankSize+''} entries"/>
-                <call-class-method method-name="reserveEntitySeqIdList" class-name="com.ilscipio.scipio.setup.SetupDataUtil"
-                    ret-field="productStoreShipMethIdList">
+                <log level="info" message="ProductStoreData.xml: Using dynamically reserved productStoreShipMethId range"/>
+                <create-object class-name="org.ofbiz.entity.util.EntitySeqIdList$DynamicEntitySeqIdStringList"
+                    field="productStoreShipMethIdList">
                     <field field="delegator" type="org.ofbiz.entity.Delegator"/>
                     <string value="ProductStoreShipmentMeth"/>
-                    <field field="pssmBankSize" type="Integer"/>
-                </call-class-method>
+                    <field field="pssmBankSize" type="int"/>
+                </create-object>
                 <!--<sequenced-id sequence-name="ProductStoreShipmentMeth" field="productStoreShipMethIdBase" get-long-only="true"/>-->
             </else>
         </if-not-empty>

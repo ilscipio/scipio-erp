@@ -86,7 +86,7 @@ public abstract class SetupDataUtil {
                         contactMechInfo.resultsToMap(result);
                         
                         Set<String> mailShipAddressContactMechPurposes = null;
-                        GenericValue mailShipAddressContactMech = contactMechInfo.getClosestContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
+                        GenericValue mailShipAddressContactMech = contactMechInfo.getClosestPartyContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
                         if (mailShipAddressContactMech != null) {
                             mailShipAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(mailShipAddressContactMech.getString("contactMechId"));
                         }
@@ -98,26 +98,28 @@ public abstract class SetupDataUtil {
                         result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
                         Map<String, GenericValue> locationContactMechs = new HashMap<>();
                         for(String purpose : ORGANIZATION_MAINADDR_PURPOSES) {
-                            GenericValue contactMech = contactMechInfo.getContactMechForPurpose(delegator, purpose, useCache);
+                            GenericValue contactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, purpose, useCache);
                             if (contactMech != null) {
                                 locationContactMechs.put(purpose, contactMech);
                             }
                         }
-                        boolean locationAddressesCompleted = (locationContactMechs.size() == ORGANIZATION_MAINADDR_PURPOSES.size());
- 
-                        GenericValue workPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PHONE_WORK", useCache);
-                        GenericValue faxPhoneContactMech = contactMechInfo.getContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
-                        GenericValue primaryEmailContactMech = contactMechInfo.getContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
+                        boolean locationAddressesCompleted = (locationContactMechs.size() >= ORGANIZATION_MAINADDR_PURPOSES.size());
+                        result.put("locationAddressesCompleted", locationAddressesCompleted);
+                        
+                        GenericValue workPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_WORK", useCache);
+                        GenericValue faxPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+                        GenericValue primaryEmailContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
 
                         result.put("workPhoneContactMech", workPhoneContactMech);
                         result.put("faxPhoneContactMech", faxPhoneContactMech);
                         result.put("primaryEmailContactMech", primaryEmailContactMech);
-                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) && 
-                                (faxPhoneContactMech != null) &&
-                                (primaryEmailContactMech != null);
-                        result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
+                        // not required anymore
+//                        boolean simpleContactMechsCompleted = (workPhoneContactMech != null) && 
+//                                (faxPhoneContactMech != null) &&
+//                                (primaryEmailContactMech != null);
+//                        result.put("simpleContactMechsCompleted", simpleContactMechsCompleted);
                         
-                        boolean contactMechsCompleted = locationAddressesCompleted && simpleContactMechsCompleted;
+                        boolean contactMechsCompleted = locationAddressesCompleted; // && simpleContactMechsCompleted
                         result.put("contactMechsCompleted", contactMechsCompleted);
                         
                         if (contactMechsCompleted) {

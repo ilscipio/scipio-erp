@@ -34,7 +34,9 @@
         <@field type="input" name="groupName" value=(params.groupName!) label=uiLabelMap.SetupOrganizationName required=true size="30" maxlength="60"/>
         
       <#-- SPECIAL: we may have to relax the required fields for already-created organizations, or else cause trouble for people's configs-->
-      <#assign fieldsRequired = !(party??)>
+      <#-- UPDATE: leaving these required for now because most were removed and this causes inconsistency
+      <#assign fieldsRequired = !(party??)>-->
+      <#assign fieldsRequired = true>
         
       <#-- TODO: THESE ARE NOT RECOGNIZED BY UPDATE EVENT YET - CREATE ONLY 
           IS NOT CLEAR HOW SAFE IT IS TO USE THESE FORMS TO UPDATE EXISTING ORGANIZATION -
@@ -76,9 +78,11 @@
                   jQuery('#USE_ADDRESS_CHECK').change(updateUseMailShipAddr);
               });
             </@script>
-            <#-- NOTE: this flag could be destructive, that's why it's false by default -->
-            <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_UPDATEROLES" label=uiLabelMap.SetupCreateMissingAddressPurposes
-                id="USER_ADDRESS_UPDATEROLES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_UPDATEROLES!"false")/>
+            <#if (locationAddressesCompleted!false) == false>
+              <#-- NOTE: this flag could be destructive, that's why it's false by default -->
+              <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_UPDATEROLES" label=uiLabelMap.SetupCreateMissingAddressPurposes
+                  id="USER_ADDRESS_UPDATEROLES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_UPDATEROLES!"false")/>
+            </#if>
             <#if mailShipAddressContactMech??>
               <@field type="hidden" name="USER_ADDRESS_CONTACTMECHID" value=mailShipAddressContactMech.contactMechId/>
             </#if>
@@ -86,6 +90,13 @@
             <@field type="hidden" name="USE_ADDRESS" value=(USE_ADDRESS!"true")/>
           </#if>
           
+        <#assign addressParamMaps = getWizardFormFieldValueMaps({
+            "record":mailShipPostalAddress!true, <#-- DEV NOTE: record names are translated in the data script -->
+            "defaults":defaultParams,
+            "strictRecord":false
+        })>
+        <#assign addressParams = addressParamMaps.values>
+        <#assign addressFixedParams = addressParamMaps.fixedValues>
           <div id="setupOrg-editMailShipAddr-area">
             <@fields args={"type":"default", "ignoreParentField":true}>
               <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
@@ -94,7 +105,7 @@
                     "pafFieldIdPrefix":"EditOrganization_",
                     "pafUseScripts":true,
                     "pafFallbacks":({}),
-                    "pafParams":params,
+                    "pafParams": addressParams,
                     "pafFieldNameMap": {
                       "stateProvinceGeoId": "STATE",
                       "countryGeoId": "COUNTRY",
@@ -106,7 +117,7 @@
                     "pafUseToAttnName":false,
                     "pafMarkRequired":fieldsRequired
                   }/>
-              <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>
+              <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(addressFixedParams.USER_ADDRESS_ALLOW_SOL!)/>
             </@fields>
           </div>
           
@@ -130,10 +141,15 @@
           </#if>
         </@field>
         
+        <#assign workPhoneParamMaps = getWizardFormFieldValueMaps({
+            "record":workPhoneNumber!true,
+            "defaults":defaultParams,
+            "strictRecord":false
+        })>
         <#if workPhoneContactMech??>
           <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=workPhoneContactMech.contactMechId/>
         </#if>
-        <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=params
+        <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=workPhoneParamMaps.values
             fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
             <#--<@allowSolicitationField params=params name="USER_WORK_ALLOW_SOL" allowSolicitation="" containerClass="+${styles.field_extra!}" />-->
@@ -141,10 +157,15 @@
           </@fields>
         </@telecomNumberField>
         
+        <#assign faxPhoneParamMaps = getWizardFormFieldValueMaps({
+            "record":faxPhoneNumber!true,
+            "defaults":defaultParams,
+            "strictRecord":false
+        })>
         <#if faxPhoneContactMech??>
           <@field type="hidden" name="USER_FAX_CONTACTMECHID" value=faxPhoneContactMech.contactMechId/>
         </#if>
-        <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=params
+        <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=faxPhoneParamMaps.values
             fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
             <#--<@allowSolicitationField params=params name="USER_FAX_ALLOW_SOL" allowSolicitation="" containerClass="+${styles.field_extra!}" />-->
@@ -152,6 +173,13 @@
           </@fields>
         </@telecomNumberField>
         
+        <#assign primaryEmailParamMaps = getWizardFormFieldValueMaps({
+            "record":primaryEmailAddress!true,
+            "defaults":defaultParams,
+            "strictRecord":false
+        })>
+        <#assign primaryEmailParams = primaryEmailParamMaps.values>
+        <#assign primaryEmailFixedParams = primaryEmailParamMaps.fixedValues>
         <#-- SCIPIO: probably can get away with not requiring email
         <#if partyId??>
           <@field type="hidden" name="require_email" value=(require_email!"true")/>
@@ -162,8 +190,8 @@
         <#if primaryEmailContactMech??>
           <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=primaryEmailContactMech.contactMechId/>
         </#if>
-        <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail size="60" maxlength="250"/><#-- required=fieldsRequired  -->
-        <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
+        <@field type="input" name="USER_EMAIL" value=(primaryEmailParams.USER_EMAIL!) label=uiLabelMap.CommonEmail size="60" maxlength="250"/><#-- required=fieldsRequired  -->
+        <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(primaryEmailFixedParams.USER_EMAIL_ALLOW_SOL!)/>
         <#-- no point
         <@field type="generic" label=uiLabelMap.PartyEmailAddress>
             <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail required=true size="60" maxlength="250"/>

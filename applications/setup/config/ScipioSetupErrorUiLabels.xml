@@ -63,4 +63,9 @@
         <value xml:lang="de">Kann keine Website erstellen: fehlendes ProduktStoreId</value>
         <value xml:lang="fr">Impossible de créer le site Web: productStoreId manquant</value>
     </property>
+    <property key="SetupContactWithPurposeAlreadyExistsPleaseResubmit">
+        <value xml:lang="en">A contact having the purpose ${contactMechPurposeTypeId} was found while trying to create new records. This user may have been modified elsewhere while you were editing this form. Please try again.</value>
+        <value xml:lang="de">Ein Kontakt mit dem Zweck ${contactMechPurposeTypeId} wurde beim Versuch gefunden, neue Datensätze zu erstellen. Dieser Benutzer wurde möglicherweise anderswo geändert, während Sie dieses Formular bearbeiten. Bitte versuche es erneut.</value>
+        <value xml:lang="fr">Un contact portant l'objet ${contactMechPurposeTypeId} a été trouvé lors de la tentative de création de nouveaux enregistrements. Cet utilisateur peut avoir été modifié ailleurs pendant la modification de ce formulaire. Veuillez réessayer.</value>
+    </property>
 </resource>

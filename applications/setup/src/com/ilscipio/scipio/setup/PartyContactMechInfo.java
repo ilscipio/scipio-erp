@@ -141,6 +141,11 @@ class PartyContactMechInfo {
         return getContactMechById(delegator, contactMechId, useCache);
     }
     
+    public GenericValue getPartyContactMechForPurpose(Delegator delegator, String purpose, boolean useCache) throws GenericEntityException {
+        String contactMechId = getContactMechIdForPurpose(purpose);
+        return getPartyContactMechById(delegator, contactMechId, useCache);
+    }
+    
     /**
      * BEST-EFFORT! Returns closest match only. May be incomplete.
      */
@@ -171,10 +176,35 @@ class PartyContactMechInfo {
         return getContactMechById(delegator, contactMechId, useCache);
     }
     
+    public GenericValue getClosestPartyContactMechForPurposes(Delegator delegator, Set<String> purposes, boolean useCache) throws GenericEntityException {
+        String contactMechId = getClosestContactMechIdForPurposes(purposes);
+        return getPartyContactMechById(delegator, contactMechId, useCache);
+    }
+    
     private GenericValue getContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
         if (UtilValidate.isNotEmpty(contactMechId)) {
             return delegator.findOne("ContactMech", 
                     UtilMisc.toMap("contactMechId", contactMechId), useCache);
+        }
+        return null;
+    }
+    
+    private GenericValue getPartyContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isNotEmpty(contactMechId)) {
+            List<EntityCondition> condList = new ArrayList<>();
+            condList.add(EntityCondition.makeCondition("contactMechId", contactMechId));
+            condList.add(EntityCondition.makeCondition("partyId", partyId));
+            condList.add(EntityUtil.getFilterByDateExpr());
+            List<GenericValue> pcmList = delegator.findList("PartyContactMech", EntityCondition.makeCondition(condList, EntityOperator.AND),
+                    null, UtilMisc.toList("fromDate"), null, useCache);
+            if (pcmList.size() > 0) {
+                GenericValue result = pcmList.get(0);
+                if (pcmList.size() > 2) {
+                    Debug.logWarning("Setup: Multiple active PartyContactMech records found for contactMechId '" 
+                        + contactMechId + "' and partyId '" + partyId + "'; using latest only (fromDate: " + result.get("fromDate") + ")", module);
+                }
+                return result;
+            }
         }
         return null;
     }

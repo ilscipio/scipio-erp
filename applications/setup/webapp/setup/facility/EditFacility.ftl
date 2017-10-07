@@ -15,6 +15,11 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
+<style type="text/css"><#-- FIXME -->
+    .setup-addresslist { }
+    .setup-addressentry { display:inline-block; width:20em; }
+</style>
+
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
@@ -82,6 +87,44 @@
                   }/>
             </@fields>
           
+          <#if partyPostalAddressList?has_content>
+            <@script>
+                var partyPostalAddressList = [
+                  <#list (partyPostalAddressList![]) as postalAddress>
+                    <@postalAddressAsScript postalAddress=postalAddress/><#if postalAddress?has_next>,</#if>
+                  </#list>
+                ];
+                var setFacilityShipAddress = function(postalAddress) {
+                    var form = jQuery('#${escapeVal(submitFormId, 'js')}');
+                    <#assign prefix = "shipAddress_">
+                    
+                    jQuery('input[name=${prefix}toName]', form).val(postalAddress.toName || '').change();
+                    jQuery('input[name=${prefix}attnName]', form).val(postalAddress.attnName || '').change();
+                    jQuery('input[name=${prefix}address1]', form).val(postalAddress.address1 || '').change();
+                    jQuery('input[name=${prefix}address2]', form).val(postalAddress.address2 || '').change();
+                    jQuery('input[name=${prefix}city]', form).val(postalAddress.city || '').change();
+                    jQuery('input[name=${prefix}postalCode]', form).val(postalAddress.postalCode || '').change();
+                    
+                    jQuery('select[name=${prefix}countryGeoId]', form).val(postalAddress.countryGeoId || '').change();
+                    <#-- FIXME: NON-WORKING -->
+                    jQuery('select[name=${prefix}stateProvinceGeoId]', form).val(postalAddress.stateProvinceGeoId || '').change();
+                };
+            </@script>
+            <@modal id="setupFacility-selectShipAddr" label=uiLabelMap.SetupSelectAddress class="+${styles.link_nav!} ${styles.action_show!}">
+              <div class="setup-addresslist">
+                <#list partyPostalAddressList as postalAddress>
+                  <div class="setup-addressentry">
+                    <@formattedAddressBasic address=postalAddress 
+                        purposes=(partyContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
+                        emphasis=true/><br/>
+                    <a href="javascript:setFacilityShipAddress(partyPostalAddressList[${postalAddress?index}]);jQuery('#modal_setupFacility-selectShipAddr').foundation('reveal', 'close');void(0);"<#rt/> 
+                        <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>
+                  </div>
+                </#list>
+              </div>
+            </@modal>
+          </#if>
+            
           <#if facilityInfo??>
             <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
             <#if !shipAddressContactMech??>

@@ -24,6 +24,7 @@ import com.ilscipio.scipio.setup.*;
 final module = "SetupFacility.groovy";
 
 facilityData = context.facilityData ?: [:];
+organizationData = context.setupStepStates?.organization.stepData ?: [:];
 
 facilityInfo = null; // contains ALL facility record information
 defaultParams = [:];
@@ -81,22 +82,65 @@ if (shipPostalAddress != null && facilityInfo != null) {
 }
 
 if (facility != null) {
-    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "'", module);
+    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "'; info: " + facilityInfo, module);
 } else {
     Debug.logInfo("Setup: Setting up new warehouse", module);
 }
 
-partyAddressContactMech = context.setupStepStates?.organization.stepData.generalAddressContactMech;
+partyContactMechPurposeList = organizationData.partyContactMechPurposeList;
+partyPostalAddressList = null;
 partyPostalAddress = null;
-if (partyAddressContactMech) {
-    partyPostalAddress = delegator.findOne("PostalAddress", [contactMechId:partyAddressContactMech.contactMechId], false);
+partyContactMechPurposeMap = null;
+// pick out SHIPPING_LOCATION and SHIP_ORIG_LOCATIONs first, followed by general address, then the rest
+if (partyContactMechPurposeList) {
+    partyPostalAddressList = [];
+    partyContactMechPurposeMap = [:];
+    generalAddressContactMechId = organizationData.generalAddressContactMech?.contactMechId;
+    generalAddressContactMechPurposes = organizationData.generalAddressContactMechPurposes ?: [];
+    shipAddressList = [];
+    genAddressList = [];
+    restList = [];
+    for(cmp in partyContactMechPurposeList) {
+        def contactMechId = cmp.contactMechId;
+        def postalAddress = delegator.findOne("PostalAddress", [contactMechId:contactMechId], false);
+        if (postalAddress) {
+            def purpose = cmp.contactMechPurposeTypeId;
+            if (contactMechId == generalAddressContactMechId) {
+                genAddressList.add(postalAddress);
+            } else if (purpose == "SHIPPING_LOCATION" || purpose == "SHIP_ORIG_LOCATION") {
+                shipAddressList.add(postalAddress);
+            } else {
+                restList.add(postalAddress);
+            }
+            addrSet = partyContactMechPurposeMap[contactMechId];
+            if (addrSet == null) {
+                addrSet = new HashSet();
+                partyContactMechPurposeMap[contactMechId] = addrSet;
+            }
+            addrSet.add(purpose);
+        }
+    }
+    
+    if (generalAddressContactMechPurposes.contains("SHIPPING_LOCATION") || generalAddressContactMechPurposes.contains("SHIP_ORIG_LOCATION")) {
+        partyPostalAddressList.addAll(genAddressList);
+        partyPostalAddressList.addAll(shipAddressList);
+    } else {
+        partyPostalAddressList.addAll(shipAddressList);
+        partyPostalAddressList.addAll(genAddressList);
+    }
+    partyPostalAddressList.addAll(restList);
+    
+    // now make unique
+    addressMap = new LinkedHashMap();
+    for(postalAddress in partyPostalAddressList) {
+        addressMap[postalAddress.contactMechId] = postalAddress;
+    }
+    partyPostalAddressList = new ArrayList(addressMap.values());
+    partyPostalAddress = partyPostalAddressList[0];
 }
-if (partyPostalAddress == null) {
-    // fallback (legacy ofbiz behavior)
-    listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
-    partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
-}
+context.partyPostalAddressList = partyPostalAddressList;
 context.partyPostalAddress = partyPostalAddress;
+context.partyContactMechPurposeMap = partyContactMechPurposeMap;
 
 defaultShipAddress = null;
 if (partyPostalAddress) {

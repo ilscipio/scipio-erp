@@ -245,33 +245,41 @@ abstract class ContactMechPurposeInfo {
     
     public static class PartyContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String partyId;
+        protected final List<GenericValue> partyContactMechPurposeList;
         
         protected PartyContactMechPurposeInfo(String partyId, Map<String, Set<String>> contactMechPurposes,
-                Map<String, Set<String>> purposeContactMechs, String logPrefix) {
+                Map<String, Set<String>> purposeContactMechs, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
             super(contactMechPurposes, purposeContactMechs, logPrefix);
             this.partyId = partyId;
+            this.partyContactMechPurposeList = partyContactMechPurposeList;
         }
         
         public static PartyContactMechPurposeInfo forParty(Delegator delegator, LocalDispatcher dispatcher, String partyId, boolean useCache, String logPrefix) throws GenericEntityException {
             List<EntityCondition> condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("partyId", partyId));
             condList.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> contactMechPurposeList = delegator.findList("PartyContactMechPurpose", 
+            List<GenericValue> partyContactMechPurposeList = delegator.findList("PartyContactMechPurpose", 
                     EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
-            return fromPartyContactMechPurposeList(partyId, contactMechPurposeList, logPrefix);
+            return fromPartyContactMechPurposeList(partyId, partyContactMechPurposeList, logPrefix);
         }
         
-        public static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<? extends Map<String, Object>> contactMechPurposeList, String logPrefix) {
+        public static PartyContactMechPurposeInfo fromPartyContactMechPurposeList(String partyId, List<GenericValue> partyContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
-            populateIdMaps(contactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
+            populateIdMaps(partyContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
             return new PartyContactMechPurposeInfo(partyId,
-                    //Collections.unmodifiableList(contactMechAndPurposeList), 
                     Collections.unmodifiableMap(contactMechPurposes), 
                     Collections.unmodifiableMap(purposeContactMechs),
+                    Collections.unmodifiableList(partyContactMechPurposeList),
                     logPrefix);
         }
-        
+
+        @Override
+        public void resultsToMap(Map<String, Object> map) {
+            super.resultsToMap(map);
+            map.put("partyContactMechPurposeList", partyContactMechPurposeList);
+        }
+
         public GenericValue getPartyContactMechForPurpose(Delegator delegator, String purpose, boolean useCache) throws GenericEntityException {
             String contactMechId = getContactMechIdForPurpose(purpose);
             return getPartyContactMechById(delegator, contactMechId, useCache);
@@ -322,31 +330,39 @@ abstract class ContactMechPurposeInfo {
     
     public static class FacilityContactMechPurposeInfo extends ContactMechPurposeInfo {
         protected final String facilityId;
+        protected final List<GenericValue> facilityContactMechPurposeList;
         
         protected FacilityContactMechPurposeInfo(String facilityId, Map<String, Set<String>> contactMechPurposes,
-                Map<String, Set<String>> purposeContactMechs, String logPrefix) {
+                Map<String, Set<String>> purposeContactMechs, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
             super(contactMechPurposes, purposeContactMechs, logPrefix);
             this.facilityId = facilityId;
+            this.facilityContactMechPurposeList = facilityContactMechPurposeList;
         }
         
         public static FacilityContactMechPurposeInfo forFacility(Delegator delegator, LocalDispatcher dispatcher, String facilityId, boolean useCache, String logPrefix) throws GenericEntityException {
             List<EntityCondition> condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("facilityId", facilityId));
             condList.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> contactMechPurposeList = delegator.findList("FacilityContactMechPurpose", 
+            List<GenericValue> facilityContactMechPurposeList = delegator.findList("FacilityContactMechPurpose", 
                     EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
-            return fromFacilityContactMechPurposeList(facilityId, contactMechPurposeList, logPrefix);
+            return fromFacilityContactMechPurposeList(facilityId, facilityContactMechPurposeList, logPrefix);
         }
         
-        public static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<? extends Map<String, Object>> contactMechPurposeList, String logPrefix) {
+        public static FacilityContactMechPurposeInfo fromFacilityContactMechPurposeList(String facilityId, List<GenericValue> facilityContactMechPurposeList, String logPrefix) {
             Map<String, Set<String>> contactMechPurposes = new HashMap<>();
             Map<String, Set<String>> purposeContactMechs = new HashMap<>();
-            populateIdMaps(contactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
+            populateIdMaps(facilityContactMechPurposeList, "contactMechId", "contactMechPurposeTypeId", contactMechPurposes, purposeContactMechs);
             return new FacilityContactMechPurposeInfo(facilityId,
-                    //Collections.unmodifiableList(contactMechAndPurposeList), 
                     Collections.unmodifiableMap(contactMechPurposes), 
                     Collections.unmodifiableMap(purposeContactMechs),
+                    Collections.unmodifiableList(facilityContactMechPurposeList),
                     logPrefix);
+        }
+        
+        @Override
+        public void resultsToMap(Map<String, Object> map) {
+            super.resultsToMap(map);
+            map.put("facilityContactMechPurposeList", facilityContactMechPurposeList);
         }
         
         public GenericValue getFacilityContactMechForPurpose(Delegator delegator, String purpose, boolean useCache) throws GenericEntityException {

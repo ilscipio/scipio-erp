@@ -118,4 +118,9 @@
         <value xml:lang="de">Anmerkung: Aus Gründen des Legacy-Schemas ist die visualThemeId normalerweise auf dem ProductStore-Datensatz und nicht auf dem WebSite-Datensatz angegeben.</value>
         <value xml:lang="fr">Remarque: pour les raisons de conception du schéma existant, le visualThemeId est généralement spécifié sur l'enregistrement ProductStore plutôt que sur l'enregistrement WebSite.</value>
     </property>
+    <property key="SetupSelectAddress">
+        <value xml:lang="en">Select Address</value>
+        <value xml:lang="de">Adresse auswählen</value>
+        <value xml:lang="fr">Sélectionner une adresse</value>
+    </property>
 </resource>

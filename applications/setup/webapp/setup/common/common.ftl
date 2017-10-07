@@ -255,3 +255,18 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     <#nested description>
   </#list>
 </#macro>
+
+<#macro postalAddressAsScript postalAddress>
+    {
+        "contactMechId": "${escapeVal(postalAddress.contactMechId!, 'js')}",
+        "toName": "${escapeVal(postalAddress.toName!, 'js')}",
+        "attnName": "${escapeVal(postalAddress.attnName!, 'js')}",
+        "stateProvinceGeoId": "${escapeVal(postalAddress.stateProvinceGeoId!, 'js')}",
+        "countryGeoId": "${escapeVal(postalAddress.countryGeoId!, 'js')}",
+        "address1": "${escapeVal(postalAddress.address1!, 'js')}",
+        "address2": "${escapeVal(postalAddress.address2!, 'js')}",
+        "city": "${escapeVal(postalAddress.city!, 'js')}",
+        "postalCode": "${escapeVal(postalAddress.postalCode!, 'js')}"
+    }
+</#macro>
+

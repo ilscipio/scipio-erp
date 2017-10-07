@@ -13210,4 +13210,9 @@
         <value xml:lang="en">User not found: ${partyId}</value>
         <value xml:lang="fr">Acteur non trouvé: ${partyId}</value>
     </property>
+    <property key="PartyGeneralAddress">
+        <value xml:lang="de">Allgemeine Adresse</value>
+        <value xml:lang="en">General Address</value>
+        <value xml:lang="fr">Adresse générale</value>
+    </property>
 </resource>

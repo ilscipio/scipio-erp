@@ -355,11 +355,8 @@
     </simple-method>
 
     <simple-method method-name="createFacilityAndContactMech" short-description="create Facility and ContactMech">
-        <if-empty field="parameters.facilityName">
-            <add-error>
-                <fail-property resource="SetupUiLabels" property="SetupFacilityNameIsMissing"/>
-            </add-error>
-        </if-empty>
+        <!-- SCIPIO: delegated for reuse -->
+        <call-simple-method method-name="verifyFacilityFields"/>
         <check-errors/>
         
         <make-value value-field="newEntity" entity-name="Facility"/>
@@ -382,27 +379,34 @@
         <create-value value-field="newEntity"/>
 
         <!-- create  Facility ContactMech-->
-        <!-- SCIPIO: 2017-09-27: support a specific contact mech ID -->
-        <if>
-            <condition><not><if-empty field="parameters.postalAddressContactMechId"/></not></condition>
-            <then>
-                <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
-                    <field-map field-name="partyId" from-field="parameters.partyId"/>
-                    <field-map field-name="contactMechId" from-field="parameters.postalAddressContactMechId"/>
-                </entity-and>
-                <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
-            </then>
-            <else>
-                <!-- stock ofbiz -->
-                <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
-                    <field-map field-name="partyId" from-field="parameters.partyId"/>
-                </entity-and>
-                <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
-            </else>
-        </if>
+        <!-- SCIPIO: 2017-09-27: support a specific contact mech ID AND also support manual input -->
+        <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
+            <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
+                <set-service-fields service-name="createPostalAddress" map="shipAddressContext" to-map="addressContext"/>
+                <else>
+                    <if>
+                        <condition><not><if-empty field="parameters.postalAddressContactMechId"/></not></condition>
+                        <then>
+                            <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
+                                <field-map field-name="partyId" from-field="parameters.partyId"/>
+                                <field-map field-name="contactMechId" from-field="parameters.postalAddressContactMechId"/>
+                            </entity-and>
+                            <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+                        </then>
+                        <else>
+                            <!-- stock ofbiz -->
+                            <entity-and entity-name="PartyAndPostalAddress" list="listPartyPostalAddress" filter-by-date="true">
+                                <field-map field-name="partyId" from-field="parameters.partyId"/>
+                            </entity-and>
+                            <first-from-list entry="partyPostalAddress" list="listPartyPostalAddress"/>
+                        </else>
+                    </if>
+                    <set-service-fields service-name="createPostalAddress" map="partyPostalAddress" to-map="addressContext"/>
+                </else>
+            </if-compare>
+        </if-compare>
         
-        <sequenced-id sequence-name="ContactMech" field="partyPostalAddress.contactMechId"/>
-        <set-service-fields service-name="createPostalAddress" map="partyPostalAddress" to-map="addressContext"/>
+        <sequenced-id sequence-name="ContactMech" field="addressContext.contactMechId"/>
         <call-service service-name="createPostalAddress" in-map-name="addressContext">
             <result-to-field result-name="contactMechId" field="contactMechId"/>
         </call-service>
@@ -419,6 +423,46 @@
         <!-- also consider this address the shipping origin address -->
         <set field="addressPurposeContext.contactMechPurposeTypeId" value="SHIP_ORIG_LOCATION"/>
         <call-service service-name="createFacilityContactMechPurpose" in-map-name="addressPurposeContext"/>
+    </simple-method>
+    
+    <!-- SCIPIO: new -->
+    <simple-method method-name="verifyFacilityFields" short-description="SCIPIO: verify facility fields">
+        <if-empty field="parameters.facilityName">
+            <add-error>
+                <fail-property resource="SetupUiLabels" property="SetupFacilityNameIsMissing"/>
+            </add-error>
+        </if-empty>
+    
+        <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
+            <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
+                <!-- NOTE: logic copied and modified from createOrganization -->
+                <call-map-processor in-map-name="parameters" out-map-name="shipAddressContext">
+                    <simple-map-processor name="newPostalAddress">
+                        <!--<process field="roleTypeId"><copy/></process>-->
+                        <process field="shipAddress_toName"><copy to-field="toName"/></process>
+                        <process field="shipAddress_attnName"><copy to-field="attnName"/></process>
+                        <process field="shipAddress_address1"><copy to-field="address1"/><not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1Missing"/></not-empty></process>
+                        <process field="shipAddress_address2"><copy to-field="address2"/></process>
+                        <process field="shipAddress_city"><copy to-field="city"/><not-empty><fail-property resource="PartyUiLabels" property="PartyCityMissing"/></not-empty></process>
+                        <process field="shipAddress_stateProvinceGeoId"><copy to-field="stateProvinceGeoId"/></process>
+                        <process field="shipAddress_postalCode"><copy to-field="postalCode"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPostalCodeMissing"/></not-empty></process>
+                        <process field="shipAddress_countryGeoId"><copy to-field="countryGeoId"/><not-empty><fail-property resource="CommonUiLabels" property="CommonCountryMissing"/></not-empty></process>
+                    </simple-map-processor>
+                </call-map-processor>
+                <if-compare value="USA" operator="equals" field="parameters.shipAddress_countryGeoId">
+                    <if-empty field="parameters.shipAddress_stateProvinceGeoId">
+                        <property-to-field field="tempErrorMessage" resource="PartyUiLabels" property="PartyStateInUsMissing"/>
+                        <field-to-list field="tempErrorMessage" list="error_list"/>
+                    </if-empty>
+                </if-compare>
+                <if-compare value="CAN" operator="equals" field="parameters.shipAddress_countryGeoId">
+                    <if-empty field="parameters.shipAddress_stateProvinceGeoId">
+                        <property-to-field field="tempErrorMessage" resource="PartyUiLabels" property="PartyStateInCanadaMissing"/>
+                        <field-to-list field="tempErrorMessage" list="error_list"/>
+                    </if-empty>
+                </if-compare>
+            </if-compare>
+        </if-compare>
     </simple-method>
 
     <simple-method method-name="createProductStoreWithDefaultSetting" short-description="create ProductStore and setting default value for payment and shipping">

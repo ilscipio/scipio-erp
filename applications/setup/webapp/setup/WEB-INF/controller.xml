@@ -157,7 +157,7 @@
     </request-map>
     <request-map uri="setupUpdateFacility">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFacility"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateFacilityAndContactMech"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupFacility"/>
     </request-map>

@@ -241,4 +241,17 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
 </#macro>
 
+<#function getContactMechPurposeDescs purposes>
+  <#local res = []>
+  <#list purposes as purpose>
+    <#local purposeType = delegator.findOne("ContactMechPurposeType", {"contactMechPurposeTypeId":purpose}, true)!>
+    <#local res = res + [rawString(purposeType.get("description", locale)!purposeType.contactMechPurposeTypeId!)]>
+  </#list>
+  <#return res>
+</#function>
 
+<#macro formattedContactMechPurposeDescs purposes=[]>
+  <#list getContactMechPurposeDescs(purposes) as description>
+    <#nested description>
+  </#list>
+</#macro>

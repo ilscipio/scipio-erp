@@ -6,9 +6,9 @@
     "USER_WORK_ALLOW_SOL": "Y",
     "USER_FAX_ALLOW_SOL": "Y",
     "USER_EMAIL_ALLOW_SOL": "Y"
-}>
+} + toSimpleMap(defaultParams!{})>
 <#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":partyGroup!true,
+    "record":organizationInfo!true, <#-- NOTE: organizationInfo is pre-prepared in data script -->
     "defaults":defaultParams,
     "strictRecord":false <#-- numerous extra fields not on party/partyGroup -->
 })>
@@ -17,12 +17,12 @@
 
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["orgPartyId", "partyId"]/><#-- these will conflict with SetupWorker -->
-        <@field type="hidden" name="isCreateOrganization" value=(partyGroup??)?string("N","Y")/>
+        <@field type="hidden" name="isCreateOrganization" value=(organizationInfo??)?string("N","Y")/>
         
         <#-- TODO: REVIEW: I don't know if we want to disable this or not yet
         <@field type="hidden" name="update_current_userlogin_party" value="false">-->
         
-      <#if party??>
+      <#if organizationInfo??>
         <@field type="display" name="partyId" label=uiLabelMap.PartyPartyId><#rt/>
             <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=(params.partyId!)/><#t/>
         </@field><#lt/>
@@ -35,33 +35,22 @@
         
       <#-- SPECIAL: we may have to relax the required fields for already-created organizations, or else cause trouble for people's configs-->
       <#-- UPDATE: leaving these required for now because most were removed and this causes inconsistency
-      <#assign fieldsRequired = !(party??)>-->
+      <#assign fieldsRequired = !(organizationInfo??)>-->
       <#assign fieldsRequired = true>
         
-      <#-- TODO: THESE ARE NOT RECOGNIZED BY UPDATE EVENT YET - CREATE ONLY 
-          IS NOT CLEAR HOW SAFE IT IS TO USE THESE FORMS TO UPDATE EXISTING ORGANIZATION -
-          RISK OF MESSING UP RECORDS - TENTATIVE ONLY FOR NOW 
-          
-          THE UPDATE SERVICE MUST BE FINISHED BEFORE THESE CAN BE FILLED IN.
-          -->
-      <#--<#if !party??>-->
-      
-      <#if party??>
-        <@alert type="warning">FIXME: Fields below this do not yet work for updating existing organization.</@alert>
-      </#if>
-      
-        <#if partyId??>
-          <#assign fieldLabelDetail>
-            <#list (mailShipAddressContactMechPurposes![]) as purpose>
-                <b>${delegator.findOne("ContactMechPurposeType", {"contactMechPurposeTypeId":purpose}, true).get("description", locale)}</b><br/>
-            </#list>
+        <#if organizationInfo??>
+          <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}">
+          <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
           </#assign>
         <#else>
           <#assign labelDetail = "">
+          <#assign addressManageUri = "">
         </#if>
       
-        <@field type="generic" label=uiLabelMap.PartyAddressMailingShipping labelDetail=fieldLabelDetail>
-          <#if party??>
+        <@field type="generic" label=uiLabelMap.PartyGeneralAddress labelDetail=fieldLabelDetail>
+          <#if organizationInfo??>
+            <#-- NOT NEEDED: the ofbiz services automatically detect if address changed and
+                avoids creating a new contactMechId if same
             <@field type="checkbox" checkboxType="simple" name="USE_ADDRESS" label=uiLabelMap.SetupUpdateAddress
                 id="USE_ADDRESS_CHECK" value="true" altValue="false" currentValue=(params.USE_ADDRESS!"false")/>
             <@script>
@@ -78,25 +67,17 @@
                   jQuery('#USE_ADDRESS_CHECK').change(updateUseMailShipAddr);
               });
             </@script>
-            <#if (locationAddressesCompleted!false) == false>
-              <#-- NOTE: this flag could be destructive, that's why it's false by default -->
-              <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_UPDATEROLES" label=uiLabelMap.SetupCreateMissingAddressPurposes
-                  id="USER_ADDRESS_UPDATEROLES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_UPDATEROLES!"false")/>
+             -->
+            <#if params.USER_ADDRESS_CONTACTMECHID?has_content>
+              <@field type="hidden" name="USER_ADDRESS_CONTACTMECHID" value=(params.USER_ADDRESS_CONTACTMECHID!)/>
             </#if>
-            <#if mailShipAddressContactMech??>
-              <@field type="hidden" name="USER_ADDRESS_CONTACTMECHID" value=mailShipAddressContactMech.contactMechId/>
-            </#if>
+          <#--
           <#else>
             <@field type="hidden" name="USE_ADDRESS" value=(USE_ADDRESS!"true")/>
+          -->
           </#if>
+          <@field type="hidden" name="USE_ADDRESS" value="true"/>
           
-        <#assign addressParamMaps = getWizardFormFieldValueMaps({
-            "record":mailShipPostalAddress!true, <#-- DEV NOTE: record names are translated in the data script -->
-            "defaults":defaultParams,
-            "strictRecord":false
-        })>
-        <#assign addressParams = addressParamMaps.values>
-        <#assign addressFixedParams = addressParamMaps.fixedValues>
           <div id="setupOrg-editMailShipAddr-area">
             <@fields args={"type":"default", "ignoreParentField":true}>
               <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
@@ -105,7 +86,7 @@
                     "pafFieldIdPrefix":"EditOrganization_",
                     "pafUseScripts":true,
                     "pafFallbacks":({}),
-                    "pafParams": addressParams,
+                    "pafParams": params,
                     "pafFieldNameMap": {
                       "stateProvinceGeoId": "STATE",
                       "countryGeoId": "COUNTRY",
@@ -114,42 +95,40 @@
                       "city": "CITY",
                       "postalCode": "POSTAL_CODE"
                     },
-                    "pafUseToAttnName":false,
+                    "pafUseToAttnName":false,  <#-- (organizationInfo??) TODO: REVIEW -->
                     "pafMarkRequired":fieldsRequired
                   }/>
-              <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(addressFixedParams.USER_ADDRESS_ALLOW_SOL!)/>
+              <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>
             </@fields>
-          </div>
           
-          <#if partyId??>
-            <#if !mailShipAddressContactMech??>
-                <#-- TODO: localize -->
-                <@alert type="warning">${uiLabelMap.SetupNoShipMailAddressDefinedForOrganizationNotice}</@alert>
+          <#if organizationInfo??>
+            <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
+            <#if !generalAddressContactMech??>
+                <@alert type="warning">${getLabel('SetupNoAddressDefinedNotice', '', addressNoticeParams)}</@alert>
             <#else>
-              <#if (mailShipAddressStandaloneCompleted!false) == false>
+              <#if (generalAddressStandaloneCompleted!false) == false>
                 <#if (locationAddressesCompleted!false) == true>
-                  <@alert type="info">${uiLabelMap.SetupSplitShipMailAddressPurposesForOrganizationNotice}
-                    <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  <@alert type="info">${getLabel('SetupSplitAddressPurposesNotice', '', addressNoticeParams)}
+                    <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
                   </@alert>
                 <#else>
-                  <@alert type="warning">${uiLabelMap.SetupMissingShipMailAddressPurposesForOrganizationNotice}
-                    <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  <@alert type="warning">${getLabel('SetupMissingAddressPurposesNotice', '', addressNoticeParams)}
+                    <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
                   </@alert>
+                  <#-- NOTE: this flag could be destructive, that's why it's false by default -->
+                  <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_CREATEMISSINGPURPOSES" label=uiLabelMap.SetupCreateMissingAddressPurposes
+                    id="USER_ADDRESS_CREATEMISSINGPURPOSES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_CREATEMISSINGPURPOSES!"false")/>
                 </#if>
               </#if>
             </#if>
           </#if>
+          </div>
         </@field>
         
-        <#assign workPhoneParamMaps = getWizardFormFieldValueMaps({
-            "record":workPhoneNumber!true,
-            "defaults":defaultParams,
-            "strictRecord":false
-        })>
-        <#if workPhoneContactMech??>
-          <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=workPhoneContactMech.contactMechId/>
+        <#if organizationInfo?? && params.USER_WORK_CONTACTMECHID?has_content>
+          <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=(params.USER_WORK_CONTACTMECHID!)/>
         </#if>
-        <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=workPhoneParamMaps.values
+        <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=params
             fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
             <#--<@allowSolicitationField params=params name="USER_WORK_ALLOW_SOL" allowSolicitation="" containerClass="+${styles.field_extra!}" />-->
@@ -157,15 +136,10 @@
           </@fields>
         </@telecomNumberField>
         
-        <#assign faxPhoneParamMaps = getWizardFormFieldValueMaps({
-            "record":faxPhoneNumber!true,
-            "defaults":defaultParams,
-            "strictRecord":false
-        })>
-        <#if faxPhoneContactMech??>
-          <@field type="hidden" name="USER_FAX_CONTACTMECHID" value=faxPhoneContactMech.contactMechId/>
+        <#if organizationInfo?? && params.USER_FAX_CONTACTMECHID?has_content>
+          <@field type="hidden" name="USER_FAX_CONTACTMECHID" value=(params.USER_FAX_CONTACTMECHID!)/>
         </#if>
-        <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=faxPhoneParamMaps.values
+        <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=params
             fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
           <@fields type="default-compact" ignoreParentField=true>
             <#--<@allowSolicitationField params=params name="USER_FAX_ALLOW_SOL" allowSolicitation="" containerClass="+${styles.field_extra!}" />-->
@@ -173,30 +147,12 @@
           </@fields>
         </@telecomNumberField>
         
-        <#assign primaryEmailParamMaps = getWizardFormFieldValueMaps({
-            "record":primaryEmailAddress!true,
-            "defaults":defaultParams,
-            "strictRecord":false
-        })>
-        <#assign primaryEmailParams = primaryEmailParamMaps.values>
-        <#assign primaryEmailFixedParams = primaryEmailParamMaps.fixedValues>
-        <#-- SCIPIO: probably can get away with not requiring email
-        <#if partyId??>
-          <@field type="hidden" name="require_email" value=(require_email!"true")/>
-        <#else>
-          <@field type="hidden" name="require_email" value=(require_email!"false")/>
-        </#if>-->
+        <#-- SCIPIO: NOTE: probably can get away with never requiring email -->
         <@field type="hidden" name="require_email" value="false"/>
-        <#if primaryEmailContactMech??>
-          <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=primaryEmailContactMech.contactMechId/>
+        <#if params.USER_EMAIL_CONTACTMECHID?has_content>
+          <@field type="hidden" name="USER_EMAIL_CONTACTMECHID" value=(params.USER_EMAIL_CONTACTMECHID!)/>
         </#if>
-        <@field type="input" name="USER_EMAIL" value=(primaryEmailParams.USER_EMAIL!) label=uiLabelMap.CommonEmail size="60" maxlength="250"/><#-- required=fieldsRequired  -->
-        <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(primaryEmailFixedParams.USER_EMAIL_ALLOW_SOL!)/>
-        <#-- no point
-        <@field type="generic" label=uiLabelMap.PartyEmailAddress>
-            <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail required=true size="60" maxlength="250"/>
-            <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(params.USER_EMAIL_ALLOW_SOL!)/>
-        </@field>-->
-        
-      <#--</#if>-->
+        <@field type="input" name="USER_EMAIL" value=(params.USER_EMAIL!) label=uiLabelMap.CommonEmail size="60" maxlength="250"/><#-- required=fieldsRequired  -->
+        <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
+
     </@form>

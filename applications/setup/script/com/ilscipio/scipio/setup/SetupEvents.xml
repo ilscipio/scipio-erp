@@ -54,7 +54,8 @@
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
                 <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
                 <set field="cutn.contactCtx" from-field="addressContext"/>
-                <call-simple-method method-name="createUpdatePostalAddress"/>
+                <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
+                <call-simple-method method-name="createUpdatePartyPostalAddress"/>
                 <check-errors/>
             </else>
         </if-compare>
@@ -64,7 +65,7 @@
         <set field="cutn.contactMechId" from-field="parameters.USER_HOME_CONTACTMECHID"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_HOME"/>
         <set field="cutn.contactCtx" from-field="homePhoneContext"/>
-        <call-simple-method method-name="createUpdateTelecomNumber"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
         
         <!-- work phone -->
@@ -72,7 +73,7 @@
         <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
         <set field="cutn.contactCtx" from-field="workPhoneContext"/>
-        <call-simple-method method-name="createUpdateTelecomNumber"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
         
         <!-- fax phone -->
@@ -80,7 +81,7 @@
         <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
         <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
         <set field="cutn.contactCtx" from-field="faxPhoneContext"/>
-        <call-simple-method method-name="createUpdateTelecomNumber"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
         
         <!-- mobile phone -->
@@ -89,7 +90,7 @@
         <log level="info" message="TEST: ${cutn.contactMechId}"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobilePhoneContext"/>
-        <call-simple-method method-name="createUpdateTelecomNumber"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>
         
         <!-- email address -->
@@ -97,12 +98,12 @@
         <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
         <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
         <set field="cutn.contactCtx" from-field="emailContext"/>
-        <call-simple-method method-name="createUpdateEmailAddress"/>
+        <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
         
         <check-errors/>
     </simple-method>
-    <simple-method method-name="createUpdatePostalAddress">
+    <simple-method method-name="createUpdatePartyPostalAddress">
         <!-- WARN: this one might be too specific for general use; no deletion support for now -->
         <!-- REQUIRES:
             cutn.contactMechPurposeTypeIdList
@@ -134,6 +135,22 @@
             <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
             <set field="cutn.contactCtx.partyId" from-field="partyId"/>
             <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx"/>
+            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                    <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
+                        <field-map field-name="partyId" from-field="partyId"/>
+                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                    </entity-and>
+                    <if-empty field="purposes">
+                        <log level="info" message="Setup: Creating party '${partyId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+                        <set field="purposeCtx" value="" set-if-null="true"/>
+                        <set field="purposeCtx.partyId" from-field="partyId"/>
+                        <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                        <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeCtx"/>
+                    </if-empty>
+                </iterate>
+            </if-compare>
             <else>
                 <log level="info" message="Setup: Creating party '${partyId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
                 <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
@@ -165,7 +182,7 @@
             </else>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="createUpdateTelecomNumber">
+    <simple-method method-name="createUpdatePartyTelecomNumber">
         <!-- REQUIRES:
             cutn.contactMechPurposeTypeId 
             cutn.contactCtx
@@ -229,7 +246,7 @@
             </else>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="createUpdateEmailAddress">
+    <simple-method method-name="createUpdatePartyEmailAddress">
         <!-- REQUIRES:
             cutn.contactMechPurposeTypeId 
             cutn.contactCtx
@@ -371,6 +388,106 @@
         
     </simple-method>
     
+    <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">
+        <set field="facilityId" from-field="parameters.facilityId"/>
+        <call-simple-method method-name="verifyFacilityFields" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
+        <check-errors/>
+
+        <set-service-fields service-name="updateFacility" map="parameters" to-map="updateFacilityCtx"/>
+        <call-service service-name="updateFacility" in-map-name="updateFacilityCtx"/>
+        <check-errors/>
+        
+        <if-compare field="parameters.useFacilityAddr" operator="not-equals" value="false">
+            <if-compare field="parameters.useInputFacilityAddr" operator="equals" value="true">
+                <set field="cutn" value="" set-if-null="true"/>
+                <set field="cutn.contactMechId" from-field="parameters.shipAddress_contactMechId"/>
+                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIPPING_LOCATION"/>
+                <set field="cutn.contactMechPurposeTypeIdList[]" value="SHIP_ORIG_LOCATION"/>
+                <set field="cutn.contactCtx" from-field="shipAddressContext"/>
+                <set field="cutn.createMissingPurposes" from-field="parameters.createMissingShipAddressPurposes"/>
+                <call-simple-method method-name="createUpdateFacilityPostalAddress"/>
+                <check-errors/>
+            </if-compare>
+        </if-compare>
+    </simple-method>
+    <simple-method method-name="createUpdateFacilityPostalAddress">
+        <!-- REQUIRES:
+            cutn.contactMechPurposeTypeIdList
+            cutn.contactCtx
+            cutn.contactMechId
+            cutn.createMissingPurposes
+            facilityId
+        -->
+        <if-not-empty field="cutn.contactMechId">
+            <!-- TODO? support deletion (for facility we don't want delete for now)
+            <if>
+                <condition>
+                    <and>
+                        <if-empty field="cutn.contactCtx..."/>
+                    </and>
+                </condition>
+                <then>
+                    <set field="deleteCtx" value="" set-if-null="true"/>
+                    <set field="deleteCtx.facilityId" from-field="facilityId"/>
+                    <set field="deleteCtx.contactMechId" from-field="cutn.contactMechId"/>
+                    <call-service service-name="deleteFacilityContactMech" in-map-name="deleteCtx"/>
+                </then>
+                <else>
+                    <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx"/>
+                </else>
+            </if>-->
+            <log level="info" message="Setup: Updating facility '${facilityId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
+            <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
+            <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
+            <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx"/>
+            <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
+                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
+                        <field-map field-name="facilityId" from-field="facilityId"/>
+                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                    </entity-and>
+                    <if-empty field="purposes">
+                        <log level="info" message="Setup: Creating facility '${facilityId}' postal address '${cutn.contactMechId}' missing purpose: ${contactMechPurposeTypeId}"/>
+                        <set field="purposeCtx" value="" set-if-null="true"/>
+                        <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                        <set field="purposeCtx.contactMechId" from-field="cutn.contactMechId"/>
+                        <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                        <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
+                    </if-empty>
+                </iterate>
+            </if-compare>
+            <else>
+                <log level="info" message="Setup: Creating facility '${facilityId}' postal address (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
+                <!-- EMERGENCY CHECK: make sure there's no contactmech having this role;
+                    in that case fail and tell user to resubmit because we're creating a duplicate
+                    and we wouldn't know what we'd be replacing if we edit the re-queried one -->
+                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                    <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">
+                        <field-map field-name="facilityId" from-field="facilityId"/>
+                        <field-map field-name="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                    </entity-and>
+                    <if-not-empty field="purposes">
+                        <set field="contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                        <add-error><fail-property resource="ScipioSetupErrorUiLabels" property="SetupContactWithPurposeAlreadyExistsPleaseResubmit"/></add-error>
+                        <check-errors/>
+                    </if-not-empty>
+                </iterate>
+                
+                <!-- Create -->
+                <set field="purposeCtx" value="" set-if-null="true"/>
+                <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
+                <call-service service-name="createFacilityPostalAddress" in-map-name="cutn.contactCtx">
+                    <result-to-field result-name="contactMechId" field="purposeCtx.contactMechId"/>
+                </call-service>
+                <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
+                    <set field="purposeCtx.facilityId" from-field="facilityId"/>
+                    <set field="purposeCtx.contactMechPurposeTypeId" from-field="contactMechPurposeTypeId"/>
+                    <call-service service-name="createFacilityContactMechPurpose" in-map-name="purposeCtx"/>
+                </iterate>
+            </else>
+        </if-not-empty>
+    </simple-method>
+
     <simple-method method-name="createProductStoreWithDefaultSettingAndWebSite" short-description="create ProductStore and setting default value for payment and shipping, and WebSite">
         <call-simple-method method-name="createProductStoreWithDefaultSetting" xml-resource="component://commonext/script/org/ofbiz/setup/SetupEvents.xml"/>
         <check-errors/>

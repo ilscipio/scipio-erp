@@ -17,6 +17,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
+import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
+
 /**
  * Raw setup step data check logic. 
  * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP. 
@@ -27,7 +30,11 @@ public abstract class SetupDataUtil {
     public static final String module = SetupDataUtil.class.getName();
 
     public static final Set<String> ORGANIZATION_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
-            "PAYMENT_LOCATION", "GENERAL_LOCATION", "BILLING_LOCATION"
+            "GENERAL_LOCATION", "PAYMENT_LOCATION", "BILLING_LOCATION"
+    );
+    
+    public static final Set<String> FACILITY_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
+            "SHIP_ORIG_LOCATION", "SHIPPING_LOCATION"
     );
     
     protected SetupDataUtil() {
@@ -82,27 +89,27 @@ public abstract class SetupDataUtil {
                         
                         // TODO?: check for CARRIER roleTypeId??
                         
-                        PartyContactMechInfo contactMechInfo = PartyContactMechInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: Organization: ");
+                        PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: Organization: ");
                         contactMechInfo.resultsToMap(result);
                         
-                        Set<String> mailShipAddressContactMechPurposes = null;
-                        GenericValue mailShipAddressContactMech = contactMechInfo.getClosestPartyContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
-                        if (mailShipAddressContactMech != null) {
-                            mailShipAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(mailShipAddressContactMech.getString("contactMechId"));
-                        }
-                        result.put("mailShipAddressContactMech", mailShipAddressContactMech);
-                        result.put("mailShipAddressContactMechPurposes", mailShipAddressContactMechPurposes);
-                        boolean mailShipAddressStandaloneCompleted = (mailShipAddressContactMech != null) && setContainsAll(mailShipAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
-                        result.put("mailShipAddressStandaloneCompleted", mailShipAddressStandaloneCompleted);
-                        
-                        result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
-                        Map<String, GenericValue> locationContactMechs = new HashMap<>();
-                        for(String purpose : ORGANIZATION_MAINADDR_PURPOSES) {
-                            GenericValue contactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, purpose, useCache);
-                            if (contactMech != null) {
-                                locationContactMechs.put(purpose, contactMech);
+                        Set<String> generalAddressContactMechPurposes = null;
+                        GenericValue generalAddressContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "GENERAL_LOCATION", useCache);
+                        if (generalAddressContactMech == null) {
+                            if (UtilMisc.booleanValueVersatile(params.get("useClosestAddress"), true)) {
+                                Debug.logInfo("Setup: Organization: party '" + orgPartyId + "' has no GENERAL_LOCATION address; trying closest-matching for address purposes " + ORGANIZATION_MAINADDR_PURPOSES, module);
+                                generalAddressContactMech = contactMechInfo.getClosestPartyContactMechForPurposes(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
                             }
                         }
+                        if (generalAddressContactMech != null) {
+                            generalAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(generalAddressContactMech.getString("contactMechId"));
+                        }
+                        result.put("generalAddressContactMech", generalAddressContactMech);
+                        result.put("generalAddressContactMechPurposes", generalAddressContactMechPurposes);
+                        boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null) && setContainsAll(generalAddressContactMechPurposes, ORGANIZATION_MAINADDR_PURPOSES);
+                        result.put("generalAddressStandaloneCompleted", generalAddressStandaloneCompleted);
+                        
+                        result.put("locationPurposes", ORGANIZATION_MAINADDR_PURPOSES);
+                        Map<String, GenericValue> locationContactMechs = contactMechInfo.getPartyContactMechForPurposeMap(delegator, ORGANIZATION_MAINADDR_PURPOSES, useCache);
                         boolean locationAddressesCompleted = (locationContactMechs.size() >= ORGANIZATION_MAINADDR_PURPOSES.size());
                         result.put("locationAddressesCompleted", locationAddressesCompleted);
                         
@@ -190,7 +197,7 @@ public abstract class SetupDataUtil {
             GenericValue userPerson = party.getRelatedOne("Person", false);            
             Map<String, Object> fields = UtilMisc.toMap("partyId", userPartyId);
             List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
-                    fields, UtilMisc.toList("-fromDate"), useCache));
+                    fields, UtilMisc.toList("fromDate DESC"), useCache));
             
             if (!isNewOrFailedCreate) {
                 result.put("userUserLogin", userUserLogin);
@@ -233,7 +240,7 @@ public abstract class SetupDataUtil {
 
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
-        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         String facilityId = (String) params.get("facilityId");
         String orgPartyId = (String) params.get("orgPartyId");
@@ -312,24 +319,47 @@ public abstract class SetupDataUtil {
                 result.put("facilityId", facilityId);
                 result.put("facility", facility);
             }
+            result.put("coreCompleted", true);
 
-            Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
-            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", 
-                    fields, UtilMisc.toList("-fromDate"), useCache));
-            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
-                result.put("facilityContactMechPurposeList", contactMechPurposes);
+            // supporting one address only for now
+//            Map<String, Object> fields = UtilMisc.toMap("facilityId", facilityId);
+//            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("FacilityContactMechPurpose", 
+//                    fields, UtilMisc.toList("fromDate DESC"), useCache));
+//            if (!isNewOrFailedCreate) { // if new or failed create, do not return specific info
+//                result.put("facilityContactMechPurposeList", contactMechPurposes);
+//            }
+            
+            FacilityContactMechPurposeInfo contactMechInfo = FacilityContactMechPurposeInfo.forFacility(delegator, dispatcher, facilityId, useCache, "Setup: Facility: ");
+            if (!isNewOrFailedCreate) {
+                contactMechInfo.resultsToMap(result);
             }
+            
+            Set<String> shipAddressContactMechPurposes = null;
+            GenericValue shipAddressContactMech = contactMechInfo.getFacilityContactMechForPurpose(delegator, "SHIP_ORIG_LOCATION", useCache);
+            if (shipAddressContactMech == null) {
+                if (UtilMisc.booleanValueVersatile(params.get("useClosestAddress"), true)) {
+                    Debug.logInfo("Setup: Facility: facility '" + facilityId + "' has no SHIP_ORIG_LOCATION address; trying closest-matching for address purposes " + FACILITY_MAINADDR_PURPOSES, module);
+                    shipAddressContactMech = contactMechInfo.getClosestFacilityContactMechForPurposes(delegator, FACILITY_MAINADDR_PURPOSES, useCache);
+                }
+            }
+            if (shipAddressContactMech != null) {
+                shipAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(shipAddressContactMech.getString("contactMechId"));
+            }
+            if (!isNewOrFailedCreate) {
+                result.put("shipAddressContactMech", shipAddressContactMech);
+                result.put("shipAddressContactMechPurposes", shipAddressContactMechPurposes);
+            }
+            boolean shipAddressStandaloneCompleted = (shipAddressContactMech != null) && setContainsAll(shipAddressContactMechPurposes, FACILITY_MAINADDR_PURPOSES);
+            result.put("shipAddressStandaloneCompleted", shipAddressStandaloneCompleted);
 
-            Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
-            boolean completed = true;
-            if (!purposeTypes.contains("SHIPPING_LOCATION")) {
-                Debug.logInfo("Setup: Warehouse '" + facilityId + "' has no SHIPPING_LOCATION contact mech; treating as incomplete", module);
-                completed = false;
+            if (!isNewOrFailedCreate) {
+                result.put("locationPurposes", FACILITY_MAINADDR_PURPOSES);
             }
-            if (!purposeTypes.contains("SHIP_ORIG_LOCATION")) {
-                Debug.logInfo("Setup: Warehouse '" + facilityId + "' has no SHIP_ORIG_LOCATION contact mech; treating as incomplete", module);
-                completed = false;
-            }
+            Map<String, GenericValue> locationContactMechs = contactMechInfo.getFacilityContactMechForPurposeMap(delegator, FACILITY_MAINADDR_PURPOSES, useCache);
+            boolean locationAddressesCompleted = (locationContactMechs.size() >= FACILITY_MAINADDR_PURPOSES.size());
+            result.put("locationAddressesCompleted", locationAddressesCompleted);
+            
+            boolean completed = locationAddressesCompleted;
             result.put("completed", completed);
         }
         return result;
@@ -509,6 +539,13 @@ public abstract class SetupDataUtil {
                 + query + "; using first only (" + value.getPkShortValueString() + ")", module);
         }
         return value;
+    }
+    
+    // TODO: REVIEW: unclear which code should order fromDate by ASC or DESC, so in the meantime,
+    // use this to centralize any fix needed (for setup code only!)
+    private static final List<String> defaultContactOrderBy = UtilMisc.unmodifiableArrayList("fromDate DESC");
+    public static List<String> getDefaultContactOrderBy() {
+        return defaultContactOrderBy;
     }
 
     private static <T extends Collection<String>> T getEntityStringFieldValues(List<GenericValue> values, String fieldName, T out) {

@@ -25,51 +25,90 @@ final module = "SetupFacility.groovy";
 
 facilityData = context.facilityData ?: [:];
 
+facilityInfo = null; // contains ALL facility record information
+defaultParams = [:];
+
 facilityId = null;
 facility = facilityData.facility;
+
 context.facility = facility;
 if (facility) {
     facilityId = facility.facilityId;
     facilityType = facility.getRelatedOne("FacilityType", false);
     context.facilityType = facilityType;
+    facilityInfo = new HashMap(facility);
 }
 context.facilityId = facilityId;
 
-facilityContactMechPurposeList = facilityData.facilityContactMechPurposeList;
-context.facilityContactMechPurposeList = facilityContactMechPurposeList;
-
-facilityContactMechsByPurpose = [:];
-facilityContactMechsById = [:];
-facilityContactMechPurposes = [:];
-for(purpose in facilityContactMechPurposeList) {
-    // WARN: can't use findByOne because the fromDate may not match!
-    def contactMech = EntityUtil.getFirst(delegator.findByAnd("FacilityAndContactMech", 
-        [facilityId:purpose.facilityId, contactMechId:purpose.contactMechId], null, false));
-    facilityContactMechsByPurpose[purpose.contactMechPurposeTypeId] = contactMech;
-    facilityContactMechsById[purpose.contactMechId] = contactMech;
-    purposeSet = facilityContactMechPurposes[purpose.contactMechId];
-    if (!purposeSet) {
-        purposeSet = new HashSet();
-        facilityContactMechPurposes[purpose.contactMechId] = purposeSet;
+makeShipAddressMap = { postalAddress, contactMech, includeId ->
+    def prefix = "shipAddress_";
+    def res = [
+        (prefix+"toName"): postalAddress.toName,
+        (prefix+"attnName"): postalAddress.attnName,
+        (prefix+"stateProvinceGeoId"): postalAddress.stateProvinceGeoId,
+        (prefix+"countryGeoId"): postalAddress.countryGeoId,
+        (prefix+"address1"): postalAddress.address1,
+        (prefix+"address2"): postalAddress.address2,
+        (prefix+"city"): postalAddress.city,
+        (prefix+"postalCode"): postalAddress.postalCode
+    ];
+    if (includeId) {
+        res[prefix+"contactMechId"] = contactMech?.contactMechId;
     }
-    purposeSet.add(purpose.contactMechPurposeTypeId);
+    return res;
+};
+
+
+shipAddressContactMech = facilityData.shipAddressContactMech;
+context.shipAddressContactMech = shipAddressContactMech;
+context.shipAddressContactMechPurposes = facilityData.shipAddressContactMechPurposes;
+context.shipAddressStandaloneCompleted = facilityData.shipAddressStandaloneCompleted;
+context.locationAddressesCompleted = facilityData.locationAddressesCompleted;
+context.locationPurposes = facilityData.locationPurposes;
+shipPostalAddress = null;
+if (shipAddressContactMech) {
+    postalAddress = delegator.findOne("PostalAddress", [contactMechId:shipAddressContactMech.contactMechId], false);
+    if (postalAddress) {
+        shipPostalAddress = makeShipAddressMap(postalAddress, shipAddressContactMech, true);
+    } else {
+        Debug.logError("Setup: Configuration error: Facility ship address contact mech '"
+            + shipAddressContactMech.contactMechId + " has no PostalAddress record! Invalid data configuration!", module)
+    }
 }
-context.facilityContactMechsByPurpose = facilityContactMechsByPurpose;
-context.facilityContactMechsById = facilityContactMechsById;
-context.facilityContactMechs = facilityContactMechsById.values() as List;
-context.facilityContactMechPurposes = facilityContactMechPurposes;
+//context.shipPostalAddress = shipPostalAddress;
+if (shipPostalAddress != null && facilityInfo != null) {
+    facilityInfo.putAll(shipPostalAddress);
+}
 
 if (facility != null) {
-    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "' with contact mechs and purposes: " + facilityContactMechPurposes, module);
+    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "'", module);
 } else {
     Debug.logInfo("Setup: Setting up new warehouse", module);
 }
 
-listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
-partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
+partyAddressContactMech = context.setupStepStates?.organization.stepData.generalAddressContactMech;
+partyPostalAddress = null;
+if (partyAddressContactMech) {
+    partyPostalAddress = delegator.findOne("PostalAddress", [contactMechId:partyAddressContactMech.contactMechId], false);
+}
+if (partyPostalAddress == null) {
+    // fallback (legacy ofbiz behavior)
+    listPartyPostalAddress = delegator.findByAnd("PartyAndPostalAddress", [partyId: context.partyId], null, false);
+    partyPostalAddress = EntityUtil.getFirst(EntityUtil.filterByDate(listPartyPostalAddress));
+}
 context.partyPostalAddress = partyPostalAddress;
 
-context.facilitySubmitOk = (facility != null) || (partyPostalAddress);
+defaultShipAddress = null;
+if (partyPostalAddress) {
+    defaultShipAddress = makeShipAddressMap(partyPostalAddress, partyPostalAddress.getRelatedOne("ContactMech", false), false);
+    defaultParams.putAll(defaultShipAddress);
+}
+context.defaultShipAddress = defaultShipAddress;
+
+context.facilityInfo = facilityInfo;
+context.defaultParams = defaultParams;
+
+context.facilitySubmitOk = (facility != null); // || (partyPostalAddress)
 
 defaultDefaultWeightUomId = UtilProperties.getPropertyValue("scipiosetup", "facility.defaultWeightUomId");
 context.defaultDefaultWeightUomId = defaultDefaultWeightUomId;
@@ -78,7 +117,7 @@ context.defaultDefaultWeightUomId = defaultDefaultWeightUomId;
 // NOTE: some of these below from EditFacility.groovy
 
 //Facility types
-facilityTypes = from("FacilityType").queryList();
+facilityTypes = from("FacilityType").cache(true).queryList();
 if (facilityTypes) {
     context.facilityTypes = facilityTypes;
 }

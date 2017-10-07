@@ -6,9 +6,9 @@
     "defaultInventoryItemTypeId": "NON_SERIAL_INV_ITEM",
     "defaultWeightUomId": defaultDefaultWeightUomId!
     <#--"partyId": partyId!-->
-}>
+} + toSimpleMap(defaultParams!{})>
 <#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":facility!true, <#-- NOTE: must fallback with boolean true -->
+    "record":facilityInfo!true, <#-- NOTE: must fallback with boolean true -->
     "defaults":defaultParams,
     "strictRecord":true <#-- TODO: REMOVE (debugging) -->
 })>
@@ -19,7 +19,7 @@
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
         
-      <#if facility??>
+      <#if facilityInfo??>
         <@field type="display" label=uiLabelMap.FormFieldTitle_facilityId tooltip=uiLabelMap.ProductNotModificationRecrationFacility><#rt/>
             <@setupExtAppLink uri="/facility/control/EditFacility?facilityId=${rawString(params.facilityId!)}" text=(params.facilityId!)/><#t/>
         </@field><#lt/>
@@ -47,35 +47,63 @@
         
         <@field type="hidden" name="partyId" value=(partyId!)/>
         
-        <#-- FIXME: this is fixed to the company address - the service won't accept anything else yet,
-            so can't send manual -->
-        <#-- TODO: updating the facility location is not possible -->
-        <#if facility??>
-          <#assign addressLabelDetail>(<@setupExtAppLink uri="/facility/control/settings?facilityId=${rawString(params.facilityId!)}" text=uiLabelMap.CommonManage/>)</#assign>
+        <#if facilityInfo??>
+          <#assign addressManageUri = "/facility/control/settings?facilityId=${rawString(params.facilityId!)}">
+          <#assign addressLabelDetail>
+            <@formattedContactMechPurposeDescs (shipAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
+            (<@setupExtAppLink uri=addressManageUri text=uiLabelMap.CommonManage/>)
+          </#assign>
         <#else>
           <#assign addressLabelDetail = "">
+          <#assign addressManageUri = "">
         </#if>
-        <@field type="generic" label=uiLabelMap.OrderAddress labelDetail=addressLabelDetail>
-            <#if facility??>
-              <#list (facilityContactMechs![]) as fcm>
-                <#if rawString(fcm.contactMechTypeId!) == "POSTAL_ADDRESS">
-                  <#assign postalAddress = delegator.findOne("PostalAddress", {"contactMechId":fcm.contactMechId}, false)!>
-                  <#-- TODO?: inline mechanism to edit these after create? (have link below) -->
-                  <div>
-                  <@formattedAddressBasic address=postalAddress purposes=(facilityContactMechPurposes[rawString(fcm.contactMechId)]!) emphasis=true useToAttnName=false/>
-                  </div>
-                <#else>
-                  <#-- anything else? -->
-                </#if>
-              </#list>
+        <@field type="generic" label=uiLabelMap.PartyAddressMailingShipping labelDetail=addressLabelDetail>
+          <@field type="hidden" name="useInputFacilityAddr" value="true"/><#-- don't use the stock ofbiz functionality, always use our form so consistent with org -->
+        
+          <#if facilityInfo??>
+            <#if params.shipAddress_contactMechId?has_content>
+              <@field type="hidden" name="shipAddress_contactMechId" value=(params.shipAddress_contactMechId!)/>
+            </#if>
+          </#if>
+          <#-- NOTE: always requiring address for now -->
+          <@field type="hidden" name="useFacilityAddr" value="true"/>
+
+          <div id="setupFacility-editShipAddr-area">
+            <@fields args={"type":"default", "ignoreParentField":true}>
+              <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
+                  ctxVars={
+                    "pafFieldNamePrefix":"shipAddress_",
+                    "pafFieldIdPrefix":"EditFacility_",
+                    "pafUseScripts":true,
+                    "pafFallbacks":{},
+                    "pafParams": params,
+                    "pafUseToAttnName":true,
+                    "pafMarkRequired":true
+                  }/>
+            </@fields>
+          
+          <#if facilityInfo??>
+            <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
+            <#if !shipAddressContactMech??>
+                <@alert type="warning">${getLabel('SetupNoAddressDefinedNotice', '', addressNoticeParams)}</@alert>
             <#else>
-              <#if partyPostalAddress?has_content>
-                <@formattedAddressBasic address=partyPostalAddress useToAttnName=false emphasis=true />
-                <@field type="hidden" name="postalAddressContactMechId" value=partyPostalAddress.contactMechId/>
-              <#else>
-                <#-- TODO: manual input form -->
-                <@alert type="error">${uiLabelMap.SetupNoAddressOrganizationSetupIncomplete}</@alert>
+              <#if (shipAddressStandaloneCompleted!false) == false>
+                <#if (locationAddressesCompleted!false) == true>
+                  <@alert type="info">${getLabel('SetupSplitAddressPurposesNotice', '', addressNoticeParams)}
+                    <@setupExtAppLink uri=addressManageUri text=uiLabelMap.ProductFacilityManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  </@alert>
+                <#else>
+                  <@alert type="warning">${getLabel('SetupMissingAddressPurposesNotice', '', addressNoticeParams)}
+                    <@setupExtAppLink uri=addressManageUri text=uiLabelMap.ProductFacilityManager class="+${styles.link_nav} ${styles.action_update}"/>
+                  </@alert>
+                  <#-- NOTE: this flag could be destructive, that's why it's false by default -->
+                  <@field type="checkbox" checkboxType="simple" name="createMissingShipAddressPurposes" label=uiLabelMap.SetupCreateMissingAddressPurposes
+                      id="createMissingShipAddressPurposes_check" value="true" altValue="false" currentValue=(params.createMissingShipAddressPurposes!"false")/>
+                </#if>
               </#if>
             </#if>
+          </#if>
+          
+          </div>
         </@field>
     </@form>

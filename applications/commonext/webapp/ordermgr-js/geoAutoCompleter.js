@@ -39,11 +39,12 @@ function setKeyAsParameterAndGetStateList(event, ui) {
     getAssociatedStateListForAutoComplete();
 }
 
+// SCIPIO: SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
 function getAssociatedStateListForAutoComplete() {
     stateTargetField = jQuery('#shipToStateProvinceGeo');
     stateDivToPopulate = jQuery('#shipToStates');
     stateHiddenTarget = jQuery('#shipToStateProvinceGeoId');
-    jQuery.ajax({
+    return jQuery.ajax({
         url: "getAssociatedStateList",
         type: "POST",
         data: jQuery('#shippingForm').serialize(),
@@ -80,6 +81,7 @@ function setKeyAsParameter(event, ui) {
 // SCIPIO: Generic function for fetching country's associated state list, with extended options.
 // New parameters:
 // async : boolean, whether to send sync or async (default: true)
+// SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
 function getAssociatedStateListEx(options) {
     var countryId = options.countryId;
     var stateId = options.stateId;
@@ -96,7 +98,7 @@ function getAssociatedStateListEx(options) {
     if (options.async === false) {
         async = false;
     }
-    jQuery.ajax({
+    return jQuery.ajax({
         url: requestToSend,
         async: async,
         type: "POST",
@@ -140,14 +142,16 @@ function getAssociatedStateListEx(options) {
 
 //Generic function for fetching country's associated state list.
 // SCIPIO: NOTE: this is the original Ofbiz function overload.
+// SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
 function getAssociatedStateList(countryId, stateId, errorId, divId) {
-    getAssociatedStateListEx({countryId: countryId, stateId: stateId,
+    return getAssociatedStateListEx({countryId: countryId, stateId: stateId,
         errorId: errorId, divId: divId});
 }
 
 // SCIPIO: Generic function for fetching country's associated state list - synchronous drop-in replacement.
+// SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
 function getAssociatedStateListSync(countryId, stateId, errorId, divId) {
-    getAssociatedStateListEx({countryId: countryId, stateId:
+    return getAssociatedStateListEx({countryId: countryId, stateId:
         stateId, errorId: errorId, divId: divId, async: false});
 }
 

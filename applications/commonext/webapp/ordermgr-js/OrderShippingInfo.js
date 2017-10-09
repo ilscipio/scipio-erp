@@ -24,7 +24,7 @@ jQuery(document).ready( function() {
         // add the form validator
         addShippingAddress.validate();
        
-       jQuery('#countryGeoId').change( function() {
+        jQuery('#countryGeoId').change( function() {
             getAssociatedStateList('countryGeoId', 'stateProvinceGeoId', 'advice-required-stateProvinceGeoId', 'states');
         });
 
@@ -36,7 +36,7 @@ jQuery(document).ready( function() {
 function showEdit(edit, index) {
     var sufix = index;
     if (sufix == '-1') {
-       sufix = "";
+      sufix = "";
     }
 
     //display / hide edit element
@@ -129,7 +129,7 @@ function showShipByDate(e, id) {
 function showView(view, index) {
     var sufix = index;
     if (sufix == '-1') {
-       sufix = "";
+      sufix = "";
     }
     //display / hide buttonDisplay element
     var element = document.getElementById("display" + sufix);

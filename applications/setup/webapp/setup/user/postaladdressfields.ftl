@@ -60,8 +60,14 @@ jQuery(document).ready(function() {
     <#-- TODO?: getAssociatedStateList may be out of date compared to getDependentDropdownValues?  -->
     var errorMsgContainerId = null;
     var containerId = null;
-    jQuery("#${fieldIdPrefixJs}countryGeoId").change(function() {
-        getAssociatedStateList('${fieldIdPrefixJs}countryGeoId', '${fieldIdPrefixJs}stateProvinceGeoId', errorMsgContainerId, containerId);
+    <#-- NOTE: 2017-10-09: MODIFIED from shop postaladdressfields.ftl to
+        return the ajax result to the caller via the out argument.
+        TODO: REVIEW: it's not ideal but it should work for time being. -->
+    jQuery("#${fieldIdPrefixJs}countryGeoId").change(function(event, out) {
+        var ajaxResult = getAssociatedStateList('${fieldIdPrefixJs}countryGeoId', '${fieldIdPrefixJs}stateProvinceGeoId', errorMsgContainerId, containerId);
+        if (jQuery.type(out) === 'object') {
+            out.ajaxResult = ajaxResult;
+        }
     });
     getAssociatedStateList('${fieldIdPrefixJs}countryGeoId', '${fieldIdPrefixJs}stateProvinceGeoId', errorMsgContainerId, containerId);
     

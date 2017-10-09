@@ -105,9 +105,19 @@
                     jQuery('input[name=${prefix}city]', form).val(postalAddress.city || '').change();
                     jQuery('input[name=${prefix}postalCode]', form).val(postalAddress.postalCode || '').change();
                     
+                    <#-- SPECIAL: using jQuery promise contruct to wait for this to return otherwise the state val will be squashed
                     jQuery('select[name=${prefix}countryGeoId]', form).val(postalAddress.countryGeoId || '').change();
-                    <#-- FIXME: NON-WORKING -->
                     jQuery('select[name=${prefix}stateProvinceGeoId]', form).val(postalAddress.stateProvinceGeoId || '').change();
+                    -->
+                    var countryElem = jQuery('select[name=${prefix}countryGeoId]', form);
+                    countryElem.val(postalAddress.countryGeoId || '');
+                    <#-- NOTE: for this to work the change handler in postaladdressfields.ftl has to output the ajaxResult (returned by triggerChange) - see postaladdressfields.ftl 
+                        DEV NOTE: explicitly decided against using triggerChange + return value. -->
+                    var countryOut = {};
+                    countryElem.trigger('change', countryOut);
+                    $.when(countryOut.ajaxResult).done(function() {
+                        jQuery('select[name=${prefix}stateProvinceGeoId]', form).val(postalAddress.stateProvinceGeoId || '').change();
+                    });
                 };
             </@script>
             <@modal id="setupFacility-selectShipAddr" label=uiLabelMap.SetupSelectAddress class="+${styles.link_nav!} ${styles.action_show!}">

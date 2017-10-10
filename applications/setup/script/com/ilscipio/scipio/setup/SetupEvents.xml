@@ -100,8 +100,6 @@
         <set field="cutn.contactCtx" from-field="emailContext"/>
         <call-simple-method method-name="createUpdatePartyEmailAddress"/>
         <check-errors/>
-        
-        <check-errors/>
     </simple-method>
     <simple-method method-name="createUpdatePartyPostalAddress">
         <!-- WARN: this one might be too specific for general use; no deletion support for now -->
@@ -134,7 +132,12 @@
             <log level="info" message="Setup: Updating party '${partyId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
             <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
             <set field="cutn.contactCtx.partyId" from-field="partyId"/>
-            <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx"/>
+            <call-service service-name="updatePartyPostalAddress" in-map-name="cutn.contactCtx">
+                <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
+                    if we don't do this then the purpose updates may associate the purposes with
+                    an expired contact mech! -->
+                <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
+            </call-service>
             <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
                 <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
                     <entity-and entity-name="PartyContactMechPurpose" list="purposes" filter-by-date="true">
@@ -439,7 +442,12 @@
             <log level="info" message="Setup: Updating facility '${facilityId}' postal address '${cutn.contactMechId}' (contactMechPurposeTypeId: ${cutn.contactMechPurposeTypeIdList})"/>
             <set field="cutn.contactCtx.contactMechId" from-field="cutn.contactMechId"/><!-- FIXME: shouldn't edit this in-place -->
             <set field="cutn.contactCtx.facilityId" from-field="facilityId"/>
-            <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx"/>
+            <call-service service-name="updateFacilityPostalAddress" in-map-name="cutn.contactCtx">
+                <!-- IMPORTANT: read back contactMechId because it may have changed in the update;
+                    if we don't do this then the purpose updates may associate the purposes with
+                    an expired contact mech! -->
+                <result-to-field result-name="contactMechId" field="cutn.contactMechId"/>
+            </call-service>
             <if-compare field="cutn.createMissingPurposes" operator="equals" value="true">
                 <iterate entry="contactMechPurposeTypeId" list="cutn.contactMechPurposeTypeIdList">
                     <entity-and entity-name="FacilityContactMechPurpose" list="purposes" filter-by-date="true">

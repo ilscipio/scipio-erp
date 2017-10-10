@@ -87,7 +87,6 @@
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
-        <log level="info" message="TEST: ${cutn.contactMechId}"/>
         <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobilePhoneContext"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>

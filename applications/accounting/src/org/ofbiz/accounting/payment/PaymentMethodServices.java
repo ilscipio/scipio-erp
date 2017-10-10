@@ -213,24 +213,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
@@ -388,25 +372,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
@@ -736,25 +703,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                    UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                            "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (newPartyContactMechPurpose != null)
@@ -863,26 +813,9 @@ public class PaymentMethodServices {
         if (UtilValidate.isNotEmpty(contactMechId)) {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
-
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                                "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
@@ -916,5 +849,36 @@ public class PaymentMethodServices {
         result.put("oldPaymentMethodId", paymentMethodId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
+    }
+    
+    /**
+     * SCIPIO: If a PartyContactMechPurpose for given party/contactMechId/purpose does not already exist, 
+     * makes and returns a non-committed GenericValue for one.
+     * <p>
+     * Code factored out from 4 updateXxx methods above.
+     * <p>
+     * Added 2017-10-10.
+     */
+    private static GenericValue checkMakePartyContactMechPurpose(Delegator delegator, String partyId, String contactMechId, String contactMechPurposeTypeId, Timestamp now) {
+        GenericValue tempVal = null;
+
+        try {
+            List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                    .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+            allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+            allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
+            tempVal = EntityUtil.getFirst(allPCWPs);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            tempVal = null;
+        }
+
+        if (tempVal == null) {
+            // no value found, create a new one
+            return delegator.makeValue("PartyContactMechPurpose",
+                    UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
+                            "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
+        }
+        return null;
     }
 }

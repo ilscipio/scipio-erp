@@ -1289,4 +1289,10 @@
         <value xml:lang="zh">无法更新人员信息 (写失败)：${0}</value>
         <value xml:lang="zh_TW">無法更新人員資訊 (寫失敗):${0}</value>
     </property>
+    <!-- SCIPIO: TODO: REVIEW: I added extra information that covers most backend cases. However it may not be appropriate for all cases; but is better like this for now. -->
+    <property key="contactmechservices.cannot_update_specified_contact_info_expired">
+        <value xml:lang="de">FEHLER: Die angegebenen Kontaktinformationen können nicht aktualisiert werden, da der Datensatz abgelaufen ist. Es wurde möglicherweise von irgendwo anders modifiziert, bevor Sie es aktualisieren konnten. Falls ja, laden Sie die Seite oder Kontaktdaten erneut und versuchen Sie es erneut.</value>
+        <value xml:lang="en">ERROR: Cannot update specified contact info because the record has expired. It may have been modified from somewhere else before you could update it; if so, please reload the page or contact data and try to submit again.</value>
+        <value xml:lang="fr">Erreur: Impossible de mettre à jour les informations de contact spécifiées car l'enregistrement a expiré. Il a peut-être été modifié d'un autre endroit avant de pouvoir le mettre à jour; si tel est le cas, veuillez recharger la page ou les données de contact et essayer de la soumettre à nouveau.</value>
+    </property>
 </resource>

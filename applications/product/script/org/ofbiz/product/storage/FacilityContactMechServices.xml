@@ -115,6 +115,9 @@ under the License.
 
         <if-compare-field to-field="newFacilityContactMech.contactMechId" field="parameters.contactMechId" operator="not-equals">
             <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
+            <!-- SCIPIO: 2017-10-10: MAJOR BUGFIX: the following filter-list-by-date line is missing in stock ofbiz,
+                results in expired purposes being carried over and extreme confusion (replicated from PartyContactMechServices.xml#updatePartyContactMech) -->
+            <filter-list-by-date list="facilityContactMechPurposes"/>
             <iterate entry="facilityContactMechPurposeOld" list="facilityContactMechPurposes">
                 <clone-value value-field="facilityContactMechPurposeOld" new-value-field="facilityContactMechPurpose"/>
 

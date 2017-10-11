@@ -479,7 +479,10 @@ under the License.
                             <widgets>
                                 <section><!-- SCIPIO: separated the partyContactMech record check from the security perm checks  -->
                                     <condition>
-                                        <not><if-empty field="mechMap.partyContactMech"/></not>
+                                        <or>
+                                            <not><if-empty field="mechMap.partyContactMech"/></not>
+                                            <if-empty field="parameters.contactMechId"/><!-- SCIPIO: explicit check needed for new contact mech creation -->
+                                        </or>
                                     </condition>
                                     <widgets>
                                         <platform-specific>

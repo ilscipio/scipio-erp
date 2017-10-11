@@ -139,7 +139,7 @@
         <#-- BEST-EFFORT ATTEMPT to support drop-down expanded locale string (not supported OOTB ofbiz)
         <@field type="input" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString value=(params.defaultLocaleString!) placeholder="en_US"/>-->
         <@field type="select" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString>
-            <@availableLocalesOptions expandCountries=true requireCountries=false defaultLocale=(params.defaultLocaleString!) allowExtra=true allowEmpty=true/>
+            <@availableLocalesOptions expandCountries=true requireCountries=false currentLocale=(params.defaultLocaleString!) allowExtra=true allowEmpty=true/>
         </@field>
         
         <@field type="select" name="defaultCurrencyUomId" label=uiLabelMap.FormFieldTitle_defaultCurrencyUomId>

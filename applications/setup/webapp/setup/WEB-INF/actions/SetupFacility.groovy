@@ -82,25 +82,19 @@ if (shipPostalAddress != null && facilityInfo != null) {
 }
 
 if (facility != null) {
-    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "'; info: " + facilityInfo, module);
+    Debug.logInfo("Setup: Setting up existing warehouse '" + facilityId + "'", module); // ; info: " + facilityInfo
 } else {
     Debug.logInfo("Setup: Setting up new warehouse", module);
 }
 
-partyContactMechPurposeList = organizationData.partyContactMechPurposeList;
-partyPostalAddressList = null;
-partyPostalAddress = null;
-partyContactMechPurposeMap = null;
-// pick out SHIPPING_LOCATION and SHIP_ORIG_LOCATIONs first, followed by general address, then the rest
-if (partyContactMechPurposeList) {
-    partyPostalAddressList = [];
-    partyContactMechPurposeMap = [:];
-    generalAddressContactMechId = organizationData.generalAddressContactMech?.contactMechId;
-    generalAddressContactMechPurposes = organizationData.generalAddressContactMechPurposes ?: [];
-    shipAddressList = [];
-    genAddressList = [];
-    restList = [];
-    for(cmp in partyContactMechPurposeList) {
+getSrcPostalAddresses = { contactMechPurposeList, generalAddressContactMechId, generalAddressContactMechPurposes ->
+    def srcContactMechPurposeMap = [:];
+    def srcPostalAddressList = [];
+    
+    def shipAddressList = [];
+    def genAddressList = [];
+    def restList = [];
+    for(cmp in contactMechPurposeList) {
         def contactMechId = cmp.contactMechId;
         def postalAddress = delegator.findOne("PostalAddress", [contactMechId:contactMechId], false);
         if (postalAddress) {
@@ -112,39 +106,70 @@ if (partyContactMechPurposeList) {
             } else {
                 restList.add(postalAddress);
             }
-            addrSet = partyContactMechPurposeMap[contactMechId];
+            addrSet = srcContactMechPurposeMap[contactMechId];
             if (addrSet == null) {
                 addrSet = new HashSet();
-                partyContactMechPurposeMap[contactMechId] = addrSet;
+                srcContactMechPurposeMap[contactMechId] = addrSet;
             }
             addrSet.add(purpose);
         }
     }
     
-    if (generalAddressContactMechPurposes.contains("SHIPPING_LOCATION") || generalAddressContactMechPurposes.contains("SHIP_ORIG_LOCATION")) {
-        partyPostalAddressList.addAll(genAddressList);
-        partyPostalAddressList.addAll(shipAddressList);
+    if (generalAddressContactMechPurposes?.contains("SHIPPING_LOCATION") || generalAddressContactMechPurposes?.contains("SHIP_ORIG_LOCATION")) {
+        srcPostalAddressList.addAll(genAddressList);
+        srcPostalAddressList.addAll(shipAddressList);
     } else {
-        partyPostalAddressList.addAll(shipAddressList);
-        partyPostalAddressList.addAll(genAddressList);
+        srcPostalAddressList.addAll(shipAddressList);
+        srcPostalAddressList.addAll(genAddressList);
     }
-    partyPostalAddressList.addAll(restList);
+    srcPostalAddressList.addAll(restList);
     
     // now make unique
     addressMap = new LinkedHashMap();
-    for(postalAddress in partyPostalAddressList) {
+    for(postalAddress in srcPostalAddressList) {
         addressMap[postalAddress.contactMechId] = postalAddress;
     }
-    partyPostalAddressList = new ArrayList(addressMap.values());
-    partyPostalAddress = partyPostalAddressList[0];
+    return [srcPostalAddressList:new ArrayList(addressMap.values()), srcContactMechPurposeMap:srcContactMechPurposeMap];
+};
+
+
+srcPostalAddressList = [];
+srcPostalAddress = null;
+srcContactMechPurposeMap = [:];
+
+// add facility addresses first
+facilityContactMechPurposeList = facilityData.facilityContactMechPurposeList;
+if (facilityContactMechPurposeList) {
+    shipAddressContactMechId = facilityData.shipAddressContactMech?.contactMechId;
+    shipAddressContactMechPurposes = facilityData.shipAddressContactMechPurposes ?: [];
+    
+    def srcPostalAddressInfo = getSrcPostalAddresses(facilityContactMechPurposeList, shipAddressContactMechId, shipAddressContactMechPurposes);
+    srcPostalAddressList.addAll(srcPostalAddressInfo.srcPostalAddressList);
+    srcContactMechPurposeMap.putAll(srcPostalAddressInfo.srcContactMechPurposeMap);
 }
-context.partyPostalAddressList = partyPostalAddressList;
-context.partyPostalAddress = partyPostalAddress;
-context.partyContactMechPurposeMap = partyContactMechPurposeMap;
+
+partyContactMechPurposeList = organizationData.partyContactMechPurposeList;
+// pick out SHIPPING_LOCATION and SHIP_ORIG_LOCATIONs first, followed by general address, then the rest
+if (partyContactMechPurposeList) {
+    generalAddressContactMechId = organizationData.generalAddressContactMech?.contactMechId;
+    generalAddressContactMechPurposes = organizationData.generalAddressContactMechPurposes ?: [];
+    
+    def srcPostalAddressInfo = getSrcPostalAddresses(partyContactMechPurposeList, generalAddressContactMechId, generalAddressContactMechPurposes);
+    srcPostalAddressList.addAll(srcPostalAddressInfo.srcPostalAddressList);
+    srcContactMechPurposeMap.putAll(srcPostalAddressInfo.srcContactMechPurposeMap);
+}
+
+if (srcPostalAddressList) {
+    srcPostalAddress = srcPostalAddressList[0];
+}
+
+context.srcPostalAddressList = srcPostalAddressList;
+context.srcPostalAddress = srcPostalAddress;
+context.srcContactMechPurposeMap = srcContactMechPurposeMap;
 
 defaultShipAddress = null;
-if (partyPostalAddress) {
-    defaultShipAddress = makeShipAddressMap(partyPostalAddress, partyPostalAddress.getRelatedOne("ContactMech", false), false);
+if (srcPostalAddress) {
+    defaultShipAddress = makeShipAddressMap(srcPostalAddress, srcPostalAddress.getRelatedOne("ContactMech", false), false);
     defaultParams.putAll(defaultShipAddress);
 }
 context.defaultShipAddress = defaultShipAddress;
@@ -152,7 +177,7 @@ context.defaultShipAddress = defaultShipAddress;
 context.facilityInfo = facilityInfo;
 context.defaultParams = defaultParams;
 
-context.facilitySubmitOk = (facility != null); // || (partyPostalAddress)
+context.facilitySubmitOk = (facility != null); // || (srcPostalAddress)
 
 defaultDefaultWeightUomId = UtilProperties.getPropertyValue("scipiosetup", "facility.defaultWeightUomId");
 context.defaultDefaultWeightUomId = defaultDefaultWeightUomId;

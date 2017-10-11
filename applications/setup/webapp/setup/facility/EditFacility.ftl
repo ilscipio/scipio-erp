@@ -85,12 +85,12 @@
                     "pafUseToAttnName":true,
                     "pafMarkRequired":true
                   }/>
-            </@fields>
+            
           
-          <#if partyPostalAddressList?has_content>
+          <#if srcPostalAddressList?has_content>
             <@script>
-                var partyPostalAddressList = [
-                  <#list (partyPostalAddressList![]) as postalAddress>
+                var srcPostalAddressList = [
+                  <#list (srcPostalAddressList![]) as postalAddress>
                     <@postalAddressAsScript postalAddress=postalAddress/><#if postalAddress?has_next>,</#if>
                   </#list>
                 ];
@@ -120,20 +120,24 @@
                     });
                 };
             </@script>
-            <@modal id="setupFacility-selectShipAddr" label=uiLabelMap.SetupSelectAddress class="+${styles.link_nav!} ${styles.action_show!}">
-              <div class="setup-addresslist">
-                <#list partyPostalAddressList as postalAddress>
-                  <div class="setup-addressentry">
-                    <@formattedAddressBasic address=postalAddress 
-                        purposes=(partyContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
-                        emphasis=true/><br/>
-                    <a href="javascript:setFacilityShipAddress(partyPostalAddressList[${postalAddress?index}]);jQuery('#modal_setupFacility-selectShipAddr').foundation('reveal', 'close');void(0);"<#rt/> 
-                        <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>
+            <@field type="generic" label=(rawLabel('CommonOr')+":")>
+                <@modal id="setupFacility-selectShipAddr" class="+${styles.link_nav!} ${styles.action_show!}" label=uiLabelMap.SetupSelectAddress>
+                  <div class="setup-addresslist">
+                    <#list srcPostalAddressList as postalAddress>
+                      <div class="setup-addressentry">
+                        <@formattedAddressBasic address=postalAddress 
+                            purposes=(srcContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
+                            emphasis=true/><br/>
+                        <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);jQuery('#modal_setupFacility-selectShipAddr').foundation('reveal', 'close');void(0);"<#rt/> 
+                            <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>
+                      </div>
+                    </#list>
                   </div>
-                </#list>
-              </div>
-            </@modal>
+                </@modal>
+            </@field>
           </#if>
+          
+            </@fields>
             
           <#if facilityInfo??>
             <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>

@@ -95,6 +95,7 @@ under the License.
     });
 </@script>
     
+<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
 
 <@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=["userPartyId"] />

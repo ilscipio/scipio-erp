@@ -32,6 +32,8 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
+<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
+
 <@form method="post" action=makeOfbizUrl(target) id="NewAccounting" name="NewAccounting">
     <@defaultWizardFormFields/>
   

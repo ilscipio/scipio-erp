@@ -8,7 +8,7 @@
         Country expansion implications are currently unclear and should only
         be used in backend, not public frontend, for the time being.
     TODO: REVIEW: the country expansion implications are currently unclear (not supported in stock ofbiz)... -->
-<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false defaultLocale="" allowExtra=false allowEmpty=false>
+<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false currentLocale="" allowExtra=false allowEmpty=false>
     <#if availableLocales?is_boolean>
       <#if expandCountries>
         <#if requireCountries>
@@ -28,7 +28,7 @@
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#local langDir = "rtl">
         </#if>
-        <#local localeSelected = (rawString(defaultLocale!) == rawString(availableLocale.toString()))>
+        <#local localeSelected = (rawString(currentLocale!) == rawString(availableLocale.toString()))>
         <#if localeSelected>
           <#local localeFound = true>
         </#if>
@@ -36,8 +36,8 @@
           <#lt/><#if localeSelected> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#list>
     </#local>
-    <#if allowExtra && !localeFound && defaultLocale?has_content>
-        <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawString(defaultLocale!))!>
+    <#if allowExtra && !localeFound && currentLocale?has_content>
+        <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawString(currentLocale!))!>
         <#local langAttr = availableLocale.toString()?replace("_", "-")>
         <#local langDir = "ltr">
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>

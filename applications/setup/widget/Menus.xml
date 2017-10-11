@@ -21,11 +21,18 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     
     <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: not wanted?
         <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
-            <link target="initialsetup"/>
-        </menu-item>
+            <!- - SCIPIO: link to wizard with no parameters for now so goes to create new org
+            <link target="initialsetup"/>- ->
+            <link target="setupWizardNew" link-type="anchor"/>
+        </menu-item>-->
         <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
-            <link target="setupWizard"/>
+            <!-- TODO: REVIEW: for now linking this to the "current" step (instead of starting over),
+                    but could want setupWizardNew here instead... -->
+            <link target="setupWizard" link-type="anchor">
+                <parameter-map from-field="setupStepStates.finished.stepParams"/>
+            </link>
         </menu-item>
         <menu-item name="export" title="${uiLabelMap.PageTitleEntityExportAll}">
             <link target="EntityExportAll"/>
@@ -129,23 +136,56 @@
     <!-- SCIPIO: menu entries for wizard -->
     <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         items-sort-mode="off">
-        <menu-item name="organization" title="${uiLabelMap.SetupOrganization}" disabled="${context.setupStepStates.organization.disabled == true}">
-            <link target="setupOrganization"/>
+        <actions>
+            <script lang="groovy"><![CDATA[
+                stepStyles = [:];
+                for(stepState in context.setupStepStates?.values()) {
+                    def styles = "";
+                    // TODO?: translate via styles hash (may not matter much)
+                    styles += (stepState?.completed) ? "menustep-complete" : "menustep-incomplete";
+                    stepStyles[stepState.name] = styles;
+                }
+                context.stepStyles = stepStyles;
+            ]]></script>
+        </actions>
+        <menu-item-alias name="finished" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="error" for="PARENT-WITHSUB"/>
+        <menu-item name="organization" title="${uiLabelMap[setupStepTitlePropMap['organization']]}" disabled="${context.setupStepDisabledMap.organization == true}" widget-style="+${context.stepStyles.organization}">
+            <link target="setupOrganization" link-type="anchor">
+                <parameter-map from-field="setupStepStates.organization.stepParams"/>
+            </link>
         </menu-item>
-        <menu-item name="user" title="${uiLabelMap.PartyParty}" disabled="${context.setupStepStates.user.disabled == true}">
-            <link target="setupUser"/>
+        <menu-item name="accounting" title="${uiLabelMap[setupStepTitlePropMap['accounting']]}" disabled="${context.setupStepDisabledMap.accounting == true}" widget-style="+${context.stepStyles.accounting}">
+            <link target="setupAccounting" link-type="anchor">
+                <parameter-map from-field="setupStepStates.accounting.stepParams"/>
+            </link>
         </menu-item>
-        <menu-item name="accounting" title="${uiLabelMap.AccountingAccounting}" disabled="${context.setupStepStates.accounting.disabled == true}">
-            <link target="setupAccounting"/>
+        <menu-item name="facility" title="${uiLabelMap[setupStepTitlePropMap['facility']]}" disabled="${context.setupStepDisabledMap.facility == true}" widget-style="+${context.stepStyles.facility}">
+            <link target="setupFacility" link-type="anchor">
+                <parameter-map from-field="setupStepStates.facility.stepParams"/>
+            </link>
         </menu-item>
-        <menu-item name="facility" title="${uiLabelMap.SetupFacility}" disabled="${context.setupStepStates.facility.disabled == true}">
-            <link target="setupFacility"/>
+        <menu-item name="store" title="${uiLabelMap[setupStepTitlePropMap['store']]}" disabled="${context.setupStepDisabledMap.store == true}" widget-style="+${context.stepStyles.store}">
+            <link target="setupStore" link-type="anchor">
+                <parameter-map from-field="setupStepStates.store.stepParams"/>
+            </link>
         </menu-item>
-        <menu-item name="catalog" title="${uiLabelMap.SetupProductCatalog}" disabled="${context.setupStepStates.catalog.disabled == true}">
-            <link target="setupCatalog"/>
+        <menu-item name="catalog" title="${uiLabelMap[setupStepTitlePropMap['catalog']]}" disabled="${context.setupStepDisabledMap.catalog == true}" widget-style="+${context.stepStyles.catalog}">
+            <link target="setupCatalog" link-type="anchor">
+                <parameter-map from-field="setupStepStates.catalog.stepParams"/>
+            </link>
         </menu-item>
-        <menu-item name="website" title="${uiLabelMap.SetupWebSite}" disabled="${context.setupStepStates.website.disabled == true}">
-            <link target="setupWebsite"/>
+        <menu-item name="user" title="${uiLabelMap[setupStepTitlePropMap['user']]}" disabled="${context.setupStepDisabledMap.user == true}" widget-style="+${context.stepStyles.user}">
+            <link target="setupUser" link-type="anchor">
+                <parameter-map from-field="setupStepStates.user.stepParams"/>
+            </link>
         </menu-item>
+        <!-- 
+        <menu-item name="website" title="${uiLabelMap[setupStepTitlePropMap['website']]}" disabled="${context.setupStepDisabledMap.website == true}" widget-style="+${context.stepStyles.website}">
+            <link target="setupWebsite" link-type="anchor">
+                <parameter-map from-field="setupStepStates.website.stepParams"/>
+            </link>
+        </menu-item>
+        -->
     </menu>
 </menus>

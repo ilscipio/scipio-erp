@@ -472,23 +472,39 @@ under the License.
                                     <if-true field="hasPcmCreatePermission" />
                                     <if-true field="hasPcmUpdatePermission" />
                                     <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
-                                    <not><if-empty field="mechMap.partyContactMech"/></not>
+                                    <!-- SCIPIO: having this check here makes no sense from security perspective
+                                    <not><if-empty field="mechMap.partyContactMech"/></not>-->
                                 </or>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
-                                        <html-template location="component://party/webapp/partymgr/party/editcontactmech.ftl"/>
-                                    </html>
-                                </platform-specific>
+                                <section><!-- SCIPIO: separated the partyContactMech record check from the security perm checks  -->
+                                    <condition>
+                                        <not><if-empty field="mechMap.partyContactMech"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+                                                <html-template location="component://party/webapp/partymgr/party/editcontactmech.ftl"/>
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="button-bar">
+                                            <link target="backHome" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
+                                        </container>
+                                        <container>
+                                            <label style="common-msg-error">${uiLabelMap.PartyContactInfoNotBelongToPartyOrExpired}</label>
+                                        </container>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
                                     <link target="backHome" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
                                 </container>
                                 <container>
-                                    <label>${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
+                                    <label style="common-msg-error-perm">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
                             </fail-widgets>
                         </section>

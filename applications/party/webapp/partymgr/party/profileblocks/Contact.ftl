@@ -17,6 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<#-- SCIPIO: 2017-09-29: this can be set to show non-interactive details info; and title -->
+<#assign partyInfoViewOnly = partyInfoViewOnly!false>
+<#assign partyInfoSimpleFuncOnly = partyInfoSimpleFuncOnly!false>
+<#assign partyContactInfoTitle = partyContactInfoTitle!uiLabelMap.PartyContactInformation>
+<#assign partyContactInfoUseSection = partyContactInfoUseSection!true>
+
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -25,7 +31,7 @@ under the License.
     </#if>
     </@menu>
   </#macro>-->
-  <@section id="partyContactInfo" title=uiLabelMap.PartyContactInformation>
+  <@section id="partyContactInfo" title=partyContactInfoTitle open=partyContactInfoUseSection close=partyContactInfoUseSection>
       <#if contactMeches?has_content>
         <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
@@ -87,6 +93,7 @@ under the License.
                 <#elseif "EMAIL_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
                     ${contactMech.infoString!}
+                  <#if !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
                     <#assign emailFormName = 'createEmail${contactMech.infoString?replace("&#64;","")?replace("&#x40;","")?replace(".","")?replace("@","")}'>
                     <form method="post" action="<@ofbizUrl>NewDraftCommunicationEvent</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="${emailFormName}">
                       <#if userLogin.partyId?has_content>
@@ -98,6 +105,7 @@ under the License.
                       <input name="statusId" value="COM_PENDING" type="hidden"/>
                       <input name="communicationEventTypeId" value="EMAIL_COMMUNICATION" type="hidden"/>
                     </form><a class="${styles.link_run_sys!} ${styles.action_send!}" href="javascript:document['${emailFormName}'].submit()">${uiLabelMap.CommonSendEmail}</a>
+                  </#if>
                   </div>
                 <#elseif "WEB_ADDRESS" == contactMech.contactMechTypeId>
                   <div>
@@ -112,7 +120,7 @@ under the License.
                 <div>(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate})</div>
                 <#if partyContactMech.thruDate?has_content><div><b>${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${partyContactMech.thruDate}</b></div></#if>
                 <#-- create cust request -->
-                <#if custRequestTypes??>
+                <#if custRequestTypes?? && !partyInfoViewOnly && !partyInfoSimpleFuncOnly>
                   <form name="createCustRequestForm" action="<@ofbizUrl>createCustRequest</@ofbizUrl>" method="post" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input type="hidden" name="partyId" value="${partyId}"/>
                     <input type="hidden" name="fromPartyId" value="${partyId}"/>
@@ -128,10 +136,10 @@ under the License.
               </@td>
               <@td><b>(${partyContactMech.allowSolicitation!})</b></@td>
               <@td class="button-col">
-                <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
+                <#if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
                   <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
-                <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>
+                <#if (security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>

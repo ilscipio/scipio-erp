@@ -435,6 +435,11 @@ ul.tabs {
    @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
 }
 
+/* "continue" system action buttons (FIXME?: may want color different than session above) */
+.action-run.action-scope-sys.action-modify.action-continue.button, .action-run.action-scope-sys.action-modify.action-continue .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+
 /* terminate actions (like cancel order) */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
    @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);

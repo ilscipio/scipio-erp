@@ -18,19 +18,19 @@
 # under the License.
 #####################################################################
 #
-# ofbiz        This shell script takes care of starting and stopping
-#              the OFBiz subsystem. This version is for Debian systems
+# scipio        This shell script takes care of starting and stopping
+#              the Scipio ERP server. This version is for Debian systems
 #
 # chkconfig: - 80 10
 # description: OFBiz server
 ### BEGIN INIT INFO
-# Provides:          OFBiz ERP software
+# Provides:          Scipio ERP software
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Apache-OFBiz
-# Description:       OFBiz ERP Software
+# Short-Description: Scipio ERP
+# Description:       Scipio ERP Software
 ### END INIT INFO
 
 # Paths - Edit for your locations
@@ -39,7 +39,7 @@ OFBIZ_HOME=/home/ofbiz/ofbiz
 OFBIZ_LOG=$OFBIZ_HOME/runtime/logs/console.log
 
 # VM Options
-JAVA_VMOPTIONS="-Xms128M -Xmx512M -XX:MaxPermSize=512m"
+JAVA_VMOPTIONS="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
 
 # Java arguments
 JAVA_ARGS="-jar ofbiz.jar"

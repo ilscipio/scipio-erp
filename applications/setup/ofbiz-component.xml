@@ -43,6 +43,7 @@ under the License.
     <webapp name="setup"
         title="Setup"
         server="default-server"
+				menu-name="secondary"
         location="webapp/setup"
         base-permission="OFBTOOLS,SETUP"
         mount-point="/setup"/>

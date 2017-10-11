@@ -49,14 +49,17 @@
         <section>
             <actions>
                 <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="ScipioSetupErrorUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ScipioSetupUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="SetupUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.SetupCompanyName" global="true"/>
@@ -99,7 +102,10 @@
     <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
     <screen name="CommonSetupAppDecorator">
         <section>
-            <actions>   
+            <actions>
+                <!-- SCIPIO: some of the screens need this -->
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
+                
                 <!-- FIXME: is there a common setup VIEW app permission appropriate here?
                 <condition-to-field field="commonSetupAppBasePermCond" type="Boolean" only-if-field="empty">
                     <if-has-permission permission="SETUP" action="_VIEW"/>
@@ -117,11 +123,6 @@
                                 <if-true field="commonSetupAppBasePermCond"/>
                             </condition>
                             <widgets>
-                                <!-- TODO: REMOVE -->
-                                <container>
-                                    <label style="common-msg-warning">WARN: The new /setup application is a Work-In-Progress and may not be fully functional at this time (2017-08).
-                                        The legacy /ofbizsetup component can still be accessed in the meantime.</label>
-                                </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -212,53 +213,112 @@
         </section>
     </screen>
     
-    <!-- SCIPIO: Setup Wizard common actions, should be included at beginning of each screen after setupStep definition -->
-    <screen name="SetupWizardCommonActions">
-        <actions>
-            <script lang="groovy"><![CDATA[
-                if (context.setupWizardActionsRun != true) {
-                    context.DEBUG = true;
-                    setupWorker = com.ilscipio.scipio.setup.SetupWorker.getWorker(request);
-                    context.setupWorker = setupWorker;
-                    context.setupStepStates = setupWorker.getStepStatePrimitiveMap();
-                    if (context.DEBUG) org.ofbiz.base.util.Debug.logInfo("Setup: Step states: " + context.setupStepStates, "SetupWizardCommonActions.groovy");
-                    context.setupWizardActionsRun = true;
-                }
-            ]]></script>
-        </actions>
-    </screen>
-    
     <!-- SCIPIO: Setup Wizard decorator
         NOTE: doesn't extend CommonSetupDecorator because it had a legacy use with party check we don't want to confuse -->
     <screen name="CommonSetupWizardDecorator">
         <section>
             <actions>
                 <!-- this check to prevent the /viewoverrideuri hack - this should always have been set by the events -->
-                <include-screen-actions name="SetupWizardCommonActions"/><!-- fallback only; screens should set it themselves -->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/><!-- fallback only; screens should set it themselves -->
                 <script lang="groovy"><![CDATA[
-                    context.setupStepAllowed = context.setupWorker.isStepEffectiveSafe(context.setupStep);
+                    import org.ofbiz.base.util.*;
+                    context.setupStepAllowed = UtilMisc.booleanValueVersatile(parameters.setupForce, false) || context.setupWorker?.isStepEffectiveAllowedSafe(context.setupStep);
                 ]]></script>
                 
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="${setupStep}"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://setup/widget/Menus.xml#SetupSteps" />
+                
+                <set field="noTitle" value="true"/>
+                
+                <set field="settingUpLabelProp" from-field="settingUpLabelProp" default-value="SetupSettingUp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupAppDecorator">
                     <decorator-section name="body">
                         <include-screen name="SetupProgress" location="${parameters.mainDecoratorLocation}"/>
                         <section>
+                            <condition><not><if-empty field="orgPartyGroup"/></not></condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html>
+                                        <html-template><![CDATA[
+                                          <@heading>${uiLabelMap[rawString(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${uiLabelMap.CommonPartyId}: ${orgPartyGroup.partyId}]<#t/>
+                                            <#t/><#if productStore?has_content> - ${productStore.storeName!productStore.productStoreId}</#if></@heading>
+                                        ]]></html-template>
+                                    </html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                        <section>
                             <condition>
                                 <if-compare field="setupStepAllowed" type="Boolean" operator="equals" value="true"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <not><if-compare field="useDefaultSetupSubmitBar" operator="equals" type="Boolean" value="false"/></not>
+                                            <not><if-empty field="submitFormId"/></not>
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template><![CDATA[
+                                                  <#include "component://setup/webapp/setup/common/common.ftl">
+                                                  <@setupSubmitBar submitFormId=submitFormId isCreate=(isCreate!false)>
+                                                    <@render type="section" name="menu-functions"/>
+                                                  </@setupSubmitBar>
+                                                ]]></html-template>
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="extra-body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="common-msg-error" text="${uiLabelMap.SetupErrorStepNotAccessible}"/>
+                                <section>
+                                    <actions>
+                                        <set field="setupErrorMsg" value="${uiLabelMap.SetupErrorStepNotAccessible}"/>
+                                    </actions>
+                                    <widgets>
+                                        <include-screen name="SetupErrorMsg" location="component://setup/widget/CommonScreens.xml"/>
+                                    </widgets>
+                                </section>
                             </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupErrorMsg">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    final module = "SetupError.groovy";
+                    
+                    // Log this because caller might not have (WARN: setupErrorMsg is already localized; oh well)
+                    if (context.logSetupErrorMsg != false) {
+                        Debug.logError("Setup: Error occurred (displaying): " + (context.setupErrorMsg ?: "(message missing)"), module);
+                    }
+                    
+                    // this is best-effort to get a 
+                    context.autoNextSetupStep = null;
+                    try {
+                        context.autoNextSetupStep = context.setupWorker?.determineStepAuto();
+                    } catch(Exception e) {
+                        Debug.logError(e, "Setup: Error trying to display error message: " + e.getMessage(), "SetupErrorMsg.groovy");
+                    }
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/wizard/setuperrormsg.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

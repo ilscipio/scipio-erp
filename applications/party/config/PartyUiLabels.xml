@@ -13210,4 +13210,15 @@
         <value xml:lang="en">User not found: ${partyId}</value>
         <value xml:lang="fr">Acteur non trouvé: ${partyId}</value>
     </property>
+    <property key="PartyGeneralAddress">
+        <value xml:lang="de">Allgemeine Adresse</value>
+        <value xml:lang="en">General Address</value>
+        <value xml:lang="fr">Adresse générale</value>
+    </property>
+    <property key="PartyContactInfoNotBelongToPartyOrExpired">
+        <value xml:lang="de">Die angegebenen Kontaktinformationen gehören nicht zu diesem Benutzer oder sind abgelaufen. Versuchen Sie es erneut und laden Sie die Seite neu.</value>
+        <value xml:lang="en">The contact information specified does not belong to this user or it has expired. Try going back and reloading the page.</value>
+        <value xml:lang="es">La información de contacto especificada no pertenece a este usuario o ha caducado. Intenta volver y volver a cargar la página.</value>
+        <value xml:lang="fr">Les informations de contact spécifiées n'appartiennent pas à cet utilisateur ou ont expiré. Essayez de revenir en arrière et de recharger la page.</value>
+    </property>
 </resource>

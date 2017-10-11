@@ -30,13 +30,47 @@
     <!-- SCIPIO: NOTE: setup events will keep pointing to the original script locations (ofbizsetup, commonext) unless they
         diverge significantly, because they contain significant code that should not be moved. -->
     
+    <!-- Home requests -->
+    
     <request-map uri="main">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="initialsetup" save-home-view="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
     </request-map>
     <request-map uri="initialsetup">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="initialsetup" save-home-view="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
+    </request-map>
+
+    <!-- Modified requests -->
+    
+    <!-- SCIPIO: WARN: these suffer from session reliance and session issues (needs view-home set properly everywhere) -->
+    <request-map uri="editcontactmech">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editcontactmech" save-current-view="true"/>
+    </request-map>
+    <request-map uri="createContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="updateContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="deleteContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyContactMech"/>
+        <response name="success" type="view-home" value="editcontactmech"/>
+        <response name="error" type="view-home" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <!-- NEW Setup Steps requests -->
@@ -45,89 +79,174 @@
         <security https="true" auth="true"/>
         <response name="success" type="request" value="nextSetupStep"/>
     </request-map>
+    <request-map uri="setupWizardStart"><!-- always goes back to start of wizard (as long as don't mess it up with parameters) -->
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="setupOrganization"/>
+    </request-map>
+    
+    <!-- DEV NOTE: To simplify the code, the setupUpdate[Step] server-side events below do not perform a step
+        validity check before committing (though theoretically should). This check is already done in the screens 
+        and since security is not an issue here it will practically never cause an issue. -->
+    <!-- DEV WARN: for setupCreate/UpdateXxx, only simple-method events get a transaction by default;
+        do not substitute these with java/groovy events without implementing transaction! (TODO: patches for this) -->
+    <request-map uri="setupOrganization">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupOrganization" save-home-view="true"/><!-- save-home-view is needed in case EditContactMech is accessed -->
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateOrganization">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createOrganization"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupOrganization"/>
+    </request-map>
+    <request-map uri="setupUpdateOrganization">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateOrganization"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupOrganization"/>
+    </request-map>
+    <request-map uri="setupUser">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupUser"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateUser">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createUser"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupUser"/>
+    </request-map>
+    <request-map uri="setupUpdateUser">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateUser"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupUser"/>
+    </request-map>
+    <request-map uri="setupAccounting">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateAccounting">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateAccounting">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupFacility">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupFacility"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateFacility">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupFacility"/>
+    </request-map>
+    <request-map uri="setupUpdateFacility">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateFacilityAndContactMech"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupFacility"/>
+    </request-map>
+    <request-map uri="setupCatalog">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupCatalog"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateCatalog">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createProdCatalogAndProductStoreCatalog"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupUpdateCatalog">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProdCatalogAndProductStoreCatalog"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupDeleteCatalog">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="deleteProdCatalogAndProductStoreCatalog"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupStore">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupStore"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateStore">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSettingAndWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupStore"/>
+    </request-map>
+    <request-map uri="setupUpdateStore">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProductStoreAndWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupStore"/>
+    </request-map>
+    <!-- merged into store step
+    <request-map uri="setupWebsite">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateWebsite">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupWebsite"/>
+    </request-map>
+    <request-map uri="setupUpdateWebsite">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupWebsite"/>
+    </request-map>
+    -->
+    <request-map uri="setupFinished">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupFinished"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
 
     <request-map uri="nextSetupStep">
         <security direct-request="false"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getSetupStep"/>
-        <response name="success" type="view" value="SetupFinished"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getNextSetupStep"/>
+        <response name="success" type="view" value="SetupError"/><!-- NOTE: invalid result uses this -->
         <response name="finished" type="view" value="SetupFinished"/>
         
-        <response name="organization" type="view" value="SetupOrganization"/>
+        <response name="organization" type="view" value="SetupOrganization" save-home-view="true"/>
         <response name="user" type="view" value="SetupUser"/>
         <response name="accounting" type="view" value="SetupAccounting"/>
         <response name="facility" type="view" value="SetupFacility"/>
         <response name="catalog" type="view" value="SetupCatalog"/>
+        <response name="store" type="view" value="SetupStore"/>
         <response name="website" type="view" value="SetupWebsite"/>
         
         <response name="error" type="view" value="SetupError"/>
     </request-map>
-    
-    <request-map uri="setupOrganization">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupOrganization"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateOrganization">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupOrganization"/>
-    </request-map>
-    <request-map uri="setupUser">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupUser"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateUser">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupUser"/>
-    </request-map>
-    <request-map uri="setupAccounting">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupAccounting"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateAccounting">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupAccounting"/>
-    </request-map>
-    <request-map uri="setupFacility">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupFacility"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateFacility">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupFacility"/>
-    </request-map>
-    <request-map uri="setupCatalog">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupCatalog"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateCatalog">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupCatalog"/>
-    </request-map>
-    <request-map uri="setupWebsite">
-        <security https="true" auth="true"/>
-        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setSubmittedSetupStep"/>
-        <response name="success" type="view" value="SetupWebsite"/>
-        <response name="error" type="view" value="SetupError"/>
-    </request-map>
-    <request-map uri="setupUpdateWebsite">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="view" value="SetupWebsite"/>
-    </request-map>
+
 
     <!-- end of request mappings -->
     
@@ -157,6 +276,7 @@
     <view-map name="SetupAccounting" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccounting"/>
     <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
     <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
+    <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
     <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
     <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
     <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>

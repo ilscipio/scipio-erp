@@ -158,35 +158,43 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
-
-        if (!partyId.equals("_NA_")) {
-            // try to find a PartyContactMech with a valid date range
-            try {
-                partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("partyId", partyId, "contactMechId", contactMechId)
-                        .orderBy("fromDate")
-                        .filterByDate()
-                        .queryFirst();
-                if (partyContactMech == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-                } else {
-                    toBeStored.add(partyContactMech);
-                }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                contactMech = null;
-            }
-        }
         if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
+        }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
+                        .where("partyId", partyId, "contactMechId", contactMechId)
+                        .orderBy("fromDate")
+                        .filterByDate() // SCIPIO: manual
+                        .queryList();
+                if (UtilValidate.isEmpty(partyContactMechList)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+                }
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+                partyContactMech = EntityUtil.getFirst(partyContactMechList);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+                }
+                toBeStored.add(partyContactMech);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                contactMech = null;
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
         }
 
         String contactMechTypeId = contactMech.getString("contactMechTypeId");
@@ -423,36 +431,45 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
-
-        if (!partyId.equals("_NA_")) {
-            // try to find a PartyContactMech with a valid date range
-            try {
-                partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("partyId", partyId, "contactMechId", contactMechId)
-                        .orderBy("fromDate")
-                        .filterByDate()
-                        .queryFirst();
-                if (partyContactMech == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-                } else {
-                    toBeStored.add(partyContactMech);
-                }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                contactMech = null;
-            }
-        }
         if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
+                        .where("partyId", partyId, "contactMechId", contactMechId)
+                        .orderBy("fromDate")
+                        // .filterByDate() // SCIPIO: manual
+                        .queryList();
+                if (UtilValidate.isEmpty(partyContactMechList)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+                }
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+                partyContactMech = EntityUtil.getFirst(partyContactMechList);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+                }
+                toBeStored.add(partyContactMech);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                contactMech = null;
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
+        }
+
 
         // never change a contact mech, just create a new one with the changes
         GenericValue newContactMech = GenericValue.create(contactMech);
@@ -644,27 +661,37 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
+            if (contactMech == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
             // try to find a PartyContactMech with a valid date range
-            partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
+            List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
                     .where("partyId", partyId, "contactMechId", contactMechId)
                     .orderBy("fromDate")
-                    .filterByDate()
-                    .queryFirst();
+                    //.filterByDate() // SCIPIO: manual
+                    .queryList();
+            if (UtilValidate.isEmpty(partyContactMechList)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+            }
+            partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+            partyContactMech = EntityUtil.getFirst(partyContactMechList);
+            if (partyContactMech == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
             partyContactMech = null;
-        }
-        if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
-        if (partyContactMech == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-        }
+
         toBeStored.add(partyContactMech);
 
         // never change a contact mech, just create a new one with the changes

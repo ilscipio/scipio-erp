@@ -295,8 +295,10 @@ under the License.
             </xs:attribute>
             <xs:attribute name="allow-empty" default="true">
                 <xs:annotation>
-                    <xs:documentation>If true, the verify check will accept empty or null as valid.
-                        Default: true</xs:documentation>
+                    <xs:documentation>If true, the field type verification check will accept empty or null as valid.
+                        Default: true
+                        NOTE: This only affects logging/exception handling. It does not affect whether
+                            this condition returns true or false.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -332,8 +334,10 @@ under the License.
             </xs:attribute>
             <xs:attribute name="allow-empty" default="true">
                 <xs:annotation>
-                    <xs:documentation>If true, the verify check will accept empty or null as valid.
-                        Default: true</xs:documentation>
+                    <xs:documentation>If true, the field type verification check will accept empty or null as valid.
+                        Default: true
+                        NOTE: This only affects logging/exception handling. It does not affect whether
+                            this condition returns true or false.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -859,6 +863,19 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="parameter-map">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: Designates a field containing a map whose entries to use as parameters.
+                2017-09-21: New in Scipio; added for 1.14.4.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="from-field" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Name of field which should contain a map whose entries will be used as parameters.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="exclude">
         <xs:complexType>
             <xs:attribute name="field-name" type="xs:string" use="required" />
@@ -868,6 +885,7 @@ under the License.
         <xs:sequence>
             <xs:element minOccurs="0" ref="auto-parameters-service"/>
             <xs:element minOccurs="0" ref="auto-parameters-entity"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter-map" /><!-- SCIPIO: added 2017-09-21 -->
             <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
             <xs:element minOccurs="0" name="image" type="image" />
         </xs:sequence>

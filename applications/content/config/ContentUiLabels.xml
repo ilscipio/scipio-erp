@@ -7691,4 +7691,9 @@
         <value xml:lang="de">Die ältere Content-Webanwendung-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
         <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
     </property>
+    <property key="FormFieldTitle_visualThemeSelectorScript">
+        <value xml:lang="de">Visual Theme Selector Script</value>
+        <value xml:lang="en">Visual Theme Selector Script</value>
+        <value xml:lang="fr">Script sélecteur de thème visuel</value>
+    </property>
 </resource>

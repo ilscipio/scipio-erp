@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- SCIPIO: NOTE: This file contains labels for the new setup component only; does not include the shared/legacy Setup* labels; see
+          component://commonext/config/SetupUiLabels.xml 
+        for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
+        WARN: both files share the same Setup* prefix for label names; beware overriding. (same issue occurred with filename) -->
+    <property key="SetupErrorStepNotAccessible">
+        <value xml:lang="en">Setup step unavailable - Please complete previous setup steps first.</value>
+        <value xml:lang="de">Setup-Schritt nicht verfügbar - Bitte vorherige Setup-Schritte ausfüllen.</value>
+        <value xml:lang="fr">L'étape de configuration n'est pas disponible - Veuillez compléter d'abord les étapes de configuration précédentes.</value>
+    </property>
+    <property key="SetupError">
+        <value xml:lang="en">Setup error</value>
+        <value xml:lang="de">Setup-Fehler</value>
+        <value xml:lang="fr">Erreur durant la configuration</value>
+    </property>
+    <property key="SetupErrorOccurredInfo">
+        <value xml:lang="en">An error occured during Setup. Please review the error, try restarting the wizard using the link below, or contact support.</value>
+        <value xml:lang="de">Beim Setup ist ein Fehler aufgetreten. Bitte überprüfen Sie den Fehler, versuchen Sie, den Assistenten mit dem unten stehenden Link neu zu starten, oder wenden Sie sich an den Support.</value>
+        <value xml:lang="fr">Une erreur s'est produite pendant le programme d'installation. Veuillez examiner l'erreur, essayez de redémarrer l'assistant en utilisant le lien ci-dessous ou contactez l'assistance.</value>
+    </property>
+    <property key="SetupInvalidFacilityForStore">
+        <value xml:lang="en">Warehouse currently configured is invalid for this store. It may belong to the wrong organization or other problem.</value>
+        <value xml:lang="de">Das derzeit konfigurierte Warehouse ist für diesen Speicher ungültig. Es kann zu der falschen Organisation oder einem anderen Problem gehören.</value>
+        <value xml:lang="fr">L'entrepôt actuellement configuré n'est pas valable pour ce magasin. Il peut appartenir à une mauvaise organisation ou à un autre problème.</value>
+    </property>
+    <property key="SetupNoAddressOrganizationSetupIncomplete">
+        <value xml:lang="en">No postal address available to use; please complete organization setup first.</value>
+        <value xml:lang="de">Keine Postanschrift vorhanden bitte zuerst die Einrichtung des Unternehmens ausfüllen.</value>
+        <value xml:lang="fr">Aucune adresse postale disponible pour l'utilisation; veuillez compléter la configuration de l'organisation en premier.</value>
+    </property>
+    <property key="SetupStoreMissingFacility">
+        <value xml:lang="en">Store record is missing a facility. Setup may fail until a facility is created and assigned.</value>
+        <value xml:lang="de">Store-Rekord fehlt eine Anlage. Setup kann fehlschlagen, bis eine Einrichtung erstellt und zugewiesen wird.</value>
+        <value xml:lang="fr">Le dossier de magasin manque d'une installation. Le programme d'installation peut échouer jusqu'à ce qu'une installation soit créée et attribuée.</value>
+    </property>
+    <property key="SetupWebSiteIdAlreadyInUse">
+        <value xml:lang="en">The passed Web Site ID is already in use.</value>
+        <value xml:lang="de">Die übergebene Website-ID wird bereits verwendet.</value>
+        <value xml:lang="fr">L'ID pour ce site web est déjà utilisé.</value>
+    </property>
+    <property key="SetupCannotCreateWebSiteMissingProductStoreId">
+        <value xml:lang="en">Cannot create website: missing productStoreId</value>
+        <value xml:lang="de">Kann keine Website erstellen: fehlendes ProduktStoreId</value>
+        <value xml:lang="fr">Impossible de créer le site Web: productStoreId manquant</value>
+    </property>
+    <property key="SetupContactWithPurposeAlreadyExistsPleaseResubmit">
+        <value xml:lang="en">A contact mech already having the purpose ${contactMechPurposeTypeId} was found while trying to create a new one. This entity may have been modified elsewhere while you were editing this form. Please reload this page, verify contact details and try again.</value>
+        <value xml:lang="de">Ein Kontakt, der bereits den Zweck ${contactMechPurposeTypeId} hat, wurde beim Versuch gefunden, einen neuen zu erstellen. Diese Entität wurde möglicherweise während der Bearbeitung dieses Formulars an anderer Stelle geändert. Bitte laden Sie diese Seite neu, überprüfen Sie die Kontaktdaten und versuchen Sie es erneut.</value>
+        <value xml:lang="fr">Un mech de contact ayant déjà l'objet ${contactMechPurposeTypeId} a été trouvé en essayant de créer un nouveau. Cette entité peut avoir été modifiée ailleurs pendant la modification de ce formulaire. Veuillez recharger cette page, vérifier les coordonnées et réessayer.</value>
+    </property>
+</resource>

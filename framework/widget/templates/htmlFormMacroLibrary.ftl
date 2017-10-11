@@ -241,11 +241,14 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       <#-- enable the validation plugin for all generated forms
       only enable the validation if min one field is marked as 'required' -->
       if (jQuery(form).find(".required").length > 0) {
-        jQuery(form).validate();
+          <#-- SCIPIO: 2017-09-29: now delegating this
+          jQuery(form).validate();-->
+          <@formValidateScript formExpr="form" htmlwrap=false/>
       }
     </@script><#lt/>
   </#if>
   <#if containerId?has_content && hasRequiredField?has_content>
+    <#-- SCIPIO: 2017-09-29: now delegating this
     <@script>
       jQuery("#${escapeVal(containerId, 'js')}").validate({
         submitHandler:
@@ -253,7 +256,8 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
             form.submit();
           }
       });
-    </@script>
+    </@script>-->
+    <@formValidateScript id=containerId name=formName htmlwrap=true/>
   </#if>
 <#--
 <#else>

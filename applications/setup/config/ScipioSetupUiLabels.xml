@@ -73,6 +73,11 @@
         <value xml:lang="de">Enregistrer et continuer</value>
         <value xml:lang="fr">Speichern fortsetzen</value>
     </property>
+    <property key="SetupSelectAndContinue">
+        <value xml:lang="en">Select &amp; Continue</value>
+        <value xml:lang="de">Sélectionner et continuer</value>
+        <value xml:lang="fr">Auswählen und fortfahren</value>
+    </property>
     <property key="SetupUpdateAddress">
         <value xml:lang="en">Update Address</value>
         <value xml:lang="de">Adresse aktualisieren</value>

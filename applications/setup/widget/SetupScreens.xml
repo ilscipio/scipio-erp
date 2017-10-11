@@ -441,9 +441,6 @@
                 <entity-condition entity-name="PartyRole" list="parties">
                     <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
-                <!-- TODO: REVIEW: for now, when select org, go to next incomplete step
-                <set field="selectOrgTarget" value="setupOrganization"/>-->
-                <set field="selectOrgTarget" value="setupWizard"/>
             </actions>
             <widgets>
                 <platform-specific>

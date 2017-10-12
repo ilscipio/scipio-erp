@@ -6,11 +6,15 @@
 
 <#macro compress_single_line><#local captured><#nested></#local>${captured?replace("^\\s+|\\s+$|\\n|\\r", "", "rm")}</#macro>
 
-<#function makeSetupStepUrl name stepState=true>
+<#function makeSetupStepUrl name stepState=true excludeParams=[] paramDelim="&amp;">
   <#if stepState?is_boolean>
     <#local stepState = (setupStepStates[name])!{}>
   </#if>
-  <#local paramStr = addParamsToStrUrlEnc("", stepState.stepParams!)>
+  <#local stepParams = toSimpleMap(stepState.stepParams!{})>
+  <#if excludeParams?has_content>
+    <#local stepParams = copyMap(stepParams, "e", excludeParams)>
+  </#if>
+  <#local paramStr = addParamsToStrUrlEnc("", stepParams, paramDelim)>
   <#if paramStr?has_content>
     <#local paramStr = "?" + paramStr>
   </#if>
@@ -24,13 +28,6 @@
   <#return "setup"+name?cap_first>
 </#function>
 
-<#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
-  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
-    <#if class?has_content> class="${class}"</#if><#t/>
-    <#if target?has_content> target="${target}"</#if><#t/>
-    ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
-</#macro>
-
 <#macro setupStepFields name stepState=true exclude=[]>
   <#if stepState?is_boolean>
     <#local stepState = (setupStepStates[name])!{}>
@@ -41,6 +38,13 @@
       <@field type="hidden" name=paramName value=(stepParams[paramName]!)/>
     </#if>
   </#list>
+</#macro>
+
+<#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
+  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
+    <#if class?has_content> class="${class}"</#if><#t/>
+    <#if target?has_content> target="${target}"</#if><#t/>
+    ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
 </#macro>
 
 <#macro defaultWizardFormFields stepName=true stepState=true exclude=[]>

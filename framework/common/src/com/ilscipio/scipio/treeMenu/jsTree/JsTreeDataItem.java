@@ -14,8 +14,8 @@ import javolution.util.FastMap;
  * @author jsoto
  *
  */
-public class JsTreeDataItem extends HashMap<String, Object>implements TreeDataItem {
-    private static final long serialVersionUID = -660269373973470543L;
+@SuppressWarnings("serial")
+public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataItem {
 
     private String originalId;
 

@@ -17,11 +17,11 @@ import javolution.util.FastMap;
  * @author jsoto
  * 
  */
+@SuppressWarnings("serial")
 public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
-    private static final long serialVersionUID = -8201109323209706803L;
-    private static String JSTREE_FIELD_ID_SEPARATOR = "_";
+    private static final String module = JsTreeHelper.class.getName();
 
-    private static String module = "JsTreeHelper";
+    private static final String JSTREE_FIELD_ID_SEPARATOR = "_";
 
     private Map<String, Integer> sameIdDataItemsMap = FastMap.newInstance();
 

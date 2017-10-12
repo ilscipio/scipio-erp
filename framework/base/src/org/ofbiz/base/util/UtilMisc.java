@@ -752,7 +752,13 @@ public class UtilMisc {
     // Private lazy-initializer class
     private static class LocaleHolder {
         private static final List<Locale> availableLocaleList = getAvailableLocaleList();
-
+        
+        /** SCIPIO: SPECIAL: Available locales automatically expanded to include countries (country required) (added 2017-10-11) */
+        private static final List<Locale> availableLocaleExpandedCountryRequiredList = getAvailableLocaleExpandedCountryRequiredList();
+        
+        /** SCIPIO: SPECIAL: Available locales automatically expanded to include countries, but will also show locales not having countries (added 2017-10-11) */
+        private static final List<Locale> availableLocaleExpandedCountryOptionalList = getAvailableLocaleExpandedCountryOptionalList();
+        
         private static List<Locale> getAvailableLocaleList() {
             TreeMap<String, Locale> localeMap = new TreeMap<String, Locale>();
             String localesString = UtilProperties.getPropertyValue("general", "locales.available");
@@ -773,11 +779,71 @@ public class UtilMisc {
             }
             return Collections.unmodifiableList(new ArrayList<Locale>(localeMap.values()));
         }
+        
+        /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11) */
+        private static List<Locale> getAvailableLocaleExpandedCountryRequiredList() {
+            List<Locale> list = getAvailableLocaleExpandedCountryOptionalList();
+            ArrayList<Locale> filtered = new ArrayList<>();
+            for(Locale locale : list) {
+                if (UtilValidate.isNotEmpty(locale.getCountry())) {
+                    filtered.add(locale);
+                }
+            }
+            filtered.trimToSize();
+            return Collections.unmodifiableList(filtered);
+        }
+        
+        /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes and also without country codes (added 2017-10-11) */
+        private static List<Locale> getAvailableLocaleExpandedCountryOptionalList() {
+            TreeMap<String, Locale> localeMap = new TreeMap<String, Locale>();
+            String localesString = UtilProperties.getPropertyValue("general", "locales.available");
+            if (UtilValidate.isNotEmpty(localesString)) {
+                List<String> idList = StringUtil.split(localesString, ",");
+                Set<String> genericLangs = new HashSet<>();
+                for (String id : idList) {
+                    Locale curLocale = parseLocale(id);
+                    localeMap.put(curLocale.getDisplayName(), curLocale);
+                    //if (UtilValidate.isEmpty(curLocale.getCountry())) { // TODO: REVIEW: don't restrict the countries with this list for now...
+                    genericLangs.add(curLocale.getLanguage());
+                    //}
+                }
+                Locale[] locales = Locale.getAvailableLocales();
+                for (int i = 0; i < locales.length && locales[i] != null; i++) {
+                    if (genericLangs.contains(locales[i].getLanguage())) {
+                        String displayName = locales[i].getDisplayName();
+                        if (!displayName.isEmpty()) {
+                            localeMap.put(displayName, locales[i]);
+                        }
+                    }
+                }
+            } else {
+                Locale[] locales = Locale.getAvailableLocales();
+                for (int i = 0; i < locales.length && locales[i] != null; i++) {
+                    String displayName = locales[i].getDisplayName();
+                    if (!displayName.isEmpty()) {
+                        localeMap.put(displayName, locales[i]);
+                    }
+                }
+            }
+            return Collections.unmodifiableList(new ArrayList<Locale>(localeMap.values()));
+        }
     }
 
     /** Returns a List of available locales sorted by display name */
     public static List<Locale> availableLocales() {
         return LocaleHolder.availableLocaleList;
+    }
+    
+    /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes (added 2017-10-11) 
+     * NOTE: This list may be subject to restrictions by user configuration (now or in the future) - do not rely on this to get a list of all existing countries. */
+    public static List<Locale> availableLocalesExpandedCountryRequired() {
+        return LocaleHolder.availableLocaleExpandedCountryRequiredList;
+    }
+    
+    /** SCIPIO: SPECIAL: Returns a List of available locales sorted by display name expanded to include country codes and also without country codes (added 2017-10-11).
+     * NOTE: This list may be subject to restrictions by user configuration (now or in the future) - do not rely on this to get a list of all existing countries. */
+    public static List<Locale> availableLocalesExpandedCountryOptional() {
+        return LocaleHolder.availableLocaleExpandedCountryOptionalList;
     }
 
     /** @deprecated use Thread.sleep() */

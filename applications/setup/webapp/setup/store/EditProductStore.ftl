@@ -1,3 +1,4 @@
+<#include "component://common/webcommon/includes/listLocalesMacros.ftl">
 <#include "component://setup/webapp/setup/common/common.ftl">
 
 
@@ -135,7 +136,12 @@
           </#if>
         </@field>
         
-        <@field type="input" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString value=(params.defaultLocaleString!) placeholder="en_US"/>
+        <#-- BEST-EFFORT ATTEMPT to support drop-down expanded locale string (not supported OOTB ofbiz)
+        <@field type="input" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString value=(params.defaultLocaleString!) placeholder="en_US"/>-->
+        <@field type="select" name="defaultLocaleString" label=uiLabelMap.FormFieldTitle_defaultLocaleString>
+            <@availableLocalesOptions expandCountries=true requireCountries=false currentLocale=(params.defaultLocaleString!) allowExtra=true allowEmpty=true/>
+        </@field>
+        
         <@field type="select" name="defaultCurrencyUomId" label=uiLabelMap.FormFieldTitle_defaultCurrencyUomId>
           <@field type="option" value=""></@field>
           <#list (currencyUomList!) as currencyUom>

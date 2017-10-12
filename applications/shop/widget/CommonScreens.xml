@@ -241,7 +241,7 @@ under the License.
             <widgets>
                 <decorator-screen name="ShopDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-content" >
-                        <container style="${styles.grid_row} ${styles.grid_theme_pre}" id="pre-content-section">
+                        <container style="${styles.grid_theme_pre}" id="pre-content-section">
                             <decorator-section-include name="pre-content"/>
                         </container>
                     </decorator-section>

@@ -8,8 +8,8 @@ import java.util.HashMap;
  * @author jsoto
  *
  */
+@SuppressWarnings("serial")
 public class JsTreeEvent extends HashMap<String, String> {
-    private static final long serialVersionUID = 2708617525071551004L;
     public static final String JSTREE_EVENT = ".jstree";
 
     public static final String[] VALID_EVENTS = { "init", "loading", "loaded", "ready", "load_node", "load_all", "model", "redraw", "before_open", "open_node",

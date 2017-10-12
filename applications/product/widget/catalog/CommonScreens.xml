@@ -1124,23 +1124,23 @@ under the License.
     <screen name="ScipioStoreCatalogTree">
         <section>
             <actions>
-               <entity-one value-field="productStore" entity-name="ProductStore"/>
-               <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
-           </actions>
-           <widgets>
+                <entity-one value-field="productStore" entity-name="ProductStore"/>
+                <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
+            </actions>
+            <widgets>
                 <section>
                     <condition>
                         <not>
                             <if-empty field="treeMenuData"/>
                         </not>
                     </condition>
-                     <widgets>
-                       <screenlet title="${productStore.storeName}">
-                           <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                       </screenlet>     
-                   </widgets>
+                    <widgets>
+                        <screenlet title="${productStore.storeName}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
+                        </screenlet>     
+                    </widgets>
                 </section>
-           </widgets>
+            </widgets>
         </section>
     </screen>
     

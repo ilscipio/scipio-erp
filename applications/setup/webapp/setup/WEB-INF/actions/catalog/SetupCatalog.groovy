@@ -8,6 +8,7 @@ catalogData = context.catalogData ?: [:];
 
 prodCatalog = catalogData.prodCatalog;
 context.prodCatalog = prodCatalog;
+context.prodCatalogId = prodCatalog?.prodCatalogId;
 
 productStoreCatalog = catalogData.productStoreCatalog;
 context.productStoreCatalog = productStoreCatalog;
@@ -36,3 +37,16 @@ if (prodCatalog != null && productStoreCatalog != null) {
     prodCatalogAndStoreAssoc.putAll(productStoreCatalog);
 }
 context.prodCatalogAndStoreAssoc = prodCatalogAndStoreAssoc;
+
+// CATEGORY
+productCategoryId = context.productCategoryId ?: parameters.productCategoryId;
+productCategory = null;
+if (prodCatalog && productCategoryId) {
+    // FIXME!!!: verify part of catalog
+    productCategory = delegator.findOne("ProductCategory", [productCategoryId:productCategoryId], false);
+}
+context.productCategoryId = productCategoryId;
+context.productCategory = productCategory;
+
+
+

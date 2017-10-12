@@ -29,17 +29,17 @@
     <dependencies>
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.44" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.44" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.46" transitive="false" conf="application->default"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.46" transitive="false" conf="application->default"/>
 
         <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="application->default"/>
     </dependencies>

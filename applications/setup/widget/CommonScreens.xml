@@ -74,6 +74,11 @@
                 <set field="applicationMenuLocation" value="component://setup/widget/Menus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.SetupApp}" global="true"/>
                 
+                <!-- ToDo: Move to themes? -->
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
+                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>      
+                
                 <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
                 <set field="menuCfg" from-field="mainComplexMenuCfg"/>
                 <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>

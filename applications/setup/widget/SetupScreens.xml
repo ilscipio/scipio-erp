@@ -359,7 +359,7 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="organizationData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
 
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupOrganization.groovy"/>                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/organization/SetupOrganization.groovy"/>                
 
                 <set field="isCreate" type="Boolean" value="${context.party == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
@@ -467,7 +467,7 @@
                  -->
 <!--                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/> -->
 
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupUser.groovy"/>                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
                 <set field="isCreate" type="Boolean" value="${context.userParty == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
@@ -507,6 +507,8 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
                 
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>                
+                
                 <set field="isCreate" type="Boolean" value="${context.accounting == null}"/><!-- FIXME -->
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
                 <set field="target" value="${groovy: !isCreate ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
@@ -543,7 +545,7 @@
 
                 <!-- not appropriate
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>-->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupFacility.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/facility/SetupFacility.groovy"/>
                 
                 <set field="isCreate" type="Boolean" value="${context.facility == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'ProductEditFacility' : 'ProductNewFacility'}" />
@@ -584,7 +586,7 @@
 
                 <!-- not appropriate
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupCatalog.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <set field="isCreate" type="Boolean" value="${context.prodCatalog == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'ProductEditCatalog' : 'ProductNewCatalog'}" />
@@ -623,7 +625,7 @@
                                   </@form>
                                   <@menu type="button">
                                     <#if !isCreate>
-                                      <@menuitem type="link" href="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);" text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                      <@menuitem type="link" href="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);" text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
                                 ]]></html-template>
@@ -636,9 +638,23 @@
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
+                                <!-- TODO?: can maybe remove ListCatalogs once EditCatalogTree works, will be redundant... -->
                                 <screenlet>
+                                    <label style="p">TODO: Remove table</label>
                                     <include-screen name="ListCatalogs"/>
                                 </screenlet>
+                                <section>
+                                    <conditions>
+                                        <not><if-empty field="productStoreId"/></not>
+                                        <!-- don't show until at least one catalog created -->
+                                        <not><if-empty field="productStoreCatalogList"/></not>
+                                    </conditions>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-screen name="EditCatalogTree"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -661,6 +677,27 @@
             </widgets>
         </section>
     </screen>
+    <screen name="EditCatalogTree">
+        <section>
+            <actions>
+               <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="treeMenuData"/>
+                        </not>
+                    </condition>
+                     <widgets>
+                       <screenlet>
+                           <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="SetupStore">
         <section>
@@ -672,12 +709,12 @@
 
                 <!-- do not need this - store already loaded by groovy and SetupWorker
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>-->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupStore.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupStore.groovy"/>
                 
                 <!-- NOTE: currently storeData==websiteData -->
                 <set field="websiteData" from-field="storeData"/>
                 
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWebsite.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                  
                 <set field="isCreate" type="Boolean" value="${context.productStore == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
@@ -728,7 +765,7 @@
                 <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
                 - ->
-                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWebsite.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                 
                 <set field="isCreate" type="Boolean" value="${context.webSite == null}"/>
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />

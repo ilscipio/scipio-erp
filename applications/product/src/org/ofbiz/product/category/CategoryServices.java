@@ -453,14 +453,17 @@ public class CategoryServices {
         return result;
     }
 
-    // Please note : the structure of map in this function is according to the
-    // JSON data map of the jsTree
-    @SuppressWarnings("unchecked")
-    @Deprecated
     /**
      * SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
-     * If an event is wanted though, use TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
+     * If an event is wanted though, use 
+     * TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
+     * <p>
+     * Please note : the structure of map in this function is according to the
+     * JSON data map of the jsTree
+     * TODO: MOVE ELSEWHERE
      */
+    @SuppressWarnings("unchecked")
+    @Deprecated
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String productCategoryId = request.getParameter("productCategoryId");
@@ -568,16 +571,25 @@ public class CategoryServices {
         return "success";
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * SCIPIO: buildCatalogTree implementation (for jsTree).
+     * TODO: MOVE ELSEWHERE
+     */
     public static Map<String, Object> buildCatalogTree(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         String library = (String) context.get("library");
         String mode = (String) context.get("mode");
         String prodCatalogId = (String) context.get("prodCatalogId");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
+        
+        Map<String, Object> state = UtilGenerics.checkMap(context.get("state"));
+        Map<String, Map<String, Object>> categoryStates = UtilGenerics.checkMap(context.get("categoryStates"));
 
+        boolean includeProducts = !Boolean.FALSE.equals(context.get("includeProducts"));
+        boolean useCategoryCache = !Boolean.FALSE.equals(context.get("useCategoryCache"));
+        
         List<TreeDataItem> resultList = FastList.newInstance();
         if (mode.equals("full")) {
             try {
@@ -588,8 +600,12 @@ public class CategoryServices {
 
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, library, prodCatalogId));
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(false, false),
+                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, library, prodCatalogId, categoryStates, includeProducts, useCategoryCache));
+                        Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
+                        if (state != null) {
+                            effState.putAll(state);
+                        }
+                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
                                 null);
                         dataItem.setType("catalog");
                     }

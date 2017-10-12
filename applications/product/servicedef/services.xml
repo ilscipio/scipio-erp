@@ -1725,6 +1725,17 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false" />
         <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
         <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
+        <attribute name="state" mode="IN" type="Map" optional="true">
+            <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
+        </attribute>
+        <attribute name="categoryStates" mode="IN" type="Map" optional="true">
+            <description>Map of categoryIds to maps of state attributes (added 2017-10-11)
+                WARN: can't specify specific path for many-parents</description>
+        </attribute>
+        <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true">
+            <description>use-cache flag, for catalog/category only (not product)</description>
+        </attribute>
+        <attribute name="includeProducts" mode="IN" type="Boolean" optional="true" default-value="true"/>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
 

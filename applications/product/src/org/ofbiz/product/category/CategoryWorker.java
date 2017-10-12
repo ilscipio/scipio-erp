@@ -608,36 +608,34 @@ public class CategoryWorker {
      * SCIPIO: Retrieves categories based on either a list of
      * ProductCategoryRollup or ProdCatalogCategory and returns a list of
      * TreeDataItem representing categories
-     * 
-     * @param delegator
-     * @param dispatcher
-     * @param productCategories
-     * @return
-     * @throws GenericEntityException
-     * @throws GenericServiceException
+     * TODO: MOVE ELSEWHERE
      */
     public static List<? extends TreeDataItem> getTreeCategories(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
-            List<GenericValue> productCategories, String library, String parentId) throws GenericEntityException, GenericServiceException {
+            List<GenericValue> productCategories, String library, String parentId, Map<String, Map<String, Object>> categoryStates, 
+            boolean includeProducts, boolean useCategoryCache) throws GenericEntityException, GenericServiceException {
         List<TreeDataItem> treeDataItemList = FastList.newInstance();
         for (GenericValue productCategory : productCategories) {
             GenericValue category = null;
             if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
-                category = productCategory.getRelatedOne("CurrentProductCategory", true);
+                category = productCategory.getRelatedOne("CurrentProductCategory", useCategoryCache);
             } else if (productCategory.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
-                category = productCategory.getRelatedOne("ProductCategory", true);
+                category = productCategory.getRelatedOne("ProductCategory", useCategoryCache);
             }
             if (UtilValidate.isNotEmpty(category)) {
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(true).queryList();
+                        .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(useCategoryCache).queryList();
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups))
                     treeDataItemList.addAll(
-                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId")));
+                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId"), 
+                                        categoryStates, includeProducts, useCategoryCache));
 
-                Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
-                        UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
-                if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
-                    treeDataItemList.addAll(getTreeProducts(dispatcher, locale, UtilGenerics.<GenericValue>checkList(productCategoryMembers.get("categoryMembers")), library,
-                            productCategory.getString("productCategoryId")));
+                if (includeProducts) {
+                    Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
+                            UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
+                    if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
+                        treeDataItemList.addAll(getTreeProducts(dispatcher, locale, UtilGenerics.<GenericValue>checkList(productCategoryMembers.get("categoryMembers")), library,
+                                productCategory.getString("productCategoryId")));
+                    }
                 }
 
                 String categoryId = category.getString("productCategoryId");
@@ -655,7 +653,11 @@ public class CategoryWorker {
 
                 if (library.equals("jsTree")) {
                     JsTreeDataItem dataItem = null;
-                    dataItem = new JsTreeDataItem(categoryId, categoryName + " [" + categoryId + "]", "jstree-folder", new JsTreeDataItemState(false, false),
+                    Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
+                    if (categoryStates != null && categoryStates.get(categoryId) != null) {
+                        effState.putAll(categoryStates.get(categoryId));
+                    }
+                    dataItem = new JsTreeDataItem(categoryId, categoryName + " [" + categoryId + "]", "jstree-folder", new JsTreeDataItemState(effState),
                             parentId);
                     dataItem.setType("category");
                     if (UtilValidate.isNotEmpty(dataItem))

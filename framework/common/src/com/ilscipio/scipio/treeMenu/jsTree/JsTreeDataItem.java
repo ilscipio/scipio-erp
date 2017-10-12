@@ -3,6 +3,7 @@ package com.ilscipio.scipio.treeMenu.jsTree;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
@@ -92,6 +93,12 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
         public JsTreeDataItemState(boolean opened, boolean selected, boolean disabled) {
             this(opened, selected);
             put("disabled", disabled);
+        }
+        
+        public JsTreeDataItemState(Map<String, Object> stateMap) {
+            put("opened", (Boolean) stateMap.get("opened"));
+            put("selected", (Boolean) stateMap.get("selected"));
+            put("disabled", (Boolean) stateMap.get("disabled"));
         }
 
         public boolean isOpened() {

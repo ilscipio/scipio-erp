@@ -4,6 +4,8 @@
     form widget to link-triggered forms -->
 <#assign setupFormValidate = true>
 
+<#macro compress_single_line><#local captured><#nested></#local>${captured?replace("^\\s+|\\s+$|\\n|\\r", "", "rm")}</#macro>
+
 <#function makeSetupStepUrl name stepState=true>
   <#if stepState?is_boolean>
     <#local stepState = (setupStepStates[name])!{}>
@@ -21,6 +23,13 @@
   </#if>
   <#return "setup"+name?cap_first>
 </#function>
+
+<#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
+  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
+    <#if class?has_content> class="${class}"</#if><#t/>
+    <#if target?has_content> target="${target}"</#if><#t/>
+    ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
+</#macro>
 
 <#macro setupStepFields name stepState=true exclude=[]>
   <#if stepState?is_boolean>
@@ -232,13 +241,6 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
       <@setupSubmitMenu submitFormId=submitFormId allowSkip=allowSkip isCreate=isCreate/>
     </@cell>
   </@row>
-</#macro>
-
-<#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
-  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
-    <#if class?has_content> class="${class}"</#if><#t/>
-    <#if target?has_content> target="${target}"</#if><#t/>
-    ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>
 </#macro>
 
 <#function getContactMechPurposeDescs purposes>

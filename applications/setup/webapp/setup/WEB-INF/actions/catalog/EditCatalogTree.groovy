@@ -76,11 +76,11 @@ for (productStoreCatalog in productStoreCatalogs) {
             "state": state,
             "categoryStates": categoryStates,
             "includeCategoryData": true,
-            "includeProducts": displayProducts
+            "includeProducts": displayProducts,
+            "includeEmptyTop": true,
+            "productStoreCatalog": productStoreCatalog
         ]);
         if (result?.treeList) {
-            // FIXME: dirty - the service should do this
-            result.treeList[result.treeList.size() - 1].productStoreCatalogEntity = productStoreCatalog;
             treeMenuData = treeMenuData + result.treeList;
         }
     }

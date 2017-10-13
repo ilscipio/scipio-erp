@@ -45,13 +45,8 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
-import com.ilscipio.scipio.treeMenu.TreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -452,184 +447,14 @@ public class CategoryServices {
             result.put("productCategoryMembers", productCategoryMembers);
         return result;
     }
-
+    
     /**
-     * SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
-     * If an event is wanted though, use 
-     * TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
-     * <p>
-     * Please note : the structure of map in this function is according to the
-     * JSON data map of the jsTree
-     * TODO: MOVE ELSEWHERE
+     * @deprecated SCIPIO: To be removed in future (TODO) - use 
+     * {@link com.ilscipio.scipio.product.category.CategoryEvents#getChildCategoryTree(HttpServletRequest, HttpServletResponse)}
+     * or buildCategoryTree service instead.
      */
-    @SuppressWarnings("unchecked")
     @Deprecated
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String productCategoryId = request.getParameter("productCategoryId");
-        String isCatalog = request.getParameter("isCatalog");
-        String isCategoryType = request.getParameter("isCategoryType");
-        String onclickFunction = request.getParameter("onclickFunction");
-        String additionParam = request.getParameter("additionParam");
-        String hrefString = request.getParameter("hrefString");
-        String hrefString2 = request.getParameter("hrefString2");
-        String entityName = null;
-        String primaryKeyName = null;
-
-        if (isCatalog.equals("true")) {
-            entityName = "ProdCatalog";
-            primaryKeyName = "prodCatalogId";
-        } else {
-            entityName = "ProductCategory";
-            primaryKeyName = "productCategoryId";
-        }
-
-        List categoryList = FastList.newInstance();
-        List<GenericValue> childOfCats;
-        List<String> sortList = org.ofbiz.base.util.UtilMisc.toList("sequenceNum", "title");
-
-        try {
-            GenericValue category = EntityQuery.use(delegator).from(entityName).where(primaryKeyName, productCategoryId).queryOne();
-            if (UtilValidate.isNotEmpty(category)) {
-                if (isCatalog.equals("true") && isCategoryType.equals("false")) {
-                    CategoryWorker.getRelatedCategories(request, "ChildCatalogList", CatalogWorker.getCatalogTopCategoryId(request, productCategoryId), true);
-                    childOfCats = EntityUtil.filterByDate((List<GenericValue>) request.getAttribute("ChildCatalogList"));
-
-                } else if (isCatalog.equals("false") && isCategoryType.equals("false")) {
-                    childOfCats = EntityQuery.use(delegator).from("ProductCategoryRollupAndChild").where("parentProductCategoryId", productCategoryId)
-                            .filterByDate().queryList();
-                } else {
-                    childOfCats = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", productCategoryId).filterByDate().queryList();
-                }
-                if (UtilValidate.isNotEmpty(childOfCats)) {
-
-                    for (GenericValue childOfCat : childOfCats) {
-
-                        Object catId = null;
-                        String catNameField = null;
-
-                        catId = childOfCat.get("productCategoryId");
-                        catNameField = "CATEGORY_NAME";
-
-                        Map josonMap = FastMap.newInstance();
-                        List<GenericValue> childList = null;
-
-                        // Get the child list of chosen category
-                        childList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", catId).filterByDate().queryList();
-
-                        // Get the chosen category information for the
-                        // categoryContentWrapper
-                        GenericValue cate = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", catId).queryOne();
-
-                        // If chosen category's child exists, then put the arrow
-                        // before category icon
-                        if (UtilValidate.isNotEmpty(childList)) {
-                            josonMap.put("state", "closed");
-                        }
-                        Map dataMap = FastMap.newInstance();
-                        Map dataAttrMap = FastMap.newInstance();
-                        CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(cate, request);
-
-                        String title = null;
-                        // SCIPIO: Do NOT HTML-escape this here
-                        if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField))) {
-                            title = new StringBuffer(categoryContentWrapper.get(catNameField)).append(" [").append(catId).append("]")
-                                    .toString();
-                            dataMap.put("title", title);
-                        } else {
-                            title = catId.toString();
-                            dataMap.put("title", catId);
-                        }
-                        dataAttrMap.put("onClick", onclickFunction + "('" + catId + additionParam + "')");
-
-                        String hrefStr = hrefString + catId;
-                        if (UtilValidate.isNotEmpty(hrefString2)) {
-                            hrefStr = hrefStr + hrefString2;
-                        }
-                        dataAttrMap.put("href", hrefStr);
-
-                        dataMap.put("attr", dataAttrMap);
-                        josonMap.put("data", dataMap);
-                        Map attrMap = FastMap.newInstance();
-                        attrMap.put("id", catId);
-                        attrMap.put("isCatalog", false);
-                        attrMap.put("rel", "CATEGORY");
-                        josonMap.put("attr", attrMap);
-                        josonMap.put("sequenceNum", childOfCat.get("sequenceNum"));
-                        josonMap.put("title", title);
-
-                        categoryList.add(josonMap);
-                    }
-                    List<Map<Object, Object>> sortedCategoryList = UtilMisc.sortMaps(categoryList, sortList);
-                    request.setAttribute("treeData", sortedCategoryList);
-                }
-            }
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-            return "error";
-        }
-        return "success";
-    }
-
-    /**
-     * SCIPIO: buildCatalogTree implementation (for jsTree).
-     * TODO: MOVE ELSEWHERE
-     */
-    public static Map<String, Object> buildCatalogTree(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
-        String library = (String) context.get("library");
-        String mode = (String) context.get("mode");
-        String prodCatalogId = (String) context.get("prodCatalogId");
-        
-        Map<String, Object> state = UtilGenerics.checkMap(context.get("state"));
-        Map<String, Map<String, Object>> categoryStates = UtilGenerics.checkMap(context.get("categoryStates"));
-
-        boolean includeProducts = !Boolean.FALSE.equals(context.get("includeProducts"));
-        boolean useCategoryCache = !Boolean.FALSE.equals(context.get("useCategoryCache"));
-        
-        List<TreeDataItem> resultList = FastList.newInstance();
-        if (mode.equals("full")) {
-            try {
-                GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
-                List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
-                        .filterByDate().queryList();
-                if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
-
-                    JsTreeDataItem dataItem = null;
-                    if (library.equals("jsTree")) {
-                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, library, prodCatalogId, categoryStates, includeProducts, useCategoryCache));
-                        Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
-                        if (state != null) {
-                            effState.putAll(state);
-                        }
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
-                                null);
-                        dataItem.setType("catalog");
-                    }
-
-                    if (UtilValidate.isNotEmpty(dataItem))
-                        resultList.add(dataItem);
-                }
-
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError(e.getMessage());
-            } catch (GenericServiceException e) {
-                return ServiceUtil.returnError(e.getMessage());
-            }
-        } else if (mode.equals("category")) {
-            /**
-             * TODO: Complete for other modes
-             * */
-        } else if (mode.equals("product")) {
-            /**
-             * TODO: Complete for other modes
-             * */
-        }
-
-        result.put("treeList", resultList);
-        return result;
+        return com.ilscipio.scipio.product.category.CategoryEvents.getChildCategoryTree(request, response);
     }
 }

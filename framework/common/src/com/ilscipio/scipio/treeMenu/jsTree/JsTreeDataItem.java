@@ -3,12 +3,9 @@ package com.ilscipio.scipio.treeMenu.jsTree;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
-
-import javolution.util.FastMap;
 
 /**
  * 
@@ -35,7 +32,7 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
             put("parent", "#");
 
         this.originalId = id;
-        Map<String, String> liAttrValues = FastMap.newInstance();
+        Map<String, String> liAttrValues = new HashMap<>();
         liAttrValues.put("original_id", originalId);
         put("li_attr", liAttrValues);
     }

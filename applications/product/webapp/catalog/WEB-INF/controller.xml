@@ -3051,7 +3051,7 @@ under the License.
 
     <request-map uri="getChild">
         <security auth="false" https="true"/>
-        <event type="java" path="org.ofbiz.product.category.CategoryServices" invoke="getChildCategoryTree"/>
+        <event type="java" path="com.ilscipio.scipio.product.category.CategoryEvents" invoke="getChildCategoryTree"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>

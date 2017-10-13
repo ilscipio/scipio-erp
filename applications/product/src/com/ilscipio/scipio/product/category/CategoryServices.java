@@ -55,18 +55,24 @@ public abstract class CategoryServices {
         boolean includeProducts = !Boolean.FALSE.equals(context.get("includeProducts"));
         boolean useCategoryCache = !Boolean.FALSE.equals(context.get("useCategoryCache"));
         
+        boolean includeEmptyTop = Boolean.TRUE.equals(context.get("includeEmptyTop"));
+        
         List<TreeDataItem> resultList = new ArrayList<>();
         if (mode.equals("full")) {
             try {
+                GenericValue productStoreCatalog = (GenericValue) context.get("productStoreCatalog");
+                
                 GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
                 List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
                         .filterByDate().queryList();
-                if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                if (includeEmptyTop || UtilValidate.isNotEmpty(prodCatalogCategories)) {
     
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
-                                prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProducts, useCategoryCache));
+                        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                            resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
+                                    prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProducts, useCategoryCache));
+                        }
                         Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                         if (state != null) {
                             effState.putAll(state);
@@ -76,6 +82,7 @@ public abstract class CategoryServices {
                         dataItem.setType("catalog");
                         if (includeCategoryData) {
                             dataItem.put("prodCatalogEntity", catalog);
+                            dataItem.put("productStoreCatalogEntity", productStoreCatalog);
                         }
                     }
     

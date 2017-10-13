@@ -1739,6 +1739,8 @@ under the License.
         <attribute name="includeProducts" mode="IN" type="Boolean" optional="true" default-value="true"/>
         <!-- TODO: not implemented
         <attribute name="includeProductData" mode="IN" type="Boolean" optional="true" default-value="false"/>-->
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
 

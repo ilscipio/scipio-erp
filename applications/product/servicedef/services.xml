@@ -1729,17 +1729,17 @@ under the License.
             <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
         </attribute>
         <attribute name="categoryStates" mode="IN" type="Map" optional="true">
-            <description>Map of categoryIds to maps of state attributes (added 2017-10-11)
+            <description>Map of categoryIds to maps of state attributes (added 2017-10-11).
                 WARN: can't specify specific path for many-parents</description>
         </attribute>
-        <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true">
-            <description>use-cache flag, for catalog/category only (not product)</description>
-        </attribute>
+        <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="useProductCache" mode="IN" type="Boolean" optional="true"/>
         <attribute name="includeCategoryData" mode="IN" type="Boolean" optional="true" default-value="false"/>
-        <attribute name="includeProducts" mode="IN" type="Boolean" optional="true" default-value="true"/>
-        <!-- TODO: not implemented
-        <attribute name="includeProductData" mode="IN" type="Boolean" optional="true" default-value="false"/>-->
-        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="includeProductData" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="maxProductsPerCat" mode="IN" type="Integer" optional="true"/><!-- default: no limit (same as -1) -->
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), empty catalog or top node is omitted</description>
+        </attribute>
         <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>

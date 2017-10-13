@@ -75,9 +75,12 @@ for (productStoreCatalog in productStoreCatalogs) {
             "prodCatalogId" : prodCatalog.prodCatalogId,
             "state": state,
             "categoryStates": categoryStates,
-            "includeProducts": displayProducts
+            "includeCategoryData": true,
+            "includeProducts": displayProducts,
+            "includeEmptyTop": true,
+            "productStoreCatalog": productStoreCatalog
         ]);
-        if (result && result.get("treeList")) {
+        if (result?.treeList) {
             treeMenuData = treeMenuData + result.treeList;
         }
     }

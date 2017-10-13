@@ -126,18 +126,23 @@ under the License.
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
+    
     <!-- SCIPIO: New properties -->
+    
+    <!-- Solr properties -->
     <property name="solr.home" value="applications/solr"/>
     <property name="solr.log.dir" value="runtime/logs/solr"/><!-- added 2017-09-08 -->
     <!-- Solr instance locking - see solrconfig.xml for details -->
     <!-- 2017-09-12: FIXME?: Ideally we should use "native", but issues have been encountered with write.lock;
         as workaround, use file-less "single" instance lock - there should no issues because running
         two ofbiz instances always fails before webapps load, due to ports-in-use. -->
-    <!--<property name="solr.lock.type" value="native"/> -->
+    <!--<property name="solr.lock.type" value="native"/>-->
     <property name="solr.lock.type" value="single"/>
     <!-- Passing -Dscipio.solr.reindex.auto.force=true or uncommenting forces rebuildSolrIndex(Auto) on startup; 
         see also "[set|start|...]-reindex-solr" helper tasks. -->
     <!--<property name="scipio.solr.reindex.auto.force" value="true"/>-->
+    <!-- If set to "true", prevents editing Solr config through Solr webapp's config API -->
+    <property name="solr.disable.configEdit" value=""/><!-- added 2017-10-12 -->
     
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
@@ -1067,6 +1072,7 @@ under the License.
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
+                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.auto.force=${scipio.solr.reindex.auto.force}"/>
                         <args/>
                     </java>
@@ -1080,6 +1086,7 @@ under the License.
                         <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
+                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.auto.force=${scipio.solr.reindex.auto.force}"/>
                         <args/>
                     </java>

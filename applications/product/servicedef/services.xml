@@ -1720,7 +1720,7 @@ under the License.
     </service>
     
     <!-- SCIPIO: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
-    <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="org.ofbiz.product.category.CategoryServices" invoke="buildCatalogTree">
+    <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="com.ilscipio.scipio.product.category.CategoryServices" invoke="buildCatalogTree">
         <description>Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
         <auto-attributes mode="IN" include="pk" optional="false" />
         <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
@@ -1735,7 +1735,12 @@ under the License.
         <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true">
             <description>use-cache flag, for catalog/category only (not product)</description>
         </attribute>
+        <attribute name="includeCategoryData" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="includeProducts" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <!-- TODO: not implemented
+        <attribute name="includeProductData" mode="IN" type="Boolean" optional="true" default-value="false"/>-->
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
 

@@ -36,7 +36,7 @@ rm -f $OFBIZ_LOG
 MEMIF="-Xms128M -Xmx3512M -XX:MaxPermSize=1024m"
 #JMX="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=33333 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 #MISC="-Duser.language=en"
-MISC="-Dsolr.solr.home=applications/solr/"
+MISC="-Dsolr.solr.home=applications/solr/ -Dsolr.log.dir=runtime/logs/solr/"
 VMARGS="$MEMIF $MISC $JMX $DEBUG $RMIIF"
 
 # Worldpay Config

@@ -455,17 +455,8 @@
             <actions>
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
-                
-                <!-- <set field="titleProperty" value="PartyCreateNewCustomer"/> -->
-                <!-- FIXME: everything here squashes the org party ID
-                <set field="partyId" value="CUST"/>
-                <entity-condition entity-name="PartyRole" list="parties">
-                    <condition-expr field-name="roleTypeId" operator="equals" value="CUSTOMER"/>
-                </entity-condition>
-                <set field="partyId" from-field="parties[0].partyId"/>
-                 -->
-<!--                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/> -->
+                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->               
+
 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
@@ -473,6 +464,13 @@
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
                 <set field="target" value="${groovy: !isCreate ? 'setupUpdateUser' : 'setupCreateUser'}" />
                 <set field="submitFormId" value="EditUser"/>
+                
+                <if>
+                    <condition><not><if-true field="userSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -482,12 +480,21 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <section>                                   
+                                <screenlet>
+                                    <include-screen name="SelectUser"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <if-true field="userSelected"/>
+                                    </condition>
                                     <widgets>
                                         <screenlet>
-                                            <platform-specific><html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html></platform-specific>
+                                            <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
+                                            </platform-specific>
                                         </screenlet>
-                                    </widgets>                                    
+                                    </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -496,6 +503,20 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectUser">
+        <section>
+            <!-- <actions>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-condition>
+            </actions> -->
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/user/SelectUser.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

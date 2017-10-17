@@ -6,6 +6,8 @@ import com.ilscipio.scipio.setup.*;
 
 final module = "SetupUser.groovy";
 
+SetupWorker setupWorker = context.setupWorker;
+
 userData = context.userData ?: [:];
 
 if (context.productStoreId) {
@@ -64,3 +66,7 @@ if (userContactMechsByPurpose["PRIMARY_EMAIL"]) {
 if (userContactMechsByPurpose["GENERAL_LOCATION"]) {
     context.userPostalAddress = userContactMechsByPurpose["GENERAL_LOCATION"].getRelatedOne("PostalAddress", false);
 }
+
+// true if explicit userPartyId OR explicit newUser=Y flag OR failed create
+userSelected = userPartyId || setupWorker?.isEffectiveNewRecordRequest(setupStep);
+context.userSelected = userSelected;

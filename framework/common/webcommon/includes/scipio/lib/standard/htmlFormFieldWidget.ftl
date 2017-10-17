@@ -1720,18 +1720,20 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderHiddenField form widget macro -->
 <#assign field_hidden_widget_defaultArgs = {
-  "name":"", "value":"", "id":"", "events":{}, "inlineLabel":false, "passArgs":{}
+  "name":"", "value":"", "id":"", "class":"", "events":{}, "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_hidden_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_hidden_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_hidden_markup_widget name=name value=value id=id events=events inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/>
+  <@field_hidden_markup_widget name=name value=value id=id class=class events=events inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs/><#t/>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_hidden_markup_widget name="" value="" id="" events={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
-  <input type="hidden" name="${escapeVal(name, 'html')}"<#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
+<#macro field_hidden_markup_widget name="" value="" id="" class="" events={} inlineLabel=false origArgs={} passArgs={} catchArgs...>
+  <#local classes = compileClassArg(class)>
+  <input type="hidden" name="${escapeVal(name, 'html')}"<#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
+    <#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/><#t/>
 </#macro>
 
 <#-- migrated from @renderDisplayField form widget macro 

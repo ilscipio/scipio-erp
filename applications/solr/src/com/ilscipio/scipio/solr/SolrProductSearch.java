@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,10 +34,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -604,6 +607,45 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnError(e.toString());
         }
         return result;
+    }
+    
+    /**
+     * Function to mark a product as discontinued in solr. Sets attribute "salesDiscontinuationDate" to current date.
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> setProductToSalesDiscontinued(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String productId = (String) context.get("productId");
+        if (UtilValidate.isEmpty(productId)) {
+            return ServiceUtil.returnError("Empty productId given");
+        }
+        try {
+            GenericValue product = delegator.findOne("Product", false, "productId", productId);
+            if (UtilValidate.isEmpty(product)) {
+                ServiceUtil.returnError("Could not find product with given id:" + productId);
+            }
+            product.set("salesDiscontinuationDate", new Timestamp(System.currentTimeMillis()));
+            product.set("comments", "Product discontinued (manually disabled)");
+            product.store();
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("productId", productId);
+            try {
+                dispatcher.runSync("updateSolrWithProduct", params);
+            }
+            catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                ServiceUtil.returnError("Error reindexing product to Solr:" + e.getMessage());
+            }
+        }
+        catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            ServiceUtil.returnError("Error while disabling product:" + e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
     }
     
     private static Map<String, Object> copySolrQueryExtraOutParams(Map<String, Object> src, Map<String, Object> dest) {

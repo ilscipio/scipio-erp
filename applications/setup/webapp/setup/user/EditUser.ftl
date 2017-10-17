@@ -102,8 +102,18 @@ under the License.
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     
+    <@field type="select" name="roleTypeId" id="roleTypeId" label=uiLabelMap.PartyRoleType>
+        <option value="" selected="selected">--</option>
+        <#list userPartyRoles as userPartyRole>
+            <#assign selected = (userParty?? && rawString(userParty.roleTypeId) == rawString(userPartyRole.roleTypeId!))>
+            <option value="${userPartyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${userPartyRole.description}</option>
+        </#list>
+    </@field>
+    
     <#if userParty??>
         <@field type="hidden" name="userPartyId" value=(userParty.partyId!)/>
+    <#else>
+        <@field type="input" name="userPartyId" value=(params.userPartyId!) label=uiLabelMap.PartyPartyId placeholder="User"/>
     </#if>	
     	
     <#assign fieldsRequired = true>
@@ -137,30 +147,34 @@ under the License.
     <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(userPerson.firstName!) label=uiLabelMap.PartyFirstName required=true />
     <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(userPerson.lastName!) label=uiLabelMap.PartyLastName required=true />
     
-	<@fields args={"type":"default", "ignoreParentField":true}>
-        <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
-              ctxVars={
-                "pafFieldNamePrefix":"USER_",
-                "pafFieldIdPrefix":"EditUser_",
-                "pafUseScripts":true,
-                "pafFallbacks":({"countryGeoId" : (userPostalAddress["countryGeoId"])!}),
-                "postalAddressData": userPostalAddress,                    
-                "pafFieldNameMap": {
-                  "stateProvinceGeoId": "STATE",
-                  "countryGeoId": "COUNTRY",
-                  "address1": "ADDRESS1",
-                  "address2": "ADDRESS2",
-                  "city": "CITY",
-                  "postalCode": "POSTAL_CODE"
-                },
-                "pafUseToAttnName":false,
-                "pafMarkRequired":fieldsRequired
-              }/>
-        <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>        
-        <#if userPostalAddress?has_content>
-            <@field type="hidden" name="USER_POSTAL_ADDRESS_CONTACT_MECH_ID" value=(userPostalAddress.contactMechId!)/>
-        </#if>
-    </@fields>
+    <@field type="generic" label=uiLabelMap.PartyGeneralAddress labelDetail=fieldLabelDetail>
+        <div id="setupUser-editMailShipAddr-area">
+        	<@fields args={"type":"default", "ignoreParentField":true}>
+                <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
+                      ctxVars={
+                        "pafFieldNamePrefix":"USER_",
+                        "pafFieldIdPrefix":"EditUser_",
+                        "pafUseScripts":true,
+                        "pafFallbacks":({"countryGeoId" : (userPostalAddress["countryGeoId"])!}),
+                        "postalAddressData": userPostalAddress,                    
+                        "pafFieldNameMap": {
+                          "stateProvinceGeoId": "STATE",
+                          "countryGeoId": "COUNTRY",
+                          "address1": "ADDRESS1",
+                          "address2": "ADDRESS2",
+                          "city": "CITY",
+                          "postalCode": "POSTAL_CODE"
+                        },
+                        "pafUseToAttnName":false,
+                        "pafMarkRequired":fieldsRequired
+                      }/>
+                <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>        
+                <#if userPostalAddress?has_content>
+                    <@field type="hidden" name="USER_POSTAL_ADDRESS_CONTACT_MECH_ID" value=(userPostalAddress.contactMechId!)/>
+                </#if>
+            </@fields>
+        </div>
+    </@field>
 	
 	<#if userWorkNumber?has_content>
         <@field type="hidden" name="USER_WORK_NUMBER_CONTACT_MECH_ID" value=(userWorkNumber.contactMechId!)/>

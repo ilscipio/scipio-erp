@@ -1,20 +1,24 @@
 
 <#-- DEV NOTE: KEEP SETUP-SPECIFIC CONFIG OUT OF THIS FILE
-    SO IT CAN BE FACTORED OUT LATER -->
+    SO IT CAN BE FACTORED OUT LATER (TODO) -->
 
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
 </#if>
 
+<#-- FIXME: private vs public methods are kind of arbitrary for now until code settles -->
 <@script>
-    function ScpCatalogTreeHandler(data) {
-        var sctHandler = this;
+    function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
+        var scth = this; // capture for private methods and js kludges
 
-        this.treeId = data.treeId;
-        this.productStoreId = data.productStoreId;
-        this.allActionProps = data.actionProps || {};
-        var labels = data.labels || {}; 
-        
+        scth.fadeOptions = data.fadeOptions || {};
+        scth.treeId = data.treeId;
+        scth.productStoreId = data.productStoreId;
+        scth.allActionProps = data.actionProps || {};
+        scth.emptyMenuMarkup = data.emptyMenuMarkup;
+        scth.hideShowFormIds = data.hideShowFormIds;
+        scth.labels = data.labels || {}; 
+
         <#-- 
             Helpers
         -->
@@ -24,7 +28,7 @@
         };
         
         var reportError = function(msg) {
-            alert(labels.error + ": " + msg);
+            alert(scth.labels.error + ": " + msg);
         };
         var reportInternalError = function(msg) {
             alert("Internal error: " + msg);
@@ -39,13 +43,25 @@
         var isNonEmptyObj = function(obj) {
             return (jQuery.type(obj) === "object") && !jQuery.isEmptyObject(obj);
         };
+        var isSpecParamVal = function(val) {
+            // SPECIAL: we may store sub-objects in the params map to pass around; this detects them
+            return isObj(val);
+        };
 
         var appendLinkParams = function(url, params) {
             if (url) {
                 if (isNonEmptyObj(params)) {
-                    // FIXME?: JS-based param append not guaranteed to work all cases
-                    // FIXME?: should try to replace existing params of same name for easier usage
-                    url = url + ((url.indexOf('?') >= 0) ? '&' : '?') + $.param(params);
+                    var effParams = {};
+                    jQuery.each(params, function(k, v) {
+                        if (!isSpecParamVal(v)) {
+                            effParams[k] = v;
+                        }
+                    });
+                    if (isNonEmptyObj(effParams)) {
+                        // FIXME?: JS-based param append not guaranteed to work all cases
+                        // FIXME?: should try to replace existing params of same name for easier usage
+                        url = url + ((url.indexOf('?') >= 0) ? '&' : '?') + $.param(effParams);
+                    }
                 }
             }
             return url;
@@ -61,6 +77,31 @@
             }
         };
 
+        var getJsTree = function() {
+            var jsTree = scth.jsTree;
+            if (!jsTree) {
+                jsTree = jQuery('#'+scth.treeId).jstree(true); // true = get without creating
+                scth.jsTree = jsTree
+            }
+            return jsTree;
+        };
+        this.getJsTree = function() { // public
+            return getJsTree();
+        };
+        var getNodeById = function(id) {
+            return scth.getJsTree().get_node(id);
+        };
+        this.getNodeById = function(id) { // public
+            return getNodeById(id);
+        };
+        var checkGetNodeById = function(nodeOrId) {
+            if (jQuery.type(nodeOrId) === 'string') {
+                return getNodeById(nodeOrId);
+            } else {
+                return nodeOrId;
+            }
+        };
+
         var getNodeOrigId = function($node) {
             if (!$node) return null;
             var id = $node.id;
@@ -69,38 +110,48 @@
             }
             return id;
         };
+        var getNodeObjectId = function($node) {
+            return getNodeOrigId($node);
+        };
         var getParentNode = function($node) {
-            <#-- TODO -->
+            if ($node) {
+                var jsTree = getJsTree();
+                // DEV NOTE: you could do (parentId = $node.parent), but this looks more future-proof
+                var parentId = jsTree.get_parent($node);
+                if (parentId) {
+                    return jsTree.get_node(parentId);
+                }
+            }
             return null;
         };
-        var getParentNodeOrigId = function($node) {
-            <#-- TODO -->
-            return null;
+        var isRootNode = function($node) { // true if the node is the root, above the catalogs
+            return ($node.id === "#"); // FIXME?: jstree.root is not documented, using this for now...
+        }
+        var getTopLevelNode = function($node) {
+            var $parent = getParentNode($node);
+            while($parent && !isRootNode($parent)) {
+                $node = $parent;
+                $parent = getParentNode($node);
+            }
+            return ($parent) ? $node : null; // prevents returning the root node
         };
-        var getTopNode = function($node) {
-            <#-- TODO -->
-            return null;
-        };
-        this.getJsTree = function() {
-            return jQuery('#'+this.treeId).jstree(true);
-        };
-        this.getNodeById = function(id) {
-            return this.getJsTree().get_node(id);
-        };
-        this.getNodeObjectType = function($node) {
+        var getCatalogNodeForNode = function($node) {
+            return getTopLevelNode($node);
+        }
+        var getNodeObjectType = function($node) {
             return $node.data.type; // same names, 1-for-1 mapping
         };
 
-        this.isActionPropsValid = function(objectType, actionName) {
-            var actionGroup = this.allActionProps[objectType];
+        var isActionPropsValid = function(objectType, actionName) {
+            var actionGroup = scth.allActionProps[objectType];
             if (!isNonEmptyObj(actionGroup)) return false;
             var action = actionGroup[actionName];
             if (!isNonEmptyObj(action)) return false;
             
             return action.type === "link" || action.type === "form";
         };
-        this.getActionProps = function($node, objectType, actionName) {
-            var actionGroup = this.allActionProps[objectType];
+        var getActionProps = function($node, objectType, actionName) {
+            var actionGroup = scth.allActionProps[objectType];
             if (!isNonEmptyObj(actionGroup)) return {"type":"none"};
             var action = actionGroup[actionName];
             if (!isNonEmptyObj(action)) return {"type":"none"};
@@ -110,7 +161,7 @@
         };
         
         /* can avoid editing actionProps in-place for now
-        this.setActionPropsParams = function(actionProps, params) {
+        var setActionPropsParams = function(actionProps, params) {
             if (isNonEmptyObj(params)) {
                 var currParams = actionProps.params;
                 if (!isObj(currParams)) currParams = {};
@@ -119,9 +170,9 @@
         };
         */
         
-        this.getResolvedActionPropsParams = function(actionProps, params) {
+        var getResolvedActionPropsParams = function(actionProps, params) {
             var resParams = {};
-            if (isUndefOrNull(params) {
+            if (isUndefOrNull(params)) {
                 params = actionProps.params;
             }
             if (isNonEmptyObj(params)) {
@@ -156,22 +207,99 @@
             return resParams;
         };
         
-        this.populateForm = function(form, params) {
-            if (isObj(params)) {
-                jQuery.each(params, function(k, v) {
-                    var input = jQuery('[name=' + k + ']', form).filter(':input');
-                    if (isUndefOrNull(v)) {
-                        v = '';
-                    }
-                    input.val(v);
+        /**
+         * DOES NOTHING by default - cannot clear like this, 
+         * because destroys important hidden fields.
+         */
+        this.clearFormCommon = function(form, params, actionProps, $node) {
+            //jQuery(':input', form).val('');
+            //jQuery('.ect-displayfield', form).html('');
+            //jQuery('.ect-managefield', form).html('');
+        };
+        
+        this.makeManageLinkForElem = function(manageField, k, v, form, params, actionProps, $node) {
+            if (manageField && manageField.length) {
+                // FIXME: unhardcode markup
+                var markup = jQuery('<a href="javascript:void(0);" class="ect-managefield-link">' + v + '</a>');
+                markup.click(function() {
+                    scth.execManageForNode($node);
                 });
+                manageField.html(markup);
+            }
+        };
+        
+        this.populateFormFieldCommon = function(k, v, form, params, actionProps, $node) {
+            if (isUndefOrNull(v)) {
+                v = '';
+            }
+            var input = jQuery('[name=' + k + ']', form).filter(':input');
+            input.val(v);
+            
+            var dispField = jQuery('.ect-displayfield-for-' + k, form);
+            if (dispField.length) {
+                dispField.html(v);
+            }
+            
+            var manageField = jQuery('.ect-managefield-for-' + k, form);
+            if (manageField.length) {
+                scth.makeManageLinkForElem(manageField, k, v, form, params, actionProps, $node);
+            }
+        };
+        
+        /**
+         * default populate form implementation.
+         * each param entry goes into "[name=xxxx]:input", ".ect-displayfield-for-xxx",
+         * or ".ect-managefield-for-xxx".
+         */
+        this.populateFormCommon = function(form, params, actionProps, $node) {
+            if (isObj(params)) {
+                var fieldHandlers = actionProps.populateFormFields || {};
+                jQuery.each(params, function(k, v) {
+                    if (!isSpecParamVal(v)) {
+                        var execCommon = true;
+                        if (fieldHandlers[k]) {
+                            execCommon = fieldHandlers[k](k, v, form, params, actionProps, $node);
+                            if (execCommon !== false) {
+                                execCommon = true;
+                            }
+                        }
+                        if (execCommon) {
+                            scth.populateFormFieldCommon(k, v, form, params, actionProps, $node);
+                        }
+                    }
+                });
+            }
+        };
+        
+        var populateForm = function(form, params, actionProps, $node) {
+            if (actionProps.clearForm !== false) {
+                var execClearCommon = true; 
+                if (jQuery.type(actionProps.clearForm) === 'function') {
+                    execClearCommon = actionProps.clearForm(form, params, actionProps, $node, scth);
+                    if (execClearCommon !== false) {
+                        execClearCommon = true;
+                    }
+                }
+                if (execClearCommon) {
+                    scth.clearFormCommon(form, params, actionProps, $node);
+                }
+            }
+            var execCommon = true; 
+            if (jQuery.type(actionProps.populateForm) === 'function') {
+                execCommon = actionProps.populateForm(form, params, actionProps, $node, scth);
+                if (execCommon !== false) {
+                    execCommon = true;
+                }
+            } 
+            if (execCommon) {
+                scth.populateFormCommon(form, params, actionProps, $node);
             }
         };
         
         // standard action target implementation (TODO?: callbacks or override into this)
         // NOTE: caller can pass params and call setActionPropsParams instead (convenience)
-        this.execActionTarget = function(actionProps, params) {
-            params = this.getResolvedActionPropsParams(actionProps, params);
+        var execActionTarget = function($node, actionProps, params) {
+            params = getResolvedActionPropsParams(actionProps, params);
             if (actionProps.type == "link") {
                 openLink(actionProps.url, params, actionProps.target);
             } else if (actionProps.type == "form") {
@@ -183,22 +311,24 @@
                     if (form.length) {
                         form = form.first();
                         if (actionProps.mode == "show") {
-                            this.populateForm(form, params);
-                            if (this.hideShowFormIds) {
-                                jQuery.each(this.hideShowFormIds, function(i, e) {
-                                    jQuery('#'+e).fadeOut();
+                            populateForm(form, params, actionProps, $node);
+                            if (scth.hideShowFormIds) {
+                                jQuery.each(scth.hideShowFormIds, function(i, e) {
+                                    jQuery('#'+e).fadeOut(scth.fadeOptions);
                                 });
                             }
-                            jQuery('#'+actionProps.id).fadeOut();
-                        } else (actionProps.mode == "submit") {
+                            jQuery('#'+actionProps.id).fadeIn(scth.fadeOptions);
+                        } else if (actionProps.mode == "submit") {
                             var doExec = true;
                             if (actionProps.confirmMsg) {
                                 doExec = askConfirm(actionProps.confirmMsg);
                             }
                             if (doExec) {
-                                this.populateForm(form, params);
+                                populateForm(form, params, actionProps, $node);
                                 form.submit();
                             }
+                        } else {
+                            reportInternalError("invalid form action mode: " + actionProps.mode);
                         }
                     } else {
                         reportInternalError("could not find form for container id: " + actionProps.id);
@@ -206,6 +336,8 @@
                 } else {
                     reportInternalError("bad form id: " + actionProps.id);
                 }
+            } else if (actionProps.type && actionProps.type != "none") {
+                reportInternalError("invalid action type: " + actionProps.type);
             }
         };
 
@@ -214,14 +346,25 @@
         -->
         
         this.execEditForNode = function($node) {
-            var objectType = this.getNodeObjectType($node);
-            var actionProps = this.getActionProps($node, objectType, "manage");
-            var id = getNodeOrigId($node);
+            $node = checkGetNodeById($node);
+            var objectType = getNodeObjectType($node);
+            
+            /* DEV NOTE: not doing this for now, don't like the result, confusing
+            // SPECIAL: for product, we'll make edit action trigger edit on parent category instead
+            // TODO: support real product edit in future
+            while (objectType == "product") {
+                $node = getParentNode($node);
+                objectType = getNodeObjectType($node);
+            }
+            */
+            
+            var actionProps = getActionProps($node, objectType, "edit");
+            var objectId = getNodeObjectId($node);
             var data = $node.data;
             
             var params = {};
             if (objectType == "catalog") {
-                params.prodCatalogId = id;
+                params.prodCatalogId = objectId;
                 params.productStoreId = this.productStoreId;
                 // merge all, shouldn't be any conflicts...
                 if (data.productStoreCatalogEntity) {
@@ -231,8 +374,8 @@
                     jQuery.extend(params, data.prodCatalogEntity);
                 }
             } else if (objectType == "category") {
-                params.prodCatalogId = getNodeOrigId(getTopNode($node));
-                params.productCategoryId = id;
+                params.prodCatalogId = getNodeObjectId(getCatalogNodeForNode($node));
+                params.productCategoryId = objectId;
                 params.productStoreId = this.productStoreId;
                 if (data.productCategoryRollupEntity) {
                     jQuery.extend(params, data.productCategoryRollupEntity);
@@ -243,127 +386,153 @@
                 if (data.productCategoryEntity) {
                     jQuery.extend(params, data.productCategoryEntity);
                 }
+            } else {
+                // fail cleanly for now
+                //reportInternalError("unsupported node object type for edit action: " + objectType);
             }
             
-            this.execActionTarget(actionProps, params);
+            execActionTarget($node, actionProps, params);
         };
         
         this.execRemoveForNode = function($node) {
-            var objectType = this.getNodeObjectType($node);
-            var actionProps = this.getActionProps($node, objectType, "remove");
-            var id = getNodeOrigId($node);
+            $node = checkGetNodeById($node);
+            var objectType = getNodeObjectType($node);
+            var actionProps = getActionProps($node, objectType, "remove");
+            var objectId = getNodeObjectId($node);
             
             var params = {};
             if (objectType == "catalog") {
                 params.productStoreId = this.productStoreId;
-                params.prodCatalogId = id;
+                params.prodCatalogId = objectId;
             } else if (objectType == "category") {
                 params.productStoreId = this.productStoreId;
-                params.productCategoryId = id;
-                var parentNode = this.getParentNode($node);
-                var parentType = this.getNodeObjectType(parentNode);
+                params.productCategoryId = objectId;
+                var parentNode = getParentNode($node);
+                var parentType = getNodeObjectType(parentNode);
                 if (parentType == "catalog") {
-                    params.prodCatalogId = getNodeOrigId(parentNode);
+                    params.prodCatalogId = getNodeObjectId(parentNode);
                 } else if (parentType == "category") {
-                    params.parentProductCategoryId = getNodeOrigId(parentNode);
+                    params.parentProductCategoryId = getNodeObjectId(parentNode);
                 } else {
-                    reportInternalError("category node's parent is not catalog or category: " + id);
+                    reportInternalError("category node's parent is not catalog or category: " + objectId);
                 }
+            } else {
+                // fail cleanly for now
+                //reportInternalError("unsupported node object type for remove action: " + objectType);
             }
             
-            this.execActionTarget(actionProps, params);
+            execActionTarget($node, actionProps, params);
         };
         
         this.execNewCategoryForNode = function($node) {
-            var objectType = this.getNodeObjectType($node);
-            var actionProps = this.getActionProps($node, objectType, "newcategory");
-            var id = getNodeOrigId($node);
+            $node = checkGetNodeById($node);
+            var objectType = getNodeObjectType($node);
+            var actionProps = getActionProps($node, objectType, "newcategory");
+            var objectId = getNodeObjectId($node);
             
             var params = {};
             if (objectType == "catalog") {
                 params.productStoreId = this.productStoreId;
-                params.prodCatalogId = id;
+                params.prodCatalogId = objectId;
             } else if (objectType == "category") {
                 params.productStoreId = this.productStoreId;
-                params.productCategoryId = id;
-                var parentNode = this.getParentNode($node);
-                var parentType = this.getNodeObjectType(parentNode);
-                if (parentType == "catalog") {
-                    params.prodCatalogId = getNodeOrigId(parentNode);
-                } else if (parentType == "category") {
-                    params.parentProductCategoryId = getNodeOrigId(parentNode);
+                if (objectType == "catalog") {
+                    params.prodCatalogId = objectId;
+                } else if (objectType == "category") {
+                    params.parentProductCategoryId = objectId;
                 } else {
-                    reportInternalError("category node's parent is not catalog or category: " + id);
+                    reportInternalError("category node's parent is not catalog or category: " + objectId);
                 }
+            } else {
+                // fail cleanly for now
+                //reportInternalError("unsupported node object type for newcategory action: " + objectType);
             }
             
-            this.execActionTarget(actionProps, params);
+            execActionTarget($node, actionProps, params);
         };
         
         this.execManageForNode = function($node) {
-            var objectType = this.getNodeObjectType($node);
-            var actionProps = this.getActionProps($node, objectType, "manage");
-            var id = getNodeOrigId($node);
+            $node = checkGetNodeById($node);
+            var objectType = getNodeObjectType($node);
+            var actionProps = getActionProps($node, objectType, "manage");
+            var objectId = getNodeObjectId($node);
             
             var params = {};
             if (objectType == "catalog") {
-                params.prodCatalogId = id;
+                params.prodCatalogId = objectId;
                 params.productStoreId = this.productStoreId;
             } else if (objectType == "category") {
-                params.productCategoryId = id;
+                params.productCategoryId = objectId;
                 params.productStoreId = this.productStoreId;
             } else if (objectType == "product") {
-                params.productId = id;
+                params.productId = objectId;
                 params.productStoreId = this.productStoreId;
+            } else {
+                // fail cleanly for now
+                //reportInternalError("unsupported node object type for manage action: " + objectType);
             }
             
-            this.execActionTarget(actionProps, params);
+            execActionTarget($node, actionProps, params);
+        };
+        
+        this.execForNode = function(actionType, $node) {
+            if (actionType === "edit") {
+                this.execEditForNode($node);
+            } else if (actionType === "remove") {
+                this.execRemoveForNode($node);
+            } else if (actionType === "newcategory") {
+                this.execNewCategoryForNode($node);
+            } else if (actionType === "manage") {
+                this.execManageForNode($node);
+            } else {
+                reportInternalError("invalid action type requested for execForNode: " + actionType);
+            }
         };
         
         <#-- 
             Menu plugs
         -->
 
-        this.getMenuActionDefs = function($node) {
+        var getMenuActionDefs = function($node) {
             return {
                 edit: {
                     "separator_before": false,
                     "separator_after": false,
-                    "label": labels.edit,
+                    "label": scth.labels.edit,
                     "action": function(obj) { <#-- FIXME?: should get node from obj, not $node? -->
-                        sctHandler.execEditForNode($node);
+                        scth.execEditForNode($node);
                     }
                 },
                 remove: {
                     "separator_before": false,
                     "separator_after": false,
-                    "label": labels.remove,
+                    "label": scth.labels.remove,
                     "action": function(obj) {
-                        sctHandler.execRemoveForNode($node);
+                        scth.execRemoveForNode($node);
                     }
                 },
                 newcategory: {
                     "separator_before": false,
                     "separator_after": false,
-                    "label": labels.newcategory,
+                    "label": scth.labels.newcategory,
                     "action": function(obj) {
-                        sctHandler.execNewCategoryForNode($node);
+                        scth.execNewCategoryForNode($node);
                     }
                 },
                 manage: {
                     "separator_before": true,
                     "separator_after": false,
-                    "label": labels.manage,
+                    "label": scth.labels.manage,
                     "action": function(obj) {
-                        sctHandler.execManageForNode($node);
+                        scth.execManageForNode($node);
                     }
                 }
             };
         };
         
-        this.getMenuDefs = function($node) {
-            var defs = this.getMenuActionDefs($node);
-            var objectType = this.getNodeObjectType($node);
+        var getMenuDefs = function($node) {
+            var defs = getMenuActionDefs($node);
+            var objectType = getNodeObjectType($node);
             
             var menuDefs = {};
             if (objectType == 'catalog') {
@@ -389,7 +558,7 @@
             // filter - allows caller to omit certain menu items
             var resMenuDefs = {};
             jQuery.each(menuDefs, function(k, v) {
-                if (sctHandler.isActionPropsValid(objectType, k) {
+                if (isActionPropsValid(objectType, k)) {
                     resMenuDefs[k] = v;
                 }
             });
@@ -397,16 +566,16 @@
         };
 
         this.dropMenuHandler = function($node) {
-            return this.getMenuDefs($node);
+            return getMenuDefs($node);
         };
         
         this.sideMenuHandler = function($node) {
             var $el = $("#ect-action-menu");
-            var newOptions = this.getMenuDefs($node);
+            var newOptions = getMenuDefs($node);
 
             $el.empty(); // remove old options
             $.each(newOptions, function(key, actionDef) {
-                var newEl = $(sctHandler.emptyMenuMarkup || '<ul></ul>');
+                var newEl = $(scth.emptyMenuMarkup || '<ul></ul>');
                 var menuAnchor = $(newEl).find('a:last-child');
                 menuAnchor.attr("href","javascript:void(0);").text(actionDef.label);
                 menuAnchor.click(actionDef.action);
@@ -415,11 +584,11 @@
         };
     }
     
-    var etcHandler = new ScpCatalogTreeHandler({
+    var ectHandler = new ScpCatalogTreeHandler({
         treeId: "${escapeVal(ectTreeId!, 'js')}",
         productStoreId: "${escapeVal(productStoreId!, 'js')}",
-        actionProps: <@objectAsScript object=(etcActionProps!{}) lang='js'/>,
-        hideShowFormIds: <@objectAsScript object=(etcAllHideShowFormIds![]) lang='js'/>,
+        actionProps: <@objectAsScript object=(ectActionProps!{}) lang='js'/>,
+        hideShowFormIds: <@objectAsScript object=(ectAllHideShowFormIds![]) lang='js'/>,
         labels: {
             error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
             edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",
@@ -427,19 +596,19 @@
             newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
             manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"
         },
-        emptyMenuMarkup: '<@compress_single_line><@menuitem type="link" href="" text=""/></@compress_single_line>';
+        emptyMenuMarkup: '<@compress_single_line><@menuitem type="link" href="" text=""/></@compress_single_line>'
     });
     
 </@script>
 <#assign treeEvents = {
-    'select_node.jstree': 'etcHandler.sideMenuHandler(data.node);'
-    <#--'activate_node.jstree': 'etcHandler.execManageForNode(data.node);',-->
+    'select_node.jstree': 'ectHandler.sideMenuHandler(data.node);',
+    'activate_node.jstree': 'ectHandler.execEditForNode(data.node);' <#-- TODO: REVIEW: is this too destructive? -->
     <#-- no longer supported by jstree
-    'dblclick.jstree': 'etcHandler.execManageForNode(data.node);'-->
+    'dblclick.jstree': 'ectHandler.execManageForNode(data.node);'-->
 }/>
 
 <#assign contextMenuPluginSettings = {
-    "items": wrapRawScript("function(node) { return etcHandler.dropMenuHandler(node); }")
+    "items": wrapRawScript("function(node) { return ectHandler.dropMenuHandler(node); }")
 }/>
 <#assign treePlugins = [
     {"name":"contextmenu", "settings":contextMenuPluginSettings},

@@ -1,6 +1,5 @@
 /**
- * SCIPIO: DEV NOTE: KEEP SETUP-SPECIFIC CODE OUT OF THIS FILE,
- * TO BE REFACTORED LATER.
+ * SCIPIO: Edit catalog tree common data prep, non-specific.
  */
 
 import org.ofbiz.base.util.*;
@@ -11,6 +10,9 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeCore;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType;
+
+// DEV NOTE: KEEP SETUP-SPECIFIC CODE OUT OF THIS FILE,
+// TO BE REFACTORED LATER (TODO)
 
 final module = "EditCatalogTreeCommon.groovy";
 
@@ -69,12 +71,12 @@ for (productStoreCatalog in productStoreCatalogs) {
         
         result = dispatcher.runSync("buildCatalogTree", [
             "useCategoryCache": false,
-            "useProductCache": context.etcUseProductCache != null ? context.etcUseProductCache : true,
+            "useProductCache": context.ectUseProductCache != null ? context.ectUseProductCache : true,
             "prodCatalogId" : prodCatalog.prodCatalogId,
             "state": state,
             "categoryStates": categoryStates,
             "includeCategoryData": true,
-            "includeProductData": context.etcIncludeProductData != null ? context.etcIncludeProductData : false,
+            "includeProductData": context.ectIncludeProductData != null ? context.ectIncludeProductData : false,
             "maxProductsPerCat": ectMaxProductsPerCat,
             "includeEmptyTop": true,
             "productStoreCatalog": productStoreCatalog

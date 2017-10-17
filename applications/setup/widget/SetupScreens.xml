@@ -612,10 +612,21 @@
                     context.target = target;
                     context.submitFormId = submitFormId;
                 ]]></script>
+                <set field="submitFormIdVar" value="setupSubmitFormId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template><![CDATA[
+                                  <@script>
+                                    <#-- the form to save is dynamically chosen -->
+                                    var ${submitFormIdVar} = "${submitFormId!}";
+                                  </@script>
+                                ]]></html-template>
+                            </html>
+                        </platform-specific>
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>

@@ -736,4 +736,10 @@
         <log level="always" message="faxNumber changed =================> ${faxChanged}" />
     </simple-method>
     
+    <simple-method method-name="createProductCategoryAndAssoc">
+    </simple-method>
+    <simple-method method-name="updateProductCategoryAndAssoc">
+    </simple-method>
+    <simple-method method-name="deleteProductCategoryAndAssoc">
+    </simple-method>
 </simple-methods>

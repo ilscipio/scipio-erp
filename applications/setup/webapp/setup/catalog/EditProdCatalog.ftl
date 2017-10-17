@@ -1,5 +1,12 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
+<@script>
+    <#-- DEV NOTE: I wanted to avoid having to write this manually but turns out can't get around it -->
+    function populateSetupCatalogForm(form, params, actionProps, node, scth) {
+        // TODO
+    }
+</@script>
+
 <#assign defaultParams = {
     "useQuickAdd": "Y",
     "viewAllowPermReqd": "N",
@@ -10,7 +17,7 @@
     "record":prodCatalogAndStoreAssoc!true,
     "defaults":defaultParams
 })>
-<#macro newEditCatalogForm id isCreate target params fixedParams>
+<#macro setupCatalogForm id isCreate target params fixedParams>
     <@form id=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
         <@field type="hidden" name="isCreateCatalog" value=isCreate?string("Y", "N")/>
@@ -18,7 +25,7 @@
         <#--<field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId" required-field="true"><text default-value="${partyId}"/>-->
       <#if !isCreate>
         <@field type="display" label=uiLabelMap.FormFieldTitle_prodCatalogId><#rt/>
-            <@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${rawString(params.prodCatalogId!)}" text=params.prodCatalogId!/><#t/>
+            <span class="ect-managefield ect-managefield-for-prodCatalogId"><@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${rawString(params.prodCatalogId!)}" text=params.prodCatalogId!/></span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!)/>
       <#else>
@@ -54,7 +61,7 @@
       "defaults":defaultParams
     })>
   </#if>
-  <@newEditCatalogForm id="NewCatalog" isCreate=true target="setupCreateCatalog" 
+  <@setupCatalogForm id="NewCatalog" isCreate=true target="setupCreateCatalog" 
     params=paramMaps.values fixedParams=paramMaps.fixedValues />
 </@section>
 <@section title=uiLabelMap.ProductEditCatalog containerId="ect-editcatalog" containerClass="+ect-editcatalog ect-recordaction ect-editrecord" 
@@ -67,7 +74,7 @@
       "defaults":defaultParams
     })>
   </#if>
-  <@newEditCatalogForm id="EditCatalog" isCreate=false target="setupUpdateCatalog" 
+  <@setupCatalogForm id="EditCatalog" isCreate=false target="setupUpdateCatalog" 
     params=paramMaps.values fixedParams=paramMaps.fixedValues />
 </@section>
 

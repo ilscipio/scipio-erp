@@ -205,7 +205,7 @@
    <!-- SCIPIO: doesn't apply to products: <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>-->
    
    <!-- SCIPIO: Handy list of all the locales for the text_* types:
-     en,ar,bg,ca,cjk,ckb,cz,da,de,el,es,eu,fa,fi,fr,ga,gl,hi,hu,hy,id,it,ja,lv,nl,no,pt,ro,ru,sv,th,tr
+     en,ar,bg,ca,cjk,ckb,cz,da,de,el,es,eu,fa,fi,fr,ga,gl,hi,hu,hy,id,it,ja,ko,lv,nl,no,pt,ro,ru,sv,th,tr,vi,zh
    -->
 
    <!-- catchall field, containing all other searchable text fields (implemented
@@ -249,6 +249,7 @@
    <field name="text_i18n_id" type="text_id" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_it" type="text_it" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_ja" type="text_ja" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_ko" type="text_ko" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_lv" type="text_lv" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_nl" type="text_nl" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_no" type="text_no" indexed="true" stored="false" multiValued="true"/>
@@ -258,7 +259,9 @@
    <field name="text_i18n_sv" type="text_sv" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_th" type="text_th" indexed="true" stored="false" multiValued="true"/>
    <field name="text_i18n_tr" type="text_tr" indexed="true" stored="false" multiValued="true"/>
-
+   <field name="text_i18n_vi" type="text_vi" indexed="true" stored="false" multiValued="true"/>
+   <field name="text_i18n_zh" type="text_zh" indexed="true" stored="false" multiValued="true"/>
+   
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
    <field name="text_rev" type="text_general_rev" indexed="true" stored="false" multiValued="true"/>
@@ -309,6 +312,7 @@
    <field name="spell_lang_id" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_it" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_ja" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_ko" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_lv" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_nl" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_no" type="text_general" indexed="true" stored="false" multiValued="true"/>
@@ -318,6 +322,8 @@
    <field name="spell_lang_sv" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_th" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_lang_tr" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_vi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_lang_zh" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
    <!-- dual-language spell -->
    <field name="spell_dlang_general" type="text_general" indexed="true" stored="false" multiValued="true"/>
@@ -344,6 +350,7 @@
    <field name="spell_dlang_id" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_it" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_ja" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_ko" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_lv" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_nl" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_no" type="text_general" indexed="true" stored="false" multiValued="true"/>
@@ -353,6 +360,8 @@
    <field name="spell_dlang_sv" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_th" type="text_general" indexed="true" stored="false" multiValued="true"/>
    <field name="spell_dlang_tr" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_vi" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="spell_dlang_zh" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
    <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names. 
@@ -386,6 +395,7 @@
    <dynamicField name="*_i18n_id" type="text_id" indexed="true" stored="true" />
    <dynamicField name="*_i18n_it" type="text_it" indexed="true" stored="true" />
    <dynamicField name="*_i18n_ja" type="text_ja" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_ko" type="text_ko" indexed="true" stored="true" />
    <dynamicField name="*_i18n_lv" type="text_lv" indexed="true" stored="true" />
    <dynamicField name="*_i18n_nl" type="text_nl" indexed="true" stored="true" />
    <dynamicField name="*_i18n_no" type="text_no" indexed="true" stored="true" />
@@ -395,6 +405,8 @@
    <dynamicField name="*_i18n_sv" type="text_sv" indexed="true" stored="true" />
    <dynamicField name="*_i18n_th" type="text_th" indexed="true" stored="true" />
    <dynamicField name="*_i18n_tr" type="text_tr" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_vi" type="text_vi" indexed="true" stored="true" />
+   <dynamicField name="*_i18n_zh" type="text_zh" indexed="true" stored="true" />
    
    <!-- 2017-08-24: allows alphanumeric sort on localized titles, together with copyField below -->
    <dynamicField name="alphaTitleSort_*" type="alphaOnlySort" indexed="true" stored="false"/>
@@ -500,6 +512,7 @@
    <copyField source="*_i18n_id" dest="text"/>
    <copyField source="*_i18n_it" dest="text"/>
    <copyField source="*_i18n_ja" dest="text"/>
+   <copyField source="*_i18n_ko" dest="text"/>
    <copyField source="*_i18n_lv" dest="text"/>
    <copyField source="*_i18n_nl" dest="text"/>
    <copyField source="*_i18n_no" dest="text"/>
@@ -509,6 +522,8 @@
    <copyField source="*_i18n_sv" dest="text"/>
    <copyField source="*_i18n_th" dest="text"/>
    <copyField source="*_i18n_tr" dest="text"/>
+   <copyField source="*_i18n_vi" dest="text"/>
+   <copyField source="*_i18n_zh" dest="text"/>
    <!--<copyField source="attributes" dest="text"/> REMOVED: 2017-09-14: unclear on this; currently we don't populate it -->
 
    <!-- common text: populating utility stuff for now -->
@@ -540,6 +555,7 @@
    <copyField source="*_i18n_id" dest="text_i18n_id"/>
    <copyField source="*_i18n_it" dest="text_i18n_it"/>
    <copyField source="*_i18n_ja" dest="text_i18n_ja"/>
+   <copyField source="*_i18n_ko" dest="text_i18n_ko"/>
    <copyField source="*_i18n_lv" dest="text_i18n_lv"/>
    <copyField source="*_i18n_nl" dest="text_i18n_nl"/>
    <copyField source="*_i18n_no" dest="text_i18n_no"/>
@@ -549,6 +565,8 @@
    <copyField source="*_i18n_sv" dest="text_i18n_sv"/>
    <copyField source="*_i18n_th" dest="text_i18n_th"/>
    <copyField source="*_i18n_tr" dest="text_i18n_tr"/>
+   <copyField source="*_i18n_vi" dest="text_i18n_vi"/>
+   <copyField source="*_i18n_zh" dest="text_i18n_zh"/>
    
    <!-- default spell (not really bothering with this) -->
    <!--<copyField source="internalName" dest="spell"/> may not want this public -->
@@ -582,6 +600,7 @@
    <copyField source="productId" dest="spell_lang_id"/>
    <copyField source="productId" dest="spell_lang_it"/>
    <copyField source="productId" dest="spell_lang_ja"/>
+   <copyField source="productId" dest="spell_lang_ko"/>
    <copyField source="productId" dest="spell_lang_lv"/>
    <copyField source="productId" dest="spell_lang_nl"/>
    <copyField source="productId" dest="spell_lang_no"/>
@@ -591,6 +610,8 @@
    <copyField source="productId" dest="spell_lang_sv"/>
    <copyField source="productId" dest="spell_lang_th"/>
    <copyField source="productId" dest="spell_lang_tr"/>
+   <copyField source="productId" dest="spell_lang_vi"/>
+   <copyField source="productId" dest="spell_lang_zh"/>
    <copyField source="keywords" dest="spell_lang_general"/>
    <copyField source="keywords" dest="spell_lang_en"/>
    <copyField source="keywords" dest="spell_lang_ar"/>
@@ -615,6 +636,7 @@
    <copyField source="keywords" dest="spell_lang_id"/>
    <copyField source="keywords" dest="spell_lang_it"/>
    <copyField source="keywords" dest="spell_lang_ja"/>
+   <copyField source="keywords" dest="spell_lang_ko"/>
    <copyField source="keywords" dest="spell_lang_lv"/>
    <copyField source="keywords" dest="spell_lang_nl"/>
    <copyField source="keywords" dest="spell_lang_no"/>
@@ -624,6 +646,8 @@
    <copyField source="keywords" dest="spell_lang_sv"/>
    <copyField source="keywords" dest="spell_lang_th"/>
    <copyField source="keywords" dest="spell_lang_tr"/>
+   <copyField source="keywords" dest="spell_lang_vi"/>
+   <copyField source="keywords" dest="spell_lang_zh"/>
    <copyField source="*_i18n_general" dest="spell_lang_general"/>
    <copyField source="*_i18n_en" dest="spell_lang_en"/>
    <copyField source="*_i18n_ar" dest="spell_lang_ar"/>
@@ -648,6 +672,7 @@
    <copyField source="*_i18n_id" dest="spell_lang_id"/>
    <copyField source="*_i18n_it" dest="spell_lang_it"/>
    <copyField source="*_i18n_ja" dest="spell_lang_ja"/>
+   <copyField source="*_i18n_ko" dest="spell_lang_ko"/>
    <copyField source="*_i18n_lv" dest="spell_lang_lv"/>
    <copyField source="*_i18n_nl" dest="spell_lang_nl"/>
    <copyField source="*_i18n_no" dest="spell_lang_no"/>
@@ -657,6 +682,8 @@
    <copyField source="*_i18n_sv" dest="spell_lang_sv"/>
    <copyField source="*_i18n_th" dest="spell_lang_th"/>
    <copyField source="*_i18n_tr" dest="spell_lang_tr"/>
+   <copyField source="*_i18n_vi" dest="spell_lang_vi"/>
+   <copyField source="*_i18n_zh" dest="spell_lang_zh"/>
    
    <!-- dual-language spell -->
    <copyField source="productId" dest="spell_dlang_general"/>
@@ -683,6 +710,7 @@
    <copyField source="productId" dest="spell_dlang_id"/>
    <copyField source="productId" dest="spell_dlang_it"/>
    <copyField source="productId" dest="spell_dlang_ja"/>
+   <copyField source="productId" dest="spell_dlang_ko"/>
    <copyField source="productId" dest="spell_dlang_lv"/>
    <copyField source="productId" dest="spell_dlang_nl"/>
    <copyField source="productId" dest="spell_dlang_no"/>
@@ -692,6 +720,8 @@
    <copyField source="productId" dest="spell_dlang_sv"/>
    <copyField source="productId" dest="spell_dlang_th"/>
    <copyField source="productId" dest="spell_dlang_tr"/>
+   <copyField source="productId" dest="spell_dlang_vi"/>
+   <copyField source="productId" dest="spell_dlang_zh"/>
    <copyField source="keywords" dest="spell_dlang_general"/>
    <copyField source="keywords" dest="spell_dlang_en"/>
    <copyField source="keywords" dest="spell_dlang_ar"/>
@@ -716,6 +746,7 @@
    <copyField source="keywords" dest="spell_dlang_id"/>
    <copyField source="keywords" dest="spell_dlang_it"/>
    <copyField source="keywords" dest="spell_dlang_ja"/>
+   <copyField source="keywords" dest="spell_dlang_ko"/>
    <copyField source="keywords" dest="spell_dlang_lv"/>
    <copyField source="keywords" dest="spell_dlang_nl"/>
    <copyField source="keywords" dest="spell_dlang_no"/>
@@ -725,6 +756,8 @@
    <copyField source="keywords" dest="spell_dlang_sv"/>
    <copyField source="keywords" dest="spell_dlang_th"/>
    <copyField source="keywords" dest="spell_dlang_tr"/>
+   <copyField source="keywords" dest="spell_dlang_vi"/>
+   <copyField source="keywords" dest="spell_dlang_zh"/>
    <copyField source="*_i18n_general" dest="spell_dlang_general"/>
    <copyField source="*_i18n_general" dest="spell_dlang_en"/>
    <copyField source="*_i18n_general" dest="spell_dlang_ar"/>
@@ -749,6 +782,7 @@
    <copyField source="*_i18n_general" dest="spell_dlang_id"/>
    <copyField source="*_i18n_general" dest="spell_dlang_it"/>
    <copyField source="*_i18n_general" dest="spell_dlang_ja"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_ko"/>
    <copyField source="*_i18n_general" dest="spell_dlang_lv"/>
    <copyField source="*_i18n_general" dest="spell_dlang_nl"/>
    <copyField source="*_i18n_general" dest="spell_dlang_no"/>
@@ -758,6 +792,8 @@
    <copyField source="*_i18n_general" dest="spell_dlang_sv"/>
    <copyField source="*_i18n_general" dest="spell_dlang_th"/>
    <copyField source="*_i18n_general" dest="spell_dlang_tr"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_vi"/>
+   <copyField source="*_i18n_general" dest="spell_dlang_zh"/>
    <!--<copyField source="*_i18n_general" dest="spell_dlang_general"/> covered above -->
    <copyField source="*_i18n_en" dest="spell_dlang_en"/>
    <copyField source="*_i18n_ar" dest="spell_dlang_ar"/>
@@ -782,6 +818,7 @@
    <copyField source="*_i18n_id" dest="spell_dlang_id"/>
    <copyField source="*_i18n_it" dest="spell_dlang_it"/>
    <copyField source="*_i18n_ja" dest="spell_dlang_ja"/>
+   <copyField source="*_i18n_ko" dest="spell_dlang_ko"/>
    <copyField source="*_i18n_lv" dest="spell_dlang_lv"/>
    <copyField source="*_i18n_nl" dest="spell_dlang_nl"/>
    <copyField source="*_i18n_no" dest="spell_dlang_no"/>
@@ -791,6 +828,8 @@
    <copyField source="*_i18n_sv" dest="spell_dlang_sv"/>
    <copyField source="*_i18n_th" dest="spell_dlang_th"/>
    <copyField source="*_i18n_tr" dest="spell_dlang_tr"/>
+   <copyField source="*_i18n_vi" dest="spell_dlang_vi"/>
+   <copyField source="*_i18n_zh" dest="spell_dlang_zh"/>
    
    <!-- sort fields -->
    <copyField source="internalName" dest="alphaNameSort"/>
@@ -1621,6 +1660,17 @@
       </analyzer>
     </fieldType>
     
+    <!-- SCIPIO: Korean - TODO: REVIEW -->
+    <fieldType name="text_ko" class="solr.TextField" positionIncrementGap="100">
+      <analyzer> 
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.CJKWidthFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ko.txt" />
+        <filter class="solr.CJKBigramFilterFactory"/>
+      </analyzer>
+    </fieldType>
+    
     <!-- Latvian -->
     <fieldType name="text_lv" class="solr.TextField" positionIncrementGap="100">
       <analyzer> 
@@ -1717,6 +1767,26 @@
         <filter class="solr.TurkishLowerCaseFilterFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="false" words="lang/stopwords_tr.txt" />
         <filter class="solr.SnowballPorterFilterFactory" language="Turkish"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- SCIPIO: Vietnamese - TODO: REVIEW -->
+    <fieldType name="text_vi" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_vi.txt" />
+      </analyzer>
+    </fieldType>
+    
+    <!-- SCIPIO: Chinese - TODO: REVIEW -->
+    <fieldType name="text_zh" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.CJKWidthFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_zh.txt" />
+        <filter class="solr.CJKBigramFilterFactory"/>
       </analyzer>
     </fieldType>
 

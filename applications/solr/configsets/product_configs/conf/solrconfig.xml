@@ -1245,7 +1245,7 @@
   </#assign>
 ${content?html}<#rt/>
 </#macro>
-<#list "general,en,ar,bg,ca,cjk,ckb,cz,da,de,el,es,eu,fa,fi,fr,ga,gl,hi,hu,hy,id,it,ja,lv,nl,no,pt,ro,ru,sv,th,tr"?split(",") as lang>
+<#list "general,en,ar,bg,ca,cjk,ckb,cz,da,de,el,es,eu,fa,fi,fr,ga,gl,hi,hu,hy,id,it,ja,ko,lv,nl,no,pt,ro,ru,sv,th,tr,vi,zh"?split(",") as lang>
 <@spellcheckerContent type="lang" lang=lang/>
 <@spellcheckerContent type="dlang" lang=lang/>
 </#list>
@@ -1829,6 +1829,30 @@ ${content?html}<#rt/>
       <float name="maxQueryFrequency">0.01</float>
     </lst>
     <lst name="spellchecker">
+      <str name="name">default_lang_ko</str>
+      <str name="field">spell_lang_ko</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">default_dlang_ko</str>
+      <str name="field">spell_dlang_ko</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
       <str name="name">default_lang_lv</str>
       <str name="field">spell_lang_lv</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
@@ -2035,6 +2059,54 @@ ${content?html}<#rt/>
     <lst name="spellchecker">
       <str name="name">default_dlang_tr</str>
       <str name="field">spell_dlang_tr</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">default_lang_vi</str>
+      <str name="field">spell_lang_vi</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">default_dlang_vi</str>
+      <str name="field">spell_dlang_vi</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">default_lang_zh</str>
+      <str name="field">spell_lang_zh</str>
+      <str name="classname">solr.DirectSolrSpellChecker</str>
+      <str name="distanceMeasure">internal</str>
+      <float name="accuracy">0.5</float>
+      <int name="maxEdits">2</int>
+      <int name="minPrefix">1</int>
+      <int name="maxInspections">5</int>
+      <int name="minQueryLength">4</int>
+      <float name="maxQueryFrequency">0.01</float>
+    </lst>
+    <lst name="spellchecker">
+      <str name="name">default_dlang_zh</str>
+      <str name="field">spell_dlang_zh</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
       <str name="distanceMeasure">internal</str>
       <float name="accuracy">0.5</float>

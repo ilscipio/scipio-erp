@@ -32062,4 +32062,8 @@
         <value xml:lang="nl">Relevantie</value>
         <value xml:lang="ro">Relevare</value>
     </property>
+    <property key="ProductMaxProductsPerCategory">
+        <value xml:lang="en">Max products per category</value>
+        <value xml:lang="de">Max Produkte pro Kategorie</value>
+    </property>
 </resource>

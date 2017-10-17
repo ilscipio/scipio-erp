@@ -193,41 +193,56 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   </@field>
 </#macro>
 
-<#macro setupSubmitMenu submitFormId allowSkip="" isCreate=false>
+<#macro setupSubmitMenu submitFormId="" submitFormIdVar="" allowSkip="" isCreate=false>
   <#if !allowSkip?is_boolean>
     <#local allowSkip = setupStepSkippable!false>
   </#if>
-  <#local submitFormIdJs = escapeVal(submitFormId, 'js')>
+  <#local submitVarSuffixJs = ""><#-- TODO: for uniqueness -->
   <@menu type="button">
     <#if submitFormId?has_content && setupStep?has_content>
-      <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
-      <@menuitem type="link" href="javascript:setupControlMenu_${submitFormIdJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
+      <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
+      <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
     </#if>
     <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
         disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
   </@menu>
   <@script>
-    var setupControlMenu_${submitFormIdJs} = { <#-- FIXME: bad escaping use -->
-        "submitSave" : function() {
+    var setupControlMenu${submitVarSuffixJs} = { <#-- WARN: no support duplicate yet -->
+        getFormId: function() {
+          <#if submitFormIdVar?has_content>
+            return ${submitFormIdVar}; <#-- FIXME: invalid/missing escaping - FIXED VALUES ONLY -->
+          <#else>
+            return "${escapeVal(submitFormId, 'js')}";
+          </#if>
+        },
+        
+        getForm: function() {
+            return jQuery('#'+this.getFormId());
+        },
+        
+        submitSave: function() {
             this.setSetupContinue('N');
             this.submit();
         },
-        "submitSaveContinue" : function() {
+        
+        submitSaveContinue: function() {
             this.setSetupContinue('Y');
             this.submit();
         },
-        "setSetupContinue" : function(value) {
-            var field = jQuery('#${submitFormIdJs} input[name=setupContinue]');
+        
+        setSetupContinue: function(value) {
+            var field = jQuery('input[name=setupContinue]', this.getForm());
             if (field.length) {
                 field.val(value);
             } else {
                 field = jQuery('<input type="hidden" name="setupContinue" value=""/>');
                 field.val(value);
-                jQuery('#${submitFormIdJs}').append(field);
+                this.getForm().append(field);
             }
         },
-        "submit" : function() {
-            jQuery('#${submitFormIdJs}').submit();
+        
+        submit: function() {
+            this.getForm().submit();
         }
     };
   </@script>
@@ -236,13 +251,13 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     -->
 </#macro>
 
-<#macro setupSubmitBar submitFormId allowSkip="" isCreate=false>
+<#macro setupSubmitBar submitFormId="" submitFormIdVar="" allowSkip="" isCreate=false>
   <@row>
     <@cell columns=6>
       <#nested>
     </@cell>
     <@cell columns=6 class="+${styles.text_right!}">
-      <@setupSubmitMenu submitFormId=submitFormId allowSkip=allowSkip isCreate=isCreate/>
+      <@setupSubmitMenu submitFormId=submitFormId submitFormIdVar=submitFormIdVar allowSkip=allowSkip isCreate=isCreate/>
     </@cell>
   </@row>
 </#macro>

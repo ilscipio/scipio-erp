@@ -16423,4 +16423,12 @@
         <value xml:lang="de">Das ist ein Platzhalter!</value>
         <value xml:lang="en">This is a placeholder!</value>
     </property>
+    <property key="CommonConfirmDeleteRecordPermanent">
+        <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
+    </property>
+    <property key="CommonDisplayOptions">
+        <value xml:lang="en">Display Options</value>
+        <value xml:lang="de">Anzeigeoptionen</value>
+    </property>
 </resource>

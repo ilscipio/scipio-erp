@@ -42,11 +42,8 @@ context.prodCatalogAndStoreAssoc = prodCatalogAndStoreAssoc;
 productCategoryId = context.productCategoryId ?: parameters.productCategoryId;
 productCategory = null;
 if (prodCatalog && productCategoryId) {
-    // FIXME!!!: verify part of catalog
+    // FIXME!!!: verify part of store/catalog
     productCategory = delegator.findOne("ProductCategory", [productCategoryId:productCategoryId], false);
 }
 context.productCategoryId = productCategoryId;
 context.productCategory = productCategory;
-
-
-

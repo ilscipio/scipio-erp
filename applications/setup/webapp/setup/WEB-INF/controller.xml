@@ -185,6 +185,24 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
+    <request-map uri="setupCreateCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductCategoryAndAssoc"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupUpdateCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProductCategoryAndAssoc"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupDeleteCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="deleteProductCategoryAndAssoc"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
     <request-map uri="setupStore">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>

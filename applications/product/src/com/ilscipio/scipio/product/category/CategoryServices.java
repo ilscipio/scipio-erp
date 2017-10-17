@@ -52,9 +52,11 @@ public abstract class CategoryServices {
         Map<String, Map<String, Object>> categoryStates = UtilGenerics.checkMap(context.get("categoryStates"));
     
         boolean includeCategoryData = Boolean.TRUE.equals(context.get("includeCategoryData"));
-        boolean includeProducts = !Boolean.FALSE.equals(context.get("includeProducts"));
+        boolean includeProductData = Boolean.TRUE.equals(context.get("includeProductData"));
+        Integer maxProductsPerCat = (Integer) context.get("maxProductsPerCat");
+        if (maxProductsPerCat == null) maxProductsPerCat = -1;
         boolean useCategoryCache = !Boolean.FALSE.equals(context.get("useCategoryCache"));
-        
+        boolean useProductCache = !Boolean.FALSE.equals(context.get("useProductCache"));
         boolean includeEmptyTop = Boolean.TRUE.equals(context.get("includeEmptyTop"));
         
         List<TreeDataItem> resultList = new ArrayList<>();
@@ -71,7 +73,7 @@ public abstract class CategoryServices {
                     if (library.equals("jsTree")) {
                         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
                             resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
-                                    prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProducts, useCategoryCache));
+                                    prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
                         }
                         Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                         if (state != null) {

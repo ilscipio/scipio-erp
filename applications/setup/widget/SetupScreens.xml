@@ -455,17 +455,8 @@
             <actions>
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
-                
-                <!-- <set field="titleProperty" value="PartyCreateNewCustomer"/> -->
-                <!-- FIXME: everything here squashes the org party ID
-                <set field="partyId" value="CUST"/>
-                <entity-condition entity-name="PartyRole" list="parties">
-                    <condition-expr field-name="roleTypeId" operator="equals" value="CUSTOMER"/>
-                </entity-condition>
-                <set field="partyId" from-field="parties[0].partyId"/>
-                 -->
-<!--                 <set field="customerPartyId" from-field="customerRel.partyIdFrom"/> -->
+                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->               
+
 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
@@ -473,6 +464,13 @@
                 <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
                 <set field="target" value="${groovy: !isCreate ? 'setupUpdateUser' : 'setupCreateUser'}" />
                 <set field="submitFormId" value="EditUser"/>
+                
+                <if>
+                    <condition><not><if-true field="userSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -482,12 +480,21 @@
                                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <section>                                   
+                                <screenlet>
+                                    <include-screen name="SelectUser"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <if-true field="userSelected"/>
+                                    </condition>
                                     <widgets>
                                         <screenlet>
-                                            <platform-specific><html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html></platform-specific>
+                                            <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
+                                            </platform-specific>
                                         </screenlet>
-                                    </widgets>                                    
+                                    </widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
@@ -496,6 +503,20 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectUser">
+        <section>
+            <!-- <actions>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-condition>
+            </actions> -->
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/user/SelectUser.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
@@ -588,25 +609,68 @@
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
-                <set field="isCreate" type="Boolean" value="${context.prodCatalog == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'ProductEditCatalog' : 'ProductNewCatalog'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog'}" />
-                <set field="submitFormId" value="EditCatalog"/>
+                <script lang="groovy"><![CDATA[
+                    def targetRecord;
+                    def isCreate;
+                    def titleProperty = 'ProductEditCatalog'; // forms have their own subtitles
+                    def target;
+                    def submitFormId;
+                    if (productCategoryId || parameters.newCategory) { // FIXME: BROKEN, use worker for parameters
+                        targetRecord = "category"
+                        isCreate = (context.productCategory == null);
+                        target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
+                        submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
+                    } else {
+                        targetRecord = "catalog"
+                        isCreate = (context.prodCatalog == null);
+                        if (isCreate) titleProperty = 'ProductNewCatalog';
+                        target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
+                        submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
+                    }
+                    context.targetRecord = targetRecord;
+                    context.isCreate = isCreate;
+                    context.titleProperty = titleProperty;
+                    context.target = target;
+                    context.submitFormId = submitFormId;
+                ]]></script>
+                <set field="submitFormIdVar" value="setupSubmitFormId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template><![CDATA[
+                                  <@script>
+                                    <#-- the form to save is dynamically chosen -->
+                                    var ${submitFormIdVar} = "${submitFormId!}";
+                                  </@script>
+                                ]]></html-template>
+                            </html>
+                        </platform-specific>
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                    <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
-                                    <platform-specific>
-                                        <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
-                                    </platform-specific>
-                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <!-- don't show tree until at least one catalog created -->
+                                        <not><if-empty field="productStoreCatalogList"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-screen name="EditCatalogTree"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                                <platform-specific>
+                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
+                                </platform-specific>
+                                <platform-specific>
+                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
+                                </platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
@@ -632,36 +696,64 @@
                             </html>
                         </platform-specific>
                     </decorator-section>
+                    <!-- redundant
                     <decorator-section name="extra-body">
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <!-- TODO?: can maybe remove ListCatalogs once EditCatalogTree works, will be redundant... -->
                                 <screenlet>
-                                    <label style="p">TODO: Remove table</label>
                                     <include-screen name="ListCatalogs"/>
                                 </screenlet>
-                                <section>
-                                    <conditions>
-                                        <not><if-empty field="productStoreId"/></not>
-                                        <!-- don't show until at least one catalog created -->
-                                        <not><if-empty field="productStoreCatalogList"/></not>
-                                    </conditions>
-                                    <widgets>
-                                        <screenlet>
-                                            <include-screen name="EditCatalogTree"/>
-                                        </screenlet>
-                                    </widgets>
-                                </section>
                             </widgets>
                         </section>
                     </decorator-section>
+                    -->
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    <screen name="EditCatalogTree">
+        <section>
+            <actions>
+                <!-- FIXME?: setupEctMaxProductsPerCat is a session-based control for the time being, breaking convention
+                    with rest of setup -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    ectMaxProductsPerCat = context.ectMaxProductsPerCat;
+                    if (ectMaxProductsPerCat == null) {
+                        try {
+                            ectMaxProductsPerCat = parameters.setupEctMaxProductsPerCat as Integer;
+                        } catch(Exception e) {
+                        }
+                        if (ectMaxProductsPerCat != null) {
+                            session.setAttribute("setupEctMaxProductsPerCat", ectMaxProductsPerCat);
+                        }
+                    }
+                    if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fastest and least confusing
+                    context.ectMaxProductsPerCat = ectMaxProductsPerCat;
+                ]]></script>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTreeCommon.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not>
+                            <if-empty field="productStoreId"/>
+                            <if-empty field="treeMenuData"/>
+                        </not>
+                    </condition>
+                    <widgets>
+                       <screenlet>
+                           <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
+                       </screenlet>     
+                   </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: DEPRECATED -->
     <screen name="ListCatalogs">
         <section>
             <actions>
@@ -674,27 +766,6 @@
                 <platform-specific>
                     <html><html-template location="component://setup/webapp/setup/catalog/ListCatalogs.ftl"/></html>
                 </platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="EditCatalogTree">
-        <section>
-            <actions>
-               <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTree.groovy"/>
-            </actions>
-            <widgets>
-                <section>
-                    <condition>
-                        <not>
-                            <if-empty field="treeMenuData"/>
-                        </not>
-                    </condition>
-                     <widgets>
-                       <screenlet>
-                           <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
-                       </screenlet>     
-                   </widgets>
-                </section>
             </widgets>
         </section>
     </screen>

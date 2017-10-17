@@ -102,119 +102,115 @@ under the License.
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     
+    <@field type="select" name="roleTypeId" id="roleTypeId" label=uiLabelMap.PartyRoleType>
+        <option value="" selected="selected">--</option>
+        <#list userPartyRoles as userPartyRole>
+            <#assign selected = (userParty?? && rawString(userParty.roleTypeId) == rawString(userPartyRole.roleTypeId!))>
+            <option value="${userPartyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${userPartyRole.description}</option>
+        </#list>
+    </@field>
+    
     <#if userParty??>
         <@field type="hidden" name="userPartyId" value=(userParty.partyId!)/>
-    </#if>
-
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountInformation}</legend>
+    <#else>
+        <@field type="input" name="userPartyId" value=(params.userPartyId!) label=uiLabelMap.PartyPartyId placeholder="User"/>
+    </#if>	
     	
-    	    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      
-    	        <#macro extraFieldContent args={}>	          
-    	          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
-    	        </#macro>
-    	        <#assign fieldStyle = "">    	        
-    	        <#if !userUserLogin?has_content>
-    	           <#if ((parameters.UNUSEEMAIL!) == "on")>
-                      <#assign fieldStyle = "display:none;">
-                    </#if>
-    	           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(userUserLogin.userLoginId!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
-    	        <#else>
-    	           <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
-    	           <@field type="hidden" name="USERNAME" value=(userUserLogin.userLoginId!)/>
-    	        </#if>    	      
-    	    </#if>
+    <#assign fieldsRequired = true>
     	
-    	    <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
-    	      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!userUserLogin?has_content)!true />      
-    	      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!userUserLogin?has_content)!true />		      
-    	    <#else>
-    	      <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
-    	    </#if>
-            <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(userEmailAddress.infoString!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress required=true />            
-            <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
-            <#if userEmailAddress?has_content>
-                <@field type="hidden" name="USER_EMAIL_CONTACT_MECH_ID" value=(userEmailAddress.contactMechId!)/>
-            </#if>    	    
-    	  </fieldset>
-	  </@cell>
-	
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.PartyPersonalInformation}</legend>
-    	    <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
-    	    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle /> 
-    	    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(userPerson.firstName!) label=uiLabelMap.PartyFirstName required=true />
-    	    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(userPerson.lastName!) label=uiLabelMap.PartyLastName required=true />
-    	  </fieldset>
-	  </@cell>
-	</@row>
-	
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.CommonLocation}</legend>
-    	    <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
-                  ctxVars={
-                    "pafFieldNamePrefix":"USER_",
-                    "pafFieldIdPrefix":"EditUser_",
-                    "pafUseScripts":true,
-                    "pafFallbacks":({"countryGeoId" : (userPostalAddress["countryGeoId"])!}),
-                    "postalAddressData": userPostalAddress,                    
-                    "pafFieldNameMap": {
-                      "stateProvinceGeoId": "STATE",
-                      "countryGeoId": "COUNTRY",
-                      "address1": "ADDRESS1",
-                      "address2": "ADDRESS2",
-                      "city": "CITY",
-                      "postalCode": "POSTAL_CODE"
-                    },
-                    "pafUseToAttnName":false
-                  }/>
-            <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>
-            <#if userPostalAddress?has_content>
-                <@field type="hidden" name="USER_POSTAL_ADDRESS_CONTACT_MECH_ID" value=(userPostalAddress.contactMechId!)/>
+    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      
+        <#macro extraFieldContent args={}>	          
+          <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
+        </#macro>
+        <#assign fieldStyle = "">    	        
+        <#if !userUserLogin?has_content>
+           <#if ((parameters.UNUSEEMAIL!) == "on")>
+              <#assign fieldStyle = "display:none;">
             </#if>
-    	  </fieldset>
-	  </@cell>
+           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(userUserLogin.userLoginId!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
+        <#else>
+           <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
+           <@field type="hidden" name="USERNAME" value=(userUserLogin.userLoginId!)/>
+        </#if>    	      
+    </#if>
+    	
+    <#if !createAllowPassword?has_content || (createAllowPassword?has_content && createAllowPassword)>    	      
+      <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=(!userUserLogin?has_content)!true />      
+      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=(!userUserLogin?has_content)!true />		      
+    <#else>
+      <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
+    </#if>
+    
+	 
+    <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
+    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle /> 
+    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(userPerson.firstName!) label=uiLabelMap.PartyFirstName required=true />
+    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(userPerson.lastName!) label=uiLabelMap.PartyLastName required=true />
+    
+    <@field type="generic" label=uiLabelMap.PartyGeneralAddress labelDetail=fieldLabelDetail>
+        <div id="setupUser-editMailShipAddr-area">
+        	<@fields args={"type":"default", "ignoreParentField":true}>
+                <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
+                      ctxVars={
+                        "pafFieldNamePrefix":"USER_",
+                        "pafFieldIdPrefix":"EditUser_",
+                        "pafUseScripts":true,
+                        "pafFallbacks":({"countryGeoId" : (userPostalAddress["countryGeoId"])!}),
+                        "postalAddressData": userPostalAddress,                    
+                        "pafFieldNameMap": {
+                          "stateProvinceGeoId": "STATE",
+                          "countryGeoId": "COUNTRY",
+                          "address1": "ADDRESS1",
+                          "address2": "ADDRESS2",
+                          "city": "CITY",
+                          "postalCode": "POSTAL_CODE"
+                        },
+                        "pafUseToAttnName":false,
+                        "pafMarkRequired":fieldsRequired
+                      }/>
+                <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/>        
+                <#if userPostalAddress?has_content>
+                    <@field type="hidden" name="USER_POSTAL_ADDRESS_CONTACT_MECH_ID" value=(userPostalAddress.contactMechId!)/>
+                </#if>
+            </@fields>
+        </div>
+    </@field>
 	
-	  <@cell columns=6>
-    	  <fieldset>    
-    	    <legend>${getLabel("CommunicationEventType.description.PHONE_COMMUNICATION", "PartyEntityLabels")}</legend>
-    	         <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userWorkNumber useAltNames=userWorkNumberMaps.isRecord
-                    fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
-                  <@fields type="default-compact" ignoreParentField=true>                    
-                    <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>
-                    <#if userWorkNumber?has_content>
-                        <@field type="hidden" name="USER_WORK_NUMBER_CONTACT_MECH_ID" value=(userWorkNumber.contactMechId!)/>
-                    </#if>
-                  </@fields>
-                </@telecomNumberField>
-                
-                <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userMobileNumber useAltNames=userMobileNumberMaps.isRecord
-                    fieldNamePrefix="USER_MOBILE_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
-                  <@fields type="default-compact" ignoreParentField=true>                    
-                    <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>
-                    <#if userMobileNumber?has_content>
-                        <@field type="hidden" name="USER_MOBILE_NUMBER_CONTACT_MECH_ID" value=(userMobileNumber.contactMechId!)/>
-                    </#if>
-                  </@fields>
-                </@telecomNumberField>
-                
-                <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userFaxNumber useAltNames=userFaxNumberMaps.isRecord
-                    fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
-                  <@fields type="default-compact" ignoreParentField=true>                    
-                    <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>
-                    <#if userFaxNumber?has_content>
-                        <@field type="hidden" name="USER_FAX_NUMBER_CONTACT_MECH_ID" value=(userFaxNumber.contactMechId!)/>
-                    </#if>
-                  </@fields>
-                </@telecomNumberField>
-    	  </fieldset>
-	  </@cell>
-	</@row>
-
+	<#if userWorkNumber?has_content>
+        <@field type="hidden" name="USER_WORK_NUMBER_CONTACT_MECH_ID" value=(userWorkNumber.contactMechId!)/>
+    </#if>
+    <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=userWorkNumber useAltNames=userWorkNumberMaps.isRecord
+        fieldNamePrefix="USER_WORK_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+        <@fields type="default-compact" ignoreParentField=true>                    
+        <@field type="hidden" name="USER_WORK_ALLOW_SOL" value=(fixedParams.USER_WORK_ALLOW_SOL!)/>        
+    </@fields>
+    </@telecomNumberField>
+    
+    <#if userMobileNumber?has_content>
+        <@field type="hidden" name="USER_MOBILE_NUMBER_CONTACT_MECH_ID" value=(userMobileNumber.contactMechId!)/>
+    </#if>
+    <@telecomNumberField label=uiLabelMap.PartyContactMobileNumber params=userMobileNumber useAltNames=userMobileNumberMaps.isRecord
+        fieldNamePrefix="USER_MOBILE_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+        <@fields type="default-compact" ignoreParentField=true>                    
+            <@field type="hidden" name="USER_MOBILE_ALLOW_SOL" value=(fixedParams.USER_MOBILE_ALLOW_SOL!)/>            
+        </@fields>
+    </@telecomNumberField>
+    
+     <#if userFaxNumber?has_content>
+        <@field type="hidden" name="USER_FAX_NUMBER_CONTACT_MECH_ID" value=(userFaxNumber.contactMechId!)/>
+    </#if>
+    <@telecomNumberField label=uiLabelMap.PartyContactFaxPhoneNumber params=userFaxNumber useAltNames=userFaxNumberMaps.isRecord
+        fieldNamePrefix="USER_FAX_" countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
+        <@fields type="default-compact" ignoreParentField=true>                    
+        <@field type="hidden" name="USER_FAX_ALLOW_SOL" value=(fixedParams.USER_FAX_ALLOW_SOL!)/>
+       
+      </@fields>
+    </@telecomNumberField>
+    
+    <@field type="input" name="USER_EMAIL" id="USER_EMAIL" value=(userEmailAddress.infoString!) onChange="changeEmail()" onkeyup="changeEmail()" label=uiLabelMap.PartyEmailAddress />            
+    <@field type="hidden" name="USER_EMAIL_ALLOW_SOL" value=(fixedParams.USER_EMAIL_ALLOW_SOL!)/>
+    <#if userEmailAddress?has_content>
+        <@field type="hidden" name="USER_EMAIL_CONTACT_MECH_ID" value=(userEmailAddress.contactMechId!)/>
+    </#if>
 </@form>
 

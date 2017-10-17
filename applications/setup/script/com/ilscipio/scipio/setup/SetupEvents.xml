@@ -316,7 +316,7 @@
         <set field="require_login" value="false"/>
         <!-- this parameter must be set to true or the createUser method below will use a default password instead of the one entered by user -->
         <set field="create_allow_password" value="true"/>
-        <set field="parameters.roleTypeId" value="OWNER"/>
+        <!-- <set field="parameters.roleTypeId" from-field="parameters.roleT"/> -->
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
         <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
@@ -327,7 +327,7 @@
             <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>
             <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
             <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
-            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" value="OWNER" />
+            <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
             <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" value="OWNER" />
             <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="tempMap.partyId" /> 
             <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
@@ -736,4 +736,10 @@
         <log level="always" message="faxNumber changed =================> ${faxChanged}" />
     </simple-method>
     
+    <simple-method method-name="createProductCategoryAndAssoc">
+    </simple-method>
+    <simple-method method-name="updateProductCategoryAndAssoc">
+    </simple-method>
+    <simple-method method-name="deleteProductCategoryAndAssoc">
+    </simple-method>
 </simple-methods>

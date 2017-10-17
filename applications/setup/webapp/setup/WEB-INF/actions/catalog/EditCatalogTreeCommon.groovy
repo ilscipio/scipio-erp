@@ -1,3 +1,7 @@
+/**
+ * SCIPIO: Edit catalog tree common data prep, non-specific.
+ */
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
@@ -7,23 +11,18 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType;
 
-final module = "EditCatalogTree.groovy";
-final displayProductsDefault = true; // FIXME: should be false default + option to show, otherwise risk very slow
+// DEV NOTE: KEEP SETUP-SPECIFIC CODE OUT OF THIS FILE,
+// TO BE REFACTORED LATER (TODO)
+
+final module = "EditCatalogTreeCommon.groovy";
+
+ectMaxProductsPerCat = context.ectMaxProductsPerCat;
 
 productStoreId = context.productStoreId;
 if (!productStoreId) {
     Debug.logError("Setup: No product store Id found for catalog tree.", module);
     return;
 }
-
-displayProducts = context.displayProducts;
-if (displayProducts == null) {
-    displayProducts = UtilMisc.booleanValueVersatile(parameters.displayProducts);
-    if (displayProducts == null) {
-        displayProducts = displayProductsDefault;
-    }
-}
-context.displayProducts = displayProducts;
 
 currentProdCatalogId = context.prodCatalogId;
 currentProductCategoryId = context.productCategoryId;
@@ -72,11 +71,13 @@ for (productStoreCatalog in productStoreCatalogs) {
         
         result = dispatcher.runSync("buildCatalogTree", [
             "useCategoryCache": false,
+            "useProductCache": context.ectUseProductCache != null ? context.ectUseProductCache : true,
             "prodCatalogId" : prodCatalog.prodCatalogId,
             "state": state,
             "categoryStates": categoryStates,
             "includeCategoryData": true,
-            "includeProducts": displayProducts,
+            "includeProductData": context.ectIncludeProductData != null ? context.ectIncludeProductData : false,
+            "maxProductsPerCat": ectMaxProductsPerCat,
             "includeEmptyTop": true,
             "productStoreCatalog": productStoreCatalog
         ]);

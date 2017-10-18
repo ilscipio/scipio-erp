@@ -102,12 +102,29 @@ under the License.
     <@field type="hidden" name="isCreateUser" value=(user??)?string("N","Y")/>    
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     
-    <@field type="select" name="roleTypeId" id="roleTypeId" label=uiLabelMap.PartyRoleType>
-        <option value="" selected="selected">--</option>
-        <#list userPartyRoles as userPartyRole>
-            <#assign selected = (userParty?? && rawString(userParty.roleTypeId) == rawString(userPartyRole.roleTypeId!))>
-            <option value="${userPartyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${userPartyRole.description}</option>
-        </#list>
+    <#if userParty??>
+        <#assign partyRelationship = delegator.findOne("PartyRelationship", {"partyIdTo" : userParty.partyId, "roleTypeIdTo" : userParty.roleTypeIdTo}, false)>
+    </#if>
+    <@field type="generic" label=uiLabelMap.PartyRoleType labelDetail=fieldLabelDetail>
+        <@fields args={"type":"default", "ignoreParentField":true}>
+            <@field type="select" name="roleTypeId" id="roleTypeId">
+                <option value="" selected="selected">--</option>
+                <#list userPartyRoles as userPartyRole>
+                    <#assign selected = (userParty?? && rawString(userParty.roleTypeId) == rawString(userPartyRole.roleTypeId!))>
+                    <option value="${userPartyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${userPartyRole.description}</option>
+                </#list>
+            </@field>
+            
+            <@field type="display" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(parameters.orgPartyId)}) />
+            
+            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId">
+                <option value="" selected="selected">--</option>
+                <#list userPartyRelationshipTypes as userPartyRelationshipType>
+                    <#assign selected = (partyRelationship?? && rawString(partyRelationship.partyRelationshipTypeId) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
+                    <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.partyRelationshipName}</option>
+                </#list>
+            </@field>
+        </@fields>
     </@field>
     
     <#if userParty??>

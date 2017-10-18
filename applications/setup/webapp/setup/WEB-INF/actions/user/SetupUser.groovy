@@ -1,4 +1,4 @@
-import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.GenericValue
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
@@ -34,86 +34,111 @@ if (context.userParty) {
     userInfo.putAll(context.userParty);
     userInfo.putAll(userData.userUserLogin);
     userInfo.putAll(userData.userPerson);
+
+    partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
+    context.partyRole = partyRole;
+    if (partyRole)
+        context.partyRelationship = delegator.findOne("PartyRelationship", ["partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId], false);
 }
 
-//
-//generalAddressContactMech = organizationData.generalAddressContactMech;
-//context.generalAddressContactMech = generalAddressContactMech;
-//context.generalAddressContactMechPurposes = organizationData.generalAddressContactMechPurposes;
-//context.generalAddressStandaloneCompleted = organizationData.generalAddressStandaloneCompleted;
-//context.locationAddressesCompleted = organizationData.locationAddressesCompleted;
-//context.locationPurposes = organizationData.locationPurposes;
-//generalPostalAddress = null;
-//if (generalAddressContactMech) {
-//    postalAddress = delegator.findOne("PostalAddress", [contactMechId:generalAddressContactMech.contactMechId], false);
-//    if (postalAddress) {
-//        generalPostalAddress = [
-//            "USER_ADDRESS_CONTACTMECHID": generalAddressContactMech.contactMechId,
-//            "USER_STATE": postalAddress.stateProvinceGeoId,
-//            "USER_COUNTRY": postalAddress.countryGeoId,
-//            "USER_ADDRESS1": postalAddress.address1,
-//            "USER_ADDRESS2": postalAddress.address2,
-//            "USER_CITY": postalAddress.city,
-//            "USER_POSTAL_CODE": postalAddress.postalCode
-//        ];
-//        if (organizationInfo != null) {
-//            organizationInfo.putAll(generalPostalAddress);
-//        }
-//    } else {
-//        Debug.logError("Setup: Configuration error: Mail/ship address contact mech '"
-//            + generalAddressContactMech.contactMechId + " has no PostalAddress record! Invalid data configuration!", module)
-//    }
-//    
-//}
-
-userContactMechPurposeList = userData.userContactMechPurposeList;
-context.userContactMechPurposeList = userContactMechPurposeList;
-
-userContactMechsByPurpose = [:];
-userContactMechsById = [:];
-userContactMechPurposes = [:];
-for(purpose in userContactMechPurposeList) {
-    // WARN: can't use findByOne because the fromDate may not match!
-    def contactMech = EntityUtil.getFirst(delegator.findByAnd("PartyAndContactMech",
-            [partyId: purpose.partyId, contactMechId:purpose.contactMechId], null, false));
-    userContactMechsByPurpose[purpose.contactMechPurposeTypeId] = contactMech;
-    userContactMechsById[purpose.contactMechId] = contactMech;
-    purposeSet = userContactMechPurposes[purpose.contactMechId];
-    if (!purposeSet) {
-        purposeSet = new HashSet();
-        userContactMechPurposes[purpose.contactMechId] = purposeSet;
+generalAddressContactMech = userData.generalAddressContactMech;
+context.generalAddressContactMech = generalAddressContactMech;
+context.generalAddressContactMechPurposes = userData.generalAddressContactMechPurposes;
+context.generalAddressStandaloneCompleted = userData.generalAddressStandaloneCompleted;
+context.locationAddressesCompleted = userData.locationAddressesCompleted;
+context.locationPurposes = userData.locationPurposes;
+generalPostalAddress = null;
+if (generalAddressContactMech) {
+    postalAddress = delegator.findOne("PostalAddress", [contactMechId:generalAddressContactMech.contactMechId], false);
+    if (postalAddress) {
+        generalPostalAddress = [
+            "USER_ADDRESS_CONTACTMECHID": generalAddressContactMech.contactMechId,
+            "USER_STATE": postalAddress.stateProvinceGeoId,
+            "USER_COUNTRY": postalAddress.countryGeoId,
+            "USER_ADDRESS1": postalAddress.address1,
+            "USER_ADDRESS2": postalAddress.address2,
+            "USER_CITY": postalAddress.city,
+            "USER_POSTAL_CODE": postalAddress.postalCode
+        ];
+        if (userInfo != null) {
+            userInfo.putAll(generalPostalAddress);
+        }
+    } else {
+        Debug.logError("Setup: Configuration error: Mail/ship address contact mech '"
+            + generalAddressContactMech.contactMechId + " has no PostalAddress record! Invalid data configuration!", module)
     }
-    purposeSet.add(purpose.contactMechPurposeTypeId);
+    
 }
 
-context.userContactMechsByPurpose = userContactMechsByPurpose;
-context.userContactMechsById = userContactMechsById;
-context.userContactMechs = userContactMechsById.values() as List;
-context.userContactMechPurposes = userContactMechPurposes;
+workPhoneContactMech = userData.workPhoneContactMech;
+context.workPhoneContactMech = workPhoneContactMech;
+workPhoneNumber = null;
+if (workPhoneContactMech) {
+    telecomNumber = delegator.findOne("TelecomNumber", [contactMechId:workPhoneContactMech.contactMechId], false);
+    if (telecomNumber) {
+        workPhoneNumber = [
+            "USER_WORK_CONTACTMECHID": workPhoneContactMech.contactMechId,
+            "USER_WORK_COUNTRY": telecomNumber.countryCode,
+            "USER_WORK_AREA": telecomNumber.areaCode,
+            "USER_WORK_CONTACT": telecomNumber.contactNumber,
+            "USER_WORK_EXT": workPhoneContactMech.extension
+        ];
+        if (userInfo != null) {
+            userInfo.putAll(workPhoneNumber);
+        }
+    } else {
+        Debug.logError("Setup: Configuration error: Work phone contact mech '"
+            + workPhoneContactMech.contactMechId + " has no TelecomNumber record! Invalid data configuration!", module)
+    }
+}
+//context.workPhoneNumber = workPhoneNumber;
 
-if (userContactMechsByPurpose["PHONE_WORK"]) {
-    context.userWorkNumber = userContactMechsByPurpose["PHONE_WORK"].getRelatedOne("TelecomNumber", false);
+faxPhoneContactMech = userData.faxPhoneContactMech;
+context.faxPhoneContactMech = faxPhoneContactMech;
+faxPhoneNumber = null;
+if (faxPhoneContactMech) {
+    telecomNumber = delegator.findOne("TelecomNumber", [contactMechId:faxPhoneContactMech.contactMechId], false);
+    if (telecomNumber) {
+        faxPhoneNumber = [
+            "USER_FAX_CONTACTMECHID": faxPhoneContactMech.contactMechId,
+            "USER_FAX_COUNTRY": telecomNumber.countryCode,
+            "USER_FAX_AREA": telecomNumber.areaCode,
+            "USER_FAX_CONTACT": telecomNumber.contactNumber,
+            "USER_FAX_EXT": faxPhoneContactMech.extension
+        ];
+        if (userInfo != null) {
+            userInfo.putAll(faxPhoneNumber);
+        }
+    } else {
+        Debug.logError("Setup: Configuration error: Fax phone contact mech '"
+            + faxPhoneContactMech.contactMechId + " has no TelecomNumber record! Invalid data configuration!", module)
+    }
 }
-if (userContactMechsByPurpose["PHONE_MOBILE"]) {
-    context.userMobileNumber = userContactMechsByPurpose["PHONE_MOBILE"].getRelatedOne("TelecomNumber", false);
+//context.faxPhoneNumber = faxPhoneNumber;
+
+primaryEmailContactMech = userData.primaryEmailContactMech;
+context.primaryEmailContactMech = primaryEmailContactMech;
+primaryEmailAddress = null;
+if (primaryEmailContactMech) {
+    primaryEmailAddress = [
+        "USER_EMAIL_CONTACTMECHID": primaryEmailContactMech.contactMechId,
+        "USER_EMAIL": primaryEmailContactMech.getRelatedOne("ContactMech", false)?.infoString
+    ];
+    if (userInfo != null) {
+        userInfo.putAll(primaryEmailAddress);
+    }
 }
-if (userContactMechsByPurpose["FAX_NUMBER"]) {
-    context.userFaxNumber = userContactMechsByPurpose["FAX_NUMBER"].getRelatedOne("TelecomNumber", false);
-}
-if (userContactMechsByPurpose["PRIMARY_EMAIL"]) {
-    context.userEmailAddress = userContactMechsByPurpose["PRIMARY_EMAIL"];
-}
-if (userContactMechsByPurpose["GENERAL_LOCATION"]) {
-    context.userPostalAddress = userContactMechsByPurpose["GENERAL_LOCATION"].getRelatedOne("PostalAddress", false);
-}
+
 
 // true if explicit userPartyId OR explicit newUser=Y flag OR failed create
 userSelected = userPartyId || setupWorker?.isEffectiveNewRecordRequest(setupStep);
 context.userSelected = userSelected;
 
-//List<GenericValue> roleTypes = delegator.findByAnd("RoleType", UtilMisc.toMap("parentTypeId", null), UtilMisc.toList("description"), true);
+context.contactMechsCompleted = userData.contactMechsCompleted;
 
 List<GenericValue> userPartyRoles = EntityQuery.use(delegator).from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).query();
 context.userPartyRoles = userPartyRoles;
 List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from("PartyRelationshipType").orderBy(["partyRelationshipName"]).query();
 context.userPartyRelationshipTypes = userPartyRelationshipTypes;
+
+context.userInfo = userInfo;

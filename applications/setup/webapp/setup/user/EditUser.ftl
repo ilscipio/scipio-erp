@@ -30,6 +30,7 @@ under the License.
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
+    "record":userInfo!true,
     "record":true,
     "defaults":defaultParams
 })>
@@ -103,7 +104,8 @@ under the License.
     <@field type="hidden" name="PRODUCT_STORE_ID" value=(fixedParams.PRODUCT_STORE_ID!)/>
     
     <#if userParty??>
-        <#assign partyRelationship = delegator.findOne("PartyRelationship", {"partyIdTo" : userParty.partyId, "roleTypeIdTo" : userParty.roleTypeIdTo}, false)>
+        <#assign partyRole = delegator.findOne("PartyRole", {"partyId" : userParty.partyId}, false)>
+        <#assign partyRelationship = delegator.findOne("PartyRelationship", {"partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId}, false)>
     </#if>
     <@field type="generic" label=uiLabelMap.PartyRoleType labelDetail=fieldLabelDetail>
         <@fields args={"type":"default", "ignoreParentField":true}>
@@ -115,7 +117,7 @@ under the License.
                 </#list>
             </@field>
             
-            <@field type="display" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(parameters.orgPartyId)}) />
+            <@field type="display" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(params.orgPartyId)}) />
             
             <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId">
                 <option value="" selected="selected">--</option>
@@ -128,7 +130,7 @@ under the License.
     </@field>
     
     <#if userParty??>
-        <@field type="hidden" name="userPartyId" value=(userParty.partyId!)/>
+        <@field type="display" name="userPartyId" value=(userParty.partyId!)/>
     <#else>
         <@field type="input" name="userPartyId" value=(params.userPartyId!) label=uiLabelMap.PartyPartyId placeholder="User"/>
     </#if>	

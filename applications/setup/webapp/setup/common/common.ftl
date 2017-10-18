@@ -73,8 +73,12 @@ values = user-configurable and hidden
 fixedValues = special: params that were hardcoded to preset values in stock ofbizsetup (handling differently here)
 -->
 <#function getWizardFormFieldValueMaps args={}>
+  <#local isErrorEff = args.isError!isError!false>
   <#local record = args.record!true>
   <#local useReqParams = args.useReqParams!0><#-- default true -->
+  <#if useReqParams?is_number>
+    <#local useReqParams = useRequestParameters!"">
+  </#if>
   <#local defaults = args.defaults!{}><#-- default values (NOTE: this is not in form widgets) -->
   <#local strictRecord = args.strictRecord!false><#-- if false it converts the GenericValue to map copy to prevent crash on unknown fields -->
   
@@ -96,11 +100,7 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   <#local defaults = toSimpleMap(defaults)>
   
   <#local isRecord = false>
-  
-  <#if useReqParams?is_number>
-    <#local useReqParams = useRequestParameters!"">
-  </#if>
-  <#if ((isError!false) == true && !(useReqParams?is_boolean && useReqParams == false))
+  <#if (isErrorEff && !(useReqParams?is_boolean && useReqParams == false))
         || (useReqParams?is_boolean && useReqParams == true)><#-- check if service error or forced parameters -->
     <#local values = toSimpleMap(parameters)>
     <#local fixedValues = defaults><#-- this is stock ofbizsetup behavior -->
@@ -193,11 +193,11 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   </@field>
 </#macro>
 
-<#macro setupSubmitMenu submitFormId="" submitFormIdVar="" allowSkip="" isCreate=false>
+<#macro setupSubmitMenu submitFormId="" allowSkip="" isCreate=false submitVarSuffixJs="">
   <#if !allowSkip?is_boolean>
     <#local allowSkip = setupStepSkippable!false>
   </#if>
-  <#local submitVarSuffixJs = ""><#-- TODO: for uniqueness -->
+  <#local submitVarSuffixJs = ""><#-- WARN: no support duplicate -->
   <@menu type="button">
     <#if submitFormId?has_content && setupStep?has_content>
       <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
@@ -207,42 +207,51 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
         disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
   </@menu>
   <@script>
-    var setupControlMenu${submitVarSuffixJs} = { <#-- WARN: no support duplicate yet -->
-        getFormId: function() {
-          <#if submitFormIdVar?has_content>
-            return ${submitFormIdVar}; <#-- FIXME: invalid/missing escaping - FIXED VALUES ONLY -->
-          <#else>
-            return "${escapeVal(submitFormId, 'js')}";
-          </#if>
+    var setupControlMenu${submitVarSuffixJs} = {
+        submitFormId: "${escapeVal(submitFormId, 'js')}",
+    
+        setSubmitFormId: function(id) { this.submitFormId = id; },
+        getSubmitFormId: function() { return this.submitFormId; },
+        getSubmitForm: function() {
+            var id = this.getSubmitFormId();
+            if (!id) return null;
+            var form = jQuery('#'+id);
+            if (!form.length) return null;
+            return form;
         },
         
-        getForm: function() {
-            return jQuery('#'+this.getFormId());
-        },
-        
-        submitSave: function() {
-            this.setSetupContinue('N');
-            this.submit();
-        },
-        
-        submitSaveContinue: function() {
-            this.setSetupContinue('Y');
-            this.submit();
-        },
-        
-        setSetupContinue: function(value) {
-            var field = jQuery('input[name=setupContinue]', this.getForm());
+        setSetupContinue: function(value, form) {
+            var field = jQuery('input[name=setupContinue]', form);
             if (field.length) {
                 field.val(value);
             } else {
                 field = jQuery('<input type="hidden" name="setupContinue" value=""/>');
                 field.val(value);
-                this.getForm().append(field);
+                form.append(field);
+            }
+        },
+        
+        submitSave: function() {
+            var form = this.getSubmitForm();
+            if (form) {
+                this.setSetupContinue('N', form);
+                form.submit();
+            }
+        },
+        
+        submitSaveContinue: function() {
+            var form = this.getSubmitForm();
+            if (form) {
+                this.setSetupContinue('Y', form);
+                form.submit();
             }
         },
         
         submit: function() {
-            this.getForm().submit();
+            var form = this.getSubmitForm();
+            if (form) {
+                form.submit();
+            }
         }
     };
   </@script>
@@ -251,13 +260,13 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
     -->
 </#macro>
 
-<#macro setupSubmitBar submitFormId="" submitFormIdVar="" allowSkip="" isCreate=false>
+<#macro setupSubmitBar submitFormId="" allowSkip="" isCreate=false>
   <@row>
     <@cell columns=6>
       <#nested>
     </@cell>
     <@cell columns=6 class="+${styles.text_right!}">
-      <@setupSubmitMenu submitFormId=submitFormId submitFormIdVar=submitFormIdVar allowSkip=allowSkip isCreate=isCreate/>
+      <@setupSubmitMenu submitFormId=submitFormId allowSkip=allowSkip isCreate=isCreate/>
     </@cell>
   </@row>
 </#macro>

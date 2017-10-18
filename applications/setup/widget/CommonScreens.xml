@@ -264,10 +264,7 @@
                                     <condition>
                                         <and>
                                             <not><if-compare field="useDefaultSetupSubmitBar" operator="equals" type="Boolean" value="false"/></not>
-                                            <or>
-                                                <not><if-empty field="submitFormId"/></not>
-                                                <not><if-empty field="submitFormIdVar"/></not>
-                                            </or>
+                                            <not><if-empty field="submitFormId"/></not>
                                         </and>
                                     </condition>
                                     <widgets>
@@ -275,7 +272,7 @@
                                             <html>
                                                 <html-template><![CDATA[
                                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                                  <@setupSubmitBar submitFormId=(submitFormId!) submitFormIdVar=(submitFormIdVar!)><#-- can't rely on this: isCreate=(isCreate!false)-->
+                                                  <@setupSubmitBar submitFormId=(submitFormId!)><#-- can't rely on this: isCreate=(isCreate!false)-->
                                                     <@render type="section" name="menu-functions"/>
                                                   </@setupSubmitBar>
                                                 ]]></html-template>

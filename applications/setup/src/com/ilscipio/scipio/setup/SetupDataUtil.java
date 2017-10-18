@@ -576,7 +576,7 @@ public abstract class SetupDataUtil {
     }
     
     static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false);
     }
     
     // Aggregate/high-level states

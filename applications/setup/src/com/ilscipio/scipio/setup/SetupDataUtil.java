@@ -576,7 +576,11 @@ public abstract class SetupDataUtil {
     }
     
     static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && !isEventError(params);
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false);
+    }
+    
+    static boolean isSuccessDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return isDeleteRecordRequest(params, stepNameCamel) && !isEventError(params);
     }
     
     // Aggregate/high-level states
@@ -602,7 +606,7 @@ public abstract class SetupDataUtil {
         
         return isNewRecordRequest(params, stepNameCamel) || 
                 isFailedCreateRecordRequest(params, stepNameCamel) || 
-                isDeleteRecordRequest(params, stepNameCamel);
+                isSuccessDeleteRecordRequest(params, stepNameCamel);
     }
     
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String stepNameCamel) {

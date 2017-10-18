@@ -1718,6 +1718,103 @@ under the License.
         <description>Check ProductGroupOrder Expired</description>
         <attribute name="groupOrderId" mode="IN" type="String" optional="false"/>
     </service>
+
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Services (stock-like) -->
+    <!-- ======================================== -->
+
+    <service name="createProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Create a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="createProdCatalog"/>
+        <implements service="createProductStoreCatalog"/>
+    </service>
+    
+    <service name="updateProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Update a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="updateProdCatalog"/>
+        <implements service="updateProductStoreCatalog"/>
+    </service>
+
+    <service name="deleteProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="deleteProdCatalog"/>
+        <implements service="deleteProductStoreCatalog"/>
+    </service>
+    
+    <service name="updateProductCategoryAndCatalogAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCatalogAssoc" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its top association to catalog</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToProdCatalog"/>
+    </service>
+
+    <service name="createProductCategoryAndCategoryAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCategoryAssoc" auth="true">
+        <description>SCIPIO: Create a ProductCategory and add as child of another category</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToCategory"/>
+    </service>
+    
+    <service name="updateProductCategoryAndCategoryAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCategoryAssoc" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its association to another category (as child)</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToCategory"/>
+    </service>
+
+    <service name="createProductCategoryAndCatAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCatAssoc" auth="true">
+        <description>SCIPIO: Create a ProductCategory and add as a top catalog category (if parentProductCategoryId is empty) or as child of another category (if parentProductCategoryId is set)</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToProdCatalog"/>
+        <implements service="addProductCategoryToCategory"/>
+        <override name="parentProductCategoryId" optional="true"/>
+    </service>
+    
+    <service name="updateProductCategoryAndCatAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCatAssoc" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its top association to catalog (if parentProductCategoryId is empty) or its association to another category (if parentProductCategoryId is set)</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToProdCatalog"/>
+        <implements service="updateProductCategoryToCategory"/>
+        <override name="fromDate" optional="false"/>
+        <override name="prodCatalogCategoryTypeId" optional="true"/>
+        <override name="parentProductCategoryId" optional="true"/>
+    </service>
+
+    <!-- SCIPIO: NOTE: category deletion appears frowned upon in stock ofbiz, or perhaps they
+        are meant to be expired. However, when building a site, it is common to redesign categories,
+        so deletion is sometimes appropriate (and in that case, expiring is not appropriate). -->
+    <service name="deleteProductCategory" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategory" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record (if no members)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="deleteProductCategoryCatAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryCatAssoc" auth="true">
+        <description>SCIPIO: Delete a ProductCategory catalog (if parentProductCategoryId empty) or category (if parentProductCategoryId set) association</description>
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="IN" optional="true"/>
+        <override name="productCategoryId" optional="false"/>
+    </service>
+    
+    <service name="deleteProductCategoryAndCatAssoc" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssoc" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association based on wether parentProductCategoryId set (versatile)</description>
+        <implements service="deleteProductCategoryCatAssoc"/>
+        <attribute name="deleteProductCategory" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProductCatalog; if false only deletes catalog or category association</description>
+        </attribute>
+    </service>
+
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Services (novel functionality) -->
+    <!-- ======================================== -->
     
     <!-- SCIPIO: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
     <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="com.ilscipio.scipio.product.category.CategoryServices" invoke="buildCatalogTree">

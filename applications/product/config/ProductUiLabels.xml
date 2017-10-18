@@ -32066,4 +32066,9 @@
         <value xml:lang="en">Max products per category</value>
         <value xml:lang="de">Max Produkte pro Kategorie</value>
     </property>
+    <property key="ProductCatalogAndStoreAssocRemoved">
+        <value xml:lang="en">Catalog and store association successfully removed.</value>
+        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
+        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
+    </property>
 </resource>

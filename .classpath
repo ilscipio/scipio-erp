@@ -157,6 +157,6 @@
     <classpathentry kind="src" path="applications/setup/src"/>
     <classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
     <classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
-    <classpathentry kind="lib" path="applications/solr/lib/solr-solrj-6.6.0.jar"/>
+    <classpathentry kind="lib" path="applications/solr/lib/solr-solrj-6.6.2.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>

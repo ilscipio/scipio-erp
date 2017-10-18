@@ -39,20 +39,20 @@
 </@script>
 
   <@form method="get" action=makeOfbizUrl("setupUser") id="setupUser-selectUser-form">
-    <#-- TODO: REVIEW: may make a difference later
-    <@defaultWizardFormFields exclude=[]/> -->
+    <#-- TODO: REVIEW: may make a difference later -->
+    <@defaultWizardFormFields exclude=[]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
   
     <@field type="general" label=uiLabelMap.SetupSelectUserForSetup>
         <#-- FIXME: submit doesn't align -->
-        <@field type="select" name="partyId" id="setupUser-selectUser-select" class="+setupUser-selectUser-select" inline=true style="display:inline-block;">
+        <@field type="select" name="userPartyId" id="setupUser-selectUser-select" class="+setupUser-selectUser-select" inline=true style="display:inline-block;">
             <option value="">[${uiLabelMap.SetupCreateNewUser}]</option>
             <option value="" disabled="disabled"></option>
             <#if parties?has_content>
               <#list parties as partyEntry>
-                <#assign curPartyGroup = delegator.findOne("PartyGroup", {"partyId":partyEntry.partyId}, true)>
-                <#assign selected = (rawString(partyEntry.partyId) == rawString(partyId!))>
-                <option value="${partyEntry.partyId}"<#if selected> selected="selected"</#if>>${curPartyGroup.groupName} [${partyEntry.partyId}]</option>
+                <#assign curParty = delegator.findOne("Party", {"partyId": partyEntry.partyIdTo}, true)>
+                <#assign selected = (rawString(partyEntry.partyIdTo) == rawString(userPartyId!))>
+                <option value="${curParty.partyId}"<#if selected> selected="selected"</#if>>[${curParty.partyId}]</option>
               </#list>
             </#if>
         </@field>
@@ -64,8 +64,8 @@
   </@form>
   
   <@form method="get" action=makeOfbizUrl("setupWizard") id="setupUser-selectContinueUser-form">
-    <#-- TODO: REVIEW: may make a difference later
-    <@defaultWizardFormFields exclude=[]/> -->
+    <#-- TODO: REVIEW: may make a difference later -->
+    <@defaultWizardFormFields exclude=[]/>
     <#--<@field type="hidden" name="setupContinue" value="Y"/> not needed yet-->
   
     <@field type="hidden" name="userPartyId" value=""/>

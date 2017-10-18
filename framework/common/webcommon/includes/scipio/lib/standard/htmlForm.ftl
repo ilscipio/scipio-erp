@@ -2217,7 +2217,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel style=style passArgs=passArgs><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+        <@field_hidden_widget name=name value=value id=id class=class events=events inlineLabel=effInlineLabel style=style passArgs=passArgs/>
         <#break>        
       <#case "display">
         <#-- TODO?: may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 

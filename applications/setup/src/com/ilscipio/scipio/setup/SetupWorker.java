@@ -529,6 +529,7 @@ public abstract class SetupWorker implements Serializable {
     public abstract boolean isCreateRecordRequest(String step);
     public abstract boolean isFailedCreateRecordRequest(String step);
     public abstract boolean isDeleteRecordRequest(String step);
+    public abstract boolean isSuccessDeleteRecordRequest(String step);
     
     // Aggregate/high-level states
     
@@ -673,6 +674,10 @@ public abstract class SetupWorker implements Serializable {
         }
         @Override
         public boolean isDeleteRecordRequest(String step) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isSuccessDeleteRecordRequest(String step) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
@@ -1117,6 +1122,10 @@ public abstract class SetupWorker implements Serializable {
         @Override
         public boolean isDeleteRecordRequest(String step) {
             return SetupDataUtil.isDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        }
+        @Override
+        public boolean isSuccessDeleteRecordRequest(String step) {
+            return SetupDataUtil.isSuccessDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
         }
         
         @Override

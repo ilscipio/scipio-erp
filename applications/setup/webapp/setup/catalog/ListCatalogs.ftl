@@ -1,5 +1,7 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 
+<#-- SCIPIO: DEPRECATED in favor of catalog tree
+ -->
 <#if productStoreCatalogList?has_content>
 
 <@table type="data-list">

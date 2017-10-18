@@ -32,9 +32,13 @@ public abstract class SetupDataUtil {
     public static final Set<String> ORGANIZATION_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "GENERAL_LOCATION", "PAYMENT_LOCATION", "BILLING_LOCATION"
     );
-    
+        
     public static final Set<String> FACILITY_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "SHIP_ORIG_LOCATION", "SHIPPING_LOCATION"
+    );
+    
+    public static final Set<String> USER_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
+            "GENERAL_LOCATION", "BILLING_LOCATION"
     );
     
     protected SetupDataUtil() {
@@ -147,25 +151,24 @@ public abstract class SetupDataUtil {
     
     public static Map<String, Object> getUserStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
             throws GeneralException {
-        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
-        String orgPartyId = (String) params.get("orgPartyId");        
+        String orgPartyId = (String) params.get("orgPartyId");
         String userPartyId = (String) params.get("userPartyId");
-        
+
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "User");
-        
-        GenericValue party = null;        
-        if (UtilValidate.isNotEmpty(orgPartyId)) {
-            if (UtilValidate.isNotEmpty(userPartyId) && !isNewOrFailedCreate) {                
+
+        GenericValue party = null;
+        if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
+            if (UtilValidate.isNotEmpty(userPartyId)) {
                 party = delegator.findOne("Party", UtilMisc.toMap("partyId", userPartyId), useCache);
                 if (party != null) {
-                    List<GenericValue> partyRelationshipOwnerList = party.getRelated("ToPartyRelationship",
-                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO", "partyRelationshipTypeId", "OWNER"),
-                            UtilMisc.toList("fromDate DESC"), false);
-                    if (UtilValidate.isNotEmpty(partyRelationshipOwnerList)) {
-                        if (partyRelationshipOwnerList.size() > 1) {
-                            Debug.logWarning("Setup: User: party " + userPartyId + "' got multiple owner relationships for organization '" 
-                                    + orgPartyId + "'", module);
+                    List<GenericValue> partyRelationshipList = party.getRelated("ToPartyRelationship",
+                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO"), UtilMisc.toList("fromDate DESC"), false);
+                    if (UtilValidate.isNotEmpty(partyRelationshipList)) {
+                        if (partyRelationshipList.size() > 1) {
+                            Debug.logWarning("Setup: User: party " + userPartyId + "' got multiple owner relationships for organization '" + orgPartyId + "'",
+                                    module);
                         }
                     } else {
                         Debug.logError("Setup: User: party '" + userPartyId + "'" + " is not an owner of organization '" + orgPartyId + "'; ignoring", module);
@@ -177,15 +180,13 @@ public abstract class SetupDataUtil {
             } else {
                 GenericValue orgParty = delegator.findOne("Party", UtilMisc.toMap("partyId", orgPartyId), useCache);
                 if (orgParty != null) {
-                    List<GenericValue> partyRelationshipOwnerList = orgParty.getRelated("FromPartyRelationship",
-                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO", "partyRelationshipTypeId", "OWNER"),
-                            UtilMisc.toList("fromDate DESC"), false);
-                    if (UtilValidate.isNotEmpty(partyRelationshipOwnerList)) {
-                        if (partyRelationshipOwnerList.size() > 1) {
-                           Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" 
-                                    + orgPartyId + "'", module);
+                    List<GenericValue> partyRelationshipList = orgParty.getRelated("FromPartyRelationship",
+                            UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO"), UtilMisc.toList("fromDate DESC"), false);
+                    if (UtilValidate.isNotEmpty(partyRelationshipList)) {
+                        if (partyRelationshipList.size() > 1) {
+                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" + orgPartyId + "'", module);
                         }
-                        GenericValue partyRelationshipOwner = EntityUtil.getFirst(partyRelationshipOwnerList);
+                        GenericValue partyRelationshipOwner = EntityUtil.getFirst(partyRelationshipList);
                         party = partyRelationshipOwner.getRelatedOne("ToParty", false);
                     }
                 }
@@ -194,36 +195,52 @@ public abstract class SetupDataUtil {
         if (party != null) {
             userPartyId = party.getString("partyId");
             GenericValue userUserLogin = EntityUtil.getFirst(party.getRelated("UserLogin", UtilMisc.toMap("partyId", userPartyId), null, false));
-            GenericValue userPerson = party.getRelatedOne("Person", false);            
-            Map<String, Object> fields = UtilMisc.toMap("partyId", userPartyId);
-            List<GenericValue> contactMechPurposes = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", 
-                    fields, UtilMisc.toList("fromDate DESC"), useCache));
+            GenericValue userPerson = party.getRelatedOne("Person", false);
             
-            if (!isNewOrFailedCreate) {
-                result.put("userUserLogin", userUserLogin);
-                result.put("userPerson", userPerson);
-                result.put("userContactMechPurposeList", contactMechPurposes);
-            }
+            result.put("userUserLogin", userUserLogin);
+            result.put("userPerson", userPerson);
+            result.put("userPartyId", userPartyId);
+            result.put("userParty", party);
+            result.put("coreCompleted", true);
 
-            Set<String> purposeTypes = getEntityStringFieldValues(contactMechPurposes, "contactMechPurposeTypeId", new HashSet<String>());
-            boolean completed = true;
-            if (!purposeTypes.contains("GENERAL_LOCATION")) {
-                Debug.logInfo("Setup: User: party '" + userPartyId + "' has no GENERAL_LOCATION contact mech; treating as incomplete", module);
-                completed = false;
+            PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: User: ");
+            contactMechInfo.resultsToMap(result);
+            Set<String> generalAddressContactMechPurposes = null;
+            GenericValue generalAddressContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "GENERAL_LOCATION", useCache);
+            if (generalAddressContactMech == null) {
+                if (UtilMisc.booleanValueVersatile(params.get("useClosestAddress"), true)) {
+                    Debug.logInfo("Setup: User: party '" + userPartyId + "' has no GENERAL_LOCATION address; trying closest-matching for address purposes "
+                            + USER_MAINADDR_PURPOSES, module);
+                    generalAddressContactMech = contactMechInfo.getClosestPartyContactMechForPurposes(delegator, USER_MAINADDR_PURPOSES, useCache);
+                }
             }
-            if (!purposeTypes.contains("PHONE_HOME") && !purposeTypes.contains("PHONE_MOBILE")) {
-                Debug.logInfo("Setup: User: party '" + userPartyId + "' has no PHONE_HOME and PHONE_MOBILE contact mech; treating as incomplete", module);
-                completed = false;
+            if (generalAddressContactMech != null) {
+                generalAddressContactMechPurposes = contactMechInfo.getContactMechPurposes(generalAddressContactMech.getString("contactMechId"));
             }
-            if (!purposeTypes.contains("PRIMARY_EMAIL")) {
-                Debug.logInfo("Setup: User: party '"  + userPartyId + "' has no PRIMARY_EMAIL contact mech; treating as incomplete", module);
-                completed = false;
-            }
-            
-            if (!isNewOrFailedCreate) {
-                result.put("userPartyId", userPartyId);
-                result.put("userParty", party);
-                result.put("completed", completed);
+            result.put("generalAddressContactMech", generalAddressContactMech);
+            result.put("generalAddressContactMechPurposes", generalAddressContactMechPurposes);
+            boolean generalAddressStandaloneCompleted = (generalAddressContactMech != null)
+                    && setContainsAll(generalAddressContactMechPurposes, USER_MAINADDR_PURPOSES);
+            result.put("generalAddressStandaloneCompleted", generalAddressStandaloneCompleted);
+
+            result.put("locationPurposes", USER_MAINADDR_PURPOSES);
+            Map<String, GenericValue> locationContactMechs = contactMechInfo.getPartyContactMechForPurposeMap(delegator, USER_MAINADDR_PURPOSES, useCache);
+            boolean locationAddressesCompleted = (locationContactMechs.size() >= USER_MAINADDR_PURPOSES.size());
+            result.put("locationAddressesCompleted", locationAddressesCompleted);
+
+            GenericValue workPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_WORK", useCache);
+            GenericValue faxPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+            GenericValue primaryEmailContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
+
+            result.put("workPhoneContactMech", workPhoneContactMech);
+            result.put("faxPhoneContactMech", faxPhoneContactMech);
+            result.put("primaryEmailContactMech", primaryEmailContactMech);
+
+            boolean contactMechsCompleted = locationAddressesCompleted;
+            result.put("contactMechsCompleted", contactMechsCompleted);
+
+            if (contactMechsCompleted) {
+                result.put("completed", true);
             }
         }
         return result;
@@ -576,7 +593,11 @@ public abstract class SetupDataUtil {
     }
     
     static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false) && isEventError(params);
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false);
+    }
+    
+    static boolean isSuccessDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return isDeleteRecordRequest(params, stepNameCamel) && !isEventError(params);
     }
     
     // Aggregate/high-level states
@@ -602,7 +623,7 @@ public abstract class SetupDataUtil {
         
         return isNewRecordRequest(params, stepNameCamel) || 
                 isFailedCreateRecordRequest(params, stepNameCamel) || 
-                isDeleteRecordRequest(params, stepNameCamel);
+                isSuccessDeleteRecordRequest(params, stepNameCamel);
     }
     
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String stepNameCamel) {

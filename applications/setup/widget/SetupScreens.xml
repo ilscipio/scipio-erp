@@ -488,8 +488,7 @@
                                         <if-true field="userSelected"/>
                                     </condition>
                                     <widgets>
-                                        <screenlet>
-                                            <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->
+                                        <screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
                                             </platform-specific>
@@ -502,17 +501,44 @@
                             </fail-widgets>
                         </section>
                     </decorator-section>
+                    <decorator-section name="extra-body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="userParty"/></not>
+                                    </condition>
+                                    <actions>
+                                        <!-- SCIPIO: TODO: REVIEW: restricting the contact info to simple functions only for now,
+                                            remains to be seen if need to restrict further or completely get rid of this part -->
+                                        <set field="partyInfoViewOnly" type="Boolean" value="false"/>
+                                        <set field="partyInfoSimpleFuncOnly" type="Boolean" value="true"/>
+                                        <set field="partyContactInfoUseSection" type="Boolean" value="false"/>
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://setup/webapp/setup/user/UserOverview.ftl"/></html>
+                                        </platform-specific> 
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
     <screen name="SelectUser">
         <section>
-            <!-- <actions>
-                <entity-condition entity-name="PartyRole" list="parties">
-                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+            <actions>
+                <entity-condition entity-name="PartyRelationship" list="parties">
+                    <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>
+                    <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
-            </actions> -->
+            </actions>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://setup/webapp/setup/user/SelectUser.ftl"/></html>
@@ -610,19 +636,22 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <script lang="groovy"><![CDATA[
+                    def setupWorker = context.setupWorker;
                     def targetRecord;
                     def isCreate;
                     def titleProperty = 'ProductEditCatalog'; // forms have their own subtitles
                     def target;
                     def submitFormId;
-                    if (productCategoryId || parameters.newCategory) { // FIXME: BROKEN, use worker for parameters
+                    // WARN: "category" is not a real step name to pass to worker, works for these calls only...
+                    if (!setupWorker?.isSuccessDeleteRecordRequest("category") && 
+                        (context.productCategoryAndAssoc != null || setupWorker?.isEffectiveNewRecordRequest("category"))) {
                         targetRecord = "category"
-                        isCreate = (context.productCategory == null);
+                        isCreate = (context.productCategoryAndAssoc == null);
                         target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
                         submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
                     } else {
                         targetRecord = "catalog"
-                        isCreate = (context.prodCatalog == null);
+                        isCreate = (context.prodCatalogAndStoreAssoc == null);
                         if (isCreate) titleProperty = 'ProductNewCatalog';
                         target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
                         submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
@@ -633,21 +662,11 @@
                     context.target = target;
                     context.submitFormId = submitFormId;
                 ]]></script>
-                <set field="submitFormIdVar" value="setupSubmitFormId"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template><![CDATA[
-                                  <@script>
-                                    <#-- the form to save is dynamically chosen -->
-                                    var ${submitFormIdVar} = "${submitFormId!}";
-                                  </@script>
-                                ]]></html-template>
-                            </html>
-                        </platform-specific>
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
@@ -687,11 +706,13 @@
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>
                                   </@form>
+                                <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
                                     <#if !isCreate>
-                                      <@menuitem type="link" href="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);" text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                      <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
+                                -->
                                 ]]></html-template>
                             </html>
                         </platform-specific>

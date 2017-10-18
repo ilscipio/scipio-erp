@@ -68,4 +68,9 @@
         <value xml:lang="de">Ein Kontakt, der bereits den Zweck ${contactMechPurposeTypeId} hat, wurde beim Versuch gefunden, einen neuen zu erstellen. Diese Entität wurde möglicherweise während der Bearbeitung dieses Formulars an anderer Stelle geändert. Bitte laden Sie diese Seite neu, überprüfen Sie die Kontaktdaten und versuchen Sie es erneut.</value>
         <value xml:lang="fr">Un mech de contact ayant déjà l'objet ${contactMechPurposeTypeId} a été trouvé en essayant de créer un nouveau. Cette entité peut avoir été modifiée ailleurs pendant la modification de ce formulaire. Veuillez recharger cette page, vérifier les coordonnées et réessayer.</value>
     </property>
+    <property key="SetupProductCategoryRollupMissing">
+        <value xml:lang="en">ProductCategoryRollup missing for category; cannot update.</value>
+        <value xml:lang="de">ProductCategoryRollup fehlt für Kategorie; kann nicht aktualisiert werden.</value>
+        <value xml:lang="fr">ProductCategoryRollup manquant pour la catégorie; ne peut pas mettre à jour.</value>
+    </property>
 </resource>

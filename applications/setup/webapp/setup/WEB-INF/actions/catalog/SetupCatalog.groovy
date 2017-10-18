@@ -39,11 +39,34 @@ if (prodCatalog != null && productStoreCatalog != null) {
 context.prodCatalogAndStoreAssoc = prodCatalogAndStoreAssoc;
 
 // CATEGORY
+productCategoryAndAssoc = null;
 productCategoryId = context.productCategoryId ?: parameters.productCategoryId;
 productCategory = null;
 if (prodCatalog && productCategoryId) {
-    // FIXME!!!: verify part of store/catalog
+    // VERIFY category is actually part of this store (any catalog)
     productCategory = delegator.findOne("ProductCategory", [productCategoryId:productCategoryId], false);
+    
+    def prodCatalogCategory = null;
+    def productCategoryRollup = null;
+    parentProductCategoryId = parameters.parentProductCategoryId;
+    if (parentProductCategoryId) {
+        productCategoryRollup = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", parentProductCategoryId,
+            "productCategoryId", productCategoryId).filterByDate().queryFirst();
+        if (productCategoryRollup && productCategory) {
+            productCategoryAndAssoc = new HashMap(productCategory);
+            productCategoryAndAssoc.putAll(productCategoryRollup);
+        }
+    } else if (prodCatalogId) {
+        prodCatalogCategory = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId,
+            "productCategoryId", productCategoryId).filterByDate().queryFirst();
+        if (prodCatalogCategory && productCategory) {
+            productCategoryAndAssoc = new HashMap(productCategory);
+            productCategoryAndAssoc.putAll(prodCatalogCategory);
+        }
+    }
 }
 context.productCategoryId = productCategoryId;
 context.productCategory = productCategory;
+context.productCategoryAndAssoc = productCategoryAndAssoc;
+
+

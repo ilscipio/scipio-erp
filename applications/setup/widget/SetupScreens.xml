@@ -610,19 +610,22 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <script lang="groovy"><![CDATA[
+                    def setupWorker = context.setupWorker;
                     def targetRecord;
                     def isCreate;
                     def titleProperty = 'ProductEditCatalog'; // forms have their own subtitles
                     def target;
                     def submitFormId;
-                    if (productCategoryId || parameters.newCategory) { // FIXME: BROKEN, use worker for parameters
+                    // WARN: "category" is not a real step name to pass to worker, works for these calls only...
+                    if (!setupWorker?.isSuccessDeleteRecordRequest("category") && 
+                        (context.productCategoryAndAssoc != null || setupWorker?.isEffectiveNewRecordRequest("category"))) {
                         targetRecord = "category"
-                        isCreate = (context.productCategory == null);
+                        isCreate = (context.productCategoryAndAssoc == null);
                         target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
                         submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
                     } else {
                         targetRecord = "catalog"
-                        isCreate = (context.prodCatalog == null);
+                        isCreate = (context.prodCatalogAndStoreAssoc == null);
                         if (isCreate) titleProperty = 'ProductNewCatalog';
                         target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
                         submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
@@ -633,21 +636,11 @@
                     context.target = target;
                     context.submitFormId = submitFormId;
                 ]]></script>
-                <set field="submitFormIdVar" value="setupSubmitFormId"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html>
-                                <html-template><![CDATA[
-                                  <@script>
-                                    <#-- the form to save is dynamically chosen -->
-                                    var ${submitFormIdVar} = "${submitFormId!}";
-                                  </@script>
-                                ]]></html-template>
-                            </html>
-                        </platform-specific>
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
@@ -687,11 +680,13 @@
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>
                                   </@form>
+                                <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
                                     <#if !isCreate>
-                                      <@menuitem type="link" href="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);" text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                      <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
+                                -->
                                 ]]></html-template>
                             </html>
                         </platform-specific>

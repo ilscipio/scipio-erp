@@ -16427,8 +16427,16 @@
         <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
     </property>
+    <property key="CommonConfirmDeleteRecordAssocPermanent">
+        <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
+    </property>
     <property key="CommonDisplayOptions">
         <value xml:lang="en">Display Options</value>
         <value xml:lang="de">Anzeigeoptionen</value>
+    </property>
+    <property key="CommonRemoveAssoc">
+        <value xml:lang="en">Remove Assoc</value>
+        <value xml:lang="de">Assoc entfernen</value>
     </property>
 </resource>

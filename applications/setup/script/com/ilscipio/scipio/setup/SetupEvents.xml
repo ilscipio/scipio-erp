@@ -581,30 +581,7 @@
         <call-service service-name="createWebSite" in-map-name="parameters"/>
         <field-to-request request-name="webSiteId" field="parameters.webSiteId"/>
     </simple-method>
-    
-    <simple-method method-name="updateProdCatalogAndProductStoreCatalog" short-description="update ProdCatalog And ProductStoreCatalog">
-        <set-service-fields service-name="updateProdCatalog" map="parameters" to-map="updateProdCatalogCtx"/>
-        <call-service service-name="updateProdCatalog" in-map-name="updateProdCatalogCtx"/>
-        <check-errors/>
-        
-        <set-service-fields service-name="updateProductStoreCatalog" map="parameters" to-map="updateProductStoreCatalogCtx"/>
-        <call-service service-name="updateProductStoreCatalog" in-map-name="updateProductStoreCatalogCtx"/>
-        <check-errors/>
-    </simple-method>
-    
-    <simple-method method-name="deleteProdCatalogAndProductStoreCatalog" short-description="delete ProdCatalog And ProductStoreCatalog">
-        <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteProductStoreCatalogCtx"/>
-        <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteProductStoreCatalogCtx"/>
-        <check-errors/>
 
-        <set-service-fields service-name="deleteProdCatalog" map="parameters" to-map="deleteProdCatalogCtx"/>
-        <call-service service-name="deleteProdCatalog" in-map-name="deleteProdCatalogCtx">
-            <default-message resource="ScipioSetupUiLabels" property="SetupCatalogStoreAssocRemoved"/>
-        </call-service>
-        <check-errors/>
-    </simple-method>
-    
-    
     <simple-method method-name="validateUser" short-description="Validate User" login-required="false">
         <!-- timestamp to be used -->
         <now-timestamp field="nowStamp"/>
@@ -735,90 +712,4 @@
          (!faxNumber.countryCode.equals(faxMap.countryCode) || !faxNumber.areaCode.equals(faxMap.areaCode) || !faxNumber.contactNumber.equals(faxMap.contactNumber) || !faxNumber.extension.equals(faxMap.extension)) ? true : false;}" type="Boolean" />
         <log level="always" message="faxNumber changed =================> ${faxChanged}" />
     </simple-method>
-    
-    <!-- TODO: should turn these into new group services -->
-    <simple-method method-name="createProductCategoryAndAssoc">
-        <if-empty field="parameters.parentProductCategoryId">
-            <call-simple-method method-name="createProductCategoryAndProdCatalogAssoc"/>
-            <else>
-                <call-simple-method method-name="createProductCategoryAndRollupAssoc"/>
-            </else>
-        </if-empty>
-        <check-errors/>
-    </simple-method>
-    <simple-method method-name="createProductCategory">
-        <set-service-fields service-name="createProductCategory" to-map="createRecordCtx" map="parameters"/>
-        <call-service service-name="createProductCategory" in-map-name="createRecordCtx">
-            <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
-        </call-service>
-    </simple-method>
-    <simple-method method-name="createProductCategoryAndProdCatalogAssoc">
-        <call-simple-method method-name="createProductCategory"/>
-        <check-errors/>
-        <set-service-fields service-name="addProductCategoryToProdCatalog" to-map="createAssocCtx" map="parameters"/>
-        <call-service service-name="addProductCategoryToProdCatalog" in-map-name="createAssocCtx"/>
-    </simple-method>
-    <simple-method method-name="createProductCategoryAndRollupAssoc">
-        <call-simple-method method-name="createProductCategory"/>
-        <check-errors/>
-        <set-service-fields service-name="addProductCategoryToCategory" to-map="createAssocCtx" map="parameters"/>
-        <call-service service-name="addProductCategoryToCategory" in-map-name="createAssocCtx"/>
-    </simple-method>
-
-    <simple-method method-name="updateProductCategoryAndAssoc">
-        <if-empty field="parameters.parentProductCategoryId">
-            <call-simple-method method-name="updateProductCategoryAndProdCatalogAssoc"/>
-            <else>
-                <call-simple-method method-name="updateProductCategoryAndRollupAssoc"/>
-            </else>
-        </if-empty>
-        <check-errors/>
-    </simple-method>
-    <simple-method method-name="updateProductCategory">
-        <set-service-fields service-name="updateProductCategory" to-map="updateRecordCtx" map="parameters"/>
-        <call-service service-name="updateProductCategory" in-map-name="updateRecordCtx">
-            <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
-        </call-service>
-    </simple-method>
-    <simple-method method-name="updateProductCategoryAndProdCatalogAssoc">
-        <call-simple-method method-name="updateProductCategory"/>
-        <check-errors/>
-        <set-service-fields service-name="updateProductCategoryToProdCatalog" to-map="updateAssocCtx" map="parameters"/>
-        <call-service service-name="updateProductCategoryToProdCatalog" in-map-name="updateAssocCtx"/>
-    </simple-method>
-    <simple-method method-name="updateProductCategoryAndRollupAssoc">
-        <call-simple-method method-name="updateProductCategory"/>
-        <check-errors/>
-        <set-service-fields service-name="updateProductCategoryToCategory" to-map="updateAssocCtx" map="parameters"/>
-        <call-service service-name="updateProductCategoryToCategory" in-map-name="updateAssocCtx"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteProductCategoryAndAssoc">
-        <call-simple-method method-name="deleteProductCategoryAssoc"/>
-        <check-errors/>
-        <if-compare field="parameters.isDeleteCategoryRecord" operator="equals" value="Y">
-            <call-simple-method method-name="deleteProductCategory"/>
-            <check-errors/>
-        </if-compare>
-    </simple-method>
-    <simple-method method-name="deleteProductCategoryAssoc">
-        <if-empty field="parameters.parentProductCategoryId">
-            <call-simple-method method-name="deleteProductCategoryProdCatalogAssoc"/>
-            <else>
-                <call-simple-method method-name="deleteProductCategoryRollupAssoc"/>
-            </else>
-        </if-empty>
-        <check-errors/>
-    </simple-method>
-    <simple-method method-name="deleteProductCategoryProdCatalogAssoc">
-        <set-service-fields service-name="removeProductCategoryFromProdCatalog" to-map="removeCtx" map="parameters"/>
-        <call-service service-name="removeProductCategoryFromProdCatalog" in-map-name="removeCtx"/>
-    </simple-method>
-    <simple-method method-name="deleteProductCategoryRollupAssoc">
-        <set-service-fields service-name="removeProductCategoryFromCategory" to-map="removeCtx" map="parameters"/>
-        <call-service service-name="removeProductCategoryFromCategory" in-map-name="removeCtx"/>
-    </simple-method>
-    <simple-method method-name="deleteProductCategory">
-    </simple-method>
-
 </simple-methods>

@@ -169,37 +169,37 @@
     </request-map>
     <request-map uri="setupCreateCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createProdCatalogAndProductStoreCatalog"/>
+        <event type="simple" invoke="createProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProdCatalogAndProductStoreCatalog"/>
+        <event type="simple" invoke="updateProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupDeleteCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="deleteProdCatalogAndProductStoreCatalog"/>
+        <event type="simple" invoke="deleteProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupCreateCategory">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductCategoryAndAssoc"/>
+        <event type="service" invoke="createProductCategoryAndCatAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCategory">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProductCategoryAndAssoc"/>
+        <event type="service" invoke="updateProductCategoryAndCatAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupDeleteCategory">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="deleteProductCategoryAndAssoc"/>
+        <event type="service" invoke="deleteProductCategoryAndCatAssoc"/><!-- NOTE: deleteProductCategory boolean controls record deletion -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>

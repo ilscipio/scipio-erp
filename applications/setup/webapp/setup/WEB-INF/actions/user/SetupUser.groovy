@@ -115,3 +115,5 @@ context.userSelected = userSelected;
 
 List<GenericValue> userPartyRoles = EntityQuery.use(delegator).from("RoleType").where(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, null)).orderBy(["description"]).query();
 context.userPartyRoles = userPartyRoles;
+List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from("PartyRelationshipType").orderBy(["partyRelationshipName"]).query();
+context.userPartyRelationshipTypes = userPartyRelationshipTypes;

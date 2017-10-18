@@ -509,7 +509,7 @@
                             <widgets>
                                 <section>
                                     <condition>
-                                        <not><if-empty field="party"/></not>
+                                        <not><if-empty field="userParty"/></not>
                                     </condition>
                                     <actions>
                                         <!-- SCIPIO: TODO: REVIEW: restricting the contact info to simple functions only for now,
@@ -533,11 +533,12 @@
     </screen>
     <screen name="SelectUser">
         <section>
-            <!-- <actions>
-                <entity-condition entity-name="PartyRole" list="parties">
-                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+            <actions>
+                <entity-condition entity-name="PartyRelationship" list="parties">
+                    <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>
+                    <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
                 </entity-condition>
-            </actions> -->
+            </actions>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://setup/webapp/setup/user/SelectUser.ftl"/></html>

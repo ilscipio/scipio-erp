@@ -169,19 +169,19 @@
     </request-map>
     <request-map uri="setupCreateCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" invoke="createProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="createProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" invoke="updateProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="updateProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupDeleteCatalog">
         <security https="true" auth="true"/>
-        <event type="simple" invoke="deleteProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="deleteProdCatalogAndStoreAssoc"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>

@@ -91,7 +91,7 @@
 <div style="display:none;">
 <#macro setupDeleteCatalogForm id>
   <@form id=id action=makeOfbizUrl("setupDeleteCatalog") method="post">
-      <@defaultWizardFormFields exclude=["prodCatalogId"]/>
+      <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteCatalog" value="Y"/>
       

@@ -4,11 +4,17 @@ import com.ilscipio.scipio.setup.*;
 
 final module = "SetupCatalog.groovy";
 
+SetupWorker setupWorker = context.setupWorker;
 catalogData = context.catalogData ?: [:];
 
 prodCatalog = catalogData.prodCatalog;
 context.prodCatalog = prodCatalog;
 context.prodCatalogId = prodCatalog?.prodCatalogId;
+
+// SPECIAL CASE: prevent the ID from showing up after delete
+if (setupWorker?.isSuccessDeleteRecordRequest("catalog")) {
+    parameters.prodCatalogId = null;
+}
 
 productStoreCatalog = catalogData.productStoreCatalog;
 context.productStoreCatalog = productStoreCatalog;

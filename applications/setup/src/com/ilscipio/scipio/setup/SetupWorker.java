@@ -517,6 +517,8 @@ public abstract class SetupWorker implements Serializable {
     
     // Exact request states 
     
+    public abstract boolean isSetupEventError();
+    
     /**
      * Returns true if new record form requested - this controls if form should show create or update.
      */
@@ -658,6 +660,10 @@ public abstract class SetupWorker implements Serializable {
         }
         @Override
         public List<String> getIncompleteSteps() {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isSetupEventError() {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
@@ -1107,6 +1113,10 @@ public abstract class SetupWorker implements Serializable {
             return Collections.unmodifiableList(missing);
         }
         
+        @Override
+        public boolean isSetupEventError() {
+            return SetupEvents.isPreviousEventSavedError(getParams());
+        }
         @Override
         public boolean isNewRecordRequest(String step) {
             return SetupDataUtil.isNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));

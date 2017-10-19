@@ -589,6 +589,7 @@
             if (objectType == 'catalog') {
                 menuDefs = {
                     "edit": defs.edit,
+                    "removeassoc": defs.removeassoc,
                     "remove": defs.remove,
                     "newcategory": defs.newcategory,
                     "manage": defs.manage

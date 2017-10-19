@@ -43,6 +43,12 @@
                 "prodCatalogId": wrapRawScript('function(elem, name, value, form, params, ai) { alert("ignoring this field"); return false; }')
             }-->
         },
+        "removeassoc": {
+            "type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
+            "id": "ect-removecatalogassoc-form"
+        },
         "remove": {
             "type": "form",
             "mode": "submit",

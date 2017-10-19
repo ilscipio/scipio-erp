@@ -89,16 +89,18 @@
 </@section>
 
 <div style="display:none;">
-<#macro setupDeleteCatalogForm id>
+<#macro setupDeleteCatalogForm id isDeleteRecord>
   <@form id=id action=makeOfbizUrl("setupDeleteCatalog") method="post">
       <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
       <@field type="hidden" name="setupContinue" value="N"/>
-      <@field type="hidden" name="isDeleteCatalog" value="Y"/>
-      
+      <@field type="hidden" name="isDeleteCatalog" value="Y"/><#-- for our screens -->
+      <@field type="hidden" name="deleteProdCatalog" value=isDeleteRecord?string("true", "false")/><#-- for service -->
+
       <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="fromDate" value="" class="+ect-inputfield"/>
   </@form>
 </#macro>
-  <@setupDeleteCatalogForm id="ect-removecatalog-form"/>
+  <@setupDeleteCatalogForm id="ect-removecatalog-form" isDeleteRecord=true/>
+  <@setupDeleteCatalogForm id="ect-removecatalogassoc-form" isDeleteRecord=false/>
 </div>

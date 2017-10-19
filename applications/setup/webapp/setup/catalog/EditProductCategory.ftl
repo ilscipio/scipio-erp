@@ -121,14 +121,22 @@
   <@form id=id action=makeOfbizUrl("setupDeleteCategory") method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@field type="hidden" name="setupContinue" value="N"/>
-      <@field type="hidden" name="isDeleteCategory" value="Y"/>
-      <@field type="hidden" name="isDeleteCategoryRecord" value=isDeleteRecord?string("Y","N")/>
+      <@field type="hidden" name="isDeleteCategory" value="Y"/><#-- for our screens -->
+      <@field type="hidden" name="deleteProductCategory" value=isDeleteRecord?string("true", "false")/><#-- for service -->
       
-      <@field type="hidden" name="productCategoryId" value="" class="+ect-inputfield"/>
-      <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
+      <#-- common -->
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>
-      <@field type="hidden" name="parentProductCategoryId" value="" class="+ect-inputfield"/>
+      
+      <#-- common PK -->
+      <@field type="hidden" name="productCategoryId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="fromDate" value="" class="+ect-inputfield"/>
+      
+      <#-- ProdCatalogCategory PK -->
+      <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
+      <@field type="hidden" name="prodCatalogCategoryTypeId" value="" class="+ect-inputfield"/>
+      
+      <#-- ProductCategoryRollup PK -->
+      <@field type="hidden" name="parentProductCategoryId" value="" class="+ect-inputfield"/><#-- presence determines which assoc type gets targeted for delete -->
   </@form>
 </#macro>
   <@setupDeleteCategoryForm id="ect-removecategory-form" isDeleteRecord=true/>

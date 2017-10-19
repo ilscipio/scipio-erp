@@ -1051,13 +1051,21 @@ under the License.
     </simple-method>
     
     <simple-method method-name="deleteProdCatalogAndStoreAssoc">
-        <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
-        <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx"/>
+        <if-compare field="parameters.deleteProdCatalog" operator="not-equals" type="Boolean" value="false">
+            <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
+            <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx"/>
 
-        <set-service-fields service-name="deleteProdCatalog" map="parameters" to-map="deleteRecordCtx"/>
-        <call-service service-name="deleteProdCatalog" in-map-name="deleteRecordCtx">
-            <default-message resource="ProductUiLabels" property="ProductCatalogAndStoreAssocRemoved"/>
-        </call-service>
+            <set-service-fields service-name="deleteProdCatalog" map="parameters" to-map="deleteRecordCtx"/>
+            <call-service service-name="deleteProdCatalog" in-map-name="deleteRecordCtx">
+                <default-message resource="ProductUiLabels" property="ProductCatalogAndStoreAssocRemoved"/>
+            </call-service>
+            <else>
+                <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
+                <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx">
+                    <default-message resource="ProductUiLabels" property="ProductCatalogStoreAssocRemoved"/>
+                </call-service>
+            </else>
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="createProductCategoryAndCatAssoc">

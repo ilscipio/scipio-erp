@@ -32071,4 +32071,9 @@
         <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
         <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
     </property>
+    <property key="ProductCatalogStoreAssocRemoved">
+        <value xml:lang="en">Catalog association successfully removed from store.</value>
+        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
+        <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
+    </property>
 </resource>

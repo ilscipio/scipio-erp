@@ -668,7 +668,24 @@
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>
     });
     
+    jQuery(document).ready(function() {
+        <#-- WORKAROUND: must manually trigger activate on load otherwise action menu out of sync -->
+        var treeElem = jQuery('#${escapeVal(ectTreeId!, 'js')}');
+        treeElem.bind('loaded.jstree', function(event, data) {
+            var tree = treeElem.jstree(true);
+            var selected = tree.get_selected();
+            if (selected && selected.length) {
+                jQuery.each(selected, function(i, e) {
+                    // have to deselect first or the select has no effect
+                    tree.deselect_node(e, true);
+                    tree.select_node(e, false, false);
+                });
+            }
+        });
+    });
+    
 </@script>
+
 <#assign treeEvents = {
     'select_node.jstree': 'ectHandler.sideMenuHandler(data.node);',
     'activate_node.jstree': 'ectHandler.execEditForNode(data.node);' <#-- TODO: REVIEW: is this too destructive? -->
@@ -765,5 +782,3 @@
       
     </@cell>
 </@row>
-
-

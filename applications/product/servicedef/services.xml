@@ -1743,9 +1743,15 @@ under the License.
 
     <service name="deleteProdCatalogAndStoreAssoc" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssoc" auth="true">
-        <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association</description>
+        <description>SCIPIO: Delete a ProdCatalog and ProductStoreCatalog association</description>
         <implements service="deleteProdCatalog"/>
         <implements service="deleteProductStoreCatalog"/>
+    </service>
+    
+    <service name="deleteProdCatalogAndStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association(s)</description>
+        <implements service="deleteProdCatalogAndStoreAssoc"/>
         <attribute name="deleteProdCatalog" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete ProdCatalog; if false only deletes catalog or category association</description>
         </attribute>
@@ -1810,8 +1816,9 @@ under the License.
         <override name="productCategoryId" optional="false"/>
     </service>
     
-    <service name="deleteProductCategoryAndCatAssoc" default-entity-name="ProductCategory" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssoc" auth="true">
+    <!-- SCIPIO: NOTE: having versatile service eliminates need for copy-pasting controller defs and events - form params control behavior if this is set in an event -->
+    <service name="deleteProductCategoryAndCatAssocVersatile" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association based on wether parentProductCategoryId set (versatile)</description>
         <implements service="deleteProductCategoryCatAssoc"/>
         <attribute name="deleteProductCategory" mode="IN" type="Boolean" optional="true" default-value="true">

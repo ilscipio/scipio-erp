@@ -230,10 +230,12 @@ public abstract class SetupDataUtil {
 
             GenericValue workPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_WORK", useCache);
             GenericValue faxPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+            GenericValue mobilePhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_MOBILE", useCache);
             GenericValue primaryEmailContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
 
             result.put("workPhoneContactMech", workPhoneContactMech);
             result.put("faxPhoneContactMech", faxPhoneContactMech);
+            result.put("mobilePhoneContactMech", mobilePhoneContactMech);
             result.put("primaryEmailContactMech", primaryEmailContactMech);
 
             boolean contactMechsCompleted = locationAddressesCompleted;

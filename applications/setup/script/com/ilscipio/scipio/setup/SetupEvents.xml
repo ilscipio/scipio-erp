@@ -320,7 +320,6 @@
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <!-- <set field="personContext.partyId" from-field="parameters.customerPartyId"/> -->
         <call-simple-method  method-name="createUser" xml-resource="component://party/script/org/ofbiz/party/user/UserEvents.xml"/>
-        
         <if>
             <condition>
                 <and>
@@ -344,58 +343,70 @@
     </simple-method>
     
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
-<!--         <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />
-        
-        <log level="always" message="parameters.USER_EMAIL_CONTACT_MECH_ID          =================> ${parameters.USER_EMAIL_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID =================> ${parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID    =================> ${parameters.USER_WORK_NUMBER_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID  =================> ${parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID}" />
-        <log level="always" message="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID     =================> ${parameters.USER_FAX_NUMBER_CONTACT_MECH_ID}" />   -->     
-        
-        <entity-one value-field="person" entity-name="Person"><field-map field-name="partyId" from-field="parameters.userPartyId"/></entity-one>
-        <entity-one value-field="postalAddress" entity-name="PostalAddress"><field-map field-name="contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID"/></entity-one>
-        <entity-one value-field="workNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID"/></entity-one>
-        <entity-one value-field="mobileNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID"/></entity-one>
-        <entity-one value-field="faxNumber" entity-name="TelecomNumber"><field-map field-name="contactMechId" from-field="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID"/></entity-one>
-        <entity-one value-field="emailAddress" entity-name="ContactMech"><field-map field-name="contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID"/></entity-one>
+        <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />        
+        <log level="always" message="parameters.USER_EMAIL_CONTACTMECHID            =================> ${parameters.USER_EMAIL_CONTACTMECHID}" />
+        <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACTMECHID   =================> ${parameters.USER_POSTAL_ADDRESS_CONTACTMECHID}" />
+        <log level="always" message="parameters.USER_WORK_CONTACTMECHID             =================> ${parameters.USER_WORK_CONTACTMECHID}" />
+        <log level="always" message="parameters.USER_MOBILE_CONTACTMECHID           =================> ${parameters.USER_MOBILE_CONTACTMECHID}" />
+        <log level="always" message="parameters.USER_FAX_CONTACTMECTID              =================> ${parameters.USER_FAX_CONTACT_MECH_ID}" />  
         
         <call-simple-method method-name="validateUser"/>
         <!-- see if we should continue now... -->
         <check-errors/>
+                    
+        <set field="personMap.partyId" from-field="parameters.userPartyId" />
+        <call-service service-name="updatePerson" in-map-name="personMap" />
+        <check-errors/>
         
-        <if-compare field="addressChanged" operator="equals" value="true" type="Boolean">
-			<set field="addressMap.contactMechId" from-field="parameters.USER_POSTAL_ADDRESS_CONTACT_MECH_ID" />
-			<set field="addressMap.partyId" from-field="parameters.userPartyId" />
-			<call-service service-name="updatePartyPostalAddress" in-map-name="addressMap" />
-        </if-compare>
-       
-        <if-compare field="emailChanged" operator="equals" value="true" type="Boolean">
-            <set field="emailMap.contactMechId" from-field="parameters.USER_EMAIL_CONTACT_MECH_ID" />
-            <set field="emailMap.partyId" from-field="parameters.userPartyId" />
-            <call-service service-name="updatePartyEmailAddress" in-map-name="emailMap" />
-        </if-compare>
+        <set field="partyId" from-field="parameters.partyId"/>
         
-        <if-compare field="personChanged" operator="equals" value="true" type="Boolean">            
-            <set field="personMap.partyId" from-field="parameters.userPartyId" />
-            <call-service service-name="updatePerson" in-map-name="personMap" />
-        </if-compare>
-        
-        <if-compare field="workPhoneChanged" operator="equals" value="true" type="Boolean">            
-            <set field="workPhoneMap.partyId" from-field="parameters.userPartyId" />
-            <set field="workPhoneMap.contactMechId" from-field="parameters.USER_WORK_NUMBER_CONTACT_MECH_ID" />
-            <call-service service-name="updatePartyTelecomNumber" in-map-name="workPhoneMap" />
-        </if-compare>
-        <if-compare field="mobileChanged" operator="equals" value="true" type="Boolean">
-            <set field="mobileMap.partyId" from-field="parameters.userPartyId" />
-            <set field="mobileMap.contactMechId" from-field="parameters.USER_MOBILE_NUMBER_CONTACT_MECH_ID" />
-            <call-service service-name="updatePartyTelecomNumber" in-map-name="mobileMap" />
-        </if-compare>
-        <if-compare field="faxChanged" operator="equals" value="true" type="Boolean">            
-            <set field="faxMap.partyId" from-field="parameters.userPartyId" />
-            <set field="faxMap.contactMechId" from-field="parameters.USER_FAX_NUMBER_CONTACT_MECH_ID" />
-            <call-service service-name="updatePartyTelecomNumber" in-map-name="faxMap" />
+        <!-- billing address -->
+        <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
+            <!-- address not used, do nothing -->
+            <else>
+                <set field="cutn" value="" set-if-null="true"/>
+                <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
+                <!-- <set field="cutn.contactMechPurposeTypeIdList[]" value="PAYMENT_LOCATION"/> -->
+                <set field="cutn.contactMechPurposeTypeIdList[]" value="GENERAL_LOCATION"/>
+                <set field="cutn.contactMechPurposeTypeIdList[]" value="BILLING_LOCATION"/>
+                <set field="cutn.contactCtx" from-field="addressMap"/>
+                <set field="cutn.createMissingPurposes" from-field="parameters.USER_ADDRESS_CREATEMISSINGPURPOSES"/>
+                <call-simple-method method-name="createUpdatePartyPostalAddress"/>
+                <check-errors/>
+            </else>
         </if-compare>
         
+        <!-- mobile phone -->
+        <set field="cutn" value="" set-if-null="true"/>
+        <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
+        <set field="cutn.contactMechPurposeTypeId" value="MOBILE_HOME"/>
+        <set field="cutn.contactCtx" from-field="mobileMap"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
+        <check-errors/>
+        
+        <!-- work phone -->
+        <set field="cutn" value="" set-if-null="true"/>
+        <set field="cutn.contactMechId" from-field="parameters.USER_WORK_CONTACTMECHID"/>
+        <set field="cutn.contactMechPurposeTypeId" value="PHONE_WORK"/>
+        <set field="cutn.contactCtx" from-field="workPhoneMap"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
+        <check-errors/>
+        
+        <!-- fax phone -->
+        <set field="cutn" value="" set-if-null="true"/>
+        <set field="cutn.contactMechId" from-field="parameters.USER_FAX_CONTACTMECHID"/>
+        <set field="cutn.contactMechPurposeTypeId" value="FAX_NUMBER"/>
+        <set field="cutn.contactCtx" from-field="faxMap"/>
+        <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
+        <check-errors/>
+        
+        <!-- email address -->
+        <set field="cutn" value="" set-if-null="true"/>
+        <set field="cutn.contactMechId" from-field="parameters.USER_EMAIL_CONTACTMECHID"/>
+        <set field="cutn.contactMechPurposeTypeId" value="PRIMARY_EMAIL"/>
+        <set field="cutn.contactCtx" from-field="emailMap"/>
+        <call-simple-method method-name="createUpdatePartyEmailAddress"/>
+        <check-errors/>
     </simple-method>
     
     <simple-method method-name="updateFacilityAndContactMech" short-description="update Facility and ContactMech">
@@ -610,9 +621,7 @@
                     <not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty>
                 </process>
             </simple-map-processor>
-        </call-map-processor>
-        <set field="personChanged" value="${groovy: (!person.personalTitle.equals(personMap.personalTitle) || !person.firstName.equals(personMap.firstName) || !person.lastName.equals(personMap.lastName)) ? true : false;}" type="Boolean" />
-        <log level="always" message="person changed =================> ${personChanged}" />
+        </call-map-processor>        
 
         <!-- setup the email -->
         <call-map-processor in-map-name="parameters" out-map-name="emailMap">
@@ -624,8 +633,6 @@
                 <process field="USER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        <set field="emailChanged" value="${groovy: (!emailAddress.infoString.equals(emailMap.infoString)) ? true : false;}" type="Boolean" />
-        <log level="always" message="email changed =================> ${emailChanged}" />
 
         <!-- setup the Postal Address -->
         <call-map-processor in-map-name="parameters" out-map-name="addressMap">        
@@ -655,16 +662,7 @@
                 <process field="USER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        <set field="addressChanged" value="${groovy: ( 
-         ((!postalAddress.address1 != null &amp;&amp; !postalAddress.address1.equals(addressMap.address1)) || (postalAddress.address1 == null &amp;&amp; addressMap.address1 != null)) || 
-         ((!postalAddress.address2 != null &amp;&amp; !postalAddress.address2.equals(addressMap.address2)) || (postalAddress.address2 == null &amp;&amp; addressMap.address2 != null)) || 
-         ((!postalAddress.city != null &amp;&amp; !postalAddress.city.equals(addressMap.city)) || (postalAddress.city == null &amp;&amp; addressMap.city != null)) || 
-         ((!postalAddress.stateProvinceGeoId != null &amp;&amp; !postalAddress.stateProvinceGeoId.equals(addressMap.stateProvinceGeoId)) || (postalAddress.stateProvinceGeoId == null &amp;&amp; addressMap.stateProvinceGeoId != null)) ||
-         ((!postalAddress.postalCode != null &amp;&amp; !postalAddress.postalCode.equals(addressMap.postalCode)) || (postalAddress.postalCode == null &amp;&amp; addressMap.postalCode != null)) || 
-         ((!postalAddress.countryGeoId != null &amp;&amp; !postalAddress.countryGeoId.equals(addressMap.countryGeoId)) || (postalAddress.countryGeoId == null &amp;&amp; addressMap.countryGeoId != null)) 
-         ? true : false;}" type="Boolean" />
-        <log level="always" message="address changed =================> ${addressChanged}" />
-
+       
         <!-- Setup the Work Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="workPhoneMap">
             <simple-map-processor name="workPhone">
@@ -678,13 +676,6 @@
                 <process field="USER_WORK_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        <set field="workPhoneChanged" value="${groovy: (
-         ((workNumber.countryCode != null &amp;&amp; !workNumber.countryCode.equals(workPhoneMap.countryCode)) || (workNumber == null &amp;&amp; workPhoneMap !=null)) || 
-         !workNumber.areaCode.equals(workPhoneMap.areaCode) || 
-         !workNumber.contactNumber.equals(workPhoneMap.contactNumber) || 
-         !workNumber.extension.equals(workPhoneMap.extension)
-         ) ? true : false;}" type="Boolean" />
-        <log level="always" message="workNumber changed =================> ${workPhoneChanged}" />
 
         <!-- Setup the Mobile Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="mobileMap">
@@ -699,9 +690,6 @@
                 <process field="USER_MOBILE_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
-        <set field="mobileChanged" value="${groovy: 
-         (!mobileNumber.countryCode.equals(mobileMap.countryCode) || !mobileNumber.areaCode.equals(mobileMap.areaCode) || !mobileNumber.contactNumber.equals(mobileMap.contactNumber) || !mobileNumber.extension.equals(mobileMap.extension)) ? true : false;}" type="Boolean" />
-        <log level="always" message="mobileNumber changed =================> ${mobileChanged}" />
         
         <!-- Setup the Mobile Phone -->
         <call-map-processor in-map-name="parameters" out-map-name="faxMap">
@@ -715,9 +703,6 @@
                 <process field="USER_FAX_EXT"><copy to-field="extension"/></process>
                 <process field="USER_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
-        </call-map-processor>
-        <set field="faxChanged" value="${groovy: 
-         (!faxNumber.countryCode.equals(faxMap.countryCode) || !faxNumber.areaCode.equals(faxMap.areaCode) || !faxNumber.contactNumber.equals(faxMap.contactNumber) || !faxNumber.extension.equals(faxMap.extension)) ? true : false;}" type="Boolean" />
-        <log level="always" message="faxNumber changed =================> ${faxChanged}" />
+        </call-map-processor>        
     </simple-method>
 </simple-methods>

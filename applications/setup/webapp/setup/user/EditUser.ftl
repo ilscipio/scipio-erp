@@ -91,8 +91,9 @@ under the License.
     
     <#if userParty??>
         <@field type="display" name="userPartyId" value=(userParty.partyId!) label=uiLabelMap.PartyPartyId />
-    <#else>
+    <#-- <#else>
         <@field type="input" name="userPartyId" value=(params.userPartyId!) label=uiLabelMap.PartyPartyId placeholder="User"/>
+        -->
     </#if>	
     	
     <#assign fieldsRequired = true>
@@ -152,6 +153,7 @@ under the License.
     
     <hr/>
     
+    <@field type="hidden" name="USE_ADDRESS" value="true"/>
     <@field type="generic" label=uiLabelMap.PartyGeneralAddress labelDetail=fieldLabelDetail>
         <div id="setupUser-editMailShipAddr-area">
         	<@fields args={"type":"default", "ignoreParentField":true}>

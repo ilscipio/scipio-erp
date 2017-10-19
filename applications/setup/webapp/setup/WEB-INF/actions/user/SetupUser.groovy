@@ -43,7 +43,6 @@ if (context.userParty) {
 
 generalAddressContactMech = userData.generalAddressContactMech;
 context.generalAddressContactMech = generalAddressContactMech;
-Debug.log("User step: generalAddressContactMech ==============> " + generalAddressContactMech);
 context.generalAddressContactMechPurposes = userData.generalAddressContactMechPurposes;
 context.generalAddressStandaloneCompleted = userData.generalAddressStandaloneCompleted;
 context.locationAddressesCompleted = userData.locationAddressesCompleted;
@@ -64,7 +63,6 @@ if (generalAddressContactMech) {
         if (userInfo != null) {
             userInfo.putAll(generalPostalAddress);
         }
-        Debug.log("User step: generalPostalAddress ==============> " + generalPostalAddress);
     } else {
         Debug.logError("Setup: Configuration error: Mail/ship address contact mech '"
             + generalAddressContactMech.contactMechId + " has no PostalAddress record! Invalid data configuration!", module)
@@ -144,4 +142,3 @@ List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from(
 context.userPartyRelationshipTypes = userPartyRelationshipTypes;
 
 context.userInfo = userInfo;
-Debug.log("User step: user info ========> " + userInfo);

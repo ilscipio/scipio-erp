@@ -203,7 +203,7 @@ public abstract class SetupDataUtil {
             result.put("userParty", party);
             result.put("coreCompleted", true);
 
-            PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: User: ");
+            PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, userPartyId, useCache, "Setup: User: ");
             contactMechInfo.resultsToMap(result);
             Set<String> generalAddressContactMechPurposes = null;
             GenericValue generalAddressContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "GENERAL_LOCATION", useCache);

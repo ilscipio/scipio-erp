@@ -137,7 +137,7 @@
     </property>
     
     <property key="SetupIsRelatedToOrgAs">
-        <value xml:lang="en">Is related to <strong>${orgPartyId}</strong> as</value>
+        <value xml:lang="en">Is related to ${orgPartyId} as</value>
     </property>
     
 </resource>

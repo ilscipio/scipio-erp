@@ -36,13 +36,14 @@ if (context.userParty) {
     userInfo.putAll(userData.userPerson);
 
     partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
-    context.partyRole = partyRole;
+    context.userPartyRole = partyRole;
     if (partyRole)
-        context.partyRelationship = delegator.findOne("PartyRelationship", ["partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId], false);
+        context.userPartyRelationship = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", ["partyIdTo" : userParty.partyId, "roleTypeIdTo" : partyRole.roleTypeId], null, false)));
 }
 
 generalAddressContactMech = userData.generalAddressContactMech;
 context.generalAddressContactMech = generalAddressContactMech;
+Debug.log("User step: generalAddressContactMech ==============> " + generalAddressContactMech);
 context.generalAddressContactMechPurposes = userData.generalAddressContactMechPurposes;
 context.generalAddressStandaloneCompleted = userData.generalAddressStandaloneCompleted;
 context.locationAddressesCompleted = userData.locationAddressesCompleted;
@@ -63,6 +64,7 @@ if (generalAddressContactMech) {
         if (userInfo != null) {
             userInfo.putAll(generalPostalAddress);
         }
+        Debug.log("User step: generalPostalAddress ==============> " + generalPostalAddress);
     } else {
         Debug.logError("Setup: Configuration error: Mail/ship address contact mech '"
             + generalAddressContactMech.contactMechId + " has no PostalAddress record! Invalid data configuration!", module)
@@ -142,3 +144,4 @@ List<GenericValue> userPartyRelationshipTypes = EntityQuery.use(delegator).from(
 context.userPartyRelationshipTypes = userPartyRelationshipTypes;
 
 context.userInfo = userInfo;
+Debug.log("User step: user info ========> " + userInfo);

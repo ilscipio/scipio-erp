@@ -73,7 +73,10 @@ values = user-configurable and hidden
 fixedValues = special: params that were hardcoded to preset values in stock ofbizsetup (handling differently here)
 -->
 <#function getWizardFormFieldValueMaps args={}>
-  <#local isErrorEff = args.isError!isError!false>
+  <#-- SPECIAL: FOR SETUP ONLY, will not use isError, because SetupWorker stores a more appropriate flag
+  <#local isErrorEff = args.isError!isError!false>-->
+  <#local isErrorEff = args.isError!isSetupEventError!false>
+  
   <#local record = args.record!true>
   <#local useReqParams = args.useReqParams!0><#-- default true -->
   <#if useReqParams?is_number>

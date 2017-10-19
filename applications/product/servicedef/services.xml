@@ -1743,9 +1743,12 @@ under the License.
 
     <service name="deleteProdCatalogAndStoreAssoc" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssoc" auth="true">
-        <description>SCIPIO: Delete a ProdCatalog and ProductStoreCatalog association</description>
+        <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association</description>
         <implements service="deleteProdCatalog"/>
         <implements service="deleteProductStoreCatalog"/>
+        <attribute name="deleteProdCatalog" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProdCatalog; if false only deletes catalog or category association</description>
+        </attribute>
     </service>
     
     <service name="updateProductCategoryAndCatalogAssoc" engine="simple"
@@ -1812,7 +1815,7 @@ under the License.
         <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association based on wether parentProductCategoryId set (versatile)</description>
         <implements service="deleteProductCategoryCatAssoc"/>
         <attribute name="deleteProductCategory" mode="IN" type="Boolean" optional="true" default-value="true">
-            <description>If true, attempts to delete ProductCatalog; if false only deletes catalog or category association</description>
+            <description>If true, attempts to delete ProductCategory; if false only deletes catalog or category association</description>
         </attribute>
     </service>
 

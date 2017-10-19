@@ -181,7 +181,7 @@
     </request-map>
     <request-map uri="setupDeleteCatalog">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deleteProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="deleteProdCatalogAndStoreAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
@@ -199,7 +199,7 @@
     </request-map>
     <request-map uri="setupDeleteCategory">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deleteProductCategoryAndCatAssoc"/><!-- NOTE: deleteProductCategory boolean controls record deletion -->
+        <event type="service" invoke="deleteProductCategoryAndCatAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>

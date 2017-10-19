@@ -590,6 +590,10 @@ public abstract class SetupDataUtil {
         return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false);
     }
     
+    static boolean isSuccessCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
+        return isCreateRecordRequest(params, stepNameCamel) && !isEventError(params);
+    }
+    
     static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
         return isCreateRecordRequest(params, stepNameCamel) && isEventError(params);
     }

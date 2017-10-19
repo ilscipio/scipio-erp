@@ -67,11 +67,12 @@ public abstract class CategoryServices {
                 GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
                 List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
                         .filterByDate().queryList();
-                if (includeEmptyTop || UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                boolean hasCategories = UtilValidate.isNotEmpty(prodCatalogCategories);
+                if (includeEmptyTop || hasCategories) {
     
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                        if (hasCategories) {
                             resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
                                     prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
                         }
@@ -86,6 +87,7 @@ public abstract class CategoryServices {
                             dataItem.put("prodCatalogEntity", catalog);
                             dataItem.put("productStoreCatalogEntity", productStoreCatalog);
                         }
+                        dataItem.put("isParent", hasCategories);
                     }
     
                     if (UtilValidate.isNotEmpty(dataItem))

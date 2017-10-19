@@ -53,15 +53,19 @@ public abstract class CategoryWorker {
                 category = productCategory.getRelatedOne("ProductCategory", useCategoryCache);
                 prodCatalogCategory = productCategory;
             }
-            if (UtilValidate.isNotEmpty(category)) {
+            if (category != null) {
+                Boolean isParent = null;
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(useCategoryCache).queryList();
-                if (UtilValidate.isNotEmpty(childProductCategoryRollups))
+                if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
                     treeDataItemList.addAll(
                             getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId"), 
                                         categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
-    
-                if (maxProductsPerCat != 0) {
+                    isParent = true;
+                }
+                
+                // NOTE: we may need do the query even if maxProductsPerCat is zero to determine isParent flag
+                if (maxProductsPerCat != 0 || isParent == null) { 
                     // SCIPIO: 2017-10-13: NOTE: now doing our own query here, service call was too limited
                     //Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
                     //        UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
@@ -70,11 +74,17 @@ public abstract class CategoryWorker {
                             .orderBy("sequenceNum").cache(useProductCache);
                     if (maxProductsPerCat > 0) {
                         query = query.maxRows(maxProductsPerCat);
+                    } else if (maxProductsPerCat == 0 && isParent == null) {
+                        query = query.select("productId");
+                        query = query.maxRows(1);
                     }
                     List<GenericValue> productCategoryMembers = query.queryList();
                     if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                        treeDataItemList.addAll(CategoryWorker.getTreeProducts(dispatcher, locale, productCategoryMembers, library,
-                                productCategory.getString("productCategoryId"), includeProductData, useProductCache));
+                        isParent = true;
+                        if (maxProductsPerCat != 0) {
+                            treeDataItemList.addAll(CategoryWorker.getTreeProducts(dispatcher, locale, productCategoryMembers, library,
+                                    productCategory.getString("productCategoryId"), includeProductData, useProductCache));
+                        }
                     }
                 }
     
@@ -108,6 +118,7 @@ public abstract class CategoryWorker {
                         dataItem.put("productCategoryRollupEntity", productCategoryRollup);
                         dataItem.put("prodCatalogCategoryEntity", prodCatalogCategory);
                     }
+                    dataItem.put("isParent", isParent != null ? isParent : false);
                 }
             }
         }
@@ -145,6 +156,8 @@ public abstract class CategoryWorker {
                         dataItem.put("productEntity", product);
                         dataItem.put("productCategoryMemberEntity", productCategoryMember);
                     }
+                    // TODO: REVIEW: this flag doesn't consider more complex associations to Product
+                    dataItem.put("isParent", false);
                 }
             }
         }

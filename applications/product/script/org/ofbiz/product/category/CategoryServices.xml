@@ -277,8 +277,17 @@ under the License.
         </if-empty>
 
         <create-value value-field="newEntity"/>
+        
+        <!-- SCIPIO: 2017-10-18: output PK fields so caller can get PK when fromDate was null -->
+        <field-to-result field="newEntity.productCategoryId" result-name="productCategoryId"/>
+        <field-to-result field="newEntity.parentProductCategoryId" result-name="parentProductCategoryId"/>
+        <field-to-result field="newEntity.fromDate" result-name="fromDate"/>
     </simple-method>
     <simple-method method-name="addProductCategoryToCategories" short-description="Add ProductCategory to Categories">
+        <!-- SCIPIO: 2017-10-18: use the same now-timestamp for all the categories -->
+        <if-empty field="parameters.fromDate">
+            <now-timestamp field="parameters.fromDate"/>
+        </if-empty>
         <if-instance-of field="parameters.categories" class="java.util.List">
             <iterate entry="category" list="parameters.categories">
                 <set field="callingMethodName" value="addProductCategoryToCategories"/>
@@ -293,9 +302,12 @@ under the License.
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+                <!-- SCIPIO: 2017-10-18: now set through parameters.fromDate (above)
                 <if-empty field="newEntity.fromDate">
                     <now-timestamp field="newEntity.fromDate"/>
+                    <set field="newEntity.fromDate" from-field="nowTs"/>
                 </if-empty>
+                -->
 
                 <create-value value-field="newEntity"/>
             </iterate>
@@ -312,13 +324,17 @@ under the License.
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+                <!-- SCIPIO: 2017-10-18: now set through parameters.fromDate (above)
                 <if-empty field="newEntity.fromDate">
                     <now-timestamp field="newEntity.fromDate"/>
                 </if-empty>
+                -->
 
                 <create-value value-field="newEntity"/>
             </else>
         </if-instance-of>
+        <!-- SCIPIO: 2017-10-18: output fromDate so caller can get PK when fromDate was null -->
+        <field-to-result field="parameters.fromDate" result-name="fromDate"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
         <set value="updateProductCategoryToCategory" field="callingMethodName"/>

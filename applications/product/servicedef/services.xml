@@ -827,9 +827,10 @@ under the License.
     <service name="safeAddProductCategoryToCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Safe Add ProductCategory To Category (requires fromDate)</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-18: changed PK fields to INOUT -->
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
@@ -837,9 +838,10 @@ under the License.
     <service name="addProductCategoryToCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Add ProductCategory To Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <!-- SCIPIO: 2017-10-18: changed PK fields to INOUT, otherwise can't get PK back due to optional fromDate -->
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
@@ -848,7 +850,8 @@ under the License.
         <description>Add ProductCategory To Categories</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="categories" type="Object" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <!-- SCIPIO: 2017-10-18: changed fromDate to INOUT, otherwise can't get exact PK back out -->
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>

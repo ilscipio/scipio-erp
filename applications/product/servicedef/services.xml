@@ -1757,6 +1757,13 @@ under the License.
         </attribute>
     </service>
     
+    <service name="createProductCategoryAndCatalogAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCatalogAssoc" auth="true">
+        <description>SCIPIO: Create a ProductCategory and its top association to catalog</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToProdCatalog"/>
+    </service>
+    
     <service name="updateProductCategoryAndCatalogAssoc" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCatalogAssoc" auth="true">
         <description>SCIPIO: Update a ProductCategory and its top association to catalog</description>
@@ -1785,7 +1792,12 @@ under the License.
         <implements service="createProductCategory"/>
         <implements service="addProductCategoryToProdCatalog"/>
         <implements service="addProductCategoryToCategory"/>
-        <override name="parentProductCategoryId" optional="true"/>
+        <!-- make all PK optional because it's one-interface-or-the-other (and fromDate auto-populated) -->
+        <override name="productCategoryId" optional="true"/>
+        <override name="fromDate" optional="true"/>
+        <override name="prodCatalogId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="prodCatalogCategoryTypeId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="parentProductCategoryId" optional="true"/><!-- addProductCategoryToCategory -->
     </service>
     
     <service name="updateProductCategoryAndCatAssoc" engine="simple"
@@ -1794,10 +1806,12 @@ under the License.
         <implements service="updateProductCategory"/>
         <implements service="updateProductCategoryToProdCatalog"/>
         <implements service="updateProductCategoryToCategory"/>
-        <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
+        <override name="productCategoryId" mode="IN"/><!-- WORKAROUND: for some reason this is INOUT in the ofbiz interface, not needed... -->
         <override name="fromDate" optional="false"/>
-        <override name="prodCatalogCategoryTypeId" optional="true"/>
-        <override name="parentProductCategoryId" optional="true"/>
+        <!-- make PART of PK optional because it's one-interface-or-the-other -->
+        <override name="prodCatalogId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="prodCatalogCategoryTypeId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="parentProductCategoryId" optional="true"/><!-- addProductCategoryToCategory -->
     </service>
 
     <!-- SCIPIO: NOTE: category deletion appears frowned upon in stock ofbiz, or perhaps they

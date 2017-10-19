@@ -16431,6 +16431,10 @@
         <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
     </property>
+    <property key="CommonCannotDeleteRecordHasChildren">
+        <value xml:lang="en">This record cannot be removed, because it has child record associations.</value>
+        <value xml:lang="de">Dieser Datensatz kann nicht entfernt werden, da er untergeordnete Datensatzzuordnungen hat.</value>
+    </property>
     <property key="CommonDisplayOptions">
         <value xml:lang="en">Display Options</value>
         <value xml:lang="de">Anzeigeoptionen</value>

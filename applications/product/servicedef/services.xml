@@ -1776,6 +1776,7 @@ under the License.
         <description>SCIPIO: Update a ProductCategory and its association to another category (as child)</description>
         <implements service="updateProductCategory"/>
         <implements service="updateProductCategoryToCategory"/>
+        <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
     </service>
 
     <service name="createProductCategoryAndCatAssoc" engine="simple"
@@ -1793,6 +1794,7 @@ under the License.
         <implements service="updateProductCategory"/>
         <implements service="updateProductCategoryToProdCatalog"/>
         <implements service="updateProductCategoryToCategory"/>
+        <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
         <override name="fromDate" optional="false"/>
         <override name="prodCatalogCategoryTypeId" optional="true"/>
         <override name="parentProductCategoryId" optional="true"/>

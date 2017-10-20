@@ -1865,13 +1865,45 @@ under the License.
         <override name="productCategoryId" optional="false"/>
     </service>
     
+    <!-- SCIPIO: new (2017-10-20)
+        This attempts to delete a ProductCategory and related records.
+        By default it only removes related records of low importance and relatively "safe" to remove
+        such as ProductCategoryAttribute, ProductCategoryContent and expired ProdCatalogCategory/ProductCategoryRollup/ProductCategoryMember records.
+        See service attributes for more destructive options.
+        TODO: 2017-10-20: partial functionality only -->
+    <service name="deleteProductCategoryAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record and various related records (may be dangerous)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductCategoryRollup and ProdCatalogCategory records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                such as ProductCategoryMember and ProductCategoryRollup that are expired; 
+                if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode,
+                e.g. TaxAuthorityRateProduct and TaxAuthorityCategory
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+        <!-- TODO: not implemented
+        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
+        </attribute>-->
+    </service>
+    
     <service name="deleteProductCategoryAndCatAssocVersatile" default-entity-name="ProductCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association 
             based on wether parentProductCategoryId set (versatile)</description>
         <implements service="deleteProductCategoryCatAssocVersatile"/>
-        <attribute name="deleteProductCategory" mode="IN" type="Boolean" optional="true" default-value="true">
-            <description>If true, attempts to delete ProductCategory; if false only deletes catalog or category association</description>
+        <implements service="deleteProductCategoryAndRelatedVersatile"/>
+        <attribute name="deleteCategoryRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProductCategory (using deleteProductCategoryAndRelatedVersatile); if false only deletes catalog or category association</description>
         </attribute>
     </service>
     

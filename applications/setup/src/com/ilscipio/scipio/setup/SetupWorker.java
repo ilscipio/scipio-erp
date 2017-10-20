@@ -522,28 +522,83 @@ public abstract class SetupWorker implements Serializable {
     /**
      * Returns true if new record form requested - this controls if form should show create or update.
      */
-    public abstract boolean isNewRecordRequest(String step);
+    public abstract boolean isNewRecordRequest(String recordType);
+    public abstract boolean isActionRecordRequest(String actionName, String recordType);
+    public abstract boolean isActionRecordSuccessRequest(String actionName, String recordType);
+    public abstract boolean isActionRecordFailedRequest(String actionName, String recordType);
     /**
      * Returns true if a create form was submitted.
      * NOTE: when this is true, isNewRecordRequest may return false because only one of these gets
      * passed. You may need check both.
      */
-    public abstract boolean isCreateRecordRequest(String step);
-    public abstract boolean isSuccessCreateRecordRequest(String step);
-    public abstract boolean isFailedCreateRecordRequest(String step);
-    public abstract boolean isDeleteRecordRequest(String step);
-    public abstract boolean isSuccessDeleteRecordRequest(String step);
+    public abstract boolean isCreateRecordRequest(String recordType);
+    public abstract boolean isCreateRecordSuccessRequest(String recordType);
+    public abstract boolean isCreateRecordFailedRequest(String recordType);
+    public abstract boolean isDeleteRecordRequest(String recordType);
+    public abstract boolean isDeleteRecordSuccessRequest(String recordType);
+    public abstract boolean isDeleteRecordFailedRequest(String recordType);
     
     // Aggregate/high-level states
     
-    public abstract boolean isUnspecificRecordRequest(String step);
+    public abstract boolean isUnspecificRecordRequest(String recordType);
     
     /**
      * This is basically isNewRecordRequest+isFailedCreateRecordRequest for now.
      * Couldn't find a better name.
      */
-    public abstract boolean isEffectiveNewRecordRequest(String step);
+    public abstract boolean isEffectiveNewRecordRequest(String recordType);
     
+    /**
+     * Returns a large map of all the requested states and ORed states, for easier access from screens.
+     * <p>
+     * NOTE: 
+     * isNewXxx means request for a new record form. 
+     * isCreateXxx means a new record form was submitted.
+     * isNeweff means either new record form OR failed create submit.
+     */
+    public Map<String, Object> getRecordRequestStatesMap(Collection<String> specActionNames, boolean aggregatedActions, Collection<String> recordTypes) {
+        Map<String, Object> map = new HashMap<>();
+        boolean isError = isSetupEventError();
+        map.put("isError", isError);
+        
+        // specific actions
+        for(String actionName : specActionNames) {
+            boolean isAction = false;
+            boolean isActionSuccess = false;
+            boolean isActionFailed = false;
+            for(String recordType : recordTypes) {
+                boolean isActionSpec = isActionRecordRequest(actionName, recordType);
+                map.put("is"+actionName+recordType, isActionSpec);
+                boolean isActionSpecSuccess = isActionSpec && !isError;
+                map.put("is"+actionName+recordType+"Success", isActionSpecSuccess);
+                boolean isActionSpecFailed = isActionSpec && isError;
+                map.put("is"+actionName+recordType+"Failed", isActionSpecFailed);
+                isAction = isAction || isActionSpec;
+                isActionSuccess = isActionSuccess || isActionSpecSuccess;
+                isActionFailed = isActionFailed || isActionSpecFailed;
+            }
+            map.put("is"+actionName+"Record", isAction);
+            map.put("is"+actionName+"RecordSuccess", isActionSuccess);
+            map.put("is"+actionName+"RecordFailed", isActionFailed);
+        }
+        
+        if (aggregatedActions) {
+            boolean isUnspec = false;
+            boolean isEffnew = false;
+            for(String recordType : recordTypes) {
+                boolean isUnspecSpec = isUnspecificRecordRequest(recordType);
+                map.put("isUnspec"+recordType, isUnspecSpec);
+                boolean isEffnewSpec = isEffectiveNewRecordRequest(recordType);
+                map.put("isEffnew"+recordType, isEffnewSpec);
+                isUnspec = isUnspec || isUnspecSpec;
+                isEffnew = isEffnew || isEffnewSpec;
+            }
+            map.put("isUnspecRecord", isUnspec);
+            map.put("isEffnewRecord", isEffnew);
+        }
+        
+        return map;
+    }
     
     /* 
      * *******************************************
@@ -668,35 +723,51 @@ public abstract class SetupWorker implements Serializable {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isNewRecordRequest(String step) {
+        public boolean isNewRecordRequest(String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isCreateRecordRequest(String step) {
+        public boolean isActionRecordRequest(String actionName, String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isSuccessCreateRecordRequest(String step) {
+        public boolean isActionRecordSuccessRequest(String actionName, String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isFailedCreateRecordRequest(String step) {
+        public boolean isActionRecordFailedRequest(String actionName, String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isDeleteRecordRequest(String step) {
+        public boolean isCreateRecordRequest(String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isSuccessDeleteRecordRequest(String step) {
+        public boolean isCreateRecordSuccessRequest(String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isUnspecificRecordRequest(String step) {
+        public boolean isCreateRecordFailedRequest(String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         @Override
-        public boolean isEffectiveNewRecordRequest(String step) {
+        public boolean isDeleteRecordRequest(String recordType) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isDeleteRecordSuccessRequest(String recordType) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isDeleteRecordFailedRequest(String recordType) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isUnspecificRecordRequest(String recordType) {
+            throw new UnsupportedOperationException(); // TODO?
+        }
+        @Override
+        public boolean isEffectiveNewRecordRequest(String recordType) {
             throw new UnsupportedOperationException(); // TODO?
         }
         protected static class StaticStepState extends StepState { // WARN: this one MUST be static
@@ -1123,37 +1194,53 @@ public abstract class SetupWorker implements Serializable {
             return SetupEvents.isPreviousEventSavedError(getParams());
         }
         @Override
-        public boolean isNewRecordRequest(String step) {
-            return SetupDataUtil.isNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isNewRecordRequest(String recordType) {
+            return SetupDataUtil.isNewRecordRequest(getParams(), recordType);
         }
         @Override
-        public boolean isCreateRecordRequest(String step) {
-            return SetupDataUtil.isCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isActionRecordRequest(String actionName, String recordType) {
+            return SetupDataUtil.isActionRecordRequest(getParams(), actionName, recordType);
         }
         @Override
-        public boolean isSuccessCreateRecordRequest(String step) {
-            return SetupDataUtil.isSuccessCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isActionRecordSuccessRequest(String actionName, String recordType) {
+            return SetupDataUtil.isActionRecordSuccessRequest(getParams(), actionName, recordType);
         }
         @Override
-        public boolean isFailedCreateRecordRequest(String step) {
-            return SetupDataUtil.isFailedCreateRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isActionRecordFailedRequest(String actionName, String recordType) {
+            return SetupDataUtil.isActionRecordFailedRequest(getParams(), actionName, recordType);
         }
         @Override
-        public boolean isDeleteRecordRequest(String step) {
-            return SetupDataUtil.isDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isCreateRecordRequest(String recordType) {
+            return SetupDataUtil.isCreateRecordRequest(getParams(), recordType);
         }
         @Override
-        public boolean isSuccessDeleteRecordRequest(String step) {
-            return SetupDataUtil.isSuccessDeleteRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isCreateRecordSuccessRequest(String recordType) {
+            return SetupDataUtil.isCreateRecordSuccessRequest(getParams(), recordType);
+        }
+        @Override
+        public boolean isCreateRecordFailedRequest(String recordType) {
+            return SetupDataUtil.isCreateRecordFailedRequest(getParams(), recordType);
+        }
+        @Override
+        public boolean isDeleteRecordRequest(String recordType) {
+            return SetupDataUtil.isDeleteRecordRequest(getParams(), recordType);
+        }
+        @Override
+        public boolean isDeleteRecordSuccessRequest(String recordType) {
+            return SetupDataUtil.isDeleteRecordSuccessRequest(getParams(), recordType);
+        }
+        @Override
+        public boolean isDeleteRecordFailedRequest(String recordType) {
+            return SetupDataUtil.isDeleteRecordFailedRequest(getParams(), recordType);
         }
         
         @Override
-        public boolean isUnspecificRecordRequest(String step) {
-            return SetupDataUtil.isUnspecificRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isUnspecificRecordRequest(String recordType) {
+            return SetupDataUtil.isUnspecificRecordRequest(getParams(), recordType);
         }
         @Override
-        public boolean isEffectiveNewRecordRequest(String step) {
-            return SetupDataUtil.isEffectiveNewRecordRequest(getParams(), step.substring(0, 1).toUpperCase() + step.substring(1));
+        public boolean isEffectiveNewRecordRequest(String recordType) {
+            return SetupDataUtil.isEffectiveNewRecordRequest(getParams(), recordType);
         }
         
         /* 
@@ -1768,32 +1855,32 @@ public abstract class SetupWorker implements Serializable {
      * *******************************************
      */
     
-    private static String getNonNull(String value) {
+    static String getNonNull(String value) {
         return (value != null) ? value : "";
     }
     
-    private static String getNonEmptyOrNull(String value) {
+    static String getNonEmptyOrNull(String value) {
         if (value == null) return null;
         else return (value.length() > 0) ? value : null;
     }
     
-    private static Set<String> nameSet(String... values) {
+    static Set<String> nameSet(String... values) {
         return StepParamInfo.nameSet(values);
     }
     
-    private static boolean strEquals(String first, String second) {
+    static boolean strEquals(String first, String second) {
         if (first != null) return first.equals(second);
         else return second == null;
     }
     
-    private static boolean containsOneOf(Map<String, Object> params, Iterable<String> names) {
+    static boolean containsOneOf(Map<String, Object> params, Iterable<String> names) {
         for(String name : names) {
             if (params.containsKey(name)) return true;
         }
         return false;
     }
     
-    private static String getFirstNonNull(Map<String, Object> params, Iterable<String> names) {
+    static String getFirstNonNull(Map<String, Object> params, Iterable<String> names) {
         for(String name : names) {
             Object value = params.get(name);
             if (value != null) return null;
@@ -1801,7 +1888,7 @@ public abstract class SetupWorker implements Serializable {
         return null;
     }
     
-    private static Object putFirstNonNull(Map<String, Object> params, Iterable<String> names, Map<String, Object> destMap, String destName) {
+    static Object putFirstNonNull(Map<String, Object> params, Iterable<String> names, Map<String, Object> destMap, String destName) {
         for(String name : names) {
             Object value = params.get(name);
             if (value != null) {
@@ -1812,15 +1899,15 @@ public abstract class SetupWorker implements Serializable {
         return null;
     }
     
-    private static void preventCollections(Map<String, Object> params, String... paramNames) {
+    static void preventCollections(Map<String, Object> params, String... paramNames) {
         preventCollections(params, Arrays.asList(paramNames), null);
     }
 
-    private static void preventCollections(Map<String, Object> params, Collection<String> paramNames) {
+    static void preventCollections(Map<String, Object> params, Collection<String> paramNames) {
         preventCollections(params, paramNames, null);
     }
     
-    private static void preventCollections(Map<String, Object> params, Collection<String> paramNames, String logPrefix) {
+    static void preventCollections(Map<String, Object> params, Collection<String> paramNames, String logPrefix) {
         for(String name : paramNames) {
             if (params.get(name) instanceof Collection) {
                 Iterator<?> it = UtilGenerics.checkCollection(params.get(name)).iterator();
@@ -1832,5 +1919,9 @@ public abstract class SetupWorker implements Serializable {
                 params.put(name, firstValue);
             }
         }
+    }
+    
+    static String upperFirst(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

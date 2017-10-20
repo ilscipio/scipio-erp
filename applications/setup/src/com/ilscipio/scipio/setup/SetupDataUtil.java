@@ -13,6 +13,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -392,8 +393,8 @@ public abstract class SetupDataUtil {
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Catalog");
         
-        List<GenericValue> productStoreCatalogList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreCatalog", 
-                UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum ASC"), useCache));
+        List<GenericValue> productStoreCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog")
+                .where("productStoreId", productStoreId).orderBy("sequenceNum ASC").filterByDate().cache(useCache).queryList();
         result.put("productStoreCatalogList", productStoreCatalogList);
         
         GenericValue productStoreCatalog = null;
@@ -581,28 +582,51 @@ public abstract class SetupDataUtil {
     
     // Exact request states
     
-    static boolean isNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("new" + stepNameCamel), false);
+    static boolean isNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("new" + recordTypeCamel), false);
     }
     
-    static boolean isCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false);
+    /**
+     * Generalized record action check, naming pattern: "isXxxYyy" where Xxx = action, Yyy = record type (step name).
+     */
+    static boolean isActionRecordRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        if ("new".equalsIgnoreCase(actionNameCamel)) {
+            return isNewRecordRequest(params, recordTypeCamel);
+        } else {
+            return UtilMisc.booleanValueVersatile(params.get("is" + actionNameCamel + recordTypeCamel), false);
+        }
     }
     
-    static boolean isSuccessCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isCreateRecordRequest(params, stepNameCamel) && !isEventError(params);
+    static boolean isActionRecordSuccessRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && !isEventError(params);
     }
     
-    static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isCreateRecordRequest(params, stepNameCamel) && isEventError(params);
+    static boolean isActionRecordFailedRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && isEventError(params);
     }
     
-    static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false);
+    static boolean isCreateRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isCreate" + recordTypeCamel), false);
     }
     
-    static boolean isSuccessDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isDeleteRecordRequest(params, stepNameCamel) && !isEventError(params);
+    static boolean isCreateRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isCreateRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isCreateRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isCreateRecordRequest(params, recordTypeCamel) && isEventError(params);
+    }
+    
+    static boolean isDeleteRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + recordTypeCamel), false);
+    }
+    
+    static boolean isDeleteRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isDeleteRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isDeleteRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isDeleteRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
     
     // Aggregate/high-level states
@@ -619,21 +643,21 @@ public abstract class SetupDataUtil {
      * isCreateXxx: passed with form submit
      * isDeleteXxx: passed with delete form submit
      */
-    static boolean isUnspecificRecordRequest(Map<String, Object> params, String stepNameCamel) {
+    static boolean isUnspecificRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         //stepName = stepName.substring(0, 1).toUpperCase() + stepName.substring(1);
         
         // SPECIAL: this can be used internally to override
-        Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + stepNameCamel));
+        Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + recordTypeCamel));
         if (unspecific != null) return unspecific;
         
-        return isNewRecordRequest(params, stepNameCamel) || 
-                isFailedCreateRecordRequest(params, stepNameCamel) || 
-                isSuccessDeleteRecordRequest(params, stepNameCamel);
+        return isNewRecordRequest(params, recordTypeCamel) || 
+                isCreateRecordFailedRequest(params, recordTypeCamel) || 
+                isDeleteRecordSuccessRequest(params, recordTypeCamel);
     }
     
-    static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isNewRecordRequest(params, stepNameCamel) || 
-                isFailedCreateRecordRequest(params, stepNameCamel);
+    static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isNewRecordRequest(params, recordTypeCamel) || 
+                isCreateRecordFailedRequest(params, recordTypeCamel);
     }
     
     

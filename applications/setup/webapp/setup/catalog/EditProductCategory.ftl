@@ -56,15 +56,15 @@
     "isError":isCategoryError,
     "useReqParams":useReqParams
 })>
-<#macro setupCategoryForm id isCreate target params>
+<#macro setupCategoryForm id isCreateForm target params>
     <@form id=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
         <@field type="hidden" name="productStoreId" value=(productStoreId!)/>
-        <@field type="hidden" name="isCreateCategory" value=isCreate?string("Y", "N")/>
+        <@field type="hidden" name="isCreateCategory" value=isCreateForm?string("Y", "N")/>
         
-      <#if !isCreate>
+      <#if !isCreateForm>
         <@field type="display" label=uiLabelMap.FormFieldTitle_productCategoryId><#rt/>
             <span class="ect-managefield ect-managefield-for-productCategoryId"><@setupExtAppLink uri="/catalog/control/EditCategory?productCategoryId=${rawString(params.productCategoryId!)}" text=params.productCategoryId!/></span><#t/>
         </@field><#lt/>
@@ -96,7 +96,7 @@
         
         <@field type="input" name="sequenceNum" value=(params.sequenceNum!) label=uiLabelMap.ProductSequenceNum class="+ect-inputfield"/>
 
-      <#if !isCreate>
+      <#if !isCreateForm>
         <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
         <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
       <#else>
@@ -113,8 +113,8 @@
 </#macro>
 
 <@section title=uiLabelMap.ProductNewCategory containerId="ect-newcategory" containerClass="+ect-newcategory ect-recordaction ect-newrecord" 
-    containerStyle=((targetRecord == "category" && isCreate)?string("","display:none;"))>
-  <#if (targetRecord == "category" && isCreate)>
+    containerStyle=((targetRecord == "category" && isCreateForm)?string("","display:none;"))>
+  <#if (targetRecord == "category" && isCreateForm)>
     <#assign paramMaps = initialCategoryParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -124,11 +124,11 @@
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupCategoryForm id="NewCategory" isCreate=true target="setupCreateCategory" params=paramMaps.values/>
+  <@setupCategoryForm id="NewCategory" isCreateForm=true target="setupCreateCategory" params=paramMaps.values/>
 </@section>
 <@section title=uiLabelMap.ProductEditCategory containerId="ect-editcategory" containerClass="+ect-editcategory ect-recordaction ect-editrecord" 
-    containerStyle=((targetRecord == "category" && !isCreate)?string("","display:none;"))>
-  <#if (targetRecord == "category" && !isCreate)>
+    containerStyle=((targetRecord == "category" && !isCreateForm)?string("","display:none;"))>
+  <#if (targetRecord == "category" && !isCreateForm)>
     <#assign paramMaps = initialCategoryParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -138,7 +138,7 @@
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupCategoryForm id="EditCategory" isCreate=false target="setupUpdateCategory" params=paramMaps.values/>
+  <@setupCategoryForm id="EditCategory" isCreateForm=false target="setupUpdateCategory" params=paramMaps.values/>
 </@section>
 
 <div style="display:none;">
@@ -148,7 +148,8 @@
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteCategory" value="Y"/><#-- for our screens -->
-      <@field type="hidden" name="deleteProductCategory" value=isDeleteRecord?string("true", "false")/><#-- for service -->
+      <@field type="hidden" name="deleteCategoryRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
+      <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
       <#-- common -->
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>

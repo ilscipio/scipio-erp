@@ -114,7 +114,7 @@ under the License.
     </#if>
     
     
-    <@field type="generic" label=uiLabelMap.PartyRoleType labelDetail=fieldLabelDetail>
+    <@field type="generic" label=uiLabelMap.PartyRoleType>
         <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>
             <@field type="select" name="roleTypeId" id="roleTypeId">
                 <option value="" selected="selected">--</option>
@@ -153,6 +153,14 @@ under the License.
     
     <hr/>
     
+    <#if userInfo??>
+      <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(userPartyId!)}">
+      <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
+      </#assign>
+    <#else>
+      <#assign labelDetail = "">
+      <#assign addressManageUri = "">
+    </#if>
     <@field type="hidden" name="USE_ADDRESS" value="true"/>
     <#if userInfo?? && params.USER_ADDRESS_CONTACTMECHID?has_content>
         <@field type="hidden" name="USER_ADDRESS_CONTACTMECHID" value=(params.USER_ADDRESS_CONTACTMECHID!)/>
@@ -180,6 +188,27 @@ under the License.
                       }/>
                 <@field type="hidden" name="USER_ADDRESS_ALLOW_SOL" value=(fixedParams.USER_ADDRESS_ALLOW_SOL!)/> 
             </@fields>
+            <#if userInfo??>
+                <#assign addressNoticeParams = {"purposes":getContactMechPurposeDescs(locationPurposes)?join(", ")}>
+                <#if !generalAddressContactMech??>
+                    <@alert type="warning">${getLabel('SetupNoAddressDefinedNotice', '', addressNoticeParams)}</@alert>
+                <#else>
+                  <#if (generalAddressStandaloneCompleted!false) == false>
+                    <#if (locationAddressesCompleted!false) == true>
+                      <@alert type="info">${getLabel('SetupSplitAddressPurposesNotice', '', addressNoticeParams)}
+                        <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                      </@alert>
+                    <#else>
+                      <@alert type="warning">${getLabel('SetupMissingAddressPurposesNotice', '', addressNoticeParams)}
+                        <@setupExtAppLink uri=addressManageUri text=uiLabelMap.PartyManager class="+${styles.link_nav} ${styles.action_update}"/>
+                      </@alert>
+                      <#-- NOTE: this flag could be destructive, that's why it's false by default -->
+                      <@field type="checkbox" checkboxType="simple" name="USER_ADDRESS_CREATEMISSINGPURPOSES" label=uiLabelMap.SetupCreateMissingAddressPurposes
+                        id="USER_ADDRESS_CREATEMISSINGPURPOSES_CHECK" value="true" altValue="false" currentValue=(params.USER_ADDRESS_CREATEMISSINGPURPOSES!"false")/>
+                    </#if>
+                  </#if>
+                </#if>
+            </#if>
         </div>
     </@field>
 	

@@ -60,7 +60,7 @@ public abstract class CategoryWorker {
                 
                 Boolean isParent = null;
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(useCategoryCache).queryList();
+                        .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().orderBy("sequenceNum").cache(useCategoryCache).queryList();
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
                     treeDataItemList.addAll(
                             getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, nodeId, 

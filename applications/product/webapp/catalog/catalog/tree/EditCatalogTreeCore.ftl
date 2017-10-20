@@ -1,6 +1,4 @@
-
-<#-- DEV NOTE: KEEP SETUP-SPECIFIC CONFIG OUT OF THIS FILE
-    SO IT CAN BE FACTORED OUT LATER (TODO) -->
+<#-- SCIPIO: Interactive catalog tree core include -->
 
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
@@ -9,6 +7,7 @@
 <#-- FIXME: private vs public methods are kind of arbitrary for now until code settles -->
 <@script>
     
+if (typeof ScpCatalogTreeHandler === 'undefined') {
     /**
      * Catalog tree handler constructor.
      */
@@ -19,34 +18,28 @@
         scth.treeId = data.treeId;
         scth.productStoreId = data.productStoreId;
         scth.allActionProps = data.actionProps || {};
-        scth.emptyMenuItemMarkup = data.emptyMenuItemMarkup;
+        scth.markup = data.markup || {};
         scth.postMenuItemMarkup = data.postMenuItemMarkup;
         scth.hideShowFormIds = data.hideShowFormIds;
         scth.labels = data.labels || {};
         scth.callbacks = data.callbacks || {};
-
-        <#-- 
-            Helpers
-        -->
+        scth.targetNodeInfo = data.targetNodeInfo;
+        scth.eventStates = data.eventStates || {};
+        scth.submittedFormId = data.submittedFormId;
+        scth.submittedParams = data.submittedParams || {};
         
-        var startsWith = function(str, prefix) {
-            return (str.lastIndexOf(prefix, 0) === 0);
-        };
-        var endsWith = function(str, suffix) {
-            return (str.indexOf(suffix, str.length - suffix.length) !== -1);
-        };
-    
-        var askConfirm = function(msg) {
-            return confirm(msg); // TODO: modal-based
+        // workaround flags
+        // FIXME: these are being used to prevent form changes on event error,
+        // but relies on page to show correct initial form; should make pure JS solution
+        var specFlags = {
+            preventFormChange: false,
+            preventFormPopulate: false
         };
         
-        var reportError = function(msg) {
-            alert(scth.labels.error + ": " + msg);
-        };
-        var reportInternalError = function(msg) {
-            alert("Internal error: " + msg);
-        };
-
+        /*
+         * Helpers
+         */
+         
         var isUndefOrNull = function(obj) {
             return (typeof obj === 'undefined' || obj == null);
         };
@@ -59,6 +52,37 @@
         var isSpecParamVal = function(val) {
             // SPECIAL: we may store sub-objects in the params map to pass around; this detects them
             return isObj(val);
+        };
+
+        var startsWith = function(str, prefix) {
+            return (str.lastIndexOf(prefix, 0) === 0);
+        };
+        var endsWith = function(str, suffix) {
+            return (str.indexOf(suffix, str.length - suffix.length) !== -1);
+        };
+        var extractClassNameSuffix = function(elem, prefix) {
+            var classes = elem.attr('class').split(/\s+/);
+            var result = null;
+            jQuery.each(classes, function(i, e) {
+                if (startsWith(e, prefix)) {
+                    result = e.substring(prefix.length);
+                    return false;
+                }
+            });
+            return result;
+        };
+    
+        var popupMsg = function(msg) {
+            return alert(msg); // TODO: modal-based
+        };
+        var askConfirm = function(msg) {
+            return confirm(msg); // TODO: modal-based
+        };
+        var reportError = function(msg) {
+            alert(scth.labels.error + ": " + msg);
+        };
+        var reportInternalError = function(msg) {
+            alert("Internal error: " + msg);
         };
 
         var appendLinkParams = function(url, params) {
@@ -140,6 +164,9 @@
         var isRootNode = function($node) { // true if the node is the root, above the catalogs
             return ($node.id === "#"); // FIXME?: jstree.root is not documented, using this for now...
         }
+        var getRootNode = function() {
+            return getJsTree().get_node("#");
+        }
         var getTopLevelNode = function($node) {
             var $parent = getParentNode($node);
             while($parent && !isRootNode($parent)) {
@@ -153,6 +180,75 @@
         }
         var getNodeObjectType = function($node) {
             return $node.data.type; // same names, 1-for-1 mapping
+        };
+        var getChildNodeByObjectId = function($node, objectId, targetObjectType) {
+            var result = null;
+            var tree = getJsTree();
+            if ($node.children) {
+                jQuery($node.children).each(function() {
+                    var $child = tree.get_node(this);
+                    if (objectId === getNodeObjectId($child) && 
+                        (!targetObjectType || targetObjectType === getNodeObjectType($child))) {
+                        result = $child;
+                        return false;
+                    }
+                });
+            }
+            return result;
+        };
+        var getNodeByObjectIdPath = function(objectIdList, targetObjectType, allowPartial) {
+            var $node = getRootNode();
+            for(var i = 0; i < objectIdList.length; i++) {
+                var objectId = objectIdList[i];
+                var $nextNode = null;
+                if (i == (objectIdList.length - 1)) {
+                    // last node, must check type
+                    $nextNode = getChildNodeByObjectId($node, objectId, targetObjectType);
+                } else {
+                    // middle node, no type check needed
+                    $nextNode = getChildNodeByObjectId($node, objectId, null);
+                }
+                if ($nextNode) {
+                    $node = $nextNode;
+                } else {
+                    if (allowPartial === true) {
+                        return $node;
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            return $node;
+        };
+        var getNodeObjectIdPathList = function($node) {
+            if (!$node) return null;
+            var idList = [];
+            var leaf = true;
+            while($node && !isRootNode($node)) {
+                var id = getNodeObjectId($node);
+                if (leaf) {
+                    var nodeType = getNodeObjectType($node);
+                    if (nodeType) id += "#" + nodeType;
+                    leaf = false;
+                }
+                idList.push(id);
+                $node = getParentNode($node);
+            }
+            idList.reverse();
+            return idList;
+        };
+        var getNodeObjectIdPathString = function($node) {
+            var pathList = getNodeObjectIdPathList($node);
+            if (isUndefOrNull(pathList)) return null;
+            return pathList.join('/');
+        };
+        var isNodeObjectParent = function($node) {
+            if (typeof $node.data.isParent === 'boolean') {
+                return $node.data.isParent;
+            } else {
+                // fallback
+                return getJsTree().is_parent($node);
+            }
         };
 
         var isActionPropsValid = function(objectType, actionName) {
@@ -248,7 +344,7 @@
         
         this.populateFormFieldCommon = function(elem, name, value, params, form, ai) {
             if (isUndefOrNull(value)) {
-                value = '';
+                value = ai.defaultParams[name] || '';
             }
             if (elem.is(':input')) {
                 elem.val(value);
@@ -263,18 +359,6 @@
                     ', class: ' + elem.attr('class') +
                     ',  name: ' + elem.prop('name'));
             }
-        };
-        
-        var extractClassNameSuffix = function(elem, prefix) {
-            var classes = elem.attr('class').split(/\s+/);
-            var result = null;
-            jQuery.each(classes, function(i, e) {
-                if (startsWith(e, prefix)) {
-                    result = e.substring(prefix.length);
-                    return false;
-                }
-            });
-            return result;
         };
         
         this.getEctFormFieldName = function(elem) {
@@ -297,8 +381,8 @@
         };
         
         /**
-         * default populate form implementation.
-         * each form field/elem with "ect-xxxclass" receives a param or empty value/html.
+         * Default populate form implementation.
+         * Each form field/elem with "ect-xxxclass" receives a param or empty value/html.
          */
         this.populateFormCommon = function(form, params, ai) {
             if (isObj(params)) {
@@ -325,33 +409,57 @@
             }
         };
         
-        var populateForm = function(form, params, ai) {
-            if (ai.actionProps.clearForm !== false) {
-                var execClearCommon = true; 
-                if (jQuery.type(ai.actionProps.clearForm) === 'function') {
-                    execClearCommon = ai.actionProps.clearForm(form, params, ai);
-                    if (execClearCommon !== false) {
-                        execClearCommon = true;
-                    }
-                }
-                if (execClearCommon) {
-                    scth.clearFormCommon(form, params, ai);
-                }
-            }
-            var execCommon = true; 
-            if (jQuery.type(ai.actionProps.populateForm) === 'function') {
-                execCommon = ai.actionProps.populateForm(form, params, ai);
-                if (execCommon !== false) {
-                    execCommon = true;
-                }
-            } 
-            if (execCommon) {
-                scth.populateFormCommon(form, params, ai);
-            }
+        var getCommonTreeFields = function(form, params, ai) {
+            return {
+                ectTargetNodePath: getNodeObjectIdPathString(ai.node),
+                ectSubmittedFormId: form.prop('id')
+            };
         };
         
-        // standard action target implementation (TODO?: callbacks or override into this)
-        // NOTE: caller can pass params and call setActionPropsParams instead (convenience)
+        var populateFormCommonTreeFieldsOnly = function(form, params, ai) {
+            var fields = getCommonTreeFields(form, params, ai);
+            jQuery('input[name=ectTargetNodePath].ect-inputfield', form).val(fields.ectTargetNodePath || '');
+            jQuery('input[name=ectSubmittedFormId].ect-inputfield', form).val(fields.ectSubmittedFormId || '');
+        };
+        
+        var populateForm = function(form, params, ai) {
+            if (specFlags.preventFormPopulate === true && scth.submittedFormId === form.prop('id')) {
+                // still have to populate common fields (FIXME: inconsistent populate)
+                //populateFormCommonTreeFieldsOnly(form, params, ai); // doing at end always for now...
+            } else {
+                //params = jQuery.extend({}, params, getCommonTreeFields(form, params, ai));  // doing at end always for now...
+            
+                if (ai.actionProps.clearForm !== false) {
+                    var execClearCommon = true; 
+                    if (jQuery.type(ai.actionProps.clearForm) === 'function') {
+                        execClearCommon = ai.actionProps.clearForm(form, params, ai);
+                        if (execClearCommon !== false) {
+                            execClearCommon = true;
+                        }
+                    }
+                    if (execClearCommon) {
+                        scth.clearFormCommon(form, params, ai);
+                    }
+                }
+                var execCommon = true; 
+                if (jQuery.type(ai.actionProps.populateForm) === 'function') {
+                    execCommon = ai.actionProps.populateForm(form, params, ai);
+                    if (execCommon !== false) {
+                        execCommon = true;
+                    }
+                } 
+                if (execCommon) {
+                    scth.populateFormCommon(form, params, ai);
+                }
+            }
+            // FIXME: inconsistent population code, but works for now
+            populateFormCommonTreeFieldsOnly(form, params, ai);
+        };
+        
+        /** 
+         * Standard action target implementation (TODO?: callbacks or override into this).
+         * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
+         */
         var execActionTarget = function(ai, params) {
             params = getResolvedActionPropsParams(ai, params);
             if (ai.actionProps.type == "link") {
@@ -365,16 +473,23 @@
                     if (form.length) {
                         form = form.first();
                         if (ai.actionProps.mode == "show") {
-                            populateForm(form, params, ai);
-                            if (scth.callbacks.showFormActivated) {
-                                scth.callbacks.showFormActivated(form, ai);
+                            // abort form change and populate in special cases 
+                            // FIXME?: this assumes the page is already showing the right form on load... 
+                            // could use JS to do that
+                            if (specFlags.preventFormChange === true) {
+                                ;
+                            } else {
+                                populateForm(form, params, ai);
+                                if (scth.callbacks.showFormActivated) {
+                                    scth.callbacks.showFormActivated(form, ai);
+                                }
+                                if (scth.hideShowFormIds) {
+                                    jQuery.each(scth.hideShowFormIds, function(i, e) {
+                                        jQuery('#'+e).fadeOut(scth.fadeOptions);
+                                    });
+                                }
+                                jQuery('#'+ai.containerId).fadeIn(scth.fadeOptions);
                             }
-                            if (scth.hideShowFormIds) {
-                                jQuery.each(scth.hideShowFormIds, function(i, e) {
-                                    jQuery('#'+e).fadeOut(scth.fadeOptions);
-                                });
-                            }
-                            jQuery('#'+ai.containerId).fadeIn(scth.fadeOptions);
                         } else if (ai.actionProps.mode == "submit") {
                             var doExec = true;
                             if (ai.actionProps.confirmMsg) {
@@ -438,9 +553,9 @@
             return params;
         };
 
-        <#-- 
-            Core functions
-        -->
+        /*
+         * Core functions
+         */
         
         /**
          * Action info object, also accessible from most custom callbacks ("ai" parameter).
@@ -460,46 +575,67 @@
             this.actionProps = getActionProps(this.objectType, this.actionType);
             this.formId = this.actionProps.formId || this.actionProps.id;
             this.containerId = this.actionProps.id;
+            if (this.actionProps) {
+                this.defaultParams = this.actionProps.defaultParams || {};
+            } else {
+                this.defaultParams = {};
+            }
             // TODO: more accessors
-        }
+        };
+        
+        var getActionInfo = function($node, actionType, objectType) {
+            var ai = new ActionInfo($node, actionType, objectType);
+            // special post-resolve
+            if (typeof ai.defaultParams === 'function') {
+                ai.defaultParams = ai.defaultParams(ai);
+            }
+            return ai;
+        };
         
         this.execEditForNode = function($node) {
-            var ai = new ActionInfo($node, "edit");
+            var ai = getActionInfo($node, "edit");
             var params = makeParamsMap(ai);
             // default params OK
             return execActionTarget(ai, params);
         };
         
         this.execRemoveAssocForNode = function($node) {
-            var ai = new ActionInfo($node, "removeassoc");
+            var ai = getActionInfo($node, "removeassoc");
             var params = makeParamsMap(ai);
             // default params OK
             return execActionTarget(ai, params);
         };
         
         this.execRemoveForNode = function($node) {
-            var ai = new ActionInfo($node, "remove");
+            var ai = getActionInfo($node, "remove");
             var params = makeParamsMap(ai);
             // default params OK
             return execActionTarget(ai, params);
         };
         
         this.execNewCategoryForNode = function($node) {
-            var ai = new ActionInfo($node, "newcategory");
-            var params = makeParamsMap(ai);
-            // default params OK
+            var ai = getActionInfo($node, "newcategory");
+            
+            // SPECIAL: the default entity merge doesn't work for this
+            var params = makeParamsMap(ai, false);
+            if (ai.objectType == "catalog") {
+                // prodCatalogId will be ok
+            } else if (ai.objectType == "category") {
+                params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            }
+            
             return execActionTarget(ai, params);
         };
         
         this.execNewCatalog = function() {
-            var ai = new ActionInfo(null, "newcatalog", "default");
+            var ai = getActionInfo(null, "newcatalog", "default");
             var params = makeParamsMap(ai);
             // default params OK
             return execActionTarget(ai, params);
         };
         
         this.execManageForNode = function($node) {
-            var ai = new ActionInfo($node, "manage");
+            var ai = getActionInfo($node, "manage");
             var params = makeParamsMap(ai);
             // default params OK
             return execActionTarget(ai, params);
@@ -524,11 +660,12 @@
             }
         };
         
-        <#-- 
-            Menu plugs
-        -->
+        /*
+         * Menu plugs
+         */
 
         var getMenuActionDefs = function($node) {
+            var nodeObjectIsParent = isNodeObjectParent($node);
             return {
                 edit: {
                     "separator_before": false,
@@ -549,9 +686,14 @@
                 remove: {
                     "separator_before": false,
                     "separator_after": false,
+                    "_disabled": nodeObjectIsParent,
                     "label": scth.labels.remove,
                     "action": function(obj) {
-                        scth.execRemoveForNode($node);
+                        if (nodeObjectIsParent) {
+                            popupMsg(scth.labels.cannotremovehaschild);
+                        } else {
+                            scth.execRemoveForNode($node);
+                        }
                     }
                 },
                 newcategory: {
@@ -591,16 +733,16 @@
                     "edit": defs.edit,
                     "removeassoc": defs.removeassoc,
                     "remove": defs.remove,
-                    "newcategory": defs.newcategory,
-                    "manage": defs.manage
+                    "manage": defs.manage,
+                    "newcategory": defs.newcategory
                 };
             } else if (objectType == 'category') {
                 menuDefs = {
                     "edit": defs.edit,
                     "removeassoc": defs.removeassoc,
                     "remove": defs.remove,
-                    "newcategory": defs.newcategory,
-                    "manage": defs.manage
+                    "manage": defs.manage,
+                    "newcategory": defs.newcategory
                 };
             } else if (objectType == 'product') {
                 menuDefs = {
@@ -623,33 +765,111 @@
         };
         
         this.sideMenuHandler = function($node) {
-            var $el = $("#ect-action-menu");
-            var newOptions = getMenuDefs($node);
+            var $el = jQuery("#ect-action-menu");
+            var menuDefs = getMenuDefs($node);
 
             $el.empty(); // remove old options
-            $.each(newOptions, function(key, actionDef) {
-                var newEl = $(scth.emptyMenuItemMarkup || '<li></li>');
-                var menuAnchor = $(newEl).find('a:last-child');
-                menuAnchor.attr("href","javascript:void(0);").text(actionDef.label);
-                menuAnchor.click(actionDef.action);
-                $el.append(newEl);
+            $.each(menuDefs, function(key, menuDef) {
+                var disabled = (menuDef._disabled === true);
+                var menuItem = jQuery((disabled ? scth.markup.menuItemDisabled : scth.markup.menuItem) || '<li><a href=""></a></li>');
+                var menuAnchor = menuItem.find('a:last-child');
+                if (menuAnchor.length) {
+                    menuAnchor.attr("href", "javascript:void(0);").text(menuDef.label);
+                    menuAnchor.click(menuDef.action);
+                } else {
+                    menuItem.click(menuDef.action); // fallback improves markup support
+                }
+                $el.append(menuItem);
             });
             if (scth.postMenuItemMarkup) {
                 $el.append(scth.postMenuItemMarkup);
             }
         };
+        
+            
+        /*
+         * Event helpers
+         */
+        
+        this.resolvePreselect = function(targetNodeInfo, preventFormChange, preventFormPopulate) {
+            var prevPfc = specFlags.preventFormChange;
+            specFlags.preventFormChange = preventFormChange;
+        
+            var prevPfp = specFlags.preventFormPopulate;
+            specFlags.preventFormPopulate = preventFormPopulate;
+
+            var tree = scth.getJsTree();
+            var selected = tree.get_selected();
+            
+            // have to deselect first or the re-select will not fully work
+            tree.deselect_all();
+            var activateNode = function($node) {
+                tree.select_node($node);
+                tree.activate_node($node);
+                if (!tree.is_leaf($node)) {
+                    tree.open_node($node);
+                }
+            };
+
+            if (selected && selected.length) {
+                jQuery.each(selected, function(i, $node) {
+                    activateNode($node);
+                    return false; // first only; only support one for now
+                });
+            } else if (targetNodeInfo && targetNodeInfo.objectIdList && targetNodeInfo.objectIdList.length > 0) {
+                var $node = getNodeByObjectIdPath(targetNodeInfo.objectIdList, targetNodeInfo.targetObjectType);
+                if ($node) {
+                    activateNode($node);
+                }
+            }
+            
+            specFlags.preventFormPopulate = prevPfp;
+            specFlags.preventFormChange = prevPfc;
+        };
+        
+        this.bindResolvePreselect = function() {
+            var treeElem = jQuery('#'+scth.treeId);
+            treeElem.bind('loaded.jstree', function(event, data) {
+            
+                // SPECIAL: disable form populate on load IF event error on our target form,
+                // otherwise we will lose user input on event failures
+                // this means all forms must be pre-populated correctly 
+                // FIXME?: could be handled better, depends on a mishmax of non-js and js
+                var preventFormChange = false;
+                var preventFormPopulate = false;
+                if (scth.eventStates.isError === true) {
+                    preventFormPopulate = true;
+                    if (scth.eventStates.isEffNewRequest === true) {
+                        preventFormChange = true;
+                    }
+                } else if (scth.eventStates.isNewRequest) {
+                    // special case
+                    preventFormPopulate = true;
+                    preventFormChange = true;
+                }
+                scth.resolvePreselect(scth.targetNodeInfo, preventFormChange, preventFormPopulate);
+            });
+        };
     }
+}
     
     <#if !ectEmptyMenuItemMarkup?has_content>
       <#assign ectEmptyMenuItemMarkup><@compress_single_line><@menuitem type="link" 
         href="" text=""/></@compress_single_line></#assign>
+    </#if>
+    <#if !ectEmptyMenuItemMarkupDisabled?has_content>
+      <#assign ectEmptyMenuItemMarkupDisabled><@compress_single_line><@menuitem type="link" 
+        href="" text="" disabled=true/></@compress_single_line></#assign>
     </#if>
     <#if !ectPostMenuItemMarkup??>
       <#assign ectPostMenuItemMarkup><@compress_single_line><@menuitem type="link" 
         href="javascript:void(0);" onClick="ectHandler.execNewCatalog();" text=uiLabelMap.ProductNewCatalog/></@compress_single_line></#assign>
     </#if>
     
-    var ectHandler = new ScpCatalogTreeHandler({
+if (typeof ectHandler === 'undefined') {
+    var ectHandler;
+}
+    ectHandler = new ScpCatalogTreeHandler({
         treeId: "${escapeVal(ectTreeId!, 'js')}",
         productStoreId: "${escapeVal(productStoreId!, 'js')}",
         actionProps: <@objectAsScript object=(ectActionProps!{}) lang='js'/>,
@@ -659,29 +879,25 @@
             edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",
             removeassoc: "${escapeVal(uiLabelMap.CommonRemoveAssoc, 'js')}",
             remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",
+            cannotremovehaschild: "${escapeVal(uiLabelMap.CommonCannotDeleteRecordHasChildren, 'js')}",
             newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
             newcatalog: "${escapeVal(uiLabelMap.ProductNewCatalog, 'js')}",
             manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"
         },
-        emptyMenuItemMarkup: '${ectEmptyMenuItemMarkup}',
+        markup: {
+            menuItem: '${ectEmptyMenuItemMarkup}',
+            menuItemDisabled: '${ectEmptyMenuItemMarkupDisabled}'
+        },
         postMenuItemMarkup: '${ectPostMenuItemMarkup}',
-        callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>
+        callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
+        targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,
+        submittedFormId: "${escapeVal(ectSubmittedFormId!, 'js')}",
+        submittedParams: <@objectAsScript object=(ectSubmittedParams!requestParameters!{}) lang='js'/>,
+        eventStates: <@objectAsScript object=(ectEventStates!{"isError":isError!false}) lang='js'/>
     });
     
     jQuery(document).ready(function() {
-        <#-- WORKAROUND: must manually trigger activate on load otherwise action menu out of sync -->
-        var treeElem = jQuery('#${escapeVal(ectTreeId!, 'js')}');
-        treeElem.bind('loaded.jstree', function(event, data) {
-            var tree = treeElem.jstree(true);
-            var selected = tree.get_selected();
-            if (selected && selected.length) {
-                jQuery.each(selected, function(i, e) {
-                    // have to deselect first or the select has no effect
-                    tree.deselect_node(e, true);
-                    tree.select_node(e, false, false);
-                });
-            }
-        });
+        ectHandler.bindResolvePreselect();
     });
     
 </@script>
@@ -700,18 +916,27 @@
     {"name":"contextmenu", "settings":contextMenuPluginSettings},
     {"name":"massload"}
 ]/>
+<#assign treeSettings = {
+    "multiple": false <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
+} + toSimpleMap(ectTreeSettings!{})>
 
 <@row>
     <@cell medium=9 large=9>
     
       <#-- MAIN JSTREE -->
       <@section title=uiLabelMap.ProductBrowseCatalogeAndCategories>
-        <@treemenu id=ectTreeId settings=treeMenuSettings plugins=treePlugins events=treeEvents>
+        <@treemenu id=ectTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
             <#list treeMenuData as node>
                 <#switch rawString(node.type)>
                     <#case "product">
                         <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
-                            attribs={"data":{"type":"${node.type!}","li_attr":node.li_attr}} 
+                            attribs={"data":{
+                                "type":"${node.type!}",
+                                "li_attr":node.li_attr,
+                                "productEntity":node.productEntity!{},
+                                "productCategoryMemberEntity":node.productCategoryMemberEntity!{},
+                                "isParent":node.isParent!false
+                            }} 
                             state=(node.state!{})
                             icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}file"/>
                     <#break>
@@ -725,10 +950,10 @@
                             attribs={"data":{
                                 "type":"${node.type!}",
                                 "li_attr":node.li_attr,
-                                <#-- TODO: OPTIMIZE: print out only needed fields -->
                                 "productCategoryRollupEntity":node.productCategoryRollupEntity!{},
                                 "prodCatalogCategoryEntity":node.prodCatalogCategoryEntity!{},
-                                "productCategoryEntity":node.productCategoryEntity!{}
+                                "productCategoryEntity":node.productCategoryEntity!{},
+                                "isParent":node.isParent!false
                             }} 
                             state=(node.state!{})
                             icon=("${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}"+(node.state.opened?string("folder-open","folder")))/>
@@ -743,9 +968,9 @@
                             attribs={"data":{
                                 "type":"${node.type!}",
                                 "li_attr":node.li_attr,
-                                <#-- TODO: OPTIMIZE: print out only needed fields -->
                                 "productStoreCatalogEntity":node.productStoreCatalogEntity!{},
-                                "prodCatalogEntity":node.prodCatalogEntity!{}
+                                "prodCatalogEntity":node.prodCatalogEntity!{},
+                                "isParent":node.isParent!false
                             }} 
                             state=(node.state!{})
                             icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}cubes"/>

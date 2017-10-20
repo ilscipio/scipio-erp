@@ -7,14 +7,76 @@ final module = "SetupCatalog.groovy";
 SetupWorker setupWorker = context.setupWorker;
 catalogData = context.catalogData ?: [:];
 
+/*
+ * Request states
+ * NOTE: this is complicated for this screen due to multiple forms + half-JS + submit behavior
+ */
+
+eventFlags = [:];
+
+// TODO: SetupWorker method to generate this map instead
+isNewCatalog = setupWorker?.isNewRecordRequest("catalog");
+isNewCategory = setupWorker?.isNewRecordRequest("category");
+isNewProduct = setupWorker?.isNewRecordRequest("product");
+isNewRequest = (isNewCatalog || isNewCategory || isNewProduct);
+eventFlags.isNewCatalog = isNewCatalog;
+eventFlags.isNewCategory = isNewCategory;
+eventFlags.isNewProduct = isNewProduct;
+eventFlags.isNewRequest = isNewRequest;
+
+isDeleteCatalog = setupWorker?.isDeleteRecordRequest("catalog");
+isDeleteCategory = setupWorker?.isDeleteRecordRequest("category");
+isDeleteProduct = setupWorker?.isDeleteRecordRequest("product");
+isDeleteRequest = (isDeleteCatalog || isDeleteCategory || isDeleteProduct);
+eventFlags.isDeleteCatalog = isDeleteCatalog;
+eventFlags.isDeleteCategory = isDeleteCategory;
+eventFlags.isDeleteProduct = isDeleteProduct;
+eventFlags.isDeleteRequest = isDeleteRequest;
+
+isCreateCatalog = setupWorker?.isCreateRecordRequest("catalog");
+isCreateCategory = setupWorker?.isCreateRecordRequest("category");
+isCreateProduct = setupWorker?.isCreateRecordRequest("product");
+isCreateRequest = (isCreateCatalog || isCreateCategory || isCreateProduct);
+eventFlags.isCreateCatalog = isCreateCatalog;
+eventFlags.isCreateCategory = isCreateCategory;
+eventFlags.isCreateProduct = isCreateProduct;
+eventFlags.isCreateRequest = isCreateRequest;
+
+// WARN: some of these are not valid setup step names to pass to worker, but works anyway
+isDeleteCatalogSuccess = setupWorker?.isSuccessDeleteRecordRequest("catalog");
+isDeleteCategorySuccess = setupWorker?.isSuccessDeleteRecordRequest("category");
+isDeleteProductSuccess = setupWorker?.isSuccessDeleteRecordRequest("product");
+isDeleteSuccess = (isDeleteCatalogSuccess || isDeleteCategorySuccess || isDeleteProductSuccess);
+eventFlags.isDeleteCatalogSuccess = isDeleteCatalogSuccess;
+eventFlags.isDeleteCategorySuccess = isDeleteCategorySuccess;
+eventFlags.isDeleteProductSuccess = isDeleteProductSuccess;
+eventFlags.isDeleteSuccess = isDeleteSuccess;
+
+isCreateCatalogSuccess = setupWorker?.isSuccessCreateRecordRequest("catalog");
+isCreateCategorySuccess = setupWorker?.isSuccessCreateRecordRequest("category");
+isCreateProductSuccess = setupWorker?.isSuccessCreateRecordRequest("product");
+isCreateSuccess = (isCreateCatalogSuccess || isCreateCategorySuccess || isCreateProductSuccess);
+eventFlags.isCreateCatalogSuccess = isCreateCatalogSuccess;
+eventFlags.isCreateCategorySuccess = isCreateCategorySuccess;
+eventFlags.isCreateProductSuccess = isCreateProductSuccess;
+eventFlags.isCreateSuccess = isCreateSuccess;
+
+isEffNewCatalog = setupWorker?.isEffectiveNewRecordRequest("catalog");
+isEffNewCategory = setupWorker?.isEffectiveNewRecordRequest("category");
+isEffNewProduct = setupWorker?.isEffectiveNewRecordRequest("product");
+isEffNewRequest = (isEffNewCatalog || isEffNewCategory || isEffNewProduct);
+eventFlags.isEffNewCatalog = isEffNewCatalog;
+eventFlags.isEffNewCategory = isEffNewCategory;
+eventFlags.isEffNewProduct = isEffNewProduct;
+eventFlags.isEffNewRequest = isEffNewRequest;
+
+/*
+ * Catalog
+ */
 prodCatalog = catalogData.prodCatalog;
 context.prodCatalog = prodCatalog;
-context.prodCatalogId = prodCatalog?.prodCatalogId;
-
-// SPECIAL CASE: prevent the ID from showing up after delete
-if (setupWorker?.isSuccessDeleteRecordRequest("catalog")) {
-    parameters.prodCatalogId = null;
-}
+prodCatalogId = prodCatalog?.prodCatalogId;
+context.prodCatalogId = prodCatalogId;
 
 productStoreCatalog = catalogData.productStoreCatalog;
 context.productStoreCatalog = productStoreCatalog;
@@ -44,12 +106,14 @@ if (prodCatalog != null && productStoreCatalog != null) {
 }
 context.prodCatalogAndStoreAssoc = prodCatalogAndStoreAssoc;
 
-// CATEGORY
+/*
+ * Category
+ * WARN: no verify category is strictly part of store
+ */
 productCategoryAndAssoc = null;
 productCategoryId = context.productCategoryId ?: parameters.productCategoryId;
 productCategory = null;
 if (prodCatalog && productCategoryId) {
-    // VERIFY category is actually part of this store (any catalog)
     productCategory = delegator.findOne("ProductCategory", [productCategoryId:productCategoryId], false);
     
     def prodCatalogCategory = null;
@@ -71,8 +135,65 @@ if (prodCatalog && productCategoryId) {
         }
     }
 }
+
+prodCatalogCategoryTypes = EntityQuery.use(delegator).from("ProdCatalogCategoryType").orderBy("description").queryList();
+context.prodCatalogCategoryTypes = prodCatalogCategoryTypes;
+
+productCategoryTypes = EntityQuery.use(delegator).from("ProductCategoryType").orderBy("description").queryList();
+context.productCategoryTypes = productCategoryTypes;
+
 context.productCategoryId = productCategoryId;
 context.productCategory = productCategory;
 context.productCategoryAndAssoc = productCategoryAndAssoc;
+
+/*
+ * Product
+ * WARN: no verify product is strictly part of store
+ */
+productAndAssoc = null;
+productId = context.productId ?: parameters.productId;
+product = null;
+productCategoryMember = null;
+if (productCategory && productId) {
+    product = delegator.findOne("Product", [productId:productId], false);
+    
+    productCategoryMember = EntityQuery.use(delegator).from("ProductCategoryMember").where("productId", productId,
+            "productCategoryId", productCategoryId).filterByDate().queryFirst();
+    
+    if (product && productCategoryMember) {
+        productAndAssoc = new HashMap(product);
+        productAndAssoc.putAll(productCategoryMember);
+    }
+}
+context.product = product;
+context.productCategoryMember = productCategoryMember;
+context.productId = productId;
+context.productAndAssoc = productAndAssoc;
+
+/*
+ * Extra prep
+ */
+
+if (!eventFlags.isDeleteProductSuccess && (productAndAssoc != null || eventFlags.isEffNewProduct)) {
+    eventFlags.targetRecord = "product"
+    eventFlags.isCreate = (context.productAndAssoc == null);
+} else if (!eventFlags.isDeleteCategorySuccess && (context.productCategoryAndAssoc != null || eventFlags.isEffNewCategory)) {
+    eventFlags.targetRecord = "category"
+    eventFlags.isCreate = (context.productCategoryAndAssoc == null);
+} else {
+    eventFlags.targetRecord = "catalog"
+    eventFlags.isCreate = (context.prodCatalogAndStoreAssoc == null);
+}
+
+// dump flags in context (FIXME?: remove this later)
+context.putAll(eventFlags);
+
+eventStates = [:];
+eventStates.putAll(eventFlags);
+
+// add some more (not in context)
+eventStates.isError = context.isSetupEventError;
+
+context.eventStates = eventStates;
 
 

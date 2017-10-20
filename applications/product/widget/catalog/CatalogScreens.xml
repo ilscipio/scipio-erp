@@ -267,4 +267,56 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Read-only catalog tree -->
+    <screen name="ScipioViewCatalogTree">
+        <section>
+            <actions>
+                <entity-one value-field="productStore" entity-name="ProductStore"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/tree/ViewCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${productStore.storeName}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/tree/ViewCatalogTree.ftl"/></html></platform-specific>
+                        </screenlet>     
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: Interactive catalog tree - DEFAULT implementation 
+        To adapt the tree to another screen, this screen can be duplicated and the custom
+        groovy and ftl should then delegate to EditCatalogTreeCore.groovy and EditCatalogTreeCore.ftl -->
+    <screen name="ScipioEditCatalogTree">
+        <section>
+            <actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/tree/EditCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                        <screenlet title="${productStore.storeName}">
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/tree/EditCatalogTree.ftl"/></html></platform-specific>
+                        </screenlet>     
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

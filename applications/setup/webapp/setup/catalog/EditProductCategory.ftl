@@ -1,10 +1,14 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
 
-<#assign setupCategoryTargetFields = [
-    
+<#assign defaultParams = {
+    "prodCatalogCategoryTypeId": "PCCT_BROWSE_ROOT",
+    "productCategoryTypeId": "CATALOG_CATEGORY"
+}>
 
-]>
 <@script>
+    var defaultCategoryParams = <@objectAsScript object=defaultParams lang='js'/>;
+
     <#-- NOTE: also called from setupShowFormActivatedCallback -->
     function refreshScfFieldVisibility(form) {
         var parentProductCategoryId = jQuery('[name=parentProductCategoryId]', form).filter(':input').val();
@@ -33,21 +37,29 @@
 
 <#-- SPECIAL: for this screen because there are multiple forms, we have to ignore isError
     when target was not a submit for one of our forms -->
-<#assign isCategoryError = isError!false>
+<#assign isCategoryError = isSetupEventError!false>
 <#if !parameters.isCreateCategory?has_content>
   <#assign isCategoryError = false/>
 </#if>
 
-<#assign defaultCategoryParams = {
-}>
+<#-- SPECIAL: for this screen because there are multiple forms, we have to disable useRequestParameters
+    when target was not one of our forms -->
+<#assign useReqParams = "">
+<#if targetRecord != "category" || isDeleteCategorySuccess>
+  <#assign useReqParams = false>
+</#if>
+
+<#-- DEV NOTE: WARN: avoid fixedParams here, not appropriate for this screen -->
 <#assign initialCategoryParamMaps = getWizardFormFieldValueMaps({
     "record":productCategoryAndAssoc!true,
-    "defaults":defaultCategoryParams,
-    "isError":isCategoryError
+    "defaults":defaultParams,
+    "isError":isCategoryError,
+    "useReqParams":useReqParams
 })>
-<#macro setupCategoryForm id isCreate target params fixedParams>
+<#macro setupCategoryForm id isCreate target params>
     <@form id=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId", "partyId"]/>
+        <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
         <@field type="hidden" name="productStoreId" value=(productStoreId!)/>
         <@field type="hidden" name="isCreateCategory" value=isCreate?string("Y", "N")/>
@@ -62,8 +74,34 @@
         <@field type="input" name="productCategoryId" label=uiLabelMap.FormFieldTitle_productCategoryId value=(params.productCategoryId!) class="+ect-inputfield"/>
       </#if>
 
-        <@field type="display" name="productCategoryTypeId" label=uiLabelMap.FormFieldTitle_productCategoryTypeId><span class="ect-displayfield ect-displayfield-for-productCategoryTypeId">${params.productCategoryTypeId!}</span></@field>
-        <@field type="hidden" name="productCategoryTypeId" value=(params.productCategoryTypeId!) class="+ect-inputfield"/>
+        <#-- DEV NOTE: some of these aren't selectable because it should be done through the js tree. -->
+
+        <@field type="select" label=uiLabelMap.ProductProductCategoryType name="productCategoryTypeId" class="+ect-inputfield" required=true>
+            <#list productCategoryTypes as productCategoryTypeData>
+                <option<#if rawString(params.productCategoryTypeId!) == rawString(productCategoryTypeData.productCategoryTypeId!)> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description", locale)}</option>
+            </#list>
+        </@field>
+
+        <@field type="display" name="prodCatalogId" label=uiLabelMap.ProductCatalog><span class="ect-displayfield ect-displayfield-for-prodCatalogId">${params.prodCatalogId!}</span></@field>
+        <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!) class="+ect-inputfield"/>
+
+        <@field type="select" label=uiLabelMap.ProductCatalogCategoryType name="prodCatalogCategoryTypeId" class="+ect-inputfield" containerClass="+epc-field-prodCatalogCategoryTypeId" required=true>
+          <#list prodCatalogCategoryTypes as prodCatalogCategoryTypeData>                       
+            <option<#if rawString(params.prodCatalogCategoryTypeId!) == rawString(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
+          </#list>
+        </@field>
+
+        <@field type="display" name="parentProductCategoryId" label=uiLabelMap.ProductParentCategory containerClass="+epc-field-parentProductCategoryId"><span class="ect-displayfield ect-displayfield-for-parentProductCategoryId">${params.parentProductCategoryId!}</span></@field>
+        <@field type="hidden" name="parentProductCategoryId" value=(params.parentProductCategoryId!) class="+ect-inputfield"/>
+        
+        <@field type="input" name="sequenceNum" value=(params.sequenceNum!) label=uiLabelMap.ProductSequenceNum class="+ect-inputfield"/>
+
+      <#if !isCreate>
+        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
+        <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
+      <#else>
+        <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
+      </#if>
 
         <@field type="input" name="categoryName" value=(params.categoryName!) label=uiLabelMap.FormFieldTitle_categoryName class="+ect-inputfield"/><#--  not strictly: required=true -->
         <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield"/>
@@ -71,19 +109,6 @@
 
         <#-- TODO: LOCALIZED VERSIONS OF categoryName/description/longDescription (complex) -->
 
-        <@field type="display" name="prodCatalogId" label=uiLabelMap.FormFieldTitle_prodCatalogId><span class="ect-displayfield ect-displayfield-for-prodCatalogId">${params.prodCatalogId!}</span></@field>
-        <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!) class="+ect-inputfield"/>
-        <#-- TODO: REVIEW: prodCatalogCategoryTypeId -->
-        <@field type="display" name="prodCatalogCategoryTypeId" label=uiLabelMap.FormFieldTitle_prodCatalogCategoryTypeId containerClass="+epc-field-prodCatalogCategoryTypeId"><span class="ect-displayfield ect-displayfield-for-prodCatalogCategoryTypeId">${params.prodCatalogCategoryTypeId!}</span></@field>
-        <@field type="hidden" name="prodCatalogCategoryTypeId" value=(params.prodCatalogCategoryTypeId!) class="+ect-inputfield"/>
-        
-        <@field type="display" name="parentProductCategoryId" label=uiLabelMap.FormFieldTitle_parentCategoryId containerClass="+epc-field-parentProductCategoryId"><span class="ect-displayfield ect-displayfield-for-parentProductCategoryId">${params.parentProductCategoryId!}</span></@field>
-        <@field type="hidden" name="parentProductCategoryId" value=(params.parentProductCategoryId!) class="+ect-inputfield"/>
-        
-        <@field type="input" name="sequenceNum" value=(params.sequenceNum!) label=uiLabelMap.ProductSequenceNum required=false class="+ect-inputfield"/>
-
-        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
-        <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
     </@form>
 </#macro>
 
@@ -94,12 +119,12 @@
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
       "record":true,
-      "defaults":defaultCategoryParams,
-      "isError":isCategoryError
+      "defaults":defaultParams,
+      "isError":isCategoryError,
+      "useReqParams":useReqParams
     })>
   </#if>
-  <@setupCategoryForm id="NewCategory" isCreate=true target="setupCreateCategory" 
-    params=paramMaps.values fixedParams=paramMaps.fixedValues />
+  <@setupCategoryForm id="NewCategory" isCreate=true target="setupCreateCategory" params=paramMaps.values/>
 </@section>
 <@section title=uiLabelMap.ProductEditCategory containerId="ect-editcategory" containerClass="+ect-editcategory ect-recordaction ect-editrecord" 
     containerStyle=((targetRecord == "category" && !isCreate)?string("","display:none;"))>
@@ -108,18 +133,19 @@
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
       "record":{},
-      "defaults":defaultCategoryParams,
-      "isError":isCategoryError
+      "defaults":defaultParams,
+      "isError":isCategoryError,
+      "useReqParams":useReqParams
     })>
   </#if>
-  <@setupCategoryForm id="EditCategory" isCreate=false target="setupUpdateCategory" 
-    params=paramMaps.values fixedParams=paramMaps.fixedValues />
+  <@setupCategoryForm id="EditCategory" isCreate=false target="setupUpdateCategory" params=paramMaps.values/>
 </@section>
 
 <div style="display:none;">
 <#macro setupDeleteCategoryForm id isDeleteRecord>
   <@form id=id action=makeOfbizUrl("setupDeleteCategory") method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
+      <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteCategory" value="Y"/><#-- for our screens -->
       <@field type="hidden" name="deleteProductCategory" value=isDeleteRecord?string("true", "false")/><#-- for service -->

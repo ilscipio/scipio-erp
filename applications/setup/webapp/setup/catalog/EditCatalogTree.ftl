@@ -1,6 +1,9 @@
-<#include "component://setup/webapp/setup/common/common.ftl">
+<#-- SCIPIO: SETUP interactive catalog tree implementation -->
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS, category forms have no effect.</@alert>
+<#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
+
+<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
 
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
@@ -25,7 +28,8 @@
         "newcatalog": {
             "type": "form",
             "mode": "show",
-            "id": "ect-newcatalog"
+            "id": "ect-newcatalog",
+            "defaultParams": wrapRawScript("function() { return defaultCatalogParams; }")
         }
     },
     "catalog": {
@@ -58,7 +62,8 @@
         "newcategory": {
             "type": "form",
             "mode": "show",
-            "id": "ect-newcategory"
+            "id": "ect-newcategory",
+            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
         },
         "manage": {
             "type": "link",
@@ -89,7 +94,8 @@
         "newcategory": {
             "type": "form",
             "mode": "show",
-            "id": "ect-newcategory"
+            "id": "ect-newcategory",
+            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
         },
         "manage": {
             "type": "link",
@@ -121,6 +127,5 @@
   </@section>
 </#macro>
 
-<#-- TODO: this will move later -->
-<#include "EditCatalogTreeCommon.ftl">
-
+<#-- CORE INCLUDE -->
+<#include "component://product/webapp/catalog/catalog/tree/EditCatalogTreeCore.ftl">

@@ -636,22 +636,19 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <script lang="groovy"><![CDATA[
-                    def setupWorker = context.setupWorker;
-                    def targetRecord;
-                    def isCreate;
-                    def titleProperty = 'ProductEditCatalog'; // forms have their own subtitles
+                    def targetRecord = context.targetRecord;
+                    def isCreate = context.isCreate;
+                    def titleProperty = 'ProductEditCatalog'; // forms have their own section title, so not bothering with this
                     def target;
                     def submitFormId;
-                    // WARN: "category" is not a real step name to pass to worker, works for these calls only...
-                    if (!setupWorker?.isSuccessDeleteRecordRequest("category") && 
-                        (context.productCategoryAndAssoc != null || setupWorker?.isEffectiveNewRecordRequest("category"))) {
-                        targetRecord = "category"
-                        isCreate = (context.productCategoryAndAssoc == null);
+                    // WARN: "category" are not real step names to pass to worker, works for these calls only...
+                    if (targetRecord == "product") {
+                        target = !isCreate ? 'setupUpdateProduct' : 'setupCreateProduct';
+                        submitFormId = !isCreate ? 'EditProduct' : 'NewProduct'
+                    } else if (targetRecord == "category") {
                         target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
                         submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
                     } else {
-                        targetRecord = "catalog"
-                        isCreate = (context.prodCatalogAndStoreAssoc == null);
                         if (isCreate) titleProperty = 'ProductNewCatalog';
                         target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
                         submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
@@ -662,7 +659,8 @@
                     context.target = target;
                     context.submitFormId = submitFormId;
                 ]]></script>
-                <set field="newCatalogLinkHref" value="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);"/>
+                <set field="newCatalogFormId" value="setupCatalog-newCatalog"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -690,6 +688,9 @@
                                 <platform-specific>
                                     <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
                                 </platform-specific>
+                                <platform-specific>
+                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProduct.ftl"/></html>
+                                </platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
@@ -701,7 +702,7 @@
                             <html>
                                 <html-template><![CDATA[
                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id="setupCatalog-newCatalog">
+                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id=newCatalogFormId>
                                     <@defaultWizardFormFields exclude=["prodCatalogId"]/>
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>
@@ -738,32 +739,15 @@
     <screen name="EditCatalogTree">
         <section>
             <actions>
-                <!-- FIXME?: setupEctMaxProductsPerCat is a session-based control for the time being, breaking convention
-                    with rest of setup -->
-                <script lang="groovy"><![CDATA[
-                    import org.ofbiz.base.util.*;
-                    ectMaxProductsPerCat = context.ectMaxProductsPerCat;
-                    if (ectMaxProductsPerCat == null) {
-                        try {
-                            ectMaxProductsPerCat = parameters.setupEctMaxProductsPerCat as Integer;
-                        } catch(Exception e) {
-                        }
-                        if (ectMaxProductsPerCat != null) {
-                            session.setAttribute("setupEctMaxProductsPerCat", ectMaxProductsPerCat);
-                        }
-                    }
-                    if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fastest and least confusing
-                    context.ectMaxProductsPerCat = ectMaxProductsPerCat;
-                ]]></script>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTreeCommon.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTree.groovy"/>
             </actions>
             <widgets>
                 <section>
                     <condition>
-                        <not>
-                            <if-empty field="productStoreId"/>
-                            <if-empty field="treeMenuData"/>
-                        </not>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
                     </condition>
                     <widgets>
                        <screenlet>

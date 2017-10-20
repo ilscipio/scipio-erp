@@ -1,3 +1,9 @@
+<#-- SCIPIO: Read-only catalog tree -->
+<#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
+
+<#-- SCIPIO: NOTE: an updated and interactive version of catalog tree
+    now exists in EditCatalogTree*.ftl -->
+
 <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
     <#assign treePlugin = [{"name":"massload"}]/>
     <#assign menuEvent>

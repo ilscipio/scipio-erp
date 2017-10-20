@@ -12,6 +12,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType;
 
 final module = "EditCatalogTreeCore.groovy";
+final DEBUG = false;
 
 etcAdvanced = context.etcAdvanced != null ? context.etcAdvanced : false;
 context.etcAdvanced = etcAdvanced;
@@ -32,19 +33,45 @@ if (!productStoreId) {
     return;
 }
 
-isDeleteSuccess = getSetCtxBool("isDeleteSuccess", false);
-isDeleteCatalogSuccess = getSetCtxBool("isDeleteCatalogSuccess", false);
-isDeleteCategorySuccess = getSetCtxBool("isDeleteCategorySuccess", false);
-isDeleteProductSuccess = getSetCtxBool("isDeleteProductSuccess", false);
+/*
+ * NOTE: event states currently follow those defined by:
+ *  com.ilscipio.scipio.setup.SetupWorker#getRecordRequestStatesMap
+ * Non-setup screens will have to populate it differently...
+ */
+eventStates = context.ectEventStates ?: [:];
+context.ectEventStates = eventStates;
 
-isCreateSuccess = getSetCtxBool("isCreateSuccess", false);
-isCreateCatalogSuccess = getSetCtxBool("isCreateCatalogSuccess", false);
-isCreateCategorySuccess = getSetCtxBool("isCreateCategorySuccess", false);
-isCreateProductSuccess = getSetCtxBool("isCreateProductSuccess", false);
+if (DEBUG) {
+    Debug.logInfo("Event states: " + eventStates, module);
+}
 
 curProdCatalogId = context.ectProdCatalogId != null ? context.ectProdCatalogId : context.prodCatalogId;
 curProductCategoryId = context.ectProductCategoryId != null ? context.ectProductCategoryId : context.productCategoryId;
 curProductId = context.ectProductId != null ? context.ectProductId : context.productId;
+
+submittedFormId = context.ectSubmittedFormId;
+if (submittedFormId == null) {
+    submittedFormId = parameters.ectSubmittedFormId as String;
+}
+context.ectSubmittedFormId = submittedFormId;
+
+// special handling for the initial form
+// FIXME?: this currently still assumes the parent screen properly set up the initial visibility.
+// we could change this to full-JS solution because this gets very hard to follow.
+preventInitialFormChange = context.ectPreventInitialFormChange;
+preventInitialFormPopulate = context.ectPreventInitialFormPopulate;
+if (preventInitialFormChange == null && preventInitialFormPopulate == null) { // caller can override if need
+    if (eventStates.isError) {
+        preventInitialFormPopulate = true;
+        if (eventStates.isEffnewRecord) {
+            preventInitialFormChange = true;
+        }
+    } else if (eventStates.isNewRecord) {
+        preventInitialFormChange = true;
+    }
+}
+context.ectPreventInitialFormChange = preventInitialFormChange;
+context.ectPreventInitialFormPopulate = preventInitialFormPopulate;
 
 // ectTargetNodePath is the preferred pre-selection mechanism. 
 // if not set, falls back on prodCatalogId or productCategoryId (below)
@@ -53,12 +80,6 @@ if (targetNodePath == null) {
     targetNodePath = parameters.ectTargetNodePath as String;
 }
 context.ectTargetNodePath = targetNodePath;
-
-submittedFormId = context.ectSubmittedFormId;
-if (submittedFormId == null) {
-    submittedFormId = parameters.ectSubmittedFormId as String;
-}
-context.ectSubmittedFormId = submittedFormId;
 
 parseTargetNodeInfo = { targetNodePath ->
     def objectIdList = [];
@@ -76,7 +97,7 @@ parseTargetNodeInfo = { targetNodePath ->
 };
 
 targetNodeInfo = parseTargetNodeInfo(targetNodePath);
-if (isDeleteSuccess) {
+if (eventStates.isDeleteRecordSuccess) {
     // Remove last entry (deleted)
     if (targetNodeInfo.objectIdList) {
         targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
@@ -86,19 +107,19 @@ if (isDeleteSuccess) {
             targetNodeInfo.targetObjectType = "category";
         }
     }
-} else if (isCreateSuccess) {
+} else if (eventStates.isCreateRecordSuccess) {
     // Append new entry
-    if (isCreateCatalogSuccess) {
+    if (eventStates.isCreateCatalogSuccess) {
         if (!targetNodeInfo.objectIdList && curProdCatalogId) {
             targetNodeInfo.objectIdList.add(curProdCatalogId);
             targetNodeInfo.targetObjectType = "catalog";
         }
-    } else if (isCreateCategorySuccess) {
+    } else if (eventStates.isCreateCategorySuccess) {
         if (targetNodeInfo.objectIdList && curProductCategoryId) {
             targetNodeInfo.objectIdList.add(curProductCategoryId);
             targetNodeInfo.targetObjectType = "category";
         }
-    } else if (isCreateProductSuccess) {
+    } else if (eventStates.isCreateProductSuccess) {
         if (targetNodeInfo.objectIdList && curProductId) {
             targetNodeInfo.objectIdList.add(curProductId);
             targetNodeInfo.targetObjectType = "product";
@@ -110,7 +131,7 @@ context.ectTargetNodeInfo = targetNodeInfo;
 // only either catalog or category should be "selected"
 currentCatalogSelected = false;
 currentCategorySelected = false;
-if (!targetNodeInfo.defined && !isDeleteSuccess) { // fallback auto-select (best-effort) for when targetNodePath is not set
+if (!targetNodeInfo.defined && !eventStates.isDeleteRecordSuccess) { // fallback auto-select (best-effort) for when targetNodePath is not set
     if (curProductCategoryId) {
         currentCategorySelected = true;
     } else if (curProdCatalogId) {

@@ -3,6 +3,10 @@
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
 </#if>
+<#assign ectActionProps = toSimpleMap(ectActionProps!{})>
+
+<#assign ectDialogIdPrefix = ectDialogIdPrefix!"ect-dialog-">
+<#assign ectDialogIdModalPrefix = ectDialogIdModalPrefix!("modal_"+ectDialogIdPrefix)>
 
 <#-- FIXME: private vs public methods are kind of arbitrary for now until code settles -->
 <@script>
@@ -26,7 +30,12 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         scth.targetNodeInfo = data.targetNodeInfo;
         scth.eventStates = data.eventStates || {};
         scth.submittedFormId = data.submittedFormId;
-        scth.submittedParams = data.submittedParams || {};
+        scth.initialParams = data.initialParams;
+        scth.preventInitialFormChange = data.preventInitialFormChange;
+        scth.preventInitialFormPopulate = data.preventInitialFormPopulate;
+        scth.popupMsgModalId = data.popupMsgModalId;
+        scth.confirmMsgModalId = data.confirmMsgModalId;
+        scth.dialogIdPrefix = data.dialogIdPrefix;
         
         // workaround flags
         // FIXME: these are being used to prevent form changes on event error,
@@ -72,11 +81,64 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             return result;
         };
     
-        var popupMsg = function(msg) {
-            return alert(msg); // TODO: modal-based
+        // TODO: REVIEW: these
+        var openModal = function(modalElem) {
+            try {
+                modalElem.foundation('reveal', 'open');
+            } catch(err) {
+                try {
+                    modalElem.modal('show'); 
+                }
+                catch(err) {
+                    //t.dispatchEvent(event); // FIXME?
+                }
+            }
         };
-        var askConfirm = function(msg) {
-            return confirm(msg); // TODO: modal-based
+        var closeModal = function(modalElem) {
+            try {
+                modalElem.foundation('reveal', 'close');
+            } catch(err) {
+                try {
+                    modalElem.modal('hide'); 
+                }
+                catch(err) {
+                    //t.dispatchEvent(event); // FIXME?
+                }
+            }
+        };
+    
+        // TODO?: blocking mode? return values? callback?
+        var showPopupMsg = function(msg) {
+            if (scth.popupMsgModalId) {
+                var modalElem = jQuery('#'+scth.popupMsgModalId);
+                if (modalElem.length) {
+                    jQuery('.ect-dialogmsg', modalElem).html(msg);
+                    openModal(modalElem);
+                } else {
+                    return alert(msg);
+                }
+            } else {
+                return alert(msg);
+            }
+        };
+        var showConfirmMsg = function(msg, modalElem, continueCallback) {
+            if ((!modalElem || !modalElem.length) && scth.confirmMsgModalId) {
+                modalElem = jQuery('#'+scth.confirmMsgModalId);
+            }
+            if (modalElem && modalElem.length) {
+                jQuery('.ect-dialogmsg', modalElem).html(msg);
+                jQuery('.ect-dialogbtn', modalElem).click(function() {
+                    closeModal(modalElem);
+                    var selectedName = extractClassNameSuffix(jQuery(this), 'ect-dialogbtn-');
+                    continueCallback(selectedName);
+                });
+                openModal(modalElem);
+            } else {
+                var result = confirm(msg);
+                if (result) {
+                    continueCallback();
+                }
+            }
         };
         var reportError = function(msg) {
             alert(scth.labels.error + ": " + msg);
@@ -141,11 +203,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
 
         var getNodeOrigId = function($node) {
             if (!$node) return null;
-            var id = $node.id;
-            if ($node.data.li_attr.original_id && $node.data.li_attr.original_id != id) {
-                id = $node.data.li_attr.original_id;
-            }
-            return id;
+            return $node.data.li_attr.original_id;
         };
         var getNodeObjectId = function($node) {
             return getNodeOrigId($node);
@@ -423,7 +481,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
         
         var populateForm = function(form, params, ai) {
-            if (specFlags.preventFormPopulate === true && scth.submittedFormId === form.prop('id')) {
+            if (specFlags.preventFormPopulate === true) {
                 // still have to populate common fields (FIXME: inconsistent populate)
                 //populateFormCommonTreeFieldsOnly(form, params, ai); // doing at end always for now...
             } else {
@@ -460,56 +518,66 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
          * Standard action target implementation (TODO?: callbacks or override into this).
          * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
          */
-        var execActionTarget = function(ai, params) {
-            params = getResolvedActionPropsParams(ai, params);
-            if (ai.actionProps.type == "link") {
-                openLink(ai.actionProps.url, params, ai.actionProps.target);
-            } else if (ai.actionProps.type == "form") {
-                var form = jQuery('#' + ai.formId);
-                if (form.length) {
-                    if (form.prop('tagName').toLowerCase() !== "form") {
-                        form = jQuery('form', form); // find first child that is a form (convenience)
-                    }
+        var execActionTarget = function(ai, params, preParamNamesMap) {
+            var coreExec = function() {
+                params = getResolvedActionPropsParams(ai, params);
+                if (ai.actionProps.type == "link") {
+                    openLink(ai.actionProps.url, params, ai.actionProps.target);
+                } else if (ai.actionProps.type == "form") {
+                    var form = jQuery('#' + ai.formId);
                     if (form.length) {
-                        form = form.first();
-                        if (ai.actionProps.mode == "show") {
-                            // abort form change and populate in special cases 
-                            // FIXME?: this assumes the page is already showing the right form on load... 
-                            // could use JS to do that
-                            if (specFlags.preventFormChange === true) {
-                                ;
-                            } else {
-                                populateForm(form, params, ai);
-                                if (scth.callbacks.showFormActivated) {
-                                    scth.callbacks.showFormActivated(form, ai);
+                        if (form.prop('tagName').toLowerCase() !== "form") {
+                            form = jQuery('form', form); // find first child that is a form (convenience)
+                        }
+                        if (form.length) {
+                            form = form.first();
+                            if (ai.actionProps.mode == "show") {
+                                // abort form change and populate in special cases 
+                                if (specFlags.preventFormChange === true) {
+                                    ;
+                                } else {
+                                    populateForm(form, params, ai);
+                                    if (scth.callbacks.showFormActivated) {
+                                        scth.callbacks.showFormActivated(form, ai);
+                                    }
+                                    if (scth.hideShowFormIds) {
+                                        jQuery.each(scth.hideShowFormIds, function(i, e) {
+                                            jQuery('#'+e).fadeOut(scth.fadeOptions);
+                                        });
+                                    }
+                                    jQuery('#'+ai.containerId).fadeIn(scth.fadeOptions);
                                 }
-                                if (scth.hideShowFormIds) {
-                                    jQuery.each(scth.hideShowFormIds, function(i, e) {
-                                        jQuery('#'+e).fadeOut(scth.fadeOptions);
-                                    });
-                                }
-                                jQuery('#'+ai.containerId).fadeIn(scth.fadeOptions);
-                            }
-                        } else if (ai.actionProps.mode == "submit") {
-                            var doExec = true;
-                            if (ai.actionProps.confirmMsg) {
-                                doExec = askConfirm(ai.actionProps.confirmMsg);
-                            }
-                            if (doExec) {
+                            } else if (ai.actionProps.mode == "submit") {
                                 populateForm(form, params, ai);
                                 form.submit();
+                            } else {
+                                reportInternalError("invalid form action mode: " + ai.actionProps.mode);
                             }
                         } else {
-                            reportInternalError("invalid form action mode: " + ai.actionProps.mode);
+                            reportInternalError("could not find form for form or container id: " + ai.formId);
                         }
                     } else {
-                        reportInternalError("could not find form for form or container id: " + ai.formId);
+                        reportInternalError("bad form or container id: " + ai.formId);
                     }
-                } else {
-                    reportInternalError("bad form or container id: " + ai.formId);
+                } else if (ai.actionProps.type && ai.actionProps.type != "none") {
+                    reportInternalError("invalid action type: " + ai.actionProps.type);
                 }
-            } else if (ai.actionProps.type && ai.actionProps.type != "none") {
-                reportInternalError("invalid action type: " + ai.actionProps.type);
+            };
+            if (ai.actionProps.confirmMsg) {
+                var modalElem = jQuery('#'+ scth.dialogIdPrefix + ai.objectType + '-' + ai.actionType);
+                showConfirmMsg(ai.actionProps.confirmMsg, modalElem, function(subActionType) {
+                    //alert('selected subActionType: ' + subActionType);
+                    params.subActionType = subActionType;
+                    if (preParamNamesMap && preParamNamesMap.subActionType) {
+                        params[preParamNamesMap.subActionType] = subActionType;
+                    }
+                    
+                    // TODO: support for options/params in the modal dialog
+                    
+                    coreExec();
+                });
+            } else {
+                coreExec();
             }
         };
  
@@ -603,7 +671,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var ai = getActionInfo($node, "removeassoc");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params);
+            return execActionTarget(ai, params, {subActionType:"deleteAssocMode"});
         };
         
         this.execRemoveForNode = function($node) {
@@ -690,7 +758,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     "label": scth.labels.remove,
                     "action": function(obj) {
                         if (nodeObjectIsParent) {
-                            popupMsg(scth.labels.cannotremovehaschild);
+                            showPopupMsg(scth.labels.cannotremovehaschild);
                         } else {
                             scth.execRemoveForNode($node);
                         }
@@ -830,24 +898,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         this.bindResolvePreselect = function() {
             var treeElem = jQuery('#'+scth.treeId);
             treeElem.bind('loaded.jstree', function(event, data) {
-            
-                // SPECIAL: disable form populate on load IF event error on our target form,
-                // otherwise we will lose user input on event failures
-                // this means all forms must be pre-populated correctly 
-                // FIXME?: could be handled better, depends on a mishmax of non-js and js
-                var preventFormChange = false;
-                var preventFormPopulate = false;
-                if (scth.eventStates.isError === true) {
-                    preventFormPopulate = true;
-                    if (scth.eventStates.isEffNewRequest === true) {
-                        preventFormChange = true;
-                    }
-                } else if (scth.eventStates.isNewRequest) {
-                    // special case
-                    preventFormPopulate = true;
-                    preventFormChange = true;
-                }
-                scth.resolvePreselect(scth.targetNodeInfo, preventFormChange, preventFormPopulate);
+                scth.resolvePreselect(scth.targetNodeInfo, scth.preventInitialFormChange, scth.preventInitialFormPopulate);
             });
         };
     }
@@ -892,15 +943,69 @@ if (typeof ectHandler === 'undefined') {
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,
         submittedFormId: "${escapeVal(ectSubmittedFormId!, 'js')}",
-        submittedParams: <@objectAsScript object=(ectSubmittedParams!requestParameters!{}) lang='js'/>,
-        eventStates: <@objectAsScript object=(ectEventStates!{"isError":isError!false}) lang='js'/>
+        initialParams: <@objectAsScript object=(ectInitialParams!requestParameters!{}) lang='js'/>,
+        preventInitialFormChange: ${(ectPreventInitialFormChange!false)?string},
+        preventInitialFormPopulate: ${(ectPreventInitialFormPopulate!false)?string},
+        popupMsgModalId: "${escapeVal(ectPopupMsgModalId!(ectDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
+        confirmMsgModalId: "${escapeVal(ectConfirmMsgModalId!(ectDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
+        dialogIdPrefix: "${escapeVal(ectDialogIdModalPrefix, 'js')}"
     });
     
     jQuery(document).ready(function() {
         ectHandler.bindResolvePreselect();
     });
-    
+
 </@script>
+
+<#macro ectActionConfirmMsgBtn>
+    <div class="modal-footer ${styles.text_right!}">
+        <#-- NOTE: the value "continue" is extracted from the class and passed to the callback -->
+        <a class="ect-dialogbtn ect-dialogbtn-continue ${styles.button!} btn-ok">${uiLabelMap.CommonContinue}</a>
+    </div>
+</#macro>
+
+<#macro ectDefaultActionMsgModals actionProps idPrefix idModalPrefix>
+    <#list actionProps?keys as objectType>
+        <#local actionMap = toSimpleMap(actionProps[objectType])>
+
+        <#local props = actionMap["removeassoc"]!{}>
+        <#if props.confirmMsg?has_content>
+            <@modal id="${idPrefix}${rawString(objectType)}-removeassoc" class="+ect-dialogmodal">
+                <@heading>${uiLabelMap.CommonWarning}</@heading>
+                <div class="ect-dialogmsg"></div>
+                <div class="modal-footer ${styles.text_right!}">
+                   <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
+                   <a class="ect-dialogbtn ect-dialogbtn-remove ${styles.button!} btn-ok">${uiLabelMap.CommonRemove}</a>
+                   <a class="ect-dialogbtn ect-dialogbtn-expire ${styles.button!} btn-ok">${uiLabelMap.CommonExpire}</a>
+                </div>
+            </@modal>
+        </#if>
+        
+        <#local props = actionMap["remove"]!{}>
+        <#if props.confirmMsg?has_content>
+            <@modal id="${idPrefix}${rawString(objectType)}-remove" class="+ect-dialogmodal">
+                <@heading>${uiLabelMap.CommonWarning}</@heading>
+                <div class="ect-dialogmsg"></div>
+                <@ectActionConfirmMsgBtn/>
+            </@modal>
+        </#if>
+    
+    </#list>
+ 
+  <#if !ectPopupMsgModalId?has_content>
+    <@modal id="${idPrefix}generic-popupmsg" class="+ect-dialogmodal">
+        <@heading>${uiLabelMap.CommonWarning}</@heading>
+        <div class="ect-dialogmsg"></div>
+    </@modal>
+  </#if>
+  <#if !ectConfirmMsgModalId?has_content>
+    <@modal id="${idPrefix}generic-confirmmsg" class="+ect-dialogmodal">
+        <@heading>${uiLabelMap.CommonWarning}</@heading>
+        <div class="ect-dialogmsg"></div>
+        <@ectActionConfirmMsgBtn/>
+    </@modal>
+  </#if>
+</#macro>
 
 <#assign treeEvents = {
     'select_node.jstree': 'ectHandler.sideMenuHandler(data.node);',
@@ -920,22 +1025,32 @@ if (typeof ectHandler === 'undefined') {
     "multiple": false <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
 } + toSimpleMap(ectTreeSettings!{})>
 
+<#if ectActionMsgModals??>
+  <#if ectActionMsgModals?is_directive>
+     <@ectActionMsgModals actionProps=(ectActionProps!{}) idPrefix=ectDialogIdPrefix idModalPrefix=ectDialogIdModalPrefix/>
+  <#else>
+     ${ectActionMsgModals}
+  </#if>
+<#else>
+  <@ectDefaultActionMsgModals actionProps=(ectActionProps!{}) idPrefix=ectDialogIdPrefix idModalPrefix=ectDialogIdModalPrefix/>
+</#if>
 <@row>
     <@cell medium=9 large=9>
-    
+
       <#-- MAIN JSTREE -->
       <@section title=uiLabelMap.ProductBrowseCatalogeAndCategories>
         <@treemenu id=ectTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
             <#list treeMenuData as node>
+
                 <#switch rawString(node.type)>
                     <#case "product">
                         <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
                             attribs={"data":{
-                                "type":"${node.type!}",
-                                "li_attr":node.li_attr,
-                                "productEntity":node.productEntity!{},
-                                "productCategoryMemberEntity":node.productCategoryMemberEntity!{},
-                                "isParent":node.isParent!false
+                                "type": node.type!,
+                                "li_attr": node.li_attr!{},
+                                "productEntity": node.productEntity!{},
+                                "productCategoryMemberEntity": node.productCategoryMemberEntity!{},
+                                "isParent": node.isParent!false
                             }} 
                             state=(node.state!{})
                             icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}file"/>
@@ -948,12 +1063,12 @@ if (typeof ectHandler === 'undefined') {
                         </#if>
                         <@treeitem text=text id=(node.id!) parent=(node.parent!"#") 
                             attribs={"data":{
-                                "type":"${node.type!}",
-                                "li_attr":node.li_attr,
-                                "productCategoryRollupEntity":node.productCategoryRollupEntity!{},
-                                "prodCatalogCategoryEntity":node.prodCatalogCategoryEntity!{},
-                                "productCategoryEntity":node.productCategoryEntity!{},
-                                "isParent":node.isParent!false
+                                "type": node.type!,
+                                "li_attr": node.li_attr!{},
+                                "productCategoryRollupEntity": node.productCategoryRollupEntity!{},
+                                "prodCatalogCategoryEntity": node.prodCatalogCategoryEntity!{},
+                                "productCategoryEntity": node.productCategoryEntity!{},
+                                "isParent": node.isParent!false
                             }} 
                             state=(node.state!{})
                             icon=("${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}"+(node.state.opened?string("folder-open","folder")))/>
@@ -966,11 +1081,11 @@ if (typeof ectHandler === 'undefined') {
                         </#if>
                         <@treeitem text=text id=(node.id!) parent=(node.parent!"#") 
                             attribs={"data":{
-                                "type":"${node.type!}",
-                                "li_attr":node.li_attr,
-                                "productStoreCatalogEntity":node.productStoreCatalogEntity!{},
-                                "prodCatalogEntity":node.prodCatalogEntity!{},
-                                "isParent":node.isParent!false
+                                "type": node.type!,
+                                "li_attr": node.li_attr!{},
+                                "productStoreCatalogEntity": node.productStoreCatalogEntity!{},
+                                "prodCatalogEntity": node.prodCatalogEntity!{},
+                                "isParent": node.isParent!false
                             }} 
                             state=(node.state!{})
                             icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}cubes"/>
@@ -979,7 +1094,7 @@ if (typeof ectHandler === 'undefined') {
             </#list>
         </@treemenu>
       </@section>
-      
+
     </@cell>
     <@cell medium=3 large=3>
     
@@ -994,6 +1109,15 @@ if (typeof ectHandler === 'undefined') {
             </#if>
           </ul>
         </#if>
+        
+          <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->
+          <#if ectActionExtrasArea??>
+            <#if ectActionExtrasArea?is_directive>
+              <@ectActionExtrasArea/>
+            <#else>
+              ${ectActionExtrasArea}
+            </#if>
+          </#if>
       </@section>
       
       <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->

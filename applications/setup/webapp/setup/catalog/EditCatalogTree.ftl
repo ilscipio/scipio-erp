@@ -116,13 +116,15 @@
     }
 }>
 
-<#macro ectExtrasArea>
-  <@section title=uiLabelMap.CommonDisplayOptions>
+<#macro ectExtrasArea extraArgs...>
+  <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
     <@form action=makeOfbizUrl("setupCatalog") method="get">
-      <@defaultWizardFormFields/>    
+      <@defaultWizardFormFields/>   
+    <@fieldset title=uiLabelMap.CommonDisplayOptions collapsed=true> 
       <@field type="input" name="setupEctMaxProductsPerCat" label=uiLabelMap.ProductMaxProductsPerCategory 
         value=(ectMaxProductsPerCat!) tooltip=uiLabelMap.SetupLargeStoreSlowSettingWarning/>
       <@field type="submit"/>
+    </@fieldset>
     </@form>
   </@section>
 </#macro>

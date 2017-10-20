@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.product.category;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,12 +55,15 @@ public abstract class CategoryWorker {
                 prodCatalogCategory = productCategory;
             }
             if (category != null) {
+                String categoryId = category.getString("productCategoryId");
+                String nodeId = "category_" + categoryId;
+                
                 Boolean isParent = null;
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(useCategoryCache).queryList();
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
                     treeDataItemList.addAll(
-                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId"), 
+                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, nodeId, 
                                         categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
                     isParent = true;
                 }
@@ -83,13 +87,11 @@ public abstract class CategoryWorker {
                         isParent = true;
                         if (maxProductsPerCat != 0) {
                             treeDataItemList.addAll(CategoryWorker.getTreeProducts(dispatcher, locale, productCategoryMembers, library,
-                                    productCategory.getString("productCategoryId"), includeProductData, useProductCache));
+                                    nodeId, includeProductData, useProductCache));
                         }
                     }
                 }
     
-                String categoryId = category.getString("productCategoryId");
-                
                 String categoryName = null;
                 // FIXME: doesn't respect useCategoryCache
                 CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
@@ -108,8 +110,8 @@ public abstract class CategoryWorker {
                     if (categoryStates != null && categoryStates.get(categoryId) != null) {
                         effState.putAll(categoryStates.get(categoryId));
                     }
-                    dataItem = new JsTreeDataItem(categoryId, categoryName + " [" + categoryId + "]", "jstree-folder", new JsTreeDataItemState(effState),
-                            parentId);
+                    dataItem = new JsTreeDataItem(nodeId, categoryId, categoryName + " [" + categoryId + "]", 
+                            "jstree-folder", new JsTreeDataItemState(effState), parentId);
                     dataItem.setType("category");
                     if (UtilValidate.isNotEmpty(dataItem))
                         treeDataItemList.add(dataItem);
@@ -124,6 +126,12 @@ public abstract class CategoryWorker {
         }
         return treeDataItemList;
     }
+    
+    // TODO
+//    public static Map<String, Map<String, Object>> getLocalizedCategoryContentTextFields(Delegator delegator, LocalDispatcher dispatcher, 
+//            String productCategoryId, Collection<String> dataResourceTypeIdList, boolean useCache) {
+//        
+//    }
 
     /**
      * SCIPIO: Retrieves products members for a given category and returns a list
@@ -148,8 +156,8 @@ public abstract class CategoryWorker {
                 }
     
                 if (library.equals("jsTree")) {
-                    JsTreeDataItem dataItem = new JsTreeDataItem(productId, productName + " [" + productId + "]", "jstree-file",
-                            new JsTreeDataItemState(false, false), parentId);
+                    JsTreeDataItem dataItem = new JsTreeDataItem("product_" + productId, productId, productName + " [" + productId + "]", 
+                            "jstree-file", new JsTreeDataItemState(false, false), parentId);
                     dataItem.setType("product");
                     products.add(dataItem);
                     if (includeData) {
@@ -164,4 +172,10 @@ public abstract class CategoryWorker {
         return products;
     }
 
+    // TODO
+//  public static Map<String, Map<String, Object>> getLocalizedProductContentTextFields(Delegator delegator, LocalDispatcher dispatcher, 
+//      String productId, Collection<String> dataResourceTypeIdList, boolean useCache) {
+//
+//  }
+    
 }

@@ -72,15 +72,16 @@ public abstract class CategoryServices {
     
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
+                        String nodeId = "catalog_" + prodCatalogId;
                         if (hasCategories) {
                             resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
-                                    prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
+                                    prodCatalogCategories, library, nodeId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
                         }
                         Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                         if (state != null) {
                             effState.putAll(state);
                         }
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
+                        dataItem = new JsTreeDataItem(nodeId, prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
                                 null);
                         dataItem.setType("catalog");
                         if (includeCategoryData) {

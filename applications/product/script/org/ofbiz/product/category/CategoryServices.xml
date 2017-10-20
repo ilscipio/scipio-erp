@@ -102,6 +102,18 @@ under the License.
         -->
     </simple-method>
 
+    <!-- SCIPIO: new (2017-10-20) -->
+    <simple-method method-name="deleteProductCategory" short-description="Delete a ProductCategory (if empty)">
+        <set field="callingMethodName" value="deleteProductCategory"/>
+        <set field="checkAction" value="DELETE"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <check-errors/>
+
+        <entity-one entity-name="ProductCategory" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <check-errors/>
+    </simple-method>
+
     <!-- ================================================================ -->
     <!-- ProductCategoryMember Services -->
     <!-- ================================================================ -->
@@ -1058,41 +1070,6 @@ under the License.
         <call-service service-name="deleteProdCatalog" in-map-name="deleteRecordCtx"/>
     </simple-method>
     
-    <simple-method method-name="deleteProdCatalogAndStoreAssocVersatile">
-        <if-compare field="parameters.deleteProdCatalog" operator="not-equals" type="Boolean" value="false">
-            <set-service-fields service-name="deleteProdCatalogAndStoreAssoc" map="parameters" to-map="deleteCtx"/>
-            <call-service service-name="deleteProdCatalogAndStoreAssoc" in-map-name="deleteCtx">
-                <default-message resource="ProductUiLabels" property="ProductCatalogAndStoreAssocRemoved"/>
-            </call-service>
-            <else>
-                <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
-                <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx">
-                    <default-message resource="ProductUiLabels" property="ProductCatalogStoreAssocRemoved"/>
-                </call-service>
-            </else>
-        </if-compare>
-    </simple-method>
-    
-    <simple-method method-name="createProductCategoryAndCatAssoc">
-        <if-empty field="parameters.parentProductCategoryId">
-            <set-service-fields service-name="createProductCategoryAndCatalogAssoc" to-map="createCtx" map="parameters"/>
-            <call-service service-name="createProductCategoryAndCatalogAssoc" in-map-name="createCtx">
-                <result-to-result result-name="productCategoryId"/>
-                <result-to-result result-name="prodCatalogId"/>
-                <result-to-result result-name="prodCatalogCategoryTypeId"/>
-                <result-to-result result-name="fromDate"/>
-            </call-service>
-            <else>
-                <set-service-fields service-name="createProductCategoryAndCategoryAssoc" to-map="createCtx" map="parameters"/>
-                <call-service service-name="createProductCategoryAndCategoryAssoc" in-map-name="createCtx">
-                    <result-to-result result-name="productCategoryId"/>
-                    <result-to-result result-name="parentProductCategoryId"/>
-                    <result-to-result result-name="fromDate"/>
-                </call-service>
-            </else>
-        </if-empty>
-    </simple-method>
-    
     <simple-method method-name="createProductCategoryAndCatalogAssoc">
         <set-service-fields service-name="createProductCategory" to-map="createRecordCtx" map="parameters"/>
         <call-service service-name="createProductCategory" in-map-name="createRecordCtx">
@@ -1122,17 +1099,6 @@ under the License.
         </call-service>
     </simple-method>
 
-    <simple-method method-name="updateProductCategoryAndCatAssoc">
-        <if-empty field="parameters.parentProductCategoryId">
-            <set-service-fields service-name="updateProductCategoryAndCatalogAssoc" to-map="updateCtx" map="parameters"/>
-            <call-service service-name="updateProductCategoryAndCatalogAssoc" in-map-name="updateCtx"/>
-            <else>
-                <set-service-fields service-name="updateProductCategoryAndCategoryAssoc" to-map="updateCtx" map="parameters"/>
-                <call-service service-name="updateProductCategoryAndCategoryAssoc" in-map-name="updateCtx"/>
-            </else>
-        </if-empty>
-        <check-errors/>
-    </simple-method>
     
     <simple-method method-name="updateProductCategoryAndCatalogAssoc">
         <set-service-fields service-name="updateProductCategory" to-map="updateRecordCtx" map="parameters"/>
@@ -1150,32 +1116,112 @@ under the License.
         <call-service service-name="updateProductCategoryToCategory" in-map-name="updateAssocCtx"/>
     </simple-method>
     
-    <!-- SCIPIO: NOTE: please see service def comments before making changes - sensitive -->
-    <simple-method method-name="deleteProductCategory" short-description="Delete a ProductCategory (if empty)">
-        <set field="callingMethodName" value="deleteProductCategory"/>
-        <set field="checkAction" value="DELETE"/>
-        <call-simple-method method-name="checkCategoryRelatedPermission"/>
-        <check-errors/>
-
-        <entity-one entity-name="ProductCategory" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
+    
+    <!-- ================================================================ -->
+    <!-- SCIPIO: NEW Versatile Services (with stock-like functionality) -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="createProdCatalogAndStoreAssocVersatile">
+        <set-service-fields service-name="createProdCatalogAndStoreAssoc" map="parameters" to-map="createCtx"/>
+        <call-service service-name="createProdCatalogAndStoreAssoc" in-map-name="createCtx">
+            <result-to-field result-name="prodCatalogId" field="parameters.prodCatalogId"/>
+            <result-to-result result-name="prodCatalogId"/>
+            <result-to-result result-name="productStoreId"/>
+            <result-to-result result-name="fromDate"/>
+        </call-service>
+    </simple-method>
+    
+    <simple-method method-name="updateProdCatalogAndStoreAssocVersatile">
+        <set-service-fields service-name="updateProdCatalogAndStoreAssoc" map="parameters" to-map="updateCtx"/>
+        <call-service service-name="updateProdCatalogAndStoreAssoc" in-map-name="updateCtx"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteProdCatalogStoreAssocVersatile">
+        <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
+            <!-- FIXME?: check if already expired?? -->
+            <set-service-fields service-name="updateProductStoreCatalog" to-map="updateCtx" map="parameters"/>
+            <now-timestamp field="updateCtx.thruDate"/>
+            <call-service service-name="updateProductStoreCatalog" in-map-name="updateCtx"/>
+            <else>
+                <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
+                <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="deleteProdCatalogAndStoreAssocVersatile">
+        <if-compare field="parameters.deleteProdCatalog" operator="not-equals" type="Boolean" value="false">
+            <set-service-fields service-name="deleteProdCatalogAndStoreAssoc" map="parameters" to-map="deleteCtx"/>
+            <call-service service-name="deleteProdCatalogAndStoreAssoc" in-map-name="deleteCtx"/>
+            <else>
+                <set-service-fields service-name="deleteProdCatalogStoreAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
+                <call-service service-name="deleteProdCatalogStoreAssocVersatile" in-map-name="deleteAssocCtx"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="createProductCategoryAndCatAssocVersatile">
+        <if-empty field="parameters.parentProductCategoryId">
+            <set-service-fields service-name="createProductCategoryAndCatalogAssoc" to-map="createCtx" map="parameters"/>
+            <call-service service-name="createProductCategoryAndCatalogAssoc" in-map-name="createCtx">
+                <result-to-result result-name="productCategoryId"/>
+                <result-to-result result-name="prodCatalogId"/>
+                <result-to-result result-name="prodCatalogCategoryTypeId"/>
+                <result-to-result result-name="fromDate"/>
+            </call-service>
+            <else>
+                <set-service-fields service-name="createProductCategoryAndCategoryAssoc" to-map="createCtx" map="parameters"/>
+                <call-service service-name="createProductCategoryAndCategoryAssoc" in-map-name="createCtx">
+                    <result-to-result result-name="productCategoryId"/>
+                    <result-to-result result-name="parentProductCategoryId"/>
+                    <result-to-result result-name="fromDate"/>
+                </call-service>
+            </else>
+        </if-empty>
+    </simple-method>
+    
+    <simple-method method-name="updateProductCategoryAndCatAssocVersatile">
+        <if-empty field="parameters.parentProductCategoryId">
+            <set-service-fields service-name="updateProductCategoryAndCatalogAssoc" to-map="updateCtx" map="parameters"/>
+            <call-service service-name="updateProductCategoryAndCatalogAssoc" in-map-name="updateCtx"/>
+            <else>
+                <set-service-fields service-name="updateProductCategoryAndCategoryAssoc" to-map="updateCtx" map="parameters"/>
+                <call-service service-name="updateProductCategoryAndCategoryAssoc" in-map-name="updateCtx"/>
+            </else>
+        </if-empty>
         <check-errors/>
     </simple-method>
     
-    <simple-method method-name="deleteProductCategoryCatAssoc">
+    <simple-method method-name="deleteProductCategoryCatAssocVersatile">
         <if-empty field="parameters.parentProductCategoryId">
-            <set-service-fields service-name="removeProductCategoryFromProdCatalog" to-map="removeCtx" map="parameters"/>
-            <call-service service-name="removeProductCategoryFromProdCatalog" in-map-name="removeCtx"/>
+            <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
+                <!-- FIXME?: check if already expired?? -->
+                <set-service-fields service-name="updateProductCategoryToProdCatalog" to-map="updateCtx" map="parameters"/>
+                <now-timestamp field="updateCtx.thruDate"/>
+                <call-service service-name="updateProductCategoryToProdCatalog" in-map-name="updateCtx"/>
+                <else>
+                    <set-service-fields service-name="removeProductCategoryFromProdCatalog" to-map="removeCtx" map="parameters"/>
+                    <call-service service-name="removeProductCategoryFromProdCatalog" in-map-name="removeCtx"/>
+                </else>
+            </if-compare>
             <else>
-                <set-service-fields service-name="removeProductCategoryFromCategory" to-map="removeCtx" map="parameters"/>
-                <call-service service-name="removeProductCategoryFromCategory" in-map-name="removeCtx"/>
+                <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
+                    <!-- FIXME?: check if already expired?? -->
+                    <set-service-fields service-name="updateProductCategoryToCategory" to-map="updateCtx" map="parameters"/>
+                    <now-timestamp field="updateCtx.thruDate"/>
+                    <call-service service-name="updateProductCategoryToCategory" in-map-name="updateCtx"/>
+                    <else>
+                        <set-service-fields service-name="removeProductCategoryFromCategory" to-map="removeCtx" map="parameters"/>
+                        <call-service service-name="removeProductCategoryFromCategory" in-map-name="removeCtx"/>
+                    </else>
+                </if-compare>
             </else>
         </if-empty>
     </simple-method>
     
     <simple-method method-name="deleteProductCategoryAndCatAssocVersatile">
-        <set-service-fields service-name="deleteProductCategoryCatAssoc" to-map="deleteAssocCtx" map="parameters"/>
-        <call-service service-name="deleteProductCategoryCatAssoc" in-map-name="deleteAssocCtx"/>
+        <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <call-service service-name="deleteProductCategoryCatAssocVersatile" in-map-name="deleteAssocCtx"/>
         
         <if-compare field="parameters.deleteProductCategory" operator="not-equals" type="Boolean" value="false">
             <set-service-fields service-name="deleteProductCategory" to-map="deleteRecordCtx" map="parameters"/>

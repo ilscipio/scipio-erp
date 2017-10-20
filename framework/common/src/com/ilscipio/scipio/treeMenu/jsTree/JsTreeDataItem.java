@@ -17,7 +17,7 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
 
     private String originalId;
 
-    public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
+    public JsTreeDataItem(String id, String originalId, String text, String icon, JsTreeDataItemState state, String parent) {
         if (UtilValidate.isNotEmpty(id))
             put("id", id);
         if (UtilValidate.isNotEmpty(text))
@@ -31,10 +31,14 @@ public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataI
         else
             put("parent", "#");
 
-        this.originalId = id;
+        this.originalId = originalId;
         Map<String, String> liAttrValues = new HashMap<>();
         liAttrValues.put("original_id", originalId);
         put("li_attr", liAttrValues);
+    }
+    
+    public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
+        this(id, id, text, icon, state, parent);
     }
 
     @Override

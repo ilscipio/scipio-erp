@@ -169,13 +169,13 @@
     </request-map>
     <request-map uri="setupCreateCatalog">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="createProdCatalogAndStoreAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCatalog">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateProdCatalogAndStoreAssoc"/>
+        <event type="service" invoke="updateProdCatalogAndStoreAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
@@ -187,13 +187,13 @@
     </request-map>
     <request-map uri="setupCreateCategory">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createProductCategoryAndCatAssoc"/>
+        <event type="service" invoke="createProductCategoryAndCatAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
     <request-map uri="setupUpdateCategory">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateProductCategoryAndCatAssoc"/>
+        <event type="service" invoke="updateProductCategoryAndCatAssocVersatile"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>

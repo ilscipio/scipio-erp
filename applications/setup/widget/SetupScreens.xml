@@ -361,9 +361,9 @@
 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/organization/SetupOrganization.groovy"/>                
 
-                <set field="isCreate" type="Boolean" value="${context.party == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.party == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
                 <set field="submitFormId" value="EditOrganization"/>
                 
                 <if>
@@ -458,9 +458,9 @@
                 <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
-                <set field="isCreate" type="Boolean" value="${context.userParty == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateUser' : 'setupCreateUser'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.userParty == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateUser' : 'setupCreateUser'}" />
                 <set field="submitFormId" value="EditUser"/>
                 
                 <if>
@@ -558,9 +558,9 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>                
                 
-                <set field="isCreate" type="Boolean" value="${context.accounting == null}"/><!-- FIXME -->
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.accounting == null}"/><!-- FIXME -->
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
                 <set field="submitFormId" value="EditAccounting"/>
             </actions>
             <widgets>
@@ -596,9 +596,9 @@
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>-->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/facility/SetupFacility.groovy"/>
                 
-                <set field="isCreate" type="Boolean" value="${context.facility == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'ProductEditFacility' : 'ProductNewFacility'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.facility == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'ProductEditFacility' : 'ProductNewFacility'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
                 <set field="submitFormId" value="EditFacility"/>
             </actions>
             <widgets>
@@ -639,24 +639,24 @@
                 
                 <script lang="groovy"><![CDATA[
                     def targetRecord = context.targetRecord;
-                    def isCreate = context.isCreate;
+                    def isCreateForm = context.isCreateForm;
                     def titleProperty = 'ProductEditCatalog'; // forms have their own section title, so not bothering with this
                     def target;
                     def submitFormId;
                     // WARN: "category" are not real step names to pass to worker, works for these calls only...
                     if (targetRecord == "product") {
-                        target = !isCreate ? 'setupUpdateProduct' : 'setupCreateProduct';
-                        submitFormId = !isCreate ? 'EditProduct' : 'NewProduct'
+                        target = !isCreateForm ? 'setupUpdateProduct' : 'setupCreateProduct';
+                        submitFormId = !isCreateForm ? 'EditProduct' : 'NewProduct'
                     } else if (targetRecord == "category") {
-                        target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
-                        submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
+                        target = !isCreateForm ? 'setupUpdateCategory' : 'setupCreateCategory';
+                        submitFormId = !isCreateForm ? 'EditCategory' : 'NewCategory'
                     } else {
-                        if (isCreate) titleProperty = 'ProductNewCatalog';
-                        target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
-                        submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
+                        if (isCreateForm) titleProperty = 'ProductNewCatalog';
+                        target = !isCreateForm ? 'setupUpdateCatalog' : 'setupCreateCatalog';
+                        submitFormId = !isCreateForm ? 'EditCatalog' : 'NewCatalog';
                     }
                     context.targetRecord = targetRecord;
-                    context.isCreate = isCreate;
+                    context.isCreateForm = isCreateForm;
                     context.titleProperty = titleProperty;
                     context.target = target;
                     context.submitFormId = submitFormId;
@@ -711,7 +711,7 @@
                                   </@form>
                                 <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
-                                    <#if !isCreate>
+                                    <#if !isCreateForm>
                                       <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
@@ -794,9 +794,9 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                  
-                <set field="isCreate" type="Boolean" value="${context.productStore == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateStore' : 'setupCreateStore'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.productStore == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateStore' : 'setupCreateStore'}" />
                 <set field="submitFormId" value="EditStore"/>
             </actions>
             <widgets>
@@ -845,9 +845,9 @@
                 - ->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                 
-                <set field="isCreate" type="Boolean" value="${context.webSite == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.webSite == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
                 <set field="submitFormId" value="EditWebsite"/>
             </actions>
             <widgets>

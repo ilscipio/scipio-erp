@@ -25,7 +25,7 @@ under the License.
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":userParty!true, <#-- NOTE: must fallback with boolean true -->
+    "record":true, <#-- NOTE: must fallback with boolean true -->
     "defaults":defaultParams,
     "strictRecord":true <#-- TODO: REMOVE (debugging) -->
 })>
@@ -37,64 +37,19 @@ under the License.
 <@form method="post" action=makeOfbizUrl(target) id="NewAccounting" name="NewAccounting">
     <@defaultWizardFormFields/>
   
-  	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
-
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingTaxAuthority}</legend>
-        		<@field name="taxAuthPartyId" label=uiLabelMap.CommonParty required=true />
-        		<@field name="taxAuthGeoId" label=uiLabelMap.CommonGeo />
-            
-		        <#-- <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority==null&amp;&amp;taxAuthGeoId==null" required-field="true" position="2">
-		            <lookup target-form-name="LookupGeo"/>
-		        </field>
-		        <field  name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority==null&amp;&amp;taxAuthGeoId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}:[${taxAuthGeoId}]">
-		            <lookup target-form-name="LookupGeo"/>
-		        </field> -->
-				<#-- 
-		        <field name="requireTaxIdForExemption" widget-style="+smallSelect">
-		            <drop-down no-current-selected-key="Y">
-		                <option key="Y" description="${uiLabelMap.CommonY}"/>
-		                <option key="N" description="${uiLabelMap.CommonN}"/>
-		            </drop-down>
-		        </field>
-		        <field name="includeTaxInPrice" widget-style="+smallSelect" position="2">
-		            <drop-down no-current-selected-key="N">
-		                <option key="Y" description="${uiLabelMap.CommonY}"/>
-		                <option key="N" description="${uiLabelMap.CommonN}"/>
-		            </drop-down>
-		        </field>
-		        <field name="taxIdFormatPattern" tooltip="${uiLabelMap.AccountingValidationPattern}"><text/></field>
-		         -->
-    	    
-    	  </fieldset>
-	  </@cell>
+  	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>    
 	
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingTimePeriod}</legend>
-    	    
-    	  </fieldset>
-	  </@cell>
-	</@row>
-	
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingPaymentGateway}</legend>
-    	    
-    	  </fieldset>
-	  </@cell>
-	
-	  <@cell columns=6>
-    	  <fieldset>    
-    	    <legend>${uiLabelMap.SetupAccountingGLAccountDefaults}</legend>
-    	        
-    	  </fieldset>
-	  </@cell>
-	</@row>
-	
-    <@field type="submit" title=uiLabelMap.CommonUpdate class="+${styles.link_run_sys} ${styles.action_update}"/>
+	<@field type="general" label=uiLabelMap.SetupSelectAccountingModuleForSetup>
+	   <@field type="select" name="userPartyId" id="setupAccounting-selectAccounting-select" class="+setupAccounting-selectAccounting-select" inline=true style="display:inline-block;">
+            <#-- <option value="">[${uiLabelMap.SetupCreateNewUser}]</option> -->
+            <option value="" disabled="disabled"></option>
+            <#if accountingCompoments?has_content>
+              <#list accountingCompoments as accountingCompoment>
+                <option value="${accountingCompoment.getComponentName()}">[${accountingCompoment.getComponentName()}]</option>
+              </#list>
+            </#if>
+        </@field>
+    </@field>        
+    
 </@form>
 

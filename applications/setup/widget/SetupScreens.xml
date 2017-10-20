@@ -515,7 +515,7 @@
                                         <set field="partyInfoViewOnly" type="Boolean" value="false"/>
                                         <set field="partyInfoSimpleFuncOnly" type="Boolean" value="true"/>
                                         <set field="partyContactInfoUseSection" type="Boolean" value="false"/>
-                                        <set field="parameters.partyId" from-field="parameters.userPartyId" />
+                                        <set field="parameters.partyId" from-field="userPartyId" />
                                     </actions>
                                     <widgets>
                                         <platform-specific>
@@ -533,11 +533,12 @@
     <screen name="SelectUser">
         <section>
             <actions>
-                <entity-condition entity-name="PartyRelationship" list="parties">
+                <entity-condition entity-name="PartyRelationship" list="parties" distinct="true" >
                     <condition-list>
                         <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>  
                         <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                    </condition-list>                   
+                    </condition-list>
+                    <select-field field-name="partyIdTo"/>                          
                 </entity-condition>
             </actions>
             <widgets>

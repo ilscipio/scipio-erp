@@ -4,7 +4,7 @@
 <hr/>
 
 <#assign htmlSectionTitle>${uiLabelMap.CommonOverview}<#rt/>
-  <#lt/> (<@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(partyId!)}" text=uiLabelMap.CommonManage/>)</#assign>
+  <#lt/> (<@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(userPartyId!)}" text=uiLabelMap.CommonManage/>)</#assign>
 <#assign sectionTitle = wrapAsRaw({"htmlmarkup":htmlSectionTitle, "raw":rawLabel('PartyContactInformation')})>
       
 <@section title=sectionTitle relHeadingLevel=+1>

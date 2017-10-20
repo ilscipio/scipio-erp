@@ -14,7 +14,7 @@
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${rawString(partyId)}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${rawString(userPartyId)}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </@menu>
   </#macro>
   <@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>

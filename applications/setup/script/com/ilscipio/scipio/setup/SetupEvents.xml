@@ -343,23 +343,61 @@
     </simple-method>
     
     <simple-method method-name="updateUser" short-description="Update Owner User" login-required="true">
-        <log level="always" message="parameters.userPartyId                         =================> ${parameters.userPartyId}" />        
-        <log level="always" message="parameters.USER_EMAIL_CONTACTMECHID            =================> ${parameters.USER_EMAIL_CONTACTMECHID}" />
-        <log level="always" message="parameters.USER_POSTAL_ADDRESS_CONTACTMECHID   =================> ${parameters.USER_POSTAL_ADDRESS_CONTACTMECHID}" />
-        <log level="always" message="parameters.USER_WORK_CONTACTMECHID             =================> ${parameters.USER_WORK_CONTACTMECHID}" />
-        <log level="always" message="parameters.USER_MOBILE_CONTACTMECHID           =================> ${parameters.USER_MOBILE_CONTACTMECHID}" />
-        <log level="always" message="parameters.USER_FAX_CONTACTMECTID              =================> ${parameters.USER_FAX_CONTACT_MECH_ID}" />  
-        
         <call-simple-method method-name="validateUser"/>
         <!-- see if we should continue now... -->
         <check-errors/>
+        
+        <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.roleTypeId" /></not>
+                    <not><if-empty field="parameters.partyRelationshipTypeId" /></not>
+                </and>
+            </condition>
+            <then>
+                <!-- DEV NOTE: We only allow one role to be set in the setup User step. 
+                Too much implication in UI if we want to allow more than one -->
+                <entity-one value-field="systemUserLogin" entity-name="UserLogin" use-cache="true"><field-map field-name="userLoginId" value="system"/></entity-one>                
+                <set field="createNewPartyRelationShipAndRole" value="false" type="Boolean" />
+                <if-compare-field to-field="parameters.partyRelationshipTypeId" operator="not-equals" field="parameters.oldUserPartyRelationshipTypeId">
+                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />
+                </if-compare-field>
+                <if-compare-field to-field="parameters.roleTypeId" operator="not-equals" field="parameters.oldUserPartyRoleId">
+                    <set field="createNewPartyRelationShipAndRole" value="true" type="Boolean" />                          
+                </if-compare-field>                
+                <if-compare operator="equals" value="true" field="createNewPartyRelationShipAndRole" type="Boolean">                    
+                    <set field="deletePartyRelationshipCtx.partyIdFrom" from-field="organizationPartyId" />
+                    <set field="deletePartyRelationshipCtx.partyIdTo" from-field="parameters.userPartyId" />                    
+                    <set field="deletePartyRelationshipCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+                    <set field="deletePartyRelationshipCtx.roleTypeIdTo" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                    <set field="deletePartyRelationshipCtx.fromDate" from-field="parameters.oldUserPartyRelationshipFromDate" />                    
+                    <set field="deletePartyRelationshipCtx.userLogin" from-field="systemUserLogin" />
+                    <call-service service-name="deletePartyRelationship" in-map-name="deletePartyRelationshipCtx" />                
+                    
+                    <set field="deletePartyRoleCtx.roleTypeId" from-field="parameters.oldUserPartyRelationshipRoleTypeIdTo" />
+                    <set field="deletePartyRoleCtx.partyId" from-field="parameters.userPartyId" />
+                    <set field="deletePartyRoleCtx.userLogin" from-field="systemUserLogin" />
+                    <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleCtx" />        
+                    
+                    <set field="createPartyRelationshipAndRoleCtx.partyIdFrom" from-field="organizationPartyId" />
+	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />
+	                <set field="createPartyRelationshipAndRoleCtx.roleTypeIdTo" from-field="parameters.roleTypeId" />
+	                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
+	                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />	                 
+	                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
+	                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />  
+                </if-compare> 
+            </then>         
+         </if>
                     
         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />
         <check-errors/>
         
-        <set field="partyId" from-field="parameters.partyId"/>
         
+        
+        <set field="partyId" from-field="parameters.userPartyId"/>
         <!-- billing address -->
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
@@ -379,7 +417,7 @@
         <!-- mobile phone -->
         <set field="cutn" value="" set-if-null="true"/>
         <set field="cutn.contactMechId" from-field="parameters.USER_MOBILE_CONTACTMECHID"/>
-        <set field="cutn.contactMechPurposeTypeId" value="MOBILE_HOME"/>
+        <set field="cutn.contactMechPurposeTypeId" value="PHONE_MOBILE"/>
         <set field="cutn.contactCtx" from-field="mobileMap"/>
         <call-simple-method method-name="createUpdatePartyTelecomNumber"/>
         <check-errors/>

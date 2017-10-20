@@ -91,7 +91,28 @@ if (workPhoneContactMech) {
             + workPhoneContactMech.contactMechId + " has no TelecomNumber record! Invalid data configuration!", module)
     }
 }
-//context.workPhoneNumber = workPhoneNumber;
+
+mobilePhoneContactMech = userData.mobilePhoneContactMech;
+context.mobilePhoneContactMech = mobilePhoneContactMech;
+mobilePhoneNumber = null;
+if (mobilePhoneContactMech) {
+    telecomNumber = delegator.findOne("TelecomNumber", [contactMechId:mobilePhoneContactMech.contactMechId], false);
+    if (telecomNumber) {
+        mobilePhoneNumber = [
+            "USER_MOBILE_CONTACTMECHID": mobilePhoneContactMech.contactMechId,
+            "USER_MOBILE_COUNTRY": telecomNumber.countryCode,
+            "USER_MOBILE_AREA": telecomNumber.areaCode,
+            "USER_MOBILE_CONTACT": telecomNumber.contactNumber,
+            "USER_MOBILE_EXT": mobilePhoneContactMech.extension
+        ];
+        if (userInfo != null) {
+            userInfo.putAll(mobilePhoneNumber);
+        }
+    } else {
+        Debug.logError("Setup: Configuration error: Mobile phone contact mech '"
+            + mobilePhoneContactMech.contactMechId + " has no TelecomNumber record! Invalid data configuration!", module)
+    }
+}
 
 faxPhoneContactMech = userData.faxPhoneContactMech;
 context.faxPhoneContactMech = faxPhoneContactMech;
@@ -114,7 +135,7 @@ if (faxPhoneContactMech) {
             + faxPhoneContactMech.contactMechId + " has no TelecomNumber record! Invalid data configuration!", module)
     }
 }
-//context.faxPhoneNumber = faxPhoneNumber;
+
 
 primaryEmailContactMech = userData.primaryEmailContactMech;
 context.primaryEmailContactMech = primaryEmailContactMech;

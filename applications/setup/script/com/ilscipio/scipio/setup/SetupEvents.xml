@@ -347,6 +347,28 @@
         <!-- see if we should continue now... -->
         <check-errors/>
         
+        <if>
+            <condition>
+	            <and>
+	                <not><if-empty field="parameters.PASSWORD" /></not>
+	                <not><if-empty field="parameters.CONFIRM_PASSWORD" /></not>
+	            </and>
+            </condition>
+            <then>
+		        <entity-one value-field="userUserLogin" entity-name="UserLogin">
+		            <field-map field-name="userLoginId" from-field="parameters.USERNAME"/>
+		        </entity-one>
+		        
+		        <set field="updatePasswordCtx.currentPassword" from-field="userUserLogin.currentPassword"/>
+		        <set field="updatePasswordCtx.userLoginId" from-field="userUserLogin.userLoginId"/>
+		        <set field="updatePasswordCtx.newPassword" from-field="parameters.PASSWORD"/>
+		        <set field="updatePasswordCtx.newPasswordVerify" from-field="parameters.CONFIRM_PASSWORD"/>
+		        <call-service service-name="updatePassword" in-map-name="updatePasswordCtx"></call-service>
+		        <check-errors/>
+           </then>
+        </if>
+        
+        
         <set field="organizationPartyId" from-field="parameters.orgPartyId"/>
         <if>
             <condition>
@@ -386,7 +408,8 @@
 	                <set field="createPartyRelationshipAndRoleCtx.partyRelationshipTypeId" from-field="parameters.partyRelationshipTypeId" />
 	                <set field="createPartyRelationshipAndRoleCtx.partyIdTo" from-field="parameters.userPartyId" />	                 
 	                <set field="createPartyRelationshipAndRoleCtx.userLogin" from-field="systemUserLogin" />
-	                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" />  
+	                <call-service service-name="createPartyRelationshipAndRole" in-map-name="createPartyRelationshipAndRoleCtx" /> 
+	                <check-errors/>
                 </if-compare> 
             </then>         
          </if>
@@ -394,8 +417,6 @@
         <set field="personMap.partyId" from-field="parameters.userPartyId" />
         <call-service service-name="updatePerson" in-map-name="personMap" />
         <check-errors/>
-        
-        
         
         <set field="partyId" from-field="parameters.userPartyId"/>
         <!-- billing address -->

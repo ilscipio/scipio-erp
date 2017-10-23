@@ -901,6 +901,54 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 scth.resolvePreselect(scth.targetNodeInfo, scth.preventInitialFormChange, scth.preventInitialFormPopulate);
             });
         };
+        
+        var lastTreeOp = {
+            op: null,
+            node: null,
+            node_parent: null
+        };
+        
+        this.areNodesDraggable = function(nodeList) {
+            if (!nodeList || nodeList.length <= 0) return false;
+            var draggable = true;
+            jQuery.each(nodeList, function(i, $node) {
+                if (getNodeObjectType($node) !== 'category') {
+                    draggable = false;
+                    return false;
+                }
+            });
+            return draggable;
+        };
+        
+        this.treeCheckCallback = function(op, node, node_parent, node_position, more) {
+            if (op === 'copy_node' || op === 'move_node') {
+                // IMPORTANT: this dnd check means that the dnd plugin will use the logic below
+                // to draw the checkmark icon - however when (more.core === true) we must always
+                // return false so that the actual tree move is prevented - we don't want
+                // jstree to perform the actual move, because we need to handle ourselves.
+                if (more.dnd === true) {
+                    lastTreeOp.op = op;
+                    lastTreeOp.node = node;
+                    lastTreeOp.node_parent = node_parent;
+                
+                    // TODO
+                    
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+        };
+        
+        this.initBindAll = function() {
+            scth.bindResolvePreselect();
+            
+            // NOTE: we use this instead of move_node.jstree or copy_node.jstree, which will not get triggered for us
+            jQuery(document).bind('dnd_stop.vakata', function(event, data) {
+                //alert('moving node ' + getNodeObjectId(lastTreeOp.node) + ' to parent ' + getNodeObjectId(lastTreeOp.node_parent));
+            });
+        };
     }
 }
     
@@ -952,7 +1000,7 @@ if (typeof ectHandler === 'undefined') {
     });
     
     jQuery(document).ready(function() {
-        ectHandler.bindResolvePreselect();
+        ectHandler.initBindAll();
     });
 
 </@script>
@@ -1014,15 +1062,18 @@ if (typeof ectHandler === 'undefined') {
     'dblclick.jstree': 'ectHandler.execManageForNode(data.node);'-->
 }/>
 
-<#assign contextMenuPluginSettings = {
-    "items": wrapRawScript("function(node) { return ectHandler.dropMenuHandler(node); }")
-}/>
 <#assign treePlugins = [
-    {"name":"contextmenu", "settings":contextMenuPluginSettings},
-    {"name":"massload"}
+    {"name":"contextmenu", "settings":{
+        "items": wrapRawScript("function(node) { return ectHandler.dropMenuHandler(node); }")
+    }},
+    {"name":"massload"},
+    {"name":"dnd", "settings":{
+        "is_draggable": wrapRawScript("function(nodeList) { return ectHandler.areNodesDraggable(nodeList); }")
+    }} 
 ]/>
 <#assign treeSettings = {
-    "multiple": false <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
+    "multiple": false, <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
+    "check_callback": wrapRawScript("function(operation, node, node_parent, node_position, more) { return ectHandler.treeCheckCallback(operation, node, node_parent, node_position, more); }")
 } + toSimpleMap(ectTreeSettings!{})>
 
 <#if ectActionMsgModals??>

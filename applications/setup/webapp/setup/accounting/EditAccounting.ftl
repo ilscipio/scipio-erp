@@ -21,7 +21,7 @@ under the License.
 
 
 <#assign defaultParams = {
-	<#--"productStoreId": productStoreId! // not avail/crash -->
+	
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
@@ -34,22 +34,57 @@ under the License.
 
 <@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
 
-<@form method="post" action=makeOfbizUrl(target) id="NewAccounting" name="NewAccounting">
-    <@defaultWizardFormFields/>
-  
-  	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>    
-	
-	<@field type="general" label=uiLabelMap.SetupSelectAccountingModuleForSetup>
-	   <@field type="select" name="userPartyId" id="setupAccounting-selectAccounting-select" class="+setupAccounting-selectAccounting-select" inline=true style="display:inline-block;">
-            <#-- <option value="">[${uiLabelMap.SetupCreateNewUser}]</option> -->
-            <option value="" disabled="disabled"></option>
-            <#if accountingGLs?has_content>
-              <#list accountingGLs as accountingGL>
-                <option value="${accountingGL}">[${accountingGL}]</option>
-              </#list>
-            </#if>
-        </@field>
-    </@field>        
+<@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
+    <@defaultWizardFormFields exclude=[] />
+    <@field type="hidden" name="isCreateGl" value=(topAccountGlId??)?string("N","Y")/> 
     
+    <#assign fieldsRequired = true>
+    
+    <#if topGlAccount??>
+        <@field type="display" name="topGlAccountId" value=(topGlAccount.glAccountId!) label=uiLabelMap.CommonId />
+    <#else>
+        <@field type="text" name="topGlAccountId" value=(topGlAccount.glAccountId!) label=uiLabelMap.CommonId />    
+    </#if>
+    
+    <@field type="text" name="accountCode" value=(topGlAccount.accountCode!) label=uiLabelMap.CommonId />
+    <@field type="text" name="accountName" value=(topGlAccount.glAccountId!) label=uiLabelMap.CommonId />
+    
+    <@field type="select" name="glAccountTypeId">
+      <option value="" disabled="disabled"></option>
+      <#list glAccountTypes as glAccountType>
+        <#assign selected = (rawString(topGlAccount.glAccountTypeId) == (glAccountType.glAccountTypeId!))>
+        <option value="${glAccountType.glAccountTypeId!}"<#if selected> selected="selected"</#if>>${glAccountType.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="select" name="glAccountClassId">
+      <option value="" disabled="disabled"></option>
+      <#list glAccountClasses as glAccountClass>
+        <#assign selected = (rawString(topGlAccount.glAccountClassId) == (glAccountClass.glAccountClassId!))>
+        <option value="${glAccountClass.glAccountClassId!}"<#if selected> selected="selected"</#if>>${glAccountClass.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="select" name="glResourceTypeId">
+      <option value="" disabled="disabled"></option>
+      <#list glResourceTypes as glResourceType>
+        <#assign selected = (rawString(topGlAccount.glResourceTypeId) == (glResourceType.glResourceTypeId!))>
+        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="textarea" name="description_visible" value=(topGlAccount.description!) required=false label=uiLabelMap.CommonDescription/>
+
+<#-- 
+       "parentGlAccountId" title="${uiLabelMap.CommonParent}">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+--> 
+
+
 </@form>
 

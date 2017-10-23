@@ -558,8 +558,8 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>                
                 
-                <set field="isCreateForm" type="Boolean" value="${context.accounting == null}"/><!-- FIXME -->
-                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.topGlAccountId == null}"/><!-- FIXME -->
+                <!-- <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" /> -->
                 <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
                 <set field="submitFormId" value="EditAccounting"/>
             </actions>
@@ -571,9 +571,21 @@
                                 <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
-                                </platform-specific>
+                                <screenlet>
+                                    <include-screen name="SelectGL"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <if-true field="glSelected"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>                                            
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.AccountingCreatePermissionError}</label>
@@ -581,6 +593,22 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectGL">
+        <section>
+            <actions>
+                <entity-condition entity-name="GlAccount" list="accountingGLs" distinct="true">
+                    <condition-list>
+                        <condition-expr field-name="parentGlAccountId" operator="not-equals" value="null" />
+                    </condition-list>         
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/accounting/SelectGL.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

@@ -1795,19 +1795,19 @@ under the License.
             by check if parentProductCategoryId is empty or non-empty, respectively. -->
 
     <service name="createProdCatalogAndStoreAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProdCatalogAndStoreAssocVersatile" auth="true">
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="createProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Create a ProdCatalog and ProductStoreCatalog association (versatile)</description>
         <implements service="createProdCatalogAndStoreAssoc"/>
     </service>
     
     <service name="updateProdCatalogAndStoreAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProdCatalogAndStoreAssocVersatile" auth="true">
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="updateProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Update a ProdCatalog and ProductStoreCatalog association (versatile)</description>
         <implements service="updateProdCatalogAndStoreAssoc"/>
     </service>
     
     <service name="deleteProdCatalogStoreAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogStoreAssocVersatile" auth="true">
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogStoreAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProductStoreCatalog association(s) (versatile)</description>
         <implements service="deleteProductStoreCatalog"/>
         <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
@@ -1816,7 +1816,7 @@ under the License.
     </service>
     
     <service name="deleteProdCatalogAndStoreAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association(s) (versatile)</description>
         <implements service="deleteProdCatalogStoreAssocVersatile"/>
         <attribute name="deleteProdCatalog" mode="IN" type="Boolean" optional="true" default-value="true">
@@ -1825,7 +1825,7 @@ under the License.
     </service>
     
     <service name="addProdCatalogStoreAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProdCatalogStoreAssocVersatile" auth="true">
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="addProdCatalogStoreAssocVersatile" auth="true">
         <description>SCIPIO: Adds a ProductStoreCatalog association, first checking to make sure doesn't already exist</description>
         <implements service="createProductStoreCatalog"/>
     </service>

@@ -592,4 +592,67 @@ under the License.
             <check-errors/>
         </iterate>
     </simple-method>
+    
+    <!-- ================================================================ -->
+    <!-- SCIPIO: NEW Versatile Services (with stock-like functionality) -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="createProdCatalogAndStoreAssocVersatile">
+        <set-service-fields service-name="createProdCatalogAndStoreAssoc" map="parameters" to-map="createCtx"/>
+        <call-service service-name="createProdCatalogAndStoreAssoc" in-map-name="createCtx">
+            <result-to-field result-name="prodCatalogId" field="parameters.prodCatalogId"/>
+            <result-to-result result-name="prodCatalogId"/>
+            <result-to-result result-name="productStoreId"/>
+            <result-to-result result-name="fromDate"/>
+        </call-service>
+    </simple-method>
+    
+    <simple-method method-name="updateProdCatalogAndStoreAssocVersatile">
+        <set-service-fields service-name="updateProdCatalogAndStoreAssoc" map="parameters" to-map="updateCtx"/>
+        <call-service service-name="updateProdCatalogAndStoreAssoc" in-map-name="updateCtx"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteProdCatalogStoreAssocVersatile">
+        <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
+            <!-- FIXME?: check if already expired?? -->
+            <set-service-fields service-name="updateProductStoreCatalog" to-map="updateCtx" map="parameters"/>
+            <now-timestamp field="updateCtx.thruDate"/>
+            <call-service service-name="updateProductStoreCatalog" in-map-name="updateCtx"/>
+            <else>
+                <set-service-fields service-name="deleteProductStoreCatalog" map="parameters" to-map="deleteAssocCtx"/>
+                <call-service service-name="deleteProductStoreCatalog" in-map-name="deleteAssocCtx"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="deleteProdCatalogAndStoreAssocVersatile">
+        <if-compare field="parameters.deleteProdCatalog" operator="not-equals" type="Boolean" value="false">
+            <set-service-fields service-name="deleteProdCatalogAndStoreAssoc" map="parameters" to-map="deleteCtx"/>
+            <call-service service-name="deleteProdCatalogAndStoreAssoc" in-map-name="deleteCtx"/>
+            <else>
+                <set-service-fields service-name="deleteProdCatalogStoreAssocVersatile" map="parameters" to-map="deleteAssocCtx"/>
+                <call-service service-name="deleteProdCatalogStoreAssocVersatile" in-map-name="deleteAssocCtx"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="addProdCatalogStoreAssocVersatile">
+        <!-- check if assoc already exists (ignoring fromDate) -->
+        <entity-and entity-name="ProductStoreCatalog" list="assocList" filter-by-date="true">
+            <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
+            <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
+        </entity-and>
+        <if-not-empty field="assocList">
+            <add-error><fail-property resource="ProductErrorUiLabels" property="productservices.could_not_create_catalog_store_assoc_association_exists"/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        
+        <set-service-fields service-name="createProductStoreCatalog" map="parameters" to-map="createAssocCtx"/>
+        <call-service service-name="createProductStoreCatalog" in-map-name="createAssocCtx">
+            <result-to-result result-name="prodCatalogId"/>
+            <result-to-result result-name="productStoreId"/>
+            <result-to-result result-name="fromDate"/>
+        </call-service>
+    </simple-method>
+    
 </simple-methods>

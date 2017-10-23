@@ -43,9 +43,9 @@ under the License.
 	   <@field type="select" name="userPartyId" id="setupAccounting-selectAccounting-select" class="+setupAccounting-selectAccounting-select" inline=true style="display:inline-block;">
             <#-- <option value="">[${uiLabelMap.SetupCreateNewUser}]</option> -->
             <option value="" disabled="disabled"></option>
-            <#if accountingCompoments?has_content>
-              <#list accountingCompoments as accountingCompoment>
-                <option value="${accountingCompoment.getComponentName()}">[${accountingCompoment.getComponentName()}]</option>
+            <#if accountingGLs?has_content>
+              <#list accountingGLs as accountingGL>
+                <option value="${accountingGL}">[${accountingGL}]</option>
               </#list>
             </#if>
         </@field>

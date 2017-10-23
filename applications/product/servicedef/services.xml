@@ -1790,7 +1790,9 @@ under the License.
     <!-- SCIPIO: New Versatile Services (stock-like) -->
     <!-- ======================================== -->
     <!-- These versatile service eliminates need for copy-pasting controller defs and events - 
-        form params control behavior if this is set in an event. Originally designed for catalog tree. -->
+        form params control behavior if this is set in an event. Originally designed for catalog tree. 
+        NOTE: The ProductCategory services all check whether catalog or category assoc change is needed
+            by check if parentProductCategoryId is empty or non-empty, respectively. -->
 
     <service name="createProdCatalogAndStoreAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProdCatalogAndStoreAssocVersatile" auth="true">
@@ -1820,6 +1822,12 @@ under the License.
         <attribute name="deleteProdCatalog" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete ProdCatalog; if false only deletes catalog or category association</description>
         </attribute>
+    </service>
+    
+    <service name="addProdCatalogStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProdCatalogStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a ProductStoreCatalog association, first checking to make sure doesn't already exist</description>
+        <implements service="createProductStoreCatalog"/>
     </service>
 
     <service name="createProductCategoryAndCatAssocVersatile" engine="simple"
@@ -1905,6 +1913,45 @@ under the License.
         <attribute name="deleteCategoryRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete ProductCategory (using deleteProductCategoryAndRelatedVersatile); if false only deletes catalog or category association</description>
         </attribute>
+    </service>
+    
+    <service name="addProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a category to catalog or category. Attempts to prevent multiple associations.</description>
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
+        <override name="productCategoryId" optional="false"/>     
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
+    </service>
+    
+    <service name="copyMoveProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="copyMoveProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Copies or moves a ProductCategory assoc by creating a new assoc (catalog or category assoc), and in case of move, removing or expiring the original</description>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
+        <attribute name="modifyAssocMode" mode="IN" type="String" optional="false">
+            <description>(copy|move)</description>
+        </attribute>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>
+        <attribute name="returnAssocFields" mode="IN" type="String" optional="true" default-value="false">
+            <description>If true, the assoc fields for the new assoc will be outputted back to the
+                prefix-less fields in addition to the "to_"-prefixed ones (i.e., fromDate will
+                be output in both "fromDate" and "to_fromDate").
+                If false, the new assoc fields are output only to the "to_"-prefixed fields.
+                This can be used in events for switching the target easily after the update.</description>
+        </attribute>
+        <!-- common -->
+        <attribute name="to_fromDate" mode="INOUT" type="String" optional="true"/><!-- may be left empty -->
+        <attribute name="to_sequenceNum" mode="INOUT" type="String" optional="true"/>
+        <!-- ProdCatalogCategory -->
+        <attribute name="to_prodCatalogId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="to_prodCatalogCategoryTypeId" mode="INOUT" type="String" optional="true"/>
+        <!-- ProductCategoryRollup -->
+        <attribute name="to_parentProductCategoryId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="to_productCategoryId" mode="OUT" type="String" optional="true"/>         
     </service>
     
     <!-- ======================================== -->

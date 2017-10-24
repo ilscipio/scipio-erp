@@ -259,7 +259,12 @@ public abstract class SetupDataUtil {
 
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
             if (UtilValidate.isNotEmpty(topAccountGlId)) {
-                // TODO
+                GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("accountGlId", topAccountGlId));
+                if (topGlAccount != null) {
+                   // TODO
+                } else {
+                    Debug.logError("Setup: GL account '" +  topAccountGlId + "' not found; ignoring", module);
+                }
             } else {
                 // TODO
             }

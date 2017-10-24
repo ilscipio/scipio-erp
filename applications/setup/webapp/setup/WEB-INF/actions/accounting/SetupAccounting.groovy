@@ -23,6 +23,8 @@ context.glResourceTypes = delegator.findByAnd("GlResourceType", [:], UtilMisc.to
 
 // true if explicit userPartyId OR explicit newUser=Y flag OR failed create
 
-glSelected = topGlAccountId || setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
+glSelected = setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.glSelected = glSelected;
 Debug.log("glSelected =======> " + glSelected);
+
+topGlAccountId ||

@@ -85,11 +85,23 @@
         <@field type="display" name="prodCatalogId" label=uiLabelMap.ProductCatalog><span class="ect-displayfield ect-displayfield-for-prodCatalogId">${params.prodCatalogId!}</span></@field>
         <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!) class="+ect-inputfield"/>
 
+      <#if !isCreateForm>
+        <#-- NOTE: unfortunately this cannot be edited after create, because it is part of the PK... 
+            FIXME?: could do a big workaround by service to make this editable by re-creating the assoc... -->
+        <@field type="select" disabled=true label=uiLabelMap.ProductCatalogCategoryType class="+ect-inputfield ect-inputfield-for-prodCatalogCategoryTypeId" containerClass="+epc-field-prodCatalogCategoryTypeId" required=true
+            tooltip=uiLabelMap.ProductRecreateAssociation>
+          <#list prodCatalogCategoryTypes as prodCatalogCategoryTypeData>                       
+            <option<#if rawString(params.prodCatalogCategoryTypeId!) == rawString(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
+          </#list>
+        </@field>
+        <@field type="hidden" name="prodCatalogCategoryTypeId" value=(params.prodCatalogCategoryTypeId!) class="+ect-inputfield"/>
+      <#else>
         <@field type="select" label=uiLabelMap.ProductCatalogCategoryType name="prodCatalogCategoryTypeId" class="+ect-inputfield" containerClass="+epc-field-prodCatalogCategoryTypeId" required=true>
           <#list prodCatalogCategoryTypes as prodCatalogCategoryTypeData>                       
             <option<#if rawString(params.prodCatalogCategoryTypeId!) == rawString(prodCatalogCategoryTypeData.prodCatalogCategoryTypeId!)> selected="selected"</#if> value="${prodCatalogCategoryTypeData.prodCatalogCategoryTypeId}">${prodCatalogCategoryTypeData.get("description", locale)}</option>
           </#list>
         </@field>
+      </#if>
 
         <@field type="display" name="parentProductCategoryId" label=uiLabelMap.ProductParentCategory containerClass="+epc-field-parentProductCategoryId"><span class="ect-displayfield ect-displayfield-for-parentProductCategoryId">${params.parentProductCategoryId!}</span></@field>
         <@field type="hidden" name="parentProductCategoryId" value=(params.parentProductCategoryId!) class="+ect-inputfield"/>

@@ -16431,6 +16431,10 @@
         <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
     </property>
+    <property key="CommonConfirmCopyMoveRecordParametrized">
+        <value xml:lang="en">Are you sure you want to copy/move ${objectName} to ${targetName}?</value>
+        <value xml:lang="de">Möchten Sie wirklich ${objectName} in ${targetName} kopieren/verschieben?</value>
+    </property>
     <property key="CommonCannotDeleteRecordHasChildren">
         <value xml:lang="en">This record cannot be removed, because it still has child record associations in the system.</value>
         <value xml:lang="de">Dieser Datensatz kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Assoziationen enthält.</value>
@@ -16442,5 +16446,9 @@
     <property key="CommonRemoveAssoc">
         <value xml:lang="en">Remove Assoc</value>
         <value xml:lang="de">Assoc entfernen</value>
+    </property>
+    <property key="CommonMove">
+        <value xml:lang="en">Move</value>
+        <value xml:lang="de">Bewegung</value>
     </property>
 </resource>

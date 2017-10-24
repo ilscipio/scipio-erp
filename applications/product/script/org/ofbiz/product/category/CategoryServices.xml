@@ -1301,7 +1301,7 @@ under the License.
 
     <simple-method method-name="addProductCategoryCatAssocVersatile">
         <if-empty field="parameters.parentProductCategoryId">
-            <if-empty field="prodCatalogId"><!-- if don't enforce this here, the assocList could produce confusing message -->
+            <if-empty field="parameters.prodCatalogId"><!-- if don't enforce this here, the assocList could produce confusing message -->
                 <set field="missingFieldName" value="prodCatalogId"/>
                 <add-error><fail-property resource="CommonErrorUiLabels" property="CommonMissingFieldWithName"/></add-error>
                 <check-errors/>
@@ -1347,7 +1347,8 @@ under the License.
     </simple-method>
 
     <simple-method method-name="copyMoveProductCategoryCatAssocVersatile">
-        <if-compare field="parameters.assocModifyMode" operator="equals" value="move">
+        <log level="always" message="parameters: ${parameters}"/>
+        <if-compare field="parameters.modifyAssocMode" operator="equals" value="move">
             <!-- delete the original assoc if move requested -->
             <set-service-fields service-name="deleteProductCategoryCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
             <call-service service-name="deleteProductCategoryCatAssocVersatile" in-map-name="deleteAssocCtx"/>
@@ -1364,16 +1365,16 @@ under the License.
         <!-- ProductCategoryRollup -->
         <set field="addAssocCtx.parentProductCategoryId" from-field="parameters.to_parentProductCategoryId"/>
         <call-service service-name="addProductCategoryCatAssocVersatile" in-map-name="addAssocCtx">
-            <result-to-result result-name="productCategoryId" service-result-name="resultFields.productCategoryId"/>
-            <result-to-result result-name="fromDate" service-result-name="resultFields.fromDate"/>
-            <result-to-result result-name="sequenceNum" service-result-name="resultFields.sequenceNum"/>
-            <result-to-result result-name="prodCatalogId" service-result-name="resultFields.prodCatalogId"/>
-            <result-to-result result-name="prodCatalogCategoryTypeId" service-result-name="resultFields.prodCatalogCategoryTypeI"/>
-            <result-to-result result-name="parentProductCategoryId" service-result-name="resultFields.parentProductCategoryId"/>
+            <result-to-field result-name="productCategoryId" field="resultFields.productCategoryId"/>
+            <result-to-field result-name="fromDate" field="resultFields.fromDate"/>
+            <result-to-field result-name="sequenceNum" field="resultFields.sequenceNum"/>
+            <result-to-field result-name="prodCatalogId" field="resultFields.prodCatalogId"/>
+            <result-to-field result-name="prodCatalogCategoryTypeId" field="resultFields.prodCatalogCategoryTypeId"/>
+            <result-to-field result-name="parentProductCategoryId" field="resultFields.parentProductCategoryId"/>
         </call-service>
-        
+
+        <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
         <if-compare field="parameters.returnAssocFields" operator="equals" type="Boolean" value="true">
-            <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
             <field-to-result result-name="fromDate" field="resultFields.fromDate"/>
             <field-to-result result-name="sequenceNum" field="resultFields.sequenceNum"/>
             <field-to-result result-name="prodCatalogId" field="resultFields.prodCatalogId"/>

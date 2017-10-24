@@ -1920,16 +1920,23 @@ under the License.
         <description>SCIPIO: Adds a category to catalog or category. Attempts to prevent multiple associations.</description>
         <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
-        <override name="productCategoryId" optional="false"/>     
+        <auto-attributes entity-name="ProductCategoryRollup" include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryId" optional="false"/>
         <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
     </service>
     
     <service name="copyMoveProductCategoryCatAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="copyMoveProductCategoryCatAssocVersatile" auth="true">
         <description>SCIPIO: Copies or moves a ProductCategory assoc by creating a new assoc (catalog or category assoc), and in case of move, removing or expiring the original</description>
+        <!-- source category and assoc -->
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="nonpk" mode="IN" optional="true"/>
+        <!-- service behavior -->
         <attribute name="modifyAssocMode" mode="IN" type="String" optional="false">
             <description>(copy|move)</description>
         </attribute>
@@ -1943,15 +1950,17 @@ under the License.
                 If false, the new assoc fields are output only to the "to_"-prefixed fields.
                 This can be used in events for switching the target easily after the update.</description>
         </attribute>
+        <!-- target catalog or category  -->
         <!-- common -->
-        <attribute name="to_fromDate" mode="INOUT" type="String" optional="true"/><!-- may be left empty -->
-        <attribute name="to_sequenceNum" mode="INOUT" type="String" optional="true"/>
+        <attribute name="to_fromDate" mode="INOUT" type="Timestamp" optional="true"/><!-- may be left empty -->
+        <attribute name="to_sequenceNum" mode="INOUT" type="Long" optional="true"/>
         <!-- ProdCatalogCategory -->
         <attribute name="to_prodCatalogId" mode="INOUT" type="String" optional="true"/>
         <attribute name="to_prodCatalogCategoryTypeId" mode="INOUT" type="String" optional="true"/>
         <!-- ProductCategoryRollup -->
         <attribute name="to_parentProductCategoryId" mode="INOUT" type="String" optional="true"/>
-        <attribute name="to_productCategoryId" mode="OUT" type="String" optional="true"/>         
+        <attribute name="to_productCategoryId" mode="OUT" type="String" optional="true"/>
+        <override name="productCategoryId" optional="false"/>      
     </service>
     
     <!-- ======================================== -->

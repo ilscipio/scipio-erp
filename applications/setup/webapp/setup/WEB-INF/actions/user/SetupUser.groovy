@@ -1,3 +1,4 @@
+import org.apache.commons.lang.StringUtils
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.GenericValue
 import org.ofbiz.entity.condition.EntityCondition
@@ -152,7 +153,7 @@ if (primaryEmailContactMech) {
 
 
 // true if explicit userPartyId OR explicit newUser=Y flag OR failed create
-userSelected = userPartyId || setupWorker?.isEffectiveNewRecordRequest(setupStep);
+userSelected = userPartyId || setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.userSelected = userSelected;
 
 context.contactMechsCompleted = userData.contactMechsCompleted;

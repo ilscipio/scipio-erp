@@ -1,5 +1,7 @@
+import org.apache.commons.lang.StringUtils
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
+
 import com.ilscipio.scipio.setup.*;
 
 final module = "SetupOrganization.groovy";
@@ -115,7 +117,7 @@ if (primaryEmailContactMech) {
 context.contactMechsCompleted = organizationData.contactMechsCompleted;
 
 // true if explicit orgPartyId OR explicit newOrganization=Y flag OR failed create
-organizationSelected = partyId || setupWorker?.isEffectiveNewRecordRequest(setupStep);
+organizationSelected = partyId || setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.organizationSelected = organizationSelected;
 
 context.organizationInfo = organizationInfo;

@@ -577,11 +577,11 @@
                                 <section>
                                     <condition>
                                         <!-- don't show tree until at least one topGlAccountId created -->
-                                        <not><if-empty field="productStoreCatalogList"/></not>
+                                        <not><if-empty field="glAccountList"/></not>
                                     </condition>
                                     <widgets>
                                         <screenlet>
-                                            <include-screen name="EditCatalogTree"/>
+                                            <include-screen name="EditGLTree"/>
                                         </screenlet>
                                     </widgets>
                                 </section>

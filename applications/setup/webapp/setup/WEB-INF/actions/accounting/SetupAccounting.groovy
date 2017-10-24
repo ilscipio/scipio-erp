@@ -16,15 +16,16 @@ accountingData = context.accountingData ?: [:];
 topGlAccountId = accountingData.topGlAccountId;
 context.topGlAccountId = topGlAccountId;
 
+glAccountList = accountingData.glAccountList;
+context.glAccountList = glAccountList;
+
 context.glAccountTypes = delegator.findByAnd("GlAccountType", [:], UtilMisc.toList("description"), true);
 context.glAccountClasses = delegator.findByAnd("GlAccountClass", [:], UtilMisc.toList("description"), true);
 context.glResourceTypes = delegator.findByAnd("GlResourceType", [:], UtilMisc.toList("description"), true);
 
 
-// true if explicit userPartyId OR explicit newUser=Y flag OR failed create
+// true if explicit newAccounting=Y flag OR failed create
 
 glSelected = setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.glSelected = glSelected;
 Debug.log("glSelected =======> " + glSelected);
-
-topGlAccountId ||

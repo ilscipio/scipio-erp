@@ -1310,8 +1310,9 @@ under the License.
             <entity-and entity-name="ProdCatalogCategory" list="assocList" filter-by-date="true">
                 <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
                 <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
-                <!-- TODO: REVIEW: do we really want this field considered? for now, yes, just following schema... -->
-                <field-map field-name="prodCatalogCategoryTypeId" from-field="parameters.prodCatalogCategoryTypeId"/>
+                <!-- TODO/FIXME: REVIEW: prodCatalogCategoryTypeId is part of the PK, but currently we have to avoid
+                    having multiple catalog-category assoc because the tree can't handle it
+                <field-map field-name="prodCatalogCategoryTypeId" from-field="parameters.prodCatalogCategoryTypeId"/>-->
             </entity-and>
             <if-not-empty field="assocList">
                 <add-error><fail-property resource="ProductErrorUiLabels" property="productservices.could_not_create_catalog_category_assoc_association_exists"/></add-error>

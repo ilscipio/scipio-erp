@@ -81,6 +81,12 @@ if (targetNodePath == null) {
 }
 context.ectTargetNodePath = targetNodePath;
 
+newTargetNodePath = context.ectNewTargetNodePath;
+if (newTargetNodePath == null) {
+    newTargetNodePath = parameters.ectNewTargetNodePath as String;
+}
+context.ectNewTargetNodePath = newTargetNodePath;
+
 parseTargetNodeInfo = { targetNodePath ->
     def objectIdList = [];
     def targetObjectType = null;
@@ -96,33 +102,38 @@ parseTargetNodeInfo = { targetNodePath ->
     return [objectIdList:objectIdList, targetObjectType:targetObjectType, defined:defined];
 };
 
-targetNodeInfo = parseTargetNodeInfo(targetNodePath);
-if (eventStates.isDeleteRecordSuccess) {
-    // Remove last entry (deleted)
-    if (targetNodeInfo.objectIdList) {
-        targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
-        if (targetNodeInfo.objectIdList.size() <= 1) {
-            targetNodeInfo.targetObjectType = "catalog";
-        } else {
-            targetNodeInfo.targetObjectType = "category";
+def targetNodeInfo;
+if (evenStates.isError != false && newTargetNodePath) {
+    targetNodeInfo = parseTargetNodeInfo(newTargetNodePath);
+} else {
+    targetNodeInfo = parseTargetNodeInfo(targetNodePath);
+    if (eventStates.isDeleteRecordSuccess) {
+        // Remove last entry (deleted)
+        if (targetNodeInfo.objectIdList) {
+            targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
+            if (targetNodeInfo.objectIdList.size() <= 1) {
+                targetNodeInfo.targetObjectType = "catalog";
+            } else {
+                targetNodeInfo.targetObjectType = "category";
+            }
         }
-    }
-} else if (eventStates.isCreateRecordSuccess) {
-    // Append new entry
-    if (eventStates.isCreateCatalogSuccess) {
-        if (!targetNodeInfo.objectIdList && curProdCatalogId) {
-            targetNodeInfo.objectIdList.add(curProdCatalogId);
-            targetNodeInfo.targetObjectType = "catalog";
-        }
-    } else if (eventStates.isCreateCategorySuccess) {
-        if (targetNodeInfo.objectIdList && curProductCategoryId) {
-            targetNodeInfo.objectIdList.add(curProductCategoryId);
-            targetNodeInfo.targetObjectType = "category";
-        }
-    } else if (eventStates.isCreateProductSuccess) {
-        if (targetNodeInfo.objectIdList && curProductId) {
-            targetNodeInfo.objectIdList.add(curProductId);
-            targetNodeInfo.targetObjectType = "product";
+    } else if (eventStates.isCreateRecordSuccess) {
+        // Append new entry
+        if (eventStates.isCreateCatalogSuccess) {
+            if (!targetNodeInfo.objectIdList && curProdCatalogId) {
+                targetNodeInfo.objectIdList.add(curProdCatalogId);
+                targetNodeInfo.targetObjectType = "catalog";
+            }
+        } else if (eventStates.isCreateCategorySuccess) {
+            if (targetNodeInfo.objectIdList && curProductCategoryId) {
+                targetNodeInfo.objectIdList.add(curProductCategoryId);
+                targetNodeInfo.targetObjectType = "category";
+            }
+        } else if (eventStates.isCreateProductSuccess) {
+            if (targetNodeInfo.objectIdList && curProductId) {
+                targetNodeInfo.objectIdList.add(curProductId);
+                targetNodeInfo.targetObjectType = "product";
+            }
         }
     }
 }

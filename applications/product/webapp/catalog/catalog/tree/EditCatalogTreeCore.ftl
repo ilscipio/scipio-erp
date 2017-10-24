@@ -1,5 +1,15 @@
 <#-- SCIPIO: Interactive catalog tree core include -->
 
+<#-- FIXME: theme styling missing for this
+<style type="text/css">
+    .ect-action-menu {
+        li.disabled, a.disabled {
+            color:gray;
+        }
+    }
+</style>
+ -->
+ 
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
 </#if>
@@ -61,6 +71,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         var isSpecParamVal = function(val) {
             // SPECIAL: we may store sub-objects in the params map to pass around; this detects them
             return isObj(val);
+        };
+        var ensureArray = function(valOrArray) {
+            return jQuery.isArray(valOrArray) ? valOrArray : (isUndefOrNull(valOrArray) ? [] : [valOrArray]);
         };
 
         var startsWith = function(str, prefix) {
@@ -308,6 +321,14 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 return getJsTree().is_parent($node);
             }
         };
+        var isChildNodeOf = function($node, $childNode) {
+            if ($childNode) $childNode = getParentNode($childNode); // same should not count
+            while($childNode && !isRootNode($childNode)) {
+                if ($childNode.id === $node.id) return true;
+                $childNode = getParentNode($childNode);
+            }
+            return false;
+        };
 
         var isActionPropsValid = function(objectType, actionName) {
             var actionGroup = scth.allActionProps[objectType];
@@ -325,6 +346,14 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         
             // COPY the object because will be modified
             return jQuery.extend(true, {}, action);
+        };
+        var getActionPropsDefaultParams = function(actionProps) {
+            if (!actionProps) return {};
+            else if (typeof actionProps.defaultParams === 'function') {
+                return actionProps.defaultParams();
+            } else {
+                return actionProps.defaultParams || {};
+            }
         };
         
         /**
@@ -477,6 +506,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         var populateFormCommonTreeFieldsOnly = function(form, params, ai) {
             var fields = getCommonTreeFields(form, params, ai);
             jQuery('input[name=ectTargetNodePath].ect-inputfield', form).val(fields.ectTargetNodePath || '');
+            jQuery('input[name=ectNewTargetNodePath].ect-inputfield', form).val(fields.ectNewTargetNodePath || '');
             jQuery('input[name=ectSubmittedFormId].ect-inputfield', form).val(fields.ectSubmittedFormId || '');
         };
         
@@ -514,11 +544,36 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             populateFormCommonTreeFieldsOnly(form, params, ai);
         };
         
+        // TODO: REVIEW: this may need to be triggered earlier in some cases, meaning should be able to work without "ai"...
+        var checkExecConfirm = function(ai, params, preParamNamesMap, execCallback) {
+            // FIXME?: the confirm message should occur earlier than this, but need new factor points
+            var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
+            if (confirmMsg) {
+                var modalElem = jQuery('#'+ scth.dialogIdPrefix + ai.objectType + '-' + ai.actionType);
+                showConfirmMsg(confirmMsg, modalElem, function(subActionType) {
+                    params.subActionType = subActionType;
+                    if (preParamNamesMap && preParamNamesMap.subActionType) {
+                        if (typeof preParamNamesMap.subActionType === 'function') {
+                            preParamNamesMap.subActionType(subActionType, params, ai); 
+                        } else {
+                            params[preParamNamesMap.subActionType] = subActionType;
+                        }
+                    }
+                    
+                    // TODO: support for options/params in the modal dialog
+                    
+                    execCallback();
+                });
+            } else {
+                execCallback();
+            }
+        };
+        
         /** 
          * Standard action target implementation (TODO?: callbacks or override into this).
          * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
          */
-        var execActionTarget = function(ai, params, preParamNamesMap) {
+        var execActionTarget = function(ai, params) {
             var coreExec = function() {
                 params = getResolvedActionPropsParams(ai, params);
                 if (ai.actionProps.type == "link") {
@@ -563,23 +618,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     reportInternalError("invalid action type: " + ai.actionProps.type);
                 }
             };
-            if (ai.actionProps.confirmMsg) {
-                var modalElem = jQuery('#'+ scth.dialogIdPrefix + ai.objectType + '-' + ai.actionType);
-                showConfirmMsg(ai.actionProps.confirmMsg, modalElem, function(subActionType) {
-                    //alert('selected subActionType: ' + subActionType);
-                    params.subActionType = subActionType;
-                    if (preParamNamesMap && preParamNamesMap.subActionType) {
-                        params[preParamNamesMap.subActionType] = subActionType;
-                    }
-                    
-                    // TODO: support for options/params in the modal dialog
-                    
-                    coreExec();
-                });
-            } else {
-                coreExec();
-            }
+            coreExec();
         };
+
  
         /**
          * Merges the entity fields for the node together.
@@ -618,6 +659,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             }
             
             params.data = ai.data; // special entry
+            params.local = {}; // special entry
             return params;
         };
 
@@ -643,20 +685,12 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             this.actionProps = getActionProps(this.objectType, this.actionType);
             this.formId = this.actionProps.formId || this.actionProps.id;
             this.containerId = this.actionProps.id;
-            if (this.actionProps) {
-                this.defaultParams = this.actionProps.defaultParams || {};
-            } else {
-                this.defaultParams = {};
-            }
+            this.defaultParams = getActionPropsDefaultParams(this.actionProps);
             // TODO: more accessors
         };
         
         var getActionInfo = function($node, actionType, objectType) {
             var ai = new ActionInfo($node, actionType, objectType);
-            // special post-resolve
-            if (typeof ai.defaultParams === 'function') {
-                ai.defaultParams = ai.defaultParams(ai);
-            }
             return ai;
         };
         
@@ -664,21 +698,163 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var ai = getActionInfo($node, "edit");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params);
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
+        };
+        
+        this.areNodesDraggable = function($nodeOrList) {
+            $nodeOrList = ensureArray($nodeOrList);
+            if (!$nodeOrList || $nodeOrList.length <= 0) return false;
+            var draggable = true;
+            jQuery.each($nodeOrList, function(i, $node) {
+                var objectType = getNodeObjectType($node);
+                if (objectType !== 'category' && objectType !== 'product') {
+                    draggable = false;
+                    return false;
+                }
+            });
+            return draggable;
+        };
+        
+        /**
+         * Returns true only if all nodes are valid for copy/move to the target.
+         */
+        this.isValidCopyMoveTarget = function($nodeOrList, $targetNode) {
+            if (!$nodeOrList || !$targetNode || isRootNode($targetNode)) return false;
+            $nodeOrList = ensureArray($nodeOrList);
+            if ($nodeOrList.length <= 0) return false;
+            
+            var targetObjectId = getNodeObjectId($targetNode);
+            var targetType = getNodeObjectType($targetNode);
+            if (targetType !== 'catalog' && targetType !== 'category') return false;
+            
+            var result = true;
+            for(var i=0; i < $nodeOrList.length; i++) {
+                var $node = $nodeOrList[i];
+            
+                if (!$node || isRootNode($node)) return false;
+                
+                var objectType = getNodeObjectType($node);
+                if (objectType !== 'category' && objectType !== 'product') return false;
+                
+                var $parent = getParentNode($node);
+                if (!$parent) return false;
+                
+                // check if target is already us (?!) or our parent
+                if ($node.id === $targetNode.id || $node.id === $parent.id) return false;
+                // must also check via "real" object ID
+                var objectId = getNodeObjectId($node);
+                if (objectType === targetType && objectId === targetObjectId) return false;
+                var parentType = getNodeObjectType($parent);
+                var parentObjectId = getNodeObjectId($parent);
+                if (parentType === targetType && parentObjectId === targetObjectId) return false;
+                
+                if (objectType === 'product') {
+                    // products can only go under categories
+                    if (targetType !== 'category') return false;
+                } else {
+                    // category can't go under itself
+                    if (isChildNodeOf($node, $targetNode)) return false;
+                }
+                
+                // make sure the object is not already child of the target
+                
+                if (getChildNodeByObjectId($targetNode, objectId, objectType)) return false;
+            }
+            return true;  
+        };
+        
+        this.execCopyMoveAssocForNode = function($node, $targetNode) {
+            if (!scth.isValidCopyMoveTarget($node, $targetNode)) {
+                return false;
+            }
+        
+            var ai = getActionInfo($node, "copymoveassoc");
+            var params = makeParamsMap(ai);
+            
+            // target to_ node
+            var targetObjectType = getNodeObjectType($targetNode);
+            if (targetObjectType === 'catalog') {
+                params.to_prodCatalogId = getNodeObjectId($targetNode);
+                // if already a catalog relation, preserve the type,
+                // otherwise use caller default (user can edit after)...
+                if (params.prodCatalogCategoryTypeId) {
+                    params.to_prodCatalogCategoryTypeId = params.prodCatalogCategoryTypeId;
+                } else {
+                    // get default from catalog newcategory defaultParams
+                    var cncDefParams = getActionPropsDefaultParams(getActionProps("catalog", "newcategory"));
+                    if (cncDefParams.prodCatalogCategoryTypeId) {
+                        params.to_prodCatalogCategoryTypeId = cncDefParams.prodCatalogCategoryTypeId;
+                    } else {
+                        params.to_prodCatalogCategoryTypeId = "PCCT_BROWSE_ROOT"; // fallback default (can't be empty)
+                    }
+                }
+                params.to_parentProductCategoryId = null;
+            } else if (targetObjectType === 'category') {
+                params.to_prodCatalogId = null;
+                params.to_prodCatalogCategoryTypeId = null;
+                params.to_parentProductCategoryId = getNodeObjectId($targetNode);
+            }
+            params.to_fromDate = null; // TODO?: no way to populate - service will make it
+            params.to_sequenceNum = null; // TODO?: no way to populate (unreliable), can't reuse previous, but could be desirable...
+            
+            var confirmMsg = ai.actionProps.confirmMsg;
+            if (confirmMsg) {
+                confirmMsg = confirmMsg.replace('SOURCE', ai.objectId).replace('TARGET', getNodeObjectId($targetNode));
+            }
+            params.local.confirmMsg = confirmMsg;
+            
+            checkExecConfirm(ai, params, 
+                {subActionType: function(subActionType, params, ai) {
+                    if ("copy" === subActionType) {
+                        params.modifyAssocMode = "copy";
+                        params.deleteAssocMode = null;
+                        params.returnAssocFields = "false";
+                    } else if ("move-remove" === subActionType) {
+                        params.modifyAssocMode = "move";
+                        params.deleteAssocMode = "remove";
+                        params.returnAssocFields = "true";
+                    } else if ("move-expire" === subActionType) {
+                        params.modifyAssocMode = "move";
+                        params.deleteAssocMode = "expire";
+                        params.returnAssocFields = "true";
+                    } else {
+                        // should not happen
+                        params.modifyAssocMode = null;
+                        params.deleteAssocMode = null;
+                        params.returnAssocFields = null;
+                        reportInternalError("invalid copy/move sub action type: " + subActionType);
+                    }
+                }},
+                function() {
+                    execActionTarget(ai, params);
+                }
+            );
         };
         
         this.execRemoveAssocForNode = function($node) {
             var ai = getActionInfo($node, "removeassoc");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params, {subActionType:"deleteAssocMode"});
+            checkExecConfirm(ai, params, {subActionType:"deleteAssocMode"}, function() {
+                execActionTarget(ai, params);
+            });
         };
         
         this.execRemoveForNode = function($node) {
+            var nodeObjectIsParent = isNodeObjectParent($node);
+            if (nodeObjectIsParent) {
+                showPopupMsg(scth.labels.cannotremovehaschild);
+                return false;
+            }
+        
             var ai = getActionInfo($node, "remove");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params);
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
         };
         
         this.execNewCategoryForNode = function($node) {
@@ -692,26 +868,34 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
             }
             
-            return execActionTarget(ai, params);
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
         };
         
         this.execNewCatalog = function() {
             var ai = getActionInfo(null, "newcatalog", "default");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params);
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
         };
         
         this.execManageForNode = function($node) {
             var ai = getActionInfo($node, "manage");
             var params = makeParamsMap(ai);
             // default params OK
-            return execActionTarget(ai, params);
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
         };
         
-        this.execForNode = function(actionType, $node) {
+        this.execForNode = function(actionType, $node, $targetNode) {
             if (actionType === "edit") {
                 return this.execEditForNode($node);
+            } else if (actionType === "copymoveassoc") {
+                return this.execCopyMoveAssocForNode($node, $targetNode);
             } else if (actionType === "removeassoc") {
                 return this.execRemoveAssocForNode($node);
             } else if (actionType === "remove") {
@@ -757,11 +941,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     "_disabled": nodeObjectIsParent,
                     "label": scth.labels.remove,
                     "action": function(obj) {
-                        if (nodeObjectIsParent) {
-                            showPopupMsg(scth.labels.cannotremovehaschild);
-                        } else {
-                            scth.execRemoveForNode($node);
-                        }
+                        scth.execRemoveForNode($node);
                     }
                 },
                 newcategory: {
@@ -903,22 +1083,16 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
         
         var lastTreeOp = {
-            op: null,
-            node: null,
-            node_parent: null
+            clear: function() {
+                this.op = null;
+                this.node = null;
+                this.node_parent = null;
+            },
+            isSet: function() {
+                return this.node && this.node_parent;
+            }
         };
-        
-        this.areNodesDraggable = function(nodeList) {
-            if (!nodeList || nodeList.length <= 0) return false;
-            var draggable = true;
-            jQuery.each(nodeList, function(i, $node) {
-                if (getNodeObjectType($node) !== 'category') {
-                    draggable = false;
-                    return false;
-                }
-            });
-            return draggable;
-        };
+        lastTreeOp.clear();
         
         this.treeCheckCallback = function(op, node, node_parent, node_position, more) {
             if (op === 'copy_node' || op === 'move_node') {
@@ -927,13 +1101,15 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 // return false so that the actual tree move is prevented - we don't want
                 // jstree to perform the actual move, because we need to handle ourselves.
                 if (more.dnd === true) {
-                    lastTreeOp.op = op;
-                    lastTreeOp.node = node;
-                    lastTreeOp.node_parent = node_parent;
-                
-                    // TODO
-                    
-                    return true;
+                    if (scth.isValidCopyMoveTarget(node, node_parent)) {
+                        lastTreeOp.op = op;
+                        lastTreeOp.node = node;
+                        lastTreeOp.node_parent = node_parent;
+                        return true;
+                    } else {
+                        lastTreeOp.clear()
+                        return false;
+                    }
                 } else {
                     return false;
                 }
@@ -941,13 +1117,20 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             return false;
         };
         
-        this.initBindAll = function() {
-            scth.bindResolvePreselect();
-            
+        this.bindDnd = function() {
             // NOTE: we use this instead of move_node.jstree or copy_node.jstree, which will not get triggered for us
             jQuery(document).bind('dnd_stop.vakata', function(event, data) {
-                //alert('moving node ' + getNodeObjectId(lastTreeOp.node) + ' to parent ' + getNodeObjectId(lastTreeOp.node_parent));
+                if (lastTreeOp.isSet()) {
+                    //alert('moving node ' + getNodeObjectId(lastTreeOp.node) + ' to parent ' + getNodeObjectId(lastTreeOp.node_parent));
+                    scth.execCopyMoveAssocForNode(lastTreeOp.node, lastTreeOp.node_parent);
+                }
+                lastTreeOp.clear();
             });
+        };
+        
+        this.initBindAll = function() {
+            scth.bindResolvePreselect();
+            scth.bindDnd();
         };
     }
 }
@@ -1038,6 +1221,19 @@ if (typeof ectHandler === 'undefined') {
             </@modal>
         </#if>
     
+        <#local props = actionMap["copymoveassoc"]!{}>
+        <#if props.confirmMsg?has_content>
+            <@modal id="${idPrefix}${rawString(objectType)}-copymoveassoc" class="+ect-dialogmodal">
+                <@heading>${uiLabelMap.CommonWarning}</@heading>
+                <div class="ect-dialogmsg"></div>
+                <div class="modal-footer ${styles.text_right!}">
+                   <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
+                   <a class="ect-dialogbtn ect-dialogbtn-copy ${styles.button!} btn-ok">${uiLabelMap.CommonCopy}</a>
+                   <a class="ect-dialogbtn ect-dialogbtn-move-remove ${styles.button!} btn-ok">${uiLabelMap.CommonMove}</a><#-- (${uiLabelMap.CommonRemove}) -->
+                   <a class="ect-dialogbtn ect-dialogbtn-move-expire ${styles.button!} btn-ok">${uiLabelMap.CommonMove} (${uiLabelMap.CommonExpire})</a>
+                </div>
+            </@modal>
+        </#if>
     </#list>
  
   <#if !ectPopupMsgModalId?has_content>
@@ -1069,6 +1265,7 @@ if (typeof ectHandler === 'undefined') {
     {"name":"massload"},
     {"name":"dnd", "settings":{
         "is_draggable": wrapRawScript("function(nodeList) { return ectHandler.areNodesDraggable(nodeList); }")
+         <#-- "large_drop_target":true  - not helping -->
     }} 
 ]/>
 <#assign treeSettings = {

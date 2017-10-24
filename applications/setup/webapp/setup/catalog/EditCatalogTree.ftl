@@ -79,6 +79,12 @@
             "mode": "show",
             "id": "ect-editcategory"
         },
+        "copymoveassoc": {
+            "type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"}),
+            "id": "ect-copymoveassoccategory-form"
+        },
         "removeassoc": {
             "type": "form",
             "mode": "submit",

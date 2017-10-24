@@ -153,11 +153,9 @@
       
       <#-- common -->
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>
-      
       <#-- common PK -->
       <@field type="hidden" name="productCategoryId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="fromDate" value="" class="+ect-inputfield"/>
-      
       <#-- ProdCatalogCategory PK -->
       <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="prodCatalogCategoryTypeId" value="" class="+ect-inputfield"/>
@@ -168,4 +166,42 @@
 </#macro>
   <@setupDeleteCategoryForm id="ect-removecategory-form" isDeleteRecord=true/>
   <@setupDeleteCategoryForm id="ect-removecategoryassoc-form" isDeleteRecord=false/>
+  
+<#macro setupCopyMoveAssocCategoryForm id>
+  <@form id=id action=makeOfbizUrl("setupCopyMoveCategory") method="post">
+      <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
+      <@ectCommonTreeFormFields params={}/>
+      <@field type="hidden" name="setupContinue" value="N"/>
+      <@field type="hidden" name="isCopymoveCategory" value="Y"/><#-- for our screens -->
+      <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+      <@field type="hidden" name="modifyAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+      <@field type="hidden" name="returnAssocFields" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+
+      <#-- common -->
+      <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>
+      
+      <#-- SOURCE -->
+      <#-- common PK -->
+      <@field type="hidden" name="productCategoryId" value="" class="+ect-inputfield"/>
+      <@field type="hidden" name="fromDate" value="" class="+ect-inputfield"/>
+      <#-- ProdCatalogCategory PK -->
+      <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
+      <@field type="hidden" name="prodCatalogCategoryTypeId" value="" class="+ect-inputfield"/>
+      <#-- ProductCategoryRollup PK -->
+      <@field type="hidden" name="parentProductCategoryId" value="" class="+ect-inputfield"/><#-- presence determines which assoc type gets targeted for delete -->
+      
+      <#-- TARGET -->
+      <#-- common PK -->
+      <#--<@field type="hidden" name="to_productCategoryId" value="" class="+ect-inputfield"/> not an input-->
+      <@field type="hidden" name="to_fromDate" value="" class="+ect-inputfield"/>
+      <@field type="hidden" name="to_sequenceNum" value="" class="+ect-inputfield"/>
+      <#-- ProdCatalogCategory PK -->
+      <@field type="hidden" name="to_prodCatalogId" value="" class="+ect-inputfield"/>
+      <@field type="hidden" name="to_prodCatalogCategoryTypeId" value="" class="+ect-inputfield"/>
+      <#-- ProductCategoryRollup PK -->
+      <@field type="hidden" name="to_parentProductCategoryId" value="" class="+ect-inputfield"/><#-- presence determines which assoc type gets targeted for delete -->
+  </@form>
+</#macro>
+  <@setupCopyMoveAssocCategoryForm id="ect-copymoveassoccategory-form"/>
+
 </div>

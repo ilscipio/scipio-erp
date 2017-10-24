@@ -203,6 +203,12 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
+    <request-map uri="setupCopyMoveCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyMoveProductCategoryCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
     <request-map uri="setupStore">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>

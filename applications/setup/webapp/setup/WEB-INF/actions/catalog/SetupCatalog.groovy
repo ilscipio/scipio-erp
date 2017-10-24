@@ -12,7 +12,7 @@ catalogData = context.catalogData ?: [:];
  * NOTE: this is complicated for this screen due to multiple forms + half-JS + submit behavior
  */
 
-eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Delete"], true, ["Catalog", "Category", "Product"]);
+eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Delete", "Copymove"], true, ["Catalog", "Category", "Product"]);
 
 
 /*

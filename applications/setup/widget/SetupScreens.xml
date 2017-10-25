@@ -699,28 +699,21 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <script lang="groovy"><![CDATA[
-                    def targetRecord = context.targetRecord;
-                    def isCreateForm = context.isCreateForm;
-                    def titleProperty = 'ProductEditCatalog'; // forms have their own section title, so not bothering with this
-                    def target;
-                    def submitFormId;
-                    // WARN: "category" are not real step names to pass to worker, works for these calls only...
-                    if (targetRecord == "product") {
-                        target = !isCreateForm ? 'setupUpdateProduct' : 'setupCreateProduct';
-                        submitFormId = !isCreateForm ? 'EditProduct' : 'NewProduct'
-                    } else if (targetRecord == "category") {
-                        target = !isCreateForm ? 'setupUpdateCategory' : 'setupCreateCategory';
-                        submitFormId = !isCreateForm ? 'EditCategory' : 'NewCategory'
-                    } else {
-                        if (isCreateForm) titleProperty = 'ProductNewCatalog';
-                        target = !isCreateForm ? 'setupUpdateCatalog' : 'setupCreateCatalog';
-                        submitFormId = !isCreateForm ? 'EditCatalog' : 'NewCatalog';
-                    }
-                    context.targetRecord = targetRecord;
-                    context.isCreateForm = isCreateForm;
-                    context.titleProperty = titleProperty;
-                    context.target = target;
-                    context.submitFormId = submitFormId;
+                    targetRecordAction = context.targetRecordAction;
+                    submitFormIdMap = [
+                        "catalog-create": "NewCatalog",
+                        "catalog-edit": "EditCatalog",
+                        "catalog-add": "AddCatalog",
+                        "category-create": "NewCategory",
+                        "category-edit": "EditCategory",
+                        "category-add": "AddCategory",
+                        "product-create": "NewProduct",
+                        "product-edit": "EditProduct",
+                        "product-add": "AddProduct",
+                    ];
+                    context.submitFormIdMap = submitFormIdMap;
+                    context.titleProperty = (targetRecordAction == "catalog-create" ) ? "ProductNewCatalog" : "ProductEditCatalog"; // forms have their own section title, so not bothering with this
+                    context.submitFormId = submitFormIdMap[targetRecordAction];
                 ]]></script>
                 <set field="newCatalogFormId" value="setupCatalog-newCatalog"/>
                 <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>

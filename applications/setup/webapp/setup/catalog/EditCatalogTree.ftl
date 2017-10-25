@@ -3,15 +3,13 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
+<@alert type="warning">WARNING: WORK-IN-PROGRESS - <strong>SERVICES TEMPORARILY RE-BROKEN 2017-10-24</strong></@alert>
 
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
         <#-- special: if this is a category form (check for isCreateCategory hidden input present),
             adjust field visibility for top vs nested cat -->
-        if (jQuery('input[name=isCreateCategory]', form).length) {
-            refreshScfFieldVisibility(form);
-        }
+        refreshScfFieldVisibility(form);
         
         setupControlMenu.setSubmitFormId(form.prop('id'));
     };
@@ -21,7 +19,9 @@
     "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
 }>
 <#assign ectAllHideShowFormIds = [
-    "ect-newcatalog", "ect-editcatalog", "ect-newcategory", "ect-editcategory", "ect-newcategory"
+    "ect-newcatalog", "ect-editcatalog", "ect-addcatalog",
+    "ect-newcategory", "ect-editcategory", "ect-addcategory",
+    "ect-newproduct", "ect-editproduct", "ect-addproduct"
 ]>
 <#assign ectActionProps = {
     "default": {
@@ -29,6 +29,12 @@
             "type": "form",
             "mode": "show",
             "id": "ect-newcatalog",
+            "defaultParams": wrapRawScript("function() { return defaultCatalogParams; }")
+        },
+        "addcatalog": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-addcatalog",
             "defaultParams": wrapRawScript("function() { return defaultCatalogParams; }")
         }
     },
@@ -65,6 +71,12 @@
             "id": "ect-newcategory",
             "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
         },
+        "addcategory": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-addcategory",
+            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
+        },
         "manage": {
             "type": "link",
             "target": "_blank",
@@ -79,11 +91,20 @@
             "mode": "show",
             "id": "ect-editcategory"
         },
-        "copymoveassoc": {
+        "copymoveassoc": { <#-- NOTE: this is special copy/move combo for dnd, doesn't work like the others -->
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"}),
-            "id": "ect-copymoveassoccategory-form"
+            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordAssocParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"})
+        },
+        "copyassoc": {
+            "type": "form",
+            "mode": "submit",
+            "id": "ect-copycategoryassoc-form"
+        },
+        "moveassoc": {
+            "type": "form",
+            "mode": "submit",
+            "id": "ect-movecategoryassoc-form"
         },
         "removeassoc": {
             "type": "form",
@@ -103,6 +124,24 @@
             "id": "ect-newcategory",
             "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
         },
+        "addcategory": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-addcategory",
+            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
+        },
+        "newproduct": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-newproduct",
+            "defaultParams": wrapRawScript("function() { return defaultProductParams; }")
+        },
+        "addproduct": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-addproduct",
+            "defaultParams": wrapRawScript("function() { return defaultProductParams; }")
+        },
         "manage": {
             "type": "link",
             "target": "_blank",
@@ -112,6 +151,38 @@
         }
     },
     "product": {
+        "edit": {
+            "type": "form",
+            "mode": "show",
+            "id": "ect-editproduct"
+        },
+        "copymoveassoc": {
+            "type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordAssocParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"})
+        },
+        "copyassoc": {
+            "type": "form",
+            "mode": "submit",
+            "id": "ect-copyproductassoc-form"
+        },
+        "moveassoc": {
+            "type": "form",
+            "mode": "submit",
+            "id": "ect-moveproductassoc-form"
+        },
+        "removeassoc": {
+            "type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
+            "id": "ect-removeproductassoc-form"
+        },
+        "remove": {
+            "type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
+            "id": "ect-removeproduct-form"
+        },
         "manage": {
             "type": "link",
             "target": "_blank",

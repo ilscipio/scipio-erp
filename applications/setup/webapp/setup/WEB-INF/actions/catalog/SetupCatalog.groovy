@@ -12,7 +12,7 @@ catalogData = context.catalogData ?: [:];
  * NOTE: this is complicated for this screen due to multiple forms + half-JS + submit behavior
  */
 
-eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Delete", "Copymove"], true, ["Catalog", "Category", "Product"]);
+eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Move", "Add"], true, ["Catalog", "Category", "Product"]);
 
 
 /*
@@ -28,6 +28,14 @@ context.productStoreCatalog = productStoreCatalog;
 
 productStoreCatalogList = catalogData.productStoreCatalogList;
 context.productStoreCatalogList = productStoreCatalogList;
+
+prodCatalogIdSet = new HashSet();
+if (productStoreCatalogList) {
+    for(psc in productStoreCatalogList) {
+        prodCatalogIdSet.add(psc.prodCatalogId);
+    }
+}
+context.prodCatalogIdSet = prodCatalogIdSet;
 
 highestSequenceNum = null;
 if (productStoreCatalogList) {
@@ -87,6 +95,9 @@ context.prodCatalogCategoryTypes = prodCatalogCategoryTypes;
 productCategoryTypes = EntityQuery.use(delegator).from("ProductCategoryType").orderBy("description").queryList();
 context.productCategoryTypes = productCategoryTypes;
 
+productTypes = EntityQuery.use(delegator).from("ProductType").orderBy("description").queryList();
+context.productTypes = productTypes;
+
 context.productCategoryId = productCategoryId;
 context.productCategory = productCategory;
 context.productCategoryAndAssoc = productCategoryAndAssoc;
@@ -119,16 +130,22 @@ context.productAndAssoc = productAndAssoc;
  * Extra prep
  */
 
-if (!eventFlags.isDeleteProductSuccess && (productAndAssoc != null || eventFlags.isEffnewProduct)) {
-    eventFlags.targetRecord = "product"
-    eventFlags.isCreateForm = (context.productAndAssoc == null);
-} else if (!eventFlags.isDeleteCategorySuccess && (context.productCategoryAndAssoc != null || eventFlags.isEffnewCategory)) {
-    eventFlags.targetRecord = "category"
-    eventFlags.isCreateForm = (context.productCategoryAndAssoc == null);
+// TODO: REVIEW: this may not be covering all cases properly... some bad cases may be being hidden by jstree logic
+// this is ignoring the delete/expire/copy/move actions because they are hidden forms
+if (!eventFlags.isDeleteProductSuccess && (productAndAssoc != null || eventFlags.isEffnewProduct || eventFlags.isAddProductFailed)) {
+    eventFlags.targetRecord = "product";
+    if (eventFlags.isAddProductFailed) eventFlags.formActionType = "add";
+    else eventFlags.formActionType = (context.productAndAssoc == null) ? "new" : "edit";
+} else if (!eventFlags.isDeleteCategorySuccess && (context.productCategoryAndAssoc != null || eventFlags.isEffnewCategory || eventFlags.isAddCategoryFailed)) {
+    eventFlags.targetRecord = "category";
+    if (eventFlags.isAddCategoryFailed) eventFlags.formActionType = "add";
+    else eventFlags.formActionType = (context.productCategoryAndAssoc == null) ? "new" : "edit";
 } else {
-    eventFlags.targetRecord = "catalog"
-    eventFlags.isCreateForm = (context.prodCatalogAndStoreAssoc == null);
+    eventFlags.targetRecord = "catalog";
+    if (eventFlags.isAddCatalogFailed) eventFlags.formActionType = "add";
+    else eventFlags.formActionType = (context.prodCatalogAndStoreAssoc == null) ? "new" : "edit";
 }
+eventFlags.targetRecordAction = eventFlags.targetRecord + "-" + eventFlags.formActionType; // easier to check in ftl
 
 // dump flags in context (FIXME?: remove this later)
 context.putAll(eventFlags);
@@ -140,5 +157,17 @@ eventStates.putAll(eventFlags);
 eventStates.isError = context.isSetupEventError;
 
 context.eventStates = eventStates;
+
+allProdCatalogList = EntityQuery.use(delegator).from("ProdCatalog").orderBy("catalogName", "prodCatalogId").cache(true).queryList();
+// remove the ones already linked to tree
+availProdCatalogList = [];
+for(prodCatalog in allProdCatalogList) {
+    if (!prodCatalogIdSet.contains(prodCatalog.prodCatalogId)) {
+        availProdCatalogList.add(prodCatalog);
+    }
+}
+context.availProdCatalogList = availProdCatalogList;
+context.allProdCatalogList = allProdCatalogList;
+
 
 

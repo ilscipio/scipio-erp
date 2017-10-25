@@ -32076,4 +32076,29 @@
         <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
         <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
     </property>
+    <property key="ProductAddExistingCatalog">
+        <value xml:lang="en">Add Existing Catalog</value>
+        <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue existant</value>
+    </property>
+    <property key="ProductAddExistingCategory">
+        <value xml:lang="en">Add Existing Category</value>
+        <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie existante</value>
+    </property>
+    <property key="ProductAddExistingProduct">
+        <value xml:lang="de">Bestehendes Produkt hinzufügen</value>
+        <value xml:lang="en">Add Existing Product</value>
+        <value xml:lang="fr">Ajouter un produit existant</value>
+    </property>
+    <property key="ProductAddCatalog">
+        <value xml:lang="en">Add Catalog</value>
+        <value xml:lang="de">Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue</value>
+    </property>
+    <property key="ProductAddCategory">
+        <value xml:lang="en">Add Category</value>
+        <value xml:lang="de">Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie</value>
+    </property>
 </resource>

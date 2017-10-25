@@ -42,7 +42,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupCatalogForm id formActionType target params>
-    <@form id=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -94,8 +94,8 @@
     </@form>
 </#macro>
 <@section title=uiLabelMap.ProductNewCatalog containerId="ect-newcatalog" containerClass="+ect-newcatalog ect-recordaction ect-newrecord" 
-    containerStyle=((targetRecordAction == "catalog-create")?string("","display:none;"))>
-  <#if targetRecordAction == "catalog-create">
+    containerStyle=((targetRecordAction == "catalog-new")?string("","display:none;"))>
+  <#if targetRecordAction == "catalog-new">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({

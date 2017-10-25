@@ -701,22 +701,25 @@
                 <script lang="groovy"><![CDATA[
                     targetRecordAction = context.targetRecordAction;
                     submitFormIdMap = [
-                        "catalog-create": "NewCatalog",
+                        "catalog-new": "NewCatalog",
                         "catalog-edit": "EditCatalog",
                         "catalog-add": "AddCatalog",
-                        "category-create": "NewCategory",
+                        "category-new": "NewCategory",
                         "category-edit": "EditCategory",
                         "category-add": "AddCategory",
-                        "product-create": "NewProduct",
+                        "product-new": "NewProduct",
                         "product-edit": "EditProduct",
                         "product-add": "AddProduct",
                     ];
                     context.submitFormIdMap = submitFormIdMap;
-                    context.titleProperty = (targetRecordAction == "catalog-create" ) ? "ProductNewCatalog" : "ProductEditCatalog"; // forms have their own section title, so not bothering with this
+                    context.titleProperty = (targetRecordAction == "catalog-new" ) ? "ProductNewCatalog" : "ProductEditCatalog"; // forms have their own section title, so not bothering with this
                     context.submitFormId = submitFormIdMap[targetRecordAction];
                 ]]></script>
                 <set field="newCatalogFormId" value="setupCatalog-newCatalog"/>
                 <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
+                
+                <set field="setupCatalogForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupCatalogForms.name" value="SetupCatalogForms"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -731,22 +734,17 @@
                                         <!-- don't show tree until at least one catalog created -->
                                         <not><if-empty field="productStoreCatalogList"/></not>
                                     </condition>
+                                    <actions>
+                                    </actions>
                                     <widgets>
                                         <screenlet>
                                             <include-screen name="EditCatalogTree"/>
                                         </screenlet>
                                     </widgets>
+                                    <fail-widgets>
+                                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                                    </fail-widgets>
                                 </section>
-                                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
-                                </platform-specific>
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
-                                </platform-specific>
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProduct.ftl"/></html>
-                                </platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
@@ -792,6 +790,24 @@
             </widgets>
         </section>
     </screen>
+    <screen name="SetupCatalogForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProduct.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditCatalogTree">
         <section>
             <actions>
@@ -809,7 +825,10 @@
                        <screenlet>
                            <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
                        </screenlet>     
-                   </widgets>
+                    </widgets>
+                    <fail-widgets>
+                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                    </fail-widgets>
                 </section>
             </widgets>
         </section>

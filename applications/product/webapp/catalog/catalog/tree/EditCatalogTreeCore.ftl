@@ -1461,6 +1461,14 @@ if (typeof ectHandler === 'undefined') {
         </@treemenu>
       </@section>
 
+      <#if ectPostTreeArea??>
+        <#if ectPostTreeArea?is_directive>
+          <@ectPostTreeArea/>
+        <#else>
+          ${ectPostTreeArea}
+        </#if>
+      </#if>
+
     </@cell>
     <@cell medium=3 large=3>
     

@@ -140,8 +140,8 @@
 </#macro>
 
 <@section title=uiLabelMap.ProductNewCategory containerId="ect-newcategory" containerClass="+ect-newcategory ect-recordaction ect-newrecord" 
-    containerStyle=((targetRecordAction == "category-create")?string("","display:none;"))>
-  <#if targetRecordAction == "category-create">
+    containerStyle=((targetRecordAction == "category-new")?string("","display:none;"))>
+  <#if targetRecordAction == "category-new">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({

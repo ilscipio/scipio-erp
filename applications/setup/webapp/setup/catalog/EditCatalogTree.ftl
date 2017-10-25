@@ -193,6 +193,10 @@
     }
 }>
 
+<#macro ectPostTreeArea extraArgs...>
+    <@render type="screen" resource=setupCatalogForms.location name=setupCatalogForms.name/>
+</#macro>
+
 <#macro ectExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
     <@form action=makeOfbizUrl("setupCatalog") method="get">

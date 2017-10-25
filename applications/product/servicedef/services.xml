@@ -1794,6 +1794,8 @@ under the License.
         NOTE: The ProductCategory services all check whether catalog or category assoc change is needed
             by check if parentProductCategoryId is empty or non-empty, respectively. -->
 
+    <!-- CATALOG -->
+    
     <service name="createProdCatalogAndStoreAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="createProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Create a ProdCatalog and ProductStoreCatalog association (versatile)</description>
@@ -1815,21 +1817,47 @@ under the License.
         </attribute>
     </service>
     
+    <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog record and various related records (may be dangerous) (versatile)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductStoreCatalog records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                such as ProdCatalogCategory that are expired; 
+                if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+        <!-- TODO: not implemented
+        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
+        </attribute>-->
+    </service>
+    
     <service name="deleteProdCatalogAndStoreAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association(s) (versatile)</description>
         <implements service="deleteProdCatalogStoreAssocVersatile"/>
-        <attribute name="deleteProdCatalog" mode="IN" type="Boolean" optional="true" default-value="true">
-            <description>If true, attempts to delete ProdCatalog; if false only deletes catalog or category association</description>
+        <attribute name="deleteCatalogRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProdCatalog; if false only deletes store association</description>
         </attribute>
     </service>
     
     <service name="addProdCatalogStoreAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="addProdCatalogStoreAssocVersatile" auth="true">
-        <description>SCIPIO: Adds a ProductStoreCatalog association, first checking to make sure doesn't already exist</description>
+        <description>SCIPIO: Adds a ProductStoreCatalog association, first checking to make sure doesn't already exist (versatile)</description>
         <implements service="createProductStoreCatalog"/>
     </service>
 
+    <!-- CATEGORY -->
+    
     <service name="createProductCategoryAndCatAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCatAssocVersatile" auth="true">
         <description>SCIPIO: Create a ProductCategory and add as a top catalog category (if parentProductCategoryId is empty) 
@@ -1881,7 +1909,7 @@ under the License.
         TODO: 2017-10-20: partial functionality only -->
     <service name="deleteProductCategoryAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndRelatedVersatile" auth="true">
-        <description>SCIPIO: Delete a ProductCategory record and various related records (may be dangerous)</description>
+        <description>SCIPIO: Delete a ProductCategory record and various related records (may be dangerous) (versatile)</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
             <description>(none|expired|all, default: expired) Controls whether deletes all (default)
@@ -1917,7 +1945,7 @@ under the License.
     
     <service name="addProductCategoryCatAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryCatAssocVersatile" auth="true">
-        <description>SCIPIO: Adds a category to catalog or category. Attempts to prevent multiple associations.</description>
+        <description>SCIPIO: Adds a category to catalog or category, attempting to prevent multiple associations (versatile)</description>
         <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
         <auto-attributes entity-name="ProdCatalogCategory" include="nonpk" mode="IN" optional="true"/>
@@ -1927,9 +1955,9 @@ under the License.
         <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
     </service>
     
-    <service name="copyMoveProductCategoryCatAssocVersatile" engine="simple"
-                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="copyMoveProductCategoryCatAssocVersatile" auth="true">
-        <description>SCIPIO: Copies or moves a ProductCategory assoc by creating a new assoc (catalog or category assoc), and in case of move, removing or expiring the original</description>
+    <service name="copyProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="copyProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Copies a ProductCategory assoc by creating a new assoc (catalog or category assoc), basically a special wrapper around addProductCategoryCatAssocVersatile (versatile)</description>
         <!-- source category and assoc -->
         <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
@@ -1937,12 +1965,6 @@ under the License.
         <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
         <auto-attributes entity-name="ProductCategoryRollup" include="nonpk" mode="IN" optional="true"/>
         <!-- service behavior -->
-        <attribute name="modifyAssocMode" mode="IN" type="String" optional="false">
-            <description>(copy|move)</description>
-        </attribute>
-        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
-            <description>(remove|expire, default: remove)</description>
-        </attribute>
         <attribute name="returnAssocFields" mode="IN" type="String" optional="true" default-value="false">
             <description>If true, the assoc fields for the new assoc will be outputted back to the
                 prefix-less fields in addition to the "to_"-prefixed ones (i.e., fromDate will
@@ -1961,6 +1983,121 @@ under the License.
         <attribute name="to_parentProductCategoryId" mode="INOUT" type="String" optional="true"/>
         <attribute name="to_productCategoryId" mode="OUT" type="String" optional="true"/>
         <override name="productCategoryId" optional="false"/>      
+    </service>
+    
+    <service name="moveProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="moveProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Moves a ProductCategory assoc by creating a new assoc (catalog or category assoc) and removing or expiring the original (versatile)</description>
+        <implements service="copyProductCategoryCatAssocVersatile"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>     
+    </service>
+    
+    <!-- PRODUCT -->
+    
+    <service name="createProductAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="createProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Create a Product and add to category (specialized variant of createProductInCategory) (versatile)</description>
+        <implements service="createProduct"/>
+        <implements service="addProductToCategory"/>
+    </service>
+    
+    <service name="updateProductAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="updateProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Update a Product and category assoc (versatile)</description>
+        <implements service="updateProduct"/>
+        <implements service="updateProductToCategory"/>
+    </service>
+    
+    <service name="deleteProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a Product and category assoc (versatile)</description>
+        <implements service="deleteProduct"/>
+        <implements service="removeProductFromCategory"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>
+    </service>
+    
+    <!-- SCIPIO: new (2017-10-20)
+        This attempts to delete a Product and related records.
+        By default it only removes related records of low importance and relatively "safe" to remove
+        such as ProductAttribute, ProductContent and expired ProductCategoryMember records.
+        See service attributes for more destructive options.
+        TODO: 2017-10-20: partial functionality only -->
+    <service name="deleteProductAndRelatedVersatile" default-entity-name="Product" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a Product record and various related records (may be dangerous) (versatile)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductCategoryMember records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                that are expired; if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+        <!-- TODO: not implemented
+        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
+        </attribute>-->
+    </service>
+    
+    <service name="deleteProductAndCatAssocVersatile" default-entity-name="Product" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a Product record (if no members) and category assoc (versatile)</description>
+        <implements service="deleteProductCatAssocVersatile"/>
+        <implements service="deleteProductAndRelatedVersatile"/>
+        <attribute name="deleteCategoryRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete Product (using deleteProductAndRelatedVersatile); if false only deletes catalog or category association</description>
+        </attribute>
+    </service>
+    
+    <service name="addProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="addProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a category to category, attempting to prevent multiple associations (versatile)</description>
+        <auto-attributes entity-name="Product" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
+    </service>
+    
+    <service name="copyProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="copyProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Copies a Product assoc by creating a new assoc, basically a special wrapper around addProductCatAssocVersatile (versatile)</description>
+        <!-- source category and assoc -->
+        <auto-attributes entity-name="Product" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="OUT" optional="true"/>
+        <!-- service behavior -->
+        <attribute name="returnAssocFields" mode="IN" type="String" optional="true" default-value="false">
+            <description>If true, the assoc fields for the new assoc will be outputted back to the
+                prefix-less fields in addition to the "to_"-prefixed ones (i.e., fromDate will
+                be output in both "fromDate" and "to_fromDate").
+                If false, the new assoc fields are output only to the "to_"-prefixed fields.
+                This can be used in events for switching the target easily after the update.</description>
+        </attribute>
+        <!-- target -->
+        <attribute name="to_productCategoryId" mode="INOUT" type="String" optional="false"/>
+        <attribute name="to_fromDate" mode="INOUT" type="Timestamp" optional="false"/><!-- may be left empty -->
+        <attribute name="to_sequenceNum" mode="INOUT" type="Long" optional="false"/>
+        <attribute name="to_productId" mode="OUT" type="String" optional="false"/>
+        <override name="productId" optional="false"/>      
+    </service>
+    
+    <service name="moveProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="moveProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Moves a Product assoc by creating a new assoc and removing or expiring the original (versatile)</description>
+        <implements service="copyProductCatAssocVersatile"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>     
     </service>
     
     <!-- ======================================== -->

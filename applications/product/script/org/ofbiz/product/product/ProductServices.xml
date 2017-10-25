@@ -1085,6 +1085,7 @@ under the License.
         
         <remove-by-and entity-name="ProductAttribute" map="prodIdMap"/>
         <remove-by-and entity-name="ProductContent" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductKeyword" map="prodIdMap"/>
         <!-- TODO: MORE -->
 
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="expired">

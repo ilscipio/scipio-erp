@@ -23,6 +23,7 @@ if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fas
 context.ectMaxProductsPerCat = ectMaxProductsPerCat;
 
 context.ectEventStates = context.eventStates;
+context.ectIsEventError = context.isSetupEventError;
 
 // CORE DATA PREP
 GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/tree/EditCatalogTreeCore.groovy", null, context);

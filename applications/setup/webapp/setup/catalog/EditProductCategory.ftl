@@ -87,7 +87,7 @@
     </#if>
 
       <#if formActionType != "add">
-        <@field type="select" label=uiLabelMap.ProductProductCategoryType name="productCategoryTypeId" class="+ect-inputfield" required=true>
+        <@field type="select" name="productCategoryTypeId" label=uiLabelMap.ProductProductCategoryType class="+ect-inputfield" required=true>
             <#list productCategoryTypes as productCategoryTypeData>
                 <option<#if rawString(params.productCategoryTypeId!) == rawString(productCategoryTypeData.productCategoryTypeId!)> selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description", locale)}</option>
             </#list>

@@ -33,59 +33,49 @@ if (!productStoreId) {
     return;
 }
 
-/*
- * NOTE: event states currently follow those defined by:
- *  com.ilscipio.scipio.setup.SetupWorker#getRecordRequestStatesMap
- * Non-setup screens will have to populate it differently...
- */
-eventStates = context.ectEventStates ?: [:];
-context.ectEventStates = eventStates;
+isEventError = context.ectIsEventError;
+if (isEventError == null) isEventError = context.isError;
+if (isEventError == null) isEventError = false;
+context.ectIsEventError = isEventError;
 
-if (DEBUG) {
-    Debug.logInfo("Event states: " + eventStates, module);
+getSetStringParam = { paramName ->
+    def value = context[paramName];
+    if (value == null) value = parameters[paramName] as String;
+    context[paramName] = value;
+    return value;
+};
+
+eventStates = context.ectEventStates ?: [:];
+if (eventStates == null) {
+    // FIXME: need a non-setup function, should refactor setup worker
+    //eventStates = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Move", "Add"], true, ["Catalog", "Category", "Product"]);
 }
+context.ectEventStates = eventStates;
 
 curProdCatalogId = context.ectProdCatalogId != null ? context.ectProdCatalogId : context.prodCatalogId;
 curProductCategoryId = context.ectProductCategoryId != null ? context.ectProductCategoryId : context.productCategoryId;
 curProductId = context.ectProductId != null ? context.ectProductId : context.productId;
 
-submittedFormId = context.ectSubmittedFormId;
-if (submittedFormId == null) {
-    submittedFormId = parameters.ectSubmittedFormId as String;
-}
-context.ectSubmittedFormId = submittedFormId;
-
-// special handling for the initial form
-// FIXME?: this currently still assumes the parent screen properly set up the initial visibility.
-// we could change this to full-JS solution because this gets very hard to follow.
-preventInitialFormChange = context.ectPreventInitialFormChange;
-preventInitialFormPopulate = context.ectPreventInitialFormPopulate;
-if (preventInitialFormChange == null && preventInitialFormPopulate == null) { // caller can override if need
-    if (eventStates.isError) {
-        preventInitialFormPopulate = true;
-        if (eventStates.isEffnewRecord) {
-            preventInitialFormChange = true;
-        }
-    } else if (eventStates.isNewRecord) {
-        preventInitialFormChange = true;
+// special handling for the initial form - if event error, need to treat the preselect differently.
+// NOTE: these flags only apply to visible "show" forms. noShowFormChange implies noShowFormPopulate.
+// FIXME?: CURRENTLY RELYING ON SCREENS TO ENSURE CORRECT INITIAL FORM IS SHOWN AND POPULATED CORRECTLY
+// - ideally tree could handle to simplify screens...
+initialSettings = context.ectInitialSettings ?: [:];
+if (initialSettings.noShowFormChange == null && initialSettings.noShowFormPopulate == null) { // caller can override if need
+    initialSettings.noShowFormPopulate = false;
+    initialSettings.noShowFormChange = false;
+    if (isEventError) {
+        initialSettings.noShowFormPopulate = true;
+        initialSettings.noShowFormChange = true;
     }
 }
-context.ectPreventInitialFormChange = preventInitialFormChange;
-context.ectPreventInitialFormPopulate = preventInitialFormPopulate;
+context.ectInitialSettings = initialSettings;
 
-// ectTargetNodePath is the preferred pre-selection mechanism. 
+// ectTargetNodePath/ectNewTargetNodePath is the preferred pre-selection mechanism.
 // if not set, falls back on prodCatalogId or productCategoryId (below)
-targetNodePath = context.ectTargetNodePath;
-if (targetNodePath == null) {
-    targetNodePath = parameters.ectTargetNodePath as String;
-}
-context.ectTargetNodePath = targetNodePath;
-
-newTargetNodePath = context.ectNewTargetNodePath;
-if (newTargetNodePath == null) {
-    newTargetNodePath = parameters.ectNewTargetNodePath as String;
-}
-context.ectNewTargetNodePath = newTargetNodePath;
+targetNodePath = getSetStringParam("ectTargetNodePath");
+newTargetNodePath = getSetStringParam("ectNewTargetNodePath");
+submittedFormId = getSetStringParam("ectSubmittedFormId");
 
 parseTargetNodeInfo = { targetNodePath ->
     def objectIdList = [];
@@ -107,91 +97,91 @@ parseTargetNodeInfo = { targetNodePath ->
 // TODO: make this more consistent in future, maybe can simplify things
 
 def targetNodeInfo;
-if (eventStates.isError != true && newTargetNodePath) {
+if (!isEventError && newTargetNodePath) {
     targetNodeInfo = parseTargetNodeInfo(newTargetNodePath);
 } else {
     targetNodeInfo = parseTargetNodeInfo(targetNodePath);
 }
-// TODO: REVIEW: hard to manage these cases
-if (eventStates.isDeleteRecordSuccess) {
-    // Remove last entry (deleted)
-    if (targetNodeInfo.objectIdList) {
-        targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
-        if (targetNodeInfo.objectIdList.size() <= 1) {
-            targetNodeInfo.targetObjectType = "catalog";
-        } else {
-            targetNodeInfo.targetObjectType = "category";
+if (!isEventError) {
+    if (eventStates.isDeleteRecord) {
+        // Remove last entry (deleted)
+        if (targetNodeInfo.objectIdList) {
+            targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
+            if (targetNodeInfo.objectIdList.size() <= 1) {
+                targetNodeInfo.targetObjectType = "catalog";
+            } else {
+                targetNodeInfo.targetObjectType = "category";
+            }
         }
-    }
-} else if (eventStates.isCreateRecordSuccess) {
-    // Append new entry
-    if (eventStates.isCreateCatalogSuccess) {
-        if (!targetNodeInfo.objectIdList && curProdCatalogId) {
-            targetNodeInfo.objectIdList.add(curProdCatalogId);
-            targetNodeInfo.targetObjectType = "catalog";
+    } else if (eventStates.isCreateRecord) {
+        // Append new entry
+        if (eventStates.isCreateCatalog) {
+            if (!targetNodeInfo.objectIdList && curProdCatalogId) {
+                targetNodeInfo.objectIdList.add(curProdCatalogId);
+                targetNodeInfo.targetObjectType = "catalog";
+            }
+        } else if (eventStates.isCreateCategory) {
+            if (targetNodeInfo.objectIdList && curProductCategoryId) {
+                targetNodeInfo.objectIdList.add(curProductCategoryId);
+                targetNodeInfo.targetObjectType = "category";
+            }
+        } else if (eventStates.isCreateProduct) {
+            if (targetNodeInfo.objectIdList && curProductId) {
+                targetNodeInfo.objectIdList.add(curProductId);
+                targetNodeInfo.targetObjectType = "product";
+            }
         }
-    } else if (eventStates.isCreateCategorySuccess) {
-        if (targetNodeInfo.objectIdList && curProductCategoryId) {
-            targetNodeInfo.objectIdList.add(curProductCategoryId);
-            targetNodeInfo.targetObjectType = "category";
+    } else if (eventStates.isAddRecord) {
+        // Append new entry
+        if (eventStates.isAddCatalog) {
+            if (!targetNodeInfo.objectIdList && curProdCatalogId) {
+                targetNodeInfo.objectIdList.add(curProdCatalogId);
+                targetNodeInfo.targetObjectType = "catalog";
+            }
+        } else if (eventStates.isAddCategory) {
+            if (targetNodeInfo.objectIdList && curProductCategoryId) {
+                targetNodeInfo.objectIdList.add(curProductCategoryId);
+                targetNodeInfo.targetObjectType = "category";
+            }
+        } else if (eventStates.isAddProduct) {
+            if (targetNodeInfo.objectIdList && curProductId) {
+                targetNodeInfo.objectIdList.add(curProductId);
+                targetNodeInfo.targetObjectType = "product";
+            }
         }
-    } else if (eventStates.isCreateProductSuccess) {
-        if (targetNodeInfo.objectIdList && curProductId) {
-            targetNodeInfo.objectIdList.add(curProductId);
-            targetNodeInfo.targetObjectType = "product";
+    } else if (eventStates.isCopyRecord) {
+        if (eventStates.isCopyCategory) {
+            if (targetNodeInfo.objectIdList && curProductCategoryId) {
+                targetNodeInfo.objectIdList.add(curProductCategoryId);
+                targetNodeInfo.targetObjectType = "category";
+            }
+        } else if (eventStates.isCopyProduct) {
+            if (targetNodeInfo.objectIdList && curProductId) {
+                targetNodeInfo.objectIdList.add(curProductId);
+                targetNodeInfo.targetObjectType = "product";
+            }
         }
-    }
-} else if (eventStates.isAddRecordSuccess) {
-    // Append new entry
-    if (eventStates.isAddCatalogSuccess) {
-        if (!targetNodeInfo.objectIdList && curProdCatalogId) {
-            targetNodeInfo.objectIdList.add(curProdCatalogId);
-            targetNodeInfo.targetObjectType = "catalog";
-        }
-    } else if (eventStates.isAddCategorySuccess) {
-        if (targetNodeInfo.objectIdList && curProductCategoryId) {
-            targetNodeInfo.objectIdList.add(curProductCategoryId);
-            targetNodeInfo.targetObjectType = "category";
-        }
-    } else if (eventStates.isAddProductSuccess) {
-        if (targetNodeInfo.objectIdList && curProductId) {
-            targetNodeInfo.objectIdList.add(curProductId);
-            targetNodeInfo.targetObjectType = "product";
-        }
-    }
-} else if (eventStates.isCopyRecordSuccess) {
-    if (eventStates.isCopyCategorySuccess) {
-        if (targetNodeInfo.objectIdList && curProductCategoryId) {
-            targetNodeInfo.objectIdList.add(curProductCategoryId);
-            targetNodeInfo.targetObjectType = "category";
-        }
-    } else if (eventStates.isCopyProductSuccess) {
-        if (targetNodeInfo.objectIdList && curProductId) {
-            targetNodeInfo.objectIdList.add(curProductId);
-            targetNodeInfo.targetObjectType = "product";
-        }
-    }
-} else if (eventStates.isMoveRecordSuccess) {
-    if (eventStates.isMoveCategorySuccess) {
-        if (targetNodeInfo.objectIdList && curProductCategoryId) {
-            targetNodeInfo.objectIdList.add(curProductCategoryId);
-            targetNodeInfo.targetObjectType = "category";
-        }
-    } else if (eventStates.isMoveProductSuccess) {
-        if (targetNodeInfo.objectIdList && curProductId) {
-            targetNodeInfo.objectIdList.add(curProductId);
-            targetNodeInfo.targetObjectType = "product";
+    } else if (eventStates.isMoveRecord) {
+        if (eventStates.isMoveCategory) {
+            if (targetNodeInfo.objectIdList && curProductCategoryId) {
+                targetNodeInfo.objectIdList.add(curProductCategoryId);
+                targetNodeInfo.targetObjectType = "category";
+            }
+        } else if (eventStates.isMoveProduct) {
+            if (targetNodeInfo.objectIdList && curProductId) {
+                targetNodeInfo.objectIdList.add(curProductId);
+                targetNodeInfo.targetObjectType = "product";
+            }
         }
     }
 }
-if (DEBUG) Debug.logInfo("targetNodeInfo: " + targetNodeInfo, module);
+if (DEBUG) Debug.logInfo("Catalog tree: targetNodeInfo: " + targetNodeInfo, module);
 context.ectTargetNodeInfo = targetNodeInfo;
 
 // only either catalog or category should be "selected"
 currentCatalogSelected = false;
 currentCategorySelected = false;
-// FIXME?: no event state check available for move op currently
-if (!targetNodeInfo.defined && !eventStates.isDeleteRecordSuccess && !eventStates.isCopymoveRecordSuccess) { // fallback auto-select (best-effort) for when targetNodePath is not set
+if (!targetNodeInfo.defined && !(!isEventError && eventStates.isDeleteRecord)) { // fallback auto-select (best-effort) for when targetNodePath is not set
     if (curProductCategoryId) {
         currentCategorySelected = true;
     } else if (curProdCatalogId) {

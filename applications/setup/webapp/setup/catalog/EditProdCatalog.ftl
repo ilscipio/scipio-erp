@@ -41,10 +41,10 @@
     "isError":isCatalogError,
     "useReqParams":useReqParams
 })>
-<#macro setupCatalogForm id formActionType target params>
+<#macro setupCatalogForm id formActionType target params treeFieldValues={}>
     <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
-        <@ectCommonTreeFormFields params=params/>
+        <@ectCommonTreeFormFields params=params initialValues=treeFieldValues/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
         <@field type="hidden" name="productStoreId" value=(productStoreId!)/>
         
@@ -53,7 +53,7 @@
         <@field type="hidden" name="isUpdateCatalog" value=(formActionType == "edit")?string("Y", "N")/>
         
     <#if formActionType == "add">
-      <@field type="select" label=uiLabelMap.FormFieldTitle_prodCatalogId required=true>
+      <@field type="select" name="prodCatalogId" label=uiLabelMap.FormFieldTitle_prodCatalogId required=true>
         <#list (availProdCatalogList![]) as prodCatalog>
           <@field type="option" value=prodCatalog.prodCatalogId 
             selected=(rawString(params.prodCatalogId!) == rawString(prodCatalog.prodCatalogId))>${prodCatalog.catalogName!prodCatalog.prodCatalogId} [${prodCatalog.prodCatalogId}]</@field>
@@ -105,7 +105,9 @@
       "useReqParams":useReqParams
     })>
   </#if>
-  <@setupCatalogForm id="NewCatalog" formActionType="new" target="setupCreateCatalog" params=paramMaps.values/>
+  <@setupCatalogForm id="NewCatalog" formActionType="new" target="setupCreateCatalog" params=paramMaps.values
+    treeFieldValues={"ectSubmittedFormId":"NewCatalog"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
+  />
 </@section>
 <@section title=uiLabelMap.ProductEditCatalog containerId="ect-editcatalog" containerClass="+ect-editcatalog ect-recordaction ect-editrecord" 
     containerStyle=((targetRecordAction == "catalog-edit")?string("","display:none;"))>

@@ -48,8 +48,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         scth.eventStates = data.eventStates || {};
         scth.submittedFormId = data.submittedFormId;
         scth.initialParams = data.initialParams;
-        scth.preventInitialFormChange = data.preventInitialFormChange;
-        scth.preventInitialFormPopulate = data.preventInitialFormPopulate;
+        scth.initialSettings = data.initialSettings || {};
         scth.popupMsgModalId = data.popupMsgModalId;
         scth.confirmMsgModalId = data.confirmMsgModalId;
         scth.dialogIdPrefix = data.dialogIdPrefix;
@@ -58,8 +57,8 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         // FIXME: these are being used to prevent form changes on event error,
         // but relies on page to show correct initial form; should make pure JS solution
         var specFlags = {
-            preventFormChange: false,
-            preventFormPopulate: false
+            noShowFormChange: false,
+            noShowFormPopulate: false
         };
         
         /*
@@ -524,11 +523,12 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
         
         var populateForm = function(form, params, ai) {
-            if (specFlags.preventFormPopulate === true) {
-                // still have to populate common fields (FIXME: inconsistent populate)
+            if (ai.actionProps.mode == "show" && specFlags.noShowFormPopulate === true) {
+                // still have to populate common fields (now below)
                 //populateFormCommonTreeFieldsOnly(form, params, ai); // doing at end always for now...
             } else {
-                //params = jQuery.extend({}, params, getCommonTreeFields(form, params, ai));  // doing at end always for now...
+                // (now below)
+                //params = jQuery.extend({}, params, getCommonTreeFields(form, params, ai));
             
                 if (ai.actionProps.clearForm !== false) {
                     var execClearCommon = true; 
@@ -553,7 +553,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     scth.populateFormCommon(form, params, ai);
                 }
             }
-            // FIXME: inconsistent population code, but works for now
+            // FIXME?: inconsistent population code with the rest, but works for now
             populateFormCommonTreeFieldsOnly(form, params, ai);
         };
         
@@ -601,7 +601,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                             form = form.first();
                             if (ai.actionProps.mode == "show") {
                                 // abort form change and populate in special cases 
-                                if (specFlags.preventFormChange === true) {
+                                if (specFlags.noShowFormChange === true) {
                                     ;
                                 } else {
                                     populateForm(form, params, ai);
@@ -1151,12 +1151,12 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
          * Event helpers
          */
         
-        this.resolvePreselect = function(targetNodeInfo, preventFormChange, preventFormPopulate) {
-            var prevPfc = specFlags.preventFormChange;
-            specFlags.preventFormChange = preventFormChange;
+        this.resolvePreselect = function(targetNodeInfo, noShowFormChange, noShowFormPopulate) {
+            var prevNoShowFormChange = specFlags.noShowFormChange;
+            specFlags.noShowFormChange = noShowFormChange;
         
-            var prevPfp = specFlags.preventFormPopulate;
-            specFlags.preventFormPopulate = preventFormPopulate;
+            var prevNoShowFormPopulate = specFlags.noShowFormPopulate;
+            specFlags.noShowFormPopulate = noShowFormPopulate;
 
             var tree = scth.getJsTree();
             var selected = tree.get_selected();
@@ -1183,14 +1183,14 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 }
             }
             
-            specFlags.preventFormPopulate = prevPfp;
-            specFlags.preventFormChange = prevPfc;
+            specFlags.noShowFormPopulate = prevNoShowFormPopulate;
+            specFlags.noShowFormChange = prevNoShowFormChange;
         };
         
         this.bindResolvePreselect = function() {
             var treeElem = jQuery('#'+scth.treeId);
             treeElem.bind('loaded.jstree', function(event, data) {
-                scth.resolvePreselect(scth.targetNodeInfo, scth.preventInitialFormChange, scth.preventInitialFormPopulate);
+                scth.resolvePreselect(scth.targetNodeInfo, scth.initialSettings.noShowFormChange === true, scth.initialSettings.noShowFormPopulate === true);
             });
         };
         
@@ -1293,8 +1293,7 @@ if (typeof ectHandler === 'undefined') {
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,
         submittedFormId: "${escapeVal(ectSubmittedFormId!, 'js')}",
         initialParams: <@objectAsScript object=(ectInitialParams!requestParameters!{}) lang='js'/>,
-        preventInitialFormChange: ${(ectPreventInitialFormChange!false)?string},
-        preventInitialFormPopulate: ${(ectPreventInitialFormPopulate!false)?string},
+        initialSettings: <@objectAsScript object=(ectInitialSettings!{}) lang='js'/>,
         popupMsgModalId: "${escapeVal(ectPopupMsgModalId!(ectDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
         confirmMsgModalId: "${escapeVal(ectConfirmMsgModalId!(ectDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
         dialogIdPrefix: "${escapeVal(ectDialogIdModalPrefix, 'js')}"

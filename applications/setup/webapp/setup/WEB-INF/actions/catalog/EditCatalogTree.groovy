@@ -19,7 +19,9 @@ if (ectMaxProductsPerCat == null) {
         session.setAttribute("setupEctMaxProductsPerCat", ectMaxProductsPerCat);
     }
 }
-if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fastest and least confusing
+// TODO: REVIEW: I can't leave this at zero during debug...
+//if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fastest and least confusing
+//if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = ;
 context.ectMaxProductsPerCat = ectMaxProductsPerCat;
 
 context.ectEventStates = context.eventStates;

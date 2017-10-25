@@ -130,11 +130,13 @@
       </#if>
 
       <#if formActionType != "add">
-        <@field type="input" name="categoryName" value=(params.categoryName!) label=uiLabelMap.FormFieldTitle_categoryName class="+ect-inputfield"/><#--  not strictly: required=true -->
-        <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield"/>
-        <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
+        <@field type="input" name="categoryName" value=(params.categoryName!) label=uiLabelMap.FormFieldTitle_categoryName class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/><#--  not strictly: required=true -->
+        <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
+        <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
 
-        <#-- TODO: LOCALIZED VERSIONS OF categoryName/description/longDescription (complex) -->
+        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true>
+            <#-- TODO: LOCALIZED VERSIONS OF categoryName/description/longDescription (complex) -->
+        </@fieldset>
       </#if>
     </@form>
 </#macro>

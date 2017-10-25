@@ -1361,4 +1361,9 @@
         <value xml:lang="en">Could not create association to the target category for the category (association already exists).</value>
         <value xml:lang="fr">Impossible de créer une association avec la catégorie cible de la catégorie (l'association existe déjà).</value>
     </property>
+    <property key="productservices.could_not_create_product_category_assoc_association_exists">
+        <value xml:lang="de">Konnte keine Zuordnung zur Zielkategorie für das Produkt erstellen (Assoziation existiert bereits).</value>
+        <value xml:lang="en">Could not create association to the target category for the product (association already exists).</value>
+        <value xml:lang="fr">Impossible de créer une association avec la catégorie cible du produit (l'association existe déjà).</value>
+    </property>
 </resource>

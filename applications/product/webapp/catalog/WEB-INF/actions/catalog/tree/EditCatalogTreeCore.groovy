@@ -12,7 +12,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType;
 
 final module = "EditCatalogTreeCore.groovy";
-final DEBUG = false;
+final DEBUG = true;
 
 etcAdvanced = context.etcAdvanced != null ? context.etcAdvanced : false;
 context.etcAdvanced = etcAdvanced;
@@ -102,47 +102,96 @@ parseTargetNodeInfo = { targetNodePath ->
     return [objectIdList:objectIdList, targetObjectType:targetObjectType, defined:defined];
 };
 
+// NOTE: the content of targetNodePath and newTargetNodePath is actionType-specific,
+// because the JS cannot know in advance some things like sequenced PK of newly-created records
+// TODO: make this more consistent in future, maybe can simplify things
+
 def targetNodeInfo;
-if (evenStates.isError != false && newTargetNodePath) {
+if (eventStates.isError != true && newTargetNodePath) {
     targetNodeInfo = parseTargetNodeInfo(newTargetNodePath);
 } else {
     targetNodeInfo = parseTargetNodeInfo(targetNodePath);
-    if (eventStates.isDeleteRecordSuccess) {
-        // Remove last entry (deleted)
-        if (targetNodeInfo.objectIdList) {
-            targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
-            if (targetNodeInfo.objectIdList.size() <= 1) {
-                targetNodeInfo.targetObjectType = "catalog";
-            } else {
-                targetNodeInfo.targetObjectType = "category";
-            }
+}
+// TODO: REVIEW: hard to manage these cases
+if (eventStates.isDeleteRecordSuccess) {
+    // Remove last entry (deleted)
+    if (targetNodeInfo.objectIdList) {
+        targetNodeInfo.objectIdList.remove(targetNodeInfo.objectIdList.size() - 1);
+        if (targetNodeInfo.objectIdList.size() <= 1) {
+            targetNodeInfo.targetObjectType = "catalog";
+        } else {
+            targetNodeInfo.targetObjectType = "category";
         }
-    } else if (eventStates.isCreateRecordSuccess) {
-        // Append new entry
-        if (eventStates.isCreateCatalogSuccess) {
-            if (!targetNodeInfo.objectIdList && curProdCatalogId) {
-                targetNodeInfo.objectIdList.add(curProdCatalogId);
-                targetNodeInfo.targetObjectType = "catalog";
-            }
-        } else if (eventStates.isCreateCategorySuccess) {
-            if (targetNodeInfo.objectIdList && curProductCategoryId) {
-                targetNodeInfo.objectIdList.add(curProductCategoryId);
-                targetNodeInfo.targetObjectType = "category";
-            }
-        } else if (eventStates.isCreateProductSuccess) {
-            if (targetNodeInfo.objectIdList && curProductId) {
-                targetNodeInfo.objectIdList.add(curProductId);
-                targetNodeInfo.targetObjectType = "product";
-            }
+    }
+} else if (eventStates.isCreateRecordSuccess) {
+    // Append new entry
+    if (eventStates.isCreateCatalogSuccess) {
+        if (!targetNodeInfo.objectIdList && curProdCatalogId) {
+            targetNodeInfo.objectIdList.add(curProdCatalogId);
+            targetNodeInfo.targetObjectType = "catalog";
+        }
+    } else if (eventStates.isCreateCategorySuccess) {
+        if (targetNodeInfo.objectIdList && curProductCategoryId) {
+            targetNodeInfo.objectIdList.add(curProductCategoryId);
+            targetNodeInfo.targetObjectType = "category";
+        }
+    } else if (eventStates.isCreateProductSuccess) {
+        if (targetNodeInfo.objectIdList && curProductId) {
+            targetNodeInfo.objectIdList.add(curProductId);
+            targetNodeInfo.targetObjectType = "product";
+        }
+    }
+} else if (eventStates.isAddRecordSuccess) {
+    // Append new entry
+    if (eventStates.isAddCatalogSuccess) {
+        if (!targetNodeInfo.objectIdList && curProdCatalogId) {
+            targetNodeInfo.objectIdList.add(curProdCatalogId);
+            targetNodeInfo.targetObjectType = "catalog";
+        }
+    } else if (eventStates.isAddCategorySuccess) {
+        if (targetNodeInfo.objectIdList && curProductCategoryId) {
+            targetNodeInfo.objectIdList.add(curProductCategoryId);
+            targetNodeInfo.targetObjectType = "category";
+        }
+    } else if (eventStates.isAddProductSuccess) {
+        if (targetNodeInfo.objectIdList && curProductId) {
+            targetNodeInfo.objectIdList.add(curProductId);
+            targetNodeInfo.targetObjectType = "product";
+        }
+    }
+} else if (eventStates.isCopyRecordSuccess) {
+    if (eventStates.isCopyCategorySuccess) {
+        if (targetNodeInfo.objectIdList && curProductCategoryId) {
+            targetNodeInfo.objectIdList.add(curProductCategoryId);
+            targetNodeInfo.targetObjectType = "category";
+        }
+    } else if (eventStates.isCopyProductSuccess) {
+        if (targetNodeInfo.objectIdList && curProductId) {
+            targetNodeInfo.objectIdList.add(curProductId);
+            targetNodeInfo.targetObjectType = "product";
+        }
+    }
+} else if (eventStates.isMoveRecordSuccess) {
+    if (eventStates.isMoveCategorySuccess) {
+        if (targetNodeInfo.objectIdList && curProductCategoryId) {
+            targetNodeInfo.objectIdList.add(curProductCategoryId);
+            targetNodeInfo.targetObjectType = "category";
+        }
+    } else if (eventStates.isMoveProductSuccess) {
+        if (targetNodeInfo.objectIdList && curProductId) {
+            targetNodeInfo.objectIdList.add(curProductId);
+            targetNodeInfo.targetObjectType = "product";
         }
     }
 }
+if (DEBUG) Debug.logInfo("targetNodeInfo: " + targetNodeInfo, module);
 context.ectTargetNodeInfo = targetNodeInfo;
 
 // only either catalog or category should be "selected"
 currentCatalogSelected = false;
 currentCategorySelected = false;
-if (!targetNodeInfo.defined && !eventStates.isDeleteRecordSuccess) { // fallback auto-select (best-effort) for when targetNodePath is not set
+// FIXME?: no event state check available for move op currently
+if (!targetNodeInfo.defined && !eventStates.isDeleteRecordSuccess && !eventStates.isCopymoveRecordSuccess) { // fallback auto-select (best-effort) for when targetNodePath is not set
     if (curProductCategoryId) {
         currentCategorySelected = true;
     } else if (curProdCatalogId) {

@@ -1,4 +1,11 @@
-<#-- SCIPIO: Interactive catalog tree core include -->
+<#-- SCIPIO: Interactive catalog tree core include 
+    FIXME:
+    * tree does not support multiple ProdCatalogCategory associations for same
+      prodCatalogId & productCategoryId but different prodCatalogCategoryTypeId - it will simply break down.
+      The multiple assoc is permitted by schema because prodCatalogCategoryTypeId is part of PK.
+      NOTE: The service addProductCategoryCatAssocVersatile tries to prevent this (even though it shouldn't), 
+          but it cannot prevent other user-build cases.
+-->
 
 <#-- FIXME: theme styling missing for this
 <style type="text/css">
@@ -291,7 +298,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             }
             return $node;
         };
-        var getNodeObjectIdPathList = function($node) {
+        var getNodeObjectIdPathList = function($node, includeLeafType) {
             if (!$node) return null;
             var idList = [];
             var leaf = true;
@@ -299,7 +306,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 var id = getNodeObjectId($node);
                 if (leaf) {
                     var nodeType = getNodeObjectType($node);
-                    if (nodeType) id += "#" + nodeType;
+                    if (nodeType && includeLeafType !== false) id += "#" + nodeType;
                     leaf = false;
                 }
                 idList.push(id);
@@ -308,8 +315,8 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             idList.reverse();
             return idList;
         };
-        var getNodeObjectIdPathString = function($node) {
-            var pathList = getNodeObjectIdPathList($node);
+        var getNodeObjectIdPathString = function($node, includeLeafType) {
+            var pathList = getNodeObjectIdPathList($node, includeLeafType);
             if (isUndefOrNull(pathList)) return null;
             return pathList.join('/');
         };
@@ -452,6 +459,11 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var name = null;
             if (elem.is(':input')) {
                 name = elem.prop('name');
+                if (!name) {
+                    if (elem.hasClass('ect-inputfield')) {
+                        name = extractClassNameSuffix(elem, 'ect-inputfield-for-'); 
+                    }
+                }
             } else if (elem.hasClass('ect-displayfield')) {
                 name = extractClassNameSuffix(elem, 'ect-displayfield-for-'); 
             } else if (elem.hasClass('ect-managefield')) {
@@ -498,7 +510,8 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         
         var getCommonTreeFields = function(form, params, ai) {
             return {
-                ectTargetNodePath: getNodeObjectIdPathString(ai.node),
+                ectTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
+                ectNewTargetNodePath: params.ectNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
                 ectSubmittedFormId: form.prop('id')
             };
         };
@@ -805,30 +818,34 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             }
             params.local.confirmMsg = confirmMsg;
             
+            // NOTE: this path is used on success only and further adjusted server-side
+            params.ectNewTargetNodePath = getNodeObjectIdPathString($targetNode);
+            
+            // FIXME: the checkExecConfirm should be earlier in function, but this is working for time being
+            var effArgs = {};
             checkExecConfirm(ai, params, 
                 {subActionType: function(subActionType, params, ai) {
                     if ("copy" === subActionType) {
-                        params.modifyAssocMode = "copy";
+                        effArgs.ai = getActionInfo($node, "copyassoc");
                         params.deleteAssocMode = null;
-                        params.returnAssocFields = "false";
+                        params.returnAssocFields = "true"; // for now, switching to the new node after copy...
                     } else if ("move-remove" === subActionType) {
-                        params.modifyAssocMode = "move";
+                        effArgs.ai = getActionInfo($node, "moveassoc");
                         params.deleteAssocMode = "remove";
                         params.returnAssocFields = "true";
                     } else if ("move-expire" === subActionType) {
-                        params.modifyAssocMode = "move";
+                        effArgs.ai = getActionInfo($node, "moveassoc");
                         params.deleteAssocMode = "expire";
                         params.returnAssocFields = "true";
                     } else {
                         // should not happen
-                        params.modifyAssocMode = null;
-                        params.deleteAssocMode = null;
-                        params.returnAssocFields = null;
                         reportInternalError("invalid copy/move sub action type: " + subActionType);
                     }
                 }},
                 function() {
-                    execActionTarget(ai, params);
+                    if (effArgs.ai) {
+                        execActionTarget(effArgs.ai, params);
+                    }
                 }
             );
         };
@@ -852,6 +869,20 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var ai = getActionInfo($node, "remove");
             var params = makeParamsMap(ai);
             // default params OK
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
+        };
+        
+        this.execNewProductForNode = function($node) {
+            var ai = getActionInfo($node, "newproduct");
+            
+            // SPECIAL: the default entity merge doesn't work for this
+            var params = makeParamsMap(ai, false);
+            if (ai.objectType == "category") {
+                params.productCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            }
+            
             checkExecConfirm(ai, params, {}, function() {
                 execActionTarget(ai, params);
             });
@@ -882,6 +913,40 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             });
         };
         
+        this.execAddProductForNode = function($node) {
+            var ai = getActionInfo($node, "addproduct");
+            var params = makeParamsMap(ai);
+            // default params OK
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
+        };
+        
+        this.execAddCategoryForNode = function($node) {
+            var ai = getActionInfo($node, "addcategory");
+            
+            // SPECIAL: the default entity merge doesn't work for this
+            var params = makeParamsMap(ai, false);
+            if (ai.objectType == "catalog") {
+                // prodCatalogId will be ok
+            } else if (ai.objectType == "category") {
+                params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            }
+            
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
+        };
+        
+        this.execAddCatalog = function() {
+            var ai = getActionInfo(null, "addcatalog", "default");
+            var params = makeParamsMap(ai);
+            // default params OK
+            checkExecConfirm(ai, params, {}, function() {
+                execActionTarget(ai, params);
+            });
+        };
+        
         this.execManageForNode = function($node) {
             var ai = getActionInfo($node, "manage");
             var params = makeParamsMap(ai);
@@ -900,10 +965,18 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 return this.execRemoveAssocForNode($node);
             } else if (actionType === "remove") {
                 return this.execRemoveForNode($node);
+            } else if (actionType === "newproduct") {
+                return this.execNewProductForNode($node);
             } else if (actionType === "newcategory") {
                 return this.execNewCategoryForNode($node);
             } else if (actionType === "newcatalog") {
                 return this.execNewCatalog();
+            } else if (actionType === "addproduct") {
+                return this.execAddProductForNode($node);
+            } else if (actionType === "addcategory") {
+                return this.execAddCategoryForNode($node);
+            } else if (actionType === "addcatalog") {
+                return this.execAddCatalog();
             } else if (actionType === "manage") {
                 return this.execManageForNode($node);
             } else {
@@ -952,6 +1025,30 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                         scth.execNewCategoryForNode($node);
                     }
                 },
+                addcategory: {
+                    "separator_before": false,
+                    "separator_after": false,
+                    "label": scth.labels.addcategory,
+                    "action": function(obj) {
+                        scth.execAddCategoryForNode($node);
+                    }
+                },
+                newproduct: {
+                    "separator_before": false,
+                    "separator_after": false,
+                    "label": scth.labels.newproduct,
+                    "action": function(obj) {
+                        scth.execNewProductForNode($node);
+                    }
+                },
+                addproduct: {
+                    "separator_before": false,
+                    "separator_after": false,
+                    "label": scth.labels.addproduct,
+                    "action": function(obj) {
+                        scth.execAddProductForNode($node);
+                    }
+                },
                 manage: {
                     "separator_before": true,
                     "separator_after": false,
@@ -967,6 +1064,14 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     "action": function(obj) {
                         scth.execNewCatalog();
                     }
+                },
+                addcatalog: {
+                    "separator_before": false,
+                    "separator_after": false,
+                    "label": scth.labels.addcatalog,
+                    "action": function(obj) {
+                        scth.execAddCatalog();
+                    }
                 }
             };
         };
@@ -981,19 +1086,26 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                     "edit": defs.edit,
                     "removeassoc": defs.removeassoc,
                     "remove": defs.remove,
-                    "manage": defs.manage,
-                    "newcategory": defs.newcategory
+                    "newcategory": defs.newcategory,
+                    "addcategory": defs.addcategory,
+                    "manage": defs.manage
                 };
             } else if (objectType == 'category') {
                 menuDefs = {
                     "edit": defs.edit,
                     "removeassoc": defs.removeassoc,
                     "remove": defs.remove,
-                    "manage": defs.manage,
-                    "newcategory": defs.newcategory
+                    "newcategory": defs.newcategory,
+                    "addcategory": defs.addcategory,
+                    "newproduct": defs.newproduct,
+                    "addproduct": defs.addproduct,
+                    "manage": defs.manage
                 };
             } else if (objectType == 'product') {
                 menuDefs = {
+                    "edit": defs.edit,
+                    "removeassoc": defs.removeassoc,
+                    "remove": defs.remove,
                     "manage": defs.manage
                 };
             }
@@ -1144,8 +1256,10 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         href="" text="" disabled=true/></@compress_single_line></#assign>
     </#if>
     <#if !ectPostMenuItemMarkup??>
-      <#assign ectPostMenuItemMarkup><@compress_single_line><@menuitem type="link" 
-        href="javascript:void(0);" onClick="ectHandler.execNewCatalog();" text=uiLabelMap.ProductNewCatalog/></@compress_single_line></#assign>
+      <#assign ectPostMenuItemMarkup><#rt/>
+        <#t/><@compress_single_line><@menuitem type="link" href="javascript:void(0);" onClick="ectHandler.execNewCatalog();" text=uiLabelMap.ProductNewCatalog/></@compress_single_line>
+        <#t/><@compress_single_line><@menuitem type="link" href="javascript:void(0);" onClick="ectHandler.execAddCatalog();" text=uiLabelMap.ProductAddExistingCatalog/></@compress_single_line>
+      </#assign><#lt/>
     </#if>
     
 if (typeof ectHandler === 'undefined') {
@@ -1164,6 +1278,10 @@ if (typeof ectHandler === 'undefined') {
             cannotremovehaschild: "${escapeVal(uiLabelMap.CommonCannotDeleteRecordHasChildren, 'js')}",
             newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
             newcatalog: "${escapeVal(uiLabelMap.ProductNewCatalog, 'js')}",
+            newproduct: "${escapeVal(uiLabelMap.ProductNewProduct, 'js')}",
+            addcategory: "${escapeVal(uiLabelMap.ProductAddExistingCategory, 'js')}",
+            addcatalog: "${escapeVal(uiLabelMap.ProductAddExistingCatalog, 'js')}",
+            addproduct: "${escapeVal(uiLabelMap.ProductAddExistingProduct, 'js')}",
             manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"
         },
         markup: {

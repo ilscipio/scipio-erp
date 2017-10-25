@@ -660,6 +660,18 @@ public abstract class SetupDataUtil {
         return isDeleteRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
     
+    static boolean isAddRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isAdd" + recordTypeCamel), false);
+    }
+    
+    static boolean isAddRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isAddRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isAddRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isAddRecordRequest(params, recordTypeCamel) && isEventError(params);
+    }
+    
     // Aggregate/high-level states
     
     /**
@@ -683,7 +695,8 @@ public abstract class SetupDataUtil {
         
         return isNewRecordRequest(params, recordTypeCamel) || 
                 isCreateRecordFailedRequest(params, recordTypeCamel) || 
-                isDeleteRecordSuccessRequest(params, recordTypeCamel);
+                isDeleteRecordSuccessRequest(params, recordTypeCamel) ||
+                isAddRecordFailedRequest(params, recordTypeCamel);
     }
     
     static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {

@@ -28,4 +28,3 @@ context.glResourceTypes = delegator.findByAnd("GlResourceType", [:], UtilMisc.to
 
 glSelected = setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.glSelected = glSelected;
-Debug.log("glSelected =======> " + glSelected);

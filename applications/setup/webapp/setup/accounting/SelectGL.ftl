@@ -17,6 +17,7 @@
     jQuery(document).ready(function() {
         var submitSelectAccountingForm = function(cntd) {
             var val = jQuery('#setupAccounting-selectGL-select').val();
+            console.log("val ===========> " + val);
             if (val) {
                 if (cntd) {
                     jQuery('#setupAccounting-selectContinueGL-form input[name=topGlAccountId]').val(val);
@@ -40,16 +41,17 @@
 
   <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
-    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
+    <@defaultWizardFormFields exclude=[]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
     <@field type="general" label=uiLabelMap.SetupSelectAccountingModuleForSetup>
-       <@field type="select" name="topGlAccountId" id="setupAccounting-selectAccounting-select" class="+setupAccounting-selectAccounting-select" inline=true style="display:inline-block;">
+       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
             <option value="">[${uiLabelMap.SetupCreateNewGL}]</option>
             <option value="" disabled="disabled"></option>
             <#if accountingGLs?has_content>
               <#list accountingGLs as accountingGL>
-                <option value="${accountingGL.glAccountId!}">${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
+              	<#assign selected = (rawString(accountingGL.glAccountId) == rawString(topAccountGlId!))>
+                <option value="${accountingGL.glAccountId!}"<#if selected??> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
               </#list>
             </#if>
         </@field>

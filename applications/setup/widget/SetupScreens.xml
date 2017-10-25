@@ -610,11 +610,7 @@
     <screen name="SelectGL">
         <section>
             <actions>
-                <entity-condition entity-name="GlAccount" list="accountingGLs" distinct="true">
-                    <condition-list>
-                        <condition-expr field-name="parentGlAccountId" operator="not-equals" value="null" />
-                    </condition-list>         
-                </entity-condition>
+                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SelectGL.groovy" />
             </actions>
             <widgets>
                 <platform-specific>
@@ -626,22 +622,21 @@
     <screen name="EditGLTree">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/>
+                <!-- <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/> -->
+                <set field="accountMap" from-field="glAccountList"  />
             </actions>
+            <condition>
+                <and>
+                    <not><if-empty field="topGlAccountId"/></not>
+                    <not><if-empty field="accountMap"/></not>
+                </and>
+            </condition>
             <widgets>
-                <section>
-                    <condition>
-                        <and>
-                            <not><if-empty field="topGlAccountId"/></not>
-                            <not><if-empty field="treeMenuData"/></not>
-                        </and>
-                    </condition>
-                    <widgets>
-                       <screenlet>
-                           <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLTree.ftl"/></html></platform-specific>
-                       </screenlet>     
-                   </widgets>
-                </section>
+                
+				<screenlet>                       
+				    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
+				</screenlet>     
+                 
             </widgets>
         </section>
     </screen>

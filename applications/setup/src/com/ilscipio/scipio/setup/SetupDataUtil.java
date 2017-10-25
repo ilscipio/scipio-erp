@@ -20,7 +20,7 @@ import org.ofbiz.service.LocalDispatcher;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
 
-import javolution.util.FastMap;
+import javolution.util.FastList;
 
 /**
  * Raw setup step data check logic. 
@@ -250,42 +250,42 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GL");
 
         String orgPartyId = (String) params.get("orgPartyId");
-        String topAccountGlId = (String) params.get("topAccountGlId");
+        String topGlAccountId = (String) params.get("topGlAccountId");
 
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
-            if (UtilValidate.isNotEmpty(topAccountGlId)) {
-                GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("accountGlId", topAccountGlId));
+            if (UtilValidate.isNotEmpty(topGlAccountId)) {
+                GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
                 if (topGlAccount != null) {
-                    List<GenericValue> childGlAccounts = topGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false);
-                    Map<GenericValue, Object> glAccountList = getAllChildAccounts(childGlAccounts);
+                    List<GenericValue> glAccountList = FastList.newInstance();
+                    getAllChildGlAccounts(topGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false), glAccountList);
                     result.put("glAccountList", glAccountList);
                 } else {
-                    Debug.logError("Setup: GL account '" + topAccountGlId + "' not found; ignoring", module);
+                    Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
                 }
             } else {
                 // TODO
             }
+            
+            result.put("topGlAccountId", topGlAccountId);
         }
 
         return result;
     }
 
-    private static Map<GenericValue, Object> getAllChildAccounts(List<GenericValue> childGlAccounts) throws GeneralException {
-        Map<GenericValue, Object> result = FastMap.newInstance();
+    private static void getAllChildGlAccounts(List<GenericValue> childGlAccounts, List<GenericValue> allChildGlAccounts) throws GeneralException {
         for (GenericValue childGlAccount : childGlAccounts) {
             List<GenericValue> glAccounts = childGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false);
             if (UtilValidate.isNotEmpty(glAccounts)) {
-                result.put(childGlAccount, getAllChildAccounts(glAccounts));
+                getAllChildGlAccounts(glAccounts, allChildGlAccounts);
+                allChildGlAccounts.addAll(glAccounts);
             }
         }
-        return result;
     }
 
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)

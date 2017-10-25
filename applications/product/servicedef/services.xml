@@ -1817,7 +1817,7 @@ under the License.
         </attribute>
     </service>
     
-    <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
+    <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProdCatalog" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndRelatedVersatile" auth="true">
         <description>SCIPIO: Delete a ProdCatalog record and various related records (may be dangerous) (versatile)</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -1845,7 +1845,7 @@ under the License.
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association(s) (versatile)</description>
         <implements service="deleteProdCatalogStoreAssocVersatile"/>
-        <attribute name="deleteCatalogRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete ProdCatalog; if false only deletes store association</description>
         </attribute>
     </service>
@@ -1932,13 +1932,13 @@ under the License.
         </attribute>-->
     </service>
     
-    <service name="deleteProductCategoryAndCatAssocVersatile" default-entity-name="ProductCategory" engine="simple"
+    <service name="deleteProductCategoryAndCatAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association 
             based on wether parentProductCategoryId set (versatile)</description>
         <implements service="deleteProductCategoryCatAssocVersatile"/>
         <implements service="deleteProductCategoryAndRelatedVersatile"/>
-        <attribute name="deleteCategoryRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete ProductCategory (using deleteProductCategoryAndRelatedVersatile); if false only deletes catalog or category association</description>
         </attribute>
     </service>
@@ -2010,11 +2010,11 @@ under the License.
         <implements service="updateProductToCategory"/>
     </service>
     
-    <service name="deleteProductCatAssocVersatile" engine="simple"
+    <service name="deleteProductCatAssocVersatile" default-entity-name="Product" engine="simple"
                 location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductCatAssocVersatile" auth="true">
         <description>SCIPIO: Delete a Product and category assoc (versatile)</description>
-        <implements service="deleteProduct"/>
         <implements service="removeProductFromCategory"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
             <description>(remove|expire, default: remove)</description>
         </attribute>
@@ -2049,12 +2049,12 @@ under the License.
         </attribute>-->
     </service>
     
-    <service name="deleteProductAndCatAssocVersatile" default-entity-name="Product" engine="simple"
+    <service name="deleteProductAndCatAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndCatAssocVersatile" auth="true">
         <description>SCIPIO: Delete a Product record (if no members) and category assoc (versatile)</description>
         <implements service="deleteProductCatAssocVersatile"/>
         <implements service="deleteProductAndRelatedVersatile"/>
-        <attribute name="deleteCategoryRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, attempts to delete Product (using deleteProductAndRelatedVersatile); if false only deletes catalog or category association</description>
         </attribute>
     </service>

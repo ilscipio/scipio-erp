@@ -1128,7 +1128,7 @@ under the License.
         <set-service-fields service-name="deleteProductCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
         <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
         
-        <if-compare field="parameters.deleteProductRecordAndRelated" operator="not-equals" type="Boolean" value="false">
+        <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
             <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="deleteRecordCtx" map="parameters"/>
             <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
         </if-compare>

@@ -718,7 +718,8 @@ under the License.
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
         <permission-service service-name="checkCategoryPermissionWithViewPurchaseAllow" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-25: changed PK from IN to INOUT -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
@@ -731,13 +732,15 @@ under the License.
         </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="categories" type="Object" mode="IN" optional="false"/>
-        <override name="fromDate" optional="true"/>
+        <!-- SCIPIO: 2017-10-25: fromDate from IN to INOUT so caller can retrieve correct PK -->
+        <override name="fromDate" optional="true" mode="INOUT"/>
     </service>
     <service name="addProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
         <permission-service service-name="checkCategoryPermissionWithViewPurchaseAllow" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-25: changed PK from IN to INOUT so caller can retrieve full PK when fromDate empty -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>

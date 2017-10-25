@@ -136,9 +136,19 @@ under the License.
         </if-empty>
 
         <create-value value-field="newEntity"/>
+        
+        <!-- SCIPIO: 2017-10-25: now output the full PK including fromDate so caller can get exact value-->
+        <field-to-result result-name="productId" field="newEntity.productId"/>
+        <field-to-result result-name="productCategoryId" field="newEntity.productCategoryId"/>
+        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
     </simple-method>
 
     <simple-method method-name="addProductToCategories" short-description="Add Product to Multiple Categories">
+        <!-- SCIPIO: 2017-10-25: all assoc will now get the same fromDate so the caller get the full PK reliably -->
+        <if-empty field="parameters.fromDate">
+            <now-timestamp field="parameters.fromDate"/>
+        </if-empty>
+        
         <if-instance-of field="parameters.categories" class="java.util.List">
             <iterate entry="category" list="parameters.categories">
                 <!-- note that the security semantics require the user to have the general admin permission,
@@ -156,9 +166,10 @@ under the License.
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+                <!-- SCIPIO: now set in parameters above
                 <if-empty field="newEntity.fromDate">
                     <now-timestamp field="newEntity.fromDate"/>
-                </if-empty>
+                </if-empty>-->
 
                 <create-value value-field="newEntity"/>
             </iterate>
@@ -176,13 +187,17 @@ under the License.
                 <set-pk-fields map="parameters" value-field="newEntity"/>
                 <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+                <!-- SCIPIO: now set in parameters above
                 <if-empty field="newEntity.fromDate">
                     <now-timestamp field="newEntity.fromDate"/>
-                </if-empty>
+                </if-empty>-->
 
                 <create-value value-field="newEntity"/>
             </else>
         </if-instance-of>
+        
+        <!-- SCIPIO: 2017-10-25: output fromDate as it may have been empty and caller can't get exact PK otherwise -->
+        <field-to-result result-name="fromDate" field="parameters.fromDate"/>
     </simple-method>
 
     <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">

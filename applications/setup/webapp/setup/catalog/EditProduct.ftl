@@ -2,6 +2,7 @@
 <#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
 
 <#assign defaultParams = {
+    "productTypeId": "FINISHED_GOOD"
 }>
 <@script>
     var defaultProductParams = <@objectAsScript object=defaultParams lang='js'/>;
@@ -60,6 +61,8 @@
                 <option<#if rawString(params.productTypeId!) == rawString(productTypeData.productTypeId!)> selected="selected"</#if> value="${productTypeData.productTypeId}">${productTypeData.get("description", locale)}</option>
             </#list>
         </@field>
+        
+        <@field type="input" name="internalName" value=(params.internalName!) label=uiLabelMap.ProductInternalName class="+ect-inputfield" required=true/>
       </#if>
 
         <#-- DEV NOTE: some of these aren't selectable because it should be done through the js tree. -->
@@ -83,6 +86,7 @@
 
         <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true>
             <#-- TODO: LOCALIZED VERSIONS OF productName/description/longDescription (complex) -->
+            <@field type="display">(${uiLabelMap.CommonNone})</@field>
         </@fieldset>
       </#if>
     </@form>
@@ -138,7 +142,7 @@
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteProduct" value="Y"/><#-- for our screens -->
-      <@field type="hidden" name="deleteProductRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
+      <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>

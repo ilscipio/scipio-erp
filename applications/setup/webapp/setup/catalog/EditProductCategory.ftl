@@ -136,6 +136,7 @@
 
         <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true>
             <#-- TODO: LOCALIZED VERSIONS OF categoryName/description/longDescription (complex) -->
+            <@field type="display">(${uiLabelMap.CommonNone})</@field>
         </@fieldset>
       </#if>
     </@form>
@@ -191,7 +192,7 @@
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteCategory" value="Y"/><#-- for our screens -->
-      <@field type="hidden" name="deleteCategoryRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
+      <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
       <#-- common -->

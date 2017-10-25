@@ -16451,4 +16451,8 @@
         <value xml:lang="en">Move</value>
         <value xml:lang="de">Bewegung</value>
     </property>
+    <property key="CommonLocalizedFields">
+        <value xml:lang="en">Localized Fields</value>
+        <value xml:lang="de">Lokalisierte Felder</value>
+    </property>
 </resource>

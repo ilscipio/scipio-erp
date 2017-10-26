@@ -958,6 +958,14 @@ under the License.
     <screen name="EditProductContentContent">
         <section>
             <actions>
+                <!-- SCIPIO: 2017-10-26: simple content form submits mainContentId instead of contentId;
+                    if don't recognize it, form browsing unpredictable -->
+                <script lang="groovy"><![CDATA[
+                    if (parameters.mainContentId) {
+                        parameters.contentId = parameters.mainContentId;
+                    }
+                ]]></script>
+            
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditProductContent"/>
                 <set field="activeSubMenuItem" value="EditProductContent"/>

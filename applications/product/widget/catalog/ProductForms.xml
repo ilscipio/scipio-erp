@@ -778,6 +778,13 @@
         <field name="text">
             <text />
         </field>
+        <!-- SCIPIO: 2017-10-26: Added Product-specific hidden fields to preserve browsing. WARN: depends on screen -->
+        <field name="fromDate">
+            <hidden />
+        </field>
+        <field name="productContentTypeId">
+            <hidden />
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>

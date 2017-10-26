@@ -221,8 +221,8 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
 
         var getNodeOrigId = function($node) {
-            if (!$node) return null;
-            return $node.data.li_attr.original_id;
+            if ($node && $node.data) return $node.data.li_attr.original_id;
+            else return null;
         };
         var getNodeObjectId = function($node) {
             return getNodeOrigId($node);
@@ -256,7 +256,8 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             return getTopLevelNode($node);
         }
         var getNodeObjectType = function($node) {
-            return $node.data.type; // same names, 1-for-1 mapping
+            if ($node && $node.data) return $node.data.type; // same names, 1-for-1 mapping
+            else return null;
         };
         var getChildNodeByObjectId = function($node, objectId, targetObjectType) {
             var result = null;
@@ -1051,7 +1052,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                 },
                 manage: {
                     "separator_before": true,
-                    "separator_after": false,
+                    "separator_after": true,
                     "label": scth.labels.manage,
                     "action": function(obj) {
                         scth.execManageForNode($node);
@@ -1077,36 +1078,43 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
         
         var getMenuDefs = function($node) {
-            var defs = getMenuActionDefs($node);
             var objectType = getNodeObjectType($node);
+            var parentObjectType = getNodeObjectType(getParentNode($node));
+            
+            var defs = getMenuActionDefs($node);
+            var setDefLabel = function(obj, label) {
+                if (label) obj.label = label;
+                return obj;
+            };
             
             var menuDefs = {};
             if (objectType == 'catalog') {
                 menuDefs = {
-                    "edit": defs.edit,
-                    "removeassoc": defs.removeassoc,
-                    "remove": defs.remove,
+                    "edit": setDefLabel(defs.edit, scth.labels.editcatalog),
+                    "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromstore),
+                    "remove": setDefLabel(defs.remove, scth.labels.deletecatalog),
+                    "manage": setDefLabel(defs.manage, scth.labels.managecatalog),
                     "newcategory": defs.newcategory,
                     "addcategory": defs.addcategory,
-                    "manage": defs.manage
                 };
             } else if (objectType == 'category') {
                 menuDefs = {
-                    "edit": defs.edit,
-                    "removeassoc": defs.removeassoc,
-                    "remove": defs.remove,
-                    "newcategory": defs.newcategory,
-                    "addcategory": defs.addcategory,
+                    "edit": setDefLabel(defs.edit, scth.labels.editcategory),
+                    "removeassoc": setDefLabel(defs.removeassoc, 
+                        (parentObjectType === 'catalog') ? scth.labels.removefromcatalog : scth.labels.removefromcategory),
+                    "remove": setDefLabel(defs.remove, scth.labels.deletecategory),
+                    "manage": setDefLabel(defs.manage, scth.labels.managecategory),
+                    "newcategory": setDefLabel(defs.newcategory, scth.labels.newsubcategory),
+                    "addcategory": setDefLabel(defs.addcategory, scth.labels.addsubcategory),
                     "newproduct": defs.newproduct,
-                    "addproduct": defs.addproduct,
-                    "manage": defs.manage
+                    "addproduct": defs.addproduct
                 };
             } else if (objectType == 'product') {
                 menuDefs = {
-                    "edit": defs.edit,
-                    "removeassoc": defs.removeassoc,
-                    "remove": defs.remove,
-                    "manage": defs.manage
+                    "edit": setDefLabel(defs.edit, scth.labels.editproduct),
+                    "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromcategory),
+                    "remove": setDefLabel(defs.remove, scth.labels.deleteproduct),
+                    "manage": setDefLabel(defs.manage, scth.labels.manageproduct)
                 };
             }
             
@@ -1276,13 +1284,27 @@ if (typeof ectHandler === 'undefined') {
             removeassoc: "${escapeVal(uiLabelMap.CommonRemoveAssoc, 'js')}",
             remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",
             cannotremovehaschild: "${escapeVal(uiLabelMap.CommonCannotDeleteRecordHasChildren, 'js')}",
-            newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
             newcatalog: "${escapeVal(uiLabelMap.ProductNewCatalog, 'js')}",
+            newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
+            newsubcategory: "${escapeVal(uiLabelMap.ProductNewSubCategory, 'js')}",
             newproduct: "${escapeVal(uiLabelMap.ProductNewProduct, 'js')}",
-            addcategory: "${escapeVal(uiLabelMap.ProductAddExistingCategory, 'js')}",
             addcatalog: "${escapeVal(uiLabelMap.ProductAddExistingCatalog, 'js')}",
+            addcategory: "${escapeVal(uiLabelMap.ProductAddExistingCategory, 'js')}",
+            addsubcategory: "${escapeVal(uiLabelMap.ProductAddExistingSubCategory, 'js')}",
             addproduct: "${escapeVal(uiLabelMap.ProductAddExistingProduct, 'js')}",
-            manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"
+            manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}",
+            removefromstore: "${escapeVal(uiLabelMap.ProductRemoveFromStore, 'js')}",
+            removefromcatalog: "${escapeVal(uiLabelMap.ProductRemoveFromCatalog, 'js')}",
+            removefromcategory: "${escapeVal(uiLabelMap.ProductRemoveFromCategory, 'js')}",
+            deletecatalog: "${escapeVal(uiLabelMap.ProductDeleteCatalog, 'js')}",
+            deletecategory: "${escapeVal(uiLabelMap.ProductDeleteCategory, 'js')}",
+            deleteproduct: "${escapeVal(uiLabelMap.ProductDeleteProduct, 'js')}",
+            editcatalog: "${escapeVal(uiLabelMap.ProductEditCatalog, 'js')}",
+            editcategory: "${escapeVal(uiLabelMap.ProductEditCategory, 'js')}",
+            editproduct: "${escapeVal(uiLabelMap.ProductEditProduct, 'js')}",
+            managecatalog: "${escapeVal(uiLabelMap.ProductManageCatalog, 'js')}",
+            managecategory: "${escapeVal(uiLabelMap.ProductManageCategory, 'js')}",
+            manageproduct: "${escapeVal(uiLabelMap.ProductManageProduct, 'js')}"
         },
         markup: {
             menuItem: '${ectEmptyMenuItemMarkup}',

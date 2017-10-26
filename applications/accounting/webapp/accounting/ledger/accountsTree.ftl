@@ -1,13 +1,28 @@
 <#macro compress_single_line><#local captured><#nested></#local>${captured?replace("^\\s+|\\s+$|\\n|\\r", "", "rm")}</#macro>
 
+<#assign treeOptionsFixedParamsString="">
+<#if (treeOptionsFixedParams?has_content)>	
+	<#assign treeOptionsFixedParamsString=addParamsToStr(treeOptionsFixedParamsString, treeOptionsFixedParams)>
+</#if>
+
+<#assign addGlAccountUrl=(addGlAccountUrl!"AddGlAccount") + "?" + treeOptionsFixedParamsString!>
+<#assign createGlAccountUrl=(createGlAccountUrl!"createGlAccount" + "?" + treeOptionsFixedParamsString!)>
+<#assign editGlAccountUrl=(editGlAccountUrl!"EditGlobalGlAccount" + "?" + treeOptionsFixedParamsString!)>
+<#assign updateGlAccountUrl=(updateGlAccountUrl!"updateGlAccount" + "?" + treeOptionsFixedParamsString!)>
+<#assign deleteGlAccountUrl=(deleteGlAccountUrl!"deleteGlAccount" + "?" + treeOptionsFixedParamsString!)>
+<#assign assignGlAccountUrl=(assignGlAccountUrl!"AssignGlAccount" + "?" + treeOptionsFixedParamsString!)>
+<#assign accountTransactionBaseUrl=(accountTransactionBaseUrl!"FindAcctgTrans" + "?" + treeOptionsFixedParamsString!)>
+
+<#assign treeOptionsParams=treeOptionsParams![]>
+
 <#-- Javascript functions -->
 <@script>
-    var editorBaseUrl = '<@ofbizUrl escapeAs='js'>EditGlobalGlAccount</@ofbizUrl>';
-    var assignGlAccountBaseUrl = '<@ofbizUrl escapeAs='js'>AssignGlAccount</@ofbizUrl>';
-    var accountTransactionBaseUrl = '<@ofbizUrl escapeAs='js'>FindAcctgTrans</@ofbizUrl>';
+    var editorBaseUrl = '<@ofbizUrl escapeAs='js'>${editGlAccountUrl}</@ofbizUrl>';
+    var assignGlAccountBaseUrl = '<@ofbizUrl escapeAs='js'>${assignGlAccountUrl}</@ofbizUrl>';
+    var accountTransactionBaseUrl = '<@ofbizUrl escapeAs='js'>${accountTransactionBaseUrl}</@ofbizUrl>';
     
     
-    function makeNewPageUrl($node) {
+    function makeNewPageUrl($node) {    	
         var newUrl = editorBaseUrl + '?' + $.param({
             parentGlAccountId: $node.data["parentGlAccountId"]
         });
@@ -52,7 +67,7 @@
                   "${escapeVal(uiLabelMap.AccountingAcctgTrans, 'js')}":makeGlAccountTransactionPageUrl($node)
                 };
             $el.empty(); // remove old options
-            $.each(newOptions, function(key,value) {
+            $.each(newOptions, function(key,value) {              
               var newEl = $('<@compress_single_line><@menuitem type="link" href="" text=""/></@compress_single_line>');
               var menuAnchor = $(newEl).find('a:last-child');
               menuAnchor.attr("href",value).text(key);
@@ -148,7 +163,7 @@
             <@cell columns=3>
                 <@section title=uiLabelMap.CommonOptions id="action_offset">
                         <ul class="side-nav" id="action_menu">
-                            <@menuitem type="link" href=makeOfbizUrl('AddGlAccount') text=uiLabelMap.CommonCreate/>
+                            <@menuitem type="link" href=makeOfbizUrl(addGlAccountUrl) text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
             </@cell>

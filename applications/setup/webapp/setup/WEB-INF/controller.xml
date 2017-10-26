@@ -89,6 +89,7 @@
         and since security is not an issue here it will practically never cause an issue. -->
     <!-- DEV WARN: for setupCreate/UpdateXxx, only simple-method events get a transaction by default;
         do not substitute these with java/groovy events without implementing transaction! (TODO: patches for this) -->
+    <!-- Organization step -->
     <request-map uri="setupOrganization">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -107,6 +108,8 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupOrganization"/>
     </request-map>
+    
+    <!-- User step -->
     <request-map uri="setupUser">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -125,24 +128,58 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupUser"/>
     </request-map>
+    
+    <!-- Accounting step -->
     <request-map uri="setupAccounting">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
-    <request-map uri="setupCreateAccounting">
+    <request-map uri="setupAddGlAccount">
+        <security https="true" auth="true"/>        
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupEditGlAccount">
         <security https="true" auth="true"/>
         <!-- TODO -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    <request-map uri="setupUpdateAccounting">
+    <request-map uri="setupCreateGlAccount">
         <security https="true" auth="true"/>
         <!-- TODO -->
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    <request-map uri="setupUpdateGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupDeleteGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupAssignGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupImportGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+    
+    <!-- Facility step -->
     <request-map uri="setupFacility">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -161,6 +198,8 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupFacility"/>
     </request-map>
+    
+    <!-- Catalog step -->
     <request-map uri="setupCatalog">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
@@ -263,6 +302,8 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupCatalog"/>
     </request-map>
+    
+    <!-- Store step -->
     <request-map uri="setupStore">
         <security https="true" auth="true"/>
         <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>

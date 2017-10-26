@@ -983,13 +983,13 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleEditProductContent}">
                             <include-form name="${contentFormName}" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleListAssociatedContentInfos}">
-                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <!-- SCIPIO: this fails if the main content not yet created -->
                         <section>
                             <condition><not><if-empty field="content.contentId"/></not></condition>
                             <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleListAssociatedContentInfos}">
+                                    <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
                                     <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
                                 </screenlet>

@@ -59,6 +59,7 @@ if (!request.getAttribute("contentId") && (parameters.contentId && parameters.pr
         
         content = productCategoryContent.getRelatedOne("Content", false);
         context.content = content;
+        context.contentId = content?.contentId; // SCIPIO: needed for some forms
         context.textDataMap = delegator.findOne("ElectronicText", ["dataResourceId" : content.dataResourceId], false);
         context.prodCatContentTypeId = prodCatContentTypeId;
     }

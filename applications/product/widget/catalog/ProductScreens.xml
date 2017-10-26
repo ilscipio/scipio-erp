@@ -980,7 +980,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductContent}">
+                        <screenlet title="${uiLabelMap.PageTitleEditProductContent}" navigation-menu-name="ProductContentSectionSubTabBar">
+                            <include-menu name="ProductContentSectionSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/><!-- SCIPIO: screen gets confusing without a new button -->
                             <include-form name="${contentFormName}" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                         <!-- SCIPIO: this fails if the main content not yet created -->

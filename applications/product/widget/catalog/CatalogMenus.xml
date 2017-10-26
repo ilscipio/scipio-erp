@@ -866,6 +866,18 @@ under the License.
             <sub-menu name="ConfigItem" include="ConfigItemSideBar"/>
         </menu-item>
     </menu>
+    
+    <!-- SCIPIO: small tab bar needed for content (may be removed in future) -->
+    <menu name="ProductContentSectionSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewProductContent" title="${uiLabelMap.ContentNewContent}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="product.productId"/></not>
+            </condition>
+            <link target="EditProductContent">
+                <parameter param-name="productId" from-field="product.productId"/>
+            </link>
+        </menu-item>   
+    </menu>
 
     <!-- SCIPIO: ProductSubTabBar Deprecated - replaced by component://product/webapp/catalog/menu/ProductSubTabBar.ftl --> 
 

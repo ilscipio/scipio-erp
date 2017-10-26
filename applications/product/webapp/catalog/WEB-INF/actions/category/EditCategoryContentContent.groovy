@@ -25,7 +25,7 @@ uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
 // Show update form
 // SCIPIO: invalid for groovy: requestAttributes.contentId
-if (UtilValidate.isEmpty(request.getAttribute("contentId")) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
+if (!request.getAttribute("contentId") && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
     fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)    
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     productCategoryContent = from("ProductCategoryContent").
@@ -63,7 +63,7 @@ if (UtilValidate.isEmpty(request.getAttribute("contentId")) && (parameters.conte
         context.prodCatContentTypeId = prodCatContentTypeId;
     }
     // Show create form
-} else if (UtilValidate.isEmpty(request.getAttribute("contentId"))) { // SCIPIO: invalid for groovy: requestAttributes.contentId 
+} else if (!request.getAttribute("contentId")) { // SCIPIO: invalid for groovy: requestAttributes.contentId 
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     context.contentFormName = "EditCategoryContentSimpleText";
     context.contentFormAction = "createSimpleTextContentForCategory";

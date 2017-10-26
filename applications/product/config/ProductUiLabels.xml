@@ -32076,6 +32076,11 @@
         <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
         <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
     </property>
+    <property key="ProductNewSubCategory">
+        <value xml:lang="en">New Sub-Category</value>
+        <value xml:lang="de">Neue Unterkategorie</value>
+        <value xml:lang="fr">Nouvelle sous-catégorie</value>
+    </property>
     <property key="ProductAddExistingCatalog">
         <value xml:lang="en">Add Existing Catalog</value>
         <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
@@ -32085,6 +32090,11 @@
         <value xml:lang="en">Add Existing Category</value>
         <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
         <value xml:lang="fr">Ajouter une catégorie existante</value>
+    </property>
+    <property key="ProductAddExistingSubCategory">
+        <value xml:lang="en">Add Existing Sub-Category</value>
+        <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie existante</value>
     </property>
     <property key="ProductAddExistingProduct">
         <value xml:lang="de">Bestehendes Produkt hinzufügen</value>
@@ -32100,6 +32110,11 @@
         <value xml:lang="en">Add Category</value>
         <value xml:lang="de">Kategorie hinzufügen</value>
         <value xml:lang="fr">Ajouter une catégorie</value>
+    </property>
+    <property key="ProductAddSubCategory">
+        <value xml:lang="en">Add Sub-Category</value>
+        <value xml:lang="de">Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie</value>
     </property>
     <property key="ProductDeleteCatalog">
         <value xml:lang="en">Delete Catalog</value>

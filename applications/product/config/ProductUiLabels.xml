@@ -32116,6 +32116,11 @@
         <value xml:lang="de">Produkt löschen</value>
         <value xml:lang="fr">Supprimer le produit</value>
     </property>
+    <property key="ProductRemoveFromStore">
+        <value xml:lang="en">Remove from Store</value>
+        <value xml:lang="de">Aus dem Geschäft entfernen</value>
+        <value xml:lang="fr">Supprimer du magasin</value>
+    </property>
     <property key="ProductRemoveFromCatalog">
         <value xml:lang="en">Remove from Catalog</value>
         <value xml:lang="de">Aus Katalog entfernen</value>
@@ -32125,6 +32130,21 @@
         <value xml:lang="en">Remove from Category</value>
         <value xml:lang="de">Aus der Kategorie entfernen</value>
         <value xml:lang="fr">Supprimer de la catégorie</value>
+    </property>
+    <property key="ProductManageCatalog">
+        <value xml:lang="en">Manage Product</value>
+        <value xml:lang="de">Produkt verwalten</value>
+        <value xml:lang="fr">Gérer le produit</value>
+    </property>
+    <property key="ProductManageCategory">
+        <value xml:lang="en">Manage Category</value>
+        <value xml:lang="de">Kategorie verwalten</value>
+        <value xml:lang="fr">Gérer la catégorie</value>
+    </property>
+    <property key="ProductManageProduct">
+        <value xml:lang="en">Manage Product</value>
+        <value xml:lang="de">Produkt verwalten</value>
+        <value xml:lang="fr">Gérer le produit</value>
     </property>
     <property key="ProductNonLocalizedContentFieldInfo">
         <!-- SCIPIO: TODO?: REVIEW: in future this message may need to be changed if we decide to change content wrapper behavior... -->

@@ -217,11 +217,7 @@ under the License.
                     <!-- <include-screen name="ScipioEditCategoryContent"/> -->
                     <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
                 </screenlet>
-                <screenlet title="${uiLabelMap.ProductCategoryContentList}">
-                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                    <include-screen name="ScipioCategoryContentList"/>
-                </screenlet>
-                        
+   
                 <!-- SCIPIO: TODO: REVIEW: 2017-10-26: temporarily reinstated this form because it is not covered in the FTL and 
                     essential to localize until better forms, and because it is still in EditProductContentContent so this was inconsistent without -->
                 <section>
@@ -241,6 +237,11 @@ under the License.
                         </screenlet>-->
                     </widgets>
                 </section>
+                
+                <screenlet title="${uiLabelMap.ProductCategoryContentList}">
+                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                    <include-screen name="ScipioCategoryContentList"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

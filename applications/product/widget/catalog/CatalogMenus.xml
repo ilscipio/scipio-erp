@@ -282,7 +282,15 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="CategoryContentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">      
+    <menu name="CategoryContentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewContentInCategory" title="${uiLabelMap.ContentNewContent}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="productCategory"/></not>
+            </condition>
+            <link target="EditCategoryContent">
+                <parameter param-name="productCategoryId"/>
+            </link>
+        </menu-item>   
         <menu-item name="AddExistingContentInCategory" title="${uiLabelMap.ProductAddExistingContentInCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-empty field="productCategory"/></not>

@@ -884,7 +884,7 @@ under the License.
                                        <set field="productStoreId" value="ScipioShop" global="true"/>
                                    </actions>
                                    <widgets>
-                                       <include-screen name="ScipioStoreCatalogTree"/>   
+                                       <include-screen name="ScipioViewCatalogTree"/>   
                                    </widgets>
                                </section>
                             </container>
@@ -894,7 +894,7 @@ under the License.
                                        <set field="productStoreId" value="RentalStore" global="true"/>
                                    </actions>
                                    <widgets>
-                                       <include-screen name="ScipioStoreCatalogTree"/>   
+                                       <include-screen name="ScipioViewCatalogTree"/>   
                                    </widgets>
                                </section>
                             </container>
@@ -1119,27 +1119,18 @@ under the License.
         </section>
     </screen>
 
-    
-    <!-- SCIPIO: Widget implementation -->
-    <screen name="ScipioStoreCatalogTree">
+    <!-- SCIPIO: Read-only catalog tree -->
+    <screen name="ScipioViewCatalogTree"><!-- DEPRECATED -->
         <section>
-            <actions>
-                <entity-one value-field="productStore" entity-name="ProductStore"/>
-                <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
-            </actions>
             <widgets>
-                <section>
-                    <condition>
-                        <not>
-                            <if-empty field="treeMenuData"/>
-                        </not>
-                    </condition>
-                    <widgets>
-                        <screenlet title="${productStore.storeName}">
-                            <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                        </screenlet>     
-                    </widgets>
-                </section>
+                <include-screen name="ScipioViewCatalogTree" location="component://product/widget/catalog/CatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ScipioStoreCatalogTree"><!-- DEPRECATED -->
+        <section>
+            <widgets>
+                <include-screen name="ScipioViewCatalogTree" location="component://product/widget/catalog/CatalogScreens.xml"/>
             </widgets>
         </section>
     </screen>

@@ -106,8 +106,8 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         int idCount = sameIdDataItemsMap.get(id);
         for (JsTreeDataItem item : this) {
             // Update id
-            if (item.getOriginalId().equals(id) && idCount >= 0) {
-                item.setId(item.getOriginalId() + JSTREE_FIELD_ID_SEPARATOR + idCount);
+            if (item.getId().equals(id) && idCount >= 0) {
+                item.setId(item.getId() + JSTREE_FIELD_ID_SEPARATOR + idCount);
                 idCount--;
             }
             // Update parent
@@ -125,17 +125,17 @@ public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
         for (JsTreeDataItem dataItem : this) {
             Integer timesRepeated = 0;
             if (hasTreeDataItem(dataItem)) {
-                if (sameIdDataItemsMap.containsKey(dataItem.getOriginalId()))
-                    timesRepeated = sameIdDataItemsMap.get(dataItem.getOriginalId());
+                if (sameIdDataItemsMap.containsKey(dataItem.getId()))
+                    timesRepeated = sameIdDataItemsMap.get(dataItem.getId());
                 timesRepeated++;
-                sameIdDataItemsMap.put(dataItem.getOriginalId(), timesRepeated);
+                sameIdDataItemsMap.put(dataItem.getId(), timesRepeated);
             }
         }
     }
 
     private boolean hasTreeDataItem(JsTreeDataItem item) {
         for (JsTreeDataItem i : this) {
-            if (i.getOriginalId().equals(item.getOriginalId()) && !i.equals(item)) {
+            if (i.getId().equals(item.getId()) && !i.equals(item)) {
                 if (UtilValidate.isEmpty(item.get("type")) || (UtilValidate.isNotEmpty(item.get("type")) && item.get("type").equals(i.get("type")))) {
                     return true;
                 }

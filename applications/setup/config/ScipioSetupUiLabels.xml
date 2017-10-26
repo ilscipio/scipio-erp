@@ -63,11 +63,6 @@
         <value xml:lang="de">Überspringen</value>
         <value xml:lang="fr">Sauter</value>
     </property>
-    <property key="SetupCatalogStoreAssocRemoved">
-        <value xml:lang="en">Catalog and store association successfully removed.</value>
-        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
-        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
-    </property>
     <property key="SetupSaveAndContinue">
         <value xml:lang="en">Save &amp; Continue</value>
         <value xml:lang="de">Enregistrer et continuer</value>
@@ -134,15 +129,16 @@
         <value xml:lang="fr">Avertissement: pour les magasins de grande taille, la définition d'une valeur importante peut entraîner le chargement de la page et une réponse très lente.</value>
     </property>
     
+    <property key="SetupSelectUserForSetup">
+        <value xml:lang="en">Select User for Setup</value>
+    </property>
     <property key="SetupUseEmailAddress">
         <value xml:lang="en">Use email address</value>
     </property>
     <property key="SetupAccountInformation">
         <value xml:lang="en">Account information</value>
-    </property>
-    
+    </property>    
     <property key="SetupIsRelatedToOrgAs">
-        <value xml:lang="en">Is related to <strong>${orgPartyId}</strong> as</value>
+        <value xml:lang="en">Is related to ${orgPartyId} as</value>
     </property>
-    
 </resource>

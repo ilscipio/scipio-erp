@@ -3,7 +3,6 @@ package com.ilscipio.scipio.setup;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,11 +13,14 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
+
+import javolution.util.FastList;
 
 /**
  * Raw setup step data check logic. 
@@ -38,7 +40,7 @@ public abstract class SetupDataUtil {
     );
     
     public static final Set<String> USER_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
-            "GENERAL_LOCATION", "BILLING_LOCATION"
+            "GENERAL_LOCATION", "SHIPPING_LOCATION"
     );
     
     protected SetupDataUtil() {
@@ -184,7 +186,7 @@ public abstract class SetupDataUtil {
                             UtilMisc.toMap("partyIdFrom", orgPartyId, "roleTypeIdFrom", "INTERNAL_ORGANIZATIO"), UtilMisc.toList("fromDate DESC"), false);
                     if (UtilValidate.isNotEmpty(partyRelationshipList)) {
                         if (partyRelationshipList.size() > 1) {
-                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple owner relationships for organization '" + orgPartyId + "'", module);
+                            Debug.logWarning("Setup: User " + userPartyId + "' got multiple relationships with organization '" + orgPartyId + "'", module);
                         }
                         GenericValue partyRelationshipOwner = EntityUtil.getFirst(partyRelationshipList);
                         party = partyRelationshipOwner.getRelatedOne("ToParty", false);
@@ -203,7 +205,7 @@ public abstract class SetupDataUtil {
             result.put("userParty", party);
             result.put("coreCompleted", true);
 
-            PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, orgPartyId, useCache, "Setup: User: ");
+            PartyContactMechPurposeInfo contactMechInfo = PartyContactMechPurposeInfo.forParty(delegator, dispatcher, userPartyId, useCache, "Setup: User: ");
             contactMechInfo.resultsToMap(result);
             Set<String> generalAddressContactMechPurposes = null;
             GenericValue generalAddressContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "GENERAL_LOCATION", useCache);
@@ -230,10 +232,12 @@ public abstract class SetupDataUtil {
 
             GenericValue workPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_WORK", useCache);
             GenericValue faxPhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "FAX_NUMBER", useCache);
+            GenericValue mobilePhoneContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PHONE_MOBILE", useCache);
             GenericValue primaryEmailContactMech = contactMechInfo.getPartyContactMechForPurpose(delegator, "PRIMARY_EMAIL", useCache);
 
             result.put("workPhoneContactMech", workPhoneContactMech);
             result.put("faxPhoneContactMech", faxPhoneContactMech);
+            result.put("mobilePhoneContactMech", mobilePhoneContactMech);
             result.put("primaryEmailContactMech", primaryEmailContactMech);
 
             boolean contactMechsCompleted = locationAddressesCompleted;
@@ -246,13 +250,43 @@ public abstract class SetupDataUtil {
         return result;
     }
 
-    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
-            throws GeneralException {
+    public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
-        // TODO
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GL");
+
+        String orgPartyId = (String) params.get("orgPartyId");
+        String topGlAccountId = (String) params.get("topGlAccountId");
+
+        if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
+            if (UtilValidate.isNotEmpty(topGlAccountId)) {
+                GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
+                if (topGlAccount != null) {
+                    List<GenericValue> glAccountList = FastList.newInstance();
+                    glAccountList.add(topGlAccount);
+                    getAllChildGlAccounts(glAccountList, glAccountList);                    
+                    result.put("glAccountList", glAccountList);
+                } else {
+                    Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
+                }
+            } else {
+                // TODO
+            }
+            
+            result.put("topGlAccountId", topGlAccountId);
+        }
 
         return result;
+    }
+
+    private static void getAllChildGlAccounts(List<GenericValue> childGlAccounts, List<GenericValue> allChildGlAccounts) throws GeneralException {
+        for (GenericValue childGlAccount : childGlAccounts) {
+            List<GenericValue> glAccounts = childGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false);
+            if (UtilValidate.isNotEmpty(glAccounts)) {
+                getAllChildGlAccounts(glAccounts, allChildGlAccounts);
+                allChildGlAccounts.addAll(glAccounts);
+            }
+        }
     }
 
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)
@@ -391,8 +425,8 @@ public abstract class SetupDataUtil {
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "Catalog");
         
-        List<GenericValue> productStoreCatalogList = EntityUtil.filterByDate(delegator.findByAnd("ProductStoreCatalog", 
-                UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum ASC"), useCache));
+        List<GenericValue> productStoreCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog")
+                .where("productStoreId", productStoreId).orderBy("sequenceNum ASC").filterByDate().cache(useCache).queryList();
         result.put("productStoreCatalogList", productStoreCatalogList);
         
         GenericValue productStoreCatalog = null;
@@ -580,24 +614,63 @@ public abstract class SetupDataUtil {
     
     // Exact request states
     
-    static boolean isNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("new" + stepNameCamel), false);
+    static boolean isNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("new" + recordTypeCamel), false);
     }
     
-    static boolean isCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isCreate" + stepNameCamel), false);
+    /**
+     * Generalized record action check, naming pattern: "isXxxYyy" where Xxx = action, Yyy = record type (step name).
+     */
+    static boolean isActionRecordRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        if ("new".equalsIgnoreCase(actionNameCamel)) {
+            return isNewRecordRequest(params, recordTypeCamel);
+        } else {
+            return UtilMisc.booleanValueVersatile(params.get("is" + actionNameCamel + recordTypeCamel), false);
+        }
     }
     
-    static boolean isFailedCreateRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isCreateRecordRequest(params, stepNameCamel) && isEventError(params);
+    static boolean isActionRecordSuccessRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && !isEventError(params);
     }
     
-    static boolean isDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return UtilMisc.booleanValueVersatile(params.get("isDelete" + stepNameCamel), false);
+    static boolean isActionRecordFailedRequest(Map<String, Object> params, String actionNameCamel, String recordTypeCamel) {
+        return isActionRecordRequest(params, actionNameCamel, recordTypeCamel) && isEventError(params);
     }
     
-    static boolean isSuccessDeleteRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isDeleteRecordRequest(params, stepNameCamel) && !isEventError(params);
+    static boolean isCreateRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isCreate" + recordTypeCamel), false);
+    }
+    
+    static boolean isCreateRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isCreateRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isCreateRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isCreateRecordRequest(params, recordTypeCamel) && isEventError(params);
+    }
+    
+    static boolean isDeleteRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isDelete" + recordTypeCamel), false);
+    }
+    
+    static boolean isDeleteRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isDeleteRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isDeleteRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isDeleteRecordRequest(params, recordTypeCamel) && isEventError(params);
+    }
+    
+    static boolean isAddRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return UtilMisc.booleanValueVersatile(params.get("isAdd" + recordTypeCamel), false);
+    }
+    
+    static boolean isAddRecordSuccessRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isAddRecordRequest(params, recordTypeCamel) && !isEventError(params);
+    }
+    
+    static boolean isAddRecordFailedRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isAddRecordRequest(params, recordTypeCamel) && isEventError(params);
     }
     
     // Aggregate/high-level states
@@ -614,21 +687,22 @@ public abstract class SetupDataUtil {
      * isCreateXxx: passed with form submit
      * isDeleteXxx: passed with delete form submit
      */
-    static boolean isUnspecificRecordRequest(Map<String, Object> params, String stepNameCamel) {
+    static boolean isUnspecificRecordRequest(Map<String, Object> params, String recordTypeCamel) {
         //stepName = stepName.substring(0, 1).toUpperCase() + stepName.substring(1);
         
         // SPECIAL: this can be used internally to override
-        Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + stepNameCamel));
+        Boolean unspecific = UtilMisc.booleanValue(params.get("unspecReq" + recordTypeCamel));
         if (unspecific != null) return unspecific;
         
-        return isNewRecordRequest(params, stepNameCamel) || 
-                isFailedCreateRecordRequest(params, stepNameCamel) || 
-                isSuccessDeleteRecordRequest(params, stepNameCamel);
+        return isNewRecordRequest(params, recordTypeCamel) || 
+                isCreateRecordFailedRequest(params, recordTypeCamel) || 
+                isDeleteRecordSuccessRequest(params, recordTypeCamel) ||
+                isAddRecordFailedRequest(params, recordTypeCamel);
     }
     
-    static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String stepNameCamel) {
-        return isNewRecordRequest(params, stepNameCamel) || 
-                isFailedCreateRecordRequest(params, stepNameCamel);
+    static boolean isEffectiveNewRecordRequest(Map<String, Object> params, String recordTypeCamel) {
+        return isNewRecordRequest(params, recordTypeCamel) || 
+                isCreateRecordFailedRequest(params, recordTypeCamel);
     }
     
     

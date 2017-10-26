@@ -4,7 +4,7 @@
 <hr/>
 
 <#assign htmlSectionTitle>${uiLabelMap.CommonOverview}<#rt/>
-  <#lt/> (<@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(partyId!)}" text=uiLabelMap.CommonManage/>)</#assign>
+  <#lt/> (<@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(userPartyId!)}" text=uiLabelMap.CommonManage/>)</#assign>
 <#assign sectionTitle = wrapAsRaw({"htmlmarkup":htmlSectionTitle, "raw":rawLabel('PartyContactInformation')})>
       
 <@section title=sectionTitle relHeadingLevel=+1>
@@ -14,7 +14,7 @@
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${rawString(partyId)}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${rawString(userPartyId)}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </@menu>
   </#macro>
   <@section title=uiLabelMap.PartyContactInformation menuContent=menuContent>

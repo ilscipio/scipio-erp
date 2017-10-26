@@ -188,4 +188,9 @@
         <value xml:lang="en">An error occurred during the query. Please review your query; if the error persists, please contact our support.</value>
         <value xml:lang="de">Bei der Abfrage ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Anfrage. Wenn der Fehler weiterhin besteht, wenden Sie sich bitte an unseren Support.</value>
     </property>
+    <property key="CommonMissingFieldWithName">
+        <value xml:lang="de">Fehlendes Feld: ${missingFieldName}</value>
+        <value xml:lang="en">Missing field: ${missingFieldName}</value>
+        <value xml:lang="fr">Champ manquant: ${missingFieldName}</value>
+    </property>
 </resource>

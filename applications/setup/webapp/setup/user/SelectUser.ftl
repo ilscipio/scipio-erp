@@ -40,7 +40,7 @@
 
   <@form method="get" action=makeOfbizUrl("setupUser") id="setupUser-selectUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
-    <@defaultWizardFormFields exclude=[]/>
+    <@defaultWizardFormFields exclude=["userPartyId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
   
     <@field type="general" label=uiLabelMap.SetupSelectUserForSetup>
@@ -65,7 +65,7 @@
   
   <@form method="get" action=makeOfbizUrl("setupWizard") id="setupUser-selectContinueUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
-    <@defaultWizardFormFields exclude=[]/>
+    <@defaultWizardFormFields exclude=["userPartyId"]/>
     <#--<@field type="hidden" name="setupContinue" value="Y"/> not needed yet-->
   
     <@field type="hidden" name="userPartyId" value=""/>
@@ -73,7 +73,7 @@
   
   <@form method="get" action=makeOfbizUrl("setupUser") id="setupUser-newUser-form">
     <#-- TODO: REVIEW: may make a difference later -->
-    <@defaultWizardFormFields exclude=[]/>    
+    <@defaultWizardFormFields exclude=["userPartyId"]/>    
     <@field type="hidden" name="newUser" value="Y"/>
   </@form>
   

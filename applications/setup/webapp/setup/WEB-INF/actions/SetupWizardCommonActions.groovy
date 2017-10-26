@@ -41,6 +41,7 @@ if (context.setupWizardActionsRun != true) {
     def setupStepSkippable = false;
     def nextSetupStep = null;
     def nextAvailSetupStep = null;
+    def isSetupEventError = false;
     
     try {
         setupWorker = SetupWorker.getWorker(request);
@@ -75,6 +76,8 @@ if (context.setupWizardActionsRun != true) {
             nextAvailSetupStep = setupStepState.getNextAccessibleStep();
             setupStepSkippable = setupStepState.isSkippableEffective();
         }
+        
+        isSetupEventError = setupWorker.isSetupEventError();
         
         if (context.debugMode) Debug.logInfo("Setup: Step states: " + context.setupStepStates, module);
     } catch(Exception e) {
@@ -118,6 +121,8 @@ if (context.setupWizardActionsRun != true) {
     
     context.defaultCountryGeoId = EntityUtilProperties.getPropertyValue("general", "country.geo.id.default", "USA", delegator);
     context.defaultSystemCurrencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
+    
+    context.isSetupEventError = isSetupEventError;
     
     context.setupWizardActionsRun = true;
 }

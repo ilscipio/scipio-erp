@@ -8,6 +8,8 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreePlugin.JsTreeTypesPlugin.JsTreeType
 
+final module = "ViewCatalogTree.groovy";
+
 productStoreId = (context.productStoreId) ? context.productStoreId : parameters.productStoreId;
 if (!productStoreId) {
     Debug.logError("No product store Id found.", "");

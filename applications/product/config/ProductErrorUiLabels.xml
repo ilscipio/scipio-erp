@@ -1340,10 +1340,30 @@
         <value xml:lang="zh">缺少必须的变型产品标识， 请为新的变型产品输入一个标识。</value>
         <value xml:lang="zh_TW">缺少必須的變型產品識別, 請為新的變型產品輸入一個識別.</value>
     </property>
-    <!-- TODO: localize -->
+    <!-- SCIPIO: TODO: localize -->
     <property key="productevents.productstore_already_exists_for_id">
         <value xml:lang="de">Der Produktspeicher existiert bereits mit ID: ${productStoreId}</value>
         <value xml:lang="en">Product store already exists with ID: ${productStoreId}</value>
         <value xml:lang="fr">Le magasin de produits existe déjà avec ID: ${productStoreId}</value>
+    </property>
+    <property key="productservices.could_not_create_catalog_store_assoc_association_exists">
+        <value xml:lang="de">Die Zuordnung zum Zielspeicher für den Katalog konnte nicht erstellt werden (Zuordnung ist bereits vorhanden).</value>
+        <value xml:lang="en">Could not create association to the target store for the catalog (association already exists).</value>
+        <value xml:lang="fr">Impossible de créer une association au magasin cible pour le catalogue (l'association existe déjà).</value>
+    </property>
+    <property key="productservices.could_not_create_catalog_category_assoc_association_exists">
+        <value xml:lang="de">Die Zuordnung zum Zielkatalog für die Kategorie konnte nicht erstellt werden (Zuordnung ist bereits vorhanden).</value>
+        <value xml:lang="en">Could not create association to the target catalog for the category (association already exists).</value>
+        <value xml:lang="fr">Impossible de créer une association au catalogue cible pour la catégorie (l'association existe déjà).</value>
+    </property>
+    <property key="productservices.could_not_create_category_category_assoc_association_exists">
+        <value xml:lang="de">Eine Zuordnung zur Zielkategorie für die Kategorie konnte nicht erstellt werden (Zuordnung ist bereits vorhanden).</value>
+        <value xml:lang="en">Could not create association to the target category for the category (association already exists).</value>
+        <value xml:lang="fr">Impossible de créer une association avec la catégorie cible de la catégorie (l'association existe déjà).</value>
+    </property>
+    <property key="productservices.could_not_create_product_category_assoc_association_exists">
+        <value xml:lang="de">Konnte keine Zuordnung zur Zielkategorie für das Produkt erstellen (Assoziation existiert bereits).</value>
+        <value xml:lang="en">Could not create association to the target category for the product (association already exists).</value>
+        <value xml:lang="fr">Impossible de créer une association avec la catégorie cible du produit (l'association existe déjà).</value>
     </property>
 </resource>

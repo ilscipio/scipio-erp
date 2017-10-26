@@ -67,25 +67,28 @@ public abstract class CategoryServices {
                 GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
                 List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
                         .filterByDate().queryList();
-                if (includeEmptyTop || UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                boolean hasCategories = UtilValidate.isNotEmpty(prodCatalogCategories);
+                if (includeEmptyTop || hasCategories) {
     
                     JsTreeDataItem dataItem = null;
                     if (library.equals("jsTree")) {
-                        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+                        String nodeId = "catalog_" + prodCatalogId;
+                        if (hasCategories) {
                             resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
-                                    prodCatalogCategories, library, prodCatalogId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
+                                    prodCatalogCategories, library, nodeId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
                         }
                         Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                         if (state != null) {
                             effState.putAll(state);
                         }
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
+                        dataItem = new JsTreeDataItem(nodeId, prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
                                 null);
                         dataItem.setType("catalog");
                         if (includeCategoryData) {
                             dataItem.put("prodCatalogEntity", catalog);
                             dataItem.put("productStoreCatalogEntity", productStoreCatalog);
                         }
+                        dataItem.put("isParent", hasCategories);
                     }
     
                     if (UtilValidate.isNotEmpty(dataItem))

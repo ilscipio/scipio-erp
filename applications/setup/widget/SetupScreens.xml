@@ -361,9 +361,9 @@
 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/organization/SetupOrganization.groovy"/>                
 
-                <set field="isCreate" type="Boolean" value="${context.party == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.party == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
                 <set field="submitFormId" value="EditOrganization"/>
                 
                 <if>
@@ -455,14 +455,12 @@
             <actions>
                 <set field="setupStep" value="user"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
-                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->               
-
-
+                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
                 
-                <set field="isCreate" type="Boolean" value="${context.userParty == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateUser' : 'setupCreateUser'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.userParty == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateUser' : 'setupCreateUser'}" />
                 <set field="submitFormId" value="EditUser"/>
                 
                 <if>
@@ -517,6 +515,7 @@
                                         <set field="partyInfoViewOnly" type="Boolean" value="false"/>
                                         <set field="partyInfoSimpleFuncOnly" type="Boolean" value="true"/>
                                         <set field="partyContactInfoUseSection" type="Boolean" value="false"/>
+                                        <set field="parameters.partyId" from-field="userPartyId" />
                                     </actions>
                                     <widgets>
                                         <platform-specific>
@@ -534,9 +533,12 @@
     <screen name="SelectUser">
         <section>
             <actions>
-                <entity-condition entity-name="PartyRelationship" list="parties">
-                    <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>
-                    <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                <entity-condition entity-name="PartyRelationship" list="parties" distinct="true" >
+                    <condition-list>
+                        <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>  
+                        <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                    </condition-list>
+                    <select-field field-name="partyIdTo"/>                          
                 </entity-condition>
             </actions>
             <widgets>
@@ -556,9 +558,9 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>                
                 
-                <set field="isCreate" type="Boolean" value="${context.accounting == null}"/><!-- FIXME -->
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PartyChangeParty' : 'PartyNewUser'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.topGlAccountId == null}"/><!-- FIXME -->
+                <!-- <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" /> -->
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
                 <set field="submitFormId" value="EditAccounting"/>
             </actions>
             <widgets>
@@ -569,9 +571,32 @@
                                 <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
-                                </platform-specific>
+                                <screenlet>
+                                    <include-screen name="SelectGL"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <!-- don't show tree until at least one topGlAccountId created -->
+                                        <not><if-empty field="glAccountList"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-screen name="EditGLTree"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <if-true field="glSelected"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>                                            
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.AccountingCreatePermissionError}</label>
@@ -580,6 +605,40 @@
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen>
+    <screen name="SelectGL">
+        <section>
+            <actions>
+                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SelectGL.groovy" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/accounting/SelectGL.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditGLTree">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+            		 <condition>
+		                <and>
+		                    <not><if-empty field="topGlAccountId"/></not>
+		                    <not><if-empty field="accountMaps"/></not>
+		                </and>
+		            </condition>
+		            <widgets>
+						<screenlet>                       
+						    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
         </section>
     </screen>
     
@@ -594,9 +653,9 @@
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>-->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/facility/SetupFacility.groovy"/>
                 
-                <set field="isCreate" type="Boolean" value="${context.facility == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'ProductEditFacility' : 'ProductNewFacility'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.facility == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'ProductEditFacility' : 'ProductNewFacility'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
                 <set field="submitFormId" value="EditFacility"/>
             </actions>
             <widgets>
@@ -636,33 +695,27 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
                 
                 <script lang="groovy"><![CDATA[
-                    def setupWorker = context.setupWorker;
-                    def targetRecord;
-                    def isCreate;
-                    def titleProperty = 'ProductEditCatalog'; // forms have their own subtitles
-                    def target;
-                    def submitFormId;
-                    // WARN: "category" is not a real step name to pass to worker, works for these calls only...
-                    if (!setupWorker?.isSuccessDeleteRecordRequest("category") && 
-                        (context.productCategoryAndAssoc != null || setupWorker?.isEffectiveNewRecordRequest("category"))) {
-                        targetRecord = "category"
-                        isCreate = (context.productCategoryAndAssoc == null);
-                        target = !isCreate ? 'setupUpdateCategory' : 'setupCreateCategory';
-                        submitFormId = !isCreate ? 'EditCategory' : 'NewCategory'
-                    } else {
-                        targetRecord = "catalog"
-                        isCreate = (context.prodCatalogAndStoreAssoc == null);
-                        if (isCreate) titleProperty = 'ProductNewCatalog';
-                        target = !isCreate ? 'setupUpdateCatalog' : 'setupCreateCatalog';
-                        submitFormId = !isCreate ? 'EditCatalog' : 'NewCatalog';
-                    }
-                    context.targetRecord = targetRecord;
-                    context.isCreate = isCreate;
-                    context.titleProperty = titleProperty;
-                    context.target = target;
-                    context.submitFormId = submitFormId;
+                    targetRecordAction = context.targetRecordAction;
+                    submitFormIdMap = [
+                        "catalog-new": "NewCatalog",
+                        "catalog-edit": "EditCatalog",
+                        "catalog-add": "AddCatalog",
+                        "category-new": "NewCategory",
+                        "category-edit": "EditCategory",
+                        "category-add": "AddCategory",
+                        "product-new": "NewProduct",
+                        "product-edit": "EditProduct",
+                        "product-add": "AddProduct",
+                    ];
+                    context.submitFormIdMap = submitFormIdMap;
+                    context.titleProperty = (targetRecordAction == "catalog-new" ) ? "ProductNewCatalog" : "ProductEditCatalog"; // forms have their own section title, so not bothering with this
+                    context.submitFormId = submitFormIdMap[targetRecordAction];
                 ]]></script>
-                <set field="newCatalogLinkHref" value="javascript:jQuery('#setupCatalog-newCatalog').submit();void(0);"/>
+                <set field="newCatalogFormId" value="setupCatalog-newCatalog"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
+                
+                <set field="setupCatalogForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupCatalogForms.name" value="SetupCatalogForms"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -677,19 +730,17 @@
                                         <!-- don't show tree until at least one catalog created -->
                                         <not><if-empty field="productStoreCatalogList"/></not>
                                     </condition>
+                                    <actions>
+                                    </actions>
                                     <widgets>
                                         <screenlet>
                                             <include-screen name="EditCatalogTree"/>
                                         </screenlet>
                                     </widgets>
+                                    <fail-widgets>
+                                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                                    </fail-widgets>
                                 </section>
-                                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
-                                </platform-specific>
-                                <platform-specific>
-                                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
-                                </platform-specific>
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
@@ -701,14 +752,14 @@
                             <html>
                                 <html-template><![CDATA[
                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id="setupCatalog-newCatalog">
+                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id=newCatalogFormId>
                                     <@defaultWizardFormFields exclude=["prodCatalogId"]/>
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>
                                   </@form>
                                 <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
-                                    <#if !isCreate>
+                                    <#if !isCreateForm>
                                       <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
@@ -735,41 +786,45 @@
             </widgets>
         </section>
     </screen>
+    <screen name="SetupCatalogForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProduct.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditCatalogTree">
         <section>
             <actions>
-                <!-- FIXME?: setupEctMaxProductsPerCat is a session-based control for the time being, breaking convention
-                    with rest of setup -->
-                <script lang="groovy"><![CDATA[
-                    import org.ofbiz.base.util.*;
-                    ectMaxProductsPerCat = context.ectMaxProductsPerCat;
-                    if (ectMaxProductsPerCat == null) {
-                        try {
-                            ectMaxProductsPerCat = parameters.setupEctMaxProductsPerCat as Integer;
-                        } catch(Exception e) {
-                        }
-                        if (ectMaxProductsPerCat != null) {
-                            session.setAttribute("setupEctMaxProductsPerCat", ectMaxProductsPerCat);
-                        }
-                    }
-                    if (ectMaxProductsPerCat == null) ectMaxProductsPerCat = 0; // DEFAULT ZERO: fastest and least confusing
-                    context.ectMaxProductsPerCat = ectMaxProductsPerCat;
-                ]]></script>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTreeCommon.groovy"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTree.groovy"/>
             </actions>
             <widgets>
                 <section>
                     <condition>
-                        <not>
-                            <if-empty field="productStoreId"/>
-                            <if-empty field="treeMenuData"/>
-                        </not>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
                     </condition>
                     <widgets>
                        <screenlet>
                            <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
                        </screenlet>     
-                   </widgets>
+                    </widgets>
+                    <fail-widgets>
+                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                    </fail-widgets>
                 </section>
             </widgets>
         </section>
@@ -808,9 +863,9 @@
                 
                 <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                  
-                <set field="isCreate" type="Boolean" value="${context.productStore == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateStore' : 'setupCreateStore'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.productStore == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateStore' : 'setupCreateStore'}" />
                 <set field="submitFormId" value="EditStore"/>
             </actions>
             <widgets>
@@ -859,9 +914,9 @@
                 - ->
                 <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
                 
-                <set field="isCreate" type="Boolean" value="${context.webSite == null}"/>
-                <set field="titleProperty" value="${groovy: !isCreate ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
-                <set field="target" value="${groovy: !isCreate ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
+                <set field="isCreateForm" type="Boolean" value="${context.webSite == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
                 <set field="submitFormId" value="EditWebsite"/>
             </actions>
             <widgets>

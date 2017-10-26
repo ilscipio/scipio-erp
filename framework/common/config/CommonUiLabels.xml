@@ -16427,9 +16427,29 @@
         <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
     </property>
+    <property key="CommonConfirmDeleteRecordPermanentParam">
+        <value xml:lang="en">You are about to delete ${recordName} permanently. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    </property>
     <property key="CommonConfirmDeleteRecordAssocPermanent">
         <value xml:lang="en">You are about to remove the record association. The record itself will remain in the system. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei, die Datensatzzuordnung zu entfernen. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
+    </property>
+    <property key="CommonConfirmDeleteRecordAssocPermanentParam">
+        <value xml:lang="en">You are about to remove ${recordName} association to ${toRecordName}. The record itself will remain in the system. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, die Zuordnung von ${recordName} zu ${toRecordName}. Der Datensatz selbst bleibt im System. Möchtest du fortfahren?</value>
+    </property>
+    <property key="CommonConfirmCopyMoveRecordAssocParam">
+        <value xml:lang="en">Are you sure you want to copy/move the record association for ${recordName} to ${toRecordName}?</value>
+        <value xml:lang="de">Sind Sie sicher, dass Sie die Datensatzzuordnung für ${recordName} in ${toRecordName} kopieren / verschieben möchten?</value>
+    </property>
+    <property key="CommonCannotDeleteRecordHasChildren">
+        <value xml:lang="en">This record cannot be removed, because it still has child record associations in the system.</value>
+        <value xml:lang="de">Dieser Datensatz kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Assoziationen enthält.</value>
+    </property>
+    <property key="CommonCannotDeleteRecordHasChildrenParam">
+        <value xml:lang="en">The record ${recordName} cannot be removed, because it still has child record associations in the system.</value>
+        <value xml:lang="de">Der Datensatz ${recordName} kann nicht entfernt werden, da er im System noch Assoziationen zu untergeordneten Datensätzen enthält.</value>
     </property>
     <property key="CommonDisplayOptions">
         <value xml:lang="en">Display Options</value>
@@ -16438,5 +16458,13 @@
     <property key="CommonRemoveAssoc">
         <value xml:lang="en">Remove Assoc</value>
         <value xml:lang="de">Assoc entfernen</value>
+    </property>
+    <property key="CommonMove">
+        <value xml:lang="en">Move</value>
+        <value xml:lang="de">Bewegung</value>
+    </property>
+    <property key="CommonLocalizedFields">
+        <value xml:lang="en">Localized Fields</value>
+        <value xml:lang="de">Lokalisierte Felder</value>
     </property>
 </resource>

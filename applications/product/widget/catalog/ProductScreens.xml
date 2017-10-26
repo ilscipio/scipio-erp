@@ -958,6 +958,14 @@ under the License.
     <screen name="EditProductContentContent">
         <section>
             <actions>
+                <!-- SCIPIO: 2017-10-26: simple content form submits mainContentId instead of contentId;
+                    if don't recognize it, form browsing unpredictable -->
+                <script lang="groovy"><![CDATA[
+                    if (parameters.mainContentId) {
+                        parameters.contentId = parameters.mainContentId;
+                    }
+                ]]></script>
+            
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditProductContent"/>
                 <set field="activeSubMenuItem" value="EditProductContent"/>
@@ -978,9 +986,15 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleListAssociatedContentInfos}">
                             <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
-                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
+                        <!-- SCIPIO: this fails if the main content not yet created -->
+                        <section>
+                            <condition><not><if-empty field="content.contentId"/></not></condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
+                                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

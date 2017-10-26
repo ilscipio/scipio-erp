@@ -21,11 +21,11 @@ under the License.
 
 
 <#assign defaultParams = {
-	<#--"productStoreId": productStoreId! // not avail/crash -->
+	
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":userParty!true, <#-- NOTE: must fallback with boolean true -->
+    "record":true, <#-- NOTE: must fallback with boolean true -->
     "defaults":defaultParams,
     "strictRecord":true <#-- TODO: REMOVE (debugging) -->
 })>
@@ -34,67 +34,56 @@ under the License.
 
 <@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
 
-<@form method="post" action=makeOfbizUrl(target) id="NewAccounting" name="NewAccounting">
-    <@defaultWizardFormFields/>
-  
-  	<@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
+<@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
+    <@defaultWizardFormFields exclude=[] />
+    <@field type="hidden" name="isCreateGl" value=(topAccountGlId??)?string("N","Y")/> 
+    
+    <#assign fieldsRequired = true>
+    
+    <#if topGlAccount??>
+        <@field type="display" name="topGlAccountId" value=(topGlAccount.glAccountId!) label=uiLabelMap.CommonId />
+    <#else>
+        <@field type="text" name="topGlAccountId" value=(params.glAccountId!) label=uiLabelMap.CommonId />    
+    </#if>
+    
+    <@field type="text" name="accountCode" value=(params.accountCode!) label=uiLabelMap.CommonCode />
+    <@field type="text" name="accountName" value=(params.glAccountId!) label=uiLabelMap.CommonName />
+    
+    <@field type="select" name="glAccountTypeId">
+      <option value="" disabled="disabled"></option>
+      <#list glAccountTypes as glAccountType>
+        <#assign selected = (rawString(params.glAccountTypeId!) == (glAccountType.glAccountTypeId!))>
+        <option value="${glAccountType.glAccountTypeId!}"<#if selected> selected="selected"</#if>>${glAccountType.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="select" name="glAccountClassId">
+      <option value="" disabled="disabled"></option>
+      <#list glAccountClasses as glAccountClass>
+        <#assign selected = (rawString(params.glAccountClassId!) == (glAccountClass.glAccountClassId!))>
+        <option value="${glAccountClass.glAccountClassId!}"<#if selected> selected="selected"</#if>>${glAccountClass.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="select" name="glResourceTypeId">
+      <option value="" disabled="disabled"></option>
+      <#list glResourceTypes as glResourceType>
+        <#assign selected = (rawString(params.glResourceTypeId!) == (glResourceType.glResourceTypeId!))>
+        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
+      </#list>
+    </@field>
+    
+    <@field type="textarea" name="description" cols="30" rows="3" value=(params.description!) required=false label=uiLabelMap.CommonDescription />
+<#-- 
+       "parentGlAccountId" title="${uiLabelMap.CommonParent}">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+--> 
 
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingTaxAuthority}</legend>
-        		<@field name="taxAuthPartyId" label=uiLabelMap.CommonParty required=true />
-        		<@field name="taxAuthGeoId" label=uiLabelMap.CommonGeo />
-            
-		        <#-- <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority==null&amp;&amp;taxAuthGeoId==null" required-field="true" position="2">
-		            <lookup target-form-name="LookupGeo"/>
-		        </field>
-		        <field  name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}" use-when="taxAuthority==null&amp;&amp;taxAuthGeoId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}:[${taxAuthGeoId}]">
-		            <lookup target-form-name="LookupGeo"/>
-		        </field> -->
-				<#-- 
-		        <field name="requireTaxIdForExemption" widget-style="+smallSelect">
-		            <drop-down no-current-selected-key="Y">
-		                <option key="Y" description="${uiLabelMap.CommonY}"/>
-		                <option key="N" description="${uiLabelMap.CommonN}"/>
-		            </drop-down>
-		        </field>
-		        <field name="includeTaxInPrice" widget-style="+smallSelect" position="2">
-		            <drop-down no-current-selected-key="N">
-		                <option key="Y" description="${uiLabelMap.CommonY}"/>
-		                <option key="N" description="${uiLabelMap.CommonN}"/>
-		            </drop-down>
-		        </field>
-		        <field name="taxIdFormatPattern" tooltip="${uiLabelMap.AccountingValidationPattern}"><text/></field>
-		         -->
-    	    
-    	  </fieldset>
-	  </@cell>
-	
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingTimePeriod}</legend>
-    	    
-    	  </fieldset>
-	  </@cell>
-	</@row>
-	
-	<@row>
-	  <@cell columns=6>
-    	  <fieldset>
-    	    <legend>${uiLabelMap.SetupAccountingPaymentGateway}</legend>
-    	    
-    	  </fieldset>
-	  </@cell>
-	
-	  <@cell columns=6>
-    	  <fieldset>    
-    	    <legend>${uiLabelMap.SetupAccountingGLAccountDefaults}</legend>
-    	        
-    	  </fieldset>
-	  </@cell>
-	</@row>
-	
-    <@field type="submit" title=uiLabelMap.CommonUpdate class="+${styles.link_run_sys} ${styles.action_update}"/>
+
 </@form>
 

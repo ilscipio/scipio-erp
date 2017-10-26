@@ -32066,4 +32066,105 @@
         <value xml:lang="en">Max products per category</value>
         <value xml:lang="de">Max Produkte pro Kategorie</value>
     </property>
+    <property key="ProductCatalogAndStoreAssocRemoved">
+        <value xml:lang="en">Catalog and store association successfully removed.</value>
+        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
+        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
+    </property>
+    <property key="ProductCatalogStoreAssocRemoved">
+        <value xml:lang="en">Catalog association successfully removed from store.</value>
+        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
+        <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
+    </property>
+    <property key="ProductNewSubCategory">
+        <value xml:lang="en">New Sub-Category</value>
+        <value xml:lang="de">Neue Unterkategorie</value>
+        <value xml:lang="fr">Nouvelle sous-catégorie</value>
+    </property>
+    <property key="ProductAddExistingCatalog">
+        <value xml:lang="en">Add Existing Catalog</value>
+        <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue existant</value>
+    </property>
+    <property key="ProductAddExistingCategory">
+        <value xml:lang="en">Add Existing Category</value>
+        <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie existante</value>
+    </property>
+    <property key="ProductAddExistingSubCategory">
+        <value xml:lang="en">Add Existing Sub-Category</value>
+        <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie existante</value>
+    </property>
+    <property key="ProductAddExistingProduct">
+        <value xml:lang="de">Bestehendes Produkt hinzufügen</value>
+        <value xml:lang="en">Add Existing Product</value>
+        <value xml:lang="fr">Ajouter un produit existant</value>
+    </property>
+    <property key="ProductAddCatalog">
+        <value xml:lang="en">Add Catalog</value>
+        <value xml:lang="de">Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue</value>
+    </property>
+    <property key="ProductAddCategory">
+        <value xml:lang="en">Add Category</value>
+        <value xml:lang="de">Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie</value>
+    </property>
+    <property key="ProductAddSubCategory">
+        <value xml:lang="en">Add Sub-Category</value>
+        <value xml:lang="de">Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie</value>
+    </property>
+    <property key="ProductDeleteCatalog">
+        <value xml:lang="en">Delete Catalog</value>
+        <value xml:lang="de">Katalog löschen</value>
+        <value xml:lang="fr">Supprimer le catalogue</value>
+    </property>
+    <property key="ProductDeleteCategory">
+        <value xml:lang="en">Delete Category</value>
+        <value xml:lang="de">Kategorie löschen</value>
+        <value xml:lang="fr">Supprimer la catégorie</value>
+    </property>
+    <property key="ProductDeleteProduct">
+        <value xml:lang="en">Delete Product</value>
+        <value xml:lang="de">Produkt löschen</value>
+        <value xml:lang="fr">Supprimer le produit</value>
+    </property>
+    <property key="ProductRemoveFromStore">
+        <value xml:lang="en">Remove from Store</value>
+        <value xml:lang="de">Aus dem Geschäft entfernen</value>
+        <value xml:lang="fr">Supprimer du magasin</value>
+    </property>
+    <property key="ProductRemoveFromCatalog">
+        <value xml:lang="en">Remove from Catalog</value>
+        <value xml:lang="de">Aus Katalog entfernen</value>
+        <value xml:lang="fr">Supprimer du catalogue</value>
+    </property>
+    <property key="ProductRemoveFromCategory">
+        <value xml:lang="en">Remove from Category</value>
+        <value xml:lang="de">Aus der Kategorie entfernen</value>
+        <value xml:lang="fr">Supprimer de la catégorie</value>
+    </property>
+    <property key="ProductManageCatalog">
+        <value xml:lang="en">Manage Catalog</value>
+        <value xml:lang="de">Katalog verwalten</value>
+        <value xml:lang="fr">Gérer le catalogue</value>
+    </property>
+    <property key="ProductManageCategory">
+        <value xml:lang="en">Manage Category</value>
+        <value xml:lang="de">Kategorie verwalten</value>
+        <value xml:lang="fr">Gérer la catégorie</value>
+    </property>
+    <property key="ProductManageProduct">
+        <value xml:lang="en">Manage Product</value>
+        <value xml:lang="de">Produkt verwalten</value>
+        <value xml:lang="fr">Gérer le produit</value>
+    </property>
+    <property key="ProductNonLocalizedContentFieldInfo">
+        <!-- SCIPIO: TODO?: REVIEW: in future this message may need to be changed if we decide to change content wrapper behavior... -->
+        <value xml:lang="en">Note: This is a non-localized field. If you use localized versions of this field, you may need to leave this field empty in order for the localized versions to take effect.</value>
+        <value xml:lang="de">Hinweis: Dies ist ein nicht lokalisiertes Feld. Wenn Sie lokalisierte Versionen dieses Feldes verwenden, müssen Sie dieses Feld möglicherweise leer lassen, damit die lokalisierten Versionen wirksam werden.</value>
+        <value xml:lang="fr">Remarque: Ceci est un champ non localisé. Si vous utilisez des versions localisées de ce champ, vous devrez peut-être laisser ce champ vide pour que les versions localisées prennent effet.</value>
+    </property>
 </resource>

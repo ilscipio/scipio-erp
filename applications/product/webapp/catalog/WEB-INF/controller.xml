@@ -730,7 +730,7 @@ under the License.
     <request-map uri="createSimpleTextContentForAlternateLocale">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSimpleTextContentForAlternateLocale"/>
-        <response name="success" type="view" value="EditProductContent"/>
+        <response name="success" type="view" value="EditProductContentContent"/><!-- SCIPIO: after update, return to same screen otherwise can't see result value="EditProductContent" -->
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="addAdditionalImageContentForProduct">

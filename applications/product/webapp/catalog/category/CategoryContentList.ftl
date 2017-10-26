@@ -15,7 +15,7 @@
                     <@th>${uiLabelMap.ProductContent}</@th>
                     <@th>${uiLabelMap.ProductType}</@th>
                     <@th>${uiLabelMap.CommonFrom}</@th>
-                    <@th>${uiLabelMap.CommonUpdate}</@th>
+                    <@th>${uiLabelMap.CommonEdit}</@th>
                     <@th>${uiLabelMap.CommonDelete}</@th>
                 </@tr>
             </@thead>
@@ -32,12 +32,12 @@
                         <@td>${productCategoryContentType.description}</@td>
                         <@td>${productCategoryContent.fromDate?string("yyyy-MM-dd")}</@td>
                         <@td>
-                            <form id="UpdateCategoryContentAssoc_${productCategoryContent_index}" name="UpdateCategoryContentAssoc_${productCategoryContent_index}" method="post" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
+                            <form id="EditCategoryContentAssoc_${productCategoryContent_index}" name="EditCategoryContentAssoc_${productCategoryContent_index}" method="get" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
                                 <input name="productCategoryId" type="hidden" value="${parameters.productCategoryId}"/>
                                 <input name="contentId" type="hidden" value="${productCategoryContent.contentId}"/>
                                 <input name="prodCatContentTypeId" type="hidden" value="${productCategoryContent.prodCatContentTypeId}"/>
                                 <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate}"/>                                    
-                                <@field type="submit" submitType="link" href="javascript:document.UpdateCategoryContentAssoc_${productCategoryContent_index}.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>
+                                <@field type="submit" submitType="link" href="javascript:document.EditCategoryContentAssoc_${productCategoryContent_index}.submit();" text=uiLabelMap.CommonEdit class="${styles.link_run_sys} ${styles.action_update}"/>
                             </form>
                         </@td>
                         <@td>

@@ -32101,6 +32101,31 @@
         <value xml:lang="de">Kategorie hinzufügen</value>
         <value xml:lang="fr">Ajouter une catégorie</value>
     </property>
+    <property key="ProductDeleteCatalog">
+        <value xml:lang="en">Delete Catalog</value>
+        <value xml:lang="de">Katalog löschen</value>
+        <value xml:lang="fr">Supprimer le catalogue</value>
+    </property>
+    <property key="ProductDeleteCategory">
+        <value xml:lang="en">Delete Category</value>
+        <value xml:lang="de">Kategorie löschen</value>
+        <value xml:lang="fr">Supprimer la catégorie</value>
+    </property>
+    <property key="ProductDeleteProduct">
+        <value xml:lang="en">Delete Product</value>
+        <value xml:lang="de">Produkt löschen</value>
+        <value xml:lang="fr">Supprimer le produit</value>
+    </property>
+    <property key="ProductRemoveFromCatalog">
+        <value xml:lang="en">Remove from Catalog</value>
+        <value xml:lang="de">Aus Katalog entfernen</value>
+        <value xml:lang="fr">Supprimer du catalogue</value>
+    </property>
+    <property key="ProductRemoveFromCategory">
+        <value xml:lang="en">Remove from Category</value>
+        <value xml:lang="de">Aus der Kategorie entfernen</value>
+        <value xml:lang="fr">Supprimer de la catégorie</value>
+    </property>
     <property key="ProductNonLocalizedContentFieldInfo">
         <!-- SCIPIO: TODO?: REVIEW: in future this message may need to be changed if we decide to change content wrapper behavior... -->
         <value xml:lang="en">Note: This is a non-localized field. If you use localized versions of this field, you may need to leave this field empty in order for the localized versions to take effect.</value>

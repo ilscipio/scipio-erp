@@ -623,21 +623,39 @@
         <section>
             <actions>
                 <!-- <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/> -->
-                <set field="accountMap" from-field="glAccountList"  />
+                <set field="accountMaps" from-field="glAccountList" type="List"  />
             </actions>
-            <condition>
-                <and>
-                    <not><if-empty field="topGlAccountId"/></not>
-                    <not><if-empty field="accountMap"/></not>
-                </and>
-            </condition>
             <widgets>
-                
-				<screenlet>                       
-				    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
-				</screenlet>     
-                 
-            </widgets>
+            	<section>
+            		 <condition>
+		                <and>
+		                    <not><if-empty field="topGlAccountId"/></not>
+		                    <not><if-empty field="accountMaps"/></not>
+		                </and>
+		            </condition>
+		            <widgets>
+						<screenlet>                       
+						    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+		            <fail-widgets>            
+		            	<section>
+			            	<actions>			            		
+				                <script lang="groovy"><![CDATA[
+				                    import org.ofbiz.base.util.Debug
+				                    import org.ofbiz.base.util.UtilValidate
+				                    
+				                    topGlAccountId = context.topGlAccountId;
+				                    accountMap = context.accountMap;
+				                    glAccountList = context.glAccountList;
+				                    
+				                   	Debug.log("topGlAccountId ==========> " + UtilValidate.isNotEmpty(topGlAccountId) + "   accountMap ============> " + UtilValidate.isNotEmpty(accountMap) + "   glAccountList ============> " + UtilValidate.isNotEmpty(glAccountList));
+				                ]]></script>			            	
+			            	</actions>
+		            	</section>
+		            </fail-widgets>
+            	</section>
+            </widgets>           
         </section>
     </screen>
     

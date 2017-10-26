@@ -72,3 +72,4 @@ final module = "EditGlTree.groovy";
 
 Debug.log("glAccountList   ==================> " + UtilValidate.isNotEmpty(context.glAccountList));
 Debug.log("topGlAccountId  ==================> " + UtilValidate.isNotEmpty(context.topGlAccountId));
+context.accountMap = context.glAccountList;

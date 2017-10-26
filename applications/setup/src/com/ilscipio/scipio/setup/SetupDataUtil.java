@@ -263,7 +263,8 @@ public abstract class SetupDataUtil {
                 GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
                 if (topGlAccount != null) {
                     List<GenericValue> glAccountList = FastList.newInstance();
-                    getAllChildGlAccounts(topGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false), glAccountList);
+                    glAccountList.add(topGlAccount);
+                    getAllChildGlAccounts(glAccountList, glAccountList);                    
                     result.put("glAccountList", glAccountList);
                 } else {
                     Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);

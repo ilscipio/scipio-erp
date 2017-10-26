@@ -790,7 +790,7 @@
         </field>
     </form>
     <!-- SCIPIO: NEW simple alt-locale list + update form -->
-    <form name="ListSimpleTextContentForAlternateLocaleCore" type="list" list-name="contentAssocList" list-entry-name="contentAssoc">
+    <form name="ListSimpleTextContentForAlternateLocaleCore" type="multi" separate-columns="true" use-row-submit="true" list-name="contentAssocList" list-entry-name="contentAssoc">
         <actions>
             <entity-and entity-name="ContentAssoc" list="contentAssocList" filter-by-date="true">
                 <field-map field-name="contentId" from-field="contentId" />
@@ -811,14 +811,15 @@
         <field name="localeString" map-name="content"><display description="${content.localeString}"/></field>
         <field name="text" map-name="electronicText" entry-name="textData"><text/></field>
     </form>
-    <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" target="updateSimpleTextContentForAlternateLocale">
-        <!-- Product Content Assoc fields, for browsing purposes -->
+    <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" 
+        target="updateSimpleTextContentForAlternateLocale?productId=${productContent.productId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}&amp;contentId=${contentId}">
+        <!-- Product Content Assoc fields, for browsing purposes
         <field name="productId" map-name="productContent"><hidden/></field>
         <field name="productContentTypeId" map-name="productContent"><hidden/></field>
         <field name="fromDate" map-name="productContent"><hidden/></field>
-
+        -->
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
-            <submit button-type="button"/>
+            <submit button-type="text-link"/>
         </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteSimpleTextContentForAlternateLocale" description="${uiLabelMap.CommonDelete}"

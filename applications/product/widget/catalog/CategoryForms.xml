@@ -382,14 +382,14 @@ under the License.
 
     <!-- SCIPIO: new -->
     <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" extends-resource="component://product/widget/catalog/ProductForms.xml" 
-        target="updateSimpleTextContentForAlternateLocaleInCategory">
-        <!-- Product Content Assoc fields, for browsing purposes -->
+        target="updateSimpleTextContentForAlternateLocaleInCategory?productCategoryId=${productCategoryContent.productCategoryId}&amp;prodCatContentTypeId=${productCategoryContent.prodCatContentTypeId}&amp;fromDate=${productCategoryContent.fromDate}&amp;contentId=${contentId}">
+        <!-- Product Content Assoc fields, for browsing purposes
         <field name="productCategoryId" map-name="productCategoryContent"><hidden/></field>
         <field name="prodCatContentTypeId" map-name="productCategoryContent"><hidden/></field>
         <field name="fromDate" map-name="productCategoryContent"><hidden/></field>
-        
+        -->
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
-            <submit button-type="button"/>
+            <submit button-type="text-link"/>
         </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteSimpleTextContentForAlternateLocaleInCategory" description="${uiLabelMap.CommonDelete}"

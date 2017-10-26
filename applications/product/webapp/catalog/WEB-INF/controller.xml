@@ -647,7 +647,7 @@ under the License.
     </request-map>
     <request-map uri="updateSimpleTextContentForAlternateLocaleInCategory"><!-- SCIPIO: new request -->
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <event type="service-multi" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
         <response name="success" type="view" value="EditCategoryContent"/>
         <response name="error" type="view" value="EditCategoryContent"/>
     </request-map>
@@ -747,7 +747,7 @@ under the License.
     </request-map>
     <request-map uri="updateSimpleTextContentForAlternateLocale"><!-- SCIPIO: new request -->
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <event type="service-multi" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
         <response name="success" type="view" value="EditProductContentContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>

@@ -645,6 +645,18 @@ under the License.
         <response name="success" type="view" value="EditCategoryContent"/>
         <response name="error" type="view" value="EditCategoryContent"/><!-- SCIPIO: this is not a full page (anymore?): EditCategoryContentContent -->
     </request-map>
+    <request-map uri="updateSimpleTextContentForAlternateLocaleInCategory"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="deleteSimpleTextContentForAlternateLocaleInCategory"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
 
     <!-- ================ Product Content Assoc Requests ================= -->
     <request-map uri="EditProductContentContent">
@@ -731,6 +743,18 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSimpleTextContentForAlternateLocale"/>
         <response name="success" type="view" value="EditProductContentContent"/><!-- SCIPIO: after update, return to same screen otherwise can't see result value="EditProductContent" -->
+        <response name="error" type="view" value="EditProductContentContent"/>
+    </request-map>
+    <request-map uri="updateSimpleTextContentForAlternateLocale"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditProductContentContent"/>
+        <response name="error" type="view" value="EditProductContentContent"/>
+    </request-map>
+    <request-map uri="deleteSimpleTextContentForAlternateLocale"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditProductContentContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="addAdditionalImageContentForProduct">

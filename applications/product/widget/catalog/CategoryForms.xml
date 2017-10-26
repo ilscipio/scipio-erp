@@ -375,13 +375,32 @@ under the License.
         <field name="localeString"><text/></field>
         <field name="text"><text/></field>
         <!-- SCIPIO: 2017-10-26: Added Product-specific hidden fields to preserve browsing. WARN: depends on screen -->
-        <field name="fromDate">
-            <hidden />
-        </field>
-        <field name="prodCatContentTypeId">
-            <hidden />
-        </field>
+        <field name="prodCatContentTypeId" map-name="productCategoryContent"><hidden/></field>
+        <field name="fromDate" map-name="productCategoryContent"><hidden/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
+
+    <!-- SCIPIO: new -->
+    <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" extends-resource="component://product/widget/catalog/ProductForms.xml" 
+        target="updateSimpleTextContentForAlternateLocaleInCategory">
+        <!-- Product Content Assoc fields, for browsing purposes -->
+        <field name="productCategoryId" map-name="productCategoryContent"><hidden/></field>
+        <field name="prodCatContentTypeId" map-name="productCategoryContent"><hidden/></field>
+        <field name="fromDate" map-name="productCategoryContent"><hidden/></field>
+        
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteSimpleTextContentForAlternateLocaleInCategory" description="${uiLabelMap.CommonDelete}"
+                also-hidden="false" link-type="hidden-form">
+                <parameter param-name="mainContentId" from-field="contentAssoc.contentId"/>
+                <parameter param-name="contentId" from-field="contentAssoc.contentIdTo"/>
+                <parameter param-name="productCategoryId" from-field="productCategoryContent.productCategoryId"/>
+                <parameter param-name="prodCatContentTypeId" from-field="productCategoryContent.prodCatContentTypeId"/>
+                <parameter param-name="fromDate" from-field="productCategoryContent.fromDate"/>
+            </hyperlink>
+        </field>
     </form>
 
     <!-- ProductCategoryLink Forms-->

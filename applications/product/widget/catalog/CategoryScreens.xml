@@ -227,14 +227,41 @@ under the License.
                 <section>
                     <condition><not><if-empty field="content.contentId"/></not></condition>
                     <widgets>
-                        <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
-                             <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                         </screenlet>
-                         <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
-                             <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
-                         </screenlet>
+                        <include-screen name="EditAltLocaleSimpleTextContent"/>
+                        <!-- 
+                        <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        /screenlet>
+                        -->
+                        
+                        <!-- SCIPIO: TODO: REVIEW: somebody removed this list, but we do not have a full replacement for this form at this time, 
+                            only the new alt-locale content below, which only covers a portion of the possible assoc...
+                        <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos} (${uiLabelMap.CommonAll})">
+                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>-->
                     </widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: 2017-10-26: new widget to directly list and edit the alternate locale content, because ListAssociatedContentInfos form does badly -->
+    <screen name="EditAltLocaleSimpleTextContent">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="productCategoryContent"/></not>
+                    <not><if-empty field="productCategoryId"/></not>
+                    <not><if-empty field="contentId"/></not>
+                    <not><if-empty field="content.contentId"/></not>
+                </and>
+            </condition>
+            <actions>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                    <include-form name="ListSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

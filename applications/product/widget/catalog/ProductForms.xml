@@ -779,16 +779,59 @@
             <text />
         </field>
         <!-- SCIPIO: 2017-10-26: Added Product-specific hidden fields to preserve browsing. WARN: depends on screen -->
-        <field name="fromDate">
+        <field name="fromDate" map-name="productContent">
             <hidden />
         </field>
-        <field name="productContentTypeId">
+        <field name="productContentTypeId" map-name="productContent">
             <hidden />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
+    <!-- SCIPIO: NEW simple alt-locale list + update form -->
+    <form name="ListSimpleTextContentForAlternateLocaleCore" type="list" list-name="contentAssocList" list-entry-name="contentAssoc">
+        <actions>
+            <entity-and entity-name="ContentAssoc" list="contentAssocList" filter-by-date="true">
+                <field-map field-name="contentId" from-field="contentId" />
+                <field-map field-name="contentAssocTypeId" value="ALTERNATE_LOCALE"/>
+            </entity-and>
+            <set field="useRequestParameters" type="Boolean" value="false"/>
+        </actions>
+        <row-actions>
+            <entity-one entity-name="Content" value-field="content">
+                <field-map field-name="contentId" from-field="contentAssoc.contentIdTo"/>
+            </entity-one>
+            <entity-one entity-name="ElectronicText" value-field="electronicText">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </row-actions>
+        <field name="mainContentId" map-name="contentAssoc" entry-name="contentId"><hidden/></field>
+        <field name="contentId" map-name="contentAssoc" entry-name="contentIdTo"><hidden/></field>
+        <field name="localeString" map-name="content"><display description="${content.localeString}"/></field>
+        <field name="text" map-name="electronicText" entry-name="textData"><text/></field>
+    </form>
+    <form name="ListSimpleTextContentForAlternateLocale" extends="ListSimpleTextContentForAlternateLocaleCore" target="updateSimpleTextContentForAlternateLocale">
+        <!-- Product Content Assoc fields, for browsing purposes -->
+        <field name="productId" map-name="productContent"><hidden/></field>
+        <field name="productContentTypeId" map-name="productContent"><hidden/></field>
+        <field name="fromDate" map-name="productContent"><hidden/></field>
+
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink target="deleteSimpleTextContentForAlternateLocale" description="${uiLabelMap.CommonDelete}"
+                also-hidden="false" link-type="hidden-form">
+                <parameter param-name="mainContentId" from-field="contentAssoc.contentId"/>
+                <parameter param-name="contentId" from-field="contentAssoc.contentIdTo"/>
+                <parameter param-name="productId" from-field="productContent.productId"/>
+                <parameter param-name="productContentTypeId" from-field="productContent.productContentTypeId"/>
+                <parameter param-name="fromDate" from-field="productContent.fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    
     <form name="EditProductContentEmail" type="single" target="updateEmailContentForProduct" title="${uiLabelMap.ProductUpdateEmailContentProduct}"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="contentId==null" target="createEmailContentForProduct" />

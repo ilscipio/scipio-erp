@@ -32147,9 +32147,9 @@
         <value xml:lang="fr">Supprimer de la catégorie</value>
     </property>
     <property key="ProductManageCatalog">
-        <value xml:lang="en">Manage Product</value>
-        <value xml:lang="de">Produkt verwalten</value>
-        <value xml:lang="fr">Gérer le produit</value>
+        <value xml:lang="en">Manage Catalog</value>
+        <value xml:lang="de">Katalog verwalten</value>
+        <value xml:lang="fr">Gérer le catalogue</value>
     </property>
     <property key="ProductManageCategory">
         <value xml:lang="en">Manage Category</value>

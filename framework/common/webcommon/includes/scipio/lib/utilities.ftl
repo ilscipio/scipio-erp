@@ -1373,6 +1373,23 @@ Shorthand for {{{rawString(getLabel(...))}}}.
 
 <#-- 
 *************
+* rawLabelNoSubst
+************
+Same as {{{rawLabel}}} except no variable substitution is performed (prevented entirely), 
+so the caller can perform the substitutions instead.
+
+  * Related *
+    #rawLabel
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#function rawLabelNoSubst name resource="">
+  <#return rawString(getLabel(name, resource, false))>
+</#function>
+
+<#-- 
+*************
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.

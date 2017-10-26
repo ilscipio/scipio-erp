@@ -171,10 +171,10 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    <request-map uri="setupImportGlAccount">
+    <request-map uri="setupImportGlAccounts">
         <security https="true" auth="true"/>
-        <!-- TODO -->
-        <response name="success" type="request" value="nextSetupStep"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importGlAccounts"/>
+        <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
     

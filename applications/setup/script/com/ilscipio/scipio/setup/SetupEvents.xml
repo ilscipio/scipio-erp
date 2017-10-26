@@ -764,4 +764,9 @@
             </simple-map-processor>
         </call-map-processor>        
     </simple-method>
+    
+    <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true" >
+    	<!-- TODO -->
+    </simple-method>
+    
 </simple-methods>

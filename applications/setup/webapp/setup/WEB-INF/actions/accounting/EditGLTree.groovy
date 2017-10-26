@@ -8,13 +8,16 @@ import org.ofbiz.entity.util.*;
  
 final module = "EditGlTree.groovy";
 
-context.addGlAccountUrl = "setupAddGlAccount";
-context.createGlAccountUrl = "setupCreateGlAccount";
-context.editGlAccountUrl = "setupEditGlAccount";
-context.updateGlAccountUrl = "setupUpdateGlAccount";
-context.deleteGlAccountUrl = "setupDeleteGlAccount";
-context.assignGlAccountUrl = "setupAssignGlAccount";
-context.importGlAccountsUrl = "setupImportGlAccounts";
+glAccountUrls = [
+    "addGlAccountUrl" : "setupAddGlAccount",
+    "createGlAccountUrl" : "setupCreateGlAccount",
+    "editGlAccountUrl" : "setupEditGlAccount",
+    "updateGlAccountUrl" : "setupUpdateGlAccount",
+    "deleteGlAccountUrl" : "setupDeleteGlAccount",
+    "assignGlAccountUrl" : "setupAssignGlAccount",
+    "importGlAccountUrl" : "setupImportGlAccounts",
+];
+context.glAccountUrls = glAccountUrls;
 
 context.organizationPartyId = context.orgPartyId;
 context.accountMaps = context.glAccountList;

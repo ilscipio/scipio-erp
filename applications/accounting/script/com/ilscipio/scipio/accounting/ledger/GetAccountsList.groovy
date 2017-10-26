@@ -16,8 +16,17 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
 
 final String module = "GetAccountsList.groovy";
 
-/*Create Accounts Tree*/
+glAccountUrls = [
+    "addGlAccountUrl" : "AddGlAccount",
+    "createGlAccountUrl" : "createGlAccount",
+    "editGlAccountUrl" : "EditGlobalGlAccount",
+    "assignGlAccountUrl" : "AssignGlAccount",
+    "accountTransactionBaseUrl" : "FindAcctgTrans"    
+];
+context.glAccountUrls = glAccountUrls;
 
+
+/*Create Accounts Tree*/
 accountMaps = delegator.findAll("GlAccount", true);
 context.accountMaps = accountMaps;
 

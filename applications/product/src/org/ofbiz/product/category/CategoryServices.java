@@ -19,6 +19,7 @@
 package org.ofbiz.product.category;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -456,5 +457,41 @@ public class CategoryServices {
     @Deprecated
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
         return com.ilscipio.scipio.product.category.CategoryEvents.getChildCategoryTree(request, response);
+    }
+    
+    /**
+     * SCIPIO: getProductCategoryContentLocalizedSimpleTextContentAssocViews.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        
+        String productCategoryId = (String) context.get("productCategoryId");
+        Collection<String> prodCatContentTypeIdList = UtilGenerics.checkCollection(context.get("prodCatContentTypeIdList"));
+        boolean filterByDate = !Boolean.FALSE.equals(context.get("filterByDate"));
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
+        
+        Map<String, List<GenericValue>> viewsByType = null; 
+        try {
+            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextContentAssocViews(delegator, dispatcher, 
+                    productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
+        return result;
+    }
+    
+    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ? extends Object> context, 
+            Map<String, List<GenericValue>> viewsByType, Map<String, Object> result) {
+        if (!Boolean.FALSE.equals(context.get("getViewsByType"))) {
+            result.put("viewsByType", viewsByType);
+        }
+        if (Boolean.TRUE.equals(context.get("getViewsByTypeAndLocale"))) {
+            result.put("viewsByTypeAndLocale", CategoryWorker.splitContentLocalizedSimpleTextContentAssocViewsByLocale(viewsByType));
+        }
     }
 }

@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -58,6 +59,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.category.CategoryServices;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.image.ScaleImage;
 import org.ofbiz.service.DispatchContext;
@@ -1465,5 +1467,31 @@ public class ProductServices {
             }
         }
         return ServiceUtil.returnSuccess();
+    }
+    
+    /**
+     * SCIPIO: getProductContentLocalizedSimpleTextContentAssocViews.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Object> getProductContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        
+        String productId = (String) context.get("productId");
+        Collection<String> productContentTypeIdList = UtilGenerics.checkCollection(context.get("productContentTypeIdList"));
+        boolean filterByDate = !Boolean.FALSE.equals(context.get("filterByDate"));
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
+        
+        Map<String, List<GenericValue>> viewsByType = null; 
+        try {
+            viewsByType = ProductWorker.getProductContentLocalizedSimpleTextContentAssocViews(delegator, dispatcher, 
+                    productId, productContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        CategoryServices.postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
+        return result;
     }
 }

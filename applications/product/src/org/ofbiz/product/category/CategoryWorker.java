@@ -21,6 +21,7 @@ package org.ofbiz.product.category;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -803,5 +804,90 @@ public class CategoryWorker {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));
     }
     
+    /**
+     * SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views,
+     * where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any)
+     * are ContentAssocToElectronicText views.
+     * <p>
+     * NOTE: If there are multiple ProductCategoryContent for same cat/type, this fetches the lastest only (logs warning).
+     * System or user is expected to prevent this.
+     * <p>
+     * filterByDate must be set to a value in order to filter by date.
+     * Added 2017-10-27.
+     */
+    public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextContentAssocViews(Delegator delegator, LocalDispatcher dispatcher,
+            String productCategoryId, Collection<String> prodCatContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
+        Map<String, List<GenericValue>> fieldMap = new HashMap<>();
+        
+        List<EntityCondition> typeIdCondList = new ArrayList<>(prodCatContentTypeIdList.size());
+        if (prodCatContentTypeIdList != null) {
+            for(String prodCatContentTypeId : prodCatContentTypeIdList) {
+                typeIdCondList.add(EntityCondition.makeCondition("prodCatContentTypeId", prodCatContentTypeId));
+            }
+        }
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+        if (typeIdCondList.size() > 0) {
+            condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
+        }
+        if (filterByDate != null) {
+            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
+        }
+        
+        List<GenericValue> prodCatContentList = delegator.findList("ProductCategoryContentAndElectronicText", 
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        for(GenericValue prodCatContent : prodCatContentList) {
+            String prodCatContentTypeId = prodCatContent.getString("prodCatContentTypeId");
+            if (fieldMap.containsKey(prodCatContentTypeId)) {
+                Debug.logWarning("getProductCategoryContentLocalizedSimpleTextContentAssocViews: multiple ProductCategoryContentAndElectronicText"
+                        + " records found for prodCatContentTypeId '" + prodCatContentTypeId + "' for productCategoryId '" + productCategoryId + "'; "
+                        + " returning first found only (this may cause unexpected texts to appear)", module);
+                continue;
+            }
+            String contentIdStart = prodCatContent.getString("contentId");
+            
+            condList = new ArrayList<>();
+            condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
+            condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
+            if (filterByDate != null) {
+                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
+            }
+            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
+                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+            
+            List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
+            valueList.add(prodCatContent);
+            valueList.addAll(contentAssocList);
+            fieldMap.put(prodCatContentTypeId, valueList);
+        }
+        
+        return fieldMap;
+    }
     
+    /**
+     * SCIPIO: rearranges a viewsByType map into viewsByTypeAndLocale map.
+     * Logs warnings if multiple records for same locales.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Map<String, GenericValue>> splitContentLocalizedSimpleTextContentAssocViewsByLocale(Map<String, List<GenericValue>> viewsByType) {
+        Map<String, Map<String, GenericValue>> viewsByTypeAndLocale = new HashMap<>();
+        
+        for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
+            Map<String, GenericValue> viewsByLocale = new HashMap<>();
+            for(GenericValue view : entry.getValue()) {
+                String localeString = view.getString("localeString");
+                if (viewsByLocale.containsKey(localeString)) {
+                    Debug.logWarning("splitContentLocalizedSimpleTextContentAssocViewsByLocale: multiple eligible records found"
+                            + " for localeString '" + localeString + "'; using first found only (this may cause unexpected texts to appear)."
+                            + " Offending value: " + view.toString(), module);
+                    continue;
+                }
+                viewsByLocale.put(localeString, view);
+            }
+            viewsByTypeAndLocale.put(entry.getKey(), viewsByLocale);
+        }
+        
+        return viewsByTypeAndLocale;
+    }
+     
 }

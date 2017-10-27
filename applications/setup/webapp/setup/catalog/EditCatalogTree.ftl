@@ -1,4 +1,6 @@
-<#-- SCIPIO: SETUP interactive catalog tree implementation -->
+<#-- SCIPIO: SETUP interactive catalog tree implementation 
+    FIXME: dialog messages are not html-escaped currently - only the substituted parts are,
+        so the labels should only contain simple characters for now... -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
@@ -23,6 +25,7 @@
     "ect-newcategory", "ect-editcategory", "ect-addcategory",
     "ect-newproduct", "ect-editproduct", "ect-addproduct"
 ]>
+
 <#assign ectActionProps = {
     "default": {
         "newcatalog": {
@@ -56,13 +59,13 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removecatalogassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
             "id": "ect-removecatalog-form"
         },
         "newcategory": {
@@ -94,7 +97,7 @@
         "copymoveassoc": { <#-- NOTE: this is special copy/move combo for dnd, doesn't work like the others -->
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordAssocParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"})
+            "confirmMsg": rawLabelNoSubst('CommonConfirmCopyMoveRecordAssocParam')
         },
         "copyassoc": {
             "type": "form",
@@ -109,13 +112,13 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removecategoryassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
             "id": "ect-removecategory-form"
         },
         "newcategory": {
@@ -159,7 +162,7 @@
         "copymoveassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmCopyMoveRecordAssocParametrized', '', {"objectName":"SOURCE", "targetName":"TARGET"})
+            "confirmMsg": rawLabelNoSubst('CommonConfirmCopyMoveRecordAssocParam')
         },
         "copyassoc": {
             "type": "form",
@@ -174,13 +177,13 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removeproductassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
+            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
             "id": "ect-removeproduct-form"
         },
         "manage": {
@@ -204,7 +207,7 @@
     <@fieldset title=uiLabelMap.CommonDisplayOptions collapsed=true> 
       <@field type="input" name="setupEctMaxProductsPerCat" label=uiLabelMap.ProductMaxProductsPerCategory 
         value=(ectMaxProductsPerCat!) tooltip=uiLabelMap.SetupLargeStoreSlowSettingWarning/>
-      <@field type="submit"/>
+      <@field type="submit" text=uiLabelMap.CommonSave/>
     </@fieldset>
     </@form>
   </@section>

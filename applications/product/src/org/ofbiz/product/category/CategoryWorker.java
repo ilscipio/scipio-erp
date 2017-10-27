@@ -815,7 +815,7 @@ public class CategoryWorker {
      * filterByDate must be set to a value in order to filter by date.
      * Added 2017-10-27.
      */
-    public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextContentAssocViews(Delegator delegator, LocalDispatcher dispatcher,
+    public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
             String productCategoryId, Collection<String> prodCatContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
         Map<String, List<GenericValue>> fieldMap = new HashMap<>();
         
@@ -839,7 +839,7 @@ public class CategoryWorker {
         for(GenericValue prodCatContent : prodCatContentList) {
             String prodCatContentTypeId = prodCatContent.getString("prodCatContentTypeId");
             if (fieldMap.containsKey(prodCatContentTypeId)) {
-                Debug.logWarning("getProductCategoryContentLocalizedSimpleTextContentAssocViews: multiple ProductCategoryContentAndElectronicText"
+                Debug.logWarning("getProductCategoryContentLocalizedSimpleTextViews: multiple ProductCategoryContentAndElectronicText"
                         + " records found for prodCatContentTypeId '" + prodCatContentTypeId + "' for productCategoryId '" + productCategoryId + "'; "
                         + " returning first found only (this may cause unexpected texts to appear)", module);
                 continue;

@@ -1812,8 +1812,8 @@ under the License.
         <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
     </service>
     
-    <service name="getProductCategoryContentLocalizedSimpleTextContentAssocViews" engine="java"
-                location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryContentLocalizedSimpleTextContentAssocViews" auth="true">
+    <service name="getProductCategoryContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryContentLocalizedSimpleTextViews" auth="true">
         <description>SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views, 
             where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
         <permission-service service-name="productGenericPermission" main-action="VIEW"/>
@@ -1827,8 +1827,8 @@ under the License.
         <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
     </service>
     
-    <service name="getProductContentLocalizedSimpleTextContentAssocViews" engine="java"
-                location="org.ofbiz.product.product.ProductServices" invoke="getProductContentLocalizedSimpleTextContentAssocViews" auth="true">
+    <service name="getProductContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.product.ProductServices" invoke="getProductContentLocalizedSimpleTextViews" auth="true">
         <description>SCIPIO: For each simple-text-compatible productContentTypeIdList, returns a list of complex record views, 
             where the first entry is ProductContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
         <permission-service service-name="productGenericPermission" main-action="VIEW"/>

@@ -1410,7 +1410,7 @@ nextProd:
      * filterByDate must be set to a value in order to filter by date.
      * Added 2017-10-27.
      */
-    public static Map<String, List<GenericValue>> getProductContentLocalizedSimpleTextContentAssocViews(Delegator delegator, LocalDispatcher dispatcher,
+    public static Map<String, List<GenericValue>> getProductContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
             String productId, Collection<String> productContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
         Map<String, List<GenericValue>> fieldMap = new HashMap<>();
         
@@ -1434,7 +1434,7 @@ nextProd:
         for(GenericValue productContent : productContentList) {
             String productContentTypeId = productContent.getString("productContentTypeId");
             if (fieldMap.containsKey(productContentTypeId)) {
-                Debug.logWarning("getProductContentLocalizedSimpleTextContentAssocViews: multiple ProductContentAndElectronicText"
+                Debug.logWarning("getProductContentLocalizedSimpleTextViews: multiple ProductContentAndElectronicText"
                         + " records found for productContentTypeId '" + productContentTypeId + "' for productId '" + productId + "'; "
                         + " returning first found only (this may cause unexpected texts to appear)", module);
                 continue;

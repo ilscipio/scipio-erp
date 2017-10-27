@@ -460,10 +460,10 @@ public class CategoryServices {
     }
     
     /**
-     * SCIPIO: getProductCategoryContentLocalizedSimpleTextContentAssocViews.
+     * SCIPIO: getProductCategoryContentLocalizedSimpleTextViews.
      * Added 2017-10-27.
      */
-    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextViews(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         
@@ -474,7 +474,7 @@ public class CategoryServices {
         
         Map<String, List<GenericValue>> viewsByType = null; 
         try {
-            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextContentAssocViews(delegator, dispatcher, 
+            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher, 
                     productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);

@@ -1014,6 +1014,49 @@ under the License.
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: 2017-10-27: new entity that covers all 3, most useful for simple text content values -->
+    <view-entity entity-name="ContentAndElectronicText"
+                package-name="org.ofbiz.content.content"
+                title="Content and DataResource and ElectronicText Required View">
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-10-27: new entity that covers 4 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
+    <view-entity entity-name="ContentAssocToElectronicText"
+                package-name="org.ofbiz.content.content"
+                title="ContentAssoc To Content and DataResource and ElectronicText Required View">
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+      <alias entity-alias="CA" name="fromDate" field="fromDate"/>
+      <alias entity-alias="CA" name="thruDate" field="thruDate"/>
+      <view-link entity-alias="CA" rel-entity-alias="CO" rel-optional="false">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="DataResourceMetaData"
             package-name="org.ofbiz.content.data"
             title="Data Resource Meta-Data Predicate Entity">

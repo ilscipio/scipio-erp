@@ -1043,7 +1043,7 @@ under the License.
       <alias-all entity-alias="CO"/>
       <alias-all entity-alias="DR" prefix="dr"/>
       <alias-all entity-alias="EL"/>
-      <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
       <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
       <alias entity-alias="CA" name="fromDate" field="fromDate"/>
       <alias entity-alias="CA" name="thruDate" field="thruDate"/>

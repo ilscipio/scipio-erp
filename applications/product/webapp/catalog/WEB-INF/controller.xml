@@ -3116,8 +3116,24 @@ under the License.
         <response name="error" type="view" value="ViewProductGroupOrder"/>
     </request-map>
     
+    <!-- ================ SCIPIO: new requests ================= -->
+    
+    <!-- catalog ajax requests -->
+    <request-map uri="getProductCategoryContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <!-- ================ Product Tag Requests ================= -->
-     <!-- SCIPIO: Remove
+    <!-- SCIPIO: Removed
     <request-map uri="EditProductTag">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductTag"/>

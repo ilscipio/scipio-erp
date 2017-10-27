@@ -366,7 +366,23 @@
         <response name="error" type="view" value="SetupError"/>
     </request-map>
 
-   <!-- ================ Lookup Requests ================= -->
+    <!-- ================ Ajax Requests ================= -->
+    
+    <!-- catalog -->
+    <request-map uri="getProductCategoryContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- ================ Lookup Requests ================= -->
     <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>
     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>

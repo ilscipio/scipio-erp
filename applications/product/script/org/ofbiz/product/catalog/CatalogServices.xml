@@ -626,12 +626,6 @@ under the License.
     </simple-method>
     
     <simple-method method-name="deleteProdCatalogAndRelatedVersatile">
-        <!-- TODO
-        <set field="callingMethodName" value="deleteProdCatalogAndRelatedVersatile"/>
-        <set field="checkAction" value="DELETE"/>
-        <call-simple-method method-name="checkCatalogRelatedPermission"/>
-        <check-errors/>-->
-        
         <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
         <if-empty field="prodCatalog">
             <property-to-field resource="ProductUiLabels" property="ProductCategoryNotFoundForCategoryID" field="errMsgStr" />

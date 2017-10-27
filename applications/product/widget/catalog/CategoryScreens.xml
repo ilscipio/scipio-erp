@@ -161,17 +161,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
-                            <!-- <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                            <include-screen name="EditCategoryContentContent"/>
-                        </screenlet>
-                       <!--  <screenlet title="${uiLabelMap.ProductAddContentCategory}">
+                        <!--<screenlet>-->
+                        <!-- <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                        <include-screen name="EditCategoryContentContent"/>
+                        <!--</screenlet>-->
+                        <!--  <screenlet title="${uiLabelMap.ProductAddContentCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet> -->
-                        <screenlet title="${uiLabelMap.ProductCategoryContentList}">
-                            <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                            <include-screen name="ScipioCategoryContentList"/>
-                        </screenlet>
+
                         <!-- SCIPIO: To be removed -->
                         <!-- <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
@@ -195,6 +192,14 @@ under the License.
     <screen name="EditCategoryContentContent">
         <section>
             <actions>
+                <!-- SCIPIO: 2017-10-26: simple content form submits mainContentId instead of contentId;
+                    if don't recognize it, form browsing unpredictable -->
+                <script lang="groovy"><![CDATA[
+                    if (parameters.mainContentId) {
+                        parameters.contentId = parameters.mainContentId;
+                    }
+                ]]></script>
+            
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
@@ -206,20 +211,58 @@ under the License.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>            </actions>
             <widgets>
-
-                 <screenlet>
-                     <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
-                     <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                     <!-- <include-screen name="ScipioEditCategoryContent"/> -->
-                     <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
-                 </screenlet>
-                 <!-- SCIPIO: To be removed -->
-                 <!--    <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos}">
-                     <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                 </screenlet>
-                 <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
-                     <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
-                 </screenlet> -->
+                <screenlet>
+                    <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
+                    <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                    <!-- <include-screen name="ScipioEditCategoryContent"/> -->
+                    <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
+                </screenlet>
+   
+                <!-- SCIPIO: TODO: REVIEW: 2017-10-26: temporarily reinstated this form because it is not covered in the FTL and 
+                    essential to localize until better forms, and because it is still in EditProductContentContent so this was inconsistent without -->
+                <section>
+                    <condition><not><if-empty field="content.contentId"/></not></condition>
+                    <widgets>
+                        <include-screen name="EditAltLocaleSimpleTextContent"/>
+                        <!-- 
+                        <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        /screenlet>
+                        -->
+                        
+                        <!-- SCIPIO: TODO: REVIEW: somebody removed this list, but we do not have a full replacement for this form at this time, 
+                            only the new alt-locale content below, which only covers a portion of the possible assoc...
+                        <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos} (${uiLabelMap.CommonAll})">
+                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>-->
+                    </widgets>
+                </section>
+                
+                <screenlet title="${uiLabelMap.ProductCategoryContentList}">
+                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                    <include-screen name="ScipioCategoryContentList"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: 2017-10-26: new widget to directly list and edit the alternate locale content, because ListAssociatedContentInfos form does badly -->
+    <screen name="EditAltLocaleSimpleTextContent">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="productCategoryContent"/></not>
+                    <not><if-empty field="productCategoryId"/></not>
+                    <not><if-empty field="contentId"/></not>
+                    <not><if-empty field="content.contentId"/></not>
+                </and>
+            </condition>
+            <actions>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                    <include-form name="ListSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

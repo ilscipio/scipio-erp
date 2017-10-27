@@ -7696,4 +7696,8 @@
         <value xml:lang="en">Visual Theme Selector Script</value>
         <value xml:lang="fr">Script sélecteur de thème visuel</value>
     </property>
+    <property key="ContentNewContent">
+        <value xml:lang="de">Neuer Inhalt</value>
+        <value xml:lang="en">New Content</value>
+    </property>
 </resource>

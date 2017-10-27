@@ -124,9 +124,9 @@
         <value xml:lang="fr">Sélectionner une adresse</value>
     </property>
     <property key="SetupLargeStoreSlowSettingWarning">
-        <value xml:lang="en">Warning: For large stores, setting a large value may cause the page to load and respond very slowly.</value>
-        <value xml:lang="de">Warnung: Bei großen Speichern kann das Festlegen eines großen Werts dazu führen, dass die Seite geladen wird und sehr langsam reagiert.</value>
-        <value xml:lang="fr">Avertissement: pour les magasins de grande taille, la définition d'une valeur importante peut entraîner le chargement de la page et une réponse très lente.</value>
+        <value xml:lang="en">Warning: For large stores, omitting this value or setting a large value may cause the page to load and respond very slowly.</value>
+        <value xml:lang="de">Warnung: Bei großen Geschäften kann das Auslassen dieses Werts oder das Festlegen eines großen Werts dazu führen, dass die Seite geladen wird und sehr langsam reagiert.</value>
+        <value xml:lang="fr">Avertissement: Pour les grands magasins, si vous omettez cette valeur ou si vous définissez une valeur élevée, la page peut se charger et répondre très lentement.</value>
     </property>
     
     <property key="SetupSelectUserForSetup">

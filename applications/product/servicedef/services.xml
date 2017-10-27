@@ -441,6 +441,29 @@ under the License.
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
+    <!-- SCIPIO: 2017-10-26: new service for update-only, requires exact contentId of the alt content -->
+    <service name="updateSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="updateSimpleTextContentForAlternateLocale">
+        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
+        <auto-attributes mode="IN" entity-name="Content" include="nonpk" optional="true"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
+        <override name="localeString" optional="false"/>
+    </service>
+    <!-- SCIPIO: 2017-10-26: new service for delete, requi -->
+    <service name="deleteSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="deleteSimpleTextContentForAlternateLocale">
+        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- SCIPIO: 2017-10-26: new update service for alt locale - if contentId passed, updates it, otherwise
+        uses sane logic to create or update or otherwise "set" the locale to the given text -->
+    <service name="createUpdateSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="createUpdateSimpleTextContentForAlternateLocale">
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
+        <override name="localeString" optional="false"/>
+        <override name="contentId" mode="INOUT"/>
+    </service>
 
     <service name="addAdditionalViewForProduct" default-entity-name="ProductContent" engine="java"
         location="org.ofbiz.product.product.ProductServices" invoke="addAdditionalViewForProduct" auth="true">
@@ -1788,6 +1811,36 @@ under the License.
         <implements service="updateProductCategoryToCategory"/>
         <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
     </service>
+    
+    <service name="getProductCategoryContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryContentLocalizedSimpleTextViews" auth="true">
+        <description>SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views, 
+            where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
+        <attribute name="prodCatContentTypeIdList" mode="IN" type="List" optional="false"/>
+        <attribute name="filterByDate" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
+        <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+    </service>
+    
+    <service name="getProductContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.product.ProductServices" invoke="getProductContentLocalizedSimpleTextViews" auth="true">
+        <description>SCIPIO: For each simple-text-compatible productContentTypeIdList, returns a list of complex record views, 
+            where the first entry is ProductContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="productContentTypeIdList" mode="IN" type="List" optional="false"/>
+        <attribute name="filterByDate" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
+        <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+    </service>
 
     <!-- ======================================== -->
     <!-- SCIPIO: New Versatile Services (stock-like) -->
@@ -1823,6 +1876,7 @@ under the License.
     <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProdCatalog" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndRelatedVersatile" auth="true">
         <description>SCIPIO: Delete a ProdCatalog record and various related records (may be dangerous) (versatile)</description>
+        <permission-service service-name="catalogPermissionCheck" main-action="DELETE"/><!-- no delegated check, needs explicit -->
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
             <description>(none|expired|all, default: expired) Controls whether deletes all (default)
@@ -1997,6 +2051,13 @@ under the License.
         </attribute>     
     </service>
     
+    <service name="getProductCategoryExtendedDataVersatile" engine="group" auth="true">
+        <description>SCIPIO: Gets extended ProductCategory data (originally written for catalog tree edit form) (versatile)</description>
+        <group>
+            <invoke name="getProductCategoryContentLocalizedSimpleTextViews"/>
+        </group>
+    </service>
+    
     <!-- PRODUCT -->
     
     <service name="createProductAndCatAssocVersatile" engine="simple"
@@ -2101,6 +2162,13 @@ under the License.
         <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
             <description>(remove|expire, default: remove)</description>
         </attribute>     
+    </service>
+    
+    <service name="getProductExtendedDataVersatile" engine="group" auth="true">
+        <description>SCIPIO: Gets extended Product data (originally written for catalog tree edit form) (versatile)</description>
+        <group>
+            <invoke name="getProductContentLocalizedSimpleTextViews"/>
+        </group>
     </service>
     
     <!-- ======================================== -->

@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1396,5 +1397,67 @@ nextProd:
             }
         }
         return productsInStock;
+    }
+    
+    /**
+     * SCIPIO: For each simple-text-compatible productContentTypeIdList, returns a list of complex record views,
+     * where the first entry is ProductContentAndElectronicText and the following entries (if any)
+     * are ContentAssocToElectronicText views.
+     * <p>
+     * NOTE: If there are multiple ProductContent for same product/type, this fetches the lastest only (logs warning).
+     * System or user is expected to prevent this.
+     * <p>
+     * filterByDate must be set to a value in order to filter by date.
+     * Added 2017-10-27.
+     */
+    public static Map<String, List<GenericValue>> getProductContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
+            String productId, Collection<String> productContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
+        Map<String, List<GenericValue>> fieldMap = new HashMap<>();
+        
+        List<EntityCondition> typeIdCondList = new ArrayList<>(productContentTypeIdList.size());
+        if (productContentTypeIdList != null) {
+            for(String productContentTypeId : productContentTypeIdList) {
+                typeIdCondList.add(EntityCondition.makeCondition("productContentTypeId", productContentTypeId));
+            }
+        }
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productId", productId));
+        if (typeIdCondList.size() > 0) {
+            condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
+        }
+        if (filterByDate != null) {
+            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
+        }
+        condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
+        
+        List<GenericValue> productContentList = delegator.findList("ProductContentAndElectronicText", 
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        for(GenericValue productContent : productContentList) {
+            String productContentTypeId = productContent.getString("productContentTypeId");
+            if (fieldMap.containsKey(productContentTypeId)) {
+                Debug.logWarning("getProductContentLocalizedSimpleTextViews: multiple ProductContentAndElectronicText"
+                        + " records found for productContentTypeId '" + productContentTypeId + "' for productId '" + productId + "'; "
+                        + " returning first found only (this may cause unexpected texts to appear)", module);
+                continue;
+            }
+            String contentIdStart = productContent.getString("contentId");
+            
+            condList = new ArrayList<>();
+            condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
+            condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
+            if (filterByDate != null) {
+                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
+            }
+            condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
+            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
+                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+            
+            List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
+            valueList.add(productContent);
+            valueList.addAll(contentAssocList);
+            fieldMap.put(productContentTypeId, valueList);
+        }
+        
+        return fieldMap;
     }
 }

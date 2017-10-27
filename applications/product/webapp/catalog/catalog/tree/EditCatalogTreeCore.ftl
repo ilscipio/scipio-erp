@@ -5,17 +5,21 @@
       The multiple assoc is permitted by schema because prodCatalogCategoryTypeId is part of PK.
       NOTE: The service addProductCategoryCatAssocVersatile tries to prevent this (even though it shouldn't), 
           but it cannot prevent other user-build cases.
+    * dialog messages and confirmMsg are not fully escaped (but unescaped parts are internal so not security issue)
 -->
 
-<#-- FIXME: theme styling missing for this
+<#-- TODO: theme styling -->
 <style type="text/css">
-    .ect-action-menu {
-        li.disabled, a.disabled {
-            color:gray;
-        }
+    <#-- FIXME: theme doesn't show gray for disabled + priority problems -->
+    ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled {
+        color:gray;
+    }
+ 
+    .ect-dialogmsg-recordname {
+        font-style:italic;
     }
 </style>
- -->
+
  
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
@@ -37,10 +41,11 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
 
         scth.fadeOptions = data.fadeOptions || {};
         scth.treeId = data.treeId;
-        scth.productStoreId = data.productStoreId;
+        scth.productStoreEntity = data.productStoreEntity;
+        scth.productStoreId = data.productStoreEntity.productStoreId;
         scth.allActionProps = data.actionProps || {};
         scth.markup = data.markup || {};
-        scth.postMenuItemMarkup = data.postMenuItemMarkup;
+        scth.links = data.links || {};
         scth.hideShowFormIds = data.hideShowFormIds;
         scth.labels = data.labels || {};
         scth.callbacks = data.callbacks || {};
@@ -80,6 +85,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         };
         var ensureArray = function(valOrArray) {
             return jQuery.isArray(valOrArray) ? valOrArray : (isUndefOrNull(valOrArray) ? [] : [valOrArray]);
+        };
+        var htmlMarkupEscape = function(value) {
+            return jQuery("<div></div>").text(value).html();
         };
 
         var startsWith = function(str, prefix) {
@@ -363,6 +371,30 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             }
         };
         
+        // NOTE: does not include any info about the association
+        var getNodeObjectDesc = function($node) {
+            var desc = null;
+            var objectType = getNodeObjectType($node);
+            //var objectId = getNodeObjectId($node);
+            if (objectType === 'catalog') {
+                desc = $node.text + ' (' + scth.labels.catalog + ')';
+            } else if (objectType === 'category') {
+                desc = $node.text + ' (' + scth.labels.category + ')';
+            } else if (objectType === 'product') {
+                desc = $node.text + ' (' + scth.labels.product + ')';
+            } else if ($node && $node.text) { // fallback
+                desc = $node.text;
+            }
+            return desc;
+        };
+        var getStoreObjectDesc = function() { // TODO: version that works without node
+            var desc = null;
+            if (scth.productStoreEntity) {
+                desc = scth.productStoreEntity.storeName + ' [' + scth.productStoreEntity.productStoreId + '] (' + scth.labels.store + ')';
+            }
+            return desc;
+        };
+        
         /**
          * Renames and/or filters out parameters by name as requested by caller action props.
          * To prevent entries in paramNames from being included you must set paramNamesMode "explicit".
@@ -574,12 +606,21 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
                         }
                     }
                     
-                    // TODO: support for options/params in the modal dialog
+                    // check if the modal had any params, dump them into params
+                    jQuery('form.ect-dialogopts-form :input', modalElem).each(function(i, input) {
+                        input = jQuery(input);
+                        var name = input.prop('name');
+                        if (name) params[name] = input.val();
+                    });
                     
                     execCallback();
                 });
             } else {
-                execCallback();
+                if (!isUndefOrNull(confirmMsg)) {
+                    reportInternalError('dialog confirm message appears empty (bad label?) - aborting operation');
+                } else {
+                    execCallback();
+                }
             }
         };
         
@@ -649,6 +690,40 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             return params;
         };
  
+        var substituteMsg = function(msg, values, quoteChar, useHtml, htmlEscapeValues) {
+            if (msg && values) {
+                if (quoteChar === false) quoteChar = '';
+                else if (!quoteChar) quoteChar = "'";
+                
+                var spanOpen = '<span class="ect-dialogmsg-recordname">';
+                var spanClose = '</span>';
+                if (useHtml === false) {
+                    spanOpen = '';
+                    spanClose = '';
+                }
+
+                jQuery.each(values, function(k, value) {
+                    if (value) {
+                        value = quoteChar+value+quoteChar;
+                        if (htmlEscapeValues !== false) {
+                            value = htmlMarkupEscape(value);
+                        }
+                        value = spanOpen+value+spanClose;
+                        <#-- DEV NOTE: WARNING: THE FOLLOWING LINE CONTAINS A FREEMARKER ESCAPE - 
+                            PLEASE FIXUP THIS LINE IF MOVING JS TO DEDICATED FILE -->
+                        msg = msg.replace('$\{'+k+'}', value);
+                    }
+                });
+            }
+            return msg;
+        };
+ 
+        var substituteConfirmMsg = function(ai, params, values, quoteChar, useHtml, htmlEscapeValues) {
+            var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
+            confirmMsg = substituteMsg(confirmMsg, values, quoteChar, useHtml, htmlEscapeValues);
+            params.local.confirmMsg = confirmMsg;
+        };
+ 
         /**
          * Prepares params for the action, for links & form filling. 
          * These get filtered later.
@@ -674,7 +749,40 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             
             params.data = ai.data; // special entry
             params.local = {}; // special entry
+            
+            // TODO: the confirmMsg should be pre-parsed so that the text in _between_ dollar-sign variables is html-escaped...
+            //var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
+            //...
+            //params.local.confirmMsg = confirmMsg;
+            
+            substituteConfirmMsg(ai, params, {
+                recordName: getNodeObjectDesc(ai.node)
+            });
+            
             return params;
+        };
+
+        var runAjax = function(url, reqParams, successCb) {
+            jQuery.ajax({
+                url: url,
+                data: reqParams,
+                async: true,
+                type: "POST",
+                success: function(data) {
+                    if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                        if (data._ERROR_MESSAGE_) {
+                            reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_);
+                        } else {
+                            reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0]);
+                        }
+                    } else {
+                        successCb(data);
+                    }
+                },
+                error: function() {
+                    reportError(scth.labels.servercommerror);
+                }
+            });   
         };
 
         /*
@@ -712,8 +820,53 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var ai = getActionInfo($node, "edit");
             var params = makeParamsMap(ai);
             // default params OK
+            
             checkExecConfirm(ai, params, {}, function() {
-                execActionTarget(ai, params);
+                var execEdit = function() {
+                    execActionTarget(ai, params);
+                };
+                
+                var doExecEdit = true;
+                if (specFlags.noShowFormPopulate !== true) {
+                    if (ai.objectType === 'category') {
+                        if (scth.links.getProductCategoryExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductCategoryExtendedData, {
+                                    productCategoryId: ai.objectId,
+                                    prodCatContentTypeIdList: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]',
+                                    getViewsByType: false,
+                                    getViewsByTypeAndLocale: true
+                                }, 
+                                function(data) {
+                                    if (data.viewsByTypeAndLocale) {
+                                    
+                                    }
+                                    execEdit();
+                                }
+                            );
+                        }
+                    } else if (ai.objectType === 'product') {
+                        if (scth.links.getProductExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductExtendedData, {
+                                    productId: ai.objectId,
+                                    productContentTypeIdList: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]',
+                                    getViewsByType: false,
+                                    getViewsByTypeAndLocale: true
+                                }, 
+                                function(data) {
+                                    if (data.viewsByTypeAndLocale) {
+                                    
+                                    }
+                                    execEdit();
+                                }
+                            );
+                        }
+                    }
+                }
+                if (doExecEdit) {
+                    execEdit();
+                }
             });
         };
         
@@ -813,11 +966,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             params.to_fromDate = null; // TODO?: no way to populate - service will make it
             params.to_sequenceNum = null; // TODO?: no way to populate (unreliable), can't reuse previous, but could be desirable...
             
-            var confirmMsg = ai.actionProps.confirmMsg;
-            if (confirmMsg) {
-                confirmMsg = confirmMsg.replace('SOURCE', ai.objectId).replace('TARGET', getNodeObjectId($targetNode));
-            }
-            params.local.confirmMsg = confirmMsg;
+            substituteConfirmMsg(ai, params, {
+                toRecordName: getNodeObjectDesc($targetNode)
+            });
             
             // NOTE: this path is used on success only and further adjusted server-side
             params.ectNewTargetNodePath = getNodeObjectIdPathString($targetNode);
@@ -854,16 +1005,31 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         this.execRemoveAssocForNode = function($node) {
             var ai = getActionInfo($node, "removeassoc");
             var params = makeParamsMap(ai);
+            
+            var targetDesc;
+            if (ai.objectType === 'catalog') {
+                targetDesc = getStoreObjectDesc();
+            } else {
+                targetDesc = getNodeObjectDesc(getParentNode($node));
+            }
+            substituteConfirmMsg(ai, params, {
+                toRecordName: targetDesc
+            });
+            
             // default params OK
             checkExecConfirm(ai, params, {subActionType:"deleteAssocMode"}, function() {
-                execActionTarget(ai, params);
+                if (params.deleteAssocMode) {
+                    execActionTarget(ai, params);
+                } else {
+                    reportInternalError('removeassoc received no deleteAssocMode from dialog (confirm dialog error - aborting)');
+                }
             });
         };
         
         this.execRemoveForNode = function($node) {
             var nodeObjectIsParent = isNodeObjectParent($node);
             if (nodeObjectIsParent) {
-                showPopupMsg(scth.labels.cannotremovehaschild);
+                showPopupMsg(substituteMsg(scth.labels.cannotremovehaschild, {recordName:getNodeObjectDesc($node)}));
                 return false;
             }
         
@@ -1135,22 +1301,42 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         this.sideMenuHandler = function($node) {
             var $el = jQuery("#ect-action-menu");
             var menuDefs = getMenuDefs($node);
+            
+            var useDividers = true;
+            var makeDividerItem = function() {
+                return jQuery(scth.markup.menuItemDivider || '<li><hr/></li>');
+            };
+            var lastItemDivider = false;
 
             $el.empty(); // remove old options
             $.each(menuDefs, function(key, menuDef) {
+                if (useDividers && menuDef.separator_before === true) {
+                    $el.append(makeDividerItem());
+                }
+            
                 var disabled = (menuDef._disabled === true);
                 var menuItem = jQuery((disabled ? scth.markup.menuItemDisabled : scth.markup.menuItem) || '<li><a href=""></a></li>');
                 var menuAnchor = menuItem.find('a:last-child');
                 if (menuAnchor.length) {
-                    menuAnchor.attr("href", "javascript:void(0);").text(menuDef.label);
+                    menuAnchor.attr("href", "javascript:void(0);");
+                    menuAnchor.text(menuDef.label);
                     menuAnchor.click(menuDef.action);
                 } else {
                     menuItem.click(menuDef.action); // fallback improves markup support
                 }
                 $el.append(menuItem);
+                lastItemDivider = false;
+                
+                if (useDividers && menuDef.separator_after === true) {
+                    $el.append(makeDividerItem());
+                    lastItemDivider = true;
+                }
             });
-            if (scth.postMenuItemMarkup) {
-                $el.append(scth.postMenuItemMarkup);
+            if (scth.markup.postMenuItems) {
+                if (useDividers && !lastItemDivider) {
+                    $el.append(makeDividerItem());
+                }
+                $el.append(scth.markup.postMenuItems);
             }
         };
         
@@ -1160,6 +1346,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
          */
         
         this.resolvePreselect = function(targetNodeInfo, noShowFormChange, noShowFormPopulate) {
+            // no change implies no populate
+            if (noShowFormChange === true) noShowFormPopulate = true;
+        
             var prevNoShowFormChange = specFlags.noShowFormChange;
             specFlags.noShowFormChange = noShowFormChange;
         
@@ -1269,21 +1458,32 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         <#t/><@compress_single_line><@menuitem type="link" href="javascript:void(0);" onClick="ectHandler.execAddCatalog();" text=uiLabelMap.ProductAddExistingCatalog/></@compress_single_line>
       </#assign><#lt/>
     </#if>
+    <#if !ectDividerMenuItemMarkup??>
+      <#assign ectDividerMenuItemMarkup><#rt/>
+        <#t/><@compress_single_line><@menuitem type="generic"><hr/></@menuitem></@compress_single_line>
+      </#assign><#lt/>
+    </#if>
     
 if (typeof ectHandler === 'undefined') {
     var ectHandler;
 }
     ectHandler = new ScpCatalogTreeHandler({
         treeId: "${escapeVal(ectTreeId!, 'js')}",
-        productStoreId: "${escapeVal(productStoreId!, 'js')}",
+        productStoreEntity: <@objectAsScript object=(ectProductStore!productStore) lang='js'/>,
         actionProps: <@objectAsScript object=(ectActionProps!{}) lang='js'/>,
         hideShowFormIds: <@objectAsScript object=(ectAllHideShowFormIds![]) lang='js'/>,
         labels: {
             error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
+            errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
+            servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",
+            store: "${escapeVal(uiLabelMap.ProductStore, 'js')}",
+            catalog: "${escapeVal(uiLabelMap.ProductCatalog, 'js')}",
+            category: "${escapeVal(uiLabelMap.ProductCategory, 'js')}",
+            product: "${escapeVal(uiLabelMap.ProductProduct, 'js')}",
             edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",
             removeassoc: "${escapeVal(uiLabelMap.CommonRemoveAssoc, 'js')}",
             remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",
-            cannotremovehaschild: "${escapeVal(uiLabelMap.CommonCannotDeleteRecordHasChildren, 'js')}",
+            cannotremovehaschild: "${escapeVal(rawLabelNoSubst('CommonCannotDeleteRecordHasChildrenParam'), 'js')}",
             newcatalog: "${escapeVal(uiLabelMap.ProductNewCatalog, 'js')}",
             newcategory: "${escapeVal(uiLabelMap.ProductNewCategory, 'js')}",
             newsubcategory: "${escapeVal(uiLabelMap.ProductNewSubCategory, 'js')}",
@@ -1308,9 +1508,14 @@ if (typeof ectHandler === 'undefined') {
         },
         markup: {
             menuItem: '${ectEmptyMenuItemMarkup}',
-            menuItemDisabled: '${ectEmptyMenuItemMarkupDisabled}'
+            menuItemDisabled: '${ectEmptyMenuItemMarkupDisabled}',
+            menuItemDivider: '${ectDividerMenuItemMarkup}',
+            postMenuItems: '${ectPostMenuItemMarkup}'
         },
-        postMenuItemMarkup: '${ectPostMenuItemMarkup}',
+        links: {
+            getProductCategoryExtendedData: '<@ofbizUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
+            getProductExtendedData: '<@ofbizUrl uri="getProductExtendedData" escapeAs="js"/>'
+        },
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,
         submittedFormId: "${escapeVal(ectSubmittedFormId!, 'js')}",
@@ -1338,6 +1543,8 @@ if (typeof ectHandler === 'undefined') {
     <#list actionProps?keys as objectType>
         <#local actionMap = toSimpleMap(actionProps[objectType])>
 
+        <#-- DEV NOTE: supports <form class="ect-dialogopts-form"><input...>...</form> inside the modal for extra options -->
+        
         <#local props = actionMap["removeassoc"]!{}>
         <#if props.confirmMsg?has_content>
             <@modal id="${idPrefix}${rawString(objectType)}-removeassoc" class="+ect-dialogmodal">

@@ -38,6 +38,24 @@ if (isEventError == null) isEventError = context.isError;
 if (isEventError == null) isEventError = false;
 context.ectIsEventError = isEventError;
 
+objectLocalizedFields = context.ectObjectLocalizedFields;
+if (!objectLocalizedFields) {
+    objectLocalizedFields = [
+        category: [
+            fieldNames: ["categoryName", "description", "longDescription"],
+            typeNames: ["CATEGORY_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ],
+        product: [
+            fieldNames: ["productName", "description", "longDescription"],
+            typeNames: ["PRODUCT_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ] 
+    ];
+}
+context.ectObjectLocalizedFields = objectLocalizedFields;
+
+
 getSetStringParam = { paramName ->
     def value = context[paramName];
     if (value == null) value = parameters[paramName] as String;

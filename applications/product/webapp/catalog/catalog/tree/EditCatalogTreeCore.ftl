@@ -45,6 +45,7 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
         scth.productStoreId = data.productStoreEntity.productStoreId;
         scth.allActionProps = data.actionProps || {};
         scth.markup = data.markup || {};
+        scth.links = data.links || {};
         scth.hideShowFormIds = data.hideShowFormIds;
         scth.labels = data.labels || {};
         scth.callbacks = data.callbacks || {};
@@ -761,6 +762,29 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             return params;
         };
 
+        var runAjax = function(url, reqParams, successCb) {
+            jQuery.ajax({
+                url: url,
+                data: reqParams,
+                async: true,
+                type: "POST",
+                success: function(data) {
+                    if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                        if (data._ERROR_MESSAGE_) {
+                            reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_);
+                        } else {
+                            reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0]);
+                        }
+                    } else {
+                        successCb(data);
+                    }
+                },
+                error: function() {
+                    reportError(scth.labels.servercommerror);
+                }
+            });   
+        };
+
         /*
          * Core functions
          */
@@ -796,8 +820,53 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
             var ai = getActionInfo($node, "edit");
             var params = makeParamsMap(ai);
             // default params OK
+            
             checkExecConfirm(ai, params, {}, function() {
-                execActionTarget(ai, params);
+                var execEdit = function() {
+                    execActionTarget(ai, params);
+                };
+                
+                var doExecEdit = true;
+                if (specFlags.noShowFormPopulate !== true) {
+                    if (ai.objectType === 'category') {
+                        if (scth.links.getProductCategoryExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductCategoryExtendedData, {
+                                    productCategoryId: ai.objectId,
+                                    prodCatContentTypeIdList: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]',
+                                    getViewsByType: false,
+                                    getViewsByTypeAndLocale: true
+                                }, 
+                                function(data) {
+                                    if (data.viewsByTypeAndLocale) {
+                                    
+                                    }
+                                    execEdit();
+                                }
+                            );
+                        }
+                    } else if (ai.objectType === 'product') {
+                        if (scth.links.getProductExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductExtendedData, {
+                                    productId: ai.objectId,
+                                    productContentTypeIdList: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]',
+                                    getViewsByType: false,
+                                    getViewsByTypeAndLocale: true
+                                }, 
+                                function(data) {
+                                    if (data.viewsByTypeAndLocale) {
+                                    
+                                    }
+                                    execEdit();
+                                }
+                            );
+                        }
+                    }
+                }
+                if (doExecEdit) {
+                    execEdit();
+                }
             });
         };
         
@@ -1277,6 +1346,9 @@ if (typeof ScpCatalogTreeHandler === 'undefined') {
          */
         
         this.resolvePreselect = function(targetNodeInfo, noShowFormChange, noShowFormPopulate) {
+            // no change implies no populate
+            if (noShowFormChange === true) noShowFormPopulate = true;
+        
             var prevNoShowFormChange = specFlags.noShowFormChange;
             specFlags.noShowFormChange = noShowFormChange;
         
@@ -1402,6 +1474,8 @@ if (typeof ectHandler === 'undefined') {
         hideShowFormIds: <@objectAsScript object=(ectAllHideShowFormIds![]) lang='js'/>,
         labels: {
             error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
+            errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
+            servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",
             store: "${escapeVal(uiLabelMap.ProductStore, 'js')}",
             catalog: "${escapeVal(uiLabelMap.ProductCatalog, 'js')}",
             category: "${escapeVal(uiLabelMap.ProductCategory, 'js')}",
@@ -1437,6 +1511,10 @@ if (typeof ectHandler === 'undefined') {
             menuItemDisabled: '${ectEmptyMenuItemMarkupDisabled}',
             menuItemDivider: '${ectDividerMenuItemMarkup}',
             postMenuItems: '${ectPostMenuItemMarkup}'
+        },
+        links: {
+            getProductCategoryExtendedData: '<@ofbizUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
+            getProductExtendedData: '<@ofbizUrl uri="getProductExtendedData" escapeAs="js"/>'
         },
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,

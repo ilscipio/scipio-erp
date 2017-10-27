@@ -2051,6 +2051,13 @@ under the License.
         </attribute>     
     </service>
     
+    <service name="getProductCategoryExtendedDataVersatile" engine="group" auth="true">
+        <description>SCIPIO: Gets extended ProductCategory data (originally written for catalog tree edit form) (versatile)</description>
+        <group>
+            <invoke name="getProductCategoryContentLocalizedSimpleTextViews"/>
+        </group>
+    </service>
+    
     <!-- PRODUCT -->
     
     <service name="createProductAndCatAssocVersatile" engine="simple"
@@ -2155,6 +2162,13 @@ under the License.
         <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
             <description>(remove|expire, default: remove)</description>
         </attribute>     
+    </service>
+    
+    <service name="getProductExtendedDataVersatile" engine="group" auth="true">
+        <description>SCIPIO: Gets extended Product data (originally written for catalog tree edit form) (versatile)</description>
+        <group>
+            <invoke name="getProductContentLocalizedSimpleTextViews"/>
+        </group>
     </service>
     
     <!-- ======================================== -->

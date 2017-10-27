@@ -3132,6 +3132,20 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
     
+    <!-- catalog tree ajax requests -->
+    <request-map uri="getProductCategoryExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <!-- ================ Product Tag Requests ================= -->
     <!-- SCIPIO: Removed
     <request-map uri="EditProductTag">

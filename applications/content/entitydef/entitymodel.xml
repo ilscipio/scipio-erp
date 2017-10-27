@@ -344,7 +344,8 @@ under the License.
         <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="ElectronicText">
-        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId"/> </relation>
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="ImageDataResource">
         <key-map field-name="drDataResourceId" rel-field-name="dataResourceId"/>
       </relation>

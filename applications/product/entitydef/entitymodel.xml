@@ -3044,7 +3044,7 @@ under the License.
     <view-entity entity-name="ProductContentAndElectronicText"
                 package-name="org.ofbiz.product.product"
                 title="ProductContent And ElectronicText Required View">
-      <member-entity entity-alias="PC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
       <member-entity entity-alias="EL" entity-name="ElectronicText"/>

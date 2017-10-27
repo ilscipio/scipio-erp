@@ -1428,6 +1428,7 @@ nextProd:
         if (filterByDate != null) {
             condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
         }
+        condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
         
         List<GenericValue> productContentList = delegator.findList("ProductContentAndElectronicText", 
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
@@ -1447,6 +1448,7 @@ nextProd:
             if (filterByDate != null) {
                 condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
             }
+            condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
             List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
                     EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
             

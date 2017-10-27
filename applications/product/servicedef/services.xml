@@ -1867,6 +1867,7 @@ under the License.
     <service name="deleteProdCatalogStoreAssocVersatile" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogStoreAssocVersatile" auth="true">
         <description>SCIPIO: Delete a ProductStoreCatalog association(s) (versatile)</description>
+        <permission-service service-name="catalogPermissionCheck" main-action="DELETE"/><!-- no delegated check, needs explicit -->
         <implements service="deleteProductStoreCatalog"/>
         <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
             <description>(remove|expire, default: remove)</description>

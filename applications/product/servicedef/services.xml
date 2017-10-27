@@ -1823,8 +1823,10 @@ under the License.
         <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
         <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getTextByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
         <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+        <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
     </service>
     
     <service name="getProductContentLocalizedSimpleTextViews" engine="java"
@@ -1838,8 +1840,10 @@ under the License.
         <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
         <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getTextByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
         <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+        <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
     </service>
 
     <!-- ======================================== -->

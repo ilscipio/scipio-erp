@@ -891,5 +891,31 @@ public class CategoryWorker {
         
         return viewsByTypeAndLocale;
     }
+    
+    /**
+     * SCIPIO: rearranges a viewsByType map into textByTypeAndLocale map.
+     * Logs warnings if multiple records for same locales.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Map<String, String>> extractContentLocalizedSimpleTextDataByLocale(Map<String, List<GenericValue>> viewsByType) {
+        Map<String, Map<String, String>> textDataByTypeAndLocale = new HashMap<>();
+        
+        for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
+            Map<String, String> textDataByLocale = new HashMap<>();
+            for(GenericValue view : entry.getValue()) {
+                String localeString = view.getString("localeString");
+                if (textDataByLocale.containsKey(localeString)) {
+                    Debug.logWarning("splitContentLocalizedSimpleTextContentAssocViewsByLocale: multiple eligible records found"
+                            + " for localeString '" + localeString + "'; using first found only (this may cause unexpected texts to appear)."
+                            + " Offending value: " + view.toString(), module);
+                    continue;
+                }
+                textDataByLocale.put(localeString, view.getString("textData"));
+            }
+            textDataByTypeAndLocale.put(entry.getKey(), textDataByLocale);
+        }
+        
+        return textDataByTypeAndLocale;
+    }
      
 }

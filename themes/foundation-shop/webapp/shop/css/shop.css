@@ -311,3 +311,13 @@ ul.order-item-attrib-list, .order-item-attrib-list ul {
     margin-top: 1em;
 }
 
+
+.shariff-button::before {
+    content: none !important;
+}
+
+.shariff-button{
+    padding: 0px !important;  
+    text-align:left !important; 
+}
+

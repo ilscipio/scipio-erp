@@ -83,6 +83,9 @@
     DEV NOTE: PLEASE KEEP BOTH IMPL IN SYNC. -->
 <#macro ectLocalizedFields objectType params={} 
     fieldCntMarkup=ectDefMarkupLocFieldCnt fieldEntryMarkup=ectDefMarkupLocFieldEntry onAddClick="" formId=true>
+    
+    <@alert type="warning">WARNING: <strong>LOCALIZED FIELDS ARE NOT YET SAVED ON SUBMIT</strong> (2017-10-27)</@alert>
+    
   <#-- didn't need
   <#if formId?is_boolean>
     <#local formId = (readRequestStack("scipioFormInfoStack").id)!"">

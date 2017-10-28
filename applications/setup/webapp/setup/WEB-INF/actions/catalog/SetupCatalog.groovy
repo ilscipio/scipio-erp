@@ -13,7 +13,25 @@ catalogData = context.catalogData ?: [:];
  */
 
 eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Move", "Add"], true, ["Catalog", "Category", "Product"]);
+isEventError = context.isSetupEventError;
 
+// FIXME: copy-pasted
+objectLocalizedFields = context.ectObjectLocalizedFields;
+if (!objectLocalizedFields) {
+    objectLocalizedFields = [
+        category: [
+            fieldNames: ["categoryName", "description", "longDescription"],
+            typeNames: ["CATEGORY_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ],
+        product: [
+            fieldNames: ["productName", "description", "longDescription"],
+            typeNames: ["PRODUCT_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ]
+    ];
+}
+context.ectObjectLocalizedFields = objectLocalizedFields;
 
 /*
  * Catalog
@@ -87,6 +105,19 @@ if (prodCatalog && productCategoryId) {
             productCategoryAndAssoc.putAll(prodCatalogCategory);
         }
     }
+    
+    if (productCategoryAndAssoc) {
+        // get localized fields
+        try {
+            servRes = dispatcher.runSync("getProductCategoryContentLocalizedSimpleTextViews", [
+                productCategoryId: productCategoryId, prodCatContentTypeIdList: objectLocalizedFields.category.typeNames,
+                userLogin:context.userLogin, locale:context.locale, timeZone:context.timeZone
+            ], -1, true);
+            productCategoryAndAssoc.simpleTextViewsByType = servRes.viewsByType;
+        } catch(Exception e) {
+            Debug.logError(e, "Setup: Catalog: " + e.getMessage(), module);
+        }
+    }
 }
 
 prodCatalogCategoryTypes = EntityQuery.use(delegator).from("ProdCatalogCategoryType").orderBy("description").queryList();
@@ -119,6 +150,19 @@ if (productCategory && productId) {
     if (product && productCategoryMember) {
         productAndAssoc = new HashMap(product);
         productAndAssoc.putAll(productCategoryMember);
+    }
+    
+    if (productAndAssoc) {
+        // get localized fields
+        try {
+            servRes = dispatcher.runSync("getProductContentLocalizedSimpleTextViews", [
+                productId: productId, productContentTypeIdList: objectLocalizedFields.product.typeNames,
+                userLogin:context.userLogin, locale:context.locale, timeZone:context.timeZone
+            ], -1, true);
+            productAndAssoc.simpleTextViewsByType = servRes.viewsByType;
+        } catch(Exception e) {
+            Debug.logError(e, "Setup: Catalog: " + e.getMessage(), module);
+        }
     }
 }
 context.product = product;
@@ -154,7 +198,7 @@ eventStates = [:];
 eventStates.putAll(eventFlags);
 
 // add some more (not in context)
-eventStates.isError = context.isSetupEventError;
+eventStates.isError = context.isEventError;
 
 context.eventStates = eventStates;
 
@@ -169,5 +213,9 @@ for(prodCatalog in allProdCatalogList) {
 context.availProdCatalogList = availProdCatalogList;
 context.allProdCatalogList = allProdCatalogList;
 
-
-
+// SPECIAL: method to convert the stringified localized field submitted parameters (contentField_),
+// so user input is not lost on event error
+// FIXME?: shouldn't run on every call, but doesn't matter yet
+if (parameters.simpleTextViewsByType == null) {
+    parameters.simpleTextViewsByType = org.ofbiz.product.category.CategoryWorker.parseLocalizedSimpleTextContentFieldParams(parameters, "contentField_", false);
+}

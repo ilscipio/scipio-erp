@@ -159,6 +159,7 @@ function ScpEctFormHelper(data) {
      * this is better than texts silently disappearing.
      */
     this.parseViewsByType = function(viewsByType) {
+        /* don't have to do anything; names already match
         var entryDataListsByType = {};
         jQuery.each(viewsByType, function(typeName, viewList) {
             var entryDataList = [];
@@ -174,6 +175,8 @@ function ScpEctFormHelper(data) {
             entryDataListsByType[typeName] = entryDataList;
         });
         return entryDataListsByType;
+        */
+        return viewsByType;
     };
 }
 ScpEctFormHelper.extractClassNameSuffix = function(elem, prefix) {

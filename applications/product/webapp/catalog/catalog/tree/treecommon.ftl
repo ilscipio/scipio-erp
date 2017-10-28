@@ -21,14 +21,21 @@
     <@field type="hidden" name="ectSubmittedFormId" value=(initialValues.ectSubmittedFormId!) class="+ect-inputfield"/>
 </#macro>
 
-<#function ectParseLocParams fieldInfo params>
-      <#-- TODO -->
-      <#return params>
+<#function ectGetLocParams fieldInfo params>
+    <#-- MUST BE ALREADY PARSED BY DATA PREP (too slow here), as params.simpleTextViewsByType -->
+    <#return (params.simpleTextViewsByType)!{}>
 </#function>
 
 <#-- NOTE: must be same as: ScpEctCommon.js ScpEctFormHelper.makeLocFieldNamePrefix -->
 <#function ectMakeLocFieldNamePrefix typeName index>
-    <#return 'contentField_' + typeName + '.' + index + '.'>
+    <#return rawString(Static["org.ofbiz.product.category.CategoryWorker"].makeLocalizedSimpleTextContentFieldStringParamPrefix('contentField_', typeName, index))>
+</#function>
+
+<#assign ectLocFieldLabelMap = {
+    "productName":uiLabelMap.ProductProductName
+}>
+<#function ectGetLocFieldLabel fieldName typeName>
+    <#return ectLocFieldLabelMap[fieldName]!uiLabelMap["FormFieldTitle_"+fieldName]>
 </#function>
 
 <#-- NOTE: this one no longer used as JS template -->
@@ -75,7 +82,7 @@
     See corresponding js in ScpEctCommon.js ScpEctFormHelper.rebuildLocalizedFieldEntries.
     DEV NOTE: PLEASE KEEP BOTH IMPL IN SYNC. -->
 <#macro ectLocalizedFields objectType params={} 
-    fieldCnt=ectDefMarkupLocFieldCnt fieldEntry=ectDefMarkupLocFieldEntry onAddClick="" formId=true>
+    fieldCntMarkup=ectDefMarkupLocFieldCnt fieldEntryMarkup=ectDefMarkupLocFieldEntry onAddClick="" formId=true>
   <#-- didn't need
   <#if formId?is_boolean>
     <#local formId = (readRequestStack("scipioFormInfoStack").id)!"">
@@ -85,35 +92,32 @@
   </#if>
   <#local fieldInfo = (ectObjectLocalizedFields[objectType])!>
   <#if fieldInfo?has_content>
-    <#local fieldLabelMap = {
-        "productName":uiLabelMap.ProductProductName
-    }>
-    <#local fieldValues = ectParseLocParams(fieldInfo, params)>
-    <#list fieldInfo.fieldNames as fieldName>
-      <#local typeName = fieldInfo.typeNames[fieldName?index]>
-      <#local fieldLabel = fieldLabelMap[fieldName]!uiLabelMap["FormFieldTitle_"+fieldName]>
-      <@fieldCnt args={"onAddClick":onAddClick, "entryTmpl":fieldEntry,
-          "fieldName":fieldName, "typeName":typeName,
-          "fieldArgs":{"label":fieldLabel, "tooltip":""}}>
-        <#local values = (fieldValues[fieldName]![])>
-        <#if values?has_content>
+
+    <#local valueListsByType = ectGetLocParams(fieldInfo, params)>
+    <#list fieldInfo.typeNames as typeName>
+      <#local fieldName = fieldInfo.fieldNames[typeName?index]>
+      <@fieldCntMarkup args={"onAddClick":onAddClick, "entryTmpl":fieldEntryMarkup,
+          "typeName":typeName, "fieldName":fieldName,
+          "fieldArgs":{"label":ectGetLocFieldLabel(fieldName, typeName), "tooltip":""}}>
+        <#local entryDataList = (valueListsByType[typeName]![])>
+        <#if entryDataList?has_content>
           <#-- add the main/default entry (Product[Category]Content, index zero) + ContentAssoc entries -->
-          <#list values as entryData>
-            <@fieldEntry args={"typeName":typeName, "index":entryData?index, "entryData":entryData}/>
+          <#list entryDataList as entryData>
+            <@fieldEntryMarkup args={"typeName":typeName, "index":entryData?index, "entryData":entryData}/>
           </#list>
         <#else>
           <#-- add empty main/default entry (Product[Category]Content) -->
-          <@fieldEntry args={"typeName":typeName, "index":0, "entryData":{}}/>
+          <@fieldEntryMarkup args={"typeName":typeName, "index":0, "entryData":{}}/>
         </#if>
-      </@fieldCnt>
+      </@fieldCntMarkup>
     </#list>
     <#-- TEMPLATE MARKUP FOR JAVASCRIPT -->
     <#--<div style="display:none;">-->
         <#-- no longer needed
-        <div class="ect-markup-locFieldCnt"><@fieldCnt args={}/></div>-->
+        <div class="ect-markup-locFieldCnt"><@fieldCntMarkup args={}/></div>-->
         <#-- NOTE: due to styling problems with @row/@cell, we are forced to include this inside the field
             container, which causes bunch of copies for nothing... but it works out
-        <div class="ect-markup-locFieldEntry"><@fieldEntry args={}/></div> -->
+        <div class="ect-markup-locFieldEntry"><@fieldEntryMarkup args={}/></div> -->
     <#--</div>-->
   </#if>
 </#macro>

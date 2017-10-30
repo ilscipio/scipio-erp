@@ -32172,11 +32172,11 @@
         <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren? (Hinweis: Dieser Vorgang schlägt fehl, wenn der Katalog bereits wichtige oder spezialisierte Zuordnungen im System aufweist)</value>
     </property>
     <property key="ProductConfirmDeleteCategoryPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue? (Note: This operation will fail if the category already has important associations in the system)</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren? (Hinweis: Diese Operation wird fehlschlagen, wenn die Kategorie bereits wichtige Assoziationen im System hat)</value>
+        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue? (Note: This operation will fail if the category already has important or specialized associations in the system)</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren? (Hinweis: Diese Operation schlägt fehl, wenn die Kategorie bereits wichtige oder spezialisierte Zuordnungen im System hat)</value>
     </property>
     <property key="ProductConfirmDeleteProductPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue? (Note: This operation will fail if the product already has important associations in the system, such as placed orders or subscriptions)</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren? (Hinweis: Dieser Vorgang schlägt fehl, wenn das Produkt bereits wichtige Verknüpfungen im System aufweist, z. B. aufgegebene Bestellungen oder Abonnements)</value>
+        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue? (Note: This operation will fail if the product already has important or specialized associations in the system, such as placed orders or subscriptions)</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren? (Hinweis: Dieser Vorgang schlägt fehl, wenn das Produkt bereits wichtige oder spezialisierte Verknüpfungen im System hat, z. B. aufgegebene Bestellungen oder Abonnements)</value>
     </property>
 </resource>

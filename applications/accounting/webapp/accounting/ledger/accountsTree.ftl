@@ -189,8 +189,7 @@ if (typeof ectHandler === 'undefined') {
 	                  		<#if glAccountUrlKey != glAccountUrls?keys?last>,</#if>
 	                  	</#if>
 	                  	<#if glAccountUrlKey == "accountTransactionBaseUrl">
-	                  		"${escapeVal(uiLabelMap.AccountingAcctgTrans, 'js')}": [makeGlAccountTransactionPageUrl($node, '<@ofbizUrl escapeAs='js'>${glAccountUrls[glAccountUrlKey]}</@ofbizUrl>', params), '${glAccountUrlKey}']
-	                  		<#if glAccountUrlKey != glAccountUrls.keySet()?last>,</#if>
+	                  		"${escapeVal(uiLabelMap.AccountingAcctgTrans, 'js')}": [makeGlAccountTransactionPageUrl($node, '<@ofbizUrl escapeAs='js'>${glAccountUrls[glAccountUrlKey]}</@ofbizUrl>', params), '${glAccountUrlKey}']	                  		
 	                  	</#if>        		
                 	</#list>
                 };

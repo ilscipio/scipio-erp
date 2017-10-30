@@ -1,17 +1,12 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityQuery
 
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeCore;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
 
 final String module = "GetAccountsList.groovy";
@@ -21,12 +16,20 @@ glAccountUrls = [
     "createGlAccountUrl" : "createGlAccount",
     "editGlAccountUrl" : "EditGlobalGlAccount",
     "assignGlAccountUrl" : "AssignGlAccount",
-    "accountTransactionBaseUrl" : "FindAcctgTrans"    
+    "accountTransactionBaseUrl" : "FindAcctgTrans",
+    "accountTransactionBaseUrl" : "FindAcctgTrans",
+    "importGlAccountUrl" : "ImportGlAccounts"
 ];
 context.glAccountUrls = glAccountUrls;
 
-
 /*Create Accounts Tree*/
-accountMaps = delegator.findAll("GlAccount", true);
-context.accountMaps = accountMaps;
 
+treeMenuHelper = new JsTreeHelper();
+accountingGLs = EntityQuery.use(delegator).select("glAccountId").from("GlAccount").where(EntityCondition.makeCondition("parentGlAccountId", EntityOperator.EQUALS, null)).queryList();
+for (GenericValue topGlAccount : accountingGLs) {
+    result = dispatcher.runSync("buildGlAccountTree", ["glAccountId": topGlAccount.glAccountId]);
+    if (result?.treeList) {
+        treeMenuHelper.addAll(result.treeList);
+    }
+}
+context.treeMenuData = treeMenuHelper;

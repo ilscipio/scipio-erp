@@ -16,6 +16,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
@@ -261,32 +262,17 @@ public abstract class SetupDataUtil {
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
             if (UtilValidate.isNotEmpty(topGlAccountId)) {
                 GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
-                if (topGlAccount != null) {
-                    List<GenericValue> glAccountList = FastList.newInstance();
-                    glAccountList.add(topGlAccount);
-                    getAllChildGlAccounts(glAccountList, glAccountList);                    
-                    result.put("glAccountList", glAccountList);
-                } else {
+                if (topGlAccount == null) {
                     Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
                 }
             } else {
-                // TODO
+                Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
             }
             
             result.put("topGlAccountId", topGlAccountId);
         }
 
         return result;
-    }
-
-    private static void getAllChildGlAccounts(List<GenericValue> childGlAccounts, List<GenericValue> allChildGlAccounts) throws GeneralException {
-        for (GenericValue childGlAccount : childGlAccounts) {
-            List<GenericValue> glAccounts = childGlAccount.getRelated("ChildGlAccount", null, UtilMisc.toList("accountCode"), false);
-            if (UtilValidate.isNotEmpty(glAccounts)) {
-                getAllChildGlAccounts(glAccounts, allChildGlAccounts);
-                allChildGlAccounts.addAll(glAccounts);
-            }
-        }
     }
 
     public static Map<String, Object> getFacilityStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache)

@@ -123,6 +123,31 @@
             <remove-value value-field="dataResource"/>
         </if-not-empty>
     </simple-method>
+    
+    <!-- SCIPIO: Recursive version of removeContentAndRelated which removes the "To" ("child") associated content records -->
+    <simple-method method-name="removeContentAndRelatedRecursiveTo" short-description="Remove a Content Record, related resource(s) and assocs, and To content records recursively (SCIPIO)">
+        <if-compare field="parameters.recursiveTarget" operator="equals" value="all">
+            <entity-and entity-name="ContentAssoc" list="contentAssocList" filter-by-date="false">
+                <field-map field-name="contentId" from-field="parameters.contentId"/>
+            </entity-and>
+        </if-compare>
+        <if-compare field="parameters.recursiveTarget" operator="equals" value="active">
+            <entity-and entity-name="ContentAssoc" list="contentAssocList" filter-by-date="true">
+                <field-map field-name="contentId" from-field="parameters.contentId"/>
+            </entity-and>
+        </if-compare>
+        <iterate entry="contentAssoc" list="contentAssocList">
+            <!-- sanity check: prevents endless loop -->
+            <if-compare-field field="parameters.contentId" operator="not-equals" to-field="contentAssoc.contentIdTo">
+                <set field="assocRemoveCtx" set-if-null="true" value=""/>
+                <set-service-fields service-name="removeContentAndRelatedRecursiveTo" to-map="assocRemoveCtx" map="parameters"/>
+                <set field="assocRemoveCtx.contentId" from-field="contentAssoc.contentIdTo"/>
+                <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="assocRemoveCtx"/>
+            </if-compare-field>
+        </iterate>
+        <call-simple-method method-name="removeContentAndRelated"/>
+        <check-errors/>
+    </simple-method>
 
     <!-- content assoc services -->
     <simple-method method-name="createContentAssoc" short-description="Create a ContntAssoc Record">

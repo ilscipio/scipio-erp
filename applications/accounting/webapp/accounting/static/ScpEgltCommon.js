@@ -37,9 +37,9 @@ function ScpEgltFormHelper(data) {
     };
     
     this.extractLocalizedFieldName = function(fieldCnt) {
-        typeName = ScpEgltFormHelper.extractClassNameSuffix(fieldCnt, 'ect-locfield-for-');
+        typeName = ScpEgltFormHelper.extractClassNameSuffix(fieldCnt, 'eglt-locfield-for-');
         if (!typeName) {
-            reportInternalError('missing ect-locfield-for- class on localized field');
+            reportInternalError('missing eglt-locfield-for- class on localized field');
             return null;
         }
         return typeName;
@@ -54,7 +54,7 @@ function ScpEgltFormHelper(data) {
                 reportInternalError('invalid getLocalizedFieldProps call');
                 return null;
             }
-            fieldCnt = jQuery('.ect-locfield-for-'+typeName, allFieldsCnt);
+            fieldCnt = jQuery('.eglt-locfield-for-'+typeName, allFieldsCnt);
             if (!fieldCnt.length) {
                 return null; // form doesn't support
             }
@@ -64,15 +64,15 @@ function ScpEgltFormHelper(data) {
         }
         
         // NOTE: template markup is embedded in the html, now under the field itself (due to styling workaround)
-        var entryMarkupTmpl = jQuery('.ect-markup-locFieldEntry:first', fieldCnt);
+        var entryMarkupTmpl = jQuery('.eglt-markup-locFieldEntry:first', fieldCnt);
         if (!entryMarkupTmpl.length) {
-            reportInternalError('missing ect-markup-locFieldEntry html-embedded template');
+            reportInternalError('missing eglt-markup-locFieldEntry html-embedded template');
             return null;
         }
 
-        var entries = jQuery('.ect-locfield-entries', fieldCnt);
+        var entries = jQuery('.eglt-locfield-entries', fieldCnt);
         if (!entries.length) {
-            reportInternalError('missing ect-locfield-entries container');
+            reportInternalError('missing eglt-locfield-entries container');
             return null;
         }
         
@@ -83,8 +83,8 @@ function ScpEgltFormHelper(data) {
         var entryMarkup = ScpEgltFormMarkup.getCntMarkup(entryMarkupTmpl);
         if (!entryMarkup || !entryMarkup.length) return null;
         var namePrefix = sefh.makeLocFieldNamePrefix(typeName, index);
-        jQuery('.ect-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
-        jQuery('.ect-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
+        jQuery('.eglt-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
+        jQuery('.eglt-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
         return entryMarkup;
     };
 
@@ -133,7 +133,7 @@ function ScpEgltFormHelper(data) {
     this.addLocalizedFieldEntry = function(fieldProps, entryData) {
         if (!entryData) entryData = {}; // adds empty
         
-        var index = jQuery('.ect-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
+        var index = jQuery('.eglt-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
         
         var entryMarkup = sefh.buildLocalizedFieldEntry(fieldProps.entryMarkupTmpl, fieldProps.typeName, index, entryData);
         if (entryMarkup) {
@@ -143,13 +143,13 @@ function ScpEgltFormHelper(data) {
     
     this.handleFieldAdd = function(linkElem) {
         linkElem = jQuery(linkElem);
-        var fieldCnt = linkElem.closest('.ect-locfield');
+        var fieldCnt = linkElem.closest('.eglt-locfield');
         if (fieldCnt.length) {
             var fieldProps = sefh.getLocalizedFieldProps(fieldCnt);
             if (!fieldProps) return;
             sefh.addLocalizedFieldEntry(fieldProps, {});
         } else {
-            reportInternalError('missing ect-locfield class on localized field');
+            reportInternalError('missing eglt-locfield class on localized field');
         }
     };
     
@@ -295,7 +295,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (scth.popupMsgModalId) {
             var modalElem = jQuery('#'+scth.popupMsgModalId);
             if (modalElem.length) {
-                jQuery('.ect-dialogmsg', modalElem).html(msg);
+                jQuery('.eglt-dialogmsg', modalElem).html(msg);
                 openModal(modalElem);
             } else {
                 return alert(msg);
@@ -309,10 +309,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             modalElem = jQuery('#'+scth.confirmMsgModalId);
         }
         if (modalElem && modalElem.length) {
-            jQuery('.ect-dialogmsg', modalElem).html(msg);
-            jQuery('.ect-dialogbtn', modalElem).click(function() {
+            jQuery('.eglt-dialogmsg', modalElem).html(msg);
+            jQuery('.eglt-dialogbtn', modalElem).click(function() {
                 closeModal(modalElem);
-                var selectedName = extractClassNameSuffix(jQuery(this), 'ect-dialogbtn-');
+                var selectedName = extractClassNameSuffix(jQuery(this), 'eglt-dialogbtn-');
                 continueCallback(selectedName);
             });
             openModal(modalElem);
@@ -595,9 +595,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      * By default, clears all fields/elems having "etc-xxxfield" classes.
      */
     this.clearFormCommon = function(form, params, ai) {
-        jQuery('.ect-inputfield', form).filter(':input').val('');
-        jQuery('.ect-displayfield', form).html('');
-        jQuery('.ect-managefield', form).html('');
+        jQuery('.eglt-inputfield', form).filter(':input').val('');
+        jQuery('.eglt-displayfield', form).html('');
+        jQuery('.eglt-managefield', form).html('');
         
         if (params.local) {
             var localizedFields = params.local.localizedFields;
@@ -610,7 +610,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     this.makeManageLinkForElem = function(elem, name, value, form, params, ai) {
         if (value) {
             // FIXME: unhardcode markup
-            var markup = jQuery('<a href="javascript:void(0);" class="ect-managefield-link">' + value + '</a>');
+            var markup = jQuery('<a href="javascript:void(0);" class="eglt-managefield-link">' + value + '</a>');
             markup.click(function() {
                 scth.execManageForNode(ai.node);
             });
@@ -626,9 +626,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
         if (elem.is(':input')) {
             elem.val(value);
-        } else if (elem.hasClass('ect-displayfield')) {
+        } else if (elem.hasClass('eglt-displayfield')) {
             elem.html(value);
-        } else if (elem.hasClass('ect-managefield')) {
+        } else if (elem.hasClass('eglt-managefield')) {
             scth.makeManageLinkForElem(elem, name, value, form, params, ai);
         } else {
             reportInternalError('form field misconfigured for use with catalog tree - no value can be assigned. form id: ' + 
@@ -644,14 +644,14 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (elem.is(':input')) {
             name = elem.prop('name');
             if (!name) {
-                if (elem.hasClass('ect-inputfield')) {
-                    name = extractClassNameSuffix(elem, 'ect-inputfield-for-'); 
+                if (elem.hasClass('eglt-inputfield')) {
+                    name = extractClassNameSuffix(elem, 'eglt-inputfield-for-'); 
                 }
             }
-        } else if (elem.hasClass('ect-displayfield')) {
-            name = extractClassNameSuffix(elem, 'ect-displayfield-for-'); 
-        } else if (elem.hasClass('ect-managefield')) {
-            name = extractClassNameSuffix(elem, 'ect-managefield-for-'); 
+        } else if (elem.hasClass('eglt-displayfield')) {
+            name = extractClassNameSuffix(elem, 'eglt-displayfield-for-'); 
+        } else if (elem.hasClass('eglt-managefield')) {
+            name = extractClassNameSuffix(elem, 'eglt-managefield-for-'); 
         } 
         if (!name) {
             reportInternalError('form field misconfigured for use with catalog tree' +
@@ -665,13 +665,13 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     /**
      * Default populate form implementation.
-     * Each form field/elem with "ect-xxxclass" receives a param or empty value/html.
+     * Each form field/elem with "eglt-xxxclass" receives a param or empty value/html.
      */
     this.populateFormCommon = function(form, params, ai) {
         if (isObj(params)) {
             var fieldHandlers = ai.actionProps.populateFormFields || {};
             
-            jQuery('.ect-inputfield, .ect-displayfield, .ect-managefield', form).each(function(i, elem) {
+            jQuery('.eglt-inputfield, .eglt-displayfield, .eglt-managefield', form).each(function(i, elem) {
                 elem = jQuery(elem);
                 var name = scth.getEgltFormFieldName(elem);
                 if (name) {
@@ -701,17 +701,17 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     var getCommonTreeFields = function(form, params, ai) {
         return {
-            ectTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
-            ectNewTargetNodePath: params.ectNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
-            ectSubmittedFormId: form.prop('id')
+            egltTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
+            egltNewTargetNodePath: params.egltNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
+            egltSubmittedFormId: form.prop('id')
         };
     };
     
     var populateFormCommonTreeFieldsOnly = function(form, params, ai) {
         var fields = getCommonTreeFields(form, params, ai);
-        jQuery('input[name=ectTargetNodePath].ect-inputfield', form).val(fields.ectTargetNodePath || '');
-        jQuery('input[name=ectNewTargetNodePath].ect-inputfield', form).val(fields.ectNewTargetNodePath || '');
-        jQuery('input[name=ectSubmittedFormId].ect-inputfield', form).val(fields.ectSubmittedFormId || '');
+        jQuery('input[name=egltTargetNodePath].eglt-inputfield', form).val(fields.egltTargetNodePath || '');
+        jQuery('input[name=egltNewTargetNodePath].eglt-inputfield', form).val(fields.egltNewTargetNodePath || '');
+        jQuery('input[name=egltSubmittedFormId].eglt-inputfield', form).val(fields.egltSubmittedFormId || '');
     };
     
     var populateForm = function(form, params, ai) {
@@ -766,7 +766,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 }
                 
                 // check if the modal had any params, dump them into params
-                jQuery('form.ect-dialogopts-form :input', modalElem).each(function(i, input) {
+                jQuery('form.eglt-dialogopts-form :input', modalElem).each(function(i, input) {
                     input = jQuery(input);
                     var name = input.prop('name');
                     if (name) params[name] = input.val();
@@ -790,6 +790,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     var execActionTarget = function(ai, params) {
         var coreExec = function() {
             params = getResolvedActionPropsParams(ai, params);
+            console.log("ai.actionProps.type ========> " + ai.actionProps.type);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);
             } else if (ai.actionProps.type == "form") {
@@ -854,7 +855,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 if (quoteChar === false) quoteChar = '';
             else if (!quoteChar) quoteChar = "'";
             
-            var spanOpen = '<span class="ect-dialogmsg-recordname">';
+            var spanOpen = '<span class="eglt-dialogmsg-recordname">';
             var spanClose = '</span>';
             if (useHtml === false) {
                 spanOpen = '';
@@ -965,6 +966,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         this.formId = this.actionProps.formId || this.actionProps.id;
         this.containerId = this.actionProps.id;
         this.defaultParams = getActionPropsDefaultParams(this.actionProps);
+        console.log("this.objectId =========> " + this.objectId);
     };
     
     var getActionInfo = function($node, actionType, objectType) {
@@ -988,11 +990,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 var fieldInfo = scth.objectLocFields[ai.objectType];
                 
                 if (ai.objectType === 'glAccount') {
-                    if (scth.links.getProductCategoryExtendedData) {
+                    if (scth.links.getGlAccountExtendedData) {
                         doExecEdit = false;
-                        runAjax(scth.links.getProductCategoryExtendedData, {
-                                productCategoryId: ai.objectId,
-                                prodCatContentTypeIdList: fieldInfo.typeNameListStr,
+                        runAjax(scth.links.getGlAccountExtendedData, {
+                                glAccountId: ai.objectId,                                
                                 getViewsByType: true,
                                 getTextByTypeAndLocale: false
                             }, 
@@ -1022,7 +1023,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         var draggable = true;
         jQuery.each($nodeOrList, function(i, $node) {
             var objectType = getNodeObjectType($node);
-            if (objectType !== 'category' && objectType !== 'product') {
+            if (objectType !== 'glAccount') {
                 draggable = false;
                 return false;
             }
@@ -1040,7 +1041,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         
         var targetObjectId = getNodeObjectId($targetNode);
         var targetType = getNodeObjectType($targetNode);
-        if (targetType !== 'catalog' && targetType !== 'category') return false;
+        if (targetType !== 'glAccount') return false;
         
         var result = true;
         for(var i=0; i < $nodeOrList.length; i++) {
@@ -1049,7 +1050,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             if (!$node || isRootNode($node)) return false;
             
             var objectType = getNodeObjectType($node);
-            if (objectType !== 'category' && objectType !== 'product') return false;
+            if (objectType !== 'glAccount') return false;
             
             var $parent = getParentNode($node);
             if (!$parent) return false;
@@ -1063,13 +1064,13 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             var parentObjectId = getNodeObjectId($parent);
             if (parentType === targetType && parentObjectId === targetObjectId) return false;
             
-            if (objectType === 'product') {
-                // products can only go under categories
-                if (targetType !== 'category') return false;
-            } else {
+//            if (objectType === 'product') {
+//                // products can only go under categories
+//                if (targetType !== 'category') return false;
+//            } else {
                 // category can't go under itself
                 if (isChildNodeOf($node, $targetNode)) return false;
-            }
+//            }
             
             // make sure the object is not already child of the target
             
@@ -1117,7 +1118,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
         
         // NOTE: this path is used on success only and further adjusted server-side
-        params.ectNewTargetNodePath = getNodeObjectIdPathString($targetNode);
+        params.egltNewTargetNodePath = getNodeObjectIdPathString($targetNode);
         
         // FIXME: the checkExecConfirm should be earlier in function, but this is working for time being
         var effArgs = {};
@@ -1187,89 +1188,16 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
     };
     
-    this.execNewProductForNode = function($node) {
-        var ai = getActionInfo($node, "newproduct");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "category") {
-            params.productCategoryId = ai.data.productCategoryEntity.productCategoryId;
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execNewCategoryForNode = function($node) {
-        var ai = getActionInfo($node, "newcategory");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "catalog") {
-            // prodCatalogId will be ok
-        } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execNewCatalog = function() {
-        var ai = getActionInfo(null, "newcatalog", "default");
-        var params = makeParamsMap(ai);
-        // default params OK
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execAddProductForNode = function($node) {
-        var ai = getActionInfo($node, "addproduct");
-        var params = makeParamsMap(ai);
-        // default params OK
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execAddCategoryForNode = function($node) {
-        var ai = getActionInfo($node, "addcategory");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "catalog") {
-            // prodCatalogId will be ok
-        } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execAddCatalog = function() {
-        var ai = getActionInfo(null, "addcatalog", "default");
-        var params = makeParamsMap(ai);
-        // default params OK
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execManageForNode = function($node) {
-        var ai = getActionInfo($node, "manage");
-        var params = makeParamsMap(ai);
-        // default params OK
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
+    this.execNewGlAccountForNode = function($node) {
+    	var ai = getActionInfo($node, "newglaccount");
+    	
+    	checkExecConfirm(ai, params, {}, function() {
+          execActionTarget(ai, params);
+    	});
+    }
     
     this.execForNode = function(actionType, $node, $targetNode) {
+    	console.log("actionType ======> " + actionType);
         if (actionType === "edit") {
             return this.execEditForNode($node);
         } else if (actionType === "copymoveassoc") {
@@ -1278,18 +1206,8 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             return this.execRemoveAssocForNode($node);
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
-        } else if (actionType === "newproduct") {
-            return this.execNewProductForNode($node);
-        } else if (actionType === "newcategory") {
-            return this.execNewCategoryForNode($node);
-        } else if (actionType === "newcatalog") {
-            return this.execNewCatalog();
-        } else if (actionType === "addproduct") {
-            return this.execAddProductForNode($node);
-        } else if (actionType === "addcategory") {
-            return this.execAddCategoryForNode($node);
-        } else if (actionType === "addcatalog") {
-            return this.execAddCatalog();
+        } else if (actionType === "newglaccount") {
+            return this.execNewGlAccountForNode($node);
         } else if (actionType === "manage") {
             return this.execManageForNode($node);
         } else {
@@ -1330,36 +1248,12 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                     scth.execRemoveForNode($node);
                 }
             },
-            newcategory: {
+            newglaccount: {
                 "separator_before": false,
                 "separator_after": false,
-                "label": scth.labels.newcategory,
+                "label": scth.labels.newglaccount,
                 "action": function(obj) {
-                    scth.execNewCategoryForNode($node);
-                }
-            },
-            addcategory: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addcategory,
-                "action": function(obj) {
-                    scth.execAddCategoryForNode($node);
-                }
-            },
-            newproduct: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.newproduct,
-                "action": function(obj) {
-                    scth.execNewProductForNode($node);
-                }
-            },
-            addproduct: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addproduct,
-                "action": function(obj) {
-                    scth.execAddProductForNode($node);
+                    scth.execNewGlAccountForNode($node);
                 }
             },
             manage: {
@@ -1368,22 +1262,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 "label": scth.labels.manage,
                 "action": function(obj) {
                     scth.execManageForNode($node);
-                }
-            },
-            newcatalog: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.newcatalog,
-                "action": function(obj) {
-                    scth.execNewCatalog();
-                }
-            },
-            addcatalog: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addcatalog,
-                "action": function(obj) {
-                    scth.execAddCatalog();
                 }
             }
         };
@@ -1400,7 +1278,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         };
         
         var menuDefs = {};
-        if (objectType == 'catalog') {
+        if (objectType == 'glAccount') {
             menuDefs = {
                 "edit": setDefLabel(defs.edit, scth.labels.editcatalog),
                 "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromstore),
@@ -1408,25 +1286,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 "manage": setDefLabel(defs.manage, scth.labels.managecatalog),
                 "newcategory": defs.newcategory,
                 "addcategory": defs.addcategory,
-            };
-        } else if (objectType == 'category') {
-            menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editcategory),
-                "removeassoc": setDefLabel(defs.removeassoc, 
-                    (parentObjectType === 'catalog') ? scth.labels.removefromcatalog : scth.labels.removefromcategory),
-                "remove": setDefLabel(defs.remove, scth.labels.deletecategory),
-                "manage": setDefLabel(defs.manage, scth.labels.managecategory),
-                "newcategory": setDefLabel(defs.newcategory, scth.labels.newsubcategory),
-                "addcategory": setDefLabel(defs.addcategory, scth.labels.addsubcategory),
-                "newproduct": defs.newproduct,
-                "addproduct": defs.addproduct
-            };
-        } else if (objectType == 'product') {
-            menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editproduct),
-                "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromcategory),
-                "remove": setDefLabel(defs.remove, scth.labels.deleteproduct),
-                "manage": setDefLabel(defs.manage, scth.labels.manageproduct)
             };
         }
         
@@ -1445,7 +1304,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     };
     
     this.sideMenuHandler = function($node) {
-        var $el = jQuery("#ect-action-menu");
+        var $el = jQuery("#eglt-action-menu");
         var menuDefs = getMenuDefs($node);
         
         var useDividers = true;

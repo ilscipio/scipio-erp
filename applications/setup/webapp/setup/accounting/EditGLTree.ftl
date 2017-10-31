@@ -1,7 +1,7 @@
 <#-- SCIPIO: SETUP interactive catalog tree implementation -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
-<#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
+<#include "component://accounting/webapp/accounting/common/treecommon.ftl">
 
 <@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
 
@@ -17,26 +17,26 @@
     };
 </@script>
 
-<#assign ectCallbacks = {
+<#assign egltCallbacks = {
     "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
 }>
-<#assign ectAllHideShowFormIds = [
-    "ect-newcatalog", "ect-editcatalog", "ect-newcategory", "ect-editcategory", "ect-newcategory"
+<#assign egltAllHideShowFormIds = [
+    "eglt-newglaccount", "eglt-editglaccount"
 ]>
-<#assign ectActionProps = {
+<#assign egltActionProps = {
     "default": {
-        "newcatalog": {
+        "newglaccount": {
             "type": "form",
             "mode": "show",
-            "id": "ect-newcatalog",
-            "defaultParams": wrapRawScript("function() { return defaultCatalogParams; }")
+            "id": "eglt-newglaccount",
+            "defaultParams": wrapRawScript("function() { return null; }")
         }
     },
-    "catalog": {
+    "glAccount": {
         "edit": {
             "type": "form",
             "mode": "show",
-            "id": "ect-editcatalog" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->
+            "id": "eglt-editaccountgl" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->
             <#-- paramNames* is a preprocess step for easy param renaming before going into link/form
             "paramNames": {"productStoreId": "myProductStoreIdParam" }
             "paramNamesMode": "explicit"|"default"-->
@@ -59,12 +59,6 @@
             "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
             "id": "ect-removecatalog-form"
         },
-        "newcategory": {
-            "type": "form",
-            "mode": "show",
-            "id": "ect-newcategory",
-            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
-        },
         "manage": {
             "type": "link",
             "target": "_blank",
@@ -72,62 +66,23 @@
             "paramNames": {"prodCatalogId": true },
             "paramNamesMode": "explicit"
         }
-    },
-    "category": {
-        "edit": {
-            "type": "form",
-            "mode": "show",
-            "id": "ect-editcategory"
-        },
-        "removeassoc": {
-            "type": "form",
-            "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
-            "id": "ect-removecategoryassoc-form"
-        },
-        "remove": {
-            "type": "form",
-            "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
-            "id": "ect-removecategory-form"
-        },
-        "newcategory": {
-            "type": "form",
-            "mode": "show",
-            "id": "ect-newcategory",
-            "defaultParams": wrapRawScript("function() { return defaultCategoryParams; }")
-        },
-        "manage": {
-            "type": "link",
-            "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/EditCategory', "extLoginKey":true}),
-            "paramNames": {"productCategoryId": true },
-            "paramNamesMode": "explicit"
-        }
-    },
-    "product": {
-        "manage": {
-            "type": "link",
-            "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/ViewProduct', "extLoginKey":true}),
-            "paramNames": {"productId": true },
-            "paramNamesMode": "explicit"
-        }
     }
+   
 }>
 
-<#macro ectExtrasArea extraArgs...>
+<#-- RENDERS SETUP FORMS -->
+<#macro egltPostTreeArea extraArgs...>
+    <@render type="screen" resource=setupGlAccountForms.location name=setupGlAccountForms.name/>
+</#macro>
+
+<#-- RENDERS DISPLAY OPTIONS -->
+<#macro egltExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
     <@form action=makeOfbizUrl("setupCatalog") method="get">
-      <@defaultWizardFormFields/>   
-    <@fieldset title=uiLabelMap.CommonDisplayOptions collapsed=true> 
-      <@field type="input" name="setupEctMaxProductsPerCat" label=uiLabelMap.ProductMaxProductsPerCategory 
-        value=(ectMaxProductsPerCat!) tooltip=uiLabelMap.SetupLargeStoreSlowSettingWarning/>
-      <@field type="submit"/>
-    </@fieldset>
+      <@defaultWizardFormFields/>
     </@form>
   </@section>
 </#macro>
 
 <#-- CORE INCLUDE -->
-<#include "component://product/webapp/catalog/catalog/tree/EditCatalogTreeCore.ftl">
+<#include "component://accounting/webapp/accounting/ledger/accountsTree.ftl">

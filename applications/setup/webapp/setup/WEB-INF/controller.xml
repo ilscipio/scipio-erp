@@ -395,6 +395,14 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    
+    <!-- accounting tree ajax requests -->
+    <request-map uri="getGlAccountExtendedData">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" invoke="getProductCategoryExtendedDataVersatile"/> -->
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
 
     <!-- ================ Lookup Requests ================= -->
     <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>

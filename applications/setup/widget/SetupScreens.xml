@@ -563,6 +563,18 @@
                 <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
                 <set field="submitFormId" value="EditAccounting"/>
                 
+                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
+                
+                <set field="newGlAccountIdFormId" value="setupAccounting-newGlAccount"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
+
+                <if>
+                    <condition><not><if-true field="glSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>
             <widgets>
@@ -624,7 +636,6 @@
     <screen name="EditGLTree">
         <section>
             <actions>
-            	<set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEctCommon.js" global="true"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/>                
             </actions>
             <widgets>
@@ -636,12 +647,24 @@
 		                </and>
 		            </condition>
 		            <widgets>
-						<screenlet>                       
-						    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLTree.ftl"/></html></platform-specific>
 						</screenlet>
 		            </widgets>
             	</section>
             </widgets>           
+        </section>
+    </screen>
+    <screen name="SetupGlAccountForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html>
+                </platform-specific>
+            </widgets>
         </section>
     </screen>
     

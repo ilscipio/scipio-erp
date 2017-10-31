@@ -1,5 +1,5 @@
 /**
- * SCIPIO: SETUP interactive catalog tree data prep.
+ * SCIPIO: SETUP interactive glAccount tree data prep.
  */
 
 import org.ofbiz.base.util.*;
@@ -10,17 +10,32 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper
  
 final module = "EditGlTree.groovy";
 
-glAccountUrls = [
-    "addGlAccountUrl" : "setupAddGlAccount",
-    "createGlAccountUrl" : "setupCreateGlAccount",
-    "editGlAccountUrl" : "setupEditGlAccount",
-    "updateGlAccountUrl" : "setupUpdateGlAccount",
-    "deleteGlAccountUrl" : "setupDeleteGlAccount",
-    "assignGlAccountUrl" : "setupAssignGlAccount",
-    "importGlAccountUrl" : "setupImportGlAccounts"
-];
-context.glAccountUrls = glAccountUrls;
+//glAccountUrls = [
+//    "addGlAccountUrl" : "setupAddGlAccount",
+//    "createGlAccountUrl" : "setupCreateGlAccount",
+//    "editGlAccountUrl" : "setupEditGlAccount",
+//    "updateGlAccountUrl" : "setupUpdateGlAccount",
+//    "deleteGlAccountUrl" : "setupDeleteGlAccount",
+//    "assignGlAccountUrl" : "setupAssignGlAccount",
+//    "importGlAccountUrl" : "setupImportGlAccounts"
+//];
+//context.glAccountUrls = glAccountUrls;
 context.organizationPartyId = context.orgPartyId;
+
+isEventError = context.egltIsEventError;
+if (isEventError == null) isEventError = context.isError;
+if (isEventError == null) isEventError = false;
+context.egltIsEventError = isEventError;
+
+getSetStringParam = { paramName ->
+    def value = context[paramName];
+    if (value == null) value = parameters[paramName] as String;
+    context[paramName] = value;
+    return value;
+};
+targetNodePath = getSetStringParam("ectTargetNodePath");
+newTargetNodePath = getSetStringParam("ectNewTargetNodePath");
+submittedFormId = getSetStringParam("ectSubmittedFormId");
 
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];

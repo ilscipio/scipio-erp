@@ -1209,13 +1209,31 @@ under the License.
         <set field="prodCatIdMap.productCategoryId" from-field="parameters.productCategoryId"/>
         
         <remove-by-and entity-name="ProductCategoryAttribute" map="prodCatIdMap"/>
-        <remove-by-and entity-name="ProductCategoryContent" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductCategoryLink" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductCategoryRole" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductFeatureCategoryAppl" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductFeatureCatGrpAppl" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductPromoCategory" map="prodCatIdMap"/><!-- TODO: REVIEW -->
 
+        <set field="recursiveContentList" set-if-null="true" value=""/>
+        <if-compare field="parameters.deleteContentRecursive" operator="equals" value="all">
+            <entity-and entity-name="ProductCategoryContent" list="recursiveContentList" filter-by-date="false">
+                <field-map field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>
+            </entity-and>
+        </if-compare>
+        <if-compare field="parameters.deleteContentRecursive" operator="equals" value="active">
+            <entity-and entity-name="ProductCategoryContent" list="recursiveContentList" filter-by-date="false">
+                <field-map field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>
+            </entity-and>
+        </if-compare>
+        <iterate entry="prodCatContent" list="recursiveContentList">
+            <set field="contentRemoveCtx" set-if-null="true" value=""/>
+            <set field="contentRemoveCtx.contentId" from-field="prodCatContent.contentId"/>
+            <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
+            <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
+        </iterate>
+        <remove-by-and entity-name="ProductCategoryContent" map="prodCatIdMap"/>
+        
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="expired">
             <entity-and entity-name="ProdCatalogCategory" list="values" filter-by-date="true">
                 <field-map field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>

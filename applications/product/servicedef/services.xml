@@ -2033,6 +2033,12 @@ under the License.
                 if "all", removes all such records even if destructive.
                 WARN: "all" mode may leave products/categories as orphans!</description>
         </attribute>
+        <attribute name="deleteContentRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which Content records are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: This function only makes sense if the Content records were meant to be product-specific
+                    and not standalone; if standalone content is linked to the product then this may cause collateral damage!</description>
+        </attribute>
         <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
             <description>(none|expired|all, default: expired) Special-purpose association deletion mode,
                 e.g. TaxAuthorityRateProduct and TaxAuthorityCategory
@@ -2157,6 +2163,12 @@ under the License.
             <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
                 that are expired; if "all", removes all such records even if destructive.
                 WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteContentRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which Content records are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: This function only makes sense if the Content records were meant to be product-specific
+                    and not standalone; if standalone content is linked to the product then this may cause collateral damage!</description>
         </attribute>
         <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
             <description>(none|expired|all, default: expired) Special-purpose association deletion mode

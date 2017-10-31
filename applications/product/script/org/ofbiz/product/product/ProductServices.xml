@@ -1083,8 +1083,99 @@ under the License.
         
         <set field="prodIdMap.productId" from-field="parameters.productId"/>
         
+        <!-- 
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            SCIPIO: 2017-10-31: WARN: This service is WIP and may be dangerous - currently best-effort only
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        -->
+        
+        <if-compare field="product.isVirtual" operator="equals" value="Y">
+            <entity-and entity-name="ProductAssoc" list="productAssocList" filter-by-date="false">
+                <field-map field-name="productId" from-field="prodIdMap.productId"/>
+                <field-map field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>
+            </entity-and>
+            <iterate entry="productAssoc" list="productAssocList">
+                <set field="productAssocRemoveCtx" set-if-null="true" value=""/>
+                <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="productAssocRemoveCtx" map="parameters"/>
+                <set field="productAssocRemoveCtx.productId" from-field="productAssoc.productId"/>
+                <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="productAssocRemoveCtx"/>
+            </iterate>
+        </if-compare>
+
         <remove-by-and entity-name="ProductAttribute" map="prodIdMap"/>
         <remove-by-and entity-name="ProductKeyword" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductRole" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductCalculatedInfo" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductGeo" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductPriceChange" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductPrice" map="prodIdMap"/>
+        
+        <remove-by-and entity-name="ProductConfig" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductConfigProduct" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductConfigStats" map="prodIdMap"/>
+        <remove-by-and entity-name="ConfigOptionProductOption" map="prodIdMap"/>
+        
+        <!-- TODO: REVIEW: 
+            FixedAsset -> instanceOfProductId
+            FixedAssetProduct
+            InvoiceItem
+            ProductAverageCost
+            
+            ProductManufacturingRule
+            MrpEvent
+            
+            SalesForecastDetail
+            
+            // NOT deleting these - destroy order history!
+            OrderItem
+            OrderSummaryEntry
+            ProductOrderItem
+            QuoteItem
+            CustRequestItem
+            Requirement
+            ReturnItem
+            CartAbandonedLine
+            ShoppingListItem
+            
+            Agreement
+            AgreementProductAppl
+            CommunicationEventProduct
+            PartyNeed
+            
+            ShipmentReceipt
+            ShipmentItem
+            ShipmentPackageContent
+            
+            CostComponent
+            ProductCostComponentCalc
+            ProductFacility
+            ProductFacilityLocation
+            ProductFeatureAppl
+            ProductFeatureApplAttr
+            
+            InventoryItem
+            InventoryItemTempRes
+            ProductPaymentMethodType
+            
+            GoodIdentification
+            ProductAssoc
+            
+            ProductGlAccount
+            ProductKeyword
+            ProductMeter
+            ProductMaint
+            ProductReview
+            VendorProduct
+            ProductPromoProduct
+            ProductStoreSurveyAppl
+            ProductSubscriptionResource
+            Subscription
+            ReorderGuideline
+            SupplierProduct
+            ProductGroupOrder
+            
+            WorkEffortGoodStandard
+        -->
         
         <set field="recursiveContentList" set-if-null="true" value=""/>
         <if-compare field="parameters.deleteContentRecursive" operator="equals" value="all">
@@ -1104,8 +1195,6 @@ under the License.
             <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
         </iterate>
         <remove-by-and entity-name="ProductContent" map="prodIdMap"/>
-        
-        <!-- TODO: MORE -->
 
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="expired">
             <entity-and entity-name="ProductCategoryMember" list="values" filter-by-date="true">

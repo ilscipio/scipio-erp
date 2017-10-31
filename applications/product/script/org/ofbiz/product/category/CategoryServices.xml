@@ -1208,6 +1208,12 @@ under the License.
         
         <set field="prodCatIdMap.productCategoryId" from-field="parameters.productCategoryId"/>
         
+        <!-- 
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            SCIPIO: 2017-10-31: WARN: This service is WIP and may be dangerous - currently best-effort only
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        -->
+        
         <remove-by-and entity-name="ProductCategoryAttribute" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductCategoryLink" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductCategoryRole" map="prodCatIdMap"/>

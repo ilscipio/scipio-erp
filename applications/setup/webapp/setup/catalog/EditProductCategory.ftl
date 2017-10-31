@@ -193,6 +193,7 @@
       <@field type="hidden" name="isDeleteCategory" value="Y"/><#-- for our screens -->
       <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+      <@field type="hidden" name="deleteContentRecursive" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
       <#-- common -->
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>

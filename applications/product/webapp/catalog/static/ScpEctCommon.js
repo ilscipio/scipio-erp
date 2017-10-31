@@ -292,11 +292,12 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     };
 
     // TODO?: blocking mode? return values? callback?
-    var showPopupMsg = function(msg) {
+    var showPopupMsg = function(msg, extraMsg) {
         if (scth.popupMsgModalId) {
             var modalElem = jQuery('#'+scth.popupMsgModalId);
             if (modalElem.length) {
                 jQuery('.ect-dialogmsg', modalElem).html(msg);
+                jQuery('.ect-dialogextramsg', modalElem).html(extraMsg || '');
                 openModal(modalElem);
             } else {
                 return alert(msg);
@@ -305,12 +306,13 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             return alert(msg);
         }
     };
-    var showConfirmMsg = function(msg, modalElem, continueCallback) {
+    var showConfirmMsg = function(msg, extraMsg, modalElem, continueCallback) {
         if ((!modalElem || !modalElem.length) && scth.confirmMsgModalId) {
             modalElem = jQuery('#'+scth.confirmMsgModalId);
         }
         if (modalElem && modalElem.length) {
             jQuery('.ect-dialogmsg', modalElem).html(msg);
+            jQuery('.ect-dialogextramsg', modalElem).html(extraMsg || '');
             jQuery('.ect-dialogbtn', modalElem).click(function() {
                 closeModal(modalElem);
                 var selectedName = extractClassNameSuffix(jQuery(this), 'ect-dialogbtn-');
@@ -766,8 +768,9 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         // FIXME?: the confirm message should occur earlier than this, but need new factor points
         var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
         if (confirmMsg) {
+            var confirmExtraMsg = params.local.confirmExtraMsg || ai.actionProps.confirmExtraMsg;
             var modalElem = jQuery('#'+ scth.dialogIdPrefix + ai.objectType + '-' + ai.actionType);
-            showConfirmMsg(confirmMsg, modalElem, function(subActionType) {
+            showConfirmMsg(confirmMsg, confirmExtraMsg, modalElem, function(subActionType) {
                 params.subActionType = subActionType;
                 if (preParamNamesMap && preParamNamesMap.subActionType) {
                     if (typeof preParamNamesMap.subActionType === 'function') {

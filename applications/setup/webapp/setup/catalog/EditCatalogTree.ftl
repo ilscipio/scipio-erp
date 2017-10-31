@@ -70,6 +70,7 @@
             "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentNote'),
             "id": "ect-removecatalog-form"
         },
         "newcategory": {
@@ -123,6 +124,7 @@
             "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentNote'),
             "id": "ect-removecategory-form"
         },
         "newcategory": {
@@ -188,6 +190,7 @@
             "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentNote'),
             "id": "ect-removeproduct-form"
         },
         "manage": {

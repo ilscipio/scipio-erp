@@ -17,27 +17,18 @@ glAccountUrls = [
     "updateGlAccountUrl" : "setupUpdateGlAccount",
     "deleteGlAccountUrl" : "setupDeleteGlAccount",
     "assignGlAccountUrl" : "setupAssignGlAccount",
-    "importGlAccountUrl" : "setupImportGlAccounts",
+    "importGlAccountUrl" : "setupImportGlAccounts"
 ];
 context.glAccountUrls = glAccountUrls;
-
 context.organizationPartyId = context.orgPartyId;
-context.accountMaps = context.glAccountList;
 
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];
 result = dispatcher.runSync("buildGlAccountTree", ["glAccountId": context.topGlAccountId]);
-
 if (result?.treeList) {
     treeMenuData = treeMenuData + result.treeList;
 }
-treeMenuHelper.addAll(treeMenuData)
-
-for (data in treeMenuData) {
-    Debug.log("data ==============> " + data);
-}
-
+treeMenuHelper.addAll(treeMenuData);
 context.treeMenuData = treeMenuHelper;
-
 
 context.treeOptionsFixedParams=["orgPartyId": context.orgPartyId, "topGlAccountId" : context.topGlAccountId];

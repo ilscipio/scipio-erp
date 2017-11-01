@@ -1089,18 +1089,31 @@ under the License.
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         -->
         
-        <if-compare field="product.isVirtual" operator="equals" value="Y">
-            <entity-and entity-name="ProductAssoc" list="productAssocList" filter-by-date="false">
+        <!-- remove "to"/"child" associated products recursively + associations -->
+        <set field="assocProductRecList" set-if-null="true" value=""/>
+        <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="all">
+            <entity-and entity-name="ProductAssoc" list="assocProductRecList" filter-by-date="false">
                 <field-map field-name="productId" from-field="prodIdMap.productId"/>
-                <field-map field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>
+                <!-- doing all types for now: <field-map field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>-->
             </entity-and>
-            <iterate entry="productAssoc" list="productAssocList">
-                <set field="productAssocRemoveCtx" set-if-null="true" value=""/>
-                <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="productAssocRemoveCtx" map="parameters"/>
-                <set field="productAssocRemoveCtx.productId" from-field="productAssoc.productId"/>
-                <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="productAssocRemoveCtx"/>
-            </iterate>
         </if-compare>
+        <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="active">
+            <entity-and entity-name="ProductAssoc" list="assocProductRecList" filter-by-date="true">
+                <field-map field-name="productId" from-field="prodIdMap.productId"/>
+                <!-- doing all types for now: <field-map field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>-->
+            </entity-and>
+        </if-compare>
+        <iterate entry="productAssoc" list="productAssocList">
+            <set field="productAssocRemoveCtx" set-if-null="true" value=""/>
+            <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="productAssocRemoveCtx" map="parameters"/>
+            <set field="productAssocRemoveCtx.productId" from-field="productAssoc.productId"/>
+            <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="productAssocRemoveCtx"/>
+        </iterate>
+        <remove-by-and entity-name="ProductAssoc" map="prodIdMap"/>
+        
+        <!-- remove "from"/"parent" assoc to this product -->
+        <set field="prodIdToMap.productIdTo" from-field="parameters.productId"/>
+        <remove-by-and entity-name="ProductAssoc" map="prodIdToMap"/>
 
         <remove-by-and entity-name="ProductAttribute" map="prodIdMap"/>
         <remove-by-and entity-name="ProductKeyword" map="prodIdMap"/>
@@ -1158,7 +1171,6 @@ under the License.
             ProductPaymentMethodType
             
             GoodIdentification
-            ProductAssoc
             
             ProductGlAccount
             ProductKeyword

@@ -1930,7 +1930,7 @@ under the License.
     
     <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProdCatalog" engine="simple"
                 location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndRelatedVersatile" auth="true">
-        <description>SCIPIO: Delete a ProdCatalog record and various related records (may be dangerous) (versatile)</description>
+        <description>SCIPIO: Delete a ProdCatalog record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
         <permission-service service-name="catalogPermissionCheck" main-action="DELETE"/><!-- no delegated check, needs explicit -->
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
@@ -2021,7 +2021,7 @@ under the License.
         TODO: 2017-10-20: partial functionality only -->
     <service name="deleteProductCategoryAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndRelatedVersatile" auth="true">
-        <description>SCIPIO: Delete a ProductCategory record and various related records (may be dangerous) (versatile)</description>
+        <description>SCIPIO: Delete a ProductCategory record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
             <description>(none|expired|all, default: expired) Controls whether deletes all (default)
@@ -2153,7 +2153,7 @@ under the License.
         TODO: 2017-10-20: partial functionality only -->
     <service name="deleteProductAndRelatedVersatile" default-entity-name="Product" engine="simple"
                 location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndRelatedVersatile" auth="true">
-        <description>SCIPIO: Delete a Product record and various related records (may be dangerous) (versatile)</description>
+        <description>SCIPIO: Delete a Product record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
             <description>(none|expired|all, default: expired) Controls whether deletes all (default)
@@ -2170,14 +2170,15 @@ under the License.
                 WARN: This function only makes sense if the Content records were meant to be product-specific
                     and not standalone; if standalone content is linked to the product then this may cause collateral damage!</description>
         </attribute>
+        <attribute name="deleteAssocProductRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which associated "to"/"child" Products are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: Risk of collateral damage</description>
+        </attribute>
         <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
             <description>(none|expired|all, default: expired) Special-purpose association deletion mode
                 WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
         </attribute>
-        <!-- TODO: not implemented
-        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
-            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
-        </attribute>-->
     </service>
     
     <service name="deleteProductAndCatAssocVersatile" engine="simple"

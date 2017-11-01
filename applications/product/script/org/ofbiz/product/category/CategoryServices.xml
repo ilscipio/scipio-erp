@@ -1221,23 +1221,33 @@ under the License.
         <remove-by-and entity-name="ProductFeatureCatGrpAppl" map="prodCatIdMap"/>
         <remove-by-and entity-name="ProductPromoCategory" map="prodCatIdMap"/><!-- TODO: REVIEW -->
 
-        <set field="recursiveContentList" set-if-null="true" value=""/>
+        <set field="assocContentFilterByDate" set-if-null="true" value=""/>
         <if-compare field="parameters.deleteContentRecursive" operator="equals" value="all">
-            <entity-and entity-name="ProductCategoryContent" list="recursiveContentList" filter-by-date="false">
-                <field-map field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>
-            </entity-and>
+            <set field="assocContentFilterByDate" value="false"/>
+            <else>
+                <if-compare field="parameters.deleteContentRecursive" operator="equals" value="active">
+                    <set field="assocContentFilterByDate" value="true"/>
+                </if-compare>
+            </else>
         </if-compare>
-        <if-compare field="parameters.deleteContentRecursive" operator="equals" value="active">
-            <entity-and entity-name="ProductCategoryContent" list="recursiveContentList" filter-by-date="false">
-                <field-map field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>
-            </entity-and>
-        </if-compare>
-        <iterate entry="prodCatContent" list="recursiveContentList">
-            <set field="contentRemoveCtx" set-if-null="true" value=""/>
-            <set field="contentRemoveCtx.contentId" from-field="prodCatContent.contentId"/>
-            <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
-            <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
-        </iterate>
+        <if-not-empty field="assocContentFilterByDate">
+            <entity-condition entity-name="ProductCategoryContent" list="recursiveContentList" filter-by-date="${assocContentFilterByDate}">
+                <condition-list combine="and">
+                    <condition-expr field-name="productCategoryId" from-field="prodCatIdMap.productCategoryId"/>
+                    <!-- TODO: which types to filter?
+                    <condition-list combine="or">
+                        <!- - TODO: these should be configurable as a service list parameter... - ->
+                    </condition-list>
+                     -->
+                </condition-list>
+            </entity-condition>
+            <iterate entry="prodCatContent" list="recursiveContentList">
+                <set field="contentRemoveCtx" set-if-null="true" value=""/>
+                <set field="contentRemoveCtx.contentId" from-field="prodCatContent.contentId"/>
+                <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
+                <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
+            </iterate>
+        </if-not-empty>
         <remove-by-and entity-name="ProductCategoryContent" map="prodCatIdMap"/>
         
         <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="expired">

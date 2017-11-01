@@ -32195,4 +32195,8 @@
         <value xml:lang="en">Delete associated content records</value>
         <value xml:lang="de">Zugehörige Inhaltsdatensätze löschen</value>
     </property>
+    <property key="ProductDeleteAssociatedChildProducts">
+        <value xml:lang="en">Delete associated child Products (variants, etc.)</value>
+        <value xml:lang="de">Löschen Sie zugehörige untergeordnete Produkte (Varianten usw.)</value>
+    </property>
 </resource>

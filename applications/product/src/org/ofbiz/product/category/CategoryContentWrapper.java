@@ -179,4 +179,30 @@ public class CategoryContentWrapper implements ContentWrapper {
             ContentWorker.renderContentAsText(dispatcher, delegator, categoryContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, true);
         }
     }
+    
+    /**
+     * SCIPIO: Gets the entity field value corresponding to the given prodCategoryContentTypeId.
+     * DO NOT USE FROM TEMPLATES - NOT CACHED - intended for code that must replicate ProductContentWrapper behavior.
+     * DEV NOTE: LOGIC DUPLICATED FROM getProductContentAsText ABOVE - PLEASE KEEP IN SYNC.
+     * Added 2017-09-05.
+     */
+    public static String getEntityFieldValue(GenericValue productCategory, String prodCatContentTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache) throws GeneralException, IOException {
+        if (delegator == null) {
+            delegator = productCategory.getDelegator();
+        }
+
+        if (delegator == null) {
+            throw new GeneralRuntimeException("Unable to find a delegator to use!");
+        }
+        
+        String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
+        ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
+        if (categoryModel.isField(candidateFieldName)) {
+            String candidateValue = productCategory.getString(candidateFieldName);
+            if (UtilValidate.isNotEmpty(candidateValue)) {
+                return candidateValue;
+            }
+        }
+        return null;
+    }
 }

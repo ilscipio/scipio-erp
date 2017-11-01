@@ -29,6 +29,19 @@
     "ect-newproduct", "ect-editproduct", "ect-addproduct"
 ]>
 
+<#-- SPECIAL CONFIRM MESSAGE OPTIONS -->
+<#-- TODO: REVIEW: unclear if value="all" is appropriate for these (DANGEROUS?) -->
+<#macro ectDeleteCategoryConfirmFields args={}>
+    <@field type="checkbox" name="deleteContentRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedContentRecords
+        checked=true/>
+</#macro>
+<#macro ectDeleteProductConfirmFields args={}>
+    <@field type="checkbox" name="deleteContentRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedContentRecords
+        checked=true/>
+    <@field type="checkbox" name="deleteAssocProductRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedChildProducts
+        checked=true/>
+</#macro>
+
 <#-- ACTION PROPERTIES, links tree actions to setup forms -->
 <#assign ectActionProps = {
     "default": {
@@ -125,6 +138,7 @@
             "mode": "submit",
             "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentParam'),
             "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentNote'),
+            "confirmFields": ectDeleteCategoryConfirmFields,
             "id": "ect-removecategory-form"
         },
         "newcategory": {
@@ -191,6 +205,7 @@
             "mode": "submit",
             "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentParam'),
             "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentNote'),
+            "confirmFields": ectDeleteProductConfirmFields,
             "id": "ect-removeproduct-form"
         },
         "manage": {

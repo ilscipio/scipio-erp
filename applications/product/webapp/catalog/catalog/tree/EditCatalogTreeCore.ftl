@@ -85,6 +85,20 @@
         </div>
     </#macro>
     
+    <#macro ectDefActionInnerContent props>
+        <p class="ect-dialogmsg"></p>
+      <#if props.confirmFields??>
+        <@form class="+ect-dialogopts-form">
+            <#-- TODO: REVIEW: unclear if the value should be "all" or "active" at current time or if should
+                be checked by default -->
+          <@fields type="default-compact">
+            <@ectMarkupOut dir=props.confirmFields/>
+          </@fields>
+        </@form>
+      </#if>
+        <p class="ect-dialogextramsg"></p>
+    </#macro>
+    
     <#macro ectDefActionMsgModals args={}>
         <#list args.actionProps?keys as objectType>
             <#local actionMap = toSimpleMap(args.actionProps[objectType])>
@@ -95,8 +109,7 @@
             <#if props.confirmMsg?has_content>
                 <@modal id="${args.idPrefix}${rawString(objectType)}-removeassoc" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
-                    <p class="ect-dialogmsg"></p>
-                    <p class="ect-dialogextramsg"></p>
+                    <@ectDefActionInnerContent props=props/>
                     <div class="modal-footer ${styles.text_right!}">
                        <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
                        <a class="ect-dialogbtn ect-dialogbtn-remove ${styles.button!} btn-ok">${uiLabelMap.CommonRemove}</a>
@@ -109,16 +122,7 @@
             <#if props.confirmMsg?has_content>
                 <@modal id="${args.idPrefix}${rawString(objectType)}-remove" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
-                    <p class="ect-dialogmsg"></p>
-                    <@form class="+ect-dialogopts-form">
-                        <#-- TODO: REVIEW: unclear if the value should be "all" or "active" at current time or if should
-                            be checked by default -->
-                      <@fields type="default-compact">
-                        <@field type="checkbox" name="deleteContentRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedContentRecords
-                            checked=true/>
-                      </@fields>
-                    </@form>
-                    <p class="ect-dialogextramsg"></p>
+                    <@ectDefActionInnerContent props=props/>
                     <@ectDefActionConfirmMsgBtn/>
                 </@modal>
             </#if>
@@ -127,8 +131,7 @@
             <#if props.confirmMsg?has_content>
                 <@modal id="${args.idPrefix}${rawString(objectType)}-copymoveassoc" class="+ect-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
-                    <p class="ect-dialogmsg"></p>
-                    <p class="ect-dialogextramsg"></p>
+                    <@ectDefActionInnerContent props=props/>
                     <div class="modal-footer ${styles.text_right!}">
                        <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
                        <a class="ect-dialogbtn ect-dialogbtn-copy ${styles.button!} btn-ok">${uiLabelMap.CommonCopy}</a>
@@ -142,15 +145,13 @@
       <#if !ectPopupMsgModalId?has_content>
         <@modal id="${args.idPrefix}generic-popupmsg" class="+ect-dialogmodal">
             <@heading>${uiLabelMap.CommonWarning}</@heading>
-            <p class="ect-dialogmsg"></p>
-            <p class="ect-dialogextramsg"></p>
+            <@ectDefActionInnerContent props=props/>
         </@modal>
       </#if>
       <#if !ectConfirmMsgModalId?has_content>
         <@modal id="${args.idPrefix}generic-confirmmsg" class="+ect-dialogmodal">
             <@heading>${uiLabelMap.CommonWarning}</@heading>
-            <p class="ect-dialogmsg"></p>
-            <p class="ect-dialogextramsg"></p>
+            <@ectDefActionInnerContent props=props/>
             <@ectDefActionConfirmMsgBtn/>
         </@modal>
       </#if>

@@ -27,6 +27,8 @@
           <#elseif rawType == "Map" || rawType == "java.util.Map">
             <#local defaultValue = defaultValue.toString()>
           </#if>
+          <#-- FIXME: MISSING DEFAULT VALUE STR REPR FOR OTHER NON-PRIMITIVE TYPES -->
+          <#-- TODO: REVIEW: ALSO CHECK: serviceParameter.value -->
         </#if>
         <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=required placeholder=defaultValue/>
       </#if>

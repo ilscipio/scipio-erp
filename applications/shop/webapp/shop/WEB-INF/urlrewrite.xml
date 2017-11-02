@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+<urlrewrite use-context="true">
+
+    <!-- WEBAPP CONTEXT BLOCKER RULE - ignore all outbound links that do not target our webapp -->
+    <outbound-rule>
+        <from>^(.*)$</from>
+        <set name="urlFilter.outUrlWebapp.outUrl">$1</set>
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="verifySameWebappContext" />
+    </outbound-rule>
+    <outbound-rule>
+        <condition type="attribute" name="urlFilter.outUrlWebapp.isSameContext" operator="equal">false</condition>
+          <from>.*</from>
+        <to last="true">-</to>
+    </outbound-rule>
+
+    <!-- CACHE -->
+    <!-- Set the "Cache-Control" HTTP response header for all requests
+    <rule>
+        <from>.*</from>
+        <set type="response-header" name="Cache-Control">max-age=3600, must-revalidate</set>
+    </rule>
+    -->
+
+    <!-- LEGACY ECOMMERCE REDIRECT -->
+    <rule>
+        <from>^([^/]*//[^/]*)?/ecommerce([?;#/].*)?$</from>
+        <to type="permanent-redirect" last="true">$1/shop$2</to>
+    </rule>
+
+    <!-- DEFAULT REQUEST MAPPING RULE - maps default request ("/") to main
+        uncomment this to get rid of /control/main URLs -->
+    <rule>
+        <from>^/?([?;#][^/]*)?$</from>
+        <to last="true">/control/main$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/.*?)?/control/main([?;#].*)?$</from>
+        <to>$1$2/$3</to>
+    </outbound-rule>
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/.*?)?/control/main(/.*)$</from>
+        <to>$1$2$3</to>
+    </outbound-rule>
+
+    <!-- TODO? - Replace default product and category paths
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/shop)?/product([/?;#].*)?$</from>
+        <to>$1$2/product$3</to>
+    </outbound-rule>
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/shop)?/products([/?;#].*)?$</from>
+        <to>$1$2/products$3</to>
+    </outbound-rule>
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/shop)?/category([/?;#].*)?$</from>
+        <to>$1$2/category$3</to>
+    </outbound-rule>
+    <rule>
+        <from>^/product([/?;#].*)?$</from>
+        <to>/product$1</to>
+    </rule>
+    -->
+
+</urlrewrite>
+

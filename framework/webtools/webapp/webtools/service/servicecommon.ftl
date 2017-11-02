@@ -1,4 +1,17 @@
 
+<#-- FIXME: NEEDS DEEPER REVIEW (INCOMPLETE?) + PERHAPS GLOBAL UTILITY FOR STR REPR -->
+<#function getServiceParamStrRepr value type>
+  <#if isObjectType("string", value)>
+    <#return rawString(value)>
+  <#elseif isObjectType("complexobject", value)>
+    <#-- COMPLEX BEAN-WRAPPED OBJECTS MUST USE toString() BEFORE ?string/rawString
+        OTHERWISE CRASH (in rawString) OR DOUBLE-ESCAPE -->
+    <#return rawString(value.toString())>
+  <#else>
+    <#return rawString(value)>
+  </#if>
+</#function>
+
 <#macro serviceFields serviceParameters>
     <#list serviceParameters as serviceParameter>
       <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
@@ -19,18 +32,11 @@
             <option value="false"<#if serviceParameter.optional == "N"> selected="selected"</#if>>false</option>
         </@field>
       <#elseif rawType == "Timestamp" || rawType == "java.sql.Timestamp">
-        <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name value=(serviceParameter.value!) required=required placeholder=defaultValue/>
+        <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name 
+            value=(serviceParameter.value!) required=required placeholder=defaultValue/>
       <#else>
-        <#if defaultValue?has_content>
-          <#if rawType == "List" || rawType == "java.util.List">
-            <#local defaultValue = defaultValue.toString()>
-          <#elseif rawType == "Map" || rawType == "java.util.Map">
-            <#local defaultValue = defaultValue.toString()>
-          </#if>
-          <#-- FIXME: MISSING DEFAULT VALUE STR REPR FOR OTHER NON-PRIMITIVE TYPES -->
-          <#-- TODO: REVIEW: ALSO CHECK: serviceParameter.value -->
-        </#if>
-        <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=required placeholder=defaultValue/>
+        <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name 
+            value=getServiceParamStrRepr(serviceParameter.value!, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType)/>
       </#if>
     </#list>
 </#macro>

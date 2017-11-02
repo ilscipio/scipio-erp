@@ -21,6 +21,13 @@
       <#elseif rawType == "Timestamp" || rawType == "java.sql.Timestamp">
         <@field type="datetime" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name=serviceParameter.name value=(serviceParameter.value!) required=required placeholder=defaultValue/>
       <#else>
+        <#if defaultValue?has_content>
+          <#if rawType == "List" || rawType == "java.util.List">
+            <#local defaultValue = defaultValue.toString()>
+          <#elseif rawType == "Map" || rawType == "java.util.Map">
+            <#local defaultValue = defaultValue.toString()>
+          </#if>
+        </#if>
         <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name value=(serviceParameter.value!) required=required placeholder=defaultValue/>
       </#if>
     </#list>

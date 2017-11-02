@@ -609,45 +609,6 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    /**
-     * Function to mark a product as discontinued in solr. Sets attribute "salesDiscontinuationDate" to current date.
-     * 
-     * @param dctx
-     * @param context
-     * @return
-     */
-    public static Map<String, Object> setProductToSalesDiscontinued(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
-        String productId = (String) context.get("productId");
-        if (UtilValidate.isEmpty(productId)) {
-            return ServiceUtil.returnError("Empty productId given");
-        }
-        try {
-            GenericValue product = delegator.findOne("Product", false, "productId", productId);
-            if (UtilValidate.isEmpty(product)) {
-                ServiceUtil.returnError("Could not find product with given id:" + productId);
-            }
-            product.set("salesDiscontinuationDate", new Timestamp(System.currentTimeMillis()));
-            product.set("comments", "Product discontinued (manually disabled)");
-            product.store();
-            LocalDispatcher dispatcher = dctx.getDispatcher();
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("productId", productId);
-            try {
-                dispatcher.runSync("updateSolrWithProduct", params);
-            }
-            catch (GenericServiceException e) {
-                Debug.logError(e, module);
-                ServiceUtil.returnError("Error reindexing product to Solr:" + e.getMessage());
-            }
-        }
-        catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            ServiceUtil.returnError("Error while disabling product:" + e.getMessage());
-        }
-        return ServiceUtil.returnSuccess();
-    }
-    
     private static Map<String, Object> copySolrQueryExtraOutParams(Map<String, Object> src, Map<String, Object> dest) {
         if (src.containsKey("errorType")) dest.put("errorType", src.get("errorType"));
         if (src.containsKey("nestedErrorMessage")) dest.put("nestedErrorMessage", src.get("nestedErrorMessage"));

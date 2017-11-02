@@ -2245,7 +2245,7 @@ under the License.
     
     <!-- SCIPIO: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
     <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="com.ilscipio.scipio.product.category.CategoryServices" invoke="buildCatalogTree">
-        <description>Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
+        <description>SCIPIO: Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
         <auto-attributes mode="IN" include="pk" optional="false" />
         <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
         <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
@@ -2267,5 +2267,79 @@ under the License.
         <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
-
+    
+    <!-- SCIPIO: Service to discontinue a product 
+        NOTE: This is redundant if solr ECAs are enabled and should not be used in that case. -->    
+    <service name="discontinueProduct" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.product.ProductServices" invoke="setProductToSalesDiscontinued">
+        <description>SCIPIO: Discontinues (manually disables) a product and updates solr.</description>
+        <attribute name="productId" mode="IN" type="String" />
+    </service>
+    
+    <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+    <service name="generateProductAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml</description>
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="product" mode="IN" type="GenericValue" optional="true">
+            <description>optimization</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+    <service name="generateProductCategoryAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml</description>
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
+        <attribute name="productCategory" mode="IN" type="GenericValue" optional="true">
+            <description>optimization</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+    <!-- TODO?: future, no replacement for stock yet
+    <service name="generateContentAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAlternativeProductUrls">
+        <description>SCIPIO: Generates alternative urls for single conent based on the ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="contentId" mode="IN" type="String" optional="false"/>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    -->
+    
+    <!-- SCIPIO: replacement for generateMissingSeoUrlForWebsite -->
+    <service name="generateStoreAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateStoreAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: TODO: NOT IMPLEMENTED: Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true">
+            <description>May pass webSiteId OR productStoreId</description>
+        </attribute>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true">
+            <description>May pass webSiteId OR productStoreId</description>
+        </attribute>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true">
+            <description>Limits to a specific catalog</description>
+        </attribute>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true">
+            <description>Currently supports: product, category. If null (default), does all.</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+    </service>
+    
+    <service name="generateAllAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAllAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: Re-generates alternative urls for ALL stores/websites based on ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true">
+            <description>Currently supports: product, category. If null (default), does all.</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+    </service>
+    
 </services>

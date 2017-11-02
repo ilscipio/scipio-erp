@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
+import java.util.Collection;
 import java.util.Map;
 
 import freemarker.ext.beans.BeanModel;
@@ -17,6 +18,8 @@ import javolution.util.FastMap;
  * <p>
  * <em>NOTE</em>: this is mainly needed for maps. Sequences don't suffer from the
  * same type confusion or they can be examined using the expected type checks (for the most part).
+ * <p>
+ * TODO: REVIEW: 2017: these checks must be reviewed for non BeanModel wrappers...
  */
 public enum OfbizFtlObjectType {
     
@@ -90,8 +93,36 @@ public enum OfbizFtlObjectType {
             }
             return false;
         }
-    }; 
+    },
     
+    /**
+     * Collection wrapped in a bean model.
+     */
+    COMPLEXCOLLECTION("complexcollection") {
+        @Override
+        public boolean isObjectType(TemplateModel object) {
+            if (object instanceof BeanModel) {
+                Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
+                if (wrappedObject instanceof Collection) { // in ofbiz context, this could be string or other
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    
+    /**
+     * Anything wrapped in a bean model.
+     */
+    COMPLEXOBJECT("complexobject") {
+        @Override
+        public boolean isObjectType(TemplateModel object) {
+            if (object instanceof BeanModel) {
+                return true;
+            }
+            return false;
+        }
+    };
     
     private static final Map<String, OfbizFtlObjectType> ftlNameHash;
     

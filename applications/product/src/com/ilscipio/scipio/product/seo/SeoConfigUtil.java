@@ -130,7 +130,13 @@ public class SeoConfigUtil {
      * 
      * @return result to indicate the status of initialization.
      */
-    public static synchronized void init() {
+    public static void init() {
+        // FIXME?: this is fixed for a single static config, so don't init twice, change this completely in future...
+        if (isInitialed) return; // skip massive sync block for no reason
+        else initInternal();
+    }
+
+    private static synchronized void initInternal() {
         // FIXME?: this is fixed for a single static config, so don't init twice, change this completely in future...
         if (isInitialed) return;
         

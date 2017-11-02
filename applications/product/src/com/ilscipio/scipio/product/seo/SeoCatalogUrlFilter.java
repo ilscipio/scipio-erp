@@ -1,6 +1,8 @@
 package com.ilscipio.scipio.product.seo;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -41,23 +44,29 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     protected String defaultLocaleString = null;
     protected String redirectUrl = null;
     protected String controlPrefix = null;
+    protected boolean enabled = true;
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        super.init(config);
-        
-        String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
-        String initRedirectUrl = config.getInitParameter("redirectUrl");
-        defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
-        redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
-        
-        if (UtilValidate.isNotEmpty(CONTROL_MOUNT_POINT)) {
-            controlPrefix = "/" + controlPrefix;
-        } else {
-            controlPrefix = "";
+        enabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("enabled")));
+        if (enabled) {
+            
+            super.init(config);
+            
+            String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
+            String initRedirectUrl = config.getInitParameter("redirectUrl");
+            defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
+            redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
+            
+            if (UtilValidate.isNotEmpty(CONTROL_MOUNT_POINT)) {
+                controlPrefix = "/" + controlPrefix;
+            } else {
+                controlPrefix = "";
+            }
+
+            WebsiteSeoConfig.registerWebsiteForSeo(WebsiteSeoConfig.makeConfig(config.getServletContext(), true));
+            SeoConfigUtil.init();
         }
-        
-        SeoConfigUtil.init();
     }
 
     @Override
@@ -66,12 +75,9 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     }
     
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        Delegator delegator = getDelegatorForControl(request, request.getServletContext());
-
-        boolean alreadyRun = Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR));
-        
-        boolean handleRequest = false && !alreadyRun;
+        boolean handleRequest = enabled && !Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR));
         if (handleRequest) {
+            Delegator delegator = getDelegatorForControl(request, request.getServletContext());
             
             // TODO
             

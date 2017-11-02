@@ -56,6 +56,7 @@ public abstract class SeoCatalogServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
         boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
+        boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
         Timestamp moment = UtilDateTime.nowTimestamp();
 
         GenericValue product = (GenericValue) context.get("product");
@@ -67,7 +68,7 @@ public abstract class SeoCatalogServices {
                 return ServiceUtil.returnError("product not found for ID: " + productId);
             }
             return generateProductAlternativeUrls(delegator, dispatcher, context, product, 
-                    replaceExisting, moment);
+                    replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, message, module);
@@ -75,8 +76,8 @@ public abstract class SeoCatalogServices {
         }
     }
 
-    public static Map<String, Object> generateProductAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue product, boolean replaceExisting, Timestamp moment) throws Exception {
+    static Map<String, Object> generateProductAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
+            GenericValue product, boolean replaceExisting, boolean removeOldLocales, Timestamp moment) throws Exception {
         final String nameField = "PRODUCT_NAME"; // TODO: UNHARDCODE
         
         String productId = product.getString("productId");
@@ -87,7 +88,9 @@ public abstract class SeoCatalogServices {
                 .where("productId", productId, "productContentTypeId", "ALTERNATIVE_URL").filterByDate().cache(false).queryList();
         if (UtilValidate.isNotEmpty(altUrlContent)) {
             if (!replaceExisting) {
-                return ServiceUtil.returnSuccess("Product '" + product + "' already has alternative URLs - not recreating");
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("productUpdated", Boolean.FALSE);
+                return result;
             }
             productContent = altUrlContent.get(0);
         }
@@ -129,7 +132,7 @@ public abstract class SeoCatalogServices {
             mainContent = productContent.getRelatedOne("Content", false);
         }
         mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, moment);
+                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
         if (productContent == null) {
             productContent = delegator.makeValue("ProductContent");
             productContent.put("productId", productId);
@@ -142,6 +145,7 @@ public abstract class SeoCatalogServices {
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("mainContentId", mainContent.getString("contentId"));
+        result.put("productUpdated", Boolean.TRUE);
         return result;
     }
     
@@ -171,6 +175,7 @@ public abstract class SeoCatalogServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productCategoryId = (String) context.get("productCategoryId");
         boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
+        boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
         Timestamp moment = UtilDateTime.nowTimestamp();
         
         GenericValue productCategory = (GenericValue) context.get("productCategory");
@@ -181,7 +186,8 @@ public abstract class SeoCatalogServices {
             if (productCategory == null) {
                 return ServiceUtil.returnError("category not found for ID: " + productCategoryId);
             }
-            return generateProductCategoryAlternativeUrls(delegator, dispatcher, context, productCategory, replaceExisting, moment);
+            return generateProductCategoryAlternativeUrls(delegator, dispatcher, context, 
+                    productCategory, replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, message, module);
@@ -189,8 +195,8 @@ public abstract class SeoCatalogServices {
         }
     }
     
-    public static Map<String, Object> generateProductCategoryAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue productCategory, boolean replaceExisting, Timestamp moment) throws Exception {
+    static Map<String, Object> generateProductCategoryAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
+            GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment) throws Exception {
         final String nameField = "CATEGORY_NAME"; // TODO: UNHARDCODE
         String productCategoryId = productCategory.getString("productCategoryId");
         
@@ -200,7 +206,9 @@ public abstract class SeoCatalogServices {
                 .where("productCategoryId", productCategoryId, "prodCatContentTypeId", "ALTERNATIVE_URL").filterByDate().cache(false).queryList();
         if (UtilValidate.isNotEmpty(altUrlContent)) {
             if (!replaceExisting) {
-                return ServiceUtil.returnSuccess("ProductCategory '" + productCategoryId + "' already has alternative URLs - not recreating");
+                Map<String, Object> result = ServiceUtil.returnSuccess();
+                result.put("categoryUpdated", Boolean.FALSE);
+                return result;
             }
             productCategoryContent = altUrlContent.get(0);
         }
@@ -232,7 +240,7 @@ public abstract class SeoCatalogServices {
             mainContent = productCategoryContent.getRelatedOne("Content", false);
         }
         mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, moment);
+                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
     
         if (productCategoryContent == null) {
             productCategoryContent = delegator.makeValue("ProductCategoryContent");
@@ -246,6 +254,7 @@ public abstract class SeoCatalogServices {
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("mainContentId", mainContent.getString("contentId"));
+        result.put("categoryUpdated", Boolean.TRUE);
         return result;
     }
     
@@ -331,7 +340,7 @@ public abstract class SeoCatalogServices {
      */
     private static GenericValue replaceAltUrlContentLocalized(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
             GenericValue mainContent, String defaultLocaleString, String defaultLocaleUrl, Map<String, String> localeUrlMap,
-            Timestamp moment) throws Exception {
+            boolean removeOldLocales, Timestamp moment) throws Exception {
         Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
         
         // update the main content record
@@ -374,14 +383,16 @@ public abstract class SeoCatalogServices {
                 updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
                 remainingLocales.remove(localeString);
             } else {
-                Map<String, Object> servCtx = new HashMap<>();
-                servCtx.put("userLogin", context.get("userLogin"));
-                servCtx.put("locale", context.get("locale"));
-                servCtx.put("contentId", content.get("contentId"));
-                Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
-                if (ServiceUtil.isError(servResult)) {
-                    throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
-                            + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
+                if (removeOldLocales) {
+                    Map<String, Object> servCtx = new HashMap<>();
+                    servCtx.put("userLogin", context.get("userLogin"));
+                    servCtx.put("locale", context.get("locale"));
+                    servCtx.put("contentId", content.get("contentId"));
+                    Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
+                    if (ServiceUtil.isError(servResult)) {
+                        throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
+                                + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
+                    }
                 }
             }
         }
@@ -454,13 +465,16 @@ public abstract class SeoCatalogServices {
     /**
      * Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml.
      */
-    public static Map<String, Object> generateStoreAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> generateWebsiteAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
        
         Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeGenerate"));
-        boolean doProducts = (typeGenerate == null) || typeGenerate.contains("product");
-        boolean doCategory = (typeGenerate == null) || typeGenerate.contains("category");
+        if (typeGenerate == null) typeGenerate = Collections.emptyList();
+        boolean doAll = typeGenerate.contains("all");
+        boolean doProducts = doAll || typeGenerate.contains("product");
+        boolean doCategory = doAll || typeGenerate.contains("category");
+        
         boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
 
         String webSiteId = (String) context.get("webSiteId");
@@ -484,9 +498,12 @@ public abstract class SeoCatalogServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
        
         Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeGenerate"));
-        boolean doProducts = (typeGenerate == null) || typeGenerate.contains("product");
-        boolean doCategory = (typeGenerate == null) || typeGenerate.contains("category");
-        boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
+        if (typeGenerate == null) typeGenerate = Collections.emptyList();
+        boolean doAll = typeGenerate.contains("all");
+        boolean doProducts = doAll || typeGenerate.contains("product");
+        boolean doCategory = doAll || typeGenerate.contains("category");
+        
+        //boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting")); // makeValidContext transfers
         
         // IMPORTANT: USE LIST ITERATOR
         // TODO: REVIEW: currently avoids store lookup overhead but may not last,
@@ -497,7 +514,10 @@ public abstract class SeoCatalogServices {
         
         if (doProducts) {
             int productSuccess = 0;
+            int productSkipped = 0;
             int productError = 0;
+            
+            boolean includeVariant = Boolean.TRUE.equals(context.get("includeVariant"));
             
             EntityListIterator productIt = null;
             try {
@@ -505,15 +525,22 @@ public abstract class SeoCatalogServices {
                 GenericValue product;
                 while ((product = productIt.next()) != null) {
                     String productId = product.getString("productId");
-                    Map<String, Object> servCtx = dctx.makeValidContext("generateProductAlternativeUrls", ModelService.IN_PARAM, context);
+                    if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
+                        continue;
+                    }
+                    Map<String, Object> servCtx = dctx.makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, context);
                     servCtx.put("product", product);
                     servCtx.put("productId", productId);
                     // TODO: REVIEW: FORCED TO USE SERVICE (SLOWER) FOR SEPARATE TRANSACTION
-                    Map<String, Object> recordResult = dispatcher.runSync("generateProductAlternativeUrls", servCtx, -1, true);
+                    Map<String, Object> recordResult = dispatcher.runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
                     //Map<String, Object> recordResult = generateProductAlternativeUrls(delegator, dispatcher, 
                     //        context, product, replaceExisting, moment);
                     if (ServiceUtil.isSuccess(recordResult)) {
-                        productSuccess++;
+                        if (Boolean.TRUE.equals(recordResult.get("productUpdated"))) {
+                            productSuccess++;
+                        } else {
+                            productSkipped++;
+                        }
                     } else {
                         Debug.logError("Scipio: Seo: Error generating alternative links for product '" 
                                 + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
@@ -534,13 +561,15 @@ public abstract class SeoCatalogServices {
                 }
             }
             
-            msgList.add("products updated: " + productSuccess);
-            if (productError > 0) errMsgList.add("products failed: " + productError);
+            msgList.add("Products updated: " + productSuccess);
+            msgList.add("Products skipped: " + productSkipped);
+            if (productError > 0) errMsgList.add("Products failed: " + productError);
         }
         
         if (doCategory) {
             int categorySuccess = 0;
             int categoryError = 0;
+            int categorySkipped = 0;
             
             EntityListIterator productCategoryIt = null;
             try {
@@ -548,13 +577,17 @@ public abstract class SeoCatalogServices {
                 GenericValue productCategory;
                 while ((productCategory = productCategoryIt.next()) != null) {
                     String productCategoryId = productCategory.getString("productCategoryId");
-                    Map<String, Object> servCtx = dctx.makeValidContext("generateProductCategoryAlternativeUrls", ModelService.IN_PARAM, context);
+                    Map<String, Object> servCtx = dctx.makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, context);
                     servCtx.put("productCategory", productCategory);
                     servCtx.put("productCategoryId", productCategoryId);
                     // TODO: REVIEW: FORCED TO USE SERVICE (SLOWER) FOR SEPARATE TRANSACTION
-                    Map<String, Object> recordResult = dispatcher.runSync("generateProductCategoryAlternativeUrls", servCtx, -1, true);
+                    Map<String, Object> recordResult = dispatcher.runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
                     if (ServiceUtil.isSuccess(recordResult)) {
-                        categorySuccess++;
+                        if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
+                            categorySuccess++;
+                        } else {
+                            categorySkipped++;
+                        }
                     } else {
                         Debug.logError("Scipio: Seo: Error generating alternative links for category '" 
                                 + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
@@ -575,8 +608,9 @@ public abstract class SeoCatalogServices {
                 }
             }
             
-            msgList.add("categories updated: " + categorySuccess);
-            if (categoryError > 0) errMsgList.add("categories failed: " + categoryError);
+            msgList.add("Categories updated: " + categorySuccess);
+            msgList.add("Categories skipped: " + categorySkipped);
+            if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
         }
         
         // TODO?: FUTURE

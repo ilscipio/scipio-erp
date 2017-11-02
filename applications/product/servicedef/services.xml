@@ -2277,28 +2277,47 @@ under the License.
     </service>
     
     <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
-    <service name="generateProductAlternativeUrls" engine="java" auth="true"
+    <service name="generateProductAlternativeUrlsCore" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
-        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml</description>
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
         <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
         <attribute name="productId" mode="IN" type="String" optional="false"/>
         <attribute name="product" mode="IN" type="GenericValue" optional="true">
             <description>optimization</description>
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="productUpdated" mode="OUT" type="Boolean" optional="true"/>
     </service>
     
-    <service name="generateProductCategoryAlternativeUrls" engine="java" auth="true"
+    <service name="generateProductAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="generateProductAlternativeUrlsCore"/>
+    </service>
+    
+    <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+    <service name="generateProductCategoryAlternativeUrlsCore" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
-        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml</description>
+        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
         <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
         <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
         <attribute name="productCategory" mode="IN" type="GenericValue" optional="true">
             <description>optimization</description>
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="categoryUpdated" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+    
+    <service name="generateProductCategoryAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="generateProductCategoryAlternativeUrlsCore"/>
     </service>
     
     <!-- TODO?: future, no replacement for stock yet
@@ -2308,13 +2327,14 @@ under the License.
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="contentId" mode="IN" type="String" optional="false"/>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
     </service>
     -->
     
     <!-- SCIPIO: replacement for generateMissingSeoUrlForWebsite -->
-    <service name="generateStoreAlternativeUrls" engine="java" auth="true"
-        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateStoreAlternativeUrls" transaction-timeout="72000">
+    <service name="generateWebsiteAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateWebsiteAlternativeUrls" transaction-timeout="72000">
         <description>SCIPIO: TODO: NOT IMPLEMENTED: Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml</description>
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true">
@@ -2326,20 +2346,24 @@ under the License.
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true">
             <description>Limits to a specific catalog</description>
         </attribute>
-        <attribute name="typeGenerate" type="List" mode="IN" optional="true">
-            <description>Currently supports: product, category. If null (default), does all.</description>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
     </service>
     
     <service name="generateAllAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAllAlternativeUrls" transaction-timeout="72000">
         <description>SCIPIO: Re-generates alternative urls for ALL stores/websites based on ruleset outlined in SeoConfig.xml</description>
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
-        <attribute name="typeGenerate" type="List" mode="IN" optional="true">
-            <description>Currently supports: product, category. If null (default), does all.</description>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
     </service>
     
 </services>

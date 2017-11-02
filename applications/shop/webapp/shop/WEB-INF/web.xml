@@ -60,28 +60,38 @@ under the License.
         <param-value>true</param-value>
     </context-param>
 
+    <!-- HTML Compression - enable this in production (disable for debugging)
+    <context-param>
+        <description>Remove unnecessary whitespace from HTML output.</description>
+        <param-name>compressHTML</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    -->
+
+    <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
+        NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>
-        <display-name>SimpleRedirectFilter</display-name>
-        <filter-name>SimpleRedirectFilter</filter-name>
-        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <!-- Uncomment this to make rules editable at runtime
         <init-param>
-            <param-name>matchPattern</param-name>
-            <param-value>^/ecommerce$</param-value>
+            <param-name>confReloadCheckInterval</param-name>
+            <param-value>0</param-value>
+        </init-param>-->
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>log4j</param-value>
         </init-param>
         <init-param>
-            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
-                if false, matches only context path</description>
-            <param-name>matchFullPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>replacement</param-name>
-            <param-value>/shop</param-value>
-        </init-param>
-        <init-param>
-            <param-name>usePermanentRedirect</param-name>
+            <param-name>statusEnabled</param-name>
             <param-value>true</param-value>
         </init-param>
+    </filter>
+    <filter>
+        <display-name>SeoCatalogUrlFilter</display-name>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
+        <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
     </filter>
     <filter>
         <display-name>CatalogUrlFilter</display-name>
@@ -113,20 +123,34 @@ under the License.
         </init-param>
     </filter>
     <filter-mapping>
-        <filter-name>SimpleRedirectFilter</filter-name>
+        <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>    
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ContentUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher><!-- SCIPIO: 2017-11-01: required for previous filter forwards to work  -->
     </filter-mapping>
 
     <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>

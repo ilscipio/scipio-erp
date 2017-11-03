@@ -440,25 +440,30 @@ public class CatalogUrlServlet extends HttpServlet {
         }
     }
     
-    public static CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId) {
+    protected static CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId) {
         if (withRequest) {
             if (delegator == null) delegator = (Delegator) request.getAttribute("delegator");
             if (contextPath == null) contextPath = request.getContextPath();
             if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
         }
-        for(CatalogUrlBuilder builder : urlBuilders) {
+        for(CatalogUrlBuilder builder : UrlBuilders.urlBuilders) {
             if (builder.isEnabled(withRequest, request, delegator, contextPath, webSiteId)) return builder;
         }
         return DefaultCatalogUrlBuilder.getInstance();
     }
     
-    // SCIPIO: 2017: custom url builders
-    private static List<CatalogUrlBuilder> urlBuilders = Collections.emptyList();
+    /**
+     * SCIPIO: 2017: allows plugging in custom low-level URL builders.
+     * FIXME: poor initialization logic
+     */
+    private static class UrlBuilders {
+        private static List<CatalogUrlBuilder> urlBuilders = Collections.emptyList();
+    }
     
     public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder builder) {
-        if (urlBuilders.contains(builder)) return;
-        List<CatalogUrlBuilder> newList = new ArrayList<>(urlBuilders);
+        if (UrlBuilders.urlBuilders.contains(builder)) return;
+        List<CatalogUrlBuilder> newList = new ArrayList<>(UrlBuilders.urlBuilders);
         newList.add(builder);
-        urlBuilders = Collections.unmodifiableList(newList);
+        UrlBuilders.urlBuilders = Collections.unmodifiableList(newList);
     }
 }

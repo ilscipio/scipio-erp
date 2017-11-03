@@ -19,6 +19,8 @@
 package org.ofbiz.product.category;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,8 +30,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -45,6 +45,9 @@ import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
+import org.ofbiz.webapp.website.WebSiteWorker;
+
+import com.ilscipio.scipio.product.seo.SeoConfigUtil;
 
 /**
  * ControlServlet.java - Master servlet for the web application.
@@ -58,7 +61,7 @@ public class CatalogUrlServlet extends HttpServlet {
     public static final String CONTROL_MOUNT_POINT = "control";
     public static final String PRODUCT_REQUEST = "product";
     public static final String CATEGORY_REQUEST = "category";
-
+    
     public CatalogUrlServlet() {
         super();
     }
@@ -86,16 +89,64 @@ public class CatalogUrlServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Delegator delegator = (Delegator) getServletContext().getAttribute("delegator");
 
+        // SCIPIO: NOTE: 2017-11-03: entire method refactored for reuse
+        
         String pathInfo = request.getPathInfo();
-        List<String> pathElements = StringUtil.split(pathInfo, "/");
+        CatalogUrlInfo urlInfo = parseCatalogUrlPathElements(request, delegator, pathInfo);
 
-        String productId = null;
-        String categoryId = null;
-
-        if (pathElements == null) {
+        if (urlInfo == null) {
             RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/main");
             rd.forward(request, response);
         } else {
+            updateRequestForCatalogUrl(request, delegator, urlInfo);
+            RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/" + (urlInfo.getProductId() != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));
+            rd.forward(request, response);
+        }
+    }
+
+    public static class CatalogUrlInfo {
+        private final String pathInfo;
+        private final String productId;
+        private final String categoryId;
+        private final List<String> pathElements;
+
+        public CatalogUrlInfo(String pathInfo, String productId, String categoryId, List<String> pathElements) {
+            this.pathInfo = pathInfo;
+            this.productId = productId;
+            this.categoryId = categoryId;
+            this.pathElements = pathElements;
+        }
+        
+        public String getPathInfo() {
+            return pathInfo;
+        }
+        public String getProductId() {
+            return productId;
+        }
+        public String getCategoryId() {
+            return categoryId;
+        }
+        public boolean hasTarget() { 
+            return productId != null || categoryId != null;
+        }
+        public List<String> getPathElements() {
+            return pathElements;
+        }
+    }
+    
+    /**
+     * SCIPIO: factored out method to parse path elements.
+     * Added 2017-11-03.
+     */
+    public static CatalogUrlInfo parseCatalogUrlPathElements(HttpServletRequest request, Delegator delegator, String pathInfo) {
+        List<String> pathElements = pathInfo != null ? StringUtil.split(pathInfo, "/") : null;
+
+        if (UtilValidate.isEmpty(pathElements)) { // SCIPIO: prevent NPE
+            return null;
+        }
+        
+        String productId = null;
+        String categoryId = null;
         try {
             String lastPathElement = pathElements.get(pathElements.size() - 1);
             if (lastPathElement.startsWith("p_")) {
@@ -103,7 +154,7 @@ public class CatalogUrlServlet extends HttpServlet {
                 // SCIPIO: remove for products only
                 pathElements.remove(pathElements.size() - 1);
             } else {
-                GenericValue productCategory =  EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", lastPathElement).cache(true).queryOne();
+                GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", lastPathElement).cache(true).queryOne();
                 if (UtilValidate.isNotEmpty(productCategory)) {
                     categoryId = lastPathElement;
                 } else {
@@ -117,6 +168,16 @@ public class CatalogUrlServlet extends HttpServlet {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error in looking up ProductUrl or CategoryUrl with path info [" + pathInfo + "]: " + e.toString(), module);
         }
+        
+        return new CatalogUrlInfo(pathInfo, productId, categoryId, pathElements);
+    }
+    
+    /**
+     * SCIPIO: Factored out request updating code.
+     * Added 2017-11-03.
+     */
+    public static void updateRequestForCatalogUrl(HttpServletRequest request, Delegator delegator, 
+            String pathInfo, String productId, String categoryId, List<String> pathElements) {
 
         // SCIPIO: 2016-03-22: NEW EXTRA BEHAVIOR FOR TOP-LESS BROWSING: 
         // We have a problem here that CatalogUrlFilter does not have:
@@ -159,9 +220,14 @@ public class CatalogUrlServlet extends HttpServlet {
         // SCIPIO: Delegate the logic previously here to factored method
         CatalogUrlFilter.updateRequestAndTrail(request, categoryId, productId, pathElements, null);
 
-        RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/" + (productId != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));
-        rd.forward(request, response);
-        }
+    }
+    
+    /**
+     * SCIPIO: Factored out request updating code.
+     * Added 2017-11-03.
+     */
+    public static void updateRequestForCatalogUrl(HttpServletRequest request, Delegator delegator, CatalogUrlInfo urlInfo) {
+        updateRequestForCatalogUrl(request, delegator, urlInfo.getPathInfo(), urlInfo.getProductId(), urlInfo.getCategoryId(), urlInfo.getPathElements());
     }
 
     /**
@@ -233,6 +299,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * (there is intentionally no check for this, so the parameter has a double function).
      * If contextPath is omitted, it is determined automatically from webSiteId.
      * It is preferable to use webSiteId where possible.
+     * <p>
+     * 2017-11: This method will now automatically implement the alternative SEO link building.
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, String currentCategoryId,
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
@@ -241,6 +309,12 @@ public class CatalogUrlServlet extends HttpServlet {
         }
         if (UtilValidate.isEmpty(contextPath)) {
             contextPath = null;
+        }
+        
+        // SEO HOOK
+        // TODO: in future this should be pluggable using interface + .properties entry
+        if (SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) {
+            // TODO: SEO HOOK
         }
         
         if (webSiteId != null || contextPath != null) {
@@ -253,7 +327,9 @@ public class CatalogUrlServlet extends HttpServlet {
             
             return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
         } else {
-            String url = CatalogUrlServlet.makeCatalogUrl(request, 
+            CatalogUrlBuilder builder = getCatalogUrlBuilder(true, request, null, contextPath, webSiteId);
+
+            String url = builder.makeCatalogUrl(request, 
                     productId, currentCategoryId, previousCategoryId);
             
             url = appendLinkParams(url, params);
@@ -294,6 +370,8 @@ public class CatalogUrlServlet extends HttpServlet {
      * the resulting link.
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
+     * <p>
+     * 2017-11: This method will now automatically implement the alternative SEO link building.
      */
     public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
@@ -308,7 +386,9 @@ public class CatalogUrlServlet extends HttpServlet {
         
         String url;
         
-        url = makeCatalogUrl(contextPath, null, productId, currentCategoryId, previousCategoryId);
+        CatalogUrlBuilder builder = getCatalogUrlBuilder(false, request, delegator, contextPath, webSiteId);
+        
+        url = builder.makeCatalogUrl(delegator, contextPath, null, productId, currentCategoryId, previousCategoryId);
         
         url = appendLinkParams(url, params);
         
@@ -334,5 +414,59 @@ public class CatalogUrlServlet extends HttpServlet {
             url += "?" + params;
         }
         return url;
+    }
+    
+    /**
+     * SCIPIO: 2017: Wraps all the category URL method calls so they can be switched out without
+     * ruining the code.
+     */
+    public interface CatalogUrlBuilder {
+        boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
+        String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId, String previousCategoryId);
+        String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
+    }
+    
+    public static class DefaultCatalogUrlBuilder implements CatalogUrlBuilder {
+        private static final DefaultCatalogUrlBuilder INSTANCE = new DefaultCatalogUrlBuilder();
+        
+        public static final DefaultCatalogUrlBuilder getInstance() { return INSTANCE; }
+        
+        @Override
+        public boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath,
+                String webSiteId) {
+            return true;
+        }
+        @Override
+        public String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId,
+                String previousCategoryId) {
+            return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+        }
+        @Override
+        public String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId,
+                String currentCategoryId, String previousCategoryId) {
+            return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+        }
+    }
+    
+    public static CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId) {
+        if (withRequest) {
+            if (delegator == null) delegator = (Delegator) request.getAttribute("delegator");
+            if (contextPath == null) contextPath = request.getContextPath();
+            if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
+        }
+        for(CatalogUrlBuilder builder : urlBuilders) {
+            if (builder.isEnabled(withRequest, request, delegator, contextPath, webSiteId)) return builder;
+        }
+        return DefaultCatalogUrlBuilder.getInstance();
+    }
+    
+    // SCIPIO: 2017: custom url builders
+    private static List<CatalogUrlBuilder> urlBuilders = Collections.emptyList();
+    
+    public static synchronized void registerUrlBuilder(CatalogUrlBuilder builder) {
+        if (urlBuilders.contains(builder)) return;
+        List<CatalogUrlBuilder> newList = new ArrayList<>(urlBuilders);
+        newList.add(builder);
+        urlBuilders = Collections.unmodifiableList(newList);
     }
 }

@@ -155,7 +155,7 @@ public class ContextFilter implements Filter {
                 if (!redirectAllTo.toLowerCase().startsWith("http")) {
                     redirectAllTo = httpRequest.getContextPath() + redirectAllTo;
                 }
-                httpResponse.sendRedirect(redirectAllTo);
+                encodeAndSendRedirectURL(httpResponse, redirectAllTo); // SCIPIO
                 return;
             } else {
                 httpRequest.getSession().removeAttribute("_FORCE_REDIRECT_");
@@ -244,7 +244,7 @@ public class ContextFilter implements Filter {
                     if (!redirectPath.toLowerCase().startsWith("http")) {
                         redirectPath = httpRequest.getContextPath() + redirectPath;
                     }
-                    httpResponse.sendRedirect(redirectPath);
+                    encodeAndSendRedirectURL(httpResponse, redirectPath); // SCIPIO
                 }
                 Debug.logWarning(filterMessage, module);
                 return;
@@ -283,7 +283,7 @@ public class ContextFilter implements Filter {
                         GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", tenantId).queryOne();
                         String initialPath = tenant.getString("initialPath");
                         if (UtilValidate.isNotEmpty(initialPath) && !"/".equals(initialPath)) {
-                            ((HttpServletResponse)response).sendRedirect(initialPath);
+                            encodeAndSendRedirectURL(httpResponse, initialPath); // SCIPIO
                             return;
                         }
                     }
@@ -457,5 +457,24 @@ public class ContextFilter implements Filter {
             config.getServletContext().setAttribute("_serverId", serverId);
         }
         return serverId;
+    }
+    
+    /**
+     * SCIPIO: local redirect URL encode method for ContextFilter redirects (only).
+     * TODO: REVIEW: method used
+     * Added 2017-11-03.
+     */
+    protected String encodeRedirectURL(HttpServletResponse response, String url) {
+        // SCIPIO: TODO: REVIEW: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
+        return response.encodeRedirectURL(url);
+    }
+    
+    /**
+     * SCIPIO: local redirect URL encode + send redirect for ContextFilter redirects (only).
+     * Added 2017-11-03.
+     * @throws IOException 
+     */
+    protected void encodeAndSendRedirectURL(HttpServletResponse response, String url) throws IOException {
+        response.sendRedirect(encodeRedirectURL(response, url));
     }
 }

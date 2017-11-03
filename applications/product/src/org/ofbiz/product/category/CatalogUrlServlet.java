@@ -450,6 +450,10 @@ public class CatalogUrlServlet extends HttpServlet {
             CatalogUrlBuilder builder = factory.getCatalogUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
             if (builder != null) return builder;
         }
+        return getDefaultCatalogUrlBuilder();
+    }
+    
+    public static CatalogUrlBuilder getDefaultCatalogUrlBuilder() {
         return DefaultCatalogUrlBuilder.getInstance();
     }
     

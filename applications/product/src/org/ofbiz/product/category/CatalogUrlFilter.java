@@ -1046,6 +1046,10 @@ public class CatalogUrlFilter extends ContextFilter {
             CatalogAltUrlBuilder builder = factory.getCatalogAltUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
             if (builder != null) return builder;
         }
+        return getDefaultCatalogAltUrlBuilder();
+    }
+    
+    public static CatalogAltUrlBuilder getDefaultCatalogAltUrlBuilder() {
         return DefaultCatalogAltUrlBuilder.getInstance();
     }
 

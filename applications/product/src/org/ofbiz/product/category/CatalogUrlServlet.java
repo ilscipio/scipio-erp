@@ -47,10 +47,8 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-import com.ilscipio.scipio.product.seo.SeoConfigUtil;
-
 /**
- * ControlServlet.java - Master servlet for the web application.
+ * CatalogUrlServlet - Catalog servlet for the web application.
  */
 @SuppressWarnings("serial")
 public class CatalogUrlServlet extends HttpServlet {
@@ -311,12 +309,6 @@ public class CatalogUrlServlet extends HttpServlet {
             contextPath = null;
         }
         
-        // SEO HOOK
-        // TODO: in future this should be pluggable using interface + .properties entry
-        if (SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) {
-            // TODO: SEO HOOK
-        }
-        
         if (webSiteId != null || contextPath != null) {
             // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
             // and build as if we had no request
@@ -463,7 +455,7 @@ public class CatalogUrlServlet extends HttpServlet {
     // SCIPIO: 2017: custom url builders
     private static List<CatalogUrlBuilder> urlBuilders = Collections.emptyList();
     
-    public static synchronized void registerUrlBuilder(CatalogUrlBuilder builder) {
+    public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder builder) {
         if (urlBuilders.contains(builder)) return;
         List<CatalogUrlBuilder> newList = new ArrayList<>(urlBuilders);
         newList.add(builder);

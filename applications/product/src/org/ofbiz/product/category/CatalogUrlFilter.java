@@ -995,7 +995,12 @@ public class CatalogUrlFilter extends ContextFilter {
      * ruining the code.
      */
     public interface CatalogAltUrlBuilder {
-        boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
+        public interface Factory {
+            /**
+             * Returns builder or null if not applicable to request.
+             */
+            CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
+        }
         String makeProductAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId);
         String makeProductAltUrl(Delegator delegator, ProductContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId);
         String makeCategoryAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
@@ -1007,11 +1012,6 @@ public class CatalogUrlFilter extends ContextFilter {
         
         public static final DefaultCatalogAltUrlBuilder getInstance() { return INSTANCE; }
         
-        @Override
-        public boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath,
-                String webSiteId) {
-            return true;
-        }
         @Override
         public String makeProductAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId,
                 String productId) {
@@ -1042,8 +1042,9 @@ public class CatalogUrlFilter extends ContextFilter {
             if (contextPath == null) contextPath = request.getContextPath();
             if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
         }
-        for(CatalogAltUrlBuilder builder : UrlBuilders.urlBuilders) {
-            if (builder.isEnabled(withRequest, request, delegator, contextPath, webSiteId)) return builder;
+        for(CatalogAltUrlBuilder.Factory factory : UrlBuilders.urlBuilderFactories) {
+            CatalogAltUrlBuilder builder = factory.getCatalogAltUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
+            if (builder != null) return builder;
         }
         return DefaultCatalogAltUrlBuilder.getInstance();
     }
@@ -1053,13 +1054,13 @@ public class CatalogUrlFilter extends ContextFilter {
      * FIXME: poor initialization logic
      */
     private static class UrlBuilders {
-        private static List<CatalogAltUrlBuilder> urlBuilders = Collections.emptyList();
+        private static List<CatalogAltUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
     }
     
-    public static synchronized void registerUrlBuilder(String name, CatalogAltUrlBuilder builder) {
-        if (UrlBuilders.urlBuilders.contains(builder)) return;
-        List<CatalogAltUrlBuilder> newList = new ArrayList<>(UrlBuilders.urlBuilders);
-        newList.add(builder);
-        UrlBuilders.urlBuilders = Collections.unmodifiableList(newList);
+    public static synchronized void registerUrlBuilder(String name, CatalogAltUrlBuilder.Factory builderFactory) {
+        if (UrlBuilders.urlBuilderFactories.contains(builderFactory)) return;
+        List<CatalogAltUrlBuilder.Factory> newList = new ArrayList<>(UrlBuilders.urlBuilderFactories);
+        newList.add(builderFactory);
+        UrlBuilders.urlBuilderFactories = Collections.unmodifiableList(newList);
     }
 }

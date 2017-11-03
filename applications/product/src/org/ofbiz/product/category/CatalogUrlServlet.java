@@ -413,7 +413,12 @@ public class CatalogUrlServlet extends HttpServlet {
      * ruining the code.
      */
     public interface CatalogUrlBuilder {
-        boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
+        public interface Factory {
+            /**
+             * Returns builder or null if not applicable to request.
+             */
+            CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
+        }
         String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId, String previousCategoryId);
         String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
     }
@@ -422,12 +427,7 @@ public class CatalogUrlServlet extends HttpServlet {
         private static final DefaultCatalogUrlBuilder INSTANCE = new DefaultCatalogUrlBuilder();
         
         public static final DefaultCatalogUrlBuilder getInstance() { return INSTANCE; }
-        
-        @Override
-        public boolean isEnabled(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath,
-                String webSiteId) {
-            return true;
-        }
+
         @Override
         public String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId,
                 String previousCategoryId) {
@@ -446,8 +446,9 @@ public class CatalogUrlServlet extends HttpServlet {
             if (contextPath == null) contextPath = request.getContextPath();
             if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
         }
-        for(CatalogUrlBuilder builder : UrlBuilders.urlBuilders) {
-            if (builder.isEnabled(withRequest, request, delegator, contextPath, webSiteId)) return builder;
+        for(CatalogUrlBuilder.Factory factory : UrlBuilders.urlBuilderFactories) {
+            CatalogUrlBuilder builder = factory.getCatalogUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
+            if (builder != null) return builder;
         }
         return DefaultCatalogUrlBuilder.getInstance();
     }
@@ -457,13 +458,13 @@ public class CatalogUrlServlet extends HttpServlet {
      * FIXME: poor initialization logic
      */
     private static class UrlBuilders {
-        private static List<CatalogUrlBuilder> urlBuilders = Collections.emptyList();
+        private static List<CatalogUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
     }
     
-    public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder builder) {
-        if (UrlBuilders.urlBuilders.contains(builder)) return;
-        List<CatalogUrlBuilder> newList = new ArrayList<>(UrlBuilders.urlBuilders);
-        newList.add(builder);
-        UrlBuilders.urlBuilders = Collections.unmodifiableList(newList);
+    public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder.Factory builderFactory) {
+        if (UrlBuilders.urlBuilderFactories.contains(builderFactory)) return;
+        List<CatalogUrlBuilder.Factory> newList = new ArrayList<>(UrlBuilders.urlBuilderFactories);
+        newList.add(builderFactory);
+        UrlBuilders.urlBuilderFactories = Collections.unmodifiableList(newList);
     }
 }

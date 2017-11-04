@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.ofbiz.base.util.Debug;
+
 public class WebsiteSeoConfig {
+    
+    private static final String module = WebsiteSeoConfig.class.getName();
     
     // WARN: special sync behavior
     private static Map<String, WebsiteSeoConfig> websiteSeoConfigs = Collections.emptyMap();
@@ -15,6 +19,7 @@ public class WebsiteSeoConfig {
     private final boolean seoEnabled;
 
     public static synchronized void registerWebsiteForSeo(WebsiteSeoConfig config) {
+        Debug.logInfo("Scipio: SEO: Registering website for SEO: " + config.getWebSiteId(), module);
         Map<String, WebsiteSeoConfig> newConfigs = new HashMap<>(websiteSeoConfigs);
         newConfigs.put(config.getWebSiteId(), config);
         websiteSeoConfigs = Collections.unmodifiableMap(newConfigs);

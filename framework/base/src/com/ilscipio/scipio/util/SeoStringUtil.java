@@ -2,6 +2,7 @@ package com.ilscipio.scipio.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.Debug;
 
@@ -12,6 +13,10 @@ public class SeoStringUtil {
 
     private static final String module = SeoStringUtil.class.getName();
 
+    public static final String URL_HYPHEN = "-";
+    public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";
+    public static Pattern ASCII_PATTERN = Pattern.compile(ASCII_REGEX);
+    
     /**
      * Generates a hash of a given plainText
      * 

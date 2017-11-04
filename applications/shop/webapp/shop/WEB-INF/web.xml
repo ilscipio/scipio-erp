@@ -92,6 +92,7 @@ under the License.
         <filter-name>SeoCatalogUrlFilter</filter-name>
         <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
         <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
+        <init-param><param-name>seoEnabled</param-name><param-value>true</param-value></init-param>
     </filter>
     <filter>
         <display-name>CatalogUrlFilter</display-name>

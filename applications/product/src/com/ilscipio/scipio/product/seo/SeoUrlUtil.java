@@ -37,10 +37,19 @@ public class SeoUrlUtil {
         }
         return url;
     }
+    
+    /**
+     * @deprecated tied to static SeoConfigUtil config (FIXME: future)
+     */
+    @Deprecated
+    public static String replaceSpecialCharsUrl(String url) {
+        return replaceSpecialCharsUrl(url, SeoConfigUtil.getCharFilters());
+    }
 
     /**
-     * FIXME: BROKEN - MISSING DELIMITERS
+     * @deprecated FIXME: BROKEN - MISSING DELIMITERS
      */
+    @Deprecated
     public static String removeContextPath(String uri, String contextPath) {
         if (UtilValidate.isEmpty(contextPath) || UtilValidate.isEmpty(uri)) {
             return uri;

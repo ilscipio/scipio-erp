@@ -50,6 +50,12 @@ import org.xml.sax.SAXException;
  */
 public class SeoConfigUtil {
     private static final String module = SeoConfigUtil.class.getName();
+    
+    static {
+        // TODO?: unhardcode via properties?
+        SeoCatalogUrlBuilder.registerUrlBuilder();
+    }
+    
     private static volatile boolean isInitialed = false;
     private static volatile boolean categoryUrlEnabled = true;
     private static volatile boolean categoryNameEnabled = false;
@@ -524,30 +530,55 @@ public class SeoConfigUtil {
      * 
      * @return a boolean value to indicate whether category url is enabled.
      */
-    public static boolean checkCategoryUrl() {
+    public static boolean isCategoryUrlEnabledStatic() {
         return categoryUrlEnabled;
     }
 
+    /**
+     * SCIPIO: 2017: check if category URL enabled for context path and webSiteId.
+     * 
+     * @return a boolean value to indicate whether the web site is enabled.
+     */
+    public static boolean isCategoryUrlEnabled(String contextPath, String webSiteId) {
+        return categoryUrlEnabled && 
+            (WebsiteSeoConfig.isSeoEnabled(webSiteId)) && allowedContextPaths.contains(normContextPath(contextPath));
+    }
+    
+    /**
+     * SCIPIO: 2017: check if category URL enabled for webSiteId.
+     * 
+     * @return a boolean value to indicate whether the web site is enabled.
+     */
+    public static boolean isCategoryUrlEnabledForWebsite(String webSiteId) {
+        return categoryUrlEnabled && WebsiteSeoConfig.isSeoEnabled(webSiteId);
+    }
+    
+    /**
+     * Check whether the context path is enabled.
+     * @deprecated SCIPIO: 2017: use {@link #isCategoryUrlEnabledForContextPath}.
+     * 
+     * @return a boolean value to indicate whether the context path is enabled.
+     */
+    @Deprecated
+    public static boolean isCategoryUrlEnabled(String contextPath) {
+        return isCategoryUrlEnabledForContextPath(contextPath);
+    }
+    
     /**
      * Check whether the context path is enabled.
      * 
      * @return a boolean value to indicate whether the context path is enabled.
      */
-    public static boolean isCategoryUrlEnabled(String contextPath) {
-        if (contextPath == null) {
-            return false;
-        }
+    public static boolean isCategoryUrlEnabledForContextPath(String contextPath) {
+        return categoryUrlEnabled && allowedContextPaths.contains(normContextPath(contextPath));
+    }
+    
+    private static String normContextPath(String contextPath) {
+        if (contextPath == null) return null;
         if (UtilValidate.isEmpty(contextPath)) {
             contextPath = "/";
         }
-        if (categoryUrlEnabled) {
-            if (allowedContextPaths.contains(contextPath.trim())) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
+        return contextPath.trim();
     }
 
     /**

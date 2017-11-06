@@ -36,7 +36,7 @@
         "edit": {
             "type": "form",
             "mode": "show",
-            "id": "eglt-editaccountgl" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->
+            "id": "eglt-editglaccount" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->
             <#-- paramNames* is a preprocess step for easy param renaming before going into link/form
             "paramNames": {"productStoreId": "myProductStoreIdParam" }
             "paramNamesMode": "explicit"|"default"-->

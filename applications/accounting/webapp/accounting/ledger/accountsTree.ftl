@@ -180,7 +180,8 @@ egltHandler = new ScpAccountingTreeHandler({
     initialSettings: <@objectAsScript object=(egltInitialSettings!{}) lang='js'/>,
     popupMsgModalId: "${escapeVal(egltPopupMsgModalId!(egltDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
     confirmMsgModalId: "${escapeVal(egltConfirmMsgModalId!(egltDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
-    dialogIdPrefix: "${escapeVal(egltDialogIdModalPrefix, 'js')}"
+    dialogIdPrefix: "${escapeVal(egltDialogIdModalPrefix, 'js')}",
+    objectLocFields: <@objectAsScript object=(egltObjectLocalizedFields!{}) lang='js' />
 });
 
 $(document).ready(function() {
@@ -249,30 +250,7 @@ $(document).ready(function() {
       <@egltMarkupOut dir=egltPostTreeArea!/>
         
     </@cell>
-
-        
-    <@script>
-        $(function() {
-                    var $sidebar   = $("#action_offset"), 
-                        $window    = $(window),
-                        offset     = $sidebar.offset(),
-                        topPadding = 50;
-                    
-                    $window.scroll(function() {
-                        if ( $(window).width() > 1024) {
-                            if ($window.scrollTop() > offset.top) {
-                                $sidebar.stop().animate({
-                                    marginTop: $window.scrollTop() - $sidebar.position().top + topPadding
-                                });
-                            } else {
-                                $sidebar.stop().animate({
-                                    marginTop: 0
-                                });
-                            }
-                        }
-                    });
-            });
-    </@script>
+    
     <@cell medium=3 large=3>    
       <#-- ACTIONS MENU -->
       <@section title=uiLabelMap.CommonActions>	        

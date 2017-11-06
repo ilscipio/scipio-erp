@@ -1,9 +1,8 @@
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
 
 import com.ilscipio.scipio.setup.*;
-
-import org.apache.commons.lang.StringUtils;
 
 final module = "SetupAccounting.groovy";
 
@@ -11,20 +10,63 @@ final module = "SetupAccounting.groovy";
 SetupWorker setupWorker = context.setupWorker;
 setupStep = context.setupStep;
 
+/*
+ * Request states
+ */
+eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Add"], true, ["GlAccount"]);
+isEventError = context.isSetupEventError;
+
+objectLocalizedFields = context.egltObjectLocalizedFields;
+if (!objectLocalizedFields) {
+    objectLocalizedFields = [
+        glAccount: [
+            fieldNames: ["accountName", "description"],
+            typeNames: ["ACCOUNT_NAME", "DESCRIPTION"],
+            typeNameListStr: '["ACCOUNT_NAME", "DESCRIPTION"]'
+        ]
+    ];
+}
+context.egltObjectLocalizedFields = objectLocalizedFields;
+
+
 accountingData = context.accountingData ?: [:];
 
+/*
+ * GlAccount
+ */
 topGlAccountId = accountingData.topGlAccountId;
 context.topGlAccountId = topGlAccountId;
 
-glAccountList = accountingData.glAccountList;
-context.glAccountList = glAccountList;
+topGlAccount = delegator.findOne("GlAccount", [glAccountId: topGlAccountId], false);
+context.topGlAccount = topGlAccount;
 
-context.glAccountTypes = delegator.findByAnd("GlAccountType", [:], UtilMisc.toList("description"), true);
-context.glAccountClasses = delegator.findByAnd("GlAccountClass", [:], UtilMisc.toList("description"), true);
-context.glResourceTypes = delegator.findByAnd("GlResourceType", [:], UtilMisc.toList("description"), true);
+/*
+ * Extra prep
+ */
 
+// TODO: REVIEW: this may not be covering all cases properly... some bad cases may be being hidden by jstree logic
+// this is ignoring the delete/expire/copy/move actions because they are hidden forms
+eventFlags.targetRecord = "glAccount";
+if (eventFlags.isAddFailed) eventFlags.formActionType = "add";
+else eventFlags.formActionType = (context.topGlAccount == null) ? "new" : "edit";
+eventFlags.targetRecordAction = eventFlags.targetRecord + "-" + eventFlags.formActionType; // easier to check in ftl
+
+// dump flags in context (FIXME?: remove this later)
+context.putAll(eventFlags);
+
+eventStates = [:];
+eventStates.putAll(eventFlags);
+
+// add some more (not in context)
+eventStates.isError = context.isEventError;
+
+context.eventStates = eventStates;
+
+context.glAccountTypes = EntityQuery.use(delegator).from("GlAccountType").orderBy("description").queryList();
+context.glAccountClasses = EntityQuery.use(delegator).from("GlAccountClass").orderBy("description").queryList();
+context.glResourceTypes = EntityQuery.use(delegator).from("GlResourceType").orderBy("description").queryList();
 
 // true if explicit newAccounting=Y flag OR failed create
 
-glSelected = setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
+glSelected = topGlAccount || setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize(setupStep));
 context.glSelected = glSelected;

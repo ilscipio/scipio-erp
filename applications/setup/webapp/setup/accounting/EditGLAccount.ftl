@@ -1,8 +1,12 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://accounting/webapp/accounting/common/treecommon.ftl">
 
+${Static["org.ofbiz.base.util.Debug"].log("targetRecordAction =============> " + targetRecordAction)}
+${Static["org.ofbiz.base.util.Debug"].log("glAccount =============> " + glAccount!"null")}
+${Static["org.ofbiz.base.util.Debug"].log("topGlAccountId =============> " + topGlAccountId!"null")}
+
 <#assign defaultParams = {
-    
+    topGlAccountId: topGlAccountId!
 }>
 
 <@script>
@@ -14,7 +18,7 @@
     }    
     -->
     
-    var defaultCatalogParams = <@objectAsScript object=defaultParams lang='js'/>;
+    var defaultGlAccountParams = <@objectAsScript object=defaultParams lang='js'/>;
 </@script>
 
 <#-- SPECIAL: for this screen because there are multiple forms, we have to ignore isError
@@ -44,45 +48,61 @@
     <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@egltCommonTreeFormFields params=params initialValues=treeFieldValues/>
-        <#-- 
-        <@field type="hidden" name="partyId" value=(partyId!)/>
-        <@field type="hidden" name="productStoreId" value=(productStoreId!)/>
-        -->
+       
         <@field type="hidden" name="isAddGlAccount" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateGlAccount" value=(formActionType == "new")?string("Y", "N")/>
         <@field type="hidden" name="isUpdateGlAccount" value=(formActionType == "edit")?string("Y", "N")/>
         
-    <#if formActionType == "add">
-      <@field type="select" name="parentGlAccountId" label=uiLabelMap.AccountingParentGlAccountId required=true>
-        <#list (parentGlAccountList![]) as parentGlAccount>
-          <@field type="option" value=parentGlAccount.glAccountId 
-            selected=(rawString(params.glAccountId!) == rawString(parentGlAccount.glAccountId))>${parentGlAccount.accountName!parentGlAccount.glAccountId} [${parentGlAccount.glAccountId}]</@field>
-        </#list>
-      </@field>
-    <#else>
-      <#if formActionType == "edit">
-        <@field type="display" label=uiLabelMap.FormFieldTitle_prodCatalogId><#rt/>
-            <span class="ect-managefield ect-managefield-for-prodCatalogId"><@setupExtAppLink uri="/catalog/control/EditProdCatalog?prodCatalogId=${rawString(params.prodCatalogId!)}" text=params.prodCatalogId!/></span><#t/>
-        </@field><#lt/>
-        <@field type="hidden" name="prodCatalogId" value=(params.prodCatalogId!) class="+ect-inputfield"/>
-      <#else>
-        <#-- TODO: REVIEW: required=true -->
-        <@field type="input" name="prodCatalogId" label=uiLabelMap.FormFieldTitle_prodCatalogId value=(params.prodCatalogId!) class="+ect-inputfield"/>
-      </#if>
-    </#if>
-
-        <@field type="input" name="sequenceNum" value=(params.sequenceNum!) label=uiLabelMap.ProductSequenceNum class="+ect-inputfield"/>
-
-      <#if formActionType == "edit">
-        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
-        <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
-      <#else>
-        <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
-      </#if>
-      
-      <#if formActionType != "add">
-
-      </#if>
+        <#assign fieldsRequired = true>
+      	
+		<#if formActionType == "add">
+	      <@field type="select" name="parentGlAccountId" label=uiLabelMap.AccountingParentGlAccountId required=true>
+	        <#list (parentGlAccountList![]) as parentGlAccount>
+	          <@field type="option" value=parentGlAccount.glAccountId 
+	            selected=(rawString(params.glAccountId!) == rawString(parentGlAccount.glAccountId))>${parentGlAccount.accountName!parentGlAccount.glAccountId} [${parentGlAccount.glAccountId}]</@field>
+	        </#list>
+	      </@field>
+		<#else>
+		      <#if formActionType == "edit">
+		        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
+		            <span class="eglt-managefield eglt-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+		        </@field><#lt/>
+		        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+eglt-inputfield"/>
+		      <#else>
+		        <#-- TODO: REVIEW: required=true -->
+		        <@field type="input" name="glAccountId" label=uiLabelMap.CommonId value=(params.glAccountId!) class="+eglt-inputfield"/>
+		      </#if>
+		</#if>
+	    
+	    <@field type="text" name="accountCode" value=(params.accountCode!) label=uiLabelMap.CommonCode class="+eglt-inputfield" />
+	    <@field type="text" name="accountName" value=(params.accountName!) label=uiLabelMap.CommonName class="+eglt-inputfield" />
+	    
+	    <@field type="select" name="glAccountTypeId" label=uiLabelMap.CommonType class="+eglt-inputfield">
+	      <option value="" disabled="disabled"></option>
+	      <#list glAccountTypes as glAccountType>
+	        <#assign selected = (rawString(params.glAccountTypeId!) == (glAccountType.glAccountTypeId!))>
+	        <option value="${glAccountType.glAccountTypeId!}"<#if selected> selected="selected"</#if>>${glAccountType.description!}</option>
+	      </#list>
+	    </@field>
+	    
+	    <@field type="select" name="glAccountClassId" label=uiLabelMap.CommonClass class="+eglt-inputfield">
+	      <option value="" disabled="disabled"></option>
+	      <#list glAccountClasses as glAccountClass>
+	        <#assign selected = (rawString(params.glAccountClassId!) == (glAccountClass.glAccountClassId!))>
+	        <option value="${glAccountClass.glAccountClassId!}"<#if selected> selected="selected"</#if>>${glAccountClass.description!}</option>
+	      </#list>
+	    </@field>
+	    
+	    <@field type="select" name="glResourceTypeId" label=uiLabelMap.CommonResource class="+eglt-inputfield">
+	      <option value="" disabled="disabled"></option>
+	      <#list glResourceTypes as glResourceType>
+	        <#assign selected = (rawString(params.glResourceTypeId!) == (glResourceType.glResourceTypeId!))>
+	        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
+	      </#list>
+	    </@field>
+	    
+	    <@field type="textarea" name="description" cols="30" rows="3" value=(params.description!) required=false label=uiLabelMap.CommonDescription class="+eglt-inputfield"/>
+	       
     </@form>
 </#macro>
 <@section title=uiLabelMap.AccountingNewGlAccount containerId="eglt-newglaccount" containerClass="+eglt-newglaccountid eglt-recordaction eglt-newrecord" 
@@ -101,15 +121,15 @@
     treeFieldValues={"egltSubmittedFormId":"NewGlAccount"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
   />
 </@section>
-<@section title=uiLabelMap.AccountingEditGlAccount containerId="eglt-editglaccount" containerClass="+ect-editcatalog ect-recordaction ect-editrecord" 
-    containerStyle=((targetRecordAction == "catalog-edit")?string("","display:none;"))>
-  <#if targetRecordAction == "catalog-edit">
+<@section title=uiLabelMap.AccountingEditGlAccount containerId="eglt-editglaccount" containerClass="+ect-editglaccount ect-recordaction ect-editrecord" 
+    containerStyle=((targetRecordAction == "glaccount-edit")?string("","display:none;"))>
+  <#if targetRecordAction == "glaccount-edit">
     <#assign paramMaps = initialParamMaps>
   <#else>
     <#assign paramMaps = getWizardFormFieldValueMaps({
       "record":{},
       "defaults":defaultParams,
-      "isError":isCatalogError,
+      "isError":isGlAccountError,
       "useReqParams":useReqParams
     })>
   </#if>

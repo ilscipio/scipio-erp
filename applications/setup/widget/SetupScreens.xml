@@ -572,8 +572,11 @@
                 <if>
                     <condition><not><if-true field="glSelected"/></not></condition>
                     <then>
-                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>                       
                     </then>
+                    <else>
+                    	<set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
+                    </else>
                 </if>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>
@@ -598,19 +601,14 @@
                                             <include-screen name="EditGLTree"/>
                                         </screenlet>
                                     </widgets>
-                                </section>
-                                <section>
-                                    <condition>
-                                        <if-true field="glSelected"/>
-                                    </condition>
-                                    <widgets>
-                                        <screenlet>                                            
+                                    <fail-widgets>
+                                    	<screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
                                             </platform-specific>
                                         </screenlet>
-                                    </widgets>
-                                </section>
+                                    </fail-widgets>
+                                </section>                              
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.AccountingCreatePermissionError}</label>
@@ -667,6 +665,7 @@
             </widgets>
         </section>
     </screen>
+    
     
     <screen name="SetupFacility">
         <section>

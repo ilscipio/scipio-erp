@@ -205,7 +205,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     scth.fadeOptions = data.fadeOptions || {};
     scth.treeId = data.treeId;
-    scth.glAccountEntity = data.productStoreEntity;    
+    scth.glAccountEntity = data.topGlAccountEntity;    
     scth.allActionProps = data.actionProps || {};
     scth.markup = new ScpEgltFormMarkup(data.markupSelectors || {});
     scth.links = data.links || {};
@@ -790,7 +790,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     var execActionTarget = function(ai, params) {
         var coreExec = function() {
             params = getResolvedActionPropsParams(ai, params);
-            console.log("ai.actionProps.type ========> " + ai.actionProps.type);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);
             } else if (ai.actionProps.type == "form") {
@@ -966,7 +965,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         this.formId = this.actionProps.formId || this.actionProps.id;
         this.containerId = this.actionProps.id;
         this.defaultParams = getActionPropsDefaultParams(this.actionProps);
-        console.log("this.objectId =========> " + this.objectId);
     };
     
     var getActionInfo = function($node, actionType, objectType) {
@@ -993,17 +991,12 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                     if (scth.links.getGlAccountExtendedData) {
                         doExecEdit = false;
                         runAjax(scth.links.getGlAccountExtendedData, {
-                                glAccountId: ai.objectId,                                
-                                getViewsByType: true,
-                                getTextByTypeAndLocale: false
+                                glAccountId: ai.objectId,
                             }, 
                             function(data) {
-                                if (data.viewsByType) {
-                                    //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
-                                    params.local.localizedFields = {
-                                        typeNames: fieldInfo.typeNames,      
-                                        entryDataListsByType: sefh.parseViewsByType(data.viewsByType)
-                                    };
+                                if (data.glAccount) {
+                                	console.log("glAccount exists");
+                                	params = $.extend(params, data.glAccount);
                                 }
                                 execEdit();
                             }

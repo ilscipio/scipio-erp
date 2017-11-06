@@ -10,7 +10,7 @@
   </#if>
 </#macro>
 
-<#-- fields needed for every form submitted back to the catalog tree
+<#-- fields needed for every form submitted back to the glAccount tree
     initialValues are required only if form is submitted NOT by the tree, otherwise tree automatically fills them. -->
 <#macro egltCommonTreeFormFields params={} initialValues={}>
     <#-- egltTargetNodePath implements the node pre-selection; maintains the selection event if event error -->
@@ -32,7 +32,7 @@
 </#function>
 
 <#assign egltLocFieldLabelMap = {
-    "accountName":uiLabelMap.AccountingAccountName
+    "accountName":uiLabelMap.CommonName
 }>
 <#function egltGetLocFieldLabel fieldName typeName>
     <#return egltLocFieldLabelMap[fieldName]!uiLabelMap["FormFieldTitle_"+fieldName]>
@@ -93,7 +93,7 @@
   <#if !onAddClick?has_content>
     <#local onAddClick>sglpEctFormHelper.handleFieldAdd(this);</#local>
   </#if>
-  <#local fieldInfo = (ectObjectLocalizedFields[objectType])!>
+  <#local fieldInfo = (egltObjectLocalizedFields[objectType])!>
   <#if fieldInfo?has_content>
 
     <#local valueListsByType = egltGetLocParams(fieldInfo, params)>

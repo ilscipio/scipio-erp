@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -30,6 +31,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -126,6 +130,25 @@ public class GeneralLedgerServices {
             }
         }
         return childTreeDataItems;
+    }
+
+    public static Map<String, Object> getGlAccountAndAssocs(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        Delegator delegator = dctx.getDelegator();
+        String glAccountId = (String) context.get("glAccountId");
+        Boolean useCache = (Boolean) context.get("useCache");
+
+        GenericValue glAccount = null;
+        try {
+            glAccount = EntityQuery.use(delegator).cache(useCache).from("GlAccount").where(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId))
+                    .queryOne();
+        } catch (GenericEntityException e) {
+            Debug.logError("GlAccount [ " + glAccountId + "] couldn't be found. " + e.getMessage(), module);
+        }
+        result.put("glAccount", glAccount.getAllFields());
+
+        return result;
     }
 
 }

@@ -51,6 +51,16 @@ under the License.
         <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <!-- SCIPIO: New service to get a GlAccount and its associations -->
+    <service name="getGlAccountAndAssocs" default-entity-name="GlAccount" engine="java" 
+                location="com.ilscipio.scipio.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountAndAssocs" auth="true">
+        <description>SCIPIO: Gets a GlAccount and its associations</description>
+        <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="VIEW"/>
+        <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="glAccount" mode="OUT" type="Map" optional="false"/>        
+    </service>
 
     <service name="createGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccountOrganization" auth="true">

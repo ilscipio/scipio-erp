@@ -1,14 +1,17 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModel;
@@ -211,6 +214,23 @@ public abstract class TransformUtil {
 
     }
 
+    /**
+     * Returns a Locale OR the Locale representation of the string using UtilMisc.parseLocale ofbiz utility.
+     * Added 2017-11-06.
+     */
+    public static Locale getOfbizLocaleArg(TemplateModel obj) throws TemplateModelException {
+        if (obj == null) return null;
+        else if (obj instanceof WrapperTemplateModel) {
+            Object localeObj = ((WrapperTemplateModel) obj).getWrappedObject();
+            if (localeObj == null || localeObj instanceof Locale) return (Locale) localeObj;
+            else if (localeObj instanceof String) return UtilMisc.parseLocale((String) localeObj);
+        } else if (obj instanceof TemplateScalarModel) {
+            String localeStr = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) obj);
+            return UtilMisc.parseLocale(localeStr);
+        }
+        throw new IllegalArgumentException("unexpected type for locale argument: " + obj.getClass().getName());
+    }
+    
     /**
      * Gets integer arg.
      * <p>

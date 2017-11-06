@@ -19,7 +19,6 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -70,12 +69,12 @@ public abstract class ContextFtlUtil {
     }
     
     public static HttpServletRequest getRequest(Environment env) throws TemplateModelException {
-        BeanModel req = (BeanModel) env.getVariable("request");
+        WrapperTemplateModel req = (WrapperTemplateModel) env.getVariable("request");
         return (req != null) ? (HttpServletRequest) req.getWrappedObject() : null;
     }
 
     public static HttpServletResponse getResponse(Environment env) throws TemplateModelException {
-        BeanModel req = (BeanModel) env.getVariable("response");
+        WrapperTemplateModel req = (WrapperTemplateModel) env.getVariable("response");
         return (req != null) ? (HttpServletResponse) req.getWrappedObject() : null;
     }
 

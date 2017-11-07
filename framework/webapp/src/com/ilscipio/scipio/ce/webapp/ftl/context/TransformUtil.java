@@ -231,6 +231,30 @@ public abstract class TransformUtil {
         throw new IllegalArgumentException("unexpected type for locale argument: " + obj.getClass().getName());
     }
     
+    public static Locale getOfbizLocaleArg(Map<?, ?> args, String key) throws TemplateModelException {
+        return getOfbizLocaleArg(getModel(args, key));
+    }
+    
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale.
+     * NOTE: this does NOT check the request locale!
+     */
+    public static Locale getOfbizLocaleArgOrContext(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, key));
+        if (locale != null) return locale;
+        return ContextFtlUtil.getContextLocale(env);
+    }
+    
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present.
+     */
+    public static Locale getOfbizLocaleArgOrContextOrRequest(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
+        Locale locale = TransformUtil.getOfbizLocaleArg(getModel(args, "locale"));
+        if (locale != null) return locale;
+        return ContextFtlUtil.getContextLocale(env);
+    }
+    
     /**
      * Gets integer arg.
      * <p>

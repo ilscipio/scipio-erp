@@ -1102,7 +1102,10 @@ public class CatalogUrlFilter extends ContextFilter {
                 } catch (GenericEntityException e) {
                     throw new IOException(e);
                 }
-                ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
+                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE: 
+                // this should not be text/html. this should also be unrelated to escaping. there's no html here.
+                //ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
+                ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/plain");
                 
                 return CatalogUrlFilter.makeProductUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
             }
@@ -1123,7 +1126,10 @@ public class CatalogUrlFilter extends ContextFilter {
                 } catch (GenericEntityException e) {
                     throw new IOException(e);
                 }
-                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
+                // SCIPIO: 2017-11-07: CHANGED MIME-TYPE: 
+                // this should not be text/html. this should also be unrelated to escaping. there's no html here.
+                //CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
+                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/plain");
                 
                 return CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }

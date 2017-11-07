@@ -250,9 +250,9 @@ public abstract class TransformUtil {
      * or falls back on request if present.
      */
     public static Locale getOfbizLocaleArgOrContextOrRequest(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
-        Locale locale = TransformUtil.getOfbizLocaleArg(getModel(args, "locale"));
+        Locale locale = getOfbizLocaleArgOrContext(args, key, env);
         if (locale != null) return locale;
-        return ContextFtlUtil.getContextLocale(env);
+        return ContextFtlUtil.getRequestLocale(env);
     }
     
     /**

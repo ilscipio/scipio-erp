@@ -374,27 +374,6 @@ public class CatalogUrlServlet extends HttpServlet {
     }
     
     /**
-     * Appends params for catalog URLs.
-     * <p>
-     * WARN: this currently assumes the url contains no params, could change in future
-     */
-    protected static String appendLinkParams(String url, Object paramsObj) throws IOException {
-        if (paramsObj == null) {
-            return url;
-        }
-        String params = paramsObj.toString();
-        if (params.isEmpty()) {
-            return url;
-        }
-        if (params.startsWith("?")) {
-            url += params;
-        } else {
-            url += "?" + params;
-        }
-        return url;
-    }
-    
-    /**
      * SCIPIO: 2017: Wraps all the category URL method calls so they can be switched out without
      * ruining the code.
      */
@@ -441,8 +420,10 @@ public class CatalogUrlServlet extends HttpServlet {
              */
             CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
         }
-        public abstract String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId);
-        public abstract String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
+        
+        // low-level building methods (named after legacy ofbiz methods)
+        public abstract String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId) throws IOException;
+        public abstract String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId) throws IOException;
         
         /**
          * Common/default high-level makeCatalogLink implementation (new Scipio method).
@@ -469,7 +450,7 @@ public class CatalogUrlServlet extends HttpServlet {
                 
                 return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
             } else {
-                String url = makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+                String url = this.makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
                 
                 url = appendLinkParams(url, params);
                 
@@ -493,7 +474,7 @@ public class CatalogUrlServlet extends HttpServlet {
             
             String url;
             
-            url = makeCatalogUrl(delegator, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
+            url = this.makeCatalogUrl(delegator, dispatcher, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
             
             url = appendLinkParams(url, params);
             
@@ -514,10 +495,33 @@ public class CatalogUrlServlet extends HttpServlet {
                 return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
             }
             @Override
-            public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
+            public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId,
                     String currentCategoryId, String previousCategoryId) {
                 return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
             }
+        }
+        
+        // helpers
+        
+        /**
+         * Appends params for catalog URLs.
+         * <p>
+         * WARN: this currently assumes the url contains no params, could change in future
+         */
+        protected static String appendLinkParams(String url, Object paramsObj) throws IOException {
+            if (paramsObj == null) {
+                return url;
+            }
+            String params = paramsObj.toString();
+            if (params.isEmpty()) {
+                return url;
+            }
+            if (params.startsWith("?")) {
+                url += params;
+            } else {
+                url += "?" + params;
+            }
+            return url;
         }
     }
 

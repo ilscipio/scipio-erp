@@ -51,6 +51,7 @@ import org.ofbiz.product.category.CatalogUrlServlet.CatalogUrlInfo;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.util.SeoStringUtil;
 
@@ -231,16 +232,16 @@ public class SeoCatalogUrlWorker implements Serializable {
     
         @Override
         public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
-                String previousCategoryId) {
+                String previousCategoryId) throws IOException {
             // TODO
             return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
         }
     
         @Override
-        public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
-                String currentCategoryId, String previousCategoryId) {
+        public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId,
+                String currentCategoryId, String previousCategoryId) throws IOException {
             // TODO
-            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, dispatcher, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
         }
 
     }
@@ -252,32 +253,32 @@ public class SeoCatalogUrlWorker implements Serializable {
     public class SeoCatalogAltUrlBuilder extends CatalogAltUrlBuilder implements Serializable {
         @Override
         public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
-                String productId) {
+                String productId) throws IOException {
             // TODO
             return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
         }
     
         @Override
-        public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
-                String contextPath, String previousCategoryId, String productCategoryId, String productId) {
+        public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
+                String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException {
             // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId);
         }
     
         @Override
         public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
                 String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
-                String searchString) {
+                String searchString) throws IOException {
             // TODO
             return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
     
         @Override
-        public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
+        public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                 String contextPath, String previousCategoryId, String productCategoryId, String productId,
-                String viewSize, String viewIndex, String viewSort, String searchString) {
+                String viewSize, String viewIndex, String viewSort, String searchString) throws IOException {
             // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
     }
     

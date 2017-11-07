@@ -50,6 +50,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.category.CatalogUrlServlet.CatalogUrlBuilder;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.OfbizUrlBuilder;
@@ -1002,10 +1003,12 @@ public class CatalogUrlFilter extends ContextFilter {
              */
             CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
         }
-        public abstract String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId);
-        public abstract String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId);
-        public abstract String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
-        public abstract String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
+        
+        // low-level building methods (named after legacy ofbiz methods)
+        public abstract String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId) throws IOException;
+        public abstract String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException;
+        public abstract String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) throws IOException;
+        public abstract String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) throws IOException;
         
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
@@ -1032,17 +1035,17 @@ public class CatalogUrlFilter extends ContextFilter {
                 Delegator delegator = (Delegator) request.getAttribute("delegator");
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
                 
-                return makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
+                return this.makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
             } else {
                 String url;
                 
                 if (UtilValidate.isNotEmpty(productId)) {
-                    url = makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
+                    url = this.makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
                 } else {
-                    url = makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                    url = this.makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
                 }
         
-                url = CatalogUrlServlet.appendLinkParams(url, params);
+                url = appendLinkParams(url, params);
                 
                 return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
             }
@@ -1066,26 +1069,12 @@ public class CatalogUrlFilter extends ContextFilter {
             String url;
             
             if (UtilValidate.isNotEmpty(productId)) {
-                GenericValue product;
-                try {
-                    product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
-                } catch (GenericEntityException e) {
-                    throw new IOException(e);
-                }
-                ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
-                url = makeProductAltUrl(delegator, locale, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId);
+                url = this.makeProductAltUrl(delegator, dispatcher, locale, null, contextPath, previousCategoryId, productCategoryId, productId);
             } else {
-                GenericValue productCategory;
-                try {
-                    productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();
-                } catch (GenericEntityException e) {
-                    throw new IOException(e);
-                }
-                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
-                url = makeCategoryAltUrl(delegator, locale, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                url = this.makeCategoryAltUrl(delegator, dispatcher, locale, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
             
-            url = CatalogUrlServlet.appendLinkParams(url, params);
+            url = appendLinkParams(url, params);
             
             return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
         }
@@ -1104,8 +1093,17 @@ public class CatalogUrlFilter extends ContextFilter {
                 return CatalogUrlFilter.makeProductUrl(request, previousCategoryId, productCategoryId, productId);
             }
             @Override
-            public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
-                    String contextPath, String previousCategoryId, String productCategoryId, String productId) {
+            public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
+                    String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException {
+                
+                GenericValue product;
+                try {
+                    product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
+                } catch (GenericEntityException e) {
+                    throw new IOException(e);
+                }
+                ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
+                
                 return CatalogUrlFilter.makeProductUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
             }
             @Override
@@ -1115,11 +1113,29 @@ public class CatalogUrlFilter extends ContextFilter {
                 return CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
             @Override
-            public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
+            public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                     String contextPath, String previousCategoryId, String productCategoryId, String productId,
-                    String viewSize, String viewIndex, String viewSort, String searchString) {
+                    String viewSize, String viewIndex, String viewSort, String searchString) throws IOException {
+                
+                GenericValue productCategory;
+                try {
+                    productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();
+                } catch (GenericEntityException e) {
+                    throw new IOException(e);
+                }
+                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
+                
                 return CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
+        }
+        
+        /**
+         * Appends params for catalog URLs.
+         * <p>
+         * WARN: this currently assumes the url contains no params, could change in future
+         */
+        protected static String appendLinkParams(String url, Object paramsObj) throws IOException {
+            return CatalogUrlBuilder.appendLinkParams(url, paramsObj);
         }
     }
 

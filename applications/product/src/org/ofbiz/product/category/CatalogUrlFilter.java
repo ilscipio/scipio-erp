@@ -109,81 +109,88 @@ public class CatalogUrlFilter extends ContextFilter {
             String productCategoryId = null;
             String urlContentId = null;
             try {
-                // look for productId
-                if (alternativeUrl.endsWith("-p")) {
+                if (alternativeUrl.endsWith("-p")) { // look for productId
                     productId = extractAltUrlProductId(delegator, alternativeUrl, "-p");
-                }
-                
-                // look for productCategoryId
-                if (alternativeUrl.endsWith("-c")) {
+                } else if (alternativeUrl.endsWith("-c")) { // look for productCategoryId
                     productCategoryId = extractAltUrlCategoryId(delegator, alternativeUrl, "-c");
                 }
-
             } catch (GenericEntityException e) {
-                Debug.logWarning("Cannot look for product and product category", module);
+                Debug.logWarning("Cannot look for product and product category: " + e.getMessage(), module);
             }
             
-            // SCIPIO: FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
-            // which is it will only look up a default path under the top category, which is generally
-            // not desirable but accepted for simple shops.
-            
-            // SCIPIO: get default category for product
-            if (UtilValidate.isNotEmpty(productId) && UtilValidate.isEmpty(productCategoryId)) {
-                // SCIPIO: factored out
-                productCategoryId = getProductDefaultCategoryId(delegator, productId);
-            }
-
-            // SCIPIO: 2016-03-22: FIXME?: the getCatalogTopCategory call below 
-            // is currently left unchanged, but note that because of it,
-            // currently CatalogUrlFilter/ofbizCatalogAltUrl force browsing toward only the main top catalog category.
-            // It does not allow browsing any other top categories (best-selling, promotions, etc.).
-            // In some cases this is desirable, in others not.
-            
-            // generate trail belong to a top category
-            // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
-            //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
-            String topCategoryId = getCatalogTopCategory(httpRequest);
-            List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(httpRequest, "trailCategories", topCategoryId, false, false, true);
-            List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-            
-            // look for productCategoryId from productId
-            if (UtilValidate.isNotEmpty(productId)) {
-                // SCIPIO: factored out
-                String catId = getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
-                if (catId != null) {
-                    productCategoryId = catId;
-                }
-            }
-
-            // SCIPIO: 2016-03-22: FIXME?: The loop below was found to cause invalid category paths in SOLR addToSolr
-            // (was very similar code) and had to be fixed there. I think there is a chance there may be bugs here as well,
-            // but I'm not certain.
-            
-            // generate trail elements from productCategoryId
-            if (UtilValidate.isNotEmpty(productCategoryId)) {
-                // SCIPIO: 2017-11-07: factored out.
-                getTrailElementsAndUpdateRequestAndTrail(httpRequest, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
-            }
-            
-            // SCIPIO: bumped this lower to simplify all code 
-            // generate forward URL
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append(getControlServletPath(httpRequest));
-            
-            if (UtilValidate.isNotEmpty(productId)) {
-                urlBuilder.append("/" + PRODUCT_REQUEST);
-            } else {
-                urlBuilder.append("/" + CATEGORY_REQUEST);
-            }
-            
-            //Set view query parameters
-            UrlServletHelper.setViewQueryParameters(request, urlBuilder);
+            // SCIPIO: 2017-11-07: this ID check was previously much further below, but has been moved here to lower the needless overhead
             if (UtilValidate.isNotEmpty(productId) || UtilValidate.isNotEmpty(productCategoryId) || UtilValidate.isNotEmpty(urlContentId)) {
+            
+                // SCIPIO: FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
+                // which is it will only look up a default path under the top category, which is generally
+                // not desirable but accepted for simple shops.
+                
+                // SCIPIO: get default category for product
+                if (UtilValidate.isNotEmpty(productId) && UtilValidate.isEmpty(productCategoryId)) {
+                    // SCIPIO: factored out
+                    productCategoryId = getProductDefaultCategoryId(delegator, productId);
+                }
+    
+                // SCIPIO: 2016-03-22: FIXME?: the getCatalogTopCategory call below 
+                // is currently left unchanged, but note that because of it,
+                // currently CatalogUrlFilter/ofbizCatalogAltUrl force browsing toward only the main top catalog category.
+                // It does not allow browsing any other top categories (best-selling, promotions, etc.).
+                // In some cases this is desirable, in others not.
+                
+                // generate trail belong to a top category
+                // SCIPIO: 2017-08-15: this call is inappropriate; see method for details
+                //String topCategoryId = CategoryWorker.getCatalogTopCategory(httpRequest, null);
+                String topCategoryId = getCatalogTopCategory(httpRequest);
+                List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(httpRequest, "trailCategories", topCategoryId, false, false, true);
+                List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
+                
+                // look for productCategoryId from productId
+                if (UtilValidate.isNotEmpty(productId)) {
+                    // SCIPIO: factored out
+                    String catId = getProductMatchingCategoryId(delegator, productId, trailCategoryIds);
+                    if (catId != null) {
+                        productCategoryId = catId;
+                    }
+                }
+    
+                // SCIPIO: 2016-03-22: FIXME?: The loop below was found to cause invalid category paths in SOLR addToSolr
+                // (was very similar code) and had to be fixed there. I think there is a chance there may be bugs here as well,
+                // but I'm not certain.
+                
+                // generate trail elements from productCategoryId
+                if (UtilValidate.isNotEmpty(productCategoryId)) {
+                    // SCIPIO: 2017-11-07: factored out.
+                    getTrailElementsAndUpdateRequestAndTrail(httpRequest, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
+                }
+                
+                // SCIPIO: bumped this lower to simplify all code 
+                // generate forward URL
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(getControlServletPath(httpRequest));
+                
+                if (UtilValidate.isNotEmpty(productId)) {
+                    urlBuilder.append("/" + PRODUCT_REQUEST);
+                } else {
+                    urlBuilder.append("/" + CATEGORY_REQUEST);
+                }
+                
+                //Set view query parameters
+                UrlServletHelper.setViewQueryParameters(request, urlBuilder);
+                // SCIPIO: 2017-11-07: moved this check earlier to avoid large overhead on non-catalog calls
+                //if (UtilValidate.isNotEmpty(productId) || UtilValidate.isNotEmpty(productCategoryId) || UtilValidate.isNotEmpty(urlContentId)) {
                 Debug.logInfo("[Filtered request]: " + pathInfo + " (" + urlBuilder + ")", module);
                 ContextFilter.setAttributesFromRequestBody(request);
                 RequestDispatcher dispatch = request.getRequestDispatcher(urlBuilder.toString());
                 dispatch.forward(request, response);
                 return;
+                //}
+                
+            } else {
+                // SCIPIO: TODO/FIXME?: REVIEW: these calls were previously running even on non-alt-url requests;
+                // as result, we can't remove them without testing to make sure no negative impacts
+                // on rest of store... but highly dubious if they belong here...
+                getCatalogTopCategory(httpRequest);
+                UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
             }
             
             //Check path alias

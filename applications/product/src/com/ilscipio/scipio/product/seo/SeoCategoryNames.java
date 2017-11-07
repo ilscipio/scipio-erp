@@ -115,7 +115,7 @@ public class SeoCategoryNames {
                 idNameMap.put(categoryId, categoryIdName);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, SeoCatalogUrlBuilder.module);
+            Debug.logError(e, SeoCatalogUrlWorker.module);
         }
         
         this.nameIdMap = nameIdMap;

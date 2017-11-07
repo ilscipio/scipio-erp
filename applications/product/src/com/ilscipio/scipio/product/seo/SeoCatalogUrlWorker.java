@@ -45,7 +45,6 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CatalogUrlFilter.CatalogAltUrlBuilder;
-import org.ofbiz.product.category.CatalogUrlFilter.DefaultCatalogAltUrlBuilder;
 import org.ofbiz.product.category.CatalogUrlServlet;
 import org.ofbiz.product.category.CatalogUrlServlet.CatalogUrlBuilder;
 import org.ofbiz.product.category.CatalogUrlServlet.CatalogUrlInfo;
@@ -65,13 +64,14 @@ import com.ilscipio.scipio.util.SeoStringUtil;
  * {@link org.ofbiz.product.category.CatalogUrlFilter#makeCatalogAltLink}
  * {@link org.ofbiz.product.category.CatalogUrlServlet#makeCatalogLink}
  */
-public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBuilder {
+@SuppressWarnings("serial")
+public class SeoCatalogUrlWorker implements Serializable {
 
-    public static final String module = SeoCatalogUrlBuilder.class.getName();
+    public static final String module = SeoCatalogUrlWorker.class.getName();
     
     public static final String DEFAULT_CONFIG_RESOURCE = "SeoConfigUiLabels";
     
-    private static final SeoCatalogUrlBuilder DEFAULT_INSTANCE = new SeoCatalogUrlBuilder();
+    private static final SeoCatalogUrlWorker DEFAULT_INSTANCE = new SeoCatalogUrlWorker();
     
     /* 
      * *****************************************************
@@ -81,6 +81,9 @@ public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBui
     
     protected final String configResource;
     protected final String urlSuffix;
+    // kludge for no multiple inheritance
+    protected final SeoCatalogUrlBuilder catalogUrlBuilder;
+    protected final SeoCatalogAltUrlBuilder catalogAltUrlBuilder;
     
     /* 
      * *****************************************************
@@ -88,34 +91,35 @@ public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBui
      * *****************************************************
      */
 
-    protected SeoCatalogUrlBuilder() {
+    protected SeoCatalogUrlWorker() {
         this.configResource = DEFAULT_CONFIG_RESOURCE;
         this.urlSuffix = SeoConfigUtil.getCategoryUrlSuffix() != null ? SeoConfigUtil.getCategoryUrlSuffix() : "";
+        this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
+        this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
     }
-    
     
     /**
      * TODO: to be removed later.
      */
     static void registerUrlBuilder() {
         // TODO?: unhardcode via properties?
-        CatalogUrlFilter.registerUrlBuilder("seo", BuilderFactory.getInstance());
-        CatalogUrlServlet.registerUrlBuilder("seo", BuilderFactory.getInstance());
+        CatalogUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
+        CatalogAltUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
     }
     
-    private static SeoCatalogUrlBuilder getDefaultInstance() { 
+    private static SeoCatalogUrlWorker getDefaultInstance() { 
         return DEFAULT_INSTANCE; 
     }
 
-    public static SeoCatalogUrlBuilder getInstance(Delegator delegator, String webSiteId) {
+    public static SeoCatalogUrlWorker getInstance(Delegator delegator, String webSiteId) {
         // TODO: this should return different builder depending on store and config!
         return getDefaultInstance();
     }
     
-    public static SeoCatalogUrlBuilder getInstanceIfEnabled(HttpServletRequest request,
+    public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
         if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-        // TODO: this should return different builder depending on store and config!
+        // FIXME: this should return different builder depending on store and config!
         return getDefaultInstance();
     }
     
@@ -127,12 +131,16 @@ public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBui
         @Override
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            return getInstanceIfEnabled(request, delegator, contextPath, webSiteId);
+            if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            // FIXME: this should return different builder depending on store and config!
+            return getDefaultInstance().getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            return getInstanceIfEnabled(request, delegator, contextPath, webSiteId);
+            if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            // FIXME: this should return different builder depending on store and config!
+            return getDefaultInstance().getCatalogAltUrlBuilder();
         }
     }
 
@@ -215,48 +223,62 @@ public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBui
      * *****************************************************
      */
     
-    @Override
-    public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
-            String previousCategoryId) {
-        // TODO
-        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+    public CatalogUrlBuilder getCatalogUrlBuilder() {
+        return catalogUrlBuilder;
     }
+    
+    public class SeoCatalogUrlBuilder extends CatalogUrlBuilder implements Serializable {
+    
+        @Override
+        public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
+                String previousCategoryId) {
+            // TODO
+            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+        }
+    
+        @Override
+        public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
+                String currentCategoryId, String previousCategoryId) {
+            // TODO
+            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+        }
 
-    @Override
-    public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
-            String currentCategoryId, String previousCategoryId) {
-        // TODO
-        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(delegator, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
     }
-
-    @Override
-    public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
-            String productId) {
-        // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
+    
+    public CatalogAltUrlBuilder getCatalogAltUrlBuilder() {
+        return catalogAltUrlBuilder;
     }
-
-    @Override
-    public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
-            String contextPath, String previousCategoryId, String productCategoryId, String productId) {
-        // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
-    }
-
-    @Override
-    public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
-            String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
-            String searchString) {
-        // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
-    }
-
-    @Override
-    public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
-            String contextPath, String previousCategoryId, String productCategoryId, String productId,
-            String viewSize, String viewIndex, String viewSort, String searchString) {
-        // TODO
-        return DefaultCatalogAltUrlBuilder.getInstance().makeCategoryAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+    
+    public class SeoCatalogAltUrlBuilder extends CatalogAltUrlBuilder implements Serializable {
+        @Override
+        public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
+                String productId) {
+            // TODO
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
+        }
+    
+        @Override
+        public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
+                String contextPath, String previousCategoryId, String productCategoryId, String productId) {
+            // TODO
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
+        }
+    
+        @Override
+        public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
+                String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
+                String searchString) {
+            // TODO
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+        }
+    
+        @Override
+        public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
+                String contextPath, String previousCategoryId, String productCategoryId, String productId,
+                String viewSize, String viewIndex, String viewSort, String searchString) {
+            // TODO
+            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+        }
     }
     
     /* 

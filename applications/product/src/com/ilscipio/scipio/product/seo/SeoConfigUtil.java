@@ -53,7 +53,7 @@ public class SeoConfigUtil {
     
     static {
         // TODO?: unhardcode via properties?
-        SeoCatalogUrlBuilder.registerUrlBuilder();
+        SeoCatalogUrlWorker.registerUrlBuilder();
     }
     
     private static volatile boolean isInitialed = false;

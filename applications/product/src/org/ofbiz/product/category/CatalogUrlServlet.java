@@ -303,34 +303,8 @@ public class CatalogUrlServlet extends HttpServlet {
      */
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productId, String currentCategoryId,
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        if (UtilValidate.isEmpty(webSiteId)) {
-            webSiteId = null;
-        }
-        if (UtilValidate.isEmpty(contextPath)) {
-            contextPath = null;
-        }
-        // SCIPIO: 2017-11-06: NOT doing this here - caller or other overloads should do.
-        //if (locale == null) {
-        //    locale = UtilHttp.getLocale(request);
-        //}
-        
-        if (webSiteId != null || contextPath != null) {
-            // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
-            // and build as if we had no request
-            
-            Delegator delegator = (Delegator) request.getAttribute("delegator");
-            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            
-            return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
-        } else {
-            CatalogUrlBuilder builder = getCatalogUrlBuilder(true, request, null, contextPath, webSiteId);
-
-            String url = builder.makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
-            
-            url = appendLinkParams(url, params);
-            
-            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
-        }
+        CatalogUrlBuilder builder = CatalogUrlBuilder.getBuilder(true, request, null, contextPath, webSiteId);
+        return builder.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode);
     }
     
     /**
@@ -395,23 +369,8 @@ public class CatalogUrlServlet extends HttpServlet {
     public static String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
             Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
-        if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
-            throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
-        }
-        
-        if (UtilValidate.isEmpty(contextPath)) {
-            contextPath = RequestLinkUtil.getWebSiteContextPath(delegator, webSiteId);
-        }
-        
-        String url;
-        
-        CatalogUrlBuilder builder = getCatalogUrlBuilder(false, request, delegator, contextPath, webSiteId);
-        
-        url = builder.makeCatalogUrl(delegator, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
-        
-        url = appendLinkParams(url, params);
-        
-        return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
+        CatalogUrlBuilder builder = CatalogUrlBuilder.getBuilder(false, request, delegator, contextPath, webSiteId);
+        return builder.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
     }
     
     /**
@@ -439,63 +398,127 @@ public class CatalogUrlServlet extends HttpServlet {
      * SCIPIO: 2017: Wraps all the category URL method calls so they can be switched out without
      * ruining the code.
      */
-    public interface CatalogUrlBuilder {
+    public static abstract class CatalogUrlBuilder {
+        
+        /**
+         * SCIPIO: 2017: allows plugging in custom low-level URL builders.
+         * FIXME: poor initialization logic
+         */
+        private static List<CatalogUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
+        
+        public static CatalogUrlBuilder getDefaultBuilder() {
+            return OfbizCatalogUrlBuilder.getInstance();
+        }
+        
+        public static CatalogUrlBuilder getBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId) {
+            if (withRequest) {
+                if (delegator == null) delegator = (Delegator) request.getAttribute("delegator");
+                if (contextPath == null) contextPath = request.getContextPath();
+                if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
+            }
+            for(CatalogUrlBuilder.Factory factory : urlBuilderFactories) {
+                CatalogUrlBuilder builder = factory.getCatalogUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
+                if (builder != null) return builder;
+            }
+            return getDefaultBuilder();
+        }
+        
+        /**
+         * @deprecated FIXME: this may need be redesigned with property config due to possible synchronization/ordering issues.
+         */
+        @Deprecated
+        public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder.Factory builderFactory) {
+            if (urlBuilderFactories.contains(builderFactory)) return;
+            List<CatalogUrlBuilder.Factory> newList = new ArrayList<>(urlBuilderFactories);
+            newList.add(builderFactory);
+            urlBuilderFactories = Collections.unmodifiableList(newList);
+        }
+        
+        
         public interface Factory {
             /**
              * Returns builder or null if not applicable to request.
              */
             CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
         }
-        String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId);
-        String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
-    }
-    
-    public static class DefaultCatalogUrlBuilder implements CatalogUrlBuilder {
-        private static final DefaultCatalogUrlBuilder INSTANCE = new DefaultCatalogUrlBuilder();
+        public abstract String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId);
+        public abstract String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
         
-        public static final DefaultCatalogUrlBuilder getInstance() { return INSTANCE; }
+        /**
+         * Common/default high-level makeCatalogLink implementation (new Scipio method).
+         */
+        public String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productId, String currentCategoryId,
+                String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+            if (UtilValidate.isEmpty(webSiteId)) {
+                webSiteId = null;
+            }
+            if (UtilValidate.isEmpty(contextPath)) {
+                contextPath = null;
+            }
+            // SCIPIO: 2017-11-06: NOT doing this here - caller or other overloads should do.
+            //if (locale == null) {
+            //    locale = UtilHttp.getLocale(request);
+            //}
+            
+            if (webSiteId != null || contextPath != null) {
+                // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
+                // and build as if we had no request
+                
+                Delegator delegator = (Delegator) request.getAttribute("delegator");
+                LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+                
+                return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
+            } else {
+                String url = makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+                
+                url = appendLinkParams(url, params);
+                
+                return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+            }
+        }
+        
+        /**
+         * Common/default high-level makeCatalogLink implementation (new Scipio method).
+         */
+        public String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
+                String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
+                Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
+            if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
+                throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
+            }
+            
+            if (UtilValidate.isEmpty(contextPath)) {
+                contextPath = RequestLinkUtil.getWebSiteContextPath(delegator, webSiteId);
+            }
+            
+            String url;
+            
+            url = makeCatalogUrl(delegator, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
+            
+            url = appendLinkParams(url, params);
+            
+            return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
+        }
+        
+        /**
+         * Implements the stock ofbiz catalog (non-alt) URLs.
+         */
+        public static class OfbizCatalogUrlBuilder extends CatalogUrlBuilder {
+            private static final OfbizCatalogUrlBuilder INSTANCE = new OfbizCatalogUrlBuilder();
+            
+            public static final OfbizCatalogUrlBuilder getInstance() { return INSTANCE; }
 
-        @Override
-        public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
-                String previousCategoryId) {
-            return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+            @Override
+            public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
+                    String previousCategoryId) {
+                return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+            }
+            @Override
+            public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
+                    String currentCategoryId, String previousCategoryId) {
+                return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+            }
         }
-        @Override
-        public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
-                String currentCategoryId, String previousCategoryId) {
-            return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
-        }
     }
-    
-    protected static CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId) {
-        if (withRequest) {
-            if (delegator == null) delegator = (Delegator) request.getAttribute("delegator");
-            if (contextPath == null) contextPath = request.getContextPath();
-            if (webSiteId == null) webSiteId = WebSiteWorker.getWebSiteId(request);
-        }
-        for(CatalogUrlBuilder.Factory factory : UrlBuilders.urlBuilderFactories) {
-            CatalogUrlBuilder builder = factory.getCatalogUrlBuilder(withRequest, request, delegator, contextPath, webSiteId);
-            if (builder != null) return builder;
-        }
-        return getDefaultCatalogUrlBuilder();
-    }
-    
-    public static CatalogUrlBuilder getDefaultCatalogUrlBuilder() {
-        return DefaultCatalogUrlBuilder.getInstance();
-    }
-    
-    /**
-     * SCIPIO: 2017: allows plugging in custom low-level URL builders.
-     * FIXME: poor initialization logic
-     */
-    private static class UrlBuilders {
-        private static List<CatalogUrlBuilder.Factory> urlBuilderFactories = Collections.emptyList();
-    }
-    
-    public static synchronized void registerUrlBuilder(String name, CatalogUrlBuilder.Factory builderFactory) {
-        if (UrlBuilders.urlBuilderFactories.contains(builderFactory)) return;
-        List<CatalogUrlBuilder.Factory> newList = new ArrayList<>(UrlBuilders.urlBuilderFactories);
-        newList.add(builderFactory);
-        UrlBuilders.urlBuilderFactories = Collections.unmodifiableList(newList);
-    }
+
 }

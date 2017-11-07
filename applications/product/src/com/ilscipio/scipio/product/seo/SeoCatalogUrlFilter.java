@@ -46,7 +46,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.category.CatalogUrlServlet;
 import org.ofbiz.webapp.control.ContextFilter;
 
-import com.ilscipio.scipio.product.seo.SeoCatalogUrlBuilder.SeoCatalogUrlInfo;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
 
 /**
  * SCIPIO: 2017: Seo catalog URL filter.
@@ -72,7 +72,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     
     static {
         // TODO?: unhardcode via properties?
-        SeoCatalogUrlBuilder.registerUrlBuilder();
+        SeoCatalogUrlWorker.registerUrlBuilder();
     }
     
     protected String defaultLocaleString = null;
@@ -82,7 +82,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     protected String categoryRequestPath = "/" + CATEGORY_REQUEST;
     protected boolean seoEnabled = true;
     
-    protected static SeoCatalogUrlBuilder urlBuilder = null;
+    protected static SeoCatalogUrlWorker urlBuilder = null;
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -105,7 +105,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
 
             WebsiteSeoConfig.registerWebsiteForSeo(WebsiteSeoConfig.makeConfig(config.getServletContext(), true));
             
-            urlBuilder = SeoCatalogUrlBuilder.getInstance(null, config.getServletContext().getInitParameter("webSiteId"));
+            urlBuilder = SeoCatalogUrlWorker.getInstance(null, config.getServletContext().getInitParameter("webSiteId"));
         }
     }
 

@@ -216,47 +216,47 @@ public class SeoCatalogUrlBuilder implements CatalogAltUrlBuilder, CatalogUrlBui
      */
     
     @Override
-    public String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId,
+    public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
             String previousCategoryId) {
         // TODO
-        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
+        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
     }
 
     @Override
-    public String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId,
+    public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
             String currentCategoryId, String previousCategoryId) {
         // TODO
-        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(delegator, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+        return CatalogUrlServlet.getDefaultCatalogUrlBuilder().makeCatalogUrl(delegator, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
     }
 
     @Override
-    public String makeProductAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId,
+    public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
             String productId) {
         // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(request, previousCategoryId, productCategoryId, productId);
+        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
     }
 
     @Override
-    public String makeProductAltUrl(Delegator delegator, ProductContentWrapper wrapper, List<String> trail,
+    public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
             String contextPath, String previousCategoryId, String productCategoryId, String productId) {
         // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
+        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeProductAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
     }
 
     @Override
-    public String makeCategoryAltUrl(HttpServletRequest request, String previousCategoryId,
+    public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
             String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
             String searchString) {
         // TODO
-        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeCategoryAltUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+        return CatalogUrlFilter.getDefaultCatalogAltUrlBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
     }
 
     @Override
-    public String makeCategoryAltUrl(Delegator delegator, CategoryContentWrapper wrapper, List<String> trail,
+    public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
             String contextPath, String previousCategoryId, String productCategoryId, String productId,
             String viewSize, String viewIndex, String viewSort, String searchString) {
         // TODO
-        return DefaultCatalogAltUrlBuilder.getInstance().makeCategoryAltUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+        return DefaultCatalogAltUrlBuilder.getInstance().makeCategoryAltUrl(delegator, locale, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
     }
     
     /* 

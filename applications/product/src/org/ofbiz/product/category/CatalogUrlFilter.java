@@ -872,8 +872,9 @@ public class CatalogUrlFilter extends ContextFilter {
      * It is preferable to use webSiteId where possible.
      * <p>
      * 2017-11: This method will now automatically implement the alternative SEO link building.
+     * NOTE: 2017-11-06: this overload requires explicit locale - it does NOT use locale from request.
      */
-    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId,
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId,
             String previousCategoryId, Object params, String webSiteId, 
             String contextPath, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
@@ -883,6 +884,10 @@ public class CatalogUrlFilter extends ContextFilter {
         if (UtilValidate.isEmpty(contextPath)) {
             contextPath = null;
         }
+        // SCIPIO: 2017-11-06: NOT doing this here - caller or other overloads should do.
+        //if (locale == null) {
+        //    locale = UtilHttp.getLocale(request);
+        //}
         
         if (webSiteId != null || contextPath != null) {
             // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
@@ -890,7 +895,6 @@ public class CatalogUrlFilter extends ContextFilter {
             
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            Locale locale = UtilHttp.getLocale(request);
             
             return makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
         } else {
@@ -899,9 +903,9 @@ public class CatalogUrlFilter extends ContextFilter {
             CatalogAltUrlBuilder builder = getCatalogAltUrlBuilder(true, request, null, contextPath, webSiteId);
             
             if (UtilValidate.isNotEmpty(productId)) {
-                url = builder.makeProductAltUrl(request, previousCategoryId, productCategoryId, productId);
+                url = builder.makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
             } else {
-                url = builder.makeCategoryAltUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                url = builder.makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
     
             url = CatalogUrlServlet.appendLinkParams(url, params);
@@ -913,13 +917,40 @@ public class CatalogUrlFilter extends ContextFilter {
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
+     * @deprecated 2017-11-06: this overload relies on request locale (not context/screen locale).
+     */
+    @Deprecated
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId,
+            String previousCategoryId, Object params, String webSiteId, 
+            String contextPath, Boolean fullPath, Boolean secure, Boolean encode,
+            String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
+        return makeCatalogAltLink(request, response, UtilHttp.getLocale(request), productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
      * <p>
      * This version assumes the current webapp is the target webapp and may use session information.
      */
+    public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId, String previousCategoryId, 
+            Object params, Boolean fullPath, Boolean secure, Boolean encode,
+            String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
+        return makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, params, null, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogAltUrl</code> FTL macro supports.
+     * <p>
+     * This version assumes the current webapp is the target webapp and may use session information.
+     * @deprecated 2017-11-06: this overload relies on request locale (not context/screen locale).
+     */
+    @Deprecated
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, String productCategoryId, String productId, String previousCategoryId, 
             Object params, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) throws IOException, WebAppConfigurationException {
-        return makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, params, null, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+        return makeCatalogAltLink(request, response, UtilHttp.getLocale(request), productCategoryId, productId, previousCategoryId, params, null, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
     
     /**
@@ -973,7 +1004,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 throw new IOException(e);
             }
             ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, "text/html");
-            url = builder.makeProductAltUrl(delegator, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId);
+            url = builder.makeProductAltUrl(delegator, locale, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId);
         } else {
             GenericValue productCategory;
             try {
@@ -982,7 +1013,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 throw new IOException(e);
             }
             CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, productCategory, locale, "text/html");
-            url = builder.makeCategoryAltUrl(delegator, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            url = builder.makeCategoryAltUrl(delegator, locale, wrapper, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
         
         url = CatalogUrlServlet.appendLinkParams(url, params);
@@ -1001,10 +1032,10 @@ public class CatalogUrlFilter extends ContextFilter {
              */
             CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
         }
-        String makeProductAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId);
-        String makeProductAltUrl(Delegator delegator, ProductContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId);
-        String makeCategoryAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
-        String makeCategoryAltUrl(Delegator delegator, CategoryContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
+        String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId);
+        String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId);
+        String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
+        String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString);
     }
     
     public static class DefaultCatalogAltUrlBuilder implements CatalogAltUrlBuilder {
@@ -1013,23 +1044,23 @@ public class CatalogUrlFilter extends ContextFilter {
         public static final DefaultCatalogAltUrlBuilder getInstance() { return INSTANCE; }
         
         @Override
-        public String makeProductAltUrl(HttpServletRequest request, String previousCategoryId, String productCategoryId,
+        public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
                 String productId) {
             return CatalogUrlFilter.makeProductUrl(request, previousCategoryId, productCategoryId, productId);
         }
         @Override
-        public String makeProductAltUrl(Delegator delegator, ProductContentWrapper wrapper, List<String> trail,
+        public String makeProductAltUrl(Delegator delegator, Locale locale, ProductContentWrapper wrapper, List<String> trail,
                 String contextPath, String previousCategoryId, String productCategoryId, String productId) {
             return CatalogUrlFilter.makeProductUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId);
         }
         @Override
-        public String makeCategoryAltUrl(HttpServletRequest request, String previousCategoryId,
+        public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
                 String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
                 String searchString) {
             return CatalogUrlFilter.makeCategoryUrl(request, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
         @Override
-        public String makeCategoryAltUrl(Delegator delegator, CategoryContentWrapper wrapper, List<String> trail,
+        public String makeCategoryAltUrl(Delegator delegator, Locale locale, CategoryContentWrapper wrapper, List<String> trail,
                 String contextPath, String previousCategoryId, String productCategoryId, String productId,
                 String viewSize, String viewIndex, String viewSort, String searchString) {
             return CatalogUrlFilter.makeCategoryUrl(delegator, wrapper, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);

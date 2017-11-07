@@ -299,8 +299,9 @@ public class CatalogUrlServlet extends HttpServlet {
      * It is preferable to use webSiteId where possible.
      * <p>
      * 2017-11: This method will now automatically implement the alternative SEO link building.
+     * NOTE: 2017-11-06: this overload requires explicit locale - it does NOT use locale from request.
      */
-    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, String currentCategoryId,
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productId, String currentCategoryId,
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = null;
@@ -308,6 +309,10 @@ public class CatalogUrlServlet extends HttpServlet {
         if (UtilValidate.isEmpty(contextPath)) {
             contextPath = null;
         }
+        // SCIPIO: 2017-11-06: NOT doing this here - caller or other overloads should do.
+        //if (locale == null) {
+        //    locale = UtilHttp.getLocale(request);
+        //}
         
         if (webSiteId != null || contextPath != null) {
             // SPECIAL CASE: if there is a specific webSiteId, we must NOT use the current session stuff,
@@ -315,14 +320,12 @@ public class CatalogUrlServlet extends HttpServlet {
             
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            Locale locale = UtilHttp.getLocale(request);
             
             return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
         } else {
             CatalogUrlBuilder builder = getCatalogUrlBuilder(true, request, null, contextPath, webSiteId);
 
-            String url = builder.makeCatalogUrl(request, 
-                    productId, currentCategoryId, previousCategoryId);
+            String url = builder.makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
             
             url = appendLinkParams(url, params);
             
@@ -333,12 +336,36 @@ public class CatalogUrlServlet extends HttpServlet {
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
      * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * @deprecated 2017-11-06: this overload relies on request locale (not context/screen locale).
+     */
+    @Deprecated
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, String productId, String currentCategoryId,
+            String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(request, response, UtilHttp.getLocale(request), productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
      * <p>
      * This version assumes the current webapp is the target webapp and may use session information.
      */
+    public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, Locale locale,
+            String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        return makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, params, null, null, fullPath, secure, encode);
+    }
+    
+    /**
+     * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
+     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * <p>
+     * This version assumes the current webapp is the target webapp and may use session information.
+     * @deprecated 2017-11-06: this overload relies on request locale (not context/screen locale).
+     */
+    @Deprecated
     public static String makeCatalogLink(HttpServletRequest request, HttpServletResponse response, 
             String productId, String currentCategoryId, String previousCategoryId, Object params, Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        return makeCatalogLink(request, response, productId, currentCategoryId, previousCategoryId, params, null, null, fullPath, secure, encode);
+        return makeCatalogLink(request, response, UtilHttp.getLocale(request), productId, currentCategoryId, previousCategoryId, params, null, null, fullPath, secure, encode);
     }
     
     /**
@@ -380,7 +407,7 @@ public class CatalogUrlServlet extends HttpServlet {
         
         CatalogUrlBuilder builder = getCatalogUrlBuilder(false, request, delegator, contextPath, webSiteId);
         
-        url = builder.makeCatalogUrl(delegator, contextPath, null, productId, currentCategoryId, previousCategoryId);
+        url = builder.makeCatalogUrl(delegator, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
         
         url = appendLinkParams(url, params);
         
@@ -419,8 +446,8 @@ public class CatalogUrlServlet extends HttpServlet {
              */
             CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, String contextPath, String webSiteId);
         }
-        String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId, String previousCategoryId);
-        String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
+        String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId);
+        String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId);
     }
     
     public static class DefaultCatalogUrlBuilder implements CatalogUrlBuilder {
@@ -429,12 +456,12 @@ public class CatalogUrlServlet extends HttpServlet {
         public static final DefaultCatalogUrlBuilder getInstance() { return INSTANCE; }
 
         @Override
-        public String makeCatalogUrl(HttpServletRequest request, String productId, String currentCategoryId,
+        public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
                 String previousCategoryId) {
             return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
         }
         @Override
-        public String makeCatalogUrl(Delegator delegator, String contextPath, List<String> crumb, String productId,
+        public String makeCatalogUrl(Delegator delegator, Locale locale, String contextPath, List<String> crumb, String productId,
                 String currentCategoryId, String previousCategoryId) {
             return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
         }

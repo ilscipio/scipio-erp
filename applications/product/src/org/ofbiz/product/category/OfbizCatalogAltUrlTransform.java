@@ -40,6 +40,7 @@ import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
@@ -125,7 +126,7 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
             public void close() throws IOException {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
-                    BeanModel req = (BeanModel) env.getVariable("request");
+                    HttpServletRequest request = ContextFtlUtil.getRequest(env); // SCIPIO
                     String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
                     String productCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
                     String productId = TransformUtil.getStringArg(args, "productId", rawParams);
@@ -143,14 +144,16 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     
                     Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
                     
-                    if (req != null) {
-                        HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
+                    // SCIPIO: 2017-11-06: new Locale arg + context reading for most cases
+                    // NOTE: the fallback on request locale is LEGACY BEHAVIOR - not all transforms should necessarily use "OrRequest" here!
+                    Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+                    
+                    if (request != null) {
                         //StringBuilder newURL = new StringBuilder();
                         
                         // SCIPIO: now delegated to our new reusable method
-                        BeanModel resp = (BeanModel) env.getVariable("response");
-                        HttpServletResponse response = (HttpServletResponse) resp.getWrappedObject();
-                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, productCategoryId, productId, previousCategoryId, urlParams, webSiteId, 
+                        HttpServletResponse response = ContextFtlUtil.getResponse(env);
+                        url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, webSiteId, 
                                 prefix, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
 
                         // SCIPIO: no null
@@ -160,7 +163,6 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     } else if (webSiteId != null || prefix != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-                        Locale locale = (Locale) args.get("locale");
                         
                         // SCIPIO: now delegated to our new reusable method
                         // NOTE: here webSiteId is usually required!
@@ -184,4 +186,5 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
             }
         };
     }
+
 }

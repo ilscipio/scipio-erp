@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,20 +22,14 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.product.category.CategoryWorker;
-import com.ilscipio.scipio.treeMenu.TreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**

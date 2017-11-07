@@ -19,7 +19,6 @@
 package com.ilscipio.scipio.product.seo;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +39,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.category.CatalogUrlServlet;
@@ -350,13 +348,13 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     
     /**
      * Forward a uri according to forward pattern regular expressions. Note: this is developed for Filter usage.
-     * @Deprecated SCIPIO: 2017: mostly redundant with urlrewrite.xml
+     * @Deprecated SCIPIO: 2017: redundant with urlrewrite.xml (NOTE: used to be in SeoContextFilter)
      * 
      * @param uri String to reverse transform
      * @return String
      */
     @Deprecated
-    protected static boolean forwardUri(HttpServletResponse response, String uri) {
+    protected static boolean applySeoConfigRegexpRedirects(HttpServletResponse response, String uri) {
         boolean foundMatch = false;
         Integer responseCodeInt = null;
 

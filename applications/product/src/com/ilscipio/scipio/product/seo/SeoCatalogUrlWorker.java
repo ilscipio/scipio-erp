@@ -165,18 +165,8 @@ public class SeoCatalogUrlWorker implements Serializable {
         return UtilProperties.getMessage(getConfigResource(), "SeoConfigPathNameProduct", locale);
     }
     
-    @Deprecated
-    public String getProductServletPathName() {
-        return getProductServletPathName(getDefaultLocale());
-    }
-    
     public String getProductServletPath(Locale locale) {
         return "/" + getProductServletPathName(locale);
-    }
-    
-    @Deprecated
-    public String getProductServletPath() {
-        return getProductServletPath(getDefaultLocale());
     }
     
     public String getCategoryServletPathName(Locale locale) {
@@ -286,6 +276,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      * URL building core
      * *****************************************************
+     * Derived from CatalogUrlFilter/CatalogUrlServlet methods with similar names
      */
     
     /**
@@ -297,15 +288,15 @@ public class SeoCatalogUrlWorker implements Serializable {
      * @return String a catalog url
      */
     @Deprecated
-    private String makeProductUrl(HttpServletRequest request, String productId, String currentCategoryId, String previousCategoryId) {
+    private String makeProductUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         initCategoryNameMap(request);
 
         String contextPath = request.getContextPath();
         StringBuilder urlBuilder = new StringBuilder();
         GenericValue product = null;
-        // SCIPIO: We need to get bh products from SOLR...
-        Map<String, Object> bhProduct = null;
+        // SCIPIO: We need to get cached products from SOLR...
+        Map<String, Object> cachedProduct = null;
         
         urlBuilder.append((request.getSession().getServletContext()).getContextPath());
         if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
@@ -320,7 +311,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             
             Map<String, Map<String, Object>> scipioCachedProductsMap = UtilGenerics.checkMap(request.getAttribute("scipioCachedProductsMap"));
             if (scipioCachedProductsMap != null) {
-                bhProduct = scipioCachedProductsMap.get(productId);
+                cachedProduct = scipioCachedProductsMap.get(productId);
             }
         }
         
@@ -335,7 +326,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath)) {
                 
                 // SCIPIO: must always add in this case
-                urlBuilder.append(getProductServletPathName() + "/");
+                urlBuilder.append(getProductServletPathName(locale) + "/");
 
                 for (String trailCategoryId: trail) {
                     if ("TOP".equals(trailCategoryId)) continue;
@@ -354,7 +345,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                                 
                                 // SCIPIO: We only support omitting product request if a category name is also present
                                 if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
-                                    urlBuilder.append(getProductServletPathName() + "/");
+                                    urlBuilder.append(getProductServletPathName(locale) + "/");
                                     productRequestNeeded = false;
                                 }
                                 else {
@@ -370,7 +361,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                                     urlBuilder.append(lastCategoryId);
                                 }
                                 
-                                if (product != null || bhProduct != null) {
+                                if (product != null || cachedProduct != null) {
                                     if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
                                         urlBuilder.append("/");
                                     }
@@ -384,7 +375,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 }
                 
                 if (productRequestNeeded) {
-                    urlBuilder.append(getProductServletPathName() + "/");
+                    urlBuilder.append(getProductServletPathName(locale) + "/");
                 }
             }
         }
@@ -392,33 +383,35 @@ public class SeoCatalogUrlWorker implements Serializable {
             // SCIPIO: must always add in this case (can't have generic product links at root level because matching
             // is only done by IDs and likely to cause problems with other kinds of requests, and SOLR products aren't in DB
             // so they can't even match by ID)
-            urlBuilder.append(getProductServletPathName() + "/");
+            urlBuilder.append(getProductServletPathName(locale) + "/");
         }
 
         if (UtilValidate.isNotEmpty(productId)) {
-            if (product != null || bhProduct != null) {
+            if (product != null || cachedProduct != null) {
                 String productName;
-            
-                // SCIPIO: Priority to SOLR title
-                if (bhProduct != null && UtilValidate.isNotEmpty((String) bhProduct.get("title"))) {
-                    productName = (String) bhProduct.get("title");
-                }
-                else {
-                    productName  = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
-                    
-                }
                 
-                productName = SeoUrlUtil.replaceSpecialCharsUrl(productName);
-                if (UtilValidate.isNotEmpty(productName)) {
-                    urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
-                } else if (product != null) {
-                    ProductContentWrapper wrapper = new ProductContentWrapper(product, request);
-                    String alternativeUrl = wrapper.get("ALTERNATIVE_URL");
-                    if (UtilValidate.isNotEmpty(alternativeUrl)) {
-                        productName = SeoUrlUtil.replaceSpecialCharsUrl(alternativeUrl);
-                        if (UtilValidate.isNotEmpty(productName)) {
-                            urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
-                        }
+                // SCIPIO: 2017: we get ALTERNATIVE_URL first, and fall back on product
+                ProductContentWrapper wrapper = (product != null) ? new ProductContentWrapper(product, request) : null;
+                String alternativeUrl = wrapper.get("ALTERNATIVE_URL");
+                if (UtilValidate.isNotEmpty(alternativeUrl)) {
+                    productName = SeoUrlUtil.replaceSpecialCharsUrl(alternativeUrl);
+                    if (UtilValidate.isNotEmpty(productName)) {
+                        urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
+                    }
+                } else {
+                    // SCIPIO: Priority to SOLR title
+                    if (cachedProduct != null && UtilValidate.isNotEmpty((String) cachedProduct.get("title"))) {
+                        productName = (String) cachedProduct.get("title");
+                    }
+                    else {
+                        productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
+                    }
+                    
+                    productName = SeoUrlUtil.replaceSpecialCharsUrl(productName);
+                    if (UtilValidate.isNotEmpty(productName)) {
+                        urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
+                    } else if (product != null) {
+                        
                     }
                 }
             }
@@ -444,7 +437,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * @return String a category url
      */
     @Deprecated
-    private String makeCategoryUrl(HttpServletRequest request, String currentCategoryId, String previousCategoryId, String viewSize, String viewIndex, String viewSort, String searchString) {
+    private String makeCategoryUrl(HttpServletRequest request, Locale locale, String currentCategoryId, String previousCategoryId, String viewSize, String viewIndex, String viewSort, String searchString) {
         initCategoryNameMap(request);
 
         StringBuilder urlBuilder = new StringBuilder();
@@ -454,7 +447,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
         
         if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitCategoryUrl())) {
-            urlBuilder.append(getCategoryServletPathName() + "/");
+            urlBuilder.append(getCategoryServletPathName(locale) + "/");
         }
 
         if (UtilValidate.isNotEmpty(currentCategoryId)) {
@@ -521,7 +514,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * @return String a catalog url
      */
     @Deprecated
-    private String makeProductUrl(String contextPath, List<String> trail, String productId, String productName, String currentCategoryId, String previousCategoryId) {
+    private String makeProductUrl(String contextPath, Locale locale, List<String> trail, String productId, String productName, String currentCategoryId, String previousCategoryId) {
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(contextPath);
         if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
@@ -530,11 +523,11 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (!SeoConfigUtil.isCategoryUrlEnabledForContextPath(contextPath)) {
             // SCIPIO: 2017: THIS IS PROBABLY UNWANTED FOR SEO NOW? TODO: REVIEW
             //urlBuilder.append(CatalogUrlServlet.CATALOG_URL_MOUNT_POINT);
-            urlBuilder.append(getProductServletPathName());
+            urlBuilder.append(getProductServletPathName(locale));
         } else {
             // Probably should always require for now
             //if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
-            urlBuilder.append(getProductServletPathName() + "/");
+            urlBuilder.append(getProductServletPathName(locale) + "/");
             //}
         }
 

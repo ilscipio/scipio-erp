@@ -81,6 +81,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     protected String productRequestPath = "/" + PRODUCT_REQUEST;
     protected String categoryRequestPath = "/" + CATEGORY_REQUEST;
     protected boolean seoEnabled = true;
+    protected boolean debug = false;
     
     protected static SeoCatalogUrlWorker urlBuilder = null;
 
@@ -89,6 +90,8 @@ public class SeoCatalogUrlFilter extends ContextFilter {
         super.init(config);
         
         SeoConfigUtil.init();
+        
+        debug = Boolean.TRUE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("debug")));
         
         seoEnabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("seoEnabled")));
         if (seoEnabled) {
@@ -203,20 +206,21 @@ public class SeoCatalogUrlFilter extends ContextFilter {
         fwdUrl.append(controlPrefix);
         String targetRequest = urlInfo.isProductRequest() ? productRequestPath : categoryRequestPath;
         fwdUrl.append(targetRequest);
-        UrlServletHelper.setViewQueryParameters(request, fwdUrl); // TODO: REVIEW: 2017: looks bad
         
-        if (Debug.infoOn()) { // TODO?: verbose or debug flag?
+        // SCIPIO: 2017: REMOVED: this risks creating limitations for parameters -
+        // DO NOT APPEND ANY PARAMETERS HERE FOR NOW - by default the servlet will pass all current ones.
+        // TODO: REVIEW: the main risk is that some old screens may erroenously use request parameters
+        // as priority over attributes - those screens must be fixed
+        //UrlServletHelper.setViewQueryParameters(request, fwdUrl);
+        
+        if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
             if (urlInfo.isProductRequest()) {
-                if (Debug.infoOn()) {
-                    Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo() 
-                        + " (" + fwdUrl + "); args: [productId: " + urlInfo.getProductId() 
-                        + "; productCategoryId: " + urlInfo.getCategoryId() + "]", module);
-                }
+                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo() 
+                    + " (" + fwdUrl + "); args: [productId: " + urlInfo.getProductId() 
+                    + "; productCategoryId: " + urlInfo.getCategoryId() + "]", module);
             } else {
-                if (Debug.infoOn()) {
-                    Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo() 
-                        + " (" + fwdUrl + "); args: [productCategoryId: " + urlInfo.getCategoryId() + "]", module);
-                }
+                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo() 
+                    + " (" + fwdUrl + "); args: [productCategoryId: " + urlInfo.getCategoryId() + "]", module);
             }
         }
         
@@ -234,6 +238,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     /**
      * Checks an outbound URL for /control/product, /control/category or other
      * such request and tries to extract the IDs.
+     * TODO: required to intercept various kinds of redirect notably from controller/requesthandler.
      */
     public SeoCatalogUrlInfo matchOutboundSeoTranslatableUrl(Delegator delegator, String url) {
         
@@ -345,18 +350,18 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     
     /**
      * Forward a uri according to forward pattern regular expressions. Note: this is developed for Filter usage.
+     * @Deprecated SCIPIO: 2017: mostly redundant with urlrewrite.xml
      * 
      * @param uri String to reverse transform
      * @return String
      */
+    @Deprecated
     protected static boolean forwardUri(HttpServletResponse response, String uri) {
         boolean foundMatch = false;
         Integer responseCodeInt = null;
 
         if (SeoConfigUtil.checkUseUrlRegexp() && SeoConfigUtil.getSeoPatterns() != null && SeoConfigUtil.getForwardReplacements() != null) {
-            Iterator<String> keys = SeoConfigUtil.getSeoPatterns().keySet().iterator();
-            while (keys.hasNext()) {
-                String key = keys.next();
+            for(String key : SeoConfigUtil.getSeoPatterns().keySet()) {
                 Pattern pattern = SeoConfigUtil.getSeoPatterns().get(key);
                 String replacement = SeoConfigUtil.getForwardReplacements().get(key);
                 Matcher matcher = pattern.matcher(uri);
@@ -378,10 +383,10 @@ public class SeoCatalogUrlFilter extends ContextFilter {
             } else {
                 response.setStatus(responseCodeInt.intValue());
             }
-            // Buchhandel: encodeURL?
+            // SCIPIO: encodeURL?
             response.setHeader("Location", response.encodeRedirectURL(uri));
         } else {
-            Debug.logInfo("Can NOT forward this url: " + uri, module);
+            if (Debug.verboseOn()) Debug.logInfo("Can NOT redirect this url: " + uri, module);
         }
   
         return foundMatch;

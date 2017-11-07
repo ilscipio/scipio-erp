@@ -111,142 +111,29 @@ public class CatalogUrlFilter extends ContextFilter {
             try {
                 // look for productId
                 if (alternativeUrl.endsWith("-p")) {
-                    List<EntityCondition> productContentConds = FastList.newInstance();
-                    productContentConds.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
-                    productContentConds.add(EntityUtil.getFilterByDateExpr());
-                    List<GenericValue> productContentInfos = EntityQuery.use(delegator).from("ProductContentAndInfo").where(productContentConds).orderBy("-fromDate").cache(true).queryList();
-                    if (UtilValidate.isNotEmpty(productContentInfos)) {
-                        for (GenericValue productContentInfo : productContentInfos) {
-                            String contentId = (String) productContentInfo.get("contentId");
-                            List<GenericValue> ContentAssocDataResourceViewTos = EntityQuery.use(delegator).from("ContentAssocDataResourceViewTo").where("contentIdStart", contentId, "caContentAssocTypeId", "ALTERNATE_LOCALE", "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
-                            if (UtilValidate.isNotEmpty(ContentAssocDataResourceViewTos)) {
-                                for (GenericValue ContentAssocDataResourceViewTo : ContentAssocDataResourceViewTos) {
-                                    GenericValue ElectronicText = ContentAssocDataResourceViewTo.getRelatedOne("ElectronicText", true);
-                                    if (UtilValidate.isNotEmpty(ElectronicText)) {
-                                        String textData = (String) ElectronicText.get("textData");
-                                        textData = UrlServletHelper.invalidCharacter(textData);
-                                        if (alternativeUrl.matches(textData + ".+$")) {
-                                            String productIdStr = null;
-                                            productIdStr = alternativeUrl.replace(textData + "-", "");
-                                            productIdStr = productIdStr.replace("-p", "");
-                                            String checkProductId = (String) productContentInfo.get("productId");
-                                            if (productIdStr.equalsIgnoreCase(checkProductId)) {
-                                                productId = checkProductId;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (UtilValidate.isEmpty(productId)) {
-                                List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId, "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
-                                for (GenericValue contentDataResourceView : contentDataResourceViews) {
-                                    GenericValue ElectronicText = contentDataResourceView.getRelatedOne("ElectronicText", true);
-                                    if (UtilValidate.isNotEmpty(ElectronicText)) {
-                                        String textData = (String) ElectronicText.get("textData");
-                                        if (UtilValidate.isNotEmpty(textData)) {
-                                            textData = UrlServletHelper.invalidCharacter(textData);
-                                            if (alternativeUrl.matches(textData + ".+$")) {
-                                                String productIdStr = null;
-                                                productIdStr = alternativeUrl.replace(textData + "-", "");
-                                                productIdStr = productIdStr.replace("-p", "");
-                                                String checkProductId = (String) productContentInfo.get("productId");
-                                                if (productIdStr.equalsIgnoreCase(checkProductId)) {
-                                                    productId = checkProductId;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    productId = extractAltUrlProductId(delegator, alternativeUrl, "-p");
                 }
                 
                 // look for productCategoryId
                 if (alternativeUrl.endsWith("-c")) {
-                    List<EntityCondition> productCategoryContentConds = FastList.newInstance();
-                    productCategoryContentConds.add(EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL"));
-                    productCategoryContentConds.add(EntityUtil.getFilterByDateExpr());
-                    List<GenericValue> productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndInfo").where(productCategoryContentConds).orderBy("-fromDate").cache(true).queryList();
-                    if (UtilValidate.isNotEmpty(productCategoryContentInfos)) {
-                        for (GenericValue productCategoryContentInfo : productCategoryContentInfos) {
-                            String contentId = (String) productCategoryContentInfo.get("contentId");
-                            List<GenericValue> ContentAssocDataResourceViewTos = EntityQuery.use(delegator).from("ContentAssocDataResourceViewTo").where("contentIdStart", contentId, "caContentAssocTypeId", "ALTERNATE_LOCALE", "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
-                            if (UtilValidate.isNotEmpty(ContentAssocDataResourceViewTos)) {
-                                for (GenericValue ContentAssocDataResourceViewTo : ContentAssocDataResourceViewTos) {
-                                    GenericValue ElectronicText = ContentAssocDataResourceViewTo.getRelatedOne("ElectronicText", true);
-                                    if (UtilValidate.isNotEmpty(ElectronicText)) {
-                                        String textData = (String) ElectronicText.get("textData");
-                                        if (UtilValidate.isNotEmpty(textData)) {
-                                            textData = UrlServletHelper.invalidCharacter(textData);
-                                            if (alternativeUrl.matches(textData + ".+$")) {
-                                                String productCategoryStr = null;
-                                                productCategoryStr = alternativeUrl.replace(textData + "-", "");
-                                                productCategoryStr = productCategoryStr.replace("-c", "");
-                                                String checkProductCategoryId = (String) productCategoryContentInfo.get("productCategoryId");
-                                                if (productCategoryStr.equalsIgnoreCase(checkProductCategoryId)) {
-                                                    productCategoryId = checkProductCategoryId;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (UtilValidate.isEmpty(productCategoryId)) {
-                                List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId, "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
-                                for (GenericValue contentDataResourceView : contentDataResourceViews) {
-                                    GenericValue ElectronicText = contentDataResourceView.getRelatedOne("ElectronicText", true);
-                                    if (UtilValidate.isNotEmpty(ElectronicText)) {
-                                        String textData = (String) ElectronicText.get("textData");
-                                        if (UtilValidate.isNotEmpty(textData)) {
-                                            textData = UrlServletHelper.invalidCharacter(textData);
-                                            if (alternativeUrl.matches(textData + ".+$")) {
-                                                String productCategoryStr = null;
-                                                productCategoryStr = alternativeUrl.replace(textData + "-", "");
-                                                productCategoryStr = productCategoryStr.replace("-c", "");
-                                                String checkProductCategoryId = (String) productCategoryContentInfo.get("productCategoryId");
-                                                if (productCategoryStr.equalsIgnoreCase(checkProductCategoryId)) {
-                                                    productCategoryId = checkProductCategoryId;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    productCategoryId = extractAltUrlCategoryId(delegator, alternativeUrl, "-c");
                 }
 
             } catch (GenericEntityException e) {
                 Debug.logWarning("Cannot look for product and product category", module);
             }
             
-            // generate forward URL
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append("/" + CONTROL_MOUNT_POINT);
-            
-            // SCIPIO: TODO: The code below should somehow be changed to delegate to makeTrailElements
-            // call; currently duplicated due to heavy var reuse.
-            // FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
+            // SCIPIO: FIXME?: The code below also is only equivalent to makeDefaultCategoryTrailElements, 
             // which is it will only look up a default path under the top category, which is generally
             // not desirable but accepted for simple shops.
             
-            if (UtilValidate.isNotEmpty(productId)) {
+            // SCIPIO: get default category for product
+            if (UtilValidate.isNotEmpty(productId) && UtilValidate.isEmpty(productCategoryId)) {
                 // SCIPIO: factored out
-                String catId = getProductDefaultCategoryId(delegator, productId);
-                if (catId != null) {
-                    productCategoryId = catId;
-                }
-                urlBuilder.append("/" + PRODUCT_REQUEST);
-            } else {
-                urlBuilder.append("/" + CATEGORY_REQUEST);
+                productCategoryId = getProductDefaultCategoryId(delegator, productId);
             }
 
-            // SCIPIO: 2016-03-22: FIXME?: this getCatalogTopCategory call below 
+            // SCIPIO: 2016-03-22: FIXME?: the getCatalogTopCategory call below 
             // is currently left unchanged, but note that because of it,
             // currently CatalogUrlFilter/ofbizCatalogAltUrl force browsing toward only the main top catalog category.
             // It does not allow browsing any other top categories (best-selling, promotions, etc.).
@@ -274,46 +161,19 @@ public class CatalogUrlFilter extends ContextFilter {
             
             // generate trail elements from productCategoryId
             if (UtilValidate.isNotEmpty(productCategoryId)) {
-                List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
-                
-                // SCIPIO: NOTE: Parts of this could reuse updateRequestAndTrail but there are minor difference,
-                // not risking it for now.
-                
-                List<String> trail = CategoryWorker.getTrail(httpRequest);
-                if (trail == null) {
-                    trail = FastList.newInstance();
-                }
-
-                // adjust trail
-                String previousCategoryId = null;
-                if (trail.size() > 0) {
-                    previousCategoryId = trail.get(trail.size() - 1);
-                }
-                trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-                
-                // SCIPIO: 2016-03-23: There is a high risk here that the trail does not contain the top
-                // category.
-                // If top category is not in trail, we'll prepend it to trailElements. 
-                // This will cause the trailElements to replace the whole trail in the code that follows
-                // because of the way setTrail with ID works.
-                // I'm not sure what the intention of stock code was in these cases, but I think
-                // this will simply prevent a lot of confusion and makes the trail more likely to be
-                // a valid category path.
-                // EDIT: This behavior is now changed, see next comment
-                if (trailElements.size() > 0) {
-                    // SCIPIO: REVISION 2: we will ALWAYS add the top category to the trail
-                    // elements. It's needed because sometimes the code above will produce
-                    // entries incompatible with the current trail and it results in an
-                    // incomplete trail. Adding the top category should cause the code below
-                    // to reset much of the trail.
-                    //if (!trail.contains(topCategoryId)) {
-                    //    trailElements.add(0, topCategoryId);
-                    //}
-                    trailElements.add(0, topCategoryId);
-                }
-
-                // SCIPIO: this is now delegated
-                updateRequestAndTrail(httpRequest, productCategoryId, productId, trailElements, trail);
+                // SCIPIO: 2017-11-07: factored out.
+                getTrailElementsAndUpdateRequestAndTrail(httpRequest, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
+            }
+            
+            // SCIPIO: bumped this lower to simplify all code 
+            // generate forward URL
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append(getControlServletPath(httpRequest));
+            
+            if (UtilValidate.isNotEmpty(productId)) {
+                urlBuilder.append("/" + PRODUCT_REQUEST);
+            } else {
+                urlBuilder.append("/" + CATEGORY_REQUEST);
             }
             
             //Set view query parameters
@@ -334,6 +194,139 @@ public class CatalogUrlFilter extends ContextFilter {
         chain.doFilter(request, response);
     }
 
+    /**
+     * SCIPIO: Returns control servlet path or empty string (same as getServletPath).
+     */
+    protected String getControlServletPath(HttpServletRequest request) {
+        // FIXME?: unhardcode
+        return "/" + CONTROL_MOUNT_POINT;
+    }
+    
+    /**
+     * SCIPIO: Tries to match an alt URL path element to a product.
+     * Factored out code from doFilter.
+     * Added 2017-11-07.
+     */
+    public static String extractAltUrlProductId(Delegator delegator, String alternativeUrl, String suffix) throws GenericEntityException {
+        String productId = null;
+        List<EntityCondition> productContentConds = FastList.newInstance();
+        productContentConds.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        productContentConds.add(EntityUtil.getFilterByDateExpr());
+        List<GenericValue> productContentInfos = EntityQuery.use(delegator).from("ProductContentAndInfo").where(productContentConds).orderBy("-fromDate").cache(true).queryList();
+        if (UtilValidate.isNotEmpty(productContentInfos)) {
+            for (GenericValue productContentInfo : productContentInfos) {
+                String contentId = (String) productContentInfo.get("contentId");
+                List<GenericValue> ContentAssocDataResourceViewTos = EntityQuery.use(delegator).from("ContentAssocDataResourceViewTo").where("contentIdStart", contentId, "caContentAssocTypeId", "ALTERNATE_LOCALE", "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
+                if (UtilValidate.isNotEmpty(ContentAssocDataResourceViewTos)) {
+                    for (GenericValue ContentAssocDataResourceViewTo : ContentAssocDataResourceViewTos) {
+                        GenericValue ElectronicText = ContentAssocDataResourceViewTo.getRelatedOne("ElectronicText", true);
+                        if (UtilValidate.isNotEmpty(ElectronicText)) {
+                            String textData = (String) ElectronicText.get("textData");
+                            textData = UrlServletHelper.invalidCharacter(textData);
+                            if (alternativeUrl.matches(textData + ".+$")) {
+                                String productIdStr = null;
+                                productIdStr = alternativeUrl.replace(textData + "-", "");
+                                if (suffix != null) productIdStr = productIdStr.replace(suffix, ""); // SCIPIO
+                                String checkProductId = (String) productContentInfo.get("productId");
+                                if (productIdStr.equalsIgnoreCase(checkProductId)) {
+                                    productId = checkProductId;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (UtilValidate.isEmpty(productId)) {
+                    List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId, "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
+                    for (GenericValue contentDataResourceView : contentDataResourceViews) {
+                        GenericValue ElectronicText = contentDataResourceView.getRelatedOne("ElectronicText", true);
+                        if (UtilValidate.isNotEmpty(ElectronicText)) {
+                            String textData = (String) ElectronicText.get("textData");
+                            if (UtilValidate.isNotEmpty(textData)) {
+                                textData = UrlServletHelper.invalidCharacter(textData);
+                                if (alternativeUrl.matches(textData + ".+$")) {
+                                    String productIdStr = null;
+                                    productIdStr = alternativeUrl.replace(textData + "-", "");
+                                    if (suffix != null) productIdStr = productIdStr.replace(suffix, ""); // SCIPIO
+                                    String checkProductId = (String) productContentInfo.get("productId");
+                                    if (productIdStr.equalsIgnoreCase(checkProductId)) {
+                                        productId = checkProductId;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return productId;
+    }
+    
+    /**
+     * SCIPIO: Tries to match an alt URL path element to a category.
+     * Factored out code from doFilter.
+     * Added 2017-11-07.
+     */
+    public static String extractAltUrlCategoryId(Delegator delegator, String alternativeUrl, String suffix) throws GenericEntityException {
+        String productCategoryId = null;
+        List<EntityCondition> productCategoryContentConds = FastList.newInstance();
+        productCategoryContentConds.add(EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL"));
+        productCategoryContentConds.add(EntityUtil.getFilterByDateExpr());
+        List<GenericValue> productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndInfo").where(productCategoryContentConds).orderBy("-fromDate").cache(true).queryList();
+        if (UtilValidate.isNotEmpty(productCategoryContentInfos)) {
+            for (GenericValue productCategoryContentInfo : productCategoryContentInfos) {
+                String contentId = (String) productCategoryContentInfo.get("contentId");
+                List<GenericValue> ContentAssocDataResourceViewTos = EntityQuery.use(delegator).from("ContentAssocDataResourceViewTo").where("contentIdStart", contentId, "caContentAssocTypeId", "ALTERNATE_LOCALE", "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
+                if (UtilValidate.isNotEmpty(ContentAssocDataResourceViewTos)) {
+                    for (GenericValue ContentAssocDataResourceViewTo : ContentAssocDataResourceViewTos) {
+                        GenericValue ElectronicText = ContentAssocDataResourceViewTo.getRelatedOne("ElectronicText", true);
+                        if (UtilValidate.isNotEmpty(ElectronicText)) {
+                            String textData = (String) ElectronicText.get("textData");
+                            if (UtilValidate.isNotEmpty(textData)) {
+                                textData = UrlServletHelper.invalidCharacter(textData);
+                                if (alternativeUrl.matches(textData + ".+$")) {
+                                    String productCategoryStr = null;
+                                    productCategoryStr = alternativeUrl.replace(textData + "-", "");
+                                    if (suffix != null) productCategoryStr = productCategoryStr.replace(suffix, ""); // SCIPIO
+                                    String checkProductCategoryId = (String) productCategoryContentInfo.get("productCategoryId");
+                                    if (productCategoryStr.equalsIgnoreCase(checkProductCategoryId)) {
+                                        productCategoryId = checkProductCategoryId;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (UtilValidate.isEmpty(productCategoryId)) {
+                    List<GenericValue> contentDataResourceViews = EntityQuery.use(delegator).from("ContentDataResourceView").where("contentId", contentId, "drDataResourceTypeId", "ELECTRONIC_TEXT").cache(true).queryList();
+                    for (GenericValue contentDataResourceView : contentDataResourceViews) {
+                        GenericValue ElectronicText = contentDataResourceView.getRelatedOne("ElectronicText", true);
+                        if (UtilValidate.isNotEmpty(ElectronicText)) {
+                            String textData = (String) ElectronicText.get("textData");
+                            if (UtilValidate.isNotEmpty(textData)) {
+                                textData = UrlServletHelper.invalidCharacter(textData);
+                                if (alternativeUrl.matches(textData + ".+$")) {
+                                    String productCategoryStr = null;
+                                    productCategoryStr = alternativeUrl.replace(textData + "-", "");
+                                    if (suffix != null) productCategoryStr = productCategoryStr.replace(suffix, ""); // SCIPIO
+                                    String checkProductCategoryId = (String) productCategoryContentInfo.get("productCategoryId");
+                                    if (productCategoryStr.equalsIgnoreCase(checkProductCategoryId)) {
+                                        productCategoryId = checkProductCategoryId;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return productCategoryId;
+    }
+    
+    
     /**
      * SCIPIO: Returns appropriate trail elements for a category or ID (abstraction method), checked against current trail,
      * for passing to {@link #updateRequestAndTrail} method.
@@ -582,6 +575,56 @@ public class CatalogUrlFilter extends ContextFilter {
         return false;   
     }
 
+    
+    /**
+     * SCIPIO: Combines the getTrailElements, some extra fixups and updateRequestAndTrail.
+     * Factored out from doFilter.
+     * Added 2017-11-07.
+     */
+    public static void getTrailElementsAndUpdateRequestAndTrail(HttpServletRequest request, Delegator delegator, String productId, 
+            String productCategoryId, List<String> trailCategoryIds, String topCategoryId) {
+        List<String> trailElements = getTrailElements(delegator, productCategoryId, trailCategoryIds);
+        
+        // SCIPIO: NOTE: Parts of this could reuse updateRequestAndTrail but there are minor difference,
+        // not risking it for now.
+        
+        List<String> trail = CategoryWorker.getTrail(request);
+        if (trail == null) {
+            trail = FastList.newInstance();
+        }
+
+        // adjust trail
+        String previousCategoryId = null;
+        if (trail.size() > 0) {
+            previousCategoryId = trail.get(trail.size() - 1);
+        }
+        trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+        
+        // SCIPIO: 2016-03-23: There is a high risk here that the trail does not contain the top
+        // category.
+        // If top category is not in trail, we'll prepend it to trailElements. 
+        // This will cause the trailElements to replace the whole trail in the code that follows
+        // because of the way setTrail with ID works.
+        // I'm not sure what the intention of stock code was in these cases, but I think
+        // this will simply prevent a lot of confusion and makes the trail more likely to be
+        // a valid category path.
+        // EDIT: This behavior is now changed, see next comment
+        if (trailElements.size() > 0) {
+            // SCIPIO: REVISION 2: we will ALWAYS add the top category to the trail
+            // elements. It's needed because sometimes the code above will produce
+            // entries incompatible with the current trail and it results in an
+            // incomplete trail. Adding the top category should cause the code below
+            // to reset much of the trail.
+            //if (!trail.contains(topCategoryId)) {
+            //    trailElements.add(0, topCategoryId);
+            //}
+            trailElements.add(0, topCategoryId);
+        }
+
+        // SCIPIO: this is now delegated
+        updateRequestAndTrail(request, productCategoryId, productId, trailElements, trail);
+    }
+    
     /**
      * SCIPIO: Updates the trail elements using logic originally found in {@link CatalogUrlServlet#doGet}.
      * <p>

@@ -2293,7 +2293,8 @@ under the License.
     
     <service name="generateProductAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
-        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml</description>
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml
+            WARN/TODO?: this service does not run for variant or other child products</description>
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <implements service="generateProductAlternativeUrlsCore"/>
     </service>
@@ -2335,7 +2336,8 @@ under the License.
     <!-- SCIPIO: replacement for generateMissingSeoUrlForWebsite -->
     <service name="generateWebsiteAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateWebsiteAlternativeUrls" transaction-timeout="72000">
-        <description>SCIPIO: TODO: NOT IMPLEMENTED: Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml</description>
+        <description>Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml
+            FIXME?: this can include variant products, but does not yet recognize other ProductAssoc types</description>
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true">
             <description>May pass webSiteId OR productStoreId</description>
@@ -2352,6 +2354,9 @@ under the License.
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Slightly faster iterating if true, but not recommended</description>
+        </attribute>
     </service>
     
     <service name="generateAllAlternativeUrls" engine="java" auth="true"
@@ -2364,6 +2369,9 @@ under the License.
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Slightly faster iterating if true, but not recommended</description>
+        </attribute>
     </service>
     
 </services>

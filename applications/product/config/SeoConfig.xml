@@ -20,8 +20,8 @@
         <!-- Scipio: new property to set max names -->
         <names-locale-override>de</names-locale-override>
         <!-- Scipio: Must override this to de because user accounts not set to de -->
-        <category-name-separate-path-elem>enable</category-name-separate-path-elem> 
-        <!-- instead of hyphen. WARNING: Leave enabled for Scipio -->
+        <!--<category-name-separate-path-elem>enable</category-name-separate-path-elem>-->
+        <!-- instead of hyphen. SCIPIO: 2017-07-11: category-name-separate-path-elem setting currently always enabled  -->
         <category-name-append-id>enable</category-name-append-id> 
         <!-- only used if category-name-separate-path-elem enabled. 
              WARNING: MUST BE ENABLED; code for incoming links can't handle category ID omitted  -->

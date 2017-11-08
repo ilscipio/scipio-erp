@@ -19,6 +19,7 @@
 package org.ofbiz.product.category;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -85,15 +86,10 @@ public class CatalogUrlFilter extends ContextFilter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         Delegator delegator = (Delegator) httpRequest.getSession().getServletContext().getAttribute("delegator");
-        
-        //Get ServletContext
-        ServletContext servletContext = config.getServletContext();
 
-        ContextFilter.setCharacterEncoding(request);
+        // SCIPIO: 2017-11-08: factored out
+        prepareRequestAlways(httpRequest, httpResponse, delegator);
 
-        //Set request attribute and session
-        UrlServletHelper.setRequestAttributes(request, delegator, servletContext);
-        
         // set initial parameters
         String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
         String initRedirectUrl = config.getInitParameter("redirectUrl");
@@ -199,6 +195,17 @@ public class CatalogUrlFilter extends ContextFilter {
         
         // we're done checking; continue on
         chain.doFilter(request, response);
+    }
+    
+    /**
+     * SCIPIO: Actions that must run at every single request, whether handled or not.
+     * Factored out from doFilter.
+     */
+    public static void prepareRequestAlways(HttpServletRequest request, HttpServletResponse response, Delegator delegator) throws UnsupportedEncodingException {
+        ContextFilter.setCharacterEncoding(request);
+
+        //Set request attribute and session
+        UrlServletHelper.setRequestAttributes(request, delegator, request.getServletContext());
     }
 
     /**

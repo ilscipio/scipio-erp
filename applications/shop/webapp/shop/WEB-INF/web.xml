@@ -137,12 +137,13 @@ under the License.
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
+    <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
+    </filter-mapping>-->
     <filter-mapping>
         <filter-name>ContentUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>

@@ -49,6 +49,7 @@ import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
@@ -76,11 +77,18 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
+    public enum UrlType {
+        PRODUCT,
+        CATEGORY;
+        // TODO?: FUTURE: CONTENT
+    }
+    
     protected final String configResource;
     protected final String urlSuffix;
     // kludge for no multiple inheritance
     protected final SeoCatalogUrlBuilder catalogUrlBuilder;
     protected final SeoCatalogAltUrlBuilder catalogAltUrlBuilder;
+    protected final CatalogAltUrlSanitizer catalogAltUrlSanitizer;
 
     /*
      * *****************************************************
@@ -93,6 +101,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         this.urlSuffix = SeoConfigUtil.getCategoryUrlSuffix() != null ? SeoConfigUtil.getCategoryUrlSuffix() : "";
         this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
         this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
+        this.catalogAltUrlSanitizer = new SeoCatalogAltUrlSanitizer();
     }
 
     /**
@@ -116,11 +125,14 @@ public class SeoCatalogUrlWorker implements Serializable {
     public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
         if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-        // FIXME: this should return different builder depending on store and config!
+        // TODO: should return different builder depending on store and config!
         return getDefaultInstance();
     }
 
-    // boilerplate
+    /**
+     * Boilerplate factory that returns builder instances for the CatalogUrlFilter/CatalogUrlServlet builder registry.
+     * Methods return null if SEO not enabled for the webSiteId/contextPath.
+     */
     public static class BuilderFactory implements CatalogAltUrlBuilder.Factory, CatalogUrlBuilder.Factory {
         private static final BuilderFactory INSTANCE = new BuilderFactory();
 
@@ -129,14 +141,14 @@ public class SeoCatalogUrlWorker implements Serializable {
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-            // FIXME: this should return different builder depending on store and config!
+            // TODO: should return different builder depending on store and config!
             return getDefaultInstance().getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-            // FIXME: this should return different builder depending on store and config!
+            // TODO: should return different builder depending on store and config!
             return getDefaultInstance().getCatalogAltUrlBuilder();
         }
     }
@@ -270,20 +282,76 @@ public class SeoCatalogUrlWorker implements Serializable {
 
     /*
      * *****************************************************
+     * URL sanitizing
+     * *****************************************************
+     * These control how much happens before & after storage.
+     */
+    
+    public CatalogAltUrlSanitizer getCatalogAltUrlSanitizer() {
+        return catalogAltUrlSanitizer;
+    }
+    
+    public class SeoCatalogAltUrlSanitizer extends CatalogAltUrlSanitizer {
+        @Override
+        public String convertProductNameToAltUrl(String name, Locale locale) {
+            if (UtilValidate.isEmpty(name)) return name;
+            
+            name = convertGeneralNameToAltUrl(name, locale);
+            
+            name = SeoConfigUtil.limitProductNameLength(name);
+    
+            return name;
+        }
+
+        @Override
+        public String convertCategoryNameToAltUrl(String name, Locale locale) {
+            if (UtilValidate.isEmpty(name)) return name;
+            
+            name = convertGeneralNameToAltUrl(name, locale);
+            
+            name = SeoConfigUtil.limitCategoryNameLength(name);
+
+            return name;
+        }
+        
+        @Override
+        public String convertGeneralNameToAltUrl(String name, Locale locale) {
+            name = SeoStringUtil.constructSeoName(name);
+
+            // TODO: REVIEW
+            name = SeoUrlUtil.replaceSpecialCharsUrl(name, SeoConfigUtil.getCharFilters());
+
+            // TODO: REVIEW
+            name = UrlServletHelper.invalidCharacter(name); // (stock ofbiz)
+            
+            // WARN: no length limit, done by other methods
+            
+            return name;
+        }
+        
+        @Override
+        public String sanitizeAltUrlFromDb(String altUrl, Locale locale) {
+            // WARN: due to content wrapper the locale might not be the one from the altUrl!!
+            
+            if (altUrl == null) return "";
+            
+            // TODO: REVIEW: for now leaving this here for stock compat because
+            // users can manually edit the DB via interface and insert bad characters
+            altUrl = UrlServletHelper.invalidCharacter(altUrl); // (stock ofbiz)
+            
+            return altUrl;
+        }
+
+    }
+    
+    /*
+     * *****************************************************
      * URL building core
      * *****************************************************
      * Derived from CatalogUrlFilter methods of same names.
      * NOTE: The alt and non-alt SEO methods are unified to produce same output.
      */
 
-    /**
-     * Cleans alt url coming out of DB IF not already applied before going into db.
-     */
-    private String cleanAltUrlFromDb(String altUrl) {
-        if (altUrl == null) return "";
-        // TODO: this is stock ofbiz
-        return UrlServletHelper.invalidCharacter(altUrl);
-    }
 
     private List<String> makeCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
         if (trail == null || trail.isEmpty()) return new ArrayList<>();
@@ -298,7 +366,8 @@ public class SeoCatalogUrlWorker implements Serializable {
                     if (productCategory != null) {
                         String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
                         if (altUrl != null) {
-                            altUrl = cleanAltUrlFromDb(altUrl);
+                            // FIXME: effective locale might not be same as "locale" variable!
+                            altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale);
                             if (!altUrl.isEmpty()) {
                                 catName = altUrl;
                             }
@@ -359,7 +428,8 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(trailName);
         }
 
-        String alternativeUrl = cleanAltUrlFromDb(CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw"));
+        // FIXME: effective locale might not be same as "locale" variable!
+        String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw"), locale);
         if (UtilValidate.isNotEmpty(alternativeUrl)) {
 
             // append alternative URL
@@ -584,7 +654,8 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(trailName);
         }
 
-        String alternativeUrl = cleanAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"));
+        // FIXME: effective locale might not be same as "locale" variable!
+        String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"), locale);
         if (UtilValidate.isNotEmpty(alternativeUrl)) {
 
             // append alternative URL
@@ -729,7 +800,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 ProductContentWrapper wrapper = (product != null) ? new ProductContentWrapper(product, request) : null;
                 String alternativeUrl = wrapper.get("ALTERNATIVE_URL");
                 if (UtilValidate.isNotEmpty(alternativeUrl)) {
-                    productName = SeoUrlUtil.replaceSpecialCharsUrl(alternativeUrl);
+                    productName = SeoUrlUtil.replaceSpecialCharsUrl(alternativeUrl, SeoConfigUtil.getCharFilters());
                     if (UtilValidate.isNotEmpty(productName)) {
                         urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
                     }
@@ -742,7 +813,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                         productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
                     }
 
-                    productName = SeoUrlUtil.replaceSpecialCharsUrl(productName);
+                    productName = SeoUrlUtil.replaceSpecialCharsUrl(productName, SeoConfigUtil.getCharFilters());
                     if (UtilValidate.isNotEmpty(productName)) {
                         urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
                     } else if (product != null) {

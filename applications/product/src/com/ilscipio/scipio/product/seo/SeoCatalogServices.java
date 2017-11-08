@@ -30,6 +30,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
@@ -44,6 +45,13 @@ public abstract class SeoCatalogServices {
     }
 
     /**
+     * TODO: unhardcode
+     */
+    private static CatalogAltUrlSanitizer getCatalogAltUrlSanitizer(DispatchContext dctx, Map<String, ? extends Object> context) {
+        return SeoCatalogUrlWorker.getInstance(dctx.getDelegator(), null).getCatalogAltUrlSanitizer();
+    }
+    
+    /**
      * Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml.
      * TODO: localize error msgs
      * <p>
@@ -53,7 +61,7 @@ public abstract class SeoCatalogServices {
      */
     public static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
         boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
         boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
@@ -67,7 +75,7 @@ public abstract class SeoCatalogServices {
             if (product == null) {
                 return ServiceUtil.returnError("product not found for ID: " + productId);
             }
-            return generateProductAlternativeUrls(delegator, dispatcher, context, product, 
+            return generateProductAlternativeUrls(dctx, context, product, 
                     replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
@@ -76,8 +84,10 @@ public abstract class SeoCatalogServices {
         }
     }
 
-    static Map<String, Object> generateProductAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
+    static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue product, boolean replaceExisting, boolean removeOldLocales, Timestamp moment) throws Exception {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         final String nameField = "PRODUCT_NAME"; // TODO: UNHARDCODE
         
         // WARN/TODO?: this service does not run for variant or other child products
@@ -126,8 +136,9 @@ public abstract class SeoCatalogServices {
                 defaultLocaleString, nameMainContent, localeTextMap); 
         
         // make seo names
-        Map<String, String> localeUrlMap = localeTextMap != null ? makeProductAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = makeProductAltUrl(defaultName);
+        CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertProductNamesToAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertProductNameToAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString));
         
         // store 
         if (productContent != null) {
@@ -151,24 +162,6 @@ public abstract class SeoCatalogServices {
         return result;
     }
     
-    private static String makeProductAltUrl(String name) {
-        if (UtilValidate.isEmpty(name)) return name;
-        
-        name = applyCommonAltUrl(name);
-        
-        name = SeoConfigUtil.limitProductNameLength(name);
-
-        return name;
-    }
-    
-    private static Map<String, String> makeProductAltUrls(Map<String, String> localeTextMap) {
-        Map<String, String> localeSeoNameMap = new HashMap<>();
-        for(Map.Entry<String, String> entry : localeTextMap.entrySet()) {
-            localeSeoNameMap.put(entry.getKey(), makeProductAltUrl(entry.getValue()));
-        }
-        return localeSeoNameMap;
-    }
-    
     /**
      * SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml.
      */
@@ -188,7 +181,7 @@ public abstract class SeoCatalogServices {
             if (productCategory == null) {
                 return ServiceUtil.returnError("category not found for ID: " + productCategoryId);
             }
-            return generateProductCategoryAlternativeUrls(delegator, dispatcher, context, 
+            return generateProductCategoryAlternativeUrls(dctx, context, 
                     productCategory, replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
@@ -197,8 +190,10 @@ public abstract class SeoCatalogServices {
         }
     }
     
-    static Map<String, Object> generateProductCategoryAlternativeUrls(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
+    static Map<String, Object> generateProductCategoryAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment) throws Exception {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         final String nameField = "CATEGORY_NAME"; // TODO: UNHARDCODE
         String productCategoryId = productCategory.getString("productCategoryId");
         
@@ -234,8 +229,9 @@ public abstract class SeoCatalogServices {
                 defaultLocaleString, nameMainContent, localeTextMap); 
         
         // make seo names
-        Map<String, String> localeUrlMap = localeTextMap != null ? makeCategoryAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = makeCategoryAltUrl(defaultName);
+        CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertCategoryNamesToAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertCategoryNameToAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString));
         
         // store
         if (productCategoryContent != null) {
@@ -259,38 +255,6 @@ public abstract class SeoCatalogServices {
         result.put("categoryUpdated", Boolean.TRUE);
         return result;
     }
-    
-    private static String makeCategoryAltUrl(String name) {
-        if (UtilValidate.isEmpty(name)) return name;
-        
-        name = applyCommonAltUrl(name);
-        
-        name = SeoConfigUtil.limitCategoryNameLength(name);
-
-        return name;
-    }
-    
-    private static Map<String, String> makeCategoryAltUrls(Map<String, String> localeTextMap) {
-        Map<String, String> localeSeoNameMap = new HashMap<>();
-        for(Map.Entry<String, String> entry : localeTextMap.entrySet()) {
-            localeSeoNameMap.put(entry.getKey(), makeCategoryAltUrl(entry.getValue()));
-        }
-        return localeSeoNameMap;
-    }
-    
-    private static String applyCommonAltUrl(String name) {
-        name = SeoStringUtil.constructSeoName(name);
-
-        // TODO: REVIEW
-        name = SeoUrlUtil.replaceSpecialCharsUrl(name, SeoConfigUtil.getCharFilters());
-        
-        // ?
-//        if (name.lastIndexOf("-") >= 100) {
-//            name = name.substring(0, seoName.lastIndexOf("-"));
-//        }
-        
-        return name;
-    } 
     
     /**
      * This uses the content wrapper-like behavior to get a default name.

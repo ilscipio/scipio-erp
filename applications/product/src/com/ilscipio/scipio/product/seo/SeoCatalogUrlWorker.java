@@ -113,20 +113,26 @@ public class SeoCatalogUrlWorker implements Serializable {
         CatalogAltUrlBuilder.registerUrlBuilder("seo", BuilderFactory.getInstance());
     }
 
-    private static SeoCatalogUrlWorker getDefaultInstance() {
+    /**
+     * Returns an instance that is UNABLE to perform website-specific operations.
+     */
+    public static SeoCatalogUrlWorker getDefaultInstance(Delegator delegator) {
         return DEFAULT_INSTANCE;
     }
 
+    /**
+     * Returns an instance with possible website-specific configuration.
+     */
     public static SeoCatalogUrlWorker getInstance(Delegator delegator, String webSiteId) {
         // TODO: this should return different builder depending on store and config!
-        return getDefaultInstance();
+        return getDefaultInstance(delegator);
     }
 
     public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
         if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
         // TODO: should return different builder depending on store and config!
-        return getDefaultInstance();
+        return getDefaultInstance(delegator);
     }
 
     /**
@@ -142,14 +148,14 @@ public class SeoCatalogUrlWorker implements Serializable {
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
             // TODO: should return different builder depending on store and config!
-            return getDefaultInstance().getCatalogUrlBuilder();
+            return getDefaultInstance(delegator).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
             // TODO: should return different builder depending on store and config!
-            return getDefaultInstance().getCatalogAltUrlBuilder();
+            return getDefaultInstance(delegator).getCatalogAltUrlBuilder();
         }
     }
 

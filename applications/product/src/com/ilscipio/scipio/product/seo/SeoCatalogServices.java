@@ -45,10 +45,10 @@ public abstract class SeoCatalogServices {
     }
 
     /**
-     * TODO: unhardcode
+     * Returned instance can only perform generic (non-website-specific) operations. 
      */
     private static CatalogAltUrlSanitizer getCatalogAltUrlSanitizer(DispatchContext dctx, Map<String, ? extends Object> context) {
-        return SeoCatalogUrlWorker.getInstance(dctx.getDelegator(), null).getCatalogAltUrlSanitizer();
+        return SeoCatalogUrlWorker.getDefaultInstance(dctx.getDelegator()).getCatalogAltUrlSanitizer();
     }
     
     /**

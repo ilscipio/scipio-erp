@@ -95,12 +95,13 @@ under the License.
         <!-- SCIPIO: Set this to true to enable advanced SEO URLs; if false, delegates to the regular CatalogUrlFilter. -->
         <init-param><param-name>seoUrlEnabled</param-name><param-value>false</param-value></init-param>
     </filter>
+    <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
     <filter>
         <display-name>CatalogUrlFilter</display-name>
         <filter-name>CatalogUrlFilter</filter-name>
         <filter-class>org.ofbiz.product.category.CatalogUrlFilter</filter-class>
         <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
-    </filter>
+    </filter>-->
     <filter>
         <display-name>ContentUrlFilter</display-name>
         <filter-name>ContentUrlFilter</filter-name>

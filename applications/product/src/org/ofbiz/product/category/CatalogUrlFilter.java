@@ -470,7 +470,7 @@ public class CatalogUrlFilter extends ContextFilter {
      * NOTE: This is MODIFIED from stock ofbiz behavior for several issues, see code below.
      * Added 2017-08-15.
      */
-    private static String getCatalogTopCategory(ServletRequest request) {
+    public static String getCatalogTopCategory(ServletRequest request) {
         // SCIPIO: BUGFIX: 2017-08-15: in stock ofbiz, this filter was calling 
         // CategoryWorker.getCatalogTopCategory to get the top category; but this does not
         // work for stores and was probably an error; we need the one from CatalogWorker

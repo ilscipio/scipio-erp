@@ -289,11 +289,12 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (trail == null || trail.isEmpty()) return new ArrayList<>();
         List<String> catNames = new ArrayList<>(trail.size());
         for(String productCategoryId : trail) {
+            if ("TOP".equals(productCategoryId)) continue; // TODO: REVIEW
             String catName = productCategoryId; // fallback
             if (productCategoryId != null) {
                 try {
                     GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory")
-                        .where("productCategoryId", productCategoryId).cache(true).queryOne();
+                                .where("productCategoryId", productCategoryId).cache(true).queryOne();
                     if (productCategory != null) {
                         String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
                         if (altUrl != null) {
@@ -523,19 +524,59 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(contextPath);
         }
 
+        if (UtilValidate.isNotEmpty(productCategoryId)) {
+            // TODO: REVIEW: sketchy
+            trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+        }
+        List<String> trailNames = makeCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
+        
+        boolean productRequestNeeded = false;
         if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
+            productRequestNeeded = true;
+        } else if (trailNames.size() == 0) {
+            // 2017: TODO: REVIEW: if there was no category name, was forced to add product request...
+            productRequestNeeded = true;
+        }
+        if (productRequestNeeded) {
             if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");
             }
             urlBuilder.append(getProductServletPathName(locale));
         }
         
+//        if (trailNames.size() > 0) {
+//            String lastCategoryName = trailNames.get(trailNames.size() - 1);
+//            if (SeoConfigUtil.isCategoryNameEnabled()) {
+//
+//                // SCIPIO: We only support omitting product request if a category name is also present
+//                if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
+//                    urlBuilder.append(getProductServletPathName(locale) + "/");
+//                    productRequestNeeded = false;
+//                }
+//                else {
+//                    // We got a category name so no need for PRODUCT_REQUEST if we didn't want one
+//                    productRequestNeeded = false;
+//                }
+//
+//                urlBuilder.append(SeoConfigUtil.limitCategoryNameLength(categoryName));
+//
+//                if (SeoConfigUtil.isCategoryNameSeparatePathElem() && SeoConfigUtil.isCategoryNameAppendId()) {
+//                    // SCIPIO: Also append category ID for now...
+//                    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+//                    urlBuilder.append(lastCategoryId);
+//                }
+//
+//                if (product != null) {
+//                    if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
+//                        urlBuilder.append("/");
+//                    }
+//                    else {
+//                        urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+//                    }
+//                }
+//            }
+//        }
         
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            // TODO: REVIEW: sketchy
-            trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-        }
-        List<String> trailNames = makeCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
         for(String trailName : trailNames) {
             if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");

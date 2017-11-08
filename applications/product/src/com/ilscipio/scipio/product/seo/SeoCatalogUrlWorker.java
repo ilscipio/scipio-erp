@@ -83,6 +83,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         // TODO?: FUTURE: CONTENT
     }
     
+    // TODO: intended for later
+    //protected final String webSiteId;
+    //protected final String contextPath;
+    
     protected final String configResource;
     protected final String urlSuffix;
     // kludge for no multiple inheritance
@@ -122,16 +126,24 @@ public class SeoCatalogUrlWorker implements Serializable {
 
     /**
      * Returns an instance with possible website-specific configuration.
+     * <p>
+     * TODO: currently only returns default instance, inevitably this will change.
      */
     public static SeoCatalogUrlWorker getInstance(Delegator delegator, String webSiteId) {
-        // TODO: this should return different builder depending on store and config!
+        // TODO: this should return different builder depending on store and config
         return getDefaultInstance(delegator);
     }
 
+    /**
+     * Returns an instance with possible website-specific configuration IF it is
+     * enabled for this website/context, otherwise null.
+     * <p>
+     * TODO: currently only returns default instance, inevitably this will change.
+     */
     public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
         if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-        // TODO: should return different builder depending on store and config!
+        // TODO: should return different builder depending on store and config
         return getDefaultInstance(delegator);
     }
 
@@ -147,15 +159,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-            // TODO: should return different builder depending on store and config!
-            return getDefaultInstance(delegator).getCatalogUrlBuilder();
+            return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
             if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
-            // TODO: should return different builder depending on store and config!
-            return getDefaultInstance(delegator).getCatalogAltUrlBuilder();
+            return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogAltUrlBuilder();
         }
     }
 

@@ -20,27 +20,25 @@ import org.ofbiz.service.LocalDispatcher;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
- * SCIPIO
- * @deprecated TODO: REVIEW: category names map - may not be here long.
- * FIXME: remove HttpServletRequest, content wrapper, most of this...
+ * @deprecated SCIPIO: TODO: REMOVE - future optimization only...
  */
 @Deprecated
 public class SeoCategoryNames {
-    
+
     private static final SeoCategoryNames DEFAULT_INSTANCE = new SeoCategoryNames();
-    
+
     private Map<String, String> nameIdMap = new HashMap<>();
     private Map<String, String> idNameMap = new HashMap<>();
     private boolean initialized = false;
 
-    public static SeoCategoryNames getDefaultInstance() { 
+    public static SeoCategoryNames getDefaultInstance() {
         return DEFAULT_INSTANCE;
     }
-    
+
     public boolean isInitialized() {
         return initialized;
     }
-    
+
     @Deprecated
     public Map<String, String> getNameIdMap() {
         return nameIdMap;
@@ -49,24 +47,24 @@ public class SeoCategoryNames {
     public Map<String, String> getIdNameMap() {
         return idNameMap;
     }
-    
+
     /**
      * Initial category-name/category-id map.
      * Note: as a key, the category-name should be:
      *         1. ascii
      *         2. lower cased and use hyphen between the words.
      *       If not, the category id will be used.
-     * 
+     *
      */
     public void init(HttpServletRequest request) {
         if (isInitialized() || !SeoConfigUtil.isCategoryUrlEnabledStatic()) return;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         initInternal(request, delegator);
     }
-    
+
     private synchronized void initInternal(HttpServletRequest request, Delegator delegator) {
         if (isInitialized()) return; // NOTE: double check required
-        
+
         Map<String, String> nameIdMap = new HashMap<>();
         Map<String, String> idNameMap = new HashMap<>();
 
@@ -117,10 +115,10 @@ public class SeoCategoryNames {
         } catch (GenericEntityException e) {
             Debug.logError(e, SeoCatalogUrlWorker.module);
         }
-        
+
         this.nameIdMap = nameIdMap;
         this.idNameMap = idNameMap;
-        
+
         initialized = true;
     }
 
@@ -137,5 +135,5 @@ public class SeoCategoryNames {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         return CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "raw");
     }
-    
+
 }

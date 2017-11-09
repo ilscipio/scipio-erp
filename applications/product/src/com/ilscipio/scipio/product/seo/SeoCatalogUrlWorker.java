@@ -21,15 +21,17 @@ package com.ilscipio.scipio.product.seo;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -50,6 +52,7 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
+import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer.ObjectType;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
@@ -87,8 +90,13 @@ public class SeoCatalogUrlWorker implements Serializable {
     //protected final String webSiteId;
     //protected final String contextPath;
     
-    protected final String configResource;
+    protected final String configResourceName;
     protected final String urlSuffix;
+    
+    // lazy load, these do not require sync
+    protected LocalizedName productPathName = null;
+    protected LocalizedName categoryPathName = null;
+    
     // kludge for no multiple inheritance
     protected final SeoCatalogUrlBuilder catalogUrlBuilder;
     protected final SeoCatalogAltUrlBuilder catalogAltUrlBuilder;
@@ -101,7 +109,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
 
     protected SeoCatalogUrlWorker() {
-        this.configResource = DEFAULT_CONFIG_RESOURCE;
+        this.configResourceName = DEFAULT_CONFIG_RESOURCE;
         this.urlSuffix = SeoConfigUtil.getCategoryUrlSuffix() != null ? SeoConfigUtil.getCategoryUrlSuffix() : "";
         this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
         this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
@@ -175,27 +183,109 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
+    /**
+     * Maps locale to name and vice-versa - optimization to avoid ResourceBundle.
+     */
+    protected static class LocalizedName {
+        private final Map<Locale, String> localeValueMap;
+        private final Map<String, Locale> valueLocaleMap;
+        
+        public LocalizedName(Map<Locale, String> localeValueMap) {
+            this.localeValueMap = new HashMap<>(localeValueMap);
+            Map<String, Locale> valueLocaleMap = new HashMap<>();
+            for(Map.Entry<Locale, String> entry : localeValueMap.entrySet()) {
+                // SPECIAL: duplicates *could* be possible - keep the shortest locale name (most generic)
+                // for the string-to-locale mapping
+                Locale prevLocale = valueLocaleMap.get(entry.getValue());
+                if (prevLocale != null) {
+                    if (entry.getKey().toString().length() < prevLocale.toString().length()) {
+                        valueLocaleMap.put(entry.getValue(), entry.getKey());
+                    }
+                } else {
+                    valueLocaleMap.put(entry.getValue(), entry.getKey());
+                }
+            }
+            this.valueLocaleMap = valueLocaleMap;
+        }
+        
+        public static LocalizedName getNormalizedFromProperties(String resource, String name) {
+            // FIXME: NOT GUARANTEED PERFECT MAPPING!!
+            Map<Locale, String> localeValueMap = new HashMap<>();
+            for(Locale locale: UtilMisc.availableLocales()) {
+                locale = normalizeLocale(locale); // TODO: REVIEW: is this good or bad??
+                
+                ResourceBundle bundle = UtilProperties.getResourceBundle(resource, locale);
+                if (bundle == null || !bundle.containsKey(name)) continue;
+                String value = bundle.getString(name);
+                if (value == null) continue;
+                value = value.trim();
+                if (value.isEmpty()) continue;
+                localeValueMap.put(locale, value);
+            }
+            return new LocalizedName(localeValueMap);
+        }
+        
+        public Locale getLocaleForName(String name) {
+            return valueLocaleMap.get(name);
+        }
+        
+        public String getNameForLocale(Locale locale) {
+            return localeValueMap.get(locale);
+        }
+        
+        public String getNameForNormalizedLocale(Locale locale) {
+            return localeValueMap.get(normalizeLocale(locale));
+        }
+        
+        public static Locale normalizeLocale(Locale locale) {
+            return new Locale(locale.getCountry());
+        }
+    }
+    
+    
     @Deprecated
     protected Locale getDefaultLocale() {
         return Locale.getDefault();
     }
 
-    public String getConfigResource() {
-        return configResource;
+    public String getConfigResourceName() {
+        return configResourceName;
     }
 
+    protected LocalizedName getProductPathName() {
+        LocalizedName productPathName = this.productPathName;
+        if (productPathName == null) {
+            productPathName = LocalizedName.getNormalizedFromProperties(getConfigResourceName(), "SeoConfigPathNameProduct");
+            this.productPathName = productPathName;
+        }
+        return productPathName;
+    }
+    
     public String getProductServletPathName(Locale locale) {
-        // TODO: optimize
-        return UtilProperties.getMessage(getConfigResource(), "SeoConfigPathNameProduct", locale);
+        return getProductPathName().getNameForNormalizedLocale(locale);
+        //return UtilProperties.getMessage(getConfigResourceName(), "SeoConfigPathNameProduct", locale);
     }
 
     public String getProductServletPath(Locale locale) {
         return "/" + getProductServletPathName(locale);
     }
+    
+    public Locale getProductServletPathNameLocale(String pathName) {
+        return getProductPathName().getLocaleForName(pathName);
+    }
 
+    protected LocalizedName getCategoryPathName() {
+        LocalizedName categoryPathName = this.categoryPathName;
+        if (categoryPathName == null) {
+            categoryPathName = LocalizedName.getNormalizedFromProperties(getConfigResourceName(), "SeoConfigPathNameCategory");
+            this.categoryPathName = categoryPathName;
+        }
+        return categoryPathName;
+    }
+    
     public String getCategoryServletPathName(Locale locale) {
-        // TODO: optimize
-        return UtilProperties.getMessage(getConfigResource(), "SeoConfigPathNameCategory", locale);
+        return getCategoryPathName().getNameForNormalizedLocale(locale);
+        //return UtilProperties.getMessage(getConfigResourceName(), "SeoConfigPathNameCategory", locale);
     }
 
     @Deprecated
@@ -212,10 +302,22 @@ public class SeoCatalogUrlWorker implements Serializable {
         return getCategoryServletPath(getDefaultLocale());
     }
 
+    public Locale getCategoryServletPathNameLocale(String pathName) {
+        return getCategoryPathName().getLocaleForName(pathName);
+    }
+    
     public String getUrlSuffix() {
         return urlSuffix;
     }
 
+//    public String extractProductServletPrefix(String path) {
+//        throw new UnsupportedOperationException(); // TODO: if needed
+//    }
+//
+//    public String extractCategoryServletPrefix(String path) {
+//        throw new UnsupportedOperationException(); // TODO: if needed
+//    }
+    
     /*
      * *****************************************************
      * High-level helper methods (for INTERNAL use)
@@ -243,21 +345,27 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
 
     public class SeoCatalogUrlBuilder extends CatalogUrlBuilder implements Serializable {
-
         @Override
         public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
                 String previousCategoryId) throws IOException {
-            // TODO
-            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+            if (UtilValidate.isNotEmpty(productId)) {
+                return makeProductUrl(request, locale, previousCategoryId, currentCategoryId, productId);
+            } else {
+                return makeCategoryUrl(request, locale, previousCategoryId, currentCategoryId, productId, null, null, null, null);
+            }
+            //return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
         }
 
         @Override
         public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId,
                 String currentCategoryId, String previousCategoryId) throws IOException {
-            // TODO
-            return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, dispatcher, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
+            if (UtilValidate.isNotEmpty(productId)) {
+                return makeProductUrl(delegator, dispatcher, locale, crumb, contextPath, previousCategoryId, currentCategoryId, productId);
+            } else {
+                return makeCategoryUrl(delegator, dispatcher, locale, crumb, contextPath, previousCategoryId, currentCategoryId, productId, null, null, null, null);
+            }
+            //return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, dispatcher, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
         }
-
     }
 
     public CatalogAltUrlBuilder getCatalogAltUrlBuilder() {
@@ -268,31 +376,31 @@ public class SeoCatalogUrlWorker implements Serializable {
         @Override
         public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
                 String productId) throws IOException {
-            // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
+            return makeProductUrl(request, locale, previousCategoryId, productCategoryId, productId);
+            //return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
         }
 
         @Override
         public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                 String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException {
-            // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId);
+            return makeProductUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId);
+            //return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId);
         }
 
         @Override
         public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
                 String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
                 String searchString) throws IOException {
-            // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            return makeCategoryUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            //return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
 
         @Override
         public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                 String contextPath, String previousCategoryId, String productCategoryId, String productId,
                 String viewSize, String viewIndex, String viewSort, String searchString) throws IOException {
-            // TODO
-            return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            return makeCategoryUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+            //return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
     }
 
@@ -308,30 +416,9 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
     
     public class SeoCatalogAltUrlSanitizer extends CatalogAltUrlSanitizer {
-        @Override
-        public String convertProductNameToAltUrl(String name, Locale locale) {
-            if (UtilValidate.isEmpty(name)) return name;
-            
-            name = convertGeneralNameToAltUrl(name, locale);
-            
-            name = SeoConfigUtil.limitProductNameLength(name);
-    
-            return name;
-        }
-
-        @Override
-        public String convertCategoryNameToAltUrl(String name, Locale locale) {
-            if (UtilValidate.isEmpty(name)) return name;
-            
-            name = convertGeneralNameToAltUrl(name, locale);
-            
-            name = SeoConfigUtil.limitCategoryNameLength(name);
-
-            return name;
-        }
         
         @Override
-        public String convertGeneralNameToAltUrl(String name, Locale locale) {
+        public String convertNameToDbAltUrl(String name, Locale locale, ObjectType entityType) {
             name = SeoStringUtil.constructSeoName(name);
 
             // TODO: REVIEW
@@ -340,13 +427,24 @@ public class SeoCatalogUrlWorker implements Serializable {
             // TODO: REVIEW
             name = UrlServletHelper.invalidCharacter(name); // (stock ofbiz)
             
-            // WARN: no length limit, done by other methods
-            
+            if (entityType == ObjectType.PRODUCT) {
+                name = SeoConfigUtil.limitProductNameLength(name);
+            } else if (entityType == ObjectType.CATEGORY) {
+                name = SeoConfigUtil.limitCategoryNameLength(name);
+            }
+
             return name;
         }
         
+
         @Override
-        public String sanitizeAltUrlFromDb(String altUrl, Locale locale) {
+        public String convertIdToDbAltUrl(String id, Locale locale, ObjectType entityType) {
+            // TODO: REVIEW: leaving this same as live for now... doubtful...
+            return convertIdToLiveAltUrl(id, locale, entityType);
+        }
+
+        @Override
+        public String sanitizeAltUrlFromDb(String altUrl, Locale locale, ObjectType entityType) {
             // WARN: due to content wrapper the locale might not be the one from the altUrl!!
             
             if (altUrl == null) return "";
@@ -356,6 +454,16 @@ public class SeoCatalogUrlWorker implements Serializable {
             altUrl = UrlServletHelper.invalidCharacter(altUrl); // (stock ofbiz)
             
             return altUrl;
+        }
+
+        @Override
+        public String convertIdToLiveAltUrl(String id, Locale locale, ObjectType entityType) {
+
+            // TODO: REVIEW: this is what the old Seo code did, but it will just not work in the filters...
+            // People should not generate DB IDs with spaces
+            //return id.trim().replaceAll(" ", SeoStringUtil.URL_HYPHEN);
+            
+            return id;
         }
 
     }
@@ -368,13 +476,12 @@ public class SeoCatalogUrlWorker implements Serializable {
      * NOTE: The alt and non-alt SEO methods are unified to produce same output.
      */
 
-
-    private List<String> makeCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
+    private List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
         if (trail == null || trail.isEmpty()) return new ArrayList<>();
         List<String> catNames = new ArrayList<>(trail.size());
         for(String productCategoryId : trail) {
             if ("TOP".equals(productCategoryId)) continue; // TODO: REVIEW
-            String catName = productCategoryId; // fallback
+            String catName = null;
             if (productCategoryId != null) {
                 try {
                     GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory")
@@ -383,9 +490,14 @@ public class SeoCatalogUrlWorker implements Serializable {
                         String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
                         if (altUrl != null) {
                             // FIXME: effective locale might not be same as "locale" variable!
-                            altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale);
+                            altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, ObjectType.CATEGORY);
                             if (!altUrl.isEmpty()) {
                                 catName = altUrl;
+                                
+                                // TODO: REVIEW
+                                if (SeoConfigUtil.isCategoryNameAppendId()) {
+                                    catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, ObjectType.CATEGORY);
+                                }
                             }
                         }
                     } else {
@@ -395,10 +507,36 @@ public class SeoCatalogUrlWorker implements Serializable {
                     Debug.logError(e, "Seo: Cannot get category '" + productCategoryId + "' alt url", module);
                 }
             }
+            if (catName == null) {
+                // fallback
+                catName = getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, ObjectType.CATEGORY);
+            }
+            
             catNames.add(catName);
         }
         return catNames;
     }
+ 
+    /**
+     * Either complete the trail or trash it to make it acceptable for SEO purposes.
+     */
+    private List<String> postProcessCategoryUrlTrail(Delegator delegator, List<String> trail) {
+        
+        // TODO: complex
+        
+        return trail;
+    }
+    
+    /**
+     * Either complete the trail or trash it to make it acceptable for SEO purposes.
+     */
+    private List<String> postProcessProductUrlTrail(Delegator delegator, List<String> trail, String productId) {
+        
+        // TODO: complex
+        
+        return trail;
+    }
+
 
     private String makeCategoryUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -414,6 +552,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         GenericValue productCategory;
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
+            if (productCategory == null) {
+                Debug.logWarning("Seo: Category not found: Cannot create category's URL for: " + productCategoryId, module);
+                return null;
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Seo: Cannot create category's URL for: " + productCategoryId, module);
             return null;
@@ -424,130 +566,38 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(contextPath);
         }
 
+        boolean explicitCategoryRequest = false;
         if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitCategoryUrl())) {
+            explicitCategoryRequest = true;
+        }
+        if (explicitCategoryRequest) {
             if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");
             }
             urlBuilder.append(getCategoryServletPathName(locale));
         }
         
-        // SCIPIO: append trail
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            // TODO: REVIEW: sketchy
-            trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-        }
-        List<String> trailNames = makeCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
+        // SCIPIO: refine and append trail
+        trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+        trail = postProcessCategoryUrlTrail(delegator, trail);
+        List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
+        // NOTE: this loop includes the productCategoryId itself
         for(String trailName : trailNames) {
             if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");
             }
             urlBuilder.append(trailName);
         }
-
-        // FIXME: effective locale might not be same as "locale" variable!
-        String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw"), locale);
-        if (UtilValidate.isNotEmpty(alternativeUrl)) {
-
-            // append alternative URL
-            if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(alternativeUrl);
-           
-            if (UtilValidate.isNotEmpty(productCategoryId)) {
-                urlBuilder.append("-");
-                urlBuilder.append(productCategoryId);
-                urlBuilder.append("-c");
-            }
-
-        } else {
-            if (UtilValidate.isNotEmpty(productCategoryId)) {
-                urlBuilder.append("-");
-                urlBuilder.append(productCategoryId);
-                urlBuilder.append("-c");
-            }
+        
+        // FIXME: currently can't omit this for implicit yet
+        if (!explicitCategoryRequest) {
+            urlBuilder.append("-c");
         }
         
         if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
             urlBuilder.append(getUrlSuffix());
         }
         
-        // append view index
-        if (UtilValidate.isNotEmpty(viewIndex)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewIndex=" + viewIndex + "&");
-        }
-        // append view size
-        if (UtilValidate.isNotEmpty(viewSize)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewSize=" + viewSize + "&");
-        }
-        // append view sort
-        if (UtilValidate.isNotEmpty(viewSort)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("viewSort=" + viewSort + "&");
-        }
-        // append search string
-        if (UtilValidate.isNotEmpty(searchString)) {
-            if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
-                urlBuilder.append("?");
-            }
-            urlBuilder.append("searchString=" + searchString + "&");
-        }
-        if (urlBuilder.toString().endsWith("&")) {
-            return urlBuilder.toString().substring(0, urlBuilder.toString().length()-1);
-        }
-
-        return urlBuilder.toString();
-    }
-
-
-    /**
-     * Make category url according to the configurations.
-     * @deprecated SCIPIO: 2017: replaced by above; for reference only
-     *
-     * @return String a category url
-     */
-    @Deprecated
-    private String makeCategoryUrlOld(HttpServletRequest request, Locale locale, String currentCategoryId, String previousCategoryId, String viewSize, String viewIndex, String viewSort, String searchString) {
-        StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append((request.getSession().getServletContext()).getContextPath());
-        if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-            urlBuilder.append("/");
-        }
-
-        if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitCategoryUrl())) {
-            urlBuilder.append(getCategoryServletPathName(locale) + "/");
-        }
-
-        if (UtilValidate.isNotEmpty(currentCategoryId)) {
-            List<String> trail = CategoryWorker.getTrail(request);
-            trail = CategoryWorker.adjustTrail(trail, currentCategoryId, previousCategoryId);
-            if (trail.size() > 1) {
-                String lastCategoryId = trail.get(trail.size() - 1);
-                if (!"TOP".equals(lastCategoryId)) {
-                    String categoryName = getCategoryIdNameMap().get(lastCategoryId);
-                    if (UtilValidate.isNotEmpty(categoryName)) {
-                        urlBuilder.append(SeoConfigUtil.limitCategoryNameLength(categoryName));
-                        urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                        urlBuilder.append(lastCategoryId.trim().replaceAll(" ", SeoStringUtil.URL_HYPHEN));
-                    } else {
-                        urlBuilder.append(lastCategoryId.trim().replaceAll(" ", SeoStringUtil.URL_HYPHEN));
-                    }
-                }
-            }
-        }
-
-        if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
-            urlBuilder.append(getUrlSuffix());
-        }
-
         // append view index
         if (UtilValidate.isNotEmpty(viewIndex)) {
             if (!urlBuilder.toString().endsWith("?") && !urlBuilder.toString().endsWith("&")) {
@@ -610,59 +660,35 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(contextPath);
         }
 
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            // TODO: REVIEW: sketchy
-            trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+        List<String> trailNames;
+        if (!SeoConfigUtil.isCategoryNameEnabled()) {
+            // no need for trail
+            trail = Collections.emptyList();
+            trailNames = Collections.emptyList();
+        } else {
+            if (UtilValidate.isNotEmpty(productCategoryId)) {
+                trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+            }
+            trail = postProcessProductUrlTrail(delegator, trail, productId);
+            trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
         }
-        List<String> trailNames = makeCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
         
-        boolean productRequestNeeded = false;
+        boolean explicitProductRequest = false;
         if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
-            productRequestNeeded = true;
+            explicitProductRequest = true;
         } else if (trailNames.size() == 0) {
-            // 2017: TODO: REVIEW: if there was no category name, was forced to add product request...
-            productRequestNeeded = true;
+            // 2017: TODO: REVIEW:
+            // SCIPIO: We only support(ed) omitting product request if a category name is also present
+            explicitProductRequest = true;
         }
-        if (productRequestNeeded) {
+        if (explicitProductRequest) {
             if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");
             }
             urlBuilder.append(getProductServletPathName(locale));
         }
         
-//        if (trailNames.size() > 0) {
-//            String lastCategoryName = trailNames.get(trailNames.size() - 1);
-//            if (SeoConfigUtil.isCategoryNameEnabled()) {
-//
-//                // SCIPIO: We only support omitting product request if a category name is also present
-//                if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
-//                    urlBuilder.append(getProductServletPathName(locale) + "/");
-//                    productRequestNeeded = false;
-//                }
-//                else {
-//                    // We got a category name so no need for PRODUCT_REQUEST if we didn't want one
-//                    productRequestNeeded = false;
-//                }
-//
-//                urlBuilder.append(SeoConfigUtil.limitCategoryNameLength(categoryName));
-//
-//                if (SeoConfigUtil.isCategoryNameSeparatePathElem() && SeoConfigUtil.isCategoryNameAppendId()) {
-//                    // SCIPIO: Also append category ID for now...
-//                    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-//                    urlBuilder.append(lastCategoryId);
-//                }
-//
-//                if (product != null) {
-//                    if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
-//                        urlBuilder.append("/");
-//                    }
-//                    else {
-//                        urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-//                    }
-//                }
-//            }
-//        }
-        
+        // append category names
         for(String trailName : trailNames) {
             if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                 urlBuilder.append("/");
@@ -670,185 +696,40 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(trailName);
         }
 
-        // FIXME: effective locale might not be same as "locale" variable!
-        String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"), locale);
-        if (UtilValidate.isNotEmpty(alternativeUrl)) {
-
-            // append alternative URL
-            if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(alternativeUrl);
-           
-            if (UtilValidate.isNotEmpty(productId)) {
-                urlBuilder.append("-");
-                urlBuilder.append(productId);
-                urlBuilder.append("-p");
-            }
-
-        } else {
-            if (UtilValidate.isNotEmpty(productId)) {
-                urlBuilder.append("-");
-                urlBuilder.append(productId);
-                urlBuilder.append("-p");
-            }
-        }
-        
-        if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
-            urlBuilder.append(getUrlSuffix());
-        }
-        
-        
-        // TODO
-
-        return urlBuilder.toString();
-    }
-
-    /**
-     * Make product url according to the configurations.
-     * @deprecated SCIPIO: 2017: replaced by above; for reference only
-     *
-     * @return String a catalog url
-     */
-    @Deprecated
-    private String makeProductUrlOld(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-
-        String contextPath = request.getContextPath();
-        StringBuilder urlBuilder = new StringBuilder();
-        GenericValue product = null;
-        // SCIPIO: We need to get cached products from SOLR...
-        Map<String, Object> cachedProduct = null;
-
-        urlBuilder.append((request.getSession().getServletContext()).getContextPath());
-        if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
+        // 2017-11-08: NOT SUPPORTED: could only theoretically work if chose different character than hyphen
+        //if (!trailNames.isEmpty() && !SeoConfigUtil.isCategoryNameSeparatePathElem()) {
+        //    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+        //} else {
+        if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
             urlBuilder.append("/");
         }
-        if (UtilValidate.isNotEmpty(productId)) {
-            try {
-                product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up product info for productId [" + productId + "]: " + e.toString(), module);
-            }
-
-            Map<String, Map<String, Object>> scipioCachedProductsMap = UtilGenerics.checkMap(request.getAttribute("scipioCachedProductsMap"));
-            if (scipioCachedProductsMap != null) {
-                cachedProduct = scipioCachedProductsMap.get(productId);
-            }
-        }
-
-        // SCIPIO: why would you restrict this??
-        //if (product != null) {
-        //urlBuilder.append(getProductServletPathName() + "/");
         //}
-
-        if (UtilValidate.isNotEmpty(currentCategoryId)) {
-            List<String> trail = CategoryWorker.getTrail(request);
-            trail = CategoryWorker.adjustTrail(trail, currentCategoryId, previousCategoryId);
-            if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath)) {
-
-                // SCIPIO: must always add in this case
-                urlBuilder.append(getProductServletPathName(locale) + "/");
-
-                for (String trailCategoryId: trail) {
-                    if ("TOP".equals(trailCategoryId)) continue;
-                    urlBuilder.append("/");
-                    urlBuilder.append(trailCategoryId);
-                }
-            } else {
-                boolean productRequestNeeded = true;
-
-                if (trail.size() > 1) {
-                    String lastCategoryId = trail.get(trail.size() - 1);
-                    if (!"TOP".equals(lastCategoryId)) {
-                        if (SeoConfigUtil.isCategoryNameEnabled()) {
-                            String categoryName = getCategoryIdNameMap().get(lastCategoryId);
-                            if (UtilValidate.isNotEmpty(categoryName)) {
-
-                                // SCIPIO: We only support omitting product request if a category name is also present
-                                if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
-                                    urlBuilder.append(getProductServletPathName(locale) + "/");
-                                    productRequestNeeded = false;
-                                }
-                                else {
-                                    // We got a category name so no need for PRODUCT_REQUEST if we didn't want one
-                                    productRequestNeeded = false;
-                                }
-
-                                urlBuilder.append(SeoConfigUtil.limitCategoryNameLength(categoryName));
-
-                                if (SeoConfigUtil.isCategoryNameSeparatePathElem() && SeoConfigUtil.isCategoryNameAppendId()) {
-                                    // SCIPIO: Also append category ID for now...
-                                    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                                    urlBuilder.append(lastCategoryId);
-                                }
-
-                                if (product != null || cachedProduct != null) {
-                                    if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
-                                        urlBuilder.append("/");
-                                    }
-                                    else {
-                                        urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (productRequestNeeded) {
-                    urlBuilder.append(getProductServletPathName(locale) + "/");
-                }
+        
+        // append product name
+        // FIXME: effective locale might not be same as "locale" variable!
+        String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"), 
+                locale, ObjectType.PRODUCT);
+        if (UtilValidate.isNotEmpty(alternativeUrl)) {
+            urlBuilder.append(alternativeUrl);
+            
+            if (SeoConfigUtil.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
+                urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+                urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, ObjectType.PRODUCT));
             }
+        } else {
+            // FALLBACK ONLY
+            urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, ObjectType.PRODUCT));
         }
-        else {
-            // SCIPIO: must always add in this case (can't have generic product links at root level because matching
-            // is only done by IDs and likely to cause problems with other kinds of requests, and SOLR products aren't in DB
-            // so they can't even match by ID)
-            urlBuilder.append(getProductServletPathName(locale) + "/");
+        
+        // FIXME: currently can't omit this for implicit yet
+        if (!explicitProductRequest) {
+            urlBuilder.append("-p");
         }
-
-        if (UtilValidate.isNotEmpty(productId)) {
-            if (product != null || cachedProduct != null) {
-                String productName;
-
-                // SCIPIO: 2017: we get ALTERNATIVE_URL first, and fall back on product
-                ProductContentWrapper wrapper = (product != null) ? new ProductContentWrapper(product, request) : null;
-                String alternativeUrl = wrapper.get("ALTERNATIVE_URL");
-                if (UtilValidate.isNotEmpty(alternativeUrl)) {
-                    productName = SeoUrlUtil.replaceSpecialCharsUrl(alternativeUrl, SeoConfigUtil.getCharFilters());
-                    if (UtilValidate.isNotEmpty(productName)) {
-                        urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
-                    }
-                } else {
-                    // SCIPIO: Priority to SOLR title
-                    if (cachedProduct != null && UtilValidate.isNotEmpty((String) cachedProduct.get("title"))) {
-                        productName = (String) cachedProduct.get("title");
-                    }
-                    else {
-                        productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", request, "raw");
-                    }
-
-                    productName = SeoUrlUtil.replaceSpecialCharsUrl(productName, SeoConfigUtil.getCharFilters());
-                    if (UtilValidate.isNotEmpty(productName)) {
-                        urlBuilder.append(SeoConfigUtil.limitProductNameLength(productName) + SeoStringUtil.URL_HYPHEN);
-                    } else if (product != null) {
-
-                    }
-                }
-            }
-            try {
-                //SeoConfigUtil.addSpecialProductId(productId);
-                urlBuilder.append(productId);
-            } catch (Exception e) {
-                urlBuilder.append(productId);
-            }
-        }
-
+        
         if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
             urlBuilder.append(getUrlSuffix());
         }
-
+        
         return urlBuilder.toString();
     }
 
@@ -948,14 +829,17 @@ public class SeoCatalogUrlWorker implements Serializable {
         private final boolean explicitProductRequest;
         private final boolean explicitCategoryRequest;
         private final List<String> trailCatalogIds;
-
+        private final Locale locale; // the locale matched when URL is parsed (best-effort only)
+        
         public SeoCatalogUrlInfo(String pathInfo, String productId, String categoryId, List<String> pathElements,
-                String origPath, boolean explicitProductRequest, boolean explicitCategoryRequest, List<String> trailCatalogIds) {
+                String origPath, boolean explicitProductRequest, boolean explicitCategoryRequest, List<String> trailCatalogIds,
+                Locale locale) {
             super(pathInfo, productId, categoryId, pathElements);
             this.origPath = origPath;
             this.explicitProductRequest = explicitProductRequest;
             this.explicitCategoryRequest = explicitCategoryRequest;
             this.trailCatalogIds = trailCatalogIds;
+            this.locale = locale;
         }
 
         public String getOrigPath() { return origPath; }
@@ -966,7 +850,8 @@ public class SeoCatalogUrlWorker implements Serializable {
         public boolean isCategoryRequest() { return explicitCategoryRequest || (getCategoryId() != null && getProductId() == null); }
 
         public List<String> getTrailCatalogIds() { return trailCatalogIds; }
-
+        public Locale getLocale() { return locale; }
+        
         /**
          * Predicts if the request is likely to cause an error at forward.
          * NOTE: Do not use this to prevent forward.
@@ -988,12 +873,37 @@ public class SeoCatalogUrlWorker implements Serializable {
     public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(Delegator delegator, String path, String contextPath) {
 
         String pathInfo = path;
+ 
+        String urlSuffix = getUrlSuffix();
+        if (UtilValidate.isNotEmpty(urlSuffix)) {
+            if (pathInfo.endsWith(urlSuffix)) {
+                pathInfo = pathInfo.substring(0, pathInfo.length() - pathInfo.length());
+            } else {
+                return null;
+            }
+        }
+        
         boolean explicitCategoryRequest = false;
         boolean explicitProductRequest = false;
 
-        String productServletPrefix = extractProductServletPrefix(path);
-        if (productServletPrefix != null) {
-            pathInfo = path.substring(productServletPrefix.length());
+        List<String> pathElements = StringUtil.split(pathInfo, "/");
+        if (UtilValidate.isEmpty(pathElements)) {
+            return null;
+        }
+        
+
+        String productId = null;
+        String categoryIdForProduct = null;
+
+        String categoryId = null;
+
+        List<String> trailCatalogIds = new ArrayList<>(); // SCIPIO: 2017: new
+        Locale matchedLocale = null; // the locale the URL appears to be
+        
+        matchedLocale = getProductServletPathNameLocale(pathElements.get(0));
+        if (matchedLocale != null) {
+            pathElements.remove(0);
+            
             explicitProductRequest = true;
 
             // TODO
@@ -1001,9 +911,9 @@ public class SeoCatalogUrlWorker implements Serializable {
             //return new SeoCatalogUrlInfo(path, true, false, productId, null, pathElements);
 
         } else {
-            String categoryServletPrefix = extractCategoryServletPrefix(path);
-            if (categoryServletPrefix != null) {
-                pathInfo = path.substring(categoryServletPrefix.length());
+            matchedLocale = getCategoryServletPathNameLocale(pathElements.get(0));
+            if (matchedLocale != null) {
+                pathElements.remove(0);
                 explicitCategoryRequest = true;
 
                 // TODO
@@ -1022,231 +932,167 @@ public class SeoCatalogUrlWorker implements Serializable {
         // TODO: FIX ALL OLD CODE BELOW
 
 
-        List<String> pathElements = StringUtil.split(pathInfo, "/");
-        if (UtilValidate.isEmpty(pathElements)) {
-            return null;
-        }
+        String lastPathElement = pathElements.get(pathElements.size() - 1);
 
-        String productId = null;
-        String categoryIdForProduct = null;
+        if (UtilValidate.isNotEmpty(lastPathElement)) {
 
-        String categoryId = null;
 
-        List<String> trailCatalogIds = new ArrayList<>(); // SCIPIO: 2017: new
+            String prevPathElement = null;
+            if (pathElements.size() >= 2) {
+                prevPathElement = pathElements.get(pathElements.size() - 2);
+                if (UtilValidate.isEmpty(prevPathElement)) {
+                    prevPathElement = null;
+                }
+            }
 
-        if (UtilValidate.isNotEmpty(pathElements)) {
+            boolean implicitRequestNameMatchesOnly = SeoConfigUtil.isImplicitRequestNameMatchesOnly();
 
-            String lastPathElement = pathElements.get(pathElements.size() - 1);
 
-            if (UtilValidate.isNotEmpty(lastPathElement)) {
-                boolean suffixPass = true;
-
-                if (UtilValidate.isNotEmpty(getUrlSuffix())) {
-                    if (lastPathElement.endsWith(getUrlSuffix())) {
-                        lastPathElement = lastPathElement.substring(0, lastPathElement.length() - getUrlSuffix().length());
-                    } else {
-                        suffixPass = false;
+            // Check if last path elem is explicitly a category
+            String lastPathCategoryId = null;
+            boolean lastPathCategoryIdValid = false;
+            if (!explicitProductRequest) {
+                lastPathCategoryId = getNameBasedCategoryIdMatchFromPathElement(lastPathElement);
+                if (lastPathCategoryId == null) {
+                    if (explicitCategoryRequest || !implicitRequestNameMatchesOnly) {
+                        lastPathCategoryId = getFallbackCategoryIdFromPathElement(lastPathElement);
                     }
                 }
+                lastPathCategoryIdValid = isValidCategory(delegator, lastPathCategoryId);
+            }
 
-                if (suffixPass) {
-
-                    String prevPathElement = null;
-                    if (pathElements.size() >= 2) {
-                        prevPathElement = pathElements.get(pathElements.size() - 2);
-                        if (UtilValidate.isEmpty(prevPathElement)) {
-                            prevPathElement = null;
-                        }
+            String prevPathCategoryId = null;
+            boolean prevPathCategoryIdValid = false;
+            if (UtilValidate.isNotEmpty(prevPathElement)) {
+                prevPathCategoryId = getNameBasedCategoryIdMatchFromPathElement(prevPathElement);
+                if (prevPathCategoryId == null) {
+                    if (explicitCategoryRequest || explicitProductRequest || !implicitRequestNameMatchesOnly) {
+                        prevPathCategoryId = getFallbackCategoryIdFromPathElement(prevPathElement);
                     }
+                }
+                prevPathCategoryIdValid = isValidCategory(delegator, prevPathCategoryId);
+            }
 
-                    boolean implicitRequestNameMatchesOnly = SeoConfigUtil.isImplicitRequestNameMatchesOnly();
+            // Get category for product (either prev path elem or inlined in last path elem)
+            // SCIPIO: This block is ONLY valid if have a product request (implicit or explicit); original patch botched this
+            boolean categoryIdForProductValid = false;
+            if (!explicitCategoryRequest && SeoConfigUtil.isCategoryNameEnabled()) { // SCIPIO: This is already handled above: || pathInfo.startsWith("/" + CatalogUrlServlet.CATEGORY_REQUEST + "/")
+                if (UtilValidate.isNotEmpty(prevPathCategoryId)) {
+                    // SCIPIO: new case
+                    categoryIdForProduct = prevPathCategoryId;
+                    categoryIdForProductValid = prevPathCategoryIdValid;
+                }
 
+            }
+            if (UtilValidate.isEmpty(categoryIdForProduct)) {
+                categoryIdForProduct = null;
+            }
 
-                    // Check if last path elem is explicitly a category
-                    String lastPathCategoryId = null;
-                    boolean lastPathCategoryIdValid = false;
-                    if (!explicitProductRequest) {
-                        lastPathCategoryId = getNameBasedCategoryIdMatchFromPathElement(lastPathElement);
-                        if (lastPathCategoryId == null) {
-                            if (explicitCategoryRequest || !implicitRequestNameMatchesOnly) {
-                                lastPathCategoryId = getFallbackCategoryIdFromPathElement(lastPathElement);
+            // Get product itself (note: has priority over category, if somehow there was a clash)
+            // SCIPIO: SOLR product may miss from DB. For this reason can't validate product links from IDs and names alone.
+            // Also see makeProductUrl limitations; can't always generate implicit links
+            // In addition, explicitly want to disallow root matches on product IDs (unsafe product check) because we only match on
+            // IDs which are too generic and may cause conflicts with various requests
+
+            boolean safeProductRequest = explicitProductRequest || (!lastPathCategoryIdValid && categoryIdForProductValid);
+            boolean allowIdOnlyProductCheck = !implicitRequestNameMatchesOnly; // this isn't exact meaning, but close enough
+
+            if (!explicitCategoryRequest && (safeProductRequest || allowIdOnlyProductCheck) && UtilValidate.isNotEmpty(lastPathElement)) {
+                List<String> urlElements = StringUtil.split(lastPathElement, SeoStringUtil.URL_HYPHEN);
+                if (UtilValidate.isEmpty(urlElements)) {
+                    try {
+                        if (delegator.findOne("Product", UtilMisc.toMap("productId", lastPathElement), true) != null) {
+                            productId = lastPathElement;
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error looking up product info for ProductUrl with path info [" + pathInfo + "]: " + e.toString(), module);
+                    }
+                } else {
+                    int i = urlElements.size() - 1;
+                    String tempProductId = urlElements.get(i);
+                    while (i >= 0) {
+                        try {
+                            List<EntityExpr> exprs = new ArrayList<>();
+                            exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, lastPathElement));
+//                            if (SeoConfigUtil.isSpecialProductId(tempProductId)) {
+//                                exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, SeoConfigUtil.getSpecialProductId(tempProductId)));
+//                            } else {
+                                exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, tempProductId));
+//                            }
+                            List<GenericValue> products = delegator.findList("Product", EntityCondition.makeCondition(exprs, EntityOperator.OR), UtilMisc.toSet("productId", "productName"), null, null, true);
+
+                            if (products != null && products.size() > 0) {
+                                if (products.size() == 1) {
+                                    productId = products.get(0).getString("productId");
+                                    break;
+                                } else {
+                                    productId = tempProductId;
+                                    break;
+                                }
+                            } else if (i > 0) {
+                                tempProductId = urlElements.get(i - 1) + SeoStringUtil.URL_HYPHEN + tempProductId;
                             }
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Error looking up product info for ProductUrl with path info [" + pathInfo + "]: " + e.toString(), module);
                         }
-                        lastPathCategoryIdValid = isValidCategory(delegator, lastPathCategoryId);
+                        i--;
                     }
+                }
+                if (UtilValidate.isEmpty(productId)) {
+                    productId = null;
+                }
 
-                    String prevPathCategoryId = null;
-                    boolean prevPathCategoryIdValid = false;
-                    if (UtilValidate.isNotEmpty(prevPathElement)) {
-                        prevPathCategoryId = getNameBasedCategoryIdMatchFromPathElement(prevPathElement);
-                        if (prevPathCategoryId == null) {
-                            if (explicitCategoryRequest || explicitProductRequest || !implicitRequestNameMatchesOnly) {
-                                prevPathCategoryId = getFallbackCategoryIdFromPathElement(prevPathElement);
-                            }
-                        }
-                        prevPathCategoryIdValid = isValidCategory(delegator, prevPathCategoryId);
-                    }
+                // SCIPIO: SOLR products may not be in database. If had explicit product path, assume product wanted.
+                // Can also try to deduce: if last path element or closest category was a category but current one isn't a category, must be a product (see safeProductRequest)
+                if (productId == null) {
+                    boolean assumeProduct = safeProductRequest;
 
-                    // Get category for product (either prev path elem or inlined in last path elem)
-                    // SCIPIO: This block is ONLY valid if have a product request (implicit or explicit); original patch botched this
-                    boolean categoryIdForProductValid = false;
-                    if (!explicitCategoryRequest && SeoConfigUtil.isCategoryNameEnabled()) { // SCIPIO: This is already handled above: || pathInfo.startsWith("/" + CatalogUrlServlet.CATEGORY_REQUEST + "/")
-                        if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
-                            if (UtilValidate.isNotEmpty(prevPathCategoryId)) {
-                                // SCIPIO: new case
-                                categoryIdForProduct = prevPathCategoryId;
-                                categoryIdForProductValid = prevPathCategoryIdValid;
+                    if (assumeProduct) {
+                        if (UtilValidate.isEmpty(urlElements)) {
+                            if (UtilValidate.isNotEmpty(lastPathElement)) {
+                                productId = lastPathElement;
                             }
                         }
                         else {
-                            // Old SEO patch case + SCIPIO length check, also (warning) updates lastPathElement
-
-                            Map<String, String> categoryNameIdMap = getCategoryNameIdMap();
-
-                            // SCIPIO: nameIdMap keys are actually categoryName-categoryId!
-                            for (String categoryName : categoryNameIdMap.keySet()) {
-                                if (lastPathElement.startsWith(categoryName)) {
-                                    categoryIdForProduct = categoryNameIdMap.get(categoryName);
-                                    if (!lastPathElement.equals(categoryName) && (lastPathElement.length() >= (categoryName.length() + SeoStringUtil.URL_HYPHEN.length()))) {
-                                        lastPathElement = lastPathElement.substring(categoryName.length() + SeoStringUtil.URL_HYPHEN.length());
-                                    }
-                                    break;
-                                }
-                            }
-                            if (UtilValidate.isEmpty(categoryIdForProduct)) {
-                                categoryIdForProduct = lastPathElement;
-                            }
-                            categoryIdForProductValid = isValidCategory(delegator, categoryIdForProduct);
-                        }
-                    }
-                    if (UtilValidate.isEmpty(categoryIdForProduct)) {
-                        categoryIdForProduct = null;
-                    }
-
-                    // Get product itself (note: has priority over category, if somehow there was a clash)
-                    // SCIPIO: SOLR product may miss from DB. For this reason can't validate product links from IDs and names alone.
-                    // Also see makeProductUrl limitations; can't always generate implicit links
-                    // In addition, explicitly want to disallow root matches on product IDs (unsafe product check) because we only match on
-                    // IDs which are too generic and may cause conflicts with various requests
-
-                    boolean safeProductRequest = explicitProductRequest || (!lastPathCategoryIdValid && categoryIdForProductValid);
-                    boolean allowIdOnlyProductCheck = !implicitRequestNameMatchesOnly; // this isn't exact meaning, but close enough
-
-                    if (!explicitCategoryRequest && (safeProductRequest || allowIdOnlyProductCheck) && UtilValidate.isNotEmpty(lastPathElement)) {
-                        List<String> urlElements = StringUtil.split(lastPathElement, SeoStringUtil.URL_HYPHEN);
-                        if (UtilValidate.isEmpty(urlElements)) {
-                            try {
-                                if (delegator.findOne("Product", UtilMisc.toMap("productId", lastPathElement), true) != null) {
-                                    productId = lastPathElement;
-                                }
-                            } catch (GenericEntityException e) {
-                                Debug.logError(e, "Error looking up product info for ProductUrl with path info [" + pathInfo + "]: " + e.toString(), module);
-                            }
-                        } else {
-                            int i = urlElements.size() - 1;
-                            String tempProductId = urlElements.get(i);
-                            while (i >= 0) {
-                                try {
-                                    List<EntityExpr> exprs = new ArrayList<>();
-                                    exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, lastPathElement));
-        //                            if (SeoConfigUtil.isSpecialProductId(tempProductId)) {
-        //                                exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, SeoConfigUtil.getSpecialProductId(tempProductId)));
-        //                            } else {
-                                        exprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, tempProductId));
-        //                            }
-                                    List<GenericValue> products = delegator.findList("Product", EntityCondition.makeCondition(exprs, EntityOperator.OR), UtilMisc.toSet("productId", "productName"), null, null, true);
-
-                                    if (products != null && products.size() > 0) {
-                                        if (products.size() == 1) {
-                                            productId = products.get(0).getString("productId");
-                                            break;
-                                        } else {
-                                            productId = tempProductId;
-                                            break;
-                                        }
-                                    } else if (i > 0) {
-                                        tempProductId = urlElements.get(i - 1) + SeoStringUtil.URL_HYPHEN + tempProductId;
-                                    }
-                                } catch (GenericEntityException e) {
-                                    Debug.logError(e, "Error looking up product info for ProductUrl with path info [" + pathInfo + "]: " + e.toString(), module);
-                                }
-                                i--;
+                            String tempProductId = urlElements.get(urlElements.size()-1);
+                            if (UtilValidate.isNotEmpty(tempProductId)) {
+                                productId = tempProductId;
                             }
                         }
-                        if (UtilValidate.isEmpty(productId)) {
-                            productId = null;
-                        }
-
-                        // SCIPIO: SOLR products may not be in database. If had explicit product path, assume product wanted.
-                        // Can also try to deduce: if last path element or closest category was a category but current one isn't a category, must be a product (see safeProductRequest)
-                        if (productId == null) {
-                            boolean assumeProduct = safeProductRequest;
-
-                            if (assumeProduct) {
-                                if (UtilValidate.isEmpty(urlElements)) {
-                                    if (UtilValidate.isNotEmpty(lastPathElement)) {
-                                        productId = lastPathElement;
-                                    }
-                                }
-                                else {
-                                    String tempProductId = urlElements.get(urlElements.size()-1);
-                                    if (UtilValidate.isNotEmpty(tempProductId)) {
-                                        productId = tempProductId;
-                                    }
-                                }
-                            }
-
-                        }
-
-                    }
-
-                    // Handle category case
-                    if (explicitCategoryRequest) {
-                        // For explicit request, use last category ID regardless (so screen can show error if really missing)
-                        categoryId = lastPathCategoryId;
-                    }
-                    else {
-                        if (!explicitProductRequest && productId == null) {
-                            // Got no product... no explicit requests...
-                            // Use the categoryId, but only if managed to validate it; otherwise could be anything
-                            if (lastPathCategoryIdValid) {
-                                categoryId = lastPathCategoryId;
-                            }
-                        }
-                    }
-                    if (UtilValidate.isEmpty(categoryId)) {
-                        categoryId = null;
                     }
 
                 }
+
             }
+
+            // Handle category case
+            if (explicitCategoryRequest) {
+                // For explicit request, use last category ID regardless (so screen can show error if really missing)
+                categoryId = lastPathCategoryId;
+            }
+            else {
+                if (!explicitProductRequest && productId == null) {
+                    // Got no product... no explicit requests...
+                    // Use the categoryId, but only if managed to validate it; otherwise could be anything
+                    if (lastPathCategoryIdValid) {
+                        categoryId = lastPathCategoryId;
+                    }
+                }
+            }
+            if (UtilValidate.isEmpty(categoryId)) {
+                categoryId = null;
+            }
+
         }
+
 
         if (explicitProductRequest || explicitCategoryRequest || productId != null || categoryId != null) {
             return new SeoCatalogUrlInfo(pathInfo, productId, categoryId, pathElements, path,
-                    explicitProductRequest, explicitCategoryRequest, trailCatalogIds);
+                    explicitProductRequest, explicitCategoryRequest, trailCatalogIds, matchedLocale);
         }
 
         return null;
     }
-
-
-    public String extractProductServletPrefix(String path) {
-        // TODO: LOCALIZED VARIANTS
-
-        //if (path.startsWith("/" + PRODUCT_REQUEST + "/")) return "/" + PRODUCT_REQUEST;
-
-        return null;
-    }
-
-    public String extractCategoryServletPrefix(String path) {
-        // TODO: LOCALIZED VARIANTS
-
-        //if (path.startsWith("/" + CATEGORY_REQUEST + "/")) return "/" + CATEGORY_REQUEST;
-
-        return null;
-    }
-
 
     /*
      * *****************************************************

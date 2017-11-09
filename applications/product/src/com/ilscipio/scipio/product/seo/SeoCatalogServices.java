@@ -137,8 +137,8 @@ public abstract class SeoCatalogServices {
         
         // make seo names
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertProductNamesToAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertProductNameToAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString));
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogAltUrlSanitizer.ObjectType.PRODUCT) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogAltUrlSanitizer.ObjectType.PRODUCT);
         
         // store 
         if (productContent != null) {
@@ -230,8 +230,8 @@ public abstract class SeoCatalogServices {
         
         // make seo names
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertCategoryNamesToAltUrls(localeTextMap) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertCategoryNameToAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString));
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogAltUrlSanitizer.ObjectType.CATEGORY) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogAltUrlSanitizer.ObjectType.CATEGORY);
         
         // store
         if (productCategoryContent != null) {

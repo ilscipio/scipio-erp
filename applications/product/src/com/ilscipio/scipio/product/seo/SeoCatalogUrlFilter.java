@@ -40,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericValue;
@@ -56,11 +57,10 @@ import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
  * <p>
  * Some parts adapted from the original <code>org.ofbiz.product.category.ftl.CatalogUrlSeoTransform</code>.
  * <p>
- * FIXME: this should not extend ContextFilter, is an ofbiz design issue
- * compat workaround, for now ensures delegator is available.
- * WARN: base class will be changed to Filter interface in future!
+ * TODO: FUTURE: This filter should not conceptually extend CatalogUrlFilter; should try to
+ * separate them.
  */
-public class SeoCatalogUrlFilter extends ContextFilter {
+public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFilter implements Filter
 
     public static final String module = SeoCatalogUrlFilter.class.getName();
 
@@ -83,7 +83,7 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     protected String controlPrefix = null;
     protected String productRequestPath = "/" + PRODUCT_REQUEST;
     protected String categoryRequestPath = "/" + CATEGORY_REQUEST;
-    protected boolean seoEnabled = true;
+    protected boolean seoUrlEnabled = true;
     protected boolean debug = false;
 
     protected static SeoCatalogUrlWorker urlWorker = null;
@@ -92,12 +92,12 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
 
-        SeoConfigUtil.init();
-
         debug = Boolean.TRUE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("debug")));
 
-        seoEnabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("seoEnabled")));
-        if (seoEnabled) {
+        seoUrlEnabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("seoUrlEnabled")));
+        if (seoUrlEnabled) {
+            SeoConfigUtil.init();
+            
             String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
             String initRedirectUrl = config.getInitParameter("redirectUrl");
             defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
@@ -116,23 +116,35 @@ public class SeoCatalogUrlFilter extends ContextFilter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
-    }
-
-    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
+        
         // TODO: REVIEW:
         //UrlServletHelper.setRequestAttributes(request, delegator, request.getServletContext());
 
-        if (seoEnabled) {
+        if (seoUrlEnabled) {
             Delegator delegator = getDelegatorForControl(request, request.getServletContext());
-
-            if (isRequestApplicable(request, response)) {
-                boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator);
-                if (forwarded) return;
+            CatalogUrlFilter.prepareRequestAlways(request, response, delegator);
+            
+            String path = getMatchablePath(request); 
+            
+            if (UtilValidate.isNotEmpty(path)) {
+                if (isRequestApplicable(request, response)) {
+                    getCatalogTopCategory(request); // TODO: REVIEW
+                    boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
+                    if (forwarded) return;
+                } else {
+                    // TODO/FIXME: see CatalogUrlFitler for explanation for why these are here
+                    getCatalogTopCategory(request);
+                    UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
+                }
+    
+                //Check path alias (from CatalogUrlFilter)
+                // TODO/FIXME: REVIEW: control flow makes no sense for this
+                //UrlServletHelper.checkPathAlias(request, response, delegator, pathInfo);
             }
-
+            
             // NOTE: For this filter, we must wrap the request/response even if we don't forward!
             // TODO/FIXME: REVIEW: even if disabled for this webapp, may need to wrap responses
             // to process inter-webapp links... so this might need to go outside the (enabled) block...
@@ -142,22 +154,27 @@ public class SeoCatalogUrlFilter extends ContextFilter {
                 chain.doFilter(getRequestWrapper(request, delegator), getResponseWrapper(request, response, delegator));
                 return;
             }
+
+            chain.doFilter(request, response);
+        } else {
+            // currently delegates to CatalogUrlFilter.
+            // TODO: compose them differently in the future
+            super.doFilter(request, response, chain);
         }
-        chain.doFilter(request, response);
     }
 
     /**
      * Returns true if not already forwarded (needed for FORWARD dispatcher) and if request itself
      * is not disabled.
-     * WARN: does NOT check the servlet seoEnabled/webSiteId flag.
+     * WARN: does NOT check the servlet seoUrlEnabled/webSiteId flag.
      */
     public static boolean isRequestApplicable(HttpServletRequest request, HttpServletResponse response) {
         return !Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR)) &&
                 SeoConfigUtil.isCategoryUrlEnabledForContextPath(request.getContextPath());
     }
 
-    public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, Delegator delegator) throws ServletException, IOException {
-        SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator);
+    public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, Delegator delegator, String matchablePath) throws ServletException, IOException {
+        SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
         if (urlInfo != null) {
             boolean res = updateRequestForSeoCatalogUrl(request, delegator, urlInfo);
             if (!res) return false;
@@ -170,8 +187,8 @@ public class SeoCatalogUrlFilter extends ContextFilter {
         return request.getServletPath() + request.getPathInfo();
     }
 
-    public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator) {
-        return urlWorker.matchInboundSeoCatalogUrl(delegator, getMatchablePath(request), request.getContextPath());
+    public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
+        return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath());
     }
 
     /**
@@ -237,18 +254,15 @@ public class SeoCatalogUrlFilter extends ContextFilter {
         }
     }
 
-
     public boolean forwardSeoUrl(HttpServletRequest request, HttpServletResponse response, Delegator delegator, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
         StringBuilder fwdUrl = new StringBuilder();
         fwdUrl.append(controlPrefix);
         String targetRequest = urlInfo.isProductRequest() ? productRequestPath : categoryRequestPath;
         fwdUrl.append(targetRequest);
 
-        // SCIPIO: 2017: REMOVED: this risks creating limitations for parameters -
-        // DO NOT APPEND ANY PARAMETERS HERE FOR NOW - by default the servlet will pass all current ones.
-        // TODO: REVIEW: the main risk is that some old screens may erroenously use request parameters
-        // as priority over attributes - those screens must be fixed
-        //UrlServletHelper.setViewQueryParameters(request, fwdUrl);
+        // TODO: REVIEW: adding parameters may cause unexpected behavior, but it is 
+        // what CatalogUrlFilter is still doing, so until it's reviewed there, it stays here after all...
+        UrlServletHelper.setViewQueryParameters(request, fwdUrl);
 
         if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
             if (urlInfo.isProductRequest()) {

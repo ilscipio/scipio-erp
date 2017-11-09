@@ -3,11 +3,9 @@ package com.ilscipio.scipio.solr;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -18,13 +16,13 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
 
 /**
@@ -97,91 +95,11 @@ public abstract class SolrCategoryUtil {
      * Best-effort.
      */
     static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
-        List<GenericValue> stores = new ArrayList<>();
-        Set<String> storeIds = new HashSet<>();
-        for(String catalogId : catalogIds) {
-            try {
-                EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("prodCatalogId", catalogId));
-                condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productStoreCatalogs = delegator.findList("ProductStoreCatalog", condition, null, null, null, useCache);
-                for(GenericValue productStoreCatalog : productStoreCatalogs) {
-                    if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
-                        stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
-                        storeIds.add(productStoreCatalog.getString("productStoreId"));
-                    }
-                }
-            } catch(Exception e) {
-                Debug.logError(e, "Solr: Error looking up ProductStore for catalogId: " + catalogId, module);
-            }
-        }
-        return stores;
+        return CatalogWorker.getProductStoresFromCatalogIds(delegator, catalogIds, useCache);
     }
     
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
-        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-        List<List<String>> trailElements = new ArrayList<>();
-        // 2016-03-22: don't need a loop here due to change below
-        //String parentProductCategoryId = productCategoryId;
-        //while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
-            // find product category rollup
-        try {
-            List<EntityCondition> rolllupConds = new ArrayList<>();
-            //rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
-            List<String> orderBy = UtilMisc.toList("-fromDate");
-            List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, orderBy, null, true);
-            if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                /* 2016-03-22: This does not work properly and creates invalid trails.
-                 * Instead, use recursion.
-                List<List<String>> trailElementsAux = new ArrayList<>();
-                trailElementsAux.addAll(trailElements);
-                // add only categories that belong to the top category to trail
-                for (GenericValue productCategoryRollup : productCategoryRollups) {
-                    String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                    parentProductCategoryId = trailCategoryId;
-                    List<String> trailElement = new ArrayList<>();
-                    if (!trailElements.isEmpty()) {
-                        for (List<String> trailList : trailElementsAux) {
-                            trailElement.add(trailCategoryId);
-                            trailElement.addAll(trailList);
-                            trailElements.remove(trailList);
-                            trailElements.add(trailElement);
-                        }
-                    } else {
-                        trailElement.add(trailCategoryId);
-                        trailElement.add(productCategoryId);
-                        trailElements.add(trailElement);
-                    }
-                }
-                */
-                
-                // For each parent cat, get its trails recursively and add our own
-                for (GenericValue productCategoryRollup : productCategoryRollups) {
-                    String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                    List<List<String>> parentTrails = getCategoryTrail(parentProductCategoryId, dctx);
-                    for (List<String> trail : parentTrails) {
-                        // WARN: modifying the parent trail in-place for speed
-                        trail.add(productCategoryId);
-                        trailElements.add(trail);
-                    }
-                }
-            }
-            //} else {
-            //    parentProductCategoryId = null;
-            //}
-
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Solr: Cannot generate trail from product category; SOLR query or data may be incomplete!", module);
-        }
-        //}
-        if (trailElements.isEmpty()) {
-            List<String> trailElement = new ArrayList<>();
-            trailElement.add(productCategoryId);
-            trailElements.add(trailElement);
-        }
-        return trailElements;
+        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, true);
     }
     
     /**

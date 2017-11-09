@@ -18,9 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.product.catalog;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +40,8 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryWorker;
@@ -496,5 +501,30 @@ public class CatalogWorker {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Imported from SolrCategoryUtil.
+     * Added 2017-11-09.
+     */
+    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+        List<GenericValue> stores = new ArrayList<>();
+        Set<String> storeIds = new HashSet<>();
+        for(String catalogId : catalogIds) {
+            try {
+                EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("prodCatalogId", catalogId));
+                condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
+                List<GenericValue> productStoreCatalogs = delegator.findList("ProductStoreCatalog", condition, null, null, null, useCache);
+                for(GenericValue productStoreCatalog : productStoreCatalogs) {
+                    if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
+                        stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
+                        storeIds.add(productStoreCatalog.getString("productStoreId"));
+                    }
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: Error looking up ProductStore for catalogId: " + catalogId, module);
+            }
+        }
+        return stores;
     }
 }

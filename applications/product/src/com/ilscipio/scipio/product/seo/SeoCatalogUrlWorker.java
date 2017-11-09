@@ -770,7 +770,8 @@ public class SeoCatalogUrlWorker implements Serializable {
                     String lastCategoryId = trail.get(trail.size() - 1);
                     if (!"TOP".equals(lastCategoryId)) {
                         if (SeoConfigUtil.isCategoryNameEnabled()) {
-                            String categoryName = getCategoryIdNameMap().get(lastCategoryId);
+                            //String categoryName = getCategoryIdNameMap().get(lastCategoryId);
+                            String categoryName = null; //
                             if (UtilValidate.isNotEmpty(categoryName)) {
                                 urlBuilder.append(SeoConfigUtil.limitCategoryNameLength(categoryName));
                                 if (SeoConfigUtil.isCategoryNameSeparatePathElem()) {
@@ -1100,16 +1101,6 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
-    @Deprecated
-    private static Map<String, String> getCategoryIdNameMap() {
-        return SeoCategoryNames.getDefaultInstance().getIdNameMap();
-    }
-
-    @Deprecated
-    private static Map<String, String> getCategoryNameIdMap() {
-        return SeoCategoryNames.getDefaultInstance().getNameIdMap();
-    }
-
 //    /**
 //     * Get a string lower cased and hyphen connected.
 //     *
@@ -1127,6 +1118,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 //        return niceName;
 //    }
 
+    @Deprecated
     private static String getNameBasedCategoryIdMatchFromPathElement(String pathElement) {
         if (UtilValidate.isEmpty(pathElement)) {
             return null;
@@ -1134,7 +1126,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         String categoryId = null;
 
-        Map<String, String> categoryNameIdMap = getCategoryNameIdMap();
+        Map<String, String> categoryNameIdMap = Collections.emptyMap(); // getCategoryNameIdMap();
 
         // SCIPIO: nameIdMap keys are actually categoryName-categoryId!
         // FIXME: This is unable to handle case where -categoryId is omitted!

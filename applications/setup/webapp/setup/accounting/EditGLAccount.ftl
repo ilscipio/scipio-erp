@@ -51,7 +51,7 @@
         
         <#assign fieldsRequired = true>
       	
-		<#if formActionType == "add">
+		<#if formActionType == "new">
 	      <@field type="select" name="parentGlAccountId" label=uiLabelMap.AccountingParentGlAccountId required=true>
 	        <#list (parentGlAccountList![]) as parentGlAccount>
 	          <@field type="option" value=parentGlAccount.glAccountId 
@@ -101,6 +101,7 @@
 	       
     </@form>
 </#macro>
+
 <@section title=uiLabelMap.PageTitleAddGlAccount containerId="eglt-newglaccount" containerClass="+eglt-newglaccountid eglt-recordaction eglt-newrecord" 
     containerStyle=((targetRecordAction == "glaccount-new")?string("","display:none;"))>
   <#if targetRecordAction == "glaccount-new">
@@ -117,6 +118,7 @@
     treeFieldValues={"egltSubmittedFormId":"NewGlAccount"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
   />
 </@section>
+
 <@section title=uiLabelMap.PageTitleEditGlAccount containerId="eglt-editglaccount" containerClass="+ect-editglaccount ect-recordaction ect-editrecord" 
     containerStyle=((targetRecordAction == "glaccount-edit")?string("","display:none;"))>
   <#if targetRecordAction == "glaccount-edit">
@@ -131,26 +133,11 @@
   </#if>
   <@setupGlAccountForm id="EditGlAccount" formActionType="edit" target="setupUpdateGlAccount" params=paramMaps.values/>
 </@section>
-<#-- 
-<@section title=uiLabelMap.ProductAddExistingCatalog containerId="ect-addcatalog" containerClass="+ect-addcatalog ect-recordaction ect-addrecord" 
-    containerStyle=((targetRecordAction == "catalog-add")?string("","display:none;"))>
-  <#if targetRecordAction == "catalog-add">
-    <#assign paramMaps = initialParamMaps>
-  <#else>
-    <#assign paramMaps = getWizardFormFieldValueMaps({
-      "record":{},
-      "defaults":defaultParams,
-      "isError":isCatalogError,
-      "useReqParams":useReqParams
-    })>
-  </#if>
-  <@setupGlAccountForm id="AddCatalog" formActionType="add" target="setupAddCatalog" params=paramMaps.values/>
-</@section>
- -->
+
 <div style="display:none;">
 <#macro setupDeleteGlAccountForm id target isDeleteRecord>
   <@form id=id action=makeOfbizUrl(target) method="post">
-      <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
+      <@defaultWizardFormFields exclude=["topGlAccountId"]/>
       <@egltCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
       <@field type="hidden" name="isDeleteGlAccount" value="Y"/><#-- for our screens -->
@@ -158,10 +145,7 @@
       <#-- <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
       
       <@field type="hidden" name="glAccountId" value="" class="+eglt-inputfield"/>
-      <#-- 
-      <@field type="hidden" name="productStoreId" value="" class="+eglt-inputfield"/>
-      <@field type="hidden" name="fromDate" value="" class="+eglt-inputfield"/>
-       -->
+
   </@form>
 </#macro>
   <@setupDeleteGlAccountForm id="eglt-removeglaccount-form" target="setupDeleteGlAccount" isDeleteRecord=true/>  

@@ -33,11 +33,11 @@
     <#macro egltDefMarkupMenuItemDisabled args={}><@menuitem type="link" href="" text="" disabled=true/></#macro>
     <#macro egltDefMarkupMenuItemDivider args={}><@menuitem type="generic"><hr/></@menuitem></#macro>
     <#macro egltDefMarkupPostMenuItems args={}>
-    	<@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate />
+    	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
         <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execImport();" text=uiLabelMap.CommonImport />
     </#macro>
     <#macro egltDefMarkupMenu args={}>
-        <ul class="side-nav ect-action-menu" id="ect-action-menu">
+        <ul class="side-nav eglt-action-menu" id="eglt-action-menu">
           <@egltMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/>
         </ul>
     </#macro>
@@ -67,20 +67,6 @@
             <#local actionMap = toSimpleMap(args.actionProps[objectType])>
     
             <#-- DEV NOTE: supports <form class="ect-dialogopts-form"><input...>...</form> inside the modal for extra options -->
-            
-            <#local props = actionMap["removeassoc"]!{}>
-            <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-removeassoc" class="+eglt-dialogmodal">
-                    <@heading>${uiLabelMap.CommonWarning}</@heading>
-                    <div class="eglt-dialogmsg"></div>
-                    <div class="modal-footer ${styles.text_right!}">
-                       <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
-                       <a class="eglt-dialogbtn eglt-dialogbtn-remove ${styles.button!} btn-ok">${uiLabelMap.CommonRemove}</a>
-                       <a class="eglt-dialogbtn eglt-dialogbtn-expire ${styles.button!} btn-ok">${uiLabelMap.CommonExpire}</a>
-                    </div>
-                </@modal>
-            </#if>
-            
             <#local props = actionMap["remove"]!{}>
             <#if props.confirmMsg?has_content>
                 <@modal id="${args.idPrefix}${rawString(objectType)}-remove" class="+eglt-dialogmodal">
@@ -88,21 +74,7 @@
                     <div class="eglt-dialogmsg"></div>
                     <@egltDefActionConfirmMsgBtn/>
                 </@modal>
-            </#if>
-        
-            <#local props = actionMap["copymoveassoc"]!{}>
-            <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-copymoveassoc" class="+eglt-dialogmodal">
-                    <@heading>${uiLabelMap.CommonWarning}</@heading>
-                    <div class="eglt-dialogmsg"></div>
-                    <div class="modal-footer ${styles.text_right!}">
-                       <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
-                       <a class="eglt-dialogbtn eglt-dialogbtn-copy ${styles.button!} btn-ok">${uiLabelMap.CommonCopy}</a>
-                       <a class="eglt-dialogbtn eglt-dialogbtn-move-remove ${styles.button!} btn-ok">${uiLabelMap.CommonMove}</a><#-- (${uiLabelMap.CommonRemove}) -->
-                       <a class="eglt-dialogbtn eglt-dialogbtn-move-expire ${styles.button!} btn-ok">${uiLabelMap.CommonMove} (${uiLabelMap.CommonExpire})</a>
-                    </div>
-                </@modal>
-            </#if>
+            </#if>    
         </#list>
      
       <#if !egltPopupMsgModalId?has_content>
@@ -155,6 +127,7 @@ if (typeof egltHandler === 'undefined') {
 }
 egltHandler = new ScpAccountingTreeHandler({
     treeId: "${escapeVal(egltTreeId!, 'js')}",
+    topGlAccountId: <@objectAsScript object=(topGlAccountId!) lang='js'/>,
   	topGlAccountEntity: <@objectAsScript object=(topGlAccount!) lang='js'/>,
     actionProps: <@objectAsScript object=(egltActionProps!{}) lang='js'/>,
     hideShowFormIds: <@objectAsScript object=(egltAllHideShowFormIds![]) lang='js'/>,
@@ -162,10 +135,9 @@ egltHandler = new ScpAccountingTreeHandler({
         error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
         errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
         servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",            
-        edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",
-        removeassoc: "${escapeVal(uiLabelMap.CommonRemoveAssoc, 'js')}",
-        remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",
-        cannotremovehaschild: "${escapeVal(rawLabelNoSubst('CommonCannotDeleteRecordHasChildrenParam'), 'js')}",          
+        edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",       
+        remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",                  
+        add: "${escapeVal(uiLabelMap.CommonAdd, 'js')}",
         create: "${escapeVal(uiLabelMap.CommonCreate, 'js')}",           
         manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"           
     },

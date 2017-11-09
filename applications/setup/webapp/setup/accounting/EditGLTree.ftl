@@ -33,37 +33,27 @@
         }
     },
     "glAccount": {
+    	"add": {
+            "type": "form",
+            "mode": "show",
+            "id": "eglt-newglaccount"          
+        },
         "edit": {
             "type": "form",
             "mode": "show",
-            "id": "eglt-editglaccount" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->
-            <#-- paramNames* is a preprocess step for easy param renaming before going into link/form
-            "paramNames": {"productStoreId": "myProductStoreIdParam" }
-            "paramNamesMode": "explicit"|"default"-->
-            <#-- replaces the entire default form populate script, must be a single function (ai = ActionInfo object)
-            "populateForm": wrapRawScript('function(form, params, ai) { alert("preventing form populate"); return false; }')-->
-            <#-- individual form field populate handlers (return false to prevent default/common behavior)
-            "populateFormFields": {
-                "prodCatalogId": wrapRawScript('function(elem, name, value, form, params, ai) { alert("ignoring this field"); return false; }')
-            }-->
-        },
-        "removeassoc": {
-            "type": "form",
-            "mode": "submit",
-            "confirmMsg": rawLabel('CommonConfirmDeleteRecordAssocPermanent'),
-            "id": "ect-removecatalogassoc-form"
-        },
+            "id": "eglt-editglaccount" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->          
+        },       
         "remove": {
             "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
-            "id": "ect-removecatalog-form"
+            "id": "ect-removeglaccount-form"
         },
         "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/EditProdCatalog', "extLoginKey":true}),
-            "paramNames": {"prodCatalogId": true },
+            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true}),
+            "paramNames": {"glAccountId": true },
             "paramNamesMode": "explicit"
         }
     }
@@ -78,7 +68,7 @@
 <#-- RENDERS DISPLAY OPTIONS -->
 <#macro egltExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
-    <@form action=makeOfbizUrl("setupCatalog") method="get">
+    <@form action=makeOfbizUrl("setupAccounting") method="get">
       <@defaultWizardFormFields/>
     </@form>
   </@section>

@@ -205,7 +205,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     scth.fadeOptions = data.fadeOptions || {};
     scth.treeId = data.treeId;
-    scth.glAccountEntity = data.topGlAccountEntity;    
+    scth.glTopGlAccountEntity = data.topGlAccountEntity;    
     scth.allActionProps = data.actionProps || {};
     scth.markup = new ScpEgltFormMarkup(data.markupSelectors || {});
     scth.links = data.links || {};
@@ -416,7 +416,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
         return ($parent) ? $node : null; // prevents returning the root node
     };
-    var getCatalogNodeForNode = function($node) {
+    var getTopGlAccountIdNodeForNode = function($node) {
         return getTopLevelNode($node);
     }
     var getNodeObjectType = function($node) {
@@ -557,10 +557,12 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             // this is to support forms/links that need different field names or copied to multiple fields
             if (isObj(actionProps.paramNames)) {
                 jQuery.each(params, function(k, v) {
+                	console.log("KEY =====> " + k);
                     if (k === 'data') {
                         resParams.data = v;
                     } else {
                         var replName = actionProps.paramNames[k];
+                        console.log("replName =====> " + replName + " isUndefOrNull ===> " + isUndefOrNull(replName));
                         if (!isUndefOrNull(replName)) {
                             if (jQuery.type(replName) === 'array') {
                                 jQuery.each(replName, function(i, e) {
@@ -893,12 +895,12 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         
         // store & catalog (these not necessarily included in entities)
         params.productStoreId = scth.productStoreId;
-        if (ai.objectType == "catalog") {
-            params.prodCatalogId = ai.objectId;
+        if (ai.objectType == "glAccount") {
+            params.topGlAccountId = ai.objectId;
         } else if (ai.node) {
-            params.prodCatalogId = getNodeObjectId(getCatalogNodeForNode(ai.node))
+            params.topGlAccountId = getNodeObjectId(getTopGlAccountIdNodeForNode(ai.node))
         }
-        
+        console.log("topGlAccountId ==========> " + params.topGlAccountId);
         // merge any *Entity fields into params map (this takes care of objectId & parent id)
         if (mergeEntities !== false && ai.node) {
             jQuery.extend(params, scth.getNodeEntitiesMerged(ai.node));
@@ -1023,148 +1025,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         return draggable;
     };
     
-    /**
-     * Returns true only if all nodes are valid for copy/move to the target.
-     */
-    this.isValidCopyMoveTarget = function($nodeOrList, $targetNode) {
-        if (!$nodeOrList || !$targetNode || isRootNode($targetNode)) return false;
-        $nodeOrList = ensureArray($nodeOrList);
-        if ($nodeOrList.length <= 0) return false;
-        
-        var targetObjectId = getNodeObjectId($targetNode);
-        var targetType = getNodeObjectType($targetNode);
-        if (targetType !== 'glAccount') return false;
-        
-        var result = true;
-        for(var i=0; i < $nodeOrList.length; i++) {
-            var $node = $nodeOrList[i];
-        
-            if (!$node || isRootNode($node)) return false;
-            
-            var objectType = getNodeObjectType($node);
-            if (objectType !== 'glAccount') return false;
-            
-            var $parent = getParentNode($node);
-            if (!$parent) return false;
-            
-            // check if target is already us (?!) or our parent
-            if ($node.id === $targetNode.id || $node.id === $parent.id) return false;
-            // must also check via "real" object ID
-            var objectId = getNodeObjectId($node);
-            if (objectType === targetType && objectId === targetObjectId) return false;
-            var parentType = getNodeObjectType($parent);
-            var parentObjectId = getNodeObjectId($parent);
-            if (parentType === targetType && parentObjectId === targetObjectId) return false;
-            
-//            if (objectType === 'product') {
-//                // products can only go under categories
-//                if (targetType !== 'category') return false;
-//            } else {
-                // category can't go under itself
-                if (isChildNodeOf($node, $targetNode)) return false;
-//            }
-            
-            // make sure the object is not already child of the target
-            
-            if (getChildNodeByObjectId($targetNode, objectId, objectType)) return false;
-        }
-        return true;  
-    };
-    
-    this.execCopyMoveAssocForNode = function($node, $targetNode) {
-        if (!scth.isValidCopyMoveTarget($node, $targetNode)) {
-            return false;
-        }
-    
-        var ai = getActionInfo($node, "copymoveassoc");
-        var params = makeParamsMap(ai);
-        
-        // target to_ node
-        var targetObjectType = getNodeObjectType($targetNode);
-        if (targetObjectType === 'catalog') {
-            params.to_prodCatalogId = getNodeObjectId($targetNode);
-            // if already a catalog relation, preserve the type,
-            // otherwise use caller default (user can edit after)...
-            if (params.prodCatalogCategoryTypeId) {
-                params.to_prodCatalogCategoryTypeId = params.prodCatalogCategoryTypeId;
-            } else {
-                // get default from catalog newcategory defaultParams
-                var cncDefParams = getActionPropsDefaultParams(getActionProps("catalog", "newcategory"));
-                if (cncDefParams.prodCatalogCategoryTypeId) {
-                    params.to_prodCatalogCategoryTypeId = cncDefParams.prodCatalogCategoryTypeId;
-                } else {
-                    params.to_prodCatalogCategoryTypeId = "PCCT_BROWSE_ROOT"; // fallback default (can't be empty)
-                }
-            }
-            params.to_parentProductCategoryId = null;
-        } else if (targetObjectType === 'category') {
-            params.to_prodCatalogId = null;
-            params.to_prodCatalogCategoryTypeId = null;
-            params.to_parentProductCategoryId = getNodeObjectId($targetNode);
-        }
-        params.to_fromDate = null; // TODO?: no way to populate - service will make it
-        params.to_sequenceNum = null; // TODO?: no way to populate (unreliable), can't reuse previous, but could be desirable...
-        
-        substituteConfirmMsg(ai, params, {
-            toRecordName: getNodeObjectDesc($targetNode)
-        });
-        
-        // NOTE: this path is used on success only and further adjusted server-side
-        params.egltNewTargetNodePath = getNodeObjectIdPathString($targetNode);
-        
-        // FIXME: the checkExecConfirm should be earlier in function, but this is working for time being
-        var effArgs = {};
-        checkExecConfirm(ai, params, 
-            {subActionType: function(subActionType, params, ai) {
-                if ("copy" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "copyassoc");
-                    params.deleteAssocMode = null;
-                    params.returnAssocFields = "true"; // for now, switching to the new node after copy...
-                } else if ("move-remove" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "moveassoc");
-                    params.deleteAssocMode = "remove";
-                    params.returnAssocFields = "true";
-                } else if ("move-expire" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "moveassoc");
-                    params.deleteAssocMode = "expire";
-                    params.returnAssocFields = "true";
-                } else {
-                    // should not happen
-                    reportInternalError("invalid copy/move sub action type: " + subActionType);
-                }
-            }},
-            function() {
-                if (effArgs.ai) {
-                    execActionTarget(effArgs.ai, params);
-                }
-            }
-        );
-    };
-    
-    this.execRemoveAssocForNode = function($node) {
-        var ai = getActionInfo($node, "removeassoc");
-        var params = makeParamsMap(ai);
-        
-        var targetDesc;
-        if (ai.objectType === 'catalog') {
-            targetDesc = getStoreObjectDesc();
-        } else {
-            targetDesc = getNodeObjectDesc(getParentNode($node));
-        }
-        substituteConfirmMsg(ai, params, {
-            toRecordName: targetDesc
-        });
-        
-        // default params OK
-        checkExecConfirm(ai, params, {subActionType:"deleteAssocMode"}, function() {
-            if (params.deleteAssocMode) {
-                execActionTarget(ai, params);
-            } else {
-                reportInternalError('removeassoc received no deleteAssocMode from dialog (confirm dialog error - aborting)');
-            }
-        });
-    };
-    
     this.execRemoveForNode = function($node) {
         var nodeObjectIsParent = isNodeObjectParent($node);
         if (nodeObjectIsParent) {
@@ -1181,8 +1041,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     };
     
     this.execNewGlAccountForNode = function($node) {
-    	var ai = getActionInfo($node, "newglaccount");
-    	
+    	var ai = getActionInfo($node, "add");
+    	var params = makeParamsMap(ai);
+
     	checkExecConfirm(ai, params, {}, function() {
           execActionTarget(ai, params);
     	});
@@ -1197,16 +1058,21 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
     };
     
+    this.execManageForNode = function($node) {
+        var ai = getActionInfo($node, "manage");
+        var params = makeParamsMap(ai);
+        // default params OK
+        checkExecConfirm(ai, params, {}, function() {
+            execActionTarget(ai, params);
+        });
+    };
+    
     this.execForNode = function(actionType, $node, $targetNode) {    	
         if (actionType === "edit") {
             return this.execEditForNode($node);
-        } else if (actionType === "copymoveassoc") {
-            return this.execCopyMoveAssocForNode($node, $targetNode);
-        } else if (actionType === "removeassoc") {
-            return this.execRemoveAssocForNode($node);
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
-        } else if (actionType === "newglaccount") {
+        } else if (actionType === "add") {
             return this.execNewGlAccountForNode($node);
         } else if (actionType === "manage") {
             return this.execManageForNode($node);
@@ -1230,15 +1096,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 "action": function(obj) {
                     scth.execEditForNode($node);
                 }
-            },
-            removeassoc: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.removeassoc,
-                "action": function(obj) {
-                    scth.execRemoveAssocForNode($node);
-                }
-            },
+            },          
             remove: {
                 "separator_before": false,
                 "separator_after": false,
@@ -1248,10 +1106,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                     scth.execRemoveForNode($node);
                 }
             },
-            newglaccount: {
+            add: {
                 "separator_before": false,
                 "separator_after": false,
-                "label": scth.labels.newglaccount,
+                "label": scth.labels.add,
                 "action": function(obj) {
                     scth.execNewGlAccountForNode($node);
                 }
@@ -1280,18 +1138,16 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         var menuDefs = {};
         if (objectType == 'glAccount') {
             menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editcatalog),
-                "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromstore),
-                "remove": setDefLabel(defs.remove, scth.labels.deletecatalog),
-                "manage": setDefLabel(defs.manage, scth.labels.managecatalog),
-                "newcategory": defs.newcategory,
-                "addcategory": defs.addcategory,
+            	"add": defs.add,            
+                "edit": defs.edit,
+                "remove": defs.remove,
+                "manage": defs.manage
             };
         }
         
         // filter - allows caller to omit certain menu items
         var resMenuDefs = {};
-        jQuery.each(menuDefs, function(k, v) {
+        jQuery.each(menuDefs, function(k, v) {        	
             if (isActionPropsValid(objectType, k)) {
                 resMenuDefs[k] = v;
             }

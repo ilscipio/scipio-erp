@@ -9,7 +9,7 @@
           2. if disable, the CatalogUrlServlet.makeCatalogUrl will be used -->
         <allowed-context-paths>/:/shop</allowed-context-paths> <!-- /:/ecommerce -->
         <!-- if category-url is enabled, only context paths listed here will be allowed to use the new seo transformers -->
-        <category-name>disable</category-name>
+        <category-name>enable</category-name>
         <!-- enable/disable
           1. if enable, the product seo url will be /category-name(-category-id)[-/]product-name-product-id.html -> see category-name-separate-path-elem
           2. if disable, the product seo url will be /product-name-product-id.html -->
@@ -17,14 +17,16 @@
         <!-- suffix to add to the product seo url -->
         <category-name-max-length>24</category-name-max-length>
         <product-name-max-length>40</product-name-max-length>
-        <!-- Scipio: new property to set max names -->
+        <!-- SCIPIO: new property to set max names -->
         <names-locale-override>de</names-locale-override>
-        <!-- Scipio: Must override this to de because user accounts not set to de -->
+        <!-- SCIPIO: Must override this to de because user accounts not set to de -->
         <!--<category-name-separate-path-elem>enable</category-name-separate-path-elem>-->
-        <!-- instead of hyphen. SCIPIO: 2017-07-11: category-name-separate-path-elem setting currently always enabled  -->
+        <!-- instead of hyphen. SCIPIO: 2017-11-08: category-name-separate-path-elem setting currently always enabled  -->
         <category-name-append-id>enable</category-name-append-id> 
         <!-- only used if category-name-separate-path-elem enabled. 
              WARNING: MUST BE ENABLED; code for incoming links can't handle category ID omitted  -->
+        <product-name-append-id>enable</product-name-append-id>
+        <!-- SCIPIO: 2017: extra product-name-append-id control: leave enabled for now -->
         <handle-implicit-requests>enable</handle-implicit-requests> 
         <!-- i.e. requests without a specific /product or /categorie name 
              Possible for Scipio, but could cause conflicts with other requests -->

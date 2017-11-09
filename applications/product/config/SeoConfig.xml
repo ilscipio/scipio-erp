@@ -31,7 +31,7 @@
         <!-- i.e. requests without a specific /product or /categorie name 
              Possible for Scipio, but could cause conflicts with other requests -->
         <implicit-request-name-matches-only>enable</implicit-request-name-matches-only> 
-        <!-- If enabled, implicit requests will only match category name paths, and not just IDs (which may be too generic) 
+        <!-- If enabled, implicit requests will only match category name paths, and not IDs (which may be too generic) 
              Warning: Leave enable for Scipio! -->
         <generate-implicit-category-url>disable</generate-implicit-category-url>
         <!-- implicit category URLs, possible for Scipio -->

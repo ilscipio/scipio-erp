@@ -20,6 +20,7 @@ package com.ilscipio.scipio.product.seo;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,9 +33,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -76,6 +79,10 @@ public class SeoCatalogUrlWorker implements Serializable {
     public static final String DEFAULT_CONFIG_RESOURCE = "SeoConfigUiLabels";
 
     private static final SeoCatalogUrlWorker DEFAULT_INSTANCE = new SeoCatalogUrlWorker();
+
+    // TODO: in production, these cache can be tweaked with non-soft refs, limits and expire time
+    private static final UtilCache<String, Map<String, AltUrlPartInfo>> productAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.product.alturl.part", true);
+    private static final UtilCache<String, Map<String, AltUrlPartInfo>> categoryAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.category.alturl.part", true);
 
     /*
      * *****************************************************
@@ -1126,6 +1133,25 @@ public class SeoCatalogUrlWorker implements Serializable {
         public String getLocaleString() { return localeString; }
     }
     
+    public Map<String, AltUrlPartInfo> extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl) throws GenericEntityException {
+        Map<String, AltUrlPartInfo> results = productAltUrlPartInfoCache.get(altUrl);
+        if (results == null) {
+            // TODO: these could be inferred based on SeoConfig
+            boolean exactOnly = false;
+            boolean singleExactOnly = true;
+            
+            results = extractCandidateAltUrlProductId(delegator, altUrl, exactOnly, singleExactOnly);
+            
+            // TODO: REVIEW: currently, only storing in cache if has match... 
+            // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
+            if (!results.isEmpty()) {
+                results = Collections.unmodifiableMap(results);
+                productAltUrlPartInfoCache.put(altUrl, results);
+            }
+        }
+        return results;
+    }
+    
     /**
      * SCIPIO: Tries to match an alt URL path element to a product.
      * Heavily modified logic from CatalogUrlFilter.
@@ -1135,35 +1161,68 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * Added 2017-11-08.
      */
-    public AltUrlPartInfo extractAltUrlProductId(Delegator delegator, String alternativeUrl) throws GenericEntityException {
-        AltUrlPartInfo urlInfo = null;
+    public Map<String, AltUrlPartInfo> extractCandidateAltUrlProductId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly) throws GenericEntityException {
+        Map<String, AltUrlPartInfo> results = new HashMap<>();
+        AltUrlPartInfo exactResult = null;
+        
+        // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
+        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productCategoryId", "textData", exactOnly);
+        if (matchTextIdCond == null) return results;
+        
+        EntityCondition altUrlCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
+        Timestamp moment = UtilDateTime.nowTimestamp();
+        EntityCondition filterByDateCond = EntityUtil.getFilterByDateExpr(moment);
+        EntityCondition caFilterByDateCond = EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate");
+        List<EntityCondition> condList;
         
         // Search for localized alt urls
-        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
-        List<EntityCondition> condList = new ArrayList<>();
-        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList = new ArrayList<>();
+        condList.add(altUrlCond);
         condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(EntityUtil.getFilterByDateExpr());
-        condList.add(EntityUtil.getFilterByDateExpr("caFromDate", "caThruDate"));
+        condList.add(filterByDateCond);
+        condList.add(caFilterByDateCond);
+        if (matchTextIdCond != null) condList.add(matchTextIdCond);
         List<GenericValue> productContentInfos = EntityQuery.use(delegator).from("ProductContentAssocAndElecTextShort")
                 .where(condList).select("productId", "textData", "localeString")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
-        urlInfo = findExtractId(alternativeUrl, productContentInfos, "productId", ObjectType.PRODUCT);
-        if (urlInfo != null && urlInfo.isExact()) {
-            return urlInfo;
+        exactResult = findExtractId(altUrl, productContentInfos, "productId", ObjectType.PRODUCT, exactOnly, singleExactOnly, results);
+        if (exactResult != null && exactResult.isExact()) {
+            return results;
         }
 
         // Search for non-localized alt urls
-        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
         condList = new ArrayList<>();
-        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
-        condList.add(EntityUtil.getFilterByDateExpr());
+        condList.add(altUrlCond);
+        condList.add(filterByDateCond);
+        if (matchTextIdCond != null) condList.add(matchTextIdCond);
         productContentInfos = EntityQuery.use(delegator).from("ProductContentAndElecTextShort")
                 .where(condList).select("productId", "textData", "localeString")
                 .orderBy("-fromDate").cache(true).queryList();
-        urlInfo = findExtractId(alternativeUrl, productContentInfos, "productId", ObjectType.PRODUCT);
-
-        return urlInfo;
+        exactResult = findExtractId(altUrl, productContentInfos, "productId", ObjectType.PRODUCT, exactOnly, singleExactOnly, results);
+        if (exactResult != null && exactResult.isExact()) {
+            return results;
+        }
+        
+        return results;
+    }
+    
+    public Map<String, AltUrlPartInfo> extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl) throws GenericEntityException {
+        Map<String, AltUrlPartInfo> results = categoryAltUrlPartInfoCache.get(altUrl);
+        if (results == null) {
+            // TODO: these could be inferred based on SeoConfig
+            boolean exactOnly = false;
+            boolean singleExactOnly = true;
+            
+            results = extractCandidateAltUrlCategoryId(delegator, altUrl, exactOnly, singleExactOnly);
+            
+            // TODO: REVIEW: currently, only storing in cache if has match... 
+            // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
+            if (!results.isEmpty()) {
+                results = Collections.unmodifiableMap(results);
+                categoryAltUrlPartInfoCache.put(altUrl, results);
+            }
+        }
+        return results;
     }
     
     /**
@@ -1175,39 +1234,83 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * Added 2017-11-07.
      */
-    public AltUrlPartInfo extractAltUrlCategoryId(Delegator delegator, String alternativeUrl) throws GenericEntityException {
-        AltUrlPartInfo urlInfo = null;
-       
+    public Map<String, AltUrlPartInfo> extractCandidateAltUrlCategoryId(Delegator delegator, String altUrl, boolean exactOnly, boolean singleExactOnly) throws GenericEntityException {
+        Map<String, AltUrlPartInfo> results = new HashMap<>();
+        AltUrlPartInfo exactResult = null;
+        
+        // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
+        EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productCategoryId", "textData", exactOnly);
+        if (matchTextIdCond == null) return results;
+        
+        EntityCondition altUrlCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
+        Timestamp moment = UtilDateTime.nowTimestamp();
+        EntityCondition filterByDateCond = EntityUtil.getFilterByDateExpr(moment);
+        EntityCondition caFilterByDateCond = EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate");
+        List<EntityCondition> condList;
+        
         // Search for localized alt urls
-        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
-        List<EntityCondition> condList = new ArrayList<>();
-        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList = new ArrayList<>();
+        condList.add(altUrlCond);
         condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(EntityUtil.getFilterByDateExpr());
-        condList.add(EntityUtil.getFilterByDateExpr("caFromDate", "caThruDate"));
+        condList.add(filterByDateCond);
+        condList.add(caFilterByDateCond);
+        if (matchTextIdCond != null) condList.add(matchTextIdCond);
         List<GenericValue> productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAssocAndElecTextShort")
                 .where(condList).select("productCategoryId", "textData", "localeString")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
-        urlInfo = findExtractId(alternativeUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY);
-        if (urlInfo != null && urlInfo.isExact()) {
-            return urlInfo;
+        exactResult = findExtractId(altUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY, exactOnly, singleExactOnly, results);
+        if (exactResult != null && exactResult.isExact()) {
+            return results;
         }
         
         // Search for non-localized alt urls
-        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
         condList = new ArrayList<>();
-        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
-        condList.add(EntityUtil.getFilterByDateExpr());
+        condList.add(altUrlCond);
+        condList.add(filterByDateCond);
+        if (matchTextIdCond != null) condList.add(matchTextIdCond);
         productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndElecTextShort")
                 .where(condList).select("productId", "textData", "localeString")
                 .orderBy("-fromDate").cache(true).queryList();
-        urlInfo = findExtractId(alternativeUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY);
-
-        return urlInfo;
+        exactResult = findExtractId(altUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY, exactOnly, singleExactOnly, results);
+        if (exactResult != null && exactResult.isExact()) {
+            return results;
+        }
+        
+        return results;
     }
 
-    private AltUrlPartInfo findExtractId(String alternativeUrl, List<GenericValue> values, String idField, ObjectType entityType) {
-        AltUrlPartInfo bestMatch = null;
+    /**
+     * This splits altUrl by hyphen "-" and creates OR condition for all the possible combinations
+     * of name and ID.
+     */
+    public static EntityCondition makeAltUrlTextIdMatchCombinations(String altUrl, String idField, String textField, boolean exactOnly) {
+        List<EntityCondition> condList = new ArrayList<>();
+        int lastIndex = altUrl.lastIndexOf('-');
+        while(lastIndex > 0) {
+            if (lastIndex >= (altUrl.length() - 1)) continue; // bad format, missing id
+            String name = altUrl.substring(0, lastIndex);
+            String id = altUrl.substring(lastIndex + 1);
+            condList.add(EntityCondition.makeCondition(
+                        EntityCondition.makeCondition(textField, name),
+                        EntityOperator.AND,
+                        EntityCondition.makeCondition(idField, id)));
+            lastIndex = altUrl.lastIndexOf('-');
+        }
+        if (!exactOnly) {
+            // do one without any ID
+            condList.add(EntityCondition.makeCondition(textField, altUrl));
+        }
+        return EntityCondition.makeCondition(condList, EntityOperator.OR);
+    }
+    
+    
+    /**
+     * Finds matches and adds to results map. If an exact match is found, returns immediately
+     * with the result. If no exact, returns null.
+     * Based on CatalogUrlFilter iteration.
+     */
+    private AltUrlPartInfo findExtractId(String altUrl, List<GenericValue> values, String idField, 
+            ObjectType entityType, boolean exactOnly, boolean singleExactOnly, Map<String, AltUrlPartInfo> results) {
         for (GenericValue value : values) {
             String textData = value.getString("textData");
             
@@ -1217,23 +1320,30 @@ public class SeoCatalogUrlWorker implements Serializable {
             //getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(textData, null, entityType);
             //textData = UrlServletHelper.invalidCharacter(textData); 
             
-            if (alternativeUrl.startsWith(textData)) {
-                String altUrlIdStr = alternativeUrl.substring(textData.length());
+            if (altUrl.startsWith(textData)) {
+                String altUrlIdStr = altUrl.substring(textData.length());
                 String valueId = value.getString(idField);
                 if (altUrlIdStr.isEmpty()) {
-                    // id omitted
-                    // TODO: how do we handle this? for now just doing a best-match case, but we
-                    // can't stop looking...
-                    bestMatch = new AltUrlPartInfo(false, valueId, textData, value.getString("localeString"));
+                    if (!exactOnly) {
+                        // id omitted - add to results, but don't stop looking
+                        if (!results.containsKey(valueId)) { // don't replace in case exact match (don't need check)
+                            results.put(valueId, new AltUrlPartInfo(false, valueId, textData, value.getString("localeString")));
+                        }
+                    }
                 } else {
-                    if (altUrlIdStr.startsWith("-")) altUrlIdStr = altUrlIdStr.substring(1);
-                    if (altUrlIdStr.equalsIgnoreCase(valueId)) {
-                        return new AltUrlPartInfo(true, valueId, textData, value.getString("localeString"));
+                    if (altUrlIdStr.startsWith("-")) { // should always be a hyphen here
+                        altUrlIdStr = altUrlIdStr.substring(1);
+                        if (altUrlIdStr.equalsIgnoreCase(valueId)) {
+                            results.clear();
+                            AltUrlPartInfo urlInfo = new AltUrlPartInfo(true, valueId, textData, value.getString("localeString"));
+                            results.put(valueId, urlInfo);
+                            if (singleExactOnly) return urlInfo;
+                        }
                     }
                 }
             }
         }
-        return bestMatch;
+        return null;
     }
     
 //    /**

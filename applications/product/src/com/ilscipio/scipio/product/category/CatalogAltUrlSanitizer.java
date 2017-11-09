@@ -40,6 +40,9 @@ public abstract class CatalogAltUrlSanitizer {
      * Cleans alt url coming out of DB IF not already applied before going into db.
      * This is a TRADEOFF with storage-time cleaning.
      * <p>
+     * WARN: 2017-11-08: FOR SEO URLs, THIS MUST DO NOTHING AND RETURN altUrl AS-IS! 
+     * This will allow better DB queries. See implementation.
+     * <p>
      * WARN: the locale here might not perfectly match the altUrl due to performance reasons!!
      * More reliable in other methods. See FIXME in SeoCatalogUrlWorker.
      */

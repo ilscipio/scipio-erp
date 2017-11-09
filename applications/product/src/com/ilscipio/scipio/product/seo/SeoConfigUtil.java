@@ -101,30 +101,32 @@ public class SeoConfigUtil {
     public static final String DEFAULT_CATEGORY_NAME_VALUE = "disable";
     public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";
 
-    // Scipio: new additions
+    // SCIPIO: new additions
     private static volatile Integer categoryNameMaxLength = null;
     private static volatile Integer productNameMaxLength = null;
     private static volatile Locale namesLocaleOverride = null;
     private static volatile boolean categoryNameSeparatePathElem = false;
     private static volatile boolean categoryNameAppendId = false;
+    private static volatile boolean productNameAppendId = false; // SCIPIO: new 2017
     private static volatile boolean handleImplicitRequests = false;
     private static volatile boolean implicitRequestNameMatchesOnly = true; // default true => safer
     private static volatile boolean generateImplicitCategoryUrl = false; 
     private static volatile boolean generateImplicitProductUrl = false; 
-
     
     public static final String ELEMENT_CATEGORY_NAME_MAX_LENGTH = "category-name-max-length";
     public static final String ELEMENT_PRODUCT_NAME_MAX_LENGTH = "product-name-max-length";
     public static final String ELEMENT_NAMES_LOCALE_OVERRIDE = "names-locale-override";
     public static final String ELEMENT_CATEGORY_NAME_SEPARATE_PATH_ELEM = "category-name-separate-path-elem";
     public static final String ELEMENT_CATEGORY_NAME_APPEND_ID = "category-name-append-id";
+    public static final String ELEMENT_PRODUCT_NAME_APPEND_ID = "product-name-append-id";
     public static final String ELEMENT_HANDLE_IMPLICIT_REQUESTS = "handle-implicit-requests";
     public static final String ELEMENT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY = "implicit-request-name-matches-only";
     public static final String ELEMENT_GENERATE_IMPLICIT_CATEGORY_URL = "generate-implicit-category-url";
     public static final String ELEMENT_GENERATE_IMPLICIT_PRODUCT_URL = "generate-implicit-product-url";
-
+    
     public static final String DEFAULT_CATEGORY_NAME_SEPARATE_PATH_ELEM_VALUE = "disable";
     public static final String DEFAULT_CATEGORY_NAME_APPEND_ID_VALUE = "disable";
+    public static final String DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE = "disable";
     public static final String DEFAULT_HANDLE_IMPLICIT_REQUESTS_VALUE = "disable";
     public static final String DEFAULT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY_VALUE = "enable";
     public static final String DEFAULT_GENERATE_IMPLICIT_CATEGORY_URL_VALUE = "disable";
@@ -279,6 +281,18 @@ public class SeoConfigUtil {
                                 categoryNameAppendId = true;
                             }
                             Debug.logInfo("  " + ELEMENT_CATEGORY_NAME_APPEND_ID + ": " + categoryNameAppendId, module);
+                        }
+                        
+                        // SCIPIO: 2017: new
+                        {
+                            String productNameAppendIdValue = UtilXml.childElementValue(categoryUrlElement, 
+                                    ELEMENT_PRODUCT_NAME_APPEND_ID, DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE);
+                            if (DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE.equalsIgnoreCase(productNameAppendIdValue)) {
+                                productNameAppendId = false;
+                            } else {
+                                productNameAppendId = true;
+                            }
+                            Debug.logInfo("  " + ELEMENT_PRODUCT_NAME_APPEND_ID + ": " + productNameAppendId, module);
                         }
                         
                         {
@@ -752,6 +766,13 @@ public class SeoConfigUtil {
     
     public static boolean isCategoryNameAppendId() {
         return categoryNameAppendId;
+    }
+    
+    /**
+     * SCIPIO: new 2017
+     */
+    public static boolean isProductNameAppendId() {
+        return productNameAppendId;
     }
 
     public static boolean isHandleImplicitRequests() {

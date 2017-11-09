@@ -351,10 +351,14 @@ under the License.
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="TOCO" entity-name="Content"/>
       <member-entity entity-alias="EL" entity-name="ElectronicText"/>
-      <alias-all entity-alias="PCC"/>
+      <alias-all entity-alias="PCC">
+        <exclude field="contentId"/>
+      </alias-all>
       <alias-all entity-alias="CA" prefix="ca"/>
-      <alias-all entity-alias="TOCO" prefix="to"/>
+      <alias-all entity-alias="TOCO"/>
       <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
       <view-link entity-alias="PCC" rel-entity-alias="CA">
         <key-map field-name="contentId"/>
       </view-link>
@@ -3126,10 +3130,14 @@ under the License.
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="TOCO" entity-name="Content"/>
       <member-entity entity-alias="EL" entity-name="ElectronicText"/>
-      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="PC">
+        <exclude field="contentId"/>
+      </alias-all>
       <alias-all entity-alias="CA" prefix="ca"/>
-      <alias-all entity-alias="TOCO" prefix="to"/>
+      <alias-all entity-alias="TOCO"/>
       <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
       <view-link entity-alias="PC" rel-entity-alias="CA">
         <key-map field-name="contentId"/>
       </view-link>

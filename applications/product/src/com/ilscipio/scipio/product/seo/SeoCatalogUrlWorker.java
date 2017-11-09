@@ -43,6 +43,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CatalogUrlFilter.CatalogAltUrlBuilder;
 import org.ofbiz.product.category.CatalogUrlServlet;
 import org.ofbiz.product.category.CatalogUrlServlet.CatalogUrlBuilder;
@@ -54,6 +55,8 @@ import org.ofbiz.service.LocalDispatcher;
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer.ObjectType;
 import com.ilscipio.scipio.util.SeoStringUtil;
+
+import javolution.util.FastList;
 
 /**
  * SCIPIO: SEO url building functions and callbacks.
@@ -446,12 +449,15 @@ public class SeoCatalogUrlWorker implements Serializable {
         @Override
         public String sanitizeAltUrlFromDb(String altUrl, Locale locale, ObjectType entityType) {
             // WARN: due to content wrapper the locale might not be the one from the altUrl!!
+            // may also be null
             
             if (altUrl == null) return "";
             
-            // TODO: REVIEW: for now leaving this here for stock compat because
-            // users can manually edit the DB via interface and insert bad characters
-            altUrl = UrlServletHelper.invalidCharacter(altUrl); // (stock ofbiz)
+            // TODO: REVIEW: REMOVED all post-db processing for now
+            // - omitting could permit better DB queries
+            // the reason this existed in the first place was because users can input garbage
+            // through the UI, could could prevent in other ways...
+            //altUrl = UrlServletHelper.invalidCharacter(altUrl); // (stock ofbiz)
             
             return altUrl;
         }
@@ -824,8 +830,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returned whenever we find a URL that appears to be an SEO URL, even if
      * the request is not for a valid product or category.
      */
-    @SuppressWarnings("serial")
-    public static class SeoCatalogUrlInfo extends CatalogUrlServlet.CatalogUrlInfo {
+    public static class SeoCatalogUrlInfo extends CatalogUrlServlet.CatalogUrlInfo implements Serializable {
         private final String origPath;
         private final boolean explicitProductRequest;
         private final boolean explicitCategoryRequest;
@@ -1101,6 +1106,136 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
+    /**
+     * A single alt url segment info (product or catalog).
+     */
+    public static class AltUrlPartInfo {
+        private final boolean exact;
+        private final String id;
+        private final String name;
+        private final String localeString;
+        protected AltUrlPartInfo(boolean exact, String id, String name, String localeString) {
+            this.exact = exact;
+            this.id = id;
+            this.name = name;
+            this.localeString = localeString;
+        }
+        public boolean isExact() { return exact; }
+        public String getId() { return id; }
+        public String getName() { return name; }
+        public String getLocaleString() { return localeString; }
+    }
+    
+    /**
+     * SCIPIO: Tries to match an alt URL path element to a product.
+     * Heavily modified logic from CatalogUrlFilter.
+     * <p>
+     * TODO: this may need a server-side map cache (with localization support)
+     * OR a reverse LIKE (but this may lead to uncacheable results).
+     * <p>
+     * Added 2017-11-08.
+     */
+    public AltUrlPartInfo extractAltUrlProductId(Delegator delegator, String alternativeUrl) throws GenericEntityException {
+        AltUrlPartInfo urlInfo = null;
+        
+        // Search for localized alt urls
+        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
+        condList.add(EntityUtil.getFilterByDateExpr());
+        condList.add(EntityUtil.getFilterByDateExpr("caFromDate", "caThruDate"));
+        List<GenericValue> productContentInfos = EntityQuery.use(delegator).from("ProductContentAssocAndElecTextShort")
+                .where(condList).select("productId", "textData", "localeString")
+                .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
+        urlInfo = findExtractId(alternativeUrl, productContentInfos, "productId", ObjectType.PRODUCT);
+        if (urlInfo != null && urlInfo.isExact()) {
+            return urlInfo;
+        }
+
+        // Search for non-localized alt urls
+        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
+        condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList.add(EntityUtil.getFilterByDateExpr());
+        productContentInfos = EntityQuery.use(delegator).from("ProductContentAndElecTextShort")
+                .where(condList).select("productId", "textData", "localeString")
+                .orderBy("-fromDate").cache(true).queryList();
+        urlInfo = findExtractId(alternativeUrl, productContentInfos, "productId", ObjectType.PRODUCT);
+
+        return urlInfo;
+    }
+    
+    /**
+     * SCIPIO: Tries to match an alt URL path element to a category.
+     * Heavily modified logic from CatalogUrlFilter.
+     * <p>
+     * TODO: this may need a server-side map cache (with localization support)
+     * OR a reverse LIKE (but this may lead to uncacheable results).
+     * <p>
+     * Added 2017-11-07.
+     */
+    public AltUrlPartInfo extractAltUrlCategoryId(Delegator delegator, String alternativeUrl) throws GenericEntityException {
+        AltUrlPartInfo urlInfo = null;
+       
+        // Search for localized alt urls
+        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
+        condList.add(EntityUtil.getFilterByDateExpr());
+        condList.add(EntityUtil.getFilterByDateExpr("caFromDate", "caThruDate"));
+        List<GenericValue> productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAssocAndElecTextShort")
+                .where(condList).select("productCategoryId", "textData", "localeString")
+                .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
+        urlInfo = findExtractId(alternativeUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY);
+        if (urlInfo != null && urlInfo.isExact()) {
+            return urlInfo;
+        }
+        
+        // Search for non-localized alt urls
+        // TODO: smarter/faster query/iteration (but this is already better than CatalogUrlFilter)
+        condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL"));
+        condList.add(EntityUtil.getFilterByDateExpr());
+        productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndElecTextShort")
+                .where(condList).select("productId", "textData", "localeString")
+                .orderBy("-fromDate").cache(true).queryList();
+        urlInfo = findExtractId(alternativeUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY);
+
+        return urlInfo;
+    }
+
+    private AltUrlPartInfo findExtractId(String alternativeUrl, List<GenericValue> values, String idField, ObjectType entityType) {
+        AltUrlPartInfo bestMatch = null;
+        for (GenericValue value : values) {
+            String textData = value.getString("textData");
+            
+            // TODO: REVIEW: if we didn't have to sanitize the DB records, it could
+            // allow some types of LIKE DB queries, so try to do without sanitize if possible...
+            // SCIPIO: NOTE: assuming DB data good as-is for now - this loop could become very slow...
+            //getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(textData, null, entityType);
+            //textData = UrlServletHelper.invalidCharacter(textData); 
+            
+            if (alternativeUrl.startsWith(textData)) {
+                String altUrlIdStr = alternativeUrl.substring(textData.length());
+                String valueId = value.getString(idField);
+                if (altUrlIdStr.isEmpty()) {
+                    // id omitted
+                    // TODO: how do we handle this? for now just doing a best-match case, but we
+                    // can't stop looking...
+                    bestMatch = new AltUrlPartInfo(false, valueId, textData, value.getString("localeString"));
+                } else {
+                    if (altUrlIdStr.startsWith("-")) altUrlIdStr = altUrlIdStr.substring(1);
+                    if (altUrlIdStr.equalsIgnoreCase(valueId)) {
+                        return new AltUrlPartInfo(true, valueId, textData, value.getString("localeString"));
+                    }
+                }
+            }
+        }
+        return bestMatch;
+    }
+    
 //    /**
 //     * Get a string lower cased and hyphen connected.
 //     *

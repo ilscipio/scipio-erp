@@ -9,14 +9,18 @@ import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
@@ -258,18 +262,71 @@ public abstract class SetupDataUtil {
 
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");
+        
+        DynamicViewEntity dve = new DynamicViewEntity();
+        dve.addMemberEntity("GAO", "GlAccountOrganization");
+        dve.addMemberEntity("GA", "GlAccount");
+        dve.addViewLink("GA", "GAO", false, ModelKeyMap.makeKeyMapList("glAccountId"));        
+        dve.addAlias("GA", "glAccountId");
+        dve.addAlias("GA", "parentGlAccountId");
+        dve.addAlias("GAO", "organizationPartyId");
+        dve.addAlias("GAO", "roleTypeId");
+        dve.addAlias("GAO", "fromDate");
+        dve.addAlias("GAO", "thruDate");
+        dve.addRelation("one", null, "GlAccount", ModelKeyMap.makeKeyMapList("glAccountId"));
+        dve.addRelation("one", null, "GlAccountOrganization", ModelKeyMap.makeKeyMapList("glAccountId", "glAccountId", "organizationPartyId", "organizationPartyId"));
+        List<EntityCondition> dveConditions = FastList.newInstance();
+        dveConditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+        dveConditions.add(EntityCondition.makeCondition("parentGlAccountId", EntityOperator.EQUALS, null));
+        
+        List<GenericValue> glAccountAndOrganizations = EntityQuery.use(delegator).from(dve).where(EntityCondition.makeCondition(dveConditions, EntityOperator.AND))
+                .orderBy(UtilMisc.toList("fromDate")).queryList();
+        GenericValue glAccountOrganization = null;
 
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
+            GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
             if (UtilValidate.isNotEmpty(topGlAccountId)) {
-                GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
                 if (topGlAccount == null) {
                     Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
                 }
             } else {
+                GenericValue glAccountAndOrganizationFiltered = EntityUtil.getFirst(EntityUtil.filterByDate(glAccountAndOrganizations));
+                if (UtilValidate.isNotEmpty(glAccountAndOrganizationFiltered)) {
+                    topGlAccount = glAccountAndOrganizationFiltered.getRelatedOne("GlAccount", false);
+                    topGlAccountId = glAccountAndOrganizationFiltered.getString("glAccountId");
+                }
                 Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
             }
-            
-            result.put("topGlAccountId", topGlAccountId);
+
+            if (UtilValidate.isNotEmpty(glAccountAndOrganizations)) {
+                if (glAccountAndOrganizations.size() > 1) {
+                    Debug.logWarning("Setup: Multiple GL for organization '" + orgPartyId + "' and role type 'INTERNAL_ORGANIZATIO'", module);
+                }
+                for (GenericValue glAccountAndOrganization : glAccountAndOrganizations) {
+                    GenericValue gao = glAccountAndOrganization.getRelatedOne("GlAccountOrganization", false);
+                    if (!glAccountAndOrganization.get("glAccountId").equals(topGlAccountId)) {
+                        Debug.logWarning("Setup: GL account '" + glAccountAndOrganization.getString("glAccountId") + "' not used; expiring", module);
+                        
+                        gao.put("thruDate", UtilDateTime.nowTimestamp());
+                        gao.store();
+                    } else {
+                        glAccountOrganization = gao;
+                    }
+                }
+            }
+
+            if (topGlAccount != null) {
+                result.put("coreCompleted", true);
+                
+                if (UtilValidate.isEmpty(glAccountOrganization)) {
+                    glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
+                            "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
+                    delegator.create(glAccountOrganization);
+                }
+                
+                result.put("topGlAccountId", topGlAccountId);
+                result.put("topGlAccount", topGlAccount);
+            }
         }
 
         return result;

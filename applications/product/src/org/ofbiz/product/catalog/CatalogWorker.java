@@ -329,6 +329,24 @@ public class CatalogWorker {
             return null;
         }
     }
+    
+    /**
+     * SCIPIO: new overload that works with delegator instead of request.
+     * Added 2017-11-09.
+     */
+    public static String getCatalogTopCategoryId(Delegator delegator, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_BROWSE_ROOT");
+
+        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
+    }
 
     public static String getCatalogSearchCategoryId(ServletRequest request) {
         return getCatalogSearchCategoryId(request, getCurrentCatalogId(request));

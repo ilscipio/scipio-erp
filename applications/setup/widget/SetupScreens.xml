@@ -560,14 +560,14 @@
                 
                 <set field="isCreateForm" type="Boolean" value="${context.topGlAccountId == null}"/><!-- FIXME -->
                 <!-- <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" /> -->
-                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateGlAccount' : 'setupCreateGlAccount'}" />
                 <set field="submitFormId" value="EditAccounting"/>
                 
                 <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
                 
                 <set field="newGlAccountIdFormId" value="setupAccounting-newGlAccount"/>
-                <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
+                <set field="newGlAccountLinkHref" value="javascript:jQuery('#${newGlAccountFormId}').submit();void(0);"/>
 
                 <if>
                     <condition><not><if-true field="glSelected"/></not></condition>

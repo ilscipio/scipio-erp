@@ -149,7 +149,7 @@
     </request-map>
     <request-map uri="setupCreateGlAccount">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="service" invoke="createGlAccount"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>

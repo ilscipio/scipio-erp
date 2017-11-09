@@ -258,7 +258,7 @@ public abstract class SetupDataUtil {
     public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
         Map<String, Object> result = UtilMisc.toMap("completed", false);
 
-        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GL");
+        boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GlAccount");
 
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");

@@ -72,7 +72,7 @@
   <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-newGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>    
-    <@field type="hidden" name="newAccounting" value="Y"/>
+    <@field type="hidden" name="newGlAccount" value="Y"/>
   </@form>
   
   

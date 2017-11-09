@@ -33,9 +33,9 @@ getSetStringParam = { paramName ->
     context[paramName] = value;
     return value;
 };
-targetNodePath = getSetStringParam("ectTargetNodePath");
-newTargetNodePath = getSetStringParam("ectNewTargetNodePath");
-submittedFormId = getSetStringParam("ectSubmittedFormId");
+targetNodePath = getSetStringParam("egltTargetNodePath");
+newTargetNodePath = getSetStringParam("egltNewTargetNodePath");
+submittedFormId = getSetStringParam("egltSubmittedFormId");
 
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];

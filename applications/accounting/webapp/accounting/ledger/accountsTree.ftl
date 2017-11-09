@@ -155,7 +155,7 @@ if (typeof egltHandler === 'undefined') {
 }
 egltHandler = new ScpAccountingTreeHandler({
     treeId: "${escapeVal(egltTreeId!, 'js')}",
-  	glAccountEntity: <@objectAsScript object=(topGlAccount!) lang='js'/>,
+  	topGlAccountEntity: <@objectAsScript object=(topGlAccount!) lang='js'/>,
     actionProps: <@objectAsScript object=(egltActionProps!{}) lang='js'/>,
     hideShowFormIds: <@objectAsScript object=(egltAllHideShowFormIds![]) lang='js'/>,
     labels: {

@@ -1,12 +1,8 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://accounting/webapp/accounting/common/treecommon.ftl">
 
-${Static["org.ofbiz.base.util.Debug"].log("targetRecordAction =============> " + targetRecordAction)}
-${Static["org.ofbiz.base.util.Debug"].log("glAccount =============> " + glAccount!"null")}
-${Static["org.ofbiz.base.util.Debug"].log("topGlAccountId =============> " + topGlAccountId!"null")}
-
 <#assign defaultParams = {
-    topGlAccountId: topGlAccountId!
+    "topGlAccountId": topGlAccountId!
 }>
 
 <@script>
@@ -105,7 +101,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("topGlAccountId =============> " + top
 	       
     </@form>
 </#macro>
-<@section title=uiLabelMap.AccountingNewGlAccount containerId="eglt-newglaccount" containerClass="+eglt-newglaccountid eglt-recordaction eglt-newrecord" 
+<@section title=uiLabelMap.PageTitleAddGlAccount containerId="eglt-newglaccount" containerClass="+eglt-newglaccountid eglt-recordaction eglt-newrecord" 
     containerStyle=((targetRecordAction == "glaccount-new")?string("","display:none;"))>
   <#if targetRecordAction == "glaccount-new">
     <#assign paramMaps = initialParamMaps>
@@ -121,7 +117,7 @@ ${Static["org.ofbiz.base.util.Debug"].log("topGlAccountId =============> " + top
     treeFieldValues={"egltSubmittedFormId":"NewGlAccount"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
   />
 </@section>
-<@section title=uiLabelMap.AccountingEditGlAccount containerId="eglt-editglaccount" containerClass="+ect-editglaccount ect-recordaction ect-editrecord" 
+<@section title=uiLabelMap.PageTitleEditGlAccount containerId="eglt-editglaccount" containerClass="+ect-editglaccount ect-recordaction ect-editrecord" 
     containerStyle=((targetRecordAction == "glaccount-edit")?string("","display:none;"))>
   <#if targetRecordAction == "glaccount-edit">
     <#assign paramMaps = initialParamMaps>

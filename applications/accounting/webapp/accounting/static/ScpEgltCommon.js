@@ -995,7 +995,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                             }, 
                             function(data) {
                                 if (data.glAccount) {
-                                	console.log("glAccount exists");
                                 	params = $.extend(params, data.glAccount);
                                 }
                                 execEdit();
@@ -1189,8 +1188,16 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     	});
     }
     
-    this.execForNode = function(actionType, $node, $targetNode) {
-    	console.log("actionType ======> " + actionType);
+    this.execNewGlAccount = function() {
+        var ai = getActionInfo(null, "newglaccount", "default");
+        var params = makeParamsMap(ai);
+        // default params OK
+        checkExecConfirm(ai, params, {}, function() {
+            execActionTarget(ai, params);
+        });
+    };
+    
+    this.execForNode = function(actionType, $node, $targetNode) {    	
         if (actionType === "edit") {
             return this.execEditForNode($node);
         } else if (actionType === "copymoveassoc") {

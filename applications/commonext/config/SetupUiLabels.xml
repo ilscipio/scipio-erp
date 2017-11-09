@@ -306,4 +306,12 @@
         <value xml:lang="zh">网站</value>
         <value xml:lang="zh_TW">網站</value>
     </property>
+    
+    <property key="SetupAccountingSelectModuleForSetup">
+    	<value xml:lang="en">Select accounting module for setup</value>
+    </property>
+    <property key="SetupAccountingCreateNewGL">
+    	<value xml:lang="en">Create new General Ledger</value>
+    </property>
+    
 </resource>

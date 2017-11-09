@@ -29,7 +29,7 @@
             "type": "form",
             "mode": "show",
             "id": "eglt-newglaccount",
-            "defaultParams": wrapRawScript("function() { return null; }")
+            "defaultParams": wrapRawScript("function() { return defaultGlAccountParams; }")
         }
     },
     "glAccount": {

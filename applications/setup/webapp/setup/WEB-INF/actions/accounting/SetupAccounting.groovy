@@ -16,6 +16,17 @@ setupStep = context.setupStep;
 eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Add"], true, ["GlAccount"]);
 isEventError = context.isSetupEventError;
 
+initialSettings = context.egltInitialSettings ?: [:];
+if (initialSettings.noShowFormChange == null && initialSettings.noShowFormPopulate == null) { // caller can override if need
+    initialSettings.noShowFormPopulate = false;
+    initialSettings.noShowFormChange = false;
+    if (isEventError) {
+        initialSettings.noShowFormPopulate = true;
+        initialSettings.noShowFormChange = true;
+    }
+}
+context.elgtInitialSettings = initialSettings;
+
 objectLocalizedFields = context.egltObjectLocalizedFields;
 if (!objectLocalizedFields) {
     objectLocalizedFields = [

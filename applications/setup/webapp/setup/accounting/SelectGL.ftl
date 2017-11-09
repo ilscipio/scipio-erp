@@ -16,8 +16,7 @@
 <@script>
     jQuery(document).ready(function() {
         var submitSelectAccountingForm = function(cntd) {
-            var val = jQuery('#setupAccounting-selectGL-select').val();
-            console.log("val ===========> " + val);
+            var val = jQuery('#setupAccounting-selectGL-select').val();            
             if (val) {
                 if (cntd) {
                     jQuery('#setupAccounting-selectContinueGL-form input[name=topGlAccountId]').val(val);
@@ -41,17 +40,17 @@
 
   <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
-    <@defaultWizardFormFields exclude=[]/>
+    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
-    <@field type="general" label=uiLabelMap.SetupSelectAccountingModuleForSetup>
+    <@field type="general" label=uiLabelMap.SetupAccountingSelectModuleForSetup>
        <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
-            <option value="">[${uiLabelMap.SetupCreateNewGL}]</option>
+            <option value="">[${uiLabelMap.SetupAccountingCreateNewGL}]</option>
             <option value="" disabled="disabled"></option>
             <#if accountingGLs?has_content>
               <#list accountingGLs as accountingGL>
-              	<#assign selected = (rawString(accountingGL.glAccountId) == rawString(topAccountGlId!))>
-                <option value="${accountingGL.glAccountId!}"<#if selected??> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
+              	<#assign selected = (rawString(accountingGL.glAccountId) == rawString(topGlAccountId!))>
+                <option value="${accountingGL.glAccountId!}"<#if selected> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
               </#list>
             </#if>
         </@field>

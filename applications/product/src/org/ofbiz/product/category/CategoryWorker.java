@@ -1009,7 +1009,7 @@ public class CategoryWorker {
         try {
             // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
             List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().queryList();
+                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().cache(useCache).queryList();
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                 // For each parent cat, get its trails recursively and add our own
                 for (GenericValue productCategoryRollup : productCategoryRollups) {

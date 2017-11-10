@@ -1006,43 +1006,11 @@ public class CategoryWorker {
      */
     public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, boolean useCache) {
         List<List<String>> trailElements = new ArrayList<>();
-        // 2016-03-22: don't need a loop here due to change below
-        //String parentProductCategoryId = productCategoryId;
-        //while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
-            // find product category rollup
         try {
-            List<EntityCondition> rolllupConds = new ArrayList<>();
-            //rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-            rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
             // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
-            List<String> orderBy = UtilMisc.toList("-fromDate");
-            List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, orderBy, null, useCache);
+            List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().queryList();
             if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                /* 2016-03-22: This does not work properly and creates invalid trails.
-                 * Instead, use recursion.
-                List<List<String>> trailElementsAux = new ArrayList<>();
-                trailElementsAux.addAll(trailElements);
-                // add only categories that belong to the top category to trail
-                for (GenericValue productCategoryRollup : productCategoryRollups) {
-                    String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
-                    parentProductCategoryId = trailCategoryId;
-                    List<String> trailElement = new ArrayList<>();
-                    if (!trailElements.isEmpty()) {
-                        for (List<String> trailList : trailElementsAux) {
-                            trailElement.add(trailCategoryId);
-                            trailElement.addAll(trailList);
-                            trailElements.remove(trailList);
-                            trailElements.add(trailElement);
-                        }
-                    } else {
-                        trailElement.add(trailCategoryId);
-                        trailElement.add(productCategoryId);
-                        trailElements.add(trailElement);
-                    }
-                }
-                */
-                
                 // For each parent cat, get its trails recursively and add our own
                 for (GenericValue productCategoryRollup : productCategoryRollups) {
                     String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
@@ -1054,14 +1022,9 @@ public class CategoryWorker {
                     }
                 }
             }
-            //} else {
-            //    parentProductCategoryId = null;
-            //}
-
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot generate trail from product category '" + productCategoryId + "'", module);
         }
-        //}
         if (trailElements.isEmpty()) {
             List<String> trailElement = new ArrayList<>();
             trailElement.add(productCategoryId);

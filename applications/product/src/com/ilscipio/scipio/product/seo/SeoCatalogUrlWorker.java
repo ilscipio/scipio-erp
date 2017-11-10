@@ -1243,21 +1243,18 @@ public class SeoCatalogUrlWorker implements Serializable {
         EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productId", "textData", exactOnly);
         if (matchTextIdCond == null) return results;
         
-        EntityCondition altUrlCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
+        EntityCondition contentTypeIdCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
         Timestamp moment = UtilDateTime.nowTimestamp();
-        EntityCondition filterByDateCond = EntityUtil.getFilterByDateExpr(moment);
-        EntityCondition caFilterByDateCond = EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate");
         List<EntityCondition> condList;
         
         // Search for localized alt urls
         condList = new ArrayList<>();
-        condList.add(altUrlCond);
+        condList.add(contentTypeIdCond);
         condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(filterByDateCond);
-        condList.add(caFilterByDateCond);
         if (matchTextIdCond != null) condList.add(matchTextIdCond);
         List<GenericValue> productContentInfos = EntityQuery.use(delegator).from("ProductContentAssocAndElecTextShort")
                 .where(condList).select("productId", "textData", "localeString")
+                .filterByDate(moment).filterByDate(moment, "caFromDate", "caThruDate")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
         exactResult = findExtractId(altUrl, productContentInfos, "productId", ObjectType.PRODUCT, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {
@@ -1266,12 +1263,12 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         // Search for non-localized alt urls
         condList = new ArrayList<>();
-        condList.add(altUrlCond);
-        condList.add(filterByDateCond);
+        condList.add(contentTypeIdCond);
         if (matchTextIdCond != null) condList.add(matchTextIdCond);
         productContentInfos = EntityQuery.use(delegator).from("ProductContentAndElecTextShort")
                 .where(condList).select("productId", "textData", "localeString")
-                .orderBy("-fromDate").cache(true).queryList();
+                .filterByDate(moment)
+                .orderBy("-fromDate").cache(true).filterByDate().queryList();
         exactResult = findExtractId(altUrl, productContentInfos, "productId", ObjectType.PRODUCT, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {
             return results;
@@ -1339,21 +1336,18 @@ public class SeoCatalogUrlWorker implements Serializable {
         EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(altUrl, "productCategoryId", "textData", exactOnly);
         if (matchTextIdCond == null) return results;
         
-        EntityCondition altUrlCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
+        EntityCondition contentTypeIdCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
         Timestamp moment = UtilDateTime.nowTimestamp();
-        EntityCondition filterByDateCond = EntityUtil.getFilterByDateExpr(moment);
-        EntityCondition caFilterByDateCond = EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate");
         List<EntityCondition> condList;
         
         // Search for localized alt urls
         condList = new ArrayList<>();
-        condList.add(altUrlCond);
+        condList.add(contentTypeIdCond);
         condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(filterByDateCond);
-        condList.add(caFilterByDateCond);
         if (matchTextIdCond != null) condList.add(matchTextIdCond);
         List<GenericValue> productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAssocAndElecTextShort")
                 .where(condList).select("productCategoryId", "textData", "localeString")
+                .filterByDate(moment).filterByDate(moment, "caFromDate", "caThruDate")
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
         exactResult = findExtractId(altUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {
@@ -1362,11 +1356,11 @@ public class SeoCatalogUrlWorker implements Serializable {
         
         // Search for non-localized alt urls
         condList = new ArrayList<>();
-        condList.add(altUrlCond);
-        condList.add(filterByDateCond);
+        condList.add(contentTypeIdCond);
         if (matchTextIdCond != null) condList.add(matchTextIdCond);
         productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndElecTextShort")
                 .where(condList).select("productCategoryId", "textData", "localeString")
+                .filterByDate(moment)
                 .orderBy("-fromDate").cache(true).queryList();
         exactResult = findExtractId(altUrl, productCategoryContentInfos, "productCategoryId", ObjectType.CATEGORY, exactOnly, singleExactOnly, results);
         if (exactResult != null && exactResult.isExact()) {

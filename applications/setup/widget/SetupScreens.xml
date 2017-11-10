@@ -599,6 +599,7 @@
                                     <widgets>
                                         <screenlet>
                                             <include-screen name="EditGLTree"/>
+                                            <include-screen name="EditFiscalPeriods"/>
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
@@ -663,6 +664,22 @@
                     <html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html>
                 </platform-specific>
             </widgets>
+        </section>
+    </screen>
+    <screen name="EditFiscalPeriods">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
         </section>
     </screen>
     

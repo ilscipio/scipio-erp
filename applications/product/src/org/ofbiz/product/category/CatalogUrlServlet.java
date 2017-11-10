@@ -40,6 +40,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.RequestHandler;
@@ -370,7 +371,7 @@ public class CatalogUrlServlet extends HttpServlet {
             String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
             Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
         CatalogUrlBuilder builder = CatalogUrlBuilder.getBuilder(false, request, delegator, contextPath, webSiteId);
-        return builder.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
+        return builder.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, null, null, fullPath, secure, encode, request, response);
     }
     
     /**
@@ -423,7 +424,7 @@ public class CatalogUrlServlet extends HttpServlet {
         
         // low-level building methods (named after legacy ofbiz methods)
         public abstract String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId, String previousCategoryId) throws IOException;
-        public abstract String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId) throws IOException;
+        public abstract String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String currentCatalogId, List<String> crumb, String productId, String currentCategoryId, String previousCategoryId) throws IOException;
         
         /**
          * Common/default high-level makeCatalogLink implementation (new Scipio method).
@@ -447,8 +448,10 @@ public class CatalogUrlServlet extends HttpServlet {
                 
                 Delegator delegator = (Delegator) request.getAttribute("delegator");
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+                String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+                List<String> crumb = CategoryWorker.getTrail(request);
                 
-                return makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, request, response);
+                return this.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, currentCatalogId, crumb, fullPath, secure, encode, request, response);
             } else {
                 String url = this.makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
                 
@@ -462,7 +465,7 @@ public class CatalogUrlServlet extends HttpServlet {
          * Common/default high-level makeCatalogLink implementation (new Scipio method).
          */
         public String makeCatalogLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productId, String currentCategoryId,  
-                String previousCategoryId, Object params, String webSiteId, String contextPath, Boolean fullPath, Boolean secure,
+                String previousCategoryId, Object params, String webSiteId, String contextPath, String currentCatalogId, List<String> crumb, Boolean fullPath, Boolean secure,
                 Boolean encode, HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
             if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
                 throw new IOException("webSiteId and contextPath (prefix) are missing - at least one must be specified");
@@ -474,7 +477,7 @@ public class CatalogUrlServlet extends HttpServlet {
             
             String url;
             
-            url = this.makeCatalogUrl(delegator, dispatcher, locale, contextPath, null, productId, currentCategoryId, previousCategoryId);
+            url = this.makeCatalogUrl(delegator, dispatcher, locale, webSiteId, contextPath, currentCatalogId, crumb, productId, currentCategoryId, previousCategoryId);
             
             url = appendLinkParams(url, params);
             
@@ -495,7 +498,7 @@ public class CatalogUrlServlet extends HttpServlet {
                 return CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
             }
             @Override
-            public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String contextPath, List<String> crumb, String productId,
+            public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String currentCatalogId, List<String> crumb, String productId,
                     String currentCategoryId, String previousCategoryId) {
                 return CatalogUrlServlet.makeCatalogUrl(contextPath, crumb, productId, currentCategoryId, previousCategoryId);
             }

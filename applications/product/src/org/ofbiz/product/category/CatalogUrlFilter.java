@@ -1011,7 +1011,7 @@ public class CatalogUrlFilter extends ContextFilter {
             String viewSize, String viewIndex, String viewSort, String searchString,
             HttpServletRequest request, HttpServletResponse response) throws IOException, WebAppConfigurationException {
         CatalogAltUrlBuilder builder = CatalogAltUrlBuilder.getBuilder(false, request, delegator, contextPath, webSiteId);
-        return builder.makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
+        return builder.makeCatalogAltLink(delegator, dispatcher, locale, null, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
     }
     
     /**
@@ -1063,9 +1063,9 @@ public class CatalogUrlFilter extends ContextFilter {
         
         // low-level building methods (named after legacy ofbiz methods)
         public abstract String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId) throws IOException;
-        public abstract String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException;
+        public abstract String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) throws IOException;
         public abstract String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) throws IOException;
-        public abstract String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String contextPath, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) throws IOException;
+        public abstract String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) throws IOException;
         
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
@@ -1091,8 +1091,9 @@ public class CatalogUrlFilter extends ContextFilter {
                 
                 Delegator delegator = (Delegator) request.getAttribute("delegator");
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+                String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
                 
-                return this.makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
+                return this.makeCatalogAltLink(delegator, dispatcher, locale, CategoryWorker.getTrail(request), productCategoryId, productId, previousCategoryId, params, webSiteId, contextPath, currentCatalogId, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, request, response);
             } else {
                 String url;
                 
@@ -1111,8 +1112,9 @@ public class CatalogUrlFilter extends ContextFilter {
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
          */
-        public String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, String previousCategoryId, Object params, String webSiteId, 
-                String contextPath, Boolean fullPath, Boolean secure, Boolean encode,
+        public String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
+                String productCategoryId, String productId, String previousCategoryId, Object params, 
+                String webSiteId, String contextPath, String currentCatalogId, Boolean fullPath, Boolean secure, Boolean encode,
                 String viewSize, String viewIndex, String viewSort, String searchString,
                 HttpServletRequest request, HttpServletResponse response) throws IOException, WebAppConfigurationException {
             if (UtilValidate.isEmpty(webSiteId) && UtilValidate.isEmpty(contextPath)) {
@@ -1126,9 +1128,9 @@ public class CatalogUrlFilter extends ContextFilter {
             String url;
             
             if (UtilValidate.isNotEmpty(productId)) {
-                url = this.makeProductAltUrl(delegator, dispatcher, locale, null, contextPath, previousCategoryId, productCategoryId, productId);
+                url = this.makeProductAltUrl(delegator, dispatcher, locale, trail, webSiteId, contextPath, currentCatalogId, previousCategoryId, productCategoryId, productId);
             } else {
-                url = this.makeCategoryAltUrl(delegator, dispatcher, locale, null, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                url = this.makeCategoryAltUrl(delegator, dispatcher, locale, trail, webSiteId, contextPath, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
             
             url = appendLinkParams(url, params);
@@ -1151,7 +1153,7 @@ public class CatalogUrlFilter extends ContextFilter {
             }
             @Override
             public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
-                    String contextPath, String previousCategoryId, String productCategoryId, String productId) throws IOException {
+                    String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) throws IOException {
                 
                 GenericValue product;
                 try {
@@ -1174,7 +1176,7 @@ public class CatalogUrlFilter extends ContextFilter {
             }
             @Override
             public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
-                    String contextPath, String previousCategoryId, String productCategoryId, String productId,
+                    String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId,
                     String viewSize, String viewIndex, String viewSort, String searchString) throws IOException {
                 
                 GenericValue productCategory;

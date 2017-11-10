@@ -43,14 +43,15 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CatalogUrlServlet;
 import org.ofbiz.product.category.CategoryWorker;
-import org.ofbiz.webapp.control.ContextFilter;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
+
+import javolution.util.FastList;
 
 /**
  * SCIPIO: 2017: Seo catalog URL filter.
@@ -104,7 +105,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
 
             if (UtilValidate.isNotEmpty(CONTROL_MOUNT_POINT)) {
-                controlPrefix = "/" + controlPrefix;
+                controlPrefix = "/" + CONTROL_MOUNT_POINT;
             } else {
                 controlPrefix = "";
             }
@@ -124,35 +125,41 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         //UrlServletHelper.setRequestAttributes(request, delegator, request.getServletContext());
 
         if (seoUrlEnabled) {
-            Delegator delegator = getDelegatorForControl(request, request.getServletContext());
-            CatalogUrlFilter.prepareRequestAlways(request, response, delegator);
             
-            String path = getMatchablePath(request); 
+            // TODO: REVIEW: it's possible some of the "always-run" calls below (such as prepareRequestAlways)
+            // should actually run again even after forward...
+            if (!Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR))) {
+                Delegator delegator = getDelegatorForControl(request, request.getServletContext());
             
-            if (UtilValidate.isNotEmpty(path)) {
-                if (isRequestApplicable(request, response)) {
-                    getCatalogTopCategory(request); // TODO: REVIEW
-                    boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
-                    if (forwarded) return;
-                } else {
-                    // TODO/FIXME: see CatalogUrlFitler for explanation for why these are here
-                    getCatalogTopCategory(request);
-                    UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
+                CatalogUrlFilter.prepareRequestAlways(request, response, delegator);
+                
+                String path = getMatchablePath(request); 
+                
+                if (UtilValidate.isNotEmpty(path)) {
+                    if (SeoConfigUtil.isCategoryUrlEnabledForContextPath(request.getContextPath())) {
+                        getCatalogTopCategory(request); // TODO: REVIEW
+                        boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
+                        if (forwarded) return;
+                    } else {
+                        // TODO/FIXME: see CatalogUrlFitler for explanation for why these are here
+                        getCatalogTopCategory(request);
+                        UrlServletHelper.setViewQueryParameters(request, new StringBuilder());
+                    }
+        
+                    //Check path alias (from CatalogUrlFilter)
+                    // TODO/FIXME: REVIEW: control flow makes no sense for this (no boolean result to check)
+                    //UrlServletHelper.checkPathAlias(request, response, delegator, pathInfo);
                 }
-    
-                //Check path alias (from CatalogUrlFilter)
-                // TODO/FIXME: REVIEW: control flow makes no sense for this
-                //UrlServletHelper.checkPathAlias(request, response, delegator, pathInfo);
-            }
             
-            // NOTE: For this filter, we must wrap the request/response even if we don't forward!
-            // TODO/FIXME: REVIEW: even if disabled for this webapp, may need to wrap responses
-            // to process inter-webapp links... so this might need to go outside the (enabled) block...
-            // or need 2 disable flags for debugging...
-            if (!Boolean.TRUE.equals(request.getAttribute(REQWRAPPED_ATTR))) {
-                request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
-                chain.doFilter(getRequestWrapper(request, delegator), getResponseWrapper(request, response, delegator));
-                return;
+                // NOTE: For this filter, we must wrap the request/response even if we don't forward!
+                // TODO/FIXME: REVIEW: even if disabled for this webapp, may need to wrap responses
+                // to process inter-webapp links... so this might need to go outside the (enabled) block...
+                // or need 2 disable flags for debugging...
+                if (!Boolean.TRUE.equals(request.getAttribute(REQWRAPPED_ATTR))) {
+                    request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
+                    chain.doFilter(getRequestWrapper(request, delegator), getResponseWrapper(request, response, delegator));
+                    return;
+                }
             }
 
             chain.doFilter(request, response);
@@ -162,17 +169,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             super.doFilter(request, response, chain);
         }
     }
-
-    /**
-     * Returns true if not already forwarded (needed for FORWARD dispatcher) and if request itself
-     * is not disabled.
-     * WARN: does NOT check the servlet seoUrlEnabled/webSiteId flag.
-     */
-    public static boolean isRequestApplicable(HttpServletRequest request, HttpServletResponse response) {
-        return !Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR)) &&
-                SeoConfigUtil.isCategoryUrlEnabledForContextPath(request.getContextPath());
-    }
-
+    
     public boolean matchSeoCatalogUrlAndForward(HttpServletRequest request, HttpServletResponse response, Delegator delegator, String matchablePath) throws ServletException, IOException {
         SeoCatalogUrlInfo urlInfo = matchInboundSeoCatalogUrl(request, delegator, matchablePath);
         if (urlInfo != null) {
@@ -184,11 +181,13 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     public static String getMatchablePath(HttpServletRequest request) {
-        return request.getServletPath() + request.getPathInfo();
+        if (request.getPathInfo() != null) return request.getServletPath() + request.getPathInfo();
+        else return request.getServletPath();
     }
 
     public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {
-        return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath());
+        return urlWorker.matchInboundSeoCatalogUrl(delegator, matchablePath, request.getContextPath(), 
+                WebSiteWorker.getWebSiteId(request), CatalogWorker.getCurrentCatalogId(request));
     }
 
     /**
@@ -200,27 +199,35 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             if (urlInfo.getProductId() != null) {
                 request.setAttribute("product_id", urlInfo.getProductId());
                 request.setAttribute("productId", urlInfo.getProductId());
-
-                if (urlInfo.getCategoryId() != null) {
-                    request.setAttribute("productCategoryId", urlInfo.getCategoryId());
-                }
             }
+            request.setAttribute("productCategoryId", urlInfo.getCategoryId()); // EVEN IF NULL!
         } else { // if (CatalogUrlServlet.CATEGORY_REQUEST.equals(targetRequest)) {
-            if (urlInfo.getCategoryId() != null) {
-                request.setAttribute("productCategoryId", urlInfo.getCategoryId());
-            }
-            if (Debug.infoOn()) {
-                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo()
-                    + " (" + urlWorker + "); args: [productCategoryId: " + urlInfo.getCategoryId() + "]", module);
-            }
+            request.setAttribute("productCategoryId", urlInfo.getCategoryId()); // EVEN IF NULL!
         }
+        
+        String rootCategoryId = null;
+        if (urlInfo.getPathCategoryIds() != null && urlInfo.getPathCategoryIds().size() >= 1) {
+            rootCategoryId = urlInfo.getPathCategoryIds().get(0);
+        }
+        request.setAttribute("rootCategoryId", rootCategoryId); // EVEN IF NULL!
 
-        // FIXME: USE REAL PATH! THIS IS IGNORING PATH!!
-        String topCategoryId = CatalogUrlFilter.getCatalogTopCategory(request);
-        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
-        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
-        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
-
+        // FIXME: Doing something completely different until further review...
+//        String topCategoryId = CatalogUrlFilter.getCatalogTopCategory(request);
+//        List<GenericValue> trailCategories = CategoryWorker.getRelatedCategoriesRet(request, "trailCategories", topCategoryId, false, false, true);
+//        List<String> trailCategoryIds = EntityUtil.getFieldListFromEntityList(trailCategories, "productCategoryId", true);
+//        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
+        
+        // FOR NOW, just replace the whole trail with what we got for time being
+        List<String> newTrail = FastList.newInstance(); // FastList legacy code
+        newTrail.add("TOP");
+        newTrail.addAll(urlInfo.getPathCategoryIds());
+        if (urlInfo.getCategoryId() != null && !urlInfo.getCategoryId().equals(newTrail.get(newTrail.size() - 1))) {
+            newTrail.add(urlInfo.getCategoryId());
+        }
+        CategoryWorker.setTrail(request, newTrail);
+        
+        request.setAttribute("categoryTrailUpdated", Boolean.TRUE); // SCIPIO: This is new
+        
         return true;
     }
 
@@ -228,7 +235,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
      * TRAIL UPDATES, emulates CatalogUrlFilter.doFilter,
      * TODO: 2017: MISSING TRAIL UPDATES HERE, REQUIRED BY SCREENS AND SHOP
      */
-    public static void updateRequestTrail(HttpServletRequest request, Delegator delegator, String productId, String productCategoryId, List<String> trailCategoryIds, String topCategoryId) {
+    static void updateRequestTrail(HttpServletRequest request, Delegator delegator, String productId, String productCategoryId, List<String> trailCategoryIds, String topCategoryId) {
         // look for productCategoryId from productId
         if (UtilValidate.isNotEmpty(productId)) {
             // SCIPIO: factored out
@@ -247,11 +254,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             // SCIPIO: 2017-11-07: factored out.
             CatalogUrlFilter.getTrailElementsAndUpdateRequestAndTrail(request, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
         }
-
-        if (UtilValidate.isNotEmpty(productCategoryId)) {
-            // SCIPIO: 2017-11-07: factored out.
-            CatalogUrlFilter.getTrailElementsAndUpdateRequestAndTrail(request, delegator, productId, productCategoryId, trailCategoryIds, topCategoryId);
-        }
     }
 
     public boolean forwardSeoUrl(HttpServletRequest request, HttpServletResponse response, Delegator delegator, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
@@ -266,11 +268,11 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
             if (urlInfo.isProductRequest()) {
-                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo()
+                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()
                     + " (" + fwdUrl + "); args: [productId: " + urlInfo.getProductId()
                     + "; productCategoryId: " + urlInfo.getCategoryId() + "]", module);
             } else {
-                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getPathInfo()
+                Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()
                     + " (" + fwdUrl + "); args: [productCategoryId: " + urlInfo.getCategoryId() + "]", module);
             }
         }

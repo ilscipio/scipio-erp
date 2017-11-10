@@ -1174,7 +1174,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * A single alt url segment info (product or catalog).
      * Incoming full alt URL with categories becomes a list of these.
      */
-    public static class AltUrlPartInfo {
+    public static class AltUrlPartInfo implements Serializable {
         private final boolean exact;
         private final boolean idOnlyMatch;
         private final String id;
@@ -1205,14 +1205,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
     }
     
-    // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
     public Map<String, AltUrlPartInfo> extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl, boolean allowIdOnly) throws GenericEntityException {
+        // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
         String key = altUrl + "::" + (allowIdOnly ? "Y" : "N");
         Map<String, AltUrlPartInfo> results = productAltUrlPartInfoCache.get(key);
         if (results == null) {
-            // TODO: these could be inferred based on SeoConfig
-            boolean exactOnly = false;
-            boolean singleExactOnly = true;
+            boolean exactOnly = false; // TODO?: could be inferred based on SeoConfig?
+            boolean singleExactOnly = true; // NOTE: there is a 0.001% chance of multiple exact matches; ignoring for now
 
             results = extractCandidateAltUrlProductId(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly);
             
@@ -1289,15 +1288,14 @@ public class SeoCatalogUrlWorker implements Serializable {
         return results;
     }
     
-    // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
     public Map<String, AltUrlPartInfo> extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl, boolean allowIdOnly) throws GenericEntityException {
+        // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
         String key = altUrl + "::" + (allowIdOnly ? "Y" : "N");
         
         Map<String, AltUrlPartInfo> results = categoryAltUrlPartInfoCache.get(key);
         if (results == null) {
-            // TODO: these could be inferred based on SeoConfig
-            boolean exactOnly = false;
-            boolean singleExactOnly = true;
+            boolean exactOnly = false; // TODO?: could be inferred based on SeoConfig?
+            boolean singleExactOnly = true; // NOTE: there is a 0.001% chance of multiple exact matches; ignoring for now
             
             results = extractCandidateAltUrlCategoryId(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly);
             

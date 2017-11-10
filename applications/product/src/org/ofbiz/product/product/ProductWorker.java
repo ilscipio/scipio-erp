@@ -1426,13 +1426,14 @@ nextProd:
         if (typeIdCondList.size() > 0) {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
-        if (filterByDate != null) {
-            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-        }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
         
-        List<GenericValue> productContentList = delegator.findList("ProductContentAndElectronicText", 
-                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        EntityQuery query = EntityQuery.use(delegator).from("ProductContentAndElectronicText") 
+                .where(condList).orderBy("-fromDate").cache(useCache);
+        if (filterByDate != null) {
+            query = query.filterByDate(filterByDate);
+        }
+        List<GenericValue> productContentList = query.queryList();
         for(GenericValue productContent : productContentList) {
             String productContentTypeId = productContent.getString("productContentTypeId");
             if (fieldMap.containsKey(productContentTypeId)) {
@@ -1446,12 +1447,13 @@ nextProd:
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-            if (filterByDate != null) {
-                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-            }
             condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+            
+            query = EntityQuery.use(delegator).from("ContentAssocToElectronicText").where(condList).orderBy("-fromDate").cache(useCache);
+            if (filterByDate != null) {
+                query = query.filterByDate(filterByDate);
+            }
+            List<GenericValue> contentAssocList = query.queryList();
             
             List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
             valueList.add(productContent);

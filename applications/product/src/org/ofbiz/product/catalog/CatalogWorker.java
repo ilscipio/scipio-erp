@@ -530,9 +530,8 @@ public class CatalogWorker {
         Set<String> storeIds = new HashSet<>();
         for(String catalogId : catalogIds) {
             try {
-                EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("prodCatalogId", catalogId));
-                condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productStoreCatalogs = delegator.findList("ProductStoreCatalog", condition, null, null, null, useCache);
+                List<GenericValue> productStoreCatalogs = EntityQuery.use(delegator).from("ProductStoreCatalog").where("prodCatalogId", catalogId)
+                        .filterByDate().cache(useCache).queryList();
                 for(GenericValue productStoreCatalog : productStoreCatalogs) {
                     if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
                         stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));

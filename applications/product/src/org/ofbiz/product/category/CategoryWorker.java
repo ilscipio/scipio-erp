@@ -572,9 +572,8 @@ public class CategoryWorker {
             try {
                 List<EntityCondition> rolllupConds = FastList.newInstance();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-                rolllupConds.add(EntityUtil.getFilterByDateExpr());
                 List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum")
-                        .cache(true).queryList();
+                        .filterByDate().cache(true).queryList();
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     // add only categories that belong to the top category to
                     // trail
@@ -612,8 +611,7 @@ public class CategoryWorker {
             List<EntityCondition> rolllupConds = FastList.newInstance();
             rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return !rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -643,8 +641,7 @@ public class CategoryWorker {
         try {
             List<EntityCondition> rolllupConds = FastList.newInstance();
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -675,8 +672,8 @@ public class CategoryWorker {
             List<EntityCondition> conds = FastList.newInstance();
             conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             conds.add(EntityCondition.makeCondition("productId", productId));
-            conds.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).cache(true).queryList();
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
+                    .where(conds).filterByDate().cache(true).queryList();
             return !productCategoryMembers.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -833,13 +830,14 @@ public class CategoryWorker {
         if (typeIdCondList.size() > 0) {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
-        if (filterByDate != null) {
-            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-        }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
         
-        List<GenericValue> prodCatContentList = delegator.findList("ProductCategoryContentAndElectronicText", 
-                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        EntityQuery query = EntityQuery.use(delegator).from("ProductCategoryContentAndElectronicText")
+                .where(condList).orderBy("-fromDate").cache(useCache);
+        if (filterByDate != null) {
+            query = query.filterByDate(filterByDate);
+        }
+        List<GenericValue> prodCatContentList = query.queryList();
         for(GenericValue prodCatContent : prodCatContentList) {
             String prodCatContentTypeId = prodCatContent.getString("prodCatContentTypeId");
             if (fieldMap.containsKey(prodCatContentTypeId)) {
@@ -853,13 +851,13 @@ public class CategoryWorker {
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-            if (filterByDate != null) {
-                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-            }
             condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
-            
+            query = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
+                    .where(condList).orderBy("-fromDate").cache(useCache);
+            if (filterByDate != null) {
+                query = query.filterByDate(filterByDate);
+            }
+            List<GenericValue> contentAssocList = query.queryList();
             List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
             valueList.add(prodCatContent);
             valueList.addAll(contentAssocList);

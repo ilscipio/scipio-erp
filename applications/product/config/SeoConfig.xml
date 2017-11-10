@@ -22,9 +22,8 @@
         <!-- SCIPIO: Must override this to de because user accounts not set to de -->
         <!--<category-name-separate-path-elem>enable</category-name-separate-path-elem>-->
         <!-- instead of hyphen. SCIPIO: 2017-11-08: category-name-separate-path-elem setting currently always enabled  -->
-        <category-name-append-id>enable</category-name-append-id> 
-        <!-- only used if category-name-separate-path-elem enabled. 
-             WARNING: MUST BE ENABLED; code for incoming links can't handle category ID omitted  -->
+        <category-name-append-id>disable</category-name-append-id> 
+        <!-- only used if category-name-separate-path-elem enabled. -->
         <product-name-append-id>enable</product-name-append-id>
         <!-- SCIPIO: 2017: extra product-name-append-id control: leave enabled for now -->
         <handle-implicit-requests>enable</handle-implicit-requests> 

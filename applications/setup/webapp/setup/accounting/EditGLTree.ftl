@@ -7,12 +7,6 @@
 
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
-        <#-- special: if this is a category form (check for isCreateCategory hidden input present),
-            adjust field visibility for top vs nested cat -->
-        if (jQuery('input[name=isCreateCategory]', form).length) {
-            refreshScfFieldVisibility(form);
-        }
-        
         setupControlMenu.setSubmitFormId(form.prop('id'));
     };
 </@script>
@@ -53,8 +47,8 @@
             "type": "link",
             "target": "_blank",
             "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true}),
-            "paramNames": {"glAccountId": true },
-            "paramNamesMode": "explicit"
+            "paramNames": {"glAccountId": true }
+            
         }
     }
    
@@ -75,4 +69,5 @@
 </#macro>
 
 <#-- CORE INCLUDE -->
+
 <#include "component://accounting/webapp/accounting/ledger/accountsTree.ftl">

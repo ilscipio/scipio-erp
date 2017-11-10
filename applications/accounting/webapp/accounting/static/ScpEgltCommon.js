@@ -557,12 +557,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             // this is to support forms/links that need different field names or copied to multiple fields
             if (isObj(actionProps.paramNames)) {
                 jQuery.each(params, function(k, v) {
-                	console.log("KEY =====> " + k);
                     if (k === 'data') {
                         resParams.data = v;
                     } else {
-                        var replName = actionProps.paramNames[k];
-                        console.log("replName =====> " + replName + " isUndefOrNull ===> " + isUndefOrNull(replName));
+                        var replName = actionProps.paramNames[k];                        
                         if (!isUndefOrNull(replName)) {
                             if (jQuery.type(replName) === 'array') {
                                 jQuery.each(replName, function(i, e) {
@@ -892,15 +890,13 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      */
     var makeParamsMap = function(ai, mergeEntities) {
         var params = {};
-        
-        // store & catalog (these not necessarily included in entities)
-        params.productStoreId = scth.productStoreId;
+
         if (ai.objectType == "glAccount") {
             params.topGlAccountId = ai.objectId;
         } else if (ai.node) {
             params.topGlAccountId = getNodeObjectId(getTopGlAccountIdNodeForNode(ai.node))
         }
-        console.log("topGlAccountId ==========> " + params.topGlAccountId);
+        
         // merge any *Entity fields into params map (this takes care of objectId & parent id)
         if (mergeEntities !== false && ai.node) {
             jQuery.extend(params, scth.getNodeEntitiesMerged(ai.node));
@@ -1061,6 +1057,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     this.execManageForNode = function($node) {
         var ai = getActionInfo($node, "manage");
         var params = makeParamsMap(ai);
+        params.glAccountId = ai.objectId;
         // default params OK
         checkExecConfirm(ai, params, {}, function() {
             execActionTarget(ai, params);

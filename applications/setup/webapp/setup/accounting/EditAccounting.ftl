@@ -20,8 +20,7 @@ under the License.
 <#include "component://setup/webapp/setup/common/common.ftl">
 
 
-<#assign defaultParams = {
-	
+<#assign defaultParams = {	
 }>
 
 <#assign paramMaps = getWizardFormFieldValueMaps({

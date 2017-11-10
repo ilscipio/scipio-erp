@@ -43,6 +43,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 public class GeneralLedgerServices {
 
@@ -140,13 +141,36 @@ public class GeneralLedgerServices {
         Boolean useCache = (Boolean) context.get("useCache");
 
         GenericValue glAccount = null;
+        GenericValue parentGlAccount = null;
+        Map<String, Object> glAccountMap = FastMap.newInstance();
         try {
             glAccount = EntityQuery.use(delegator).cache(useCache).from("GlAccount").where(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId))
                     .queryOne();
+            if (UtilValidate.isNotEmpty(glAccount)) {
+                parentGlAccount = glAccount.getRelatedOne("ParentGlAccount", false);
+                glAccountMap.putAll(glAccount.getAllFields());
+                StringBuilder parentGlAccountDesc = new StringBuilder();
+                if (UtilValidate.isNotEmpty(parentGlAccount)) {
+                    parentGlAccountDesc.append("[");
+                    parentGlAccountDesc.append(parentGlAccount.getString("glAccountId"));
+                    parentGlAccountDesc.append("]");
+                    if (UtilValidate.isNotEmpty(parentGlAccount.getString("accountName"))) {
+                        parentGlAccountDesc.append(" " + parentGlAccount.getString("accountName"));
+                    } else if (UtilValidate.isNotEmpty(parentGlAccount.getString("accountCode"))) {
+                        parentGlAccountDesc.append(" " + parentGlAccount.getString("accountCode"));
+                    }                    
+                } else {
+                    parentGlAccountDesc.append("_Not Applicable_");
+                }
+                glAccountMap.put("parentGlAccountDesc", parentGlAccountDesc.toString());
+            }
+            
         } catch (GenericEntityException e) {
             Debug.logError("GlAccount [ " + glAccountId + "] couldn't be found. " + e.getMessage(), module);
         }
-        result.put("glAccount", glAccount.getAllFields());
+        
+        
+        result.put("glAccount", glAccountMap);
 
         return result;
     }

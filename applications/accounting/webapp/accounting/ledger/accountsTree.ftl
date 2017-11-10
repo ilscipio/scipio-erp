@@ -1,14 +1,3 @@
-<#-- 
-<#assign treeOptionsFixedParamsString=""> 
-<#if (treeOptionsFixedParams?has_content)>	
-	<#assign treeOptionsFixedParamsString=addParamsToStr(treeOptionsFixedParamsString, treeOptionsFixedParams)>
-</#if>
-
-<#assign treeOptionsFixedParamsJS>
-	<@objectAsScript object=(treeOptionsFixedParams!{}) lang='js'/>
-</#assign>
--->
-
 <#if !egltTreeId?has_content>
   <#assign egltTreeId = "egltTree_" + rawString(topGlAccountId!)>
 </#if>
@@ -101,26 +90,6 @@
 
 <#-- Javascript functions -->
 <@script>
-<#-- 
-	<#if !egltEmptyMenuItemMarkup?has_content>
-      <#assign egltEmptyMenuItemMarkup><@compress_single_line><@menuitem type="link" 
-        href="" text=""/></@compress_single_line></#assign>
-    </#if>
-    <#if !egltEmptyMenuItemMarkupDisabled?has_content>
-      <#assign egltEmptyMenuItemMarkupDisabled><@compress_single_line><@menuitem type="link" 
-        href="" text="" disabled=true/></@compress_single_line></#assign>
-    </#if>
-    <#if !egltPostMenuItemMarkup??>
-      <#assign egltPostMenuItemMarkup><#rt/>
-       
-      </#assign><#lt/>
-    </#if>
-    <#if !egltDividerMenuItemMarkup??>
-      <#assign egltDividerMenuItemMarkup><#rt/>
-        <#t/><@compress_single_line><@menuitem type="generic"><hr/></@menuitem></@compress_single_line>
-      </#assign><#lt/>
-    </#if>
--->    
     
 if (typeof egltHandler === 'undefined') {
     var egltHandler;
@@ -183,14 +152,12 @@ $(document).ready(function() {
 } + toSimpleMap(egltTreeSettings!{})>
 
 <#-- Content -->
-
+<@fieldset collapsed=false collapsible=true title="Show GL Accounts tree">
 <@row>
     <#-- JSTree displaying all content nodes -->
     <@cell medium=9 large=9>
         <@section title=uiLabelMap.AccountingAccounts>
-           
            <@treemenu id=egltTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
-           <#-- <@treemenu type="lib-basic" events=treeEvent plugins=treePlugin id="account-tree"> --> 
                 <#list treeMenuData as node>
                     <#if node.isParent!false>                            	 
                     	 <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
@@ -235,6 +202,6 @@ $(document).ready(function() {
       <@egltMarkupOut dir=egltExtrasArea!/>      
 	</@cell>
 </@row>
-
+</@fieldset>
 
 

@@ -10,16 +10,6 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper
  
 final module = "EditGlTree.groovy";
 
-//glAccountUrls = [
-//    "addGlAccountUrl" : "setupAddGlAccount",
-//    "createGlAccountUrl" : "setupCreateGlAccount",
-//    "editGlAccountUrl" : "setupEditGlAccount",
-//    "updateGlAccountUrl" : "setupUpdateGlAccount",
-//    "deleteGlAccountUrl" : "setupDeleteGlAccount",
-//    "assignGlAccountUrl" : "setupAssignGlAccount",
-//    "importGlAccountUrl" : "setupImportGlAccounts"
-//];
-//context.glAccountUrls = glAccountUrls;
 context.organizationPartyId = context.orgPartyId;
 
 isEventError = context.egltIsEventError;

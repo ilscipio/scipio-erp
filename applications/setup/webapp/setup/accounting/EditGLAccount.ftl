@@ -50,25 +50,25 @@
         <@field type="hidden" name="isUpdateGlAccount" value=(formActionType == "edit")?string("Y", "N")/>
         
         <#assign fieldsRequired = true>
-      	
-		<#if formActionType == "new">
-	      <@field type="select" name="parentGlAccountId" label=uiLabelMap.AccountingParentGlAccountId required=true>
-	        <#list (parentGlAccountList![]) as parentGlAccount>
-	          <@field type="option" value=parentGlAccount.glAccountId 
-	            selected=(rawString(params.glAccountId!) == rawString(parentGlAccount.glAccountId))>${parentGlAccount.accountName!parentGlAccount.glAccountId} [${parentGlAccount.glAccountId}]</@field>
-	        </#list>
-	      </@field>
-		<#else>
-		      <#if formActionType == "edit">
-		        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
-		            <span class="eglt-managefield eglt-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
-		        </@field><#lt/>
-		        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+eglt-inputfield"/>
-		      <#else>
-		        <#-- TODO: REVIEW: required=true -->
-		        <@field type="input" name="glAccountId" label=uiLabelMap.CommonId value=(params.glAccountId!) class="+eglt-inputfield"/>
-		      </#if>
-		</#if>
+      	      	
+      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentGlAccountId><#rt/>
+            <span class="eglt-managefield eglt-managefield-for-parentGlAccountDesc">            	
+            	<@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+           	</span><#t/>
+        </@field><#lt/>
+        <@field type="hidden" name="parentGlAccountId" value=(params.parentGlAccountId!) class="+eglt-inputfield"/>
+		
+		
+	    <#if formActionType == "edit">
+	        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
+	            <span class="eglt-managefield eglt-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+	        </@field><#lt/>
+	        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+eglt-inputfield"/>
+	    <#else>
+	        <#-- TODO: REVIEW: required=true -->
+	        <@field type="input" name="glAccountId" label=uiLabelMap.CommonId value=(params.glAccountId!) class="+eglt-inputfield"/>
+	    </#if>
+
 	    
 	    <@field type="text" name="accountCode" value=(params.accountCode!) label=uiLabelMap.CommonCode class="+eglt-inputfield" />
 	    <@field type="text" name="accountName" value=(params.accountName!) label=uiLabelMap.CommonName class="+eglt-inputfield" />

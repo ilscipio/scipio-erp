@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -1067,5 +1068,22 @@ public class CategoryWorker {
             trailElements.add(trailElement);
         }
         return trailElements;
+    }
+    
+    /**
+     * SCIPIO: Returns all rollups for a category that have the given top categories.
+     * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
+     * Added 2017-11-09.
+     */
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
+        if (topCategoryIds == null) return trails;
+        List<List<String>> filtered = new ArrayList<>(trails.size());
+        for(List<String> trail : trails) {
+            if (!trail.isEmpty() && topCategoryIds.contains(trail.get(0))) {
+                filtered.add(trail);
+            }
+        }
+        return filtered;
     }
 }

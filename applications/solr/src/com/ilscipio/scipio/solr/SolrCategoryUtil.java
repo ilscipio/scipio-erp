@@ -20,6 +20,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
@@ -50,9 +51,8 @@ public abstract class SolrCategoryUtil {
     static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
         List<GenericValue> catalogs = null;
         try {
-            EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("productCategoryId", productCategoryId));
-            condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityUtil.getFilterByDateExpr());
-            catalogs = delegator.findList("ProdCatalogCategory", condition, null, UtilMisc.toList("sequenceNum"), null, useCache);
+            catalogs = EntityQuery.use(delegator).from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
+                    .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Solr: Error looking up catalogs for productCategoryId: " + productCategoryId, module);
             catalogs = new ArrayList<>();

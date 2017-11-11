@@ -31,6 +31,7 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
+import com.ilscipio.scipio.product.category.CatalogUrlType;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
@@ -137,8 +138,8 @@ public abstract class SeoCatalogServices {
         
         // make seo names
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogAltUrlSanitizer.ObjectType.PRODUCT) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogAltUrlSanitizer.ObjectType.PRODUCT);
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.PRODUCT);
         
         // store 
         if (productContent != null) {
@@ -167,7 +168,7 @@ public abstract class SeoCatalogServices {
      */
     public static Map<String, Object> generateProductCategoryAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         String productCategoryId = (String) context.get("productCategoryId");
         boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting"));
         boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
@@ -230,8 +231,8 @@ public abstract class SeoCatalogServices {
         
         // make seo names
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogAltUrlSanitizer.ObjectType.CATEGORY) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogAltUrlSanitizer.ObjectType.CATEGORY);
+        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY) : Collections.<String, String>emptyMap();
+        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.CATEGORY);
         
         // store
         if (productCategoryContent != null) {

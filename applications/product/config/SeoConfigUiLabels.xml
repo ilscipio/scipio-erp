@@ -19,6 +19,8 @@
     under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- WARNING: Some operations may require a value-to-lang 1-to-1 mapping,
+        so for these to work, each language should have a different value. -->
     <property key="SeoConfigPathNameProduct">
         <value xml:lang="de">produkt</value>
         <value xml:lang="en">product</value>
@@ -40,11 +42,11 @@
         <value xml:lang="es">categoría</value>
         <value xml:lang="fr">catégorie</value>
         <value xml:lang="hi_IN">सूची</value>
-        <value xml:lang="it">categoria</value>
+        <value xml:lang="it">categoria-it</value>
         <value xml:lang="ja">カテゴリ</value>
-        <value xml:lang="nl">categorie</value>
-        <value xml:lang="pt_PT">categoria</value>
-        <value xml:lang="ro">categoria</value>
+        <value xml:lang="nl">categorie-nl</value>
+        <value xml:lang="pt_PT">categoria-pt</value>
+        <value xml:lang="ro">categoria-ro</value>
         <value xml:lang="ru">kатегория</value>
         <value xml:lang="th">หมวดหมู่</value>
         <value xml:lang="vi">phân-loại-quản-lý</value>

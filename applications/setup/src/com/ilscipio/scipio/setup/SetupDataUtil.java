@@ -256,7 +256,7 @@ public abstract class SetupDataUtil {
     }
 
     public static Map<String, Object> getAccountingStepData(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> params, boolean useCache) throws GeneralException {
-        Map<String, Object> result = UtilMisc.toMap("completed", false);
+        Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GlAccount");
 
@@ -317,11 +317,22 @@ public abstract class SetupDataUtil {
 
             if (topGlAccount != null) {
                 result.put("coreCompleted", true);
+                boolean isAcctgPreferencesSet = false;
                 
                 if (UtilValidate.isEmpty(glAccountOrganization)) {
                     glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
                             "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
                     delegator.create(glAccountOrganization);
+                }
+                
+                GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
+                if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
+                    isAcctgPreferencesSet = true;
+                    result.put("acctgPreferences", partyAcctgPreference);
+                }
+                
+                if (isAcctgPreferencesSet) {
+                    result.put("complete", true);
                 }
                 
                 result.put("topGlAccountId", topGlAccountId);

@@ -177,7 +177,18 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    
+    <request-map uri="setupCreateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
     
     <!-- Facility step -->
     <request-map uri="setupFacility">

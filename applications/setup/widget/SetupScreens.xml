@@ -598,8 +598,10 @@
                                     </condition>
                                     <widgets>
                                         <screenlet>
+                                        	<include-screen name="EditAcctgPreferences"/>
                                             <include-screen name="EditGLTree"/>
                                             <include-screen name="EditFiscalPeriods"/>
+                                            <include-screen name="EditJournals"/>
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
@@ -630,6 +632,22 @@
                     <html><html-template location="component://setup/webapp/setup/accounting/SelectGL.ftl"/></html>
                 </platform-specific>
             </widgets>
+        </section>
+    </screen>
+    <screen name="EditAcctgPreferences">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
         </section>
     </screen>
     <screen name="EditGLTree">
@@ -676,6 +694,22 @@
 		            <widgets>
 						<screenlet>
 							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="EditJournals">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
 						</screenlet>
 		            </widgets>
             	</section>

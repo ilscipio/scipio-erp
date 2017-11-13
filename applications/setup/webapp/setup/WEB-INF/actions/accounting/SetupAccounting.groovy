@@ -43,6 +43,13 @@ context.egltObjectLocalizedFields = objectLocalizedFields;
 accountingData = context.accountingData ?: [:];
 
 /*
+ * Preferences
+ */
+acctgPreferences = accountingData.acctgPreferences;
+context.acctgPreferences = acctgPreferences;
+
+
+/*
  * GlAccount
  */
 topGlAccountId = accountingData.topGlAccountId;
@@ -50,6 +57,8 @@ context.topGlAccountId = topGlAccountId;
 
 topGlAccount = delegator.findOne("GlAccount", [glAccountId: topGlAccountId], false);
 context.topGlAccount = topGlAccount;
+
+
 
 /*
  * Extra prep

@@ -152,7 +152,7 @@ $(document).ready(function() {
 } + toSimpleMap(egltTreeSettings!{})>
 
 <#-- Content -->
-<@fieldset collapsed=false collapsible=true title="Show GL Accounts tree">
+<@fieldset collapsed=false collapsible=true title="Configure GL Accounts">
 <@row>
     <#-- JSTree displaying all content nodes -->
     <@cell medium=9 large=9>

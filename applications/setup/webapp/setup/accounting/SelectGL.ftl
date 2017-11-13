@@ -37,7 +37,7 @@
         });
     });
 </@script>
-
+<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
   <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>

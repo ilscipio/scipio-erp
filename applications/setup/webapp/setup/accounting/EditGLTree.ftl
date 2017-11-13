@@ -3,8 +3,6 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://accounting/webapp/accounting/common/treecommon.ftl">
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
-
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
         setupControlMenu.setSubmitFormId(form.prop('id'));

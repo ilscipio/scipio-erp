@@ -43,7 +43,7 @@ public class SeoUrlUtil {
      */
     @Deprecated
     public static String replaceSpecialCharsUrl(String url) {
-        return replaceSpecialCharsUrl(url, SeoConfigUtil.getCharFilters());
+        return replaceSpecialCharsUrl(url, SeoConfig.getDefaultConfig().getCharFilters());
     }
 
     /**

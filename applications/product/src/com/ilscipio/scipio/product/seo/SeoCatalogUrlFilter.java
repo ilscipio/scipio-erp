@@ -97,8 +97,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         seoUrlEnabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("seoUrlEnabled")));
         if (seoUrlEnabled) {
-            SeoConfigUtil.init();
-            
             String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
             String initRedirectUrl = config.getInitParameter("redirectUrl");
             defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
@@ -136,7 +134,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                 String path = getMatchablePath(request); 
                 
                 if (UtilValidate.isNotEmpty(path)) {
-                    if (SeoConfigUtil.isCategoryUrlEnabledForContextPath(request.getContextPath())) {
+                    if (urlWorker.getConfig().isCategoryUrlEnabledForContextPath(request.getContextPath())) {
                         getCatalogTopCategory(request); // TODO: REVIEW
                         boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
                         if (forwarded) return;
@@ -409,21 +407,21 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
      * @return String
      */
     @Deprecated
-    protected static boolean applySeoConfigRegexpRedirects(HttpServletResponse response, String uri) {
+    protected static boolean applySeoConfigRegexpRedirects(HttpServletResponse response, String uri, SeoConfig config) {
         boolean foundMatch = false;
         Integer responseCodeInt = null;
 
-        if (SeoConfigUtil.checkUseUrlRegexp() && SeoConfigUtil.getSeoPatterns() != null && SeoConfigUtil.getForwardReplacements() != null) {
-            for(String key : SeoConfigUtil.getSeoPatterns().keySet()) {
-                Pattern pattern = SeoConfigUtil.getSeoPatterns().get(key);
-                String replacement = SeoConfigUtil.getForwardReplacements().get(key);
+        if (config.checkUseUrlRegexp() && config.getSeoPatterns() != null && config.getForwardReplacements() != null) {
+            for(String key : config.getSeoPatterns().keySet()) {
+                Pattern pattern = config.getSeoPatterns().get(key);
+                String replacement = config.getForwardReplacements().get(key);
                 Matcher matcher = pattern.matcher(uri);
                 if (matcher.matches()) {
                     for (int i = matcher.groupCount(); i > 0; i--) {
                         replacement = replacement.replaceAll("\\$" + i, matcher.group(i));
                     }
                     uri = replacement;
-                    responseCodeInt = SeoConfigUtil.getForwardResponseCodes().get(key);
+                    responseCodeInt = config.getForwardResponseCodes().get(key);
                     foundMatch = true;
                     // be careful, we don't break after finding a match
                 }
@@ -432,7 +430,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         if (foundMatch) {
             if (responseCodeInt == null) {
-                response.setStatus(SeoConfigUtil.DEFAULT_RESPONSECODE);
+                response.setStatus(SeoConfig.DEFAULT_RESPONSECODE);
             } else {
                 response.setStatus(responseCodeInt.intValue());
             }

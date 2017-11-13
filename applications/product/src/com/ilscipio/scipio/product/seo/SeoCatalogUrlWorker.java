@@ -89,12 +89,13 @@ public class SeoCatalogUrlWorker implements Serializable {
     private static final UtilCache<String, AltUrlPartResults> productAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.product.alturl.part", true);
     private static final UtilCache<String, AltUrlPartResults> categoryAltUrlPartInfoCache = UtilCache.createUtilCache("seo.filter.category.alturl.part", true);
 
-    /**
-     * FIXME: unhardcode; could be per-store.
-     */
-    private static final List<String> DEFAULT_BROWSABLE_ROOTCATTYPES = UtilMisc.unmodifiableArrayList(
-            "PCCT_BROWSE_ROOT", "PCCT_PROMOTIONS", "PCCT_BEST_SELL"
-            );
+    // trying to avoid this if possible...
+//    /**
+//     * FIXME: unhardcode; could be per-store.
+//     */
+//    private static final List<String> DEFAULT_BROWSABLE_ROOTCATTYPES = UtilMisc.unmodifiableArrayList(
+//            "PCCT_BROWSE_ROOT", "PCCT_PROMOTIONS", "PCCT_BEST_SELL"
+//            );
     
     /*
      * *****************************************************
@@ -107,6 +108,8 @@ public class SeoCatalogUrlWorker implements Serializable {
         CATEGORY;
         // TODO?: FUTURE: CONTENT
     }
+    
+    protected SeoConfig config;
     
     // TODO: intended for later
     //protected final String webSiteId;
@@ -131,8 +134,9 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
 
     protected SeoCatalogUrlWorker() {
+        this.config = SeoConfig.getDefaultConfig();
         this.configResourceName = DEFAULT_CONFIG_RESOURCE;
-        this.urlSuffix = SeoConfigUtil.getCategoryUrlSuffix() != null ? SeoConfigUtil.getCategoryUrlSuffix() : "";
+        this.urlSuffix = config.getCategoryUrlSuffix() != null ? config.getCategoryUrlSuffix() : "";
         this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
         this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
         this.catalogAltUrlSanitizer = new SeoCatalogAltUrlSanitizer();
@@ -172,7 +176,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
     public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-        if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+        if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
         // TODO: should return different builder depending on store and config
         return getDefaultInstance(delegator);
     }
@@ -188,13 +192,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         @Override
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfigUtil.isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogAltUrlBuilder();
         }
     }
@@ -205,6 +209,10 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
+    public SeoConfig getConfig() {
+        return config;
+    }
+    
     @Deprecated
     protected Locale getDefaultLocale() {
         return Locale.getDefault();
@@ -280,26 +288,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 //        throw new UnsupportedOperationException(); // TODO: if needed
 //    }
     
-    /**
-     * If true, the target product/category will set the productId/productCategoryId
-     * in request even if it's outside the catalog.
-     * Can leave to true as long as screens perform the checks properly.
-     */
-    public boolean isAllowTargetOutsideCatalog() {
-        // TODO: unhardcode
-        return true;
-    }
-    
-    /**
-     * If false, a valid target product/category but with an invalid category path
-     * will not register as a valid link; if true it will be mapped using a default
-     * trail.
-     * WARN: LEAVE TRUE FOR NOW: more user-friendly and faster.
-     */
-    public boolean isAllowInvalidCategoryPathElements() {
-        // TODO: unhardcode
-        return true;
-    }
+
         
     /*
      * *****************************************************
@@ -405,15 +394,15 @@ public class SeoCatalogUrlWorker implements Serializable {
             name = SeoStringUtil.constructSeoName(name);
 
             // TODO: REVIEW
-            name = SeoUrlUtil.replaceSpecialCharsUrl(name, SeoConfigUtil.getCharFilters());
+            name = SeoUrlUtil.replaceSpecialCharsUrl(name, getConfig().getCharFilters());
 
             // TODO: REVIEW
             name = UrlServletHelper.invalidCharacter(name); // (stock ofbiz)
             
             if (entityType == CatalogUrlType.PRODUCT) {
-                name = SeoConfigUtil.limitProductNameLength(name);
+                name = getConfig().limitProductNameLength(name);
             } else if (entityType == CatalogUrlType.CATEGORY) {
-                name = SeoConfigUtil.limitCategoryNameLength(name);
+                name = getConfig().limitCategoryNameLength(name);
             }
 
             return name;
@@ -486,7 +475,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                                 catName = altUrl;
                                 
                                 // TODO: REVIEW
-                                if (SeoConfigUtil.isCategoryNameAppendId()) {
+                                if (getConfig().isCategoryNameAppendId()) {
                                     catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
                                 }
                             }
@@ -614,7 +603,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         boolean explicitCategoryRequest = false;
-        if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitCategoryUrl())) {
+        if (!(getConfig().isHandleImplicitRequests() && getConfig().isGenerateImplicitCategoryUrl())) {
             explicitCategoryRequest = true;
         }
         if (explicitCategoryRequest) {
@@ -710,7 +699,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         List<String> trailNames;
-        if (!SeoConfigUtil.isCategoryNameEnabled()) {
+        if (!getConfig().isCategoryNameEnabled()) {
             // no need for trail
             trail = Collections.emptyList();
             trailNames = Collections.emptyList();
@@ -723,7 +712,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
         
         boolean explicitProductRequest = false;
-        if (!(SeoConfigUtil.isHandleImplicitRequests() && SeoConfigUtil.isGenerateImplicitProductUrl())) {
+        if (!(getConfig().isHandleImplicitRequests() && getConfig().isGenerateImplicitProductUrl())) {
             explicitProductRequest = true;
         } else if (trailNames.size() == 0) {
             // 2017: TODO: REVIEW:
@@ -761,7 +750,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (UtilValidate.isNotEmpty(alternativeUrl)) {
             urlBuilder.append(alternativeUrl);
             
-            if (SeoConfigUtil.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
+            if (getConfig().isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
                 urlBuilder.append(SeoStringUtil.URL_HYPHEN);
                 urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT));
             }
@@ -888,7 +877,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         String categoryId = null;
         List<String> pathCategoryIds = null;
         // the locale the URL appears to be: the path prefix if explicit, or the cat/prod name language if implicit
-        Locale matchedLocale = null; 
+        Locale matchedLocale = null;
+        String lastPathElem = pathElements.get(pathElements.size() - 1);
+        
+        SeoConfig config = getConfig();
         
         // determine the general form of the URL: explicit or implicit (+ locale at same time)
         matchedLocale = getProductServletPathNameLocale(pathElements.get(0));
@@ -901,15 +893,25 @@ public class SeoCatalogUrlWorker implements Serializable {
                 explicitCategoryRequest = true;
                 pathElements.remove(0);
             } else {
-                if (!SeoConfigUtil.isHandleImplicitRequests()) {
-                    return null;
+                // LEGACY suffix support for backward compat with published links
+                if (config.isAllowProductAltUrlSuffix() && lastPathElem.endsWith(config.getProductAltUrlSuffix())) {
+                    explicitProductRequest = true;
+                    lastPathElem = lastPathElem.substring(0, lastPathElem.length() - config.getProductAltUrlSuffix().length());
+                    pathElements.set(pathElements.size() - 1, lastPathElem);
+                } else if (config.isAllowCategoryAltUrlSuffix() && lastPathElem.endsWith(config.getCategoryAltUrlSuffix())) {
+                    explicitCategoryRequest = true;
+                    lastPathElem = lastPathElem.substring(0, lastPathElem.length() - config.getProductAltUrlSuffix().length());
+                    pathElements.set(pathElements.size() - 1, lastPathElem);
+                } else {
+                    if (!config.isHandleImplicitRequests()) {
+                        return null;
+                    }
                 }
             }
         }
 
-        String lastPathElem = null;
         if (pathElements.size() > 0) lastPathElem = pathElements.get(pathElements.size() - 1);
-
+        
         if (UtilValidate.isNotEmpty(lastPathElem)) {
             pathElements.remove(pathElements.size() - 1);
             
@@ -926,11 +928,11 @@ public class SeoCatalogUrlWorker implements Serializable {
                             List<List<String>> possibleTrails = getProductRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
                             if (possibleTrails.size() > 0) {
                                 pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, null, topCategoryIds);
-                                if (pathCategoryIds != null || isAllowInvalidCategoryPathElements()) {
+                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
                                     productId = singleMatch.getId();
                                 }
                             } else {
-                                if (isAllowTargetOutsideCatalog()) {
+                                if (config.isAllowTargetOutsideCatalog()) {
                                     productId = singleMatch.getId();
                                 }
                             }
@@ -938,11 +940,11 @@ public class SeoCatalogUrlWorker implements Serializable {
                             // MULTIPLE PRODUCT RESULT (NAME/ID CONFLICT)
                             AltUrlTrailInfo bestMatch = findMultiMatchBestMatch(delegator, productMatches, false, pathElements, topCategoryIds);
                             if (bestMatch != null) {
-                                if (pathCategoryIds != null || isAllowInvalidCategoryPathElements()) {
+                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
                                     productId = bestMatch.getUrlInfo().getId();
                                 }
                             } else {
-                                if (isAllowTargetOutsideCatalog()) {
+                                if (config.isAllowTargetOutsideCatalog()) {
                                     productId = productMatches.getFirst().getId();
                                 }
                             }
@@ -960,11 +962,11 @@ public class SeoCatalogUrlWorker implements Serializable {
                             List<List<String>> possibleTrails = getCategoryRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
                             if (possibleTrails.size() > 0) {
                                 pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, categoryMatches, topCategoryIds);
-                                if (pathCategoryIds != null || isAllowInvalidCategoryPathElements()) {
+                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
                                     categoryId = singleMatch.getId();
                                 }
                             } else {
-                                if (isAllowTargetOutsideCatalog()) {
+                                if (config.isAllowTargetOutsideCatalog()) {
                                     categoryId = singleMatch.getId();
                                 }
                             }
@@ -974,11 +976,11 @@ public class SeoCatalogUrlWorker implements Serializable {
                             // to one that matches path elements. if there are no path elements, give priority to full name+id match.
                             AltUrlTrailInfo bestMatch = findMultiMatchBestMatch(delegator, categoryMatches, true, pathElements, topCategoryIds);
                             if (bestMatch != null) {
-                                if (pathCategoryIds != null || isAllowInvalidCategoryPathElements()) {
+                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
                                     categoryId = bestMatch.getUrlInfo().getId();
                                 }
                             } else {
-                                if (isAllowTargetOutsideCatalog()) {
+                                if (config.isAllowTargetOutsideCatalog()) {
                                     categoryId = categoryMatches.getFirst().getId();
                                 }
                             }
@@ -1029,7 +1031,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     protected List<String> findSingleMatchBestTrail(Delegator delegator, List<List<String>> possibleTrails, List<String> pathElements, AltUrlPartResults extraPathElement, Set<String> topCategoryIds) throws GenericEntityException {
         List<String> pathCategoryIds = null;
         
-        if (possibleTrails.size() == 1 && isAllowInvalidCategoryPathElements()) {
+        if (possibleTrails.size() == 1 && getConfig().isAllowInvalidCategoryPathElements()) {
             // optimization: only one trail possible, path elements not important, so can ignore path elements
             pathCategoryIds = possibleTrails.get(0);
         } else {
@@ -1045,7 +1047,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 }
                 pathCategoryIds = findBestTrailForUrlPathElems(delegator, possibleTrails, resolvedPathElems);
                 
-                if (pathCategoryIds == null && isAllowInvalidCategoryPathElements()) {
+                if (pathCategoryIds == null && getConfig().isAllowInvalidCategoryPathElements()) {
                     pathCategoryIds = getFirstTopTrail(delegator, possibleTrails, topCategoryIds);
                 }
             }
@@ -1114,7 +1116,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (bestMatch != null) {
             if (pathElements.size() > 0) {
                 pathCategoryIds = bestPathCategoryIds;
-                if (pathCategoryIds == null && isAllowInvalidCategoryPathElements()) {
+                if (pathCategoryIds == null && getConfig().isAllowInvalidCategoryPathElements()) {
                     pathCategoryIds = getFirstTopTrail(delegator, bestMatchTrails, topCategoryIds);
                 }
             } else {

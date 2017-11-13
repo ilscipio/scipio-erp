@@ -354,4 +354,14 @@ public abstract class RequestLinkUtil {
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
         return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
     }
+    
+    /**
+     * Return the URL that was requested by the client, taking into account x-forwarded headers,
+     * including query string.
+     */
+    public static String getFullOriginalURL(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+        if (request.getQueryString() != null) url.append(request.getQueryString());
+        return url.toString();
+    }
 }

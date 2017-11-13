@@ -15,7 +15,7 @@
 
 
 <#-- CORE INCLUDE -->
-<@fieldset collapsed=true collapsible=true title="Show Fiscal Periods">
+<@fieldset collapsed=true collapsible=true title="Configure Fiscal Periods">
 <@row>
     <@cell medium=12 large=12>
 		<@section title=uiLabelMap.AccountingTimePeriod>		

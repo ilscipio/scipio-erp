@@ -456,7 +456,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Convert list of categoryIds to formatted alt url names.
      */
-    private List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
+    protected List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
         if (trail == null || trail.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trail.size());
         ListIterator<String> trailIt = trail.listIterator();
@@ -559,10 +559,6 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
     }
     
-    /**
-     * 
-     * 
-     */
     private static List<String> findBestTopCatTrailForNewUrl(Delegator delegator, List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
         if (trails.size() == 0) {
             return newPathList();
@@ -579,7 +575,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
     }
 
-    private String makeCategoryUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
+    protected String makeCategoryUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         List<String> trail = CategoryWorker.getTrail(request);
@@ -591,7 +587,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Make category url according to the configurations.
      */
-    private String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
+    protected String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         GenericValue productCategory;
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
@@ -676,7 +672,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         return urlBuilder.toString();
     }
 
-    private String makeProductUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId) {
+    protected String makeProductUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         List<String> trail = CategoryWorker.getTrail(request);
@@ -691,7 +687,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * SCIPIO: Modified for bugfixes and lookup via cache products map (TODO: REVIEW)
      */
-    private String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
+    protected String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
         GenericValue product;
         try {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
@@ -925,106 +921,50 @@ public class SeoCatalogUrlWorker implements Serializable {
             try {
                 if (explicitProductRequest) { 
                     // EXPLICIT PRODUCT
-                    Set<String> topCategoryIds = getCatalogTopCategoriesForProductUrl(delegator, currentCatalogId, webSiteId);
-                    
-                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, true);
+                    boolean exactOnly = false;
+                    boolean allowIdOnly = true;
+                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
                     if (productMatches.size() > 0) {
-                        AltUrlPartInfo singleMatch = productMatches.getSingle();
-                        if (singleMatch != null) {
-                            // SINGLE PRODUCT RESULT
-                            List<List<String>> possibleTrails = getProductRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
-                            if (possibleTrails.size() > 0) {
-                                pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, null, topCategoryIds);
-                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
-                                    productId = singleMatch.getId();
-                                }
-                            } else {
-                                if (config.isAllowTargetOutsideCatalog()) {
-                                    productId = singleMatch.getId();
-                                }
-                            }
-                        } else {
-                            // MULTIPLE PRODUCT RESULT (NAME/ID CONFLICT)
-                            AltUrlTrailInfo bestMatch = findMultiMatchBestMatch(delegator, productMatches, false, pathElements, topCategoryIds);
-                            if (bestMatch != null) {
-                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
-                                    productId = bestMatch.getUrlInfo().getId();
-                                }
-                            } else {
-                                if (config.isAllowTargetOutsideCatalog()) {
-                                    productId = productMatches.getFirst().getId();
-                                }
-                            }
+                        AltUrlMatchInfo matchInfo = findBestProductMatch(delegator, productMatches, pathElements, currentCatalogId, webSiteId);
+                        if (matchInfo != null) {
+                            productId = matchInfo.getUrlInfo().getId();
+                            pathCategoryIds = matchInfo.getPathCategoryIds();
                         }
                     }
                 } else if (explicitCategoryRequest) { 
                     // EXPLICIT CATEGORY
-                    Set<String> topCategoryIds = getCatalogTopCategoriesForCategoryUrl(delegator, currentCatalogId, webSiteId);
-                    
-                    AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, true);
+                    boolean exactOnly = false;
+                    boolean allowIdOnly = true;
+                    AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
                     if (categoryMatches.size() > 0) {
-                        AltUrlPartInfo singleMatch = categoryMatches.getSingle();
-                        if (singleMatch != null) {
-                            // SINGLE CATEGORY RESULT
-                            List<List<String>> possibleTrails = getCategoryRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
-                            if (possibleTrails.size() > 0) {
-                                pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, categoryMatches, topCategoryIds);
-                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
-                                    categoryId = singleMatch.getId();
-                                }
-                            } else {
-                                if (config.isAllowTargetOutsideCatalog()) {
-                                    categoryId = singleMatch.getId();
-                                }
-                            }
-                        } else {
-                            // MULTIPLE CATEGORY RESULT (NAME/ID CONFLICT)
-                            // find the most exact category that belongs to our store, and give priority
-                            // to one that matches path elements. if there are no path elements, give priority to full name+id match.
-                            AltUrlTrailInfo bestMatch = findMultiMatchBestMatch(delegator, categoryMatches, true, pathElements, topCategoryIds);
-                            if (bestMatch != null) {
-                                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
-                                    categoryId = bestMatch.getUrlInfo().getId();
-                                }
-                            } else {
-                                if (config.isAllowTargetOutsideCatalog()) {
-                                    categoryId = categoryMatches.getFirst().getId();
-                                }
-                            }
+                        AltUrlMatchInfo matchInfo = findBestCategoryMatch(delegator, categoryMatches, pathElements, currentCatalogId, webSiteId);
+                        if (matchInfo != null) {
+                            categoryId = matchInfo.getUrlInfo().getId();
+                            pathCategoryIds = matchInfo.getPathCategoryIds();
                         }
-                        // our category will be the last entry; remove it
-                        removeLastIfEquals(pathCategoryIds, categoryId);
                     }
                 } else { 
                     // IMPLICIT REQUEST
-                    
-                    // TODO: difficult/ambiguous
-                    
-                    return null;
-                    
-                    /*
-                    boolean allowIdOnly = !SeoConfigUtil.isImplicitRequestNameMatchesOnly();
-                    Map<String, AltUrlPartInfo> productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, allowIdOnly);
+                    // WARN: best-effort, ambiguous - it is up to SeoConfig.xml to decide how risky this will be
+                    boolean exactOnly = false; // TODO: REVIEW: is this safe if false?
+                    boolean allowIdOnly = !config.isImplicitRequestNameMatchesOnly();
+                    AltUrlPartResults productMatches = extractCandidateAltUrlProductIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
                     if (productMatches.size() > 0) {
-                        AltUrlPartInfo match = AltUrlPartInfo.getSingleOrExact(productMatches);
-                        if (match != null) {
-                            
-                        } else {
-
+                        AltUrlMatchInfo matchInfo = findBestProductMatch(delegator, productMatches, pathElements, currentCatalogId, webSiteId);
+                        if (matchInfo != null) {
+                            productId = matchInfo.getUrlInfo().getId();
+                            pathCategoryIds = matchInfo.getPathCategoryIds();
                         }
                     } else {
-                        Map<String, AltUrlPartInfo> categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, allowIdOnly);
+                        AltUrlPartResults categoryMatches = extractCandidateAltUrlCategoryIdCached(delegator, lastPathElem, exactOnly, allowIdOnly);
                         if (categoryMatches.size() > 0) {
-                            AltUrlPartInfo match = AltUrlPartInfo.getSingleOrExact(categoryMatches);
-                            if (match != null) {
-                                
-                            } else {
-
+                            AltUrlMatchInfo matchInfo = findBestCategoryMatch(delegator, categoryMatches, pathElements, currentCatalogId, webSiteId);
+                            if (matchInfo != null) {
+                                categoryId = matchInfo.getUrlInfo().getId();
+                                pathCategoryIds = matchInfo.getPathCategoryIds();
                             }
                         }
                     }
-                    */
-
                 }
             } catch(Exception e) {
                 Debug.logError(e, "Seo: matchInboundSeoCatalogUrl: Error parsing catalog URL " + origPath + ": " + e.getMessage(), module);
@@ -1033,6 +973,89 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         return SeoCatalogUrlInfo.createIfValidRequest(origPath, productId, categoryId, explicitProductRequest, explicitCategoryRequest, pathCategoryIds, matchedLocale);
+    }
+    
+    public static class AltUrlMatchInfo implements Serializable {
+        private final AltUrlPartInfo urlInfo;
+        private final List<String> pathCategoryIds;
+        protected AltUrlMatchInfo(AltUrlPartInfo urlInfo, List<String> pathCategoryIds) {
+            this.urlInfo = urlInfo;
+            this.pathCategoryIds = pathCategoryIds;
+        }
+        public AltUrlPartInfo getUrlInfo() { return urlInfo;}
+        public List<String> getPathCategoryIds() { return pathCategoryIds;}
+    }
+    
+    protected AltUrlMatchInfo findBestProductMatch(Delegator delegator, AltUrlPartResults productMatches, List<String> pathElements, String currentCatalogId, String webSiteId) throws GenericEntityException {
+        List<String> pathCategoryIds = null;
+        
+        Set<String> topCategoryIds = getCatalogTopCategoriesForProductUrl(delegator, currentCatalogId, webSiteId);
+        
+        AltUrlPartInfo singleMatch = productMatches.getSingle();
+        if (singleMatch != null) {
+            // SINGLE PRODUCT RESULT
+            List<List<String>> possibleTrails = getProductRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
+            if (possibleTrails.size() > 0) {
+                pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, null, topCategoryIds);
+                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
+                    return new AltUrlMatchInfo(singleMatch, pathCategoryIds);
+                }
+            } else {
+                if (config.isAllowTargetOutsideCatalog()) {
+                    return new AltUrlMatchInfo(singleMatch, pathCategoryIds);
+                }
+            }
+        } else {
+            // MULTIPLE PRODUCT RESULT (NAME/ID CONFLICT)
+            AltUrlMatchInfo bestMatch = findMultiMatchBestMatch(delegator, productMatches, false, pathElements, topCategoryIds);
+            if (bestMatch != null) {
+                if (bestMatch.getPathCategoryIds() != null || config.isAllowInvalidCategoryPathElements()) {
+                    return bestMatch;
+                }
+            } else {
+                if (config.isAllowTargetOutsideCatalog()) {
+                    return new AltUrlMatchInfo(productMatches.getFirst(), null);
+                }
+            }
+        }
+        return null;
+    }
+    
+    protected AltUrlMatchInfo findBestCategoryMatch(Delegator delegator, AltUrlPartResults categoryMatches, List<String> pathElements, String currentCatalogId, String webSiteId) throws GenericEntityException {
+        List<String> pathCategoryIds = null;
+        
+        Set<String> topCategoryIds = getCatalogTopCategoriesForCategoryUrl(delegator, currentCatalogId, webSiteId);
+        
+        AltUrlPartInfo singleMatch = categoryMatches.getSingle();
+        if (singleMatch != null) {
+            // SINGLE CATEGORY RESULT
+            List<List<String>> possibleTrails = getCategoryRollupTrails(delegator, singleMatch.getId(), topCategoryIds);
+            if (possibleTrails.size() > 0) {
+                pathCategoryIds = findSingleMatchBestTrail(delegator, possibleTrails, pathElements, categoryMatches, topCategoryIds);
+                if (pathCategoryIds != null || config.isAllowInvalidCategoryPathElements()) {
+                    return new AltUrlMatchInfo(singleMatch, pathCategoryIds);
+                }
+            } else {
+                if (config.isAllowTargetOutsideCatalog()) {
+                    return new AltUrlMatchInfo(singleMatch, pathCategoryIds);
+                }
+            }
+        } else {
+            // MULTIPLE CATEGORY RESULT (NAME/ID CONFLICT)
+            // find the most exact category that belongs to our store, and give priority
+            // to one that matches path elements. if there are no path elements, give priority to full name+id match.
+            AltUrlMatchInfo bestMatch = findMultiMatchBestMatch(delegator, categoryMatches, true, pathElements, topCategoryIds);
+            if (bestMatch != null) {
+                if (bestMatch.getPathCategoryIds() != null || config.isAllowInvalidCategoryPathElements()) {
+                    return bestMatch;
+                }
+            } else {
+                if (config.isAllowTargetOutsideCatalog()) {
+                    return new AltUrlMatchInfo(categoryMatches.getFirst(), null);
+                }
+            }
+        }
+        return null;
     }
     
     protected List<String> findSingleMatchBestTrail(Delegator delegator, List<List<String>> possibleTrails, List<String> pathElements, AltUrlPartResults extraPathElement, Set<String> topCategoryIds) throws GenericEntityException {
@@ -1048,7 +1071,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 pathCategoryIds = getFirstTopTrail(delegator, possibleTrails, topCategoryIds);
             } else {
                 // find the trail closest to the passed path elems
-                List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, true);
+                List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true);
                 if (extraPathElement != null) { // needed for categories
                     resolvedPathElems.add(extraPathElement);
                 }
@@ -1063,18 +1086,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         return pathCategoryIds;
     }
     
-    public static class AltUrlTrailInfo implements Serializable {
-        private final AltUrlPartInfo urlInfo;
-        private final List<String> pathCategoryIds;
-        protected AltUrlTrailInfo(AltUrlPartInfo urlInfo, List<String> pathCategoryIds) {
-            this.urlInfo = urlInfo;
-            this.pathCategoryIds = pathCategoryIds;
-        }
-        public AltUrlPartInfo getUrlInfo() { return urlInfo;}
-        public List<String> getPathCategoryIds() { return pathCategoryIds;}
-    }
-    
-    protected AltUrlTrailInfo findMultiMatchBestMatch(Delegator delegator, AltUrlPartResults matches, boolean isCategory, List<String> pathElements, Set<String> topCategoryIds) throws GenericEntityException {
+    protected AltUrlMatchInfo findMultiMatchBestMatch(Delegator delegator, AltUrlPartResults matches, boolean isCategory, List<String> pathElements, Set<String> topCategoryIds) throws GenericEntityException {
         List<String> pathCategoryIds = null;
         
         AltUrlPartInfo bestMatch = null;
@@ -1089,7 +1101,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
             if (nextMatchTrails.size() > 1) {
                 if (pathElements.size() > 0) {
-                    List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, true);
+                    List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true);
                     if (isCategory) {
                         // SPECIAL: for category, we have to re-add ourselves at the end for checking purposes
                         resolvedPathElems.add(nextMatch.getAsResult());
@@ -1130,7 +1142,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 pathCategoryIds = getFirstTopTrail(delegator, bestMatchTrails, topCategoryIds);
             }
         }
-        return new AltUrlTrailInfo(bestMatch, pathCategoryIds);
+        return new AltUrlMatchInfo(bestMatch, pathCategoryIds);
     }
     
     /**
@@ -1251,6 +1263,42 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
         
         /**
+         * NOTE: this is now used post-cache in order to lessen the cache.
+         * The fastest case is when (exactOnly==false && allowIdOnly==true).
+         */
+        public AltUrlPartResults filterResults(boolean exactOnly, boolean allowIdOnly) {
+            if (exactOnly) {
+                Map<String, AltUrlPartInfo> newIdMap = new HashMap<>();
+                if (allowIdOnly) {
+                    for(Map.Entry<String, AltUrlPartInfo> entry : idMap.entrySet()) {
+                        if (entry.getValue().isExact()) {
+                            newIdMap.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                } else {
+                    for(Map.Entry<String, AltUrlPartInfo> entry : idMap.entrySet()) {
+                        if (entry.getValue().isFullMatch()) {
+                            newIdMap.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+                return newIdMap.isEmpty() ? null : new AltUrlPartResults(newIdMap);
+            } else {
+                if (allowIdOnly) {
+                    return this;
+                } else {
+                    Map<String, AltUrlPartInfo> newIdMap = new HashMap<>();
+                    for(Map.Entry<String, AltUrlPartInfo> entry : idMap.entrySet()) {
+                        if (!entry.getValue().isIdOnlyMatch()) {
+                            newIdMap.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                    return newIdMap.isEmpty() ? null : new AltUrlPartResults(newIdMap);
+                }
+            }
+        }
+        
+        /**
          * @deprecated wrote this but safer not to do this
          */
         @Deprecated
@@ -1341,15 +1389,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         public AltUrlPartResults getAsResult() { return new AltUrlPartResults(this); }
     }
     
-    public AltUrlPartResults extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl, boolean allowIdOnly) throws GenericEntityException {
-        // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
-        String key = altUrl + "::" + (allowIdOnly ? "Y" : "N");
+    public AltUrlPartResults extractCandidateAltUrlProductIdCached(Delegator delegator, String altUrl, boolean exactOnly, boolean allowIdOnly) throws GenericEntityException {
+        String key = altUrl;
+        
         AltUrlPartResults results = productAltUrlPartInfoCache.get(key);
         if (results == null) {
-            boolean exactOnly = false; // TODO?: could be inferred based on SeoConfig?
             boolean singleExactOnly = false; // NOTE: there is a 0.001% chance of multiple exact matches, slightly safer if false
-
-            results = extractCandidateAltUrlProductId(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly);
+            results = extractCandidateAltUrlProductId(delegator, altUrl, false, singleExactOnly, true);
             
             // NOTE: currently, only storing in cache if has match... 
             // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
@@ -1357,7 +1403,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 productAltUrlPartInfoCache.put(key, results);
             }
         }
-        return results;
+        return results != null ? results.filterResults(exactOnly, allowIdOnly) : null;
     }
     
     /**
@@ -1420,16 +1466,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         return new AltUrlPartResults(results);
     }
     
-    public AltUrlPartResults extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl, boolean allowIdOnly) throws GenericEntityException {
-        // FIXME?: questionable use of cache; allowIdOnly as part of key may bloat it
-        String key = altUrl + "::" + (allowIdOnly ? "Y" : "N");
+    public AltUrlPartResults extractCandidateAltUrlCategoryIdCached(Delegator delegator, String altUrl, boolean exactOnly, boolean allowIdOnly) throws GenericEntityException {
+        String key = altUrl;
         
         AltUrlPartResults results = categoryAltUrlPartInfoCache.get(key);
         if (results == null) {
-            boolean exactOnly = false; // TODO?: could be inferred based on SeoConfig?
             boolean singleExactOnly = false; // NOTE: there is a 0.001% chance of multiple exact matches, slightly safer if false
-            
-            results = extractCandidateAltUrlCategoryId(delegator, altUrl, exactOnly, singleExactOnly, allowIdOnly);
+            results = extractCandidateAltUrlCategoryId(delegator, altUrl, false, singleExactOnly, true);
             
             // NOTE: currently, only storing in cache if has match... 
             // this is tradeoff of memory vs misses (risky to allow empty due to incoming from public)
@@ -1437,13 +1480,13 @@ public class SeoCatalogUrlWorker implements Serializable {
                 categoryAltUrlPartInfoCache.put(key, results);
             }
         }
-        return results;
+        return results != null ? results.filterResults(exactOnly, allowIdOnly) : null;
     }
     
-    public List<AltUrlPartResults> extractCandidateAltUrlCategoryIdsCached(Delegator delegator, Collection<String> altUrls, boolean allowIdOnly) throws GenericEntityException {
+    public List<AltUrlPartResults> extractCandidateAltUrlCategoryIdsCached(Delegator delegator, Collection<String> altUrls, boolean exactOnly, boolean allowIdOnly) throws GenericEntityException {
         List<AltUrlPartResults> result = new ArrayList<>(altUrls.size());
         for(String altUrl : altUrls) {
-            result.add(extractCandidateAltUrlCategoryIdCached(delegator, altUrl, allowIdOnly));
+            result.add(extractCandidateAltUrlCategoryIdCached(delegator, altUrl, exactOnly, allowIdOnly));
         }
         return result;
     }

@@ -26,7 +26,7 @@
         <!-- only used if category-name-separate-path-elem enabled. -->
         <product-name-append-id>enable</product-name-append-id>
         <!-- SCIPIO: 2017: extra product-name-append-id control: leave enabled for now -->
-        <handle-implicit-requests>enable</handle-implicit-requests> 
+        <handle-implicit-requests>disable</handle-implicit-requests> 
         <!-- i.e. requests without a specific /product or /categorie name 
              Possible for Scipio, but could cause conflicts with other requests -->
         <implicit-request-name-matches-only>disable</implicit-request-name-matches-only> 

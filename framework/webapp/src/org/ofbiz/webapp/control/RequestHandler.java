@@ -340,14 +340,19 @@ public class RequestHandler {
             // need to be then we need the session cookie to be created via an http response (rather than https)
             // so we'll redirect to an unsecure request
             } else if (forceHttpSession && request.isSecure() && session.isNew() && !requestMap.securityHttps) {
-                StringBuilder urlBuf = new StringBuilder();
-                urlBuf.append(request.getPathInfo());
-                if (request.getQueryString() != null) {
-                    urlBuf.append("?").append(request.getQueryString());
-                }
-                // SCIPIO: Call proper method for this
-                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
-                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
+                // SCIPIO: 2017-11-13: Preliminary patch to try to ensure the redirected URL is as close as possible
+                // to the original incoming URL. We must not use getPathInfo because it gets changed across forwards.
+                // TODO: REVIEW: I am NOT sending this through URL encoding for now; the idea is to reflect exactly
+                // the original URL, so it's very unlikely we want this to be filtered in any way.
+                String newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, false, true);
+//                StringBuilder urlBuf = new StringBuilder();
+//                urlBuf.append(request.getPathInfo());
+//                if (request.getQueryString() != null) {
+//                    urlBuf.append("?").append(request.getQueryString());
+//                }
+//                // SCIPIO: Call proper method for this
+//                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
+//                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
                     callRedirect(newUrl, response, request, statusCodeString);
                     return;

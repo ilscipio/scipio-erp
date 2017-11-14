@@ -1092,6 +1092,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 } else {
                     url = this.makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
                 }
+                if (url == null) return null;
         
                 url = appendLinkParams(url, params);
                 
@@ -1122,6 +1123,7 @@ public class CatalogUrlFilter extends ContextFilter {
             } else {
                 url = this.makeCategoryAltUrl(delegator, dispatcher, locale, trail, webSiteId, contextPath, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
+            if (url == null) return null;
             
             url = appendLinkParams(url, params);
             

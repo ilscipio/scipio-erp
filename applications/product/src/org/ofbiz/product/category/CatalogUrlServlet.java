@@ -454,6 +454,7 @@ public class CatalogUrlServlet extends HttpServlet {
                 return this.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, params, webSiteId, contextPath, currentCatalogId, crumb, fullPath, secure, encode, request, response);
             } else {
                 String url = this.makeCatalogUrl(request, locale, productId, currentCategoryId, previousCategoryId);
+                if (url == null) return null;
                 
                 url = appendLinkParams(url, params);
                 
@@ -478,6 +479,7 @@ public class CatalogUrlServlet extends HttpServlet {
             String url;
             
             url = this.makeCatalogUrl(delegator, dispatcher, locale, webSiteId, contextPath, currentCatalogId, crumb, productId, currentCategoryId, previousCategoryId);
+            if (url == null) return null;
             
             url = appendLinkParams(url, params);
             

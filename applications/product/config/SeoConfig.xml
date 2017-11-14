@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<seo-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../dtd/SeoConfig.xsd">
+<seo-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><!-- omitted for now: xsi:noNamespaceSchemaLocation="../dtd/SeoConfig.xsd" -->
     <regexpifmatch>^.*/.*$</regexpifmatch>
 
     <category-url>
@@ -22,8 +22,10 @@
         <!-- SCIPIO: Must override this to de because user accounts not set to de -->
         <!--<category-name-separate-path-elem>enable</category-name-separate-path-elem>-->
         <!-- instead of hyphen. SCIPIO: 2017-11-08: category-name-separate-path-elem setting currently always enabled  -->
-        <category-name-append-id>disable</category-name-append-id> 
+        <category-name-append-id>disable</category-name-append-id>
         <!-- only used if category-name-separate-path-elem enabled. -->
+        <category-name-append-id-last>disable</category-name-append-id-last> 
+        <!-- whether to append id on the last category in a trail - does not affect the intermediate ones -->
         <product-name-append-id>enable</product-name-append-id>
         <!-- SCIPIO: 2017: extra product-name-append-id control: leave enabled for now -->
         <handle-implicit-requests>disable</handle-implicit-requests> 

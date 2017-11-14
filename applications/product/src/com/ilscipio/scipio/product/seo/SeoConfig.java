@@ -87,6 +87,7 @@ public class SeoConfig {
     private final Locale namesLocaleOverride;
     private final boolean categoryNameSeparatePathElem;
     private final boolean categoryNameAppendId;
+    private final boolean categoryNameAppendIdLast; // SCIPIO: new 2017
     private final boolean productNameAppendId; // SCIPIO: new 2017
     private final boolean handleImplicitRequests;
     private final boolean implicitRequestNameMatchesOnly; // default true => safer
@@ -132,6 +133,7 @@ public class SeoConfig {
     public static final String ELEMENT_NAMES_LOCALE_OVERRIDE = "names-locale-override";
     public static final String ELEMENT_CATEGORY_NAME_SEPARATE_PATH_ELEM = "category-name-separate-path-elem";
     public static final String ELEMENT_CATEGORY_NAME_APPEND_ID = "category-name-append-id";
+    public static final String ELEMENT_CATEGORY_NAME_APPEND_ID_LAST = "category-name-append-id-last";
     public static final String ELEMENT_PRODUCT_NAME_APPEND_ID = "product-name-append-id";
     public static final String ELEMENT_HANDLE_IMPLICIT_REQUESTS = "handle-implicit-requests";
     public static final String ELEMENT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY = "implicit-request-name-matches-only";
@@ -140,6 +142,7 @@ public class SeoConfig {
     
     public static final String DEFAULT_CATEGORY_NAME_SEPARATE_PATH_ELEM_VALUE = "disable";
     public static final String DEFAULT_CATEGORY_NAME_APPEND_ID_VALUE = "disable";
+    public static final String DEFAULT_CATEGORY_NAME_APPEND_ID_LAST_VALUE = "disable";
     public static final String DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE = "disable";
     public static final String DEFAULT_HANDLE_IMPLICIT_REQUESTS_VALUE = "disable";
     public static final String DEFAULT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY_VALUE = "enable";
@@ -185,6 +188,7 @@ public class SeoConfig {
         Locale namesLocaleOverride = null;
         boolean categoryNameSeparatePathElem = false;
         boolean categoryNameAppendId = false;
+        boolean categoryNameAppendIdLast = false;
         boolean productNameAppendId = false; // SCIPIO: new 2017
         boolean handleImplicitRequests = false;
         boolean implicitRequestNameMatchesOnly = true; // default true => safer
@@ -212,6 +216,7 @@ public class SeoConfig {
         this.namesLocaleOverride = namesLocaleOverride;
         this.categoryNameSeparatePathElem = categoryNameSeparatePathElem;
         this.categoryNameAppendId = categoryNameAppendId;
+        this.categoryNameAppendIdLast = categoryNameAppendIdLast;
         this.productNameAppendId = productNameAppendId;
         this.handleImplicitRequests = handleImplicitRequests;
         this.implicitRequestNameMatchesOnly = implicitRequestNameMatchesOnly;
@@ -248,6 +253,7 @@ public class SeoConfig {
         Locale namesLocaleOverride = null;
         boolean categoryNameSeparatePathElem = false;
         boolean categoryNameAppendId = false;
+        boolean categoryNameAppendIdLast = false;
         boolean productNameAppendId = false; // SCIPIO: new 2017
         boolean handleImplicitRequests = false;
         boolean implicitRequestNameMatchesOnly = true; // default true => safer
@@ -373,6 +379,17 @@ public class SeoConfig {
                             categoryNameAppendId = true;
                         }
                         Debug.logInfo("  " + ELEMENT_CATEGORY_NAME_APPEND_ID + ": " + categoryNameAppendId, module);
+                    }
+                    
+                    {
+                        String categoryNameAppendIdLastValue = UtilXml.childElementValue(categoryUrlElement, 
+                                ELEMENT_CATEGORY_NAME_APPEND_ID_LAST, DEFAULT_CATEGORY_NAME_APPEND_ID_LAST_VALUE);
+                        if (DEFAULT_CATEGORY_NAME_APPEND_ID_VALUE.equalsIgnoreCase(categoryNameAppendIdLastValue)) {
+                            categoryNameAppendIdLast = false;
+                        } else {
+                            categoryNameAppendIdLast = true;
+                        }
+                        Debug.logInfo("  " + ELEMENT_CATEGORY_NAME_APPEND_ID + ": " + categoryNameAppendIdLast, module);
                     }
                     
                     // SCIPIO: 2017: new
@@ -603,6 +620,7 @@ public class SeoConfig {
         this.namesLocaleOverride = namesLocaleOverride;
         this.categoryNameSeparatePathElem = categoryNameSeparatePathElem;
         this.categoryNameAppendId = categoryNameAppendId;
+        this.categoryNameAppendIdLast = categoryNameAppendIdLast;
         this.productNameAppendId = productNameAppendId;
         this.handleImplicitRequests = handleImplicitRequests;
         this.implicitRequestNameMatchesOnly = implicitRequestNameMatchesOnly;
@@ -896,6 +914,10 @@ public class SeoConfig {
     
     public boolean isCategoryNameAppendId() {
         return categoryNameAppendId;
+    }
+    
+    public boolean isCategoryNameAppendIdLast() {
+        return categoryNameAppendIdLast;
     }
     
     /**

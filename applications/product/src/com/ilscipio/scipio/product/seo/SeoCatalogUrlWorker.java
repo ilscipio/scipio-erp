@@ -459,7 +459,9 @@ public class SeoCatalogUrlWorker implements Serializable {
     private List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
         if (trail == null || trail.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trail.size());
-        for(String productCategoryId : trail) {
+        ListIterator<String> trailIt = trail.listIterator();
+        while(trailIt.hasNext()) {
+            String productCategoryId = trailIt.next();
             if ("TOP".equals(productCategoryId)) continue; // TODO: REVIEW
             String catName = null;
             if (productCategoryId != null) {
@@ -474,9 +476,14 @@ public class SeoCatalogUrlWorker implements Serializable {
                             if (!altUrl.isEmpty()) {
                                 catName = altUrl;
                                 
-                                // TODO: REVIEW
-                                if (getConfig().isCategoryNameAppendId()) {
-                                    catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+                                if (trailIt.hasNext()) {
+                                    if (getConfig().isCategoryNameAppendId()) {
+                                        catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+                                    }
+                                } else {
+                                    if (getConfig().isCategoryNameAppendIdLast()) {
+                                        catName += SeoStringUtil.URL_HYPHEN + getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productCategoryId, locale, CatalogUrlType.CATEGORY);
+                                    }
                                 }
                             }
                         }

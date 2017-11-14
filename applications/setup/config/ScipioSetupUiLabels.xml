@@ -141,4 +141,29 @@
     <property key="SetupIsRelatedToOrgAs">
         <value xml:lang="en">Is related to ${orgPartyId} as</value>
     </property>
+    
+    <property key="SetupAccountingPreferences">
+    	<value xml:lang="en">Accounting Preferences</value>
+    </property>
+    <property key="SetupAccountingPreferencesTaxes">
+    	<value xml:lang="en">Taxes</value>
+    </property>
+    <property key="SetupAccountingPreferencesFiscalPeriods">
+    	<value xml:lang="en">Fiscal Periods</value>
+    </property>
+    <property key="SetupAccountingSelectStartFiscalDayMonth">
+    	<value xml:lang="en">Select start fiscal day/month</value>
+    </property>
+    <property key="SetupAccountingPreferencesCurrencies">
+    	<value xml:lang="en">Currencies</value>
+    </property>
+    <property key="SetupAccountingPreferencesInvoices">
+    	<value xml:lang="en">Invoices</value>
+    </property>
+    
+    
+    
+    
+    
+    
 </resource>

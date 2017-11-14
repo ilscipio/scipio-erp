@@ -11,6 +11,8 @@ final module = "EditAcctgPreferences.groovy";
 
 orgPartyId = context.orgPartyId;
 
+String acctgPreferencesActionUrl = "setupCreateAccountingPreferences";
+
 partyAcctgPreferences = context.acctgPreferences;
 if (partyAcctgPreferences) {
     GenericValue invoiceCustomMethod = partyAcctgPreferences.getRelatedOne("InvoiceCustomMethod", true);
@@ -19,9 +21,27 @@ if (partyAcctgPreferences) {
     context.invoiceCustomMethod = invoiceCustomMethod;
     context.quoteCustomMethod = quoteCustomMethod;
     context.orderCustomMethod = orderCustomMethod;
+    
+    acctgPreferencesActionUrl = "setupUpdateAccountingPreferences";
 }
 
-invoiceCustomMethods = EntityQuery.use(delegator).from("CustomMethod").where(["customMethodTypeId": "INVOICE_HOOK"]).orderBy("customMethodName").cache().queryList();
+context.acctgPreferencesActionUrl = acctgPreferencesActionUrl;
 
+cogsMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "COGS_METHODS"]).orderBy("description").cache().queryList();
+context.cogsMethods = cogsMethods;
 
+taxForms = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "TAX_FORMS"]).orderBy("description").cache().queryList();
+context.taxForms = taxForms;
+
+currencyUoms = EntityQuery.use(delegator).from("Uom").where(["uomTypeId": "CURRENCY_MEASURE"]).orderBy("description").cache().queryList();
+context.currencyUoms = currencyUoms;
+
+invoiceCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "INVOICE_SEQMD"]).orderBy("description").cache().queryList();
 context.invoiceCustomMethods = invoiceCustomMethods;
+
+orderCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "ORDER_SEQMD"]).orderBy("description").cache().queryList();
+context.orderCustomMethods = orderCustomMethods;
+
+quoteCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "QUOTE_SEQMD"]).orderBy("description").cache().queryList();
+context.quoteCustomMethods = quoteCustomMethods;
+

@@ -24,6 +24,7 @@ public class UrlFilterHelper {
         if (outboundUrlStr != null) {
             String currentContextPath = request.getContextPath();
             String urlContextPath = getPathFromUrl(outboundUrlStr);
+            if (urlContextPath == null) return false;
             if (urlContextPath.equals(currentContextPath)) {
                 return true;
             } else {

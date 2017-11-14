@@ -507,7 +507,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Creates a full trail to the given category using hints from the incoming trail to select best.
      */
-    private List<String> makeFullCategoryUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue productCategory, String webSiteId, String currentCatalogId) {
+    protected List<String> makeFullCategoryUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue productCategory, String webSiteId, String currentCatalogId) {
         if (productCategory == null) return newPathList();
         
         Set<String> topCategoryIds = getCatalogTopCategoriesForCategoryUrl(delegator, currentCatalogId, webSiteId);
@@ -523,7 +523,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Creates a full trail to the given product using hints from the incoming trail to select best.
      */
-    private List<String> makeFullProductUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue product, String webSiteId, String currentCatalogId) {
+    protected List<String> makeFullProductUrlTrail(Delegator delegator, List<String> hintTrail, GenericValue product, String webSiteId, String currentCatalogId) {
         if (product == null) return newPathList();
 
         Set<String> topCategoryIds = getCatalogTopCategoriesForProductUrl(delegator, currentCatalogId, webSiteId);
@@ -559,22 +559,18 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
     }
     
-    private static List<String> findBestTopCatTrailForNewUrl(Delegator delegator, List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
+    protected List<String> findBestTopCatTrailForNewUrl(Delegator delegator, List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
         if (trails.size() == 0) {
             return newPathList();
         } else if (trails.size() == 1) {
             // if only one trail, we'll assume it leads to top category
             return trails.get(0);
         } else {
-        
-            // TODO: missing hints from hintTrail! 
-            // browsing is limited until this is implemented!
-            
-            // if could not determine best from hint, then get the first trail that leads to the first of the top categories
-            return ensurePathList(getFirstTopTrail(delegator, trails, topCategoryIds));
+            ClosestTrailResolver.ResolverType resolverType = getConfig().getNewUrlTrailResolver();
+            return ensurePathList(resolverType.getResolver().findClosestTrail(trails, hintTrail, topCategoryIds));
         }
     }
-
+    
     protected String makeCategoryUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -617,7 +613,8 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
         
         // SCIPIO: refine and append trail
-        trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+        // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
+        //trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
         trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, webSiteId, currentCatalogId);
         List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
         // NOTE: this loop includes the productCategoryId itself
@@ -707,9 +704,10 @@ public class SeoCatalogUrlWorker implements Serializable {
             trail = Collections.emptyList();
             trailNames = Collections.emptyList();
         } else {
-            if (UtilValidate.isNotEmpty(productCategoryId)) {
-                trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-            }
+            // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
+            //if (UtilValidate.isNotEmpty(productCategoryId)) {
+            //    trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
+            //}
             trail = makeFullProductUrlTrail(delegator, trail, product, webSiteId, currentCatalogId);
             trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
         }
@@ -1068,7 +1066,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             if (pathElements.isEmpty()) {
                 // no trail hint, so just select the first...
                 //pathCategoryIds = possibleTrails.get(0);
-                pathCategoryIds = getFirstTopTrail(delegator, possibleTrails, topCategoryIds);
+                pathCategoryIds = getFirstTopTrail(possibleTrails, topCategoryIds);
             } else {
                 // find the trail closest to the passed path elems
                 List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true);
@@ -1078,7 +1076,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 pathCategoryIds = findBestTrailForUrlPathElems(delegator, possibleTrails, resolvedPathElems);
                 
                 if (pathCategoryIds == null && getConfig().isAllowInvalidCategoryPathElements()) {
-                    pathCategoryIds = getFirstTopTrail(delegator, possibleTrails, topCategoryIds);
+                    pathCategoryIds = getFirstTopTrail(possibleTrails, topCategoryIds);
                 }
             }
         }
@@ -1136,10 +1134,10 @@ public class SeoCatalogUrlWorker implements Serializable {
             if (pathElements.size() > 0) {
                 pathCategoryIds = bestPathCategoryIds;
                 if (pathCategoryIds == null && getConfig().isAllowInvalidCategoryPathElements()) {
-                    pathCategoryIds = getFirstTopTrail(delegator, bestMatchTrails, topCategoryIds);
+                    pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
                 }
             } else {
-                pathCategoryIds = getFirstTopTrail(delegator, bestMatchTrails, topCategoryIds);
+                pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
             }
         }
         return new AltUrlMatchInfo(bestMatch, pathCategoryIds);
@@ -1765,7 +1763,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returns the first trail having the topCategory which is the earliest possible in the topCategoryIds list,
      * or null if none of them.
      */
-    protected static List<String> getFirstTopTrail(Delegator delegator, List<List<String>> possibleTrails, Collection<String> topCategoryIds) {
+    protected static List<String> getFirstTopTrail(List<List<String>> possibleTrails, Collection<String> topCategoryIds) {
         for(String topCategoryId : topCategoryIds) { // usually just one iteration
             for(List<String> trail : possibleTrails) {
                 if (trail != null && !trail.isEmpty() && topCategoryId.equals(trail.get(0))) return trail;
@@ -1774,24 +1772,38 @@ public class SeoCatalogUrlWorker implements Serializable {
         return null;
     }
     
-    static <T> void removeLastIfEquals(List<T> list, T value) {
+    // NOTE: if need this, there's should already be a util somewhere...
+//    private static boolean pathStartsWithDir(String path, String dir) {
+//        // needs delimiter logic
+//        if (UtilValidate.isEmpty(path)) {
+//            return UtilValidate.isEmpty(dir);
+//        }
+//        if (path.length() > dir.length()) {
+//            if (dir.endsWith("/")) return path.startsWith(dir);
+//            else return path.startsWith(dir + "/");
+//        } else {
+//            return path.equals(dir);
+//        }
+//    } 
+    
+    private static <T> void removeLastIfEquals(List<T> list, T value) {
         if (list != null && list.size() > 0 && value != null && value.equals(list.get(list.size() - 1))) {
             list.remove(list.size() - 1);
         }
     }
     
-    static boolean pathStartsWithDir(String path, String dir) {
-        // needs delimiter logic
-        if (UtilValidate.isEmpty(path)) {
-            return UtilValidate.isEmpty(dir);
+    /**
+     * Last index of, with starting index (inclusive - .get(startIndex) is compared - like String interface).
+     */
+    static <T> int lastIndexOf(List<T> list, T object, int startIndex) {
+        ListIterator<T> it = list.listIterator(startIndex + 1);
+        while(it.hasPrevious()) {
+            if (object.equals(it.previous())) {
+                return it.nextIndex();
+            }
         }
-        if (path.length() > dir.length()) {
-            if (dir.endsWith("/")) return path.startsWith(dir);
-            else return path.startsWith(dir + "/");
-        } else {
-            return path.equals(dir);
-        }
-    } 
+        return -1;
+    }
     
     /**
      * Maps locale to name and vice-versa - optimization to avoid ResourceBundle, which

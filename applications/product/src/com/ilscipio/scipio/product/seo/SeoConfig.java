@@ -96,8 +96,9 @@ public class SeoConfig {
     private final boolean allowTargetOutsideCatalog = true; // TODO: unhardcode
     private final boolean allowInvalidCategoryPathElements = true; // TODO: unhardcode (but this is much better true)
     private final boolean allowAltUrlSuffix = true; // TODO: unhardcode
-    private final String productAltUrlSuffix = "-p"; // LEGACY fallback
-    private final String categoryAltUrlSuffix = "-c"; // LEGACY fallback
+    private final String productAltUrlSuffix = "-p"; // LEGACY fallback - TODO: unhardcode
+    private final String categoryAltUrlSuffix = "-c"; // LEGACY fallback - TODO: unhardcode
+    private final ClosestTrailResolver.ResolverType newUrlTrailResolver = ClosestTrailResolver.ResolverType.NONCONSEC_ANYPART; // TODO: unhardcode
     
     public static final String DEFAULT_REGEXP = "^.*/.*$";
     public static final String ELEMENT_REGEXPIFMATCH = "regexpifmatch";
@@ -989,5 +990,9 @@ public class SeoConfig {
      */
     public String getCategoryAltUrlSuffix() {
         return categoryAltUrlSuffix;
+    }
+
+    public ClosestTrailResolver.ResolverType getNewUrlTrailResolver() {
+        return newUrlTrailResolver;
     }
 }

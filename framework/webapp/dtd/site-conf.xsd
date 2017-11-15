@@ -102,7 +102,15 @@ under the License.
     </xs:attributeGroup>
     <xs:element name="description" type="xs:string"/>
     <xs:element name="owner" type="xs:string"/>
-    <xs:element name="errorpage" type="xs:string"/>
+    <xs:element name="errorpage" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>
+                URI to forward when error occurs.
+                SCIPIO: 2017-11-14: This now supports flexible expressions (${}) and the
+                request attributes and servlet context attributes are now available to reference here.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     <xs:element name="status-code" type="xs:string">
         <xs:annotation>
             <xs:documentation>

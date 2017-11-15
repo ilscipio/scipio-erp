@@ -54,6 +54,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -972,6 +973,11 @@ public class RequestHandler {
         String errorpage = null;
         try {
             errorpage = getControllerConfig().getErrorpage();
+            // SCIPIO: 2017-11-14: now supports flexible expressions contains ServletContext attributes
+            Map<String, Object> exprCtx = new HashMap<>();
+            exprCtx.putAll(UtilHttp.getServletContextMap(request));
+            exprCtx.putAll(UtilHttp.getAttributeMap(request));
+            errorpage = FlexibleStringExpander.expandString(errorpage, exprCtx);
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
         }
@@ -2371,5 +2377,25 @@ public class RequestHandler {
      */
     public static String getControlServletPath(ServletContext servletContext) {
         return (String) servletContext.getAttribute("_CONTROL_SERVPATH_");
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletRequest request) {
+        return getControlServletMapping(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_MAPPING_");
     }
 }

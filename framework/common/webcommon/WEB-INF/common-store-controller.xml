@@ -37,7 +37,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     
     <description>SCIPIO: Common Framework-level Store Configuration File</description>
 
-    <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
+    <errorpage>${_CONTROL_SERVPATH_}/error</errorpage> <!-- /error/error.jsp -->
 
     <firstvisit>
         <event name="autoLoginCheck" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginCheck"/>

@@ -65,13 +65,13 @@
     </property>
     <property key="SetupSaveAndContinue">
         <value xml:lang="en">Save &amp; Continue</value>
-        <value xml:lang="de">Enregistrer et continuer</value>
-        <value xml:lang="fr">Speichern fortsetzen</value>
+        <value xml:lang="de">Speichern fortsetzen</value>
+        <value xml:lang="fr">Enregistrer et continuer</value>
     </property>
     <property key="SetupSelectAndContinue">
         <value xml:lang="en">Select &amp; Continue</value>
-        <value xml:lang="de">Sélectionner et continuer</value>
-        <value xml:lang="fr">Auswählen und fortfahren</value>
+        <value xml:lang="de">Auswählen und fortfahren</value>
+        <value xml:lang="fr">Sélectionner et continuer</value>
     </property>
     <property key="SetupUpdateAddress">
         <value xml:lang="en">Update Address</value>

@@ -33,35 +33,28 @@
         uncomment this to get rid of /control/main URLs -->
     <rule>
         <from>^/?([?;#][^/]*)?$</from>
-        <to last="true">/control/main$1</to>
+        <to last="true">%{session-attribute:_CONTROL_SERVPATH_}/main$1</to>
     </rule>
     <outbound-rule>
+        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="equal">/control</condition>
         <from>^([^/]*//[^/]*)?(/.*?)?/control/main([?;#].*)?$</from>
         <to>$1$2/$3</to>
     </outbound-rule>
     <outbound-rule>
+        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="equal">/control</condition>
         <from>^([^/]*//[^/]*)?(/.*?)?/control/main(/.*)$</from>
         <to>$1$2$3</to>
     </outbound-rule>
-
-    <!-- TODO? - Replace default product and category paths
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/shop)?/product([/?;#].*)?$</from>
-        <to>$1$2/product$3</to>
+        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="notequal">/control</condition>
+        <from>^([^/]*//[^/]*)?(/.*?)?/main([?;#].*)?$</from>
+        <to>$1$2/$3</to>
     </outbound-rule>
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/shop)?/products([/?;#].*)?$</from>
-        <to>$1$2/products$3</to>
+        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="notequal">/control</condition>
+        <from>^([^/]*//[^/]*)?(/.*?)?/main(/.*)$</from>
+        <to>$1$2$3</to>
     </outbound-rule>
-    <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/shop)?/category([/?;#].*)?$</from>
-        <to>$1$2/category$3</to>
-    </outbound-rule>
-    <rule>
-        <from>^/product([/?;#].*)?$</from>
-        <to>/product$1</to>
-    </rule>
-    -->
 
 </urlrewrite>
 

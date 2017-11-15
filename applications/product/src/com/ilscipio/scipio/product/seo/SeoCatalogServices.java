@@ -445,6 +445,9 @@ public abstract class SeoCatalogServices {
         String webSiteId = (String) context.get("webSiteId");
         String productStoreId = (String) context.get("productStoreId");
         String prodCatalogId = (String) context.get("prodCatalogId");
+        if ("all".equals(prodCatalogId)) {
+            prodCatalogId = null; // legacy compat
+        }
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         

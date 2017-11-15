@@ -22,7 +22,9 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +71,7 @@ public class ContextFilter implements Filter {
 
     protected FilterConfig config = null;
     protected boolean debug = false;
+    protected Set<String> allowedPaths = null; // SCIPIO: added 2017-11-14
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -96,6 +99,15 @@ public class ContextFilter implements Filter {
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
+        
+        // SCIPIO: 2017-11-14: now pre-parsing allowedPath during init
+        String allowedPath = config.getInitParameter("allowedPaths");
+        List<String> allowList = null;
+        if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
+            allowList.add("/");  // No path is allowed.
+            allowList.add("");   // No path is allowed.
+        }
+        this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
     }
 
     /**
@@ -169,14 +181,37 @@ public class ContextFilter implements Filter {
         String contextUri = null;
         if (httpRequest.getAttribute(ContextFilter.FORWARDED_FROM_SERVLET) == null) {
             // Debug.logInfo("In ContextFilter.doFilter, FORWARDED_FROM_SERVLET is NOT set", module);
-            String allowedPath = config.getInitParameter("allowedPaths");
+            //String allowedPath = config.getInitParameter("allowedPaths"); // SCIPIO: see init
             String redirectPath = config.getInitParameter("redirectPath");
             String errorCode = config.getInitParameter("errorCode");
 
-            List<String> allowList = null;
-            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
-                allowList.add("/");  // No path is allowed.
-                allowList.add("");   // No path is allowed.
+            // SCIPIO: 2017-11-14: now done in initialization - no reason to do this every request
+//            List<String> allowList = null;
+//            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
+//                allowList.add("/");  // No path is allowed.
+//                allowList.add("");   // No path is allowed.
+//            }
+            // SCIPIO: 2017-11-14: allowList should always have been a Set, not a List
+            Set<String> allowList = this.allowedPaths;
+            
+            // SCIPIO: 2017-11-14: SPECIAL: auto-detect when ControlServlet is mapped to root "/*" and allow its requests
+            Set<String> allowRootList = Collections.emptySet();
+            if (UtilValidate.isEmpty(httpRequest.getServletPath()) && "/".equals(RequestHandler.getControlServletMapping(httpRequest))) {
+                try {
+                    RequestHandler rh = RequestHandler.getRequestHandler(httpRequest);
+                    allowRootList = rh.getControllerConfig().getRequestMapMap().keySet();
+                } catch (Exception e) {
+                    Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
+                    throw new ServletException(e);
+                }
+            }
+            String firstPathInfoElem = httpRequest.getPathInfo();
+            if (firstPathInfoElem != null) {
+                // always starts with "/" - servlet API
+                int secondSlashIndex = firstPathInfoElem.indexOf('/', 1);
+                if (secondSlashIndex >= 1) {
+                    firstPathInfoElem = firstPathInfoElem.substring(1, secondSlashIndex);
+                }
             }
 
             if (debug) Debug.logInfo("[Domain]: " + httpRequest.getServerName() + " [Request]: " + httpRequest.getRequestURI(), module);
@@ -223,7 +258,8 @@ public class ContextFilter implements Filter {
 
             // check to make sure the requested url is allowed
             if (allowList != null &&
-                (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath()))
+                (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) &&
+                (!allowRootList.contains(firstPathInfoElem)) // SCIPIO: new 2017-11-14: allow root control requests
                 ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
                 

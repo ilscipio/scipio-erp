@@ -124,6 +124,15 @@ under the License.
             <param-name>allowedPaths</param-name>
             <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images</param-value>
         </init-param>
+        <init-param>
+            <!-- SCIPIO: Set this to Y to automatically forward root requests that match controller URIs to
+                the controller, e.g. "/main" -> "/control/main".
+                NOTE: If enabled you likely want to uncomment the CONTROL-SERVLET-STRIPPING RULES in urlrewrite.xml.
+                Together these emulate having root control URI without changing the ControlServlet mapping (problematic).
+                FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping -->
+            <param-name>forwardRootControllerUris</param-name>
+            <param-value>N</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -137,7 +146,7 @@ under the License.
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
-    <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
+    <!-- SCIPIO: the stock CatalogUrlFilter is contained in the SeoCatalogUrlFilter.
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -190,6 +199,8 @@ under the License.
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- SCIPIO: NOTE: It is possible to map ControlServlet to root here (/*), but is problematic -
+        alternatively can enable forwardRootControllerUris in ContextFilter above and uncomment the outbound-rules in rewrite.xml. -->
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>

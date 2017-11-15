@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -71,7 +72,8 @@ public class ContextFilter implements Filter {
 
     protected FilterConfig config = null;
     protected boolean debug = false;
-    protected Set<String> allowedPaths = null; // SCIPIO: added 2017-11-14
+    protected Set<String> allowedPaths = null; // SCIPIO: new: prevent parsing at every request
+    protected boolean forwardRootControllerUris = false; // SCIPIO: new
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -108,6 +110,9 @@ public class ContextFilter implements Filter {
             allowList.add("");   // No path is allowed.
         }
         this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
+        
+        // SCIPIO: new
+        this.forwardRootControllerUris = UtilMisc.booleanValueVersatile(config.getInitParameter("forwardRootControllerUris"), false);
     }
 
     /**
@@ -148,6 +153,20 @@ public class ContextFilter implements Filter {
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");
         }
 
+        // SCIPIO: 2017: new special forwarding mode for root controller URI requests
+        // NOTE: this requires that ContextFilter responds to FORWARD dispatcher, otherwise multitenant will not be init
+        // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
+        String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
+        if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
+            Set<String> reqUris = getControllerRequestUriNames(httpRequest);
+            String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
+            if (reqUris.contains(RequestLinkUtil.getFirstPathElem(servletAndPathInfo))) {
+                RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
+                rd.forward(request, response);
+                return;
+            }
+        }
+        
         // ----- Context Security -----
         // check if we are disabled
         String disableSecurity = config.getInitParameter("disableContextSecurity");
@@ -175,7 +194,7 @@ public class ContextFilter implements Filter {
                 return;
             }
         }
-
+        
         // test to see if we have come through the control servlet already, if not do the processing
         String requestPath = null;
         String contextUri = null;
@@ -185,33 +204,19 @@ public class ContextFilter implements Filter {
             String redirectPath = config.getInitParameter("redirectPath");
             String errorCode = config.getInitParameter("errorCode");
 
-            // SCIPIO: 2017-11-14: now done in initialization - no reason to do this every request
+            // SCIPIO: 2017-11: now done in initialization - no reason to do this every request
 //            List<String> allowList = null;
 //            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
 //                allowList.add("/");  // No path is allowed.
 //                allowList.add("");   // No path is allowed.
 //            }
-            // SCIPIO: 2017-11-14: allowList should always have been a Set, not a List
+            // SCIPIO: 2017-11: allowList should always have been a Set, not a List
             Set<String> allowList = this.allowedPaths;
             
-            // SCIPIO: 2017-11-14: SPECIAL: auto-detect when ControlServlet is mapped to root "/*" and allow its requests
+            // SCIPIO: 2017-11: SPECIAL: auto-detect when ControlServlet is mapped to root (controlServletPath empty) and allow its requests
             Set<String> allowRootList = Collections.emptySet();
-            if (UtilValidate.isEmpty(httpRequest.getServletPath()) && "/".equals(RequestHandler.getControlServletMapping(httpRequest))) {
-                try {
-                    RequestHandler rh = RequestHandler.getRequestHandler(httpRequest);
-                    allowRootList = rh.getControllerConfig().getRequestMapMap().keySet();
-                } catch (Exception e) {
-                    Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
-                    throw new ServletException(e);
-                }
-            }
-            String firstPathInfoElem = httpRequest.getPathInfo();
-            if (firstPathInfoElem != null) {
-                // always starts with "/" - servlet API
-                int secondSlashIndex = firstPathInfoElem.indexOf('/', 1);
-                if (secondSlashIndex >= 1) {
-                    firstPathInfoElem = firstPathInfoElem.substring(1, secondSlashIndex);
-                }
+            if (UtilValidate.isEmpty(httpRequest.getServletPath()) && controlServletPath != null && controlServletPath.isEmpty()) {
+                allowRootList = getControllerRequestUriNames(httpRequest);
             }
 
             if (debug) Debug.logInfo("[Domain]: " + httpRequest.getServerName() + " [Request]: " + httpRequest.getRequestURI(), module);
@@ -259,7 +264,7 @@ public class ContextFilter implements Filter {
             // check to make sure the requested url is allowed
             if (allowList != null &&
                 (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) &&
-                (!allowRootList.contains(firstPathInfoElem)) // SCIPIO: new 2017-11-14: allow root control requests
+                (!allowRootList.contains(RequestLinkUtil.getFirstPathInfoElem(httpRequest))) // SCIPIO: new 2017-11-14: allow root control requests
                 ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
                 
@@ -512,5 +517,15 @@ public class ContextFilter implements Filter {
      */
     protected void encodeAndSendRedirectURL(HttpServletResponse response, String url) throws IOException {
         response.sendRedirect(encodeRedirectURL(response, url));
+    }
+    
+    protected Set<String> getControllerRequestUriNames(HttpServletRequest request) throws ServletException {
+        try {
+            RequestHandler rh = RequestHandler.getRequestHandler(request);
+            return rh.getControllerConfig().getRequestMapMap().keySet();
+        } catch (Exception e) {
+            Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
+            throw new ServletException(e);
+        }
     }
 }

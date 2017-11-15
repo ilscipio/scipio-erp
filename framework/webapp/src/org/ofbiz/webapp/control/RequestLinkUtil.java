@@ -419,4 +419,34 @@ public abstract class RequestLinkUtil {
         }
         return url.toString();
     }
+    
+    public static String getServletAndPathInfo(HttpServletRequest request) {
+        if (request.getPathInfo() != null) return request.getServletPath() + request.getPathInfo();
+        else return request.getServletPath();
+    }
+    
+    /**
+     * Returns the first path elem after the slash, or null if empty or root request.
+     * WARN: assumes the first char is a slash - meant for servlet API methods: getServletPath(), getPathInfo().
+     */
+    public static String getFirstPathElem(String path) {
+        if (path == null || path.length() <= 1) return null;
+        
+        int secondSlashIndex = path.indexOf('/', 1);
+        if (secondSlashIndex >= 1) {
+            path = path.substring(1, secondSlashIndex);
+        } else {
+            path = path.substring(1);
+        }
+        
+        return path;
+    }
+    
+    public static String getFirstPathInfoElem(HttpServletRequest request) {
+        return getFirstPathElem(request.getPathInfo());
+    }
+    
+    public static String getFirstServletAndPathInfoElem(HttpServletRequest request) {
+        return getFirstPathElem(getServletAndPathInfo(request));
+    }
 }

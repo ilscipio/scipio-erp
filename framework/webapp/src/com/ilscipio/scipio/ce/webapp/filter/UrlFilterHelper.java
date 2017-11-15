@@ -3,6 +3,7 @@ package com.ilscipio.scipio.ce.webapp.filter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,5 +50,15 @@ public class UrlFilterHelper {
             }
         }
         return result;
+    }
+    
+    /**
+     * Sets some common request attributes needed by URL rewriting.
+     * NOTE: these should NOT be accessed by most webapps; is workaround for limitations in urlrewritefilter.
+     */
+    public void setCommonReqAttr(HttpServletRequest request, HttpServletResponse response) {
+        ServletContext sc = request.getServletContext();
+        request.setAttribute("scpCtrlServPath", sc.getAttribute("_CONTROL_SERVPATH_"));
+        request.setAttribute("scpCtrlMapping", sc.getAttribute("_CONTROL_MAPPING_"));
     }
 }

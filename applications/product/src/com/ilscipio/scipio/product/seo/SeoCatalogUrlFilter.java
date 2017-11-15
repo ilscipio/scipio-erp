@@ -45,7 +45,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
-import org.ofbiz.product.category.CatalogUrlServlet;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -65,11 +64,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
     public static final String module = SeoCatalogUrlFilter.class.getName();
 
-    public static final String CONTROL_MOUNT_POINT = CatalogUrlServlet.CONTROL_MOUNT_POINT;
-    public static final String PRODUCT_REQUEST = CatalogUrlServlet.PRODUCT_REQUEST;
-    public static final String CATEGORY_REQUEST = CatalogUrlServlet.CATEGORY_REQUEST;
-    public static final String CATALOG_URL_MOUNT_POINT = CatalogUrlServlet.CATALOG_URL_MOUNT_POINT;
-
     public static final String SEOURLINFO_ATTR = "_SCPSEO_URLINFO_";
     public static final String FORWARDED_ATTR = "_SCPSEO_FWDED_";
     public static final String REQWRAPPED_ATTR = "_SCPSEO_REQWRAP_";
@@ -81,7 +75,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
     protected String defaultLocaleString = null;
     protected String redirectUrl = null;
-    protected String controlPrefix = null;
     protected String productRequestPath = "/" + PRODUCT_REQUEST;
     protected String categoryRequestPath = "/" + CATEGORY_REQUEST;
     protected boolean seoUrlEnabled = true;
@@ -101,12 +94,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
             String initRedirectUrl = config.getInitParameter("redirectUrl");
             defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
             redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
-
-            if (UtilValidate.isNotEmpty(CONTROL_MOUNT_POINT)) {
-                controlPrefix = "/" + CONTROL_MOUNT_POINT;
-            } else {
-                controlPrefix = "";
-            }
 
             WebsiteSeoConfig.registerWebsiteForSeo(WebsiteSeoConfig.makeConfig(config.getServletContext(), true));
 
@@ -256,7 +243,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
     public boolean forwardSeoUrl(HttpServletRequest request, HttpServletResponse response, Delegator delegator, SeoCatalogUrlInfo urlInfo) throws ServletException, IOException {
         StringBuilder fwdUrl = new StringBuilder();
-        fwdUrl.append(controlPrefix);
+        fwdUrl.append(getControlServletPath(request));
         String targetRequest = urlInfo.isProductRequest() ? productRequestPath : categoryRequestPath;
         fwdUrl.append(targetRequest);
 

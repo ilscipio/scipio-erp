@@ -211,6 +211,7 @@ under the License.
         <url-pattern>/select/*</url-pattern>
     </servlet-mapping>
     -->
+    <!-- SCIPIO: NOTE: If you enable seoUrlEnabled, it's recommended to comment this mapping out, but not obligatory -->
     <servlet-mapping>
         <servlet-name>CatalogUrlServlet</servlet-name>
         <url-pattern>/products/*</url-pattern>

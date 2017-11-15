@@ -29,19 +29,25 @@
         <to type="permanent-redirect" last="true">$1/shop$2</to>
     </rule>
 
+    <!-- SPECIAL REQUEST ATTRIBUTES FOR REWRITE RULES (scpCtrlServPath, etc.) -->
+    <rule>
+        <from>^.*$</from>
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonReqAttr" />
+    </rule>
+
     <!-- DEFAULT REQUEST MAPPING RULE - maps default request ("/") to main
         uncomment this to get rid of /control/main URLs -->
     <rule>
-        <from>^/[^/]+/?([?;#][^/]*)?$</from><!-- (index\.(jsp|htm|html)) -->
-        <to last="true">/control/main$3</to>
+        <from>^/[^/]+/?([?;#][^/]*)?$</from>
+        <to last="true">%{attribute:scpCtrlServPath}/main$3</to>
     </rule>
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/.*?)?/control/main([?;#].*)?$</from>
-        <to>$1$2/$3</to>
+        <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main([?;#].*)?$</from>
+        <to>$1$2/$4</to>
     </outbound-rule>
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/.*?)?/control/main(/.*)$</from>
-        <to>$1$2$3</to>
+        <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main(/.*)$</from>
+        <to>$1$2$4</to>
     </outbound-rule>
 
 </urlrewrite>

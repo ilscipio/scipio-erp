@@ -7700,4 +7700,20 @@
         <value xml:lang="de">Neuer Inhalt</value>
         <value xml:lang="en">New Content</value>
     </property>
+    <property key="ContentGenerateType">
+        <value xml:lang="de">Typ generieren</value>
+        <value xml:lang="en">Generate Type</value>
+    </property>
+    <property key="ContentReplaceExisting">
+        <value xml:lang="de">Bestehende ersetzen</value>
+        <value xml:lang="en">Replace Existing</value>
+    </property>
+    <property key="ContentRemoveOldLocales">
+        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
+        <value xml:lang="en">Remove Old Locales</value>
+    </property>
+    <property key="ContentIncludeVariantProducts">
+        <value xml:lang="de">Inklusive Variantenprodukte</value>
+        <value xml:lang="en">Include Variant Products</value>
+    </property>
 </resource>

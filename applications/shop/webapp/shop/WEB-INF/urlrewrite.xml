@@ -25,34 +25,22 @@
 
     <!-- LEGACY ECOMMERCE REDIRECT -->
     <rule>
-        <from>^([^/]*//[^/]*)?/ecommerce([?;#/].*)?$</from>
+        <from>^/ecommerce([?;#/].*)?$</from>
         <to type="permanent-redirect" last="true">$1/shop$2</to>
     </rule>
 
     <!-- DEFAULT REQUEST MAPPING RULE - maps default request ("/") to main
         uncomment this to get rid of /control/main URLs -->
     <rule>
-        <from>^/?([?;#][^/]*)?$</from>
-        <to last="true">%{session-attribute:_CONTROL_SERVPATH_}/main$1</to>
+        <from>^/[^/]+/?([?;#][^/]*)?$</from><!-- (index\.(jsp|htm|html)) -->
+        <to last="true">/control/main$3</to>
     </rule>
     <outbound-rule>
-        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="equal">/control</condition>
         <from>^([^/]*//[^/]*)?(/.*?)?/control/main([?;#].*)?$</from>
         <to>$1$2/$3</to>
     </outbound-rule>
     <outbound-rule>
-        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="equal">/control</condition>
         <from>^([^/]*//[^/]*)?(/.*?)?/control/main(/.*)$</from>
-        <to>$1$2$3</to>
-    </outbound-rule>
-    <outbound-rule>
-        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="notequal">/control</condition>
-        <from>^([^/]*//[^/]*)?(/.*?)?/main([?;#].*)?$</from>
-        <to>$1$2/$3</to>
-    </outbound-rule>
-    <outbound-rule>
-        <condition type="session-attribute" name="_CONTROL_SERVPATH_" operator="notequal">/control</condition>
-        <from>^([^/]*//[^/]*)?(/.*?)?/main(/.*)$</from>
         <to>$1$2$3</to>
     </outbound-rule>
 

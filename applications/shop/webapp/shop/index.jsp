@@ -17,4 +17,8 @@ specific language governing permissions and limitations
 under the License.
 --%>
 
-<%pageContext.forward("control/main");%>
+<%
+String csp = (String) request.getServletContext().getAttribute("_CONTROL_SERVPATH_");
+if (csp == null) csp = "";
+pageContext.forward(csp + "/main");
+%>

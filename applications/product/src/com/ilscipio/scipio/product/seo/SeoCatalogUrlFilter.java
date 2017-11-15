@@ -46,6 +46,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -247,10 +248,14 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         String targetRequest = urlInfo.isProductRequest() ? productRequestPath : categoryRequestPath;
         fwdUrl.append(targetRequest);
 
-        // TODO: REVIEW: adding parameters may cause unexpected behavior, but it is 
+        // TODO: REVIEW: this is from CatalogUrlFilter.
+        // adding parameters may cause unexpected behavior, but it is 
         // what CatalogUrlFilter is still doing, so until it's reviewed there, it stays here after all...
         UrlServletHelper.setViewQueryParameters(request, fwdUrl);
-
+        // TODO: REVIEW: this is from CatalogUrlFilter.
+        // This is done later by ContextFilter so I don't know why this is here...
+        ContextFilter.setAttributesFromRequestBody(request);
+        
         if (debug || Debug.verboseOn()) { // TODO?: verbose or debug flag?
             if (urlInfo.isProductRequest()) {
                 Debug.logInfo("SEO: [Forwarding request]: " + urlInfo.getOrigPath()

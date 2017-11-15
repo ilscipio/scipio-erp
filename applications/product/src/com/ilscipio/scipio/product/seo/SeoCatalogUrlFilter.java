@@ -46,6 +46,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
@@ -166,8 +167,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     public static String getMatchablePath(HttpServletRequest request) {
-        if (request.getPathInfo() != null) return request.getServletPath() + request.getPathInfo();
-        else return request.getServletPath();
+        return RequestLinkUtil.getServletAndPathInfo(request);
     }
 
     public SeoCatalogUrlInfo matchInboundSeoCatalogUrl(HttpServletRequest request, Delegator delegator, String matchablePath) {

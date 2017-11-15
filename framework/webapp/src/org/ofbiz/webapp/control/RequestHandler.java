@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -2346,5 +2347,29 @@ public class RequestHandler {
      */
     public String getCharset() {
         return charset;
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletRequest request) {
+        return getControlServletPath(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization - HOWEVER, it may not accessible
+     * from filter/servlet initialization!
+     * NOTE: If request is available, always call the {@link #getControlServletPath(ServletRequest)} overload instead!
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_SERVPATH_");
     }
 }

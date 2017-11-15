@@ -82,6 +82,16 @@ public class ControlServlet extends HttpServlet {
         configureBsf();
         // initialize the request handler
         getRequestHandler();
+        
+        // SCIPIO: 2017-11-14: new _CONTROL_MAPPING_ and _CONTROL_SERVPATH_ servlet attributes; setting
+        // these here allows them to be available from early filters (instead of hardcoding there).
+        String servletMapping = ServletUtil.getBaseServletMapping(config.getServletContext(), config.getServletName());
+        String servletPath = "/".equals(servletMapping) ? "" : servletMapping;
+        config.getServletContext().setAttribute("_CONTROL_MAPPING", servletMapping);
+        config.getServletContext().setAttribute("_CONTROL_SERVPATH_", servletPath);
+        if (servletPath == null) {
+            Debug.logError("Scipio: ERROR: Control servlet with name '" +  config.getServletName() + "' has no servlet mapping! Cannot set _CONTROL_SERVPATH_! Please fix web.xml or app will crash!", module);
+        }
     }
 
     /**

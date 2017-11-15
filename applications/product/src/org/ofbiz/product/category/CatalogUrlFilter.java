@@ -74,6 +74,10 @@ public class CatalogUrlFilter extends ContextFilter {
 
     public final static String module = CatalogUrlFilter.class.getName();
     
+    /**
+     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
+     */
+    @Deprecated
     public static final String CONTROL_MOUNT_POINT = "control";
     public static final String PRODUCT_REQUEST = "product";
     public static final String CATEGORY_REQUEST = "category";
@@ -211,9 +215,9 @@ public class CatalogUrlFilter extends ContextFilter {
     /**
      * SCIPIO: Returns control servlet path or empty string (same as getServletPath).
      */
-    protected String getControlServletPath(HttpServletRequest request) {
-        // FIXME?: unhardcode
-        return "/" + CONTROL_MOUNT_POINT;
+    protected String getControlServletPath(ServletRequest request) {
+        return RequestHandler.getControlServletPath(request);
+        //return "/" + CONTROL_MOUNT_POINT;
     }
     
     /**

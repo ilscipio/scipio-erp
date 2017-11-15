@@ -27,6 +27,7 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,6 +58,10 @@ public class CatalogUrlServlet extends HttpServlet {
     public static final String module = CatalogUrlServlet.class.getName();
 
     public static final String CATALOG_URL_MOUNT_POINT = "products";
+    /**
+     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
+     */
+    @Deprecated
     public static final String CONTROL_MOUNT_POINT = "control";
     public static final String PRODUCT_REQUEST = "product";
     public static final String CATEGORY_REQUEST = "category";
@@ -94,15 +99,23 @@ public class CatalogUrlServlet extends HttpServlet {
         CatalogUrlInfo urlInfo = parseCatalogUrlPathElements(request, delegator, pathInfo);
 
         if (urlInfo == null) {
-            RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/main");
+            RequestDispatcher rd = request.getRequestDispatcher(getControlServletPath(request) + "/main");
             rd.forward(request, response);
         } else {
             updateRequestForCatalogUrl(request, delegator, urlInfo);
-            RequestDispatcher rd = request.getRequestDispatcher("/" + CONTROL_MOUNT_POINT + "/" + (urlInfo.getProductId() != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));
+            RequestDispatcher rd = request.getRequestDispatcher(getControlServletPath(request) + "/" + (urlInfo.getProductId() != null ? PRODUCT_REQUEST : CATEGORY_REQUEST));
             rd.forward(request, response);
         }
     }
 
+    /**
+     * SCIPIO: Returns control servlet path or empty string (same as getServletPath).
+     */
+    protected String getControlServletPath(ServletRequest request) {
+        return RequestHandler.getControlServletPath(request);
+        //return "/" + CONTROL_MOUNT_POINT;
+    }
+    
     public static class CatalogUrlInfo {
         private final String pathInfo;
         private final String productId;

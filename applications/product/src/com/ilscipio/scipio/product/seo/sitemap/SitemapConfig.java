@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -15,18 +16,28 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.redfin.sitemapgenerator.W3CDateFormat;
+import com.redfin.sitemapgenerator.W3CDateFormat.Pattern;
+
 @SuppressWarnings("serial")
 public class SitemapConfig implements Serializable {
     public static final String module = SitemapConfig.class.getName();
+
+    public static final String SITEMAPCONFIGS_RESOURCE = "sitemaps"; // .properties
+    public static final String SITEMAPCOMMON_RESOURCE = "sitemapcommon"; // .properties
+    
+    public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
+    public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
     
     private static class StaticConfigHolder {
-        private static final Map<String, SitemapConfig> staticConfigs = Collections.unmodifiableMap(readStaticConfigs());
+        // TODO?: in future could have DB config
+        private static final Map<String, SitemapConfig> staticConfigs = Collections.unmodifiableMap(readStaticConfigsFromProperties());
     }
     
-    protected final String webConfPath;
+    protected final String urlConfPath;
     protected final String baseUrl;
     protected final String sitemapDir;
-    protected final String sitemapSubDir;
+    protected final String sitemapSubdir;
     protected final String sitemapExtension;
     protected final String sitemapIndexFile;
     protected final String productFilePrefix;
@@ -36,30 +47,40 @@ public class SitemapConfig implements Serializable {
     protected final boolean doProduct;
     protected final boolean doCategory;
     
-    public SitemapConfig(Map<String, Object> map, Integer sizemapSize, Integer indexSize, Boolean doProduct, Boolean doCategory) {
-        this.webConfPath = (String) map.get("urlConfPath");
-        this.baseUrl = (String) map.get("baseUrl");
-        this.sitemapDir = (String) map.get("sitemapDir");
-        this.sitemapSubDir = (String) map.get("sitemapSubDir");
-        this.sitemapExtension = (String) map.get("sitemapExtension");
-        this.sitemapIndexFile = (String) map.get("sitemapIndexFile");
-        this.productFilePrefix = (String) map.get("productFilePrefix");
-        this.categoryFilePrefix = (String) map.get("categoryFilePrefix");
-        this.sizemapSize = intOrStr(map.get("sizemapSize"), SitemapWorker.DEFAULT_SITEMAP_SIZE);
-        this.indexSize = intOrStr(map.get("indexSize"), SitemapWorker.DEFAULT_SITEMAP_SIZE);
-        this.doProduct = UtilMisc.booleanValueVersatile(map.get("doProduct"), true);
-        this.doCategory = UtilMisc.booleanValueVersatile(map.get("doCategory"), true);
+    protected final W3CDateFormat dateFormat;
+    
+    public SitemapConfig(Map<String, Object> map) {
+        this.urlConfPath = asNormString(map.get("urlConfPath"));
+        this.baseUrl = asNormString(map.get("baseUrl"));
+        this.sitemapDir = asNormString(map.get("sitemapDir"));
+        this.sitemapSubdir = asNormString(map.get("sitemapSubDir"));
+        this.sitemapExtension = asNormString(map.get("sitemapExtension"));
+        this.sitemapIndexFile = asNormString(map.get("sitemapIndexFile"));
+        this.productFilePrefix = asNormString(map.get("productFilePrefix"));
+        this.categoryFilePrefix = asNormString(map.get("categoryFilePrefix"));
+        this.sizemapSize = asInteger(map.get("sizemapSize"), DEFAULT_SITEMAP_SIZE);
+        this.indexSize = asInteger(map.get("indexSize"), DEFAULT_SITEMAP_SIZE);
+        this.doProduct = asBoolean(map.get("doProduct"), true);
+        this.doCategory = asBoolean(map.get("doCategory"), true);
+        
+        W3CDateFormat dateFormat = new W3CDateFormat(Pattern.DAY); // FIXME: unhardcode
+        dateFormat.setTimeZone(TimeZone.getTimeZone("CET")); // FIXME: unhardcode
+        this.dateFormat = dateFormat;
     }
     
     public static SitemapConfig getSitemapConfigForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId) {
         return StaticConfigHolder.staticConfigs.get(webSiteId);
     }
     
-    protected static Map<String, SitemapConfig> readStaticConfigs() {
+    public static Map<String, SitemapConfig> getAllSitemapConfigs(Delegator delegator, LocalDispatcher dispatcher) {
+        return StaticConfigHolder.staticConfigs;
+    }
+    
+    protected static Map<String, SitemapConfig> readStaticConfigsFromProperties() {
         Map<String, SitemapConfig> configs = new HashMap<>();
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Enumeration<URL> resources = loader.getResources("sitemap.properties");
+            Enumeration<URL> resources = loader.getResources(SITEMAPCONFIGS_RESOURCE + ".properties");
             while (resources.hasMoreElements()) {
                 URL propertyURL = resources.nextElement();
                 Debug.logInfo("Seo: Sitemap: loading properties: " + propertyURL, module);
@@ -67,8 +88,15 @@ public class SitemapConfig implements Serializable {
                 if (UtilValidate.isEmpty(props)) {
                     Debug.logError("Seo: Sitemap: Unable to locate properties file " + propertyURL, module);
                 } else {
-                    loadConfigs(props, configs);
+                    Map<String, Map<String, Object>> webSiteConfigs = new HashMap<>();
+                    UtilProperties.extractPropertiesWithPrefixAndId(webSiteConfigs, props, "sitemap.");
+                    for(Map.Entry<String, Map<String, Object>> entry : webSiteConfigs.entrySet()) {
+                        configs.put(entry.getKey(), new SitemapConfig(entry.getValue()));
+                    }
                 }
+            }
+            for(Map.Entry<String, SitemapConfig> entry : configs.entrySet()) {
+                Debug.logInfo("Seo: Sitemap: Found sitemap config for website: " + entry.getKey(), module);
             }
         } catch (Exception e) {
             Debug.logError(e, "Seo: Sitemap: Could not load list of sitemap.properties", module);
@@ -76,16 +104,27 @@ public class SitemapConfig implements Serializable {
         return configs;
     }
     
-    protected static void loadConfigs(Properties props, Map<String, SitemapConfig> configs) {
-        Map<String, Map<String, Object>> webSiteConfigs = new HashMap<>();
-        UtilProperties.extractPropertiesWithPrefixAndId(webSiteConfigs, props, "sitemap.");
+    private static String asNormString(Object obj, String defaultValue) {
+        if (obj == null) return defaultValue;
+        String str = obj.toString().trim();
+        return str.isEmpty() ? defaultValue : str;
     }
     
-    private static Integer intOrStr(Object obj, Integer defaultValue) {
-        if (obj instanceof Integer) return obj != null ? (Integer) obj : defaultValue;
+    private static String asNormString(Object obj) {
+        return asNormString(obj, null);
+    }
+    
+    private static Boolean asBoolean(Object obj, Boolean defaultValue) {
+        return UtilMisc.booleanValueVersatile(obj, defaultValue);
+    }
+    
+    private static Integer asInteger(Object obj, Integer defaultValue) {
+        if (obj == null) return defaultValue;
+        else if (obj instanceof Integer) return (Integer) obj;
+        else if (obj instanceof Long) return ((Long) obj).intValue();
         else if (obj instanceof String) {
             String str = (String) obj;
-            if (UtilValidate.isEmpty(str)) return defaultValue;
+            if (str.isEmpty()) return defaultValue;
             try {
                 return Integer.parseInt(str);
             } catch(Exception e) {
@@ -96,5 +135,57 @@ public class SitemapConfig implements Serializable {
             Debug.logError("Invalid integer value from sitemap config: " + obj + "; using default: " + defaultValue, module);
         }
         return defaultValue;
+    }
+
+    public String getUrlConfPath() {
+        return urlConfPath;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public String getSitemapDir() {
+        return sitemapDir;
+    }
+
+    public String getSitemapSubdir() {
+        return sitemapSubdir;
+    }
+
+    public String getSitemapExtension() {
+        return sitemapExtension;
+    }
+
+    public String getSitemapIndexFile() {
+        return sitemapIndexFile;
+    }
+
+    public String getProductFilePrefix() {
+        return productFilePrefix;
+    }
+
+    public String getCategoryFilePrefix() {
+        return categoryFilePrefix;
+    }
+
+    public Integer getSizemapSize() {
+        return sizemapSize;
+    }
+
+    public Integer getIndexSize() {
+        return indexSize;
+    }
+
+    public boolean isDoProduct() {
+        return doProduct;
+    }
+
+    public boolean isDoCategory() {
+        return doCategory;
+    }
+
+    public W3CDateFormat getDateFormat() {
+        return dateFormat;
     }
 }

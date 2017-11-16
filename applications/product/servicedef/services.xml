@@ -2374,4 +2374,23 @@ under the License.
         </attribute>
     </service>
     
+    <service name="generateWebsiteAlternativeUrlSitemapFiles" engine="java" 
+        location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateWebsiteAlternativeUrlSitemapFiles" 
+        transaction-timeout="72000" max-retry="1">
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Slightly faster iterating if true, but not recommended</description>
+        </attribute>
+    </service>
+    
+    <service name="generateAllAlternativeUrlSitemapFiles" engine="java" 
+        location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateAllAlternativeUrlSitemapFiles" 
+        transaction-timeout="72000" max-retry="1">
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled</description>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Slightly faster iterating if true, but not recommended</description>
+        </attribute>
+    </service>
+    
 </services>

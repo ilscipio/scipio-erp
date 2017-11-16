@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -436,11 +437,12 @@ public abstract class SeoCatalogServices {
     public static Map<String, Object> generateWebsiteAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
        
         Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeGenerate"));
         if (typeGenerate == null) typeGenerate = Collections.emptyList();
         boolean doAll = typeGenerate.contains("all");
-        boolean doProducts = doAll || typeGenerate.contains("product");
+        boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
         
         String webSiteId = (String) context.get("webSiteId");
@@ -452,7 +454,7 @@ public abstract class SeoCatalogServices {
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         
-        UrlGenStats stats = new UrlGenStats(doProducts, doCategory);
+        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
         
         List<GenericValue> prodCatalogList;
         try {
@@ -481,7 +483,7 @@ public abstract class SeoCatalogServices {
             for(GenericValue prodCatalog : prodCatalogList) {
                 List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
                         .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate().cache(useCache).queryList();
-                generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProducts, doCategory, useCache);
+                generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProduct, doCategory, useCache);
             }
         } catch(Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
@@ -489,8 +491,7 @@ public abstract class SeoCatalogServices {
             return ServiceUtil.returnError(message);
         }
         
-        String msg = stats.toMsg();
-        return stats.hasError() ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
+        return stats.toServiceResultSuccessFailure(locale, true);
     }
     
     /**
@@ -499,11 +500,12 @@ public abstract class SeoCatalogServices {
     public static Map<String, Object> generateAllAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
-       
+        Locale locale = (Locale) context.get("locale");
+        
         Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeGenerate"));
         if (typeGenerate == null) typeGenerate = Collections.emptyList();
         boolean doAll = typeGenerate.contains("all");
-        boolean doProducts = doAll || typeGenerate.contains("product");
+        boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
@@ -514,9 +516,9 @@ public abstract class SeoCatalogServices {
         // TODO: REVIEW: currently avoids store lookup overhead but may not last,
         // we may be forced to lookup stores here due to defaultLocaleString and other setting...
         
-        UrlGenStats stats = new UrlGenStats(doProducts, doCategory);
+        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
         
-        if (doProducts) {
+        if (doProduct) {
             EntityListIterator productIt = null;
             try {
                 productIt = EntityQuery.use(delegator).from("Product").cache(useCache).queryIterator();
@@ -567,13 +569,12 @@ public abstract class SeoCatalogServices {
         //if (doContent) {
         //}
         
-        String msg = stats.toMsg();
-        return stats.hasError() ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
+        return stats.toServiceResultSuccessFailure(locale, true);
     }
     
     // recursive helper, rewritten from getTreeCategories
     private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, UrlGenStats stats,
-            List<GenericValue> productCategories, boolean doProducts, boolean doCategory, boolean useCache) throws GeneralException {
+            List<GenericValue> productCategories, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
         for (GenericValue productCategory : productCategories) {
             GenericValue category = null;
             if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
@@ -592,11 +593,11 @@ public abstract class SeoCatalogServices {
                         .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
                     generateCategoryAltUrlsDeep(dctx, context, stats, 
-                            childProductCategoryRollups, doProducts, doCategory, useCache);
+                            childProductCategoryRollups, doProduct, doCategory, useCache);
                 }
 
                 // products
-                if (doProducts) {
+                if (doProduct) {
                     List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
                             .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
                             .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")

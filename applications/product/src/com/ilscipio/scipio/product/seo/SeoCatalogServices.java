@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.product.seo;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -33,6 +31,7 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
 import com.ilscipio.scipio.util.SeoStringUtil;
+import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
 
 /**
  * SCIPIO: SEO catalog services.
@@ -68,6 +67,8 @@ public abstract class SeoCatalogServices {
         boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
         Timestamp moment = UtilDateTime.nowTimestamp();
 
+        // FIXME: this service will need a doChildProducts flag!
+        
         GenericValue product = (GenericValue) context.get("product");
         try {
             if (product == null) {
@@ -451,7 +452,7 @@ public abstract class SeoCatalogServices {
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         
-        GenStats stats = new GenStats(doProducts, doCategory);
+        UrlGenStats stats = new UrlGenStats(doProducts, doCategory);
         
         List<GenericValue> prodCatalogList;
         try {
@@ -479,7 +480,7 @@ public abstract class SeoCatalogServices {
             
             for(GenericValue prodCatalog : prodCatalogList) {
                 List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate().cache(false).queryList();
+                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate().cache(useCache).queryList();
                 generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProducts, doCategory, useCache);
             }
         } catch(Exception e) {
@@ -513,7 +514,7 @@ public abstract class SeoCatalogServices {
         // TODO: REVIEW: currently avoids store lookup overhead but may not last,
         // we may be forced to lookup stores here due to defaultLocaleString and other setting...
         
-        GenStats stats = new GenStats(doProducts, doCategory);
+        UrlGenStats stats = new UrlGenStats(doProducts, doCategory);
         
         if (doProducts) {
             EntityListIterator productIt = null;
@@ -570,55 +571,8 @@ public abstract class SeoCatalogServices {
         return stats.hasError() ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
     }
     
-    private static class GenStats {
-        public final boolean doProducts;
-        public final boolean doCategory;
-        
-        public int productSuccess = 0;
-        public int productSkipped = 0;
-        public int productError = 0;
-        
-        public int categorySuccess = 0;
-        public int categoryError = 0;
-        public int categorySkipped = 0;
-
-        public GenStats(boolean doProducts, boolean doCategory) {
-            this.doProducts = doProducts;
-            this.doCategory = doCategory;
-        }
-
-        public boolean hasError() {
-            return productError > 0 || categoryError > 0;
-        }
-        
-        public void toMsgLists(List<String> msgList, List<String> errMsgList) {
-            if (doProducts) {
-                msgList.add("Products updated: " + productSuccess);
-                msgList.add("Products skipped: " + productSkipped);
-                if (productError > 0) errMsgList.add("Products failed: " + productError);
-            }
-            
-            if (doCategory) {
-                msgList.add("Categories updated: " + categorySuccess);
-                msgList.add("Categories skipped: " + categorySkipped);
-                if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
-            }
-        }
-        
-        public String toMsg() {
-            List<String> msgList = new ArrayList<>();
-            List<String> errMsgList = new ArrayList<>();
-            toMsgLists(msgList, errMsgList);
-            
-            List<String> allMsgs = new ArrayList<>();
-            allMsgs.addAll(msgList);
-            allMsgs.addAll(errMsgList);
-            return StringUtils.join(allMsgs, "; ");
-        }
-    }
-    
     // recursive helper, rewritten from getTreeCategories
-    private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, GenStats stats,
+    private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, UrlGenStats stats,
             List<GenericValue> productCategories, boolean doProducts, boolean doCategory, boolean useCache) throws GeneralException {
         for (GenericValue productCategory : productCategories) {
             GenericValue category = null;
@@ -658,7 +612,7 @@ public abstract class SeoCatalogServices {
     }
     
     // helper wrapper
-    private static void generateCategoryAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue productCategory, GenStats stats, boolean useCache) throws GeneralException {
+    private static void generateCategoryAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue productCategory, UrlGenStats stats, boolean useCache) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
         Map<String, Object> servCtx = dctx.makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, context);
         servCtx.put("productCategory", productCategory);
@@ -679,7 +633,7 @@ public abstract class SeoCatalogServices {
     }
     
     // helper wrapper
-    private static void generateProductAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue product, GenStats stats, boolean doChildProducts, boolean useCache) throws GeneralException {
+    private static void generateProductAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue product, UrlGenStats stats, boolean doChildProducts, boolean useCache) throws GeneralException {
         boolean includeVariant = Boolean.TRUE.equals(context.get("includeVariant"));
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
             return;

@@ -18,8 +18,11 @@
  *******************************************************************************/
 package com.ilscipio.scipio.product.seo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
@@ -58,5 +61,55 @@ public class SeoUrlUtil {
             return uri.substring(contextPath.length());
         }
         return uri;
+    }
+    
+    /**
+     * Stats for product/category iterating services.
+     */
+    public static class UrlGenStats {
+        public final boolean doProducts;
+        public final boolean doCategory;
+        
+        public int productSuccess = 0;
+        public int productSkipped = 0;
+        public int productError = 0;
+        
+        public int categorySuccess = 0;
+        public int categoryError = 0;
+        public int categorySkipped = 0;
+
+        public UrlGenStats(boolean doProducts, boolean doCategory) {
+            this.doProducts = doProducts;
+            this.doCategory = doCategory;
+        }
+
+        public boolean hasError() {
+            return productError > 0 || categoryError > 0;
+        }
+        
+        public void toMsgLists(List<String> msgList, List<String> errMsgList) {
+            if (doProducts) {
+                msgList.add("Products updated: " + productSuccess);
+                msgList.add("Products skipped: " + productSkipped);
+                if (productError > 0) errMsgList.add("Products failed: " + productError);
+            }
+            
+            if (doCategory) {
+                msgList.add("Categories updated: " + categorySuccess);
+                msgList.add("Categories skipped: " + categorySkipped);
+                if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
+            }
+        }
+        
+        public String toMsg() {
+            List<String> msgList = new ArrayList<>();
+            List<String> errMsgList = new ArrayList<>();
+            toMsgLists(msgList, errMsgList);
+            
+            List<String> allMsgs = new ArrayList<>();
+            allMsgs.addAll(msgList);
+            allMsgs.addAll(errMsgList);
+            return StringUtils.join(allMsgs, "; ");
+        }
     }
 }

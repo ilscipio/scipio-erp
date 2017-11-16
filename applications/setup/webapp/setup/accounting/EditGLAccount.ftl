@@ -1,5 +1,5 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
-<#include "component://accounting/webapp/accounting/common/treecommon.ftl">
+<#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
 
 <#assign defaultParams = {
     "topGlAccountId": topGlAccountId!

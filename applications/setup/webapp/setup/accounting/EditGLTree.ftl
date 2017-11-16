@@ -1,7 +1,7 @@
 <#-- SCIPIO: SETUP interactive catalog tree implementation -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
-<#include "component://accounting/webapp/accounting/common/treecommon.ftl">
+<#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
 
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
@@ -68,4 +68,4 @@
 
 <#-- CORE INCLUDE -->
 
-<#include "component://accounting/webapp/accounting/ledger/accountsTree.ftl">
+<#include "component://accounting/webapp/accounting/ledger/tree/EditGLAccountTreeCore.ftl">

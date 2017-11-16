@@ -105,7 +105,7 @@ under the License.
                     <decorator-section name="body">
                         <!-- <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>-->
                         <platform-specific>
-                                <html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html>
+                                <html><html-template location="component://accounting/webapp/accounting/ledger/tree/EditGLAccountTreeCore.ftl"/></html>
                         </platform-specific>
                         
                         <!-- 

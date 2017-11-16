@@ -158,9 +158,13 @@ public class ContextFilter implements Filter {
         // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
         String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
         if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
-            Set<String> reqUris = getControllerRequestUriNames(httpRequest);
+            // previous filter may request custom forwards using _SCP_FWDROOTURIS_
+            @SuppressWarnings("unchecked")
+            Set<String> customRootRedirects = (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_");
+            Map<String, ?> reqUris = getControllerRequestUriMap(httpRequest);
             String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
-            if (reqUris.contains(RequestLinkUtil.getFirstPathElem(servletAndPathInfo))) {
+            String firstPathElem = RequestLinkUtil.getFirstPathElem(servletAndPathInfo);
+            if (reqUris.containsKey(firstPathElem) || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
                 RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
                 rd.forward(request, response);
                 return;
@@ -214,9 +218,9 @@ public class ContextFilter implements Filter {
             Set<String> allowList = this.allowedPaths;
             
             // SCIPIO: 2017-11: SPECIAL: auto-detect when ControlServlet is mapped to root (controlServletPath empty) and allow its requests
-            Set<String> allowRootList = Collections.emptySet();
+            Map<String, ?> allowRootList = Collections.emptyMap();
             if (UtilValidate.isEmpty(httpRequest.getServletPath()) && controlServletPath != null && controlServletPath.isEmpty()) {
-                allowRootList = getControllerRequestUriNames(httpRequest);
+                allowRootList = getControllerRequestUriMap(httpRequest);
             }
 
             if (debug) Debug.logInfo("[Domain]: " + httpRequest.getServerName() + " [Request]: " + httpRequest.getRequestURI(), module);
@@ -264,7 +268,7 @@ public class ContextFilter implements Filter {
             // check to make sure the requested url is allowed
             if (allowList != null &&
                 (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) &&
-                (!allowRootList.contains(RequestLinkUtil.getFirstPathInfoElem(httpRequest))) // SCIPIO: new 2017-11-14: allow root control requests
+                (!allowRootList.containsKey(RequestLinkUtil.getFirstPathInfoElem(httpRequest))) // SCIPIO: new 2017-11-14: allow root control requests
                 ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
                 
@@ -519,10 +523,10 @@ public class ContextFilter implements Filter {
         response.sendRedirect(encodeRedirectURL(response, url));
     }
     
-    protected Set<String> getControllerRequestUriNames(HttpServletRequest request) throws ServletException {
+    protected Map<String, ConfigXMLReader.RequestMap> getControllerRequestUriMap(HttpServletRequest request) throws ServletException {
         try {
             RequestHandler rh = RequestHandler.getRequestHandler(request);
-            return rh.getControllerConfig().getRequestMapMap().keySet();
+            return rh.getControllerConfig().getRequestMapMap();
         } catch (Exception e) {
             Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
             throw new ServletException(e);

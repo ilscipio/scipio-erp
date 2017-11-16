@@ -100,16 +100,20 @@
 					    		<#assign selected = (rawString(orderCustomMethod.enumId) == rawString(params.oldOrderSequenceEnumId!))>
 					    		<option value="${orderCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
 					    	</#list>
-				    	</@field>	
+				    	</@field>
+				        <@field type="text" name="orderIdPrefix" value=(params.orderIdPrefix!) label=uiLabelMap.FormFieldTitle_orderIdPrefix />
+				        <@field type="text" name="lastOrderNumber" value=(params.lastOrderNumber!) label=uiLabelMap.FormFieldTitle_lastOrderNumber />
 				    </@section>
 				    <@section title=uiLabelMap.SetupAccountingPreferencesQuotes>
 				    	<@field type="select" name="oldQuoteSequenceEnumId" value=(params.oldQuoteSequenceEnumId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
 				    		<option value=""></option>
 					    	<#list quoteCustomMethods as quoteCustomMethod>
 					    		<#assign selected = (rawString(quoteCustomMethod.enumId) == rawString(params.oldQuoteSequenceEnumId!))>
-					    		<option value="${orderCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
+					    		<option value="${quoteCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${quoteCustomMethod.description}</option>
 					    	</#list>
-				    	</@field>	
+				    	</@field>
+				    	<@field type="text" name="quoteIdPrefix" value=(params.quoteIdPrefix!) label=uiLabelMap.FormFieldTitle_quoteIdPrefix />
+				    	<@field type="text" name="lastQuoteNumber" value=(params.lastQuoteNumber!) label=uiLabelMap.FormFieldTitle_lastQuoteNumber />        			
 				    </@section>
 				</@form>
 			</@section>

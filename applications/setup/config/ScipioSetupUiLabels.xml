@@ -160,10 +160,14 @@
     <property key="SetupAccountingPreferencesInvoices">
     	<value xml:lang="en">Invoices</value>
     </property>
-    
-    
-    
-    
-    
+    <property key="SetupAccountingPreferencesOrders">
+    	<value xml:lang="en">Orders</value>
+    </property>
+    <property key="SetupAccountingPreferencesQuotes">
+    	<value xml:lang="en">Quotes</value>
+    </property>
+    <property key="SetupAccountingCreateNewTimePeriod">
+    	<value xml:lang="en">CreateNewTimePeriod</value>
+    </property>
     
 </resource>

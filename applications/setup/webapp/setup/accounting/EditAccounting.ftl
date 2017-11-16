@@ -31,8 +31,6 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS</@alert>
-
 <@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=["topGlAccountId"] />
     <@field type="hidden" name="isCreateGl" value=(topAccountGlId??)?string("N","Y")/> 

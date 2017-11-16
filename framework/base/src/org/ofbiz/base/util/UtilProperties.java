@@ -1178,6 +1178,31 @@ public class UtilProperties implements Serializable {
         }
     }
     
+    /**
+     * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
+     * Added 2017-11.
+     */
+    public static void extractPropertiesWithPrefixAndId(Map<String, Map<String, ? super String>> out, Properties properties, String prefix) {
+        if (prefix == null) prefix = "";
+        for(String name : properties.stringPropertyNames()) {
+            if (name.startsWith(prefix)) {
+                String rest = name.substring(prefix.length());
+                int nextDotIndex = rest.indexOf('.');
+                if (nextDotIndex > 0 && nextDotIndex < (rest.length() - 1)) {
+                    String id = rest.substring(0, nextDotIndex);
+                    String subName = rest.substring(nextDotIndex + 1);
+                    String value = properties.getProperty(name);
+                    Map<String, ? super String> subMap = out.get(id);
+                    if (subMap == null) {
+                        subMap = new HashMap<>();
+                        out.put(id, subMap);
+                    }
+                    subMap.put(subName, value);
+                }
+            }
+        }
+    }
+    
     /** Custom ResourceBundle class. This class extends ResourceBundle
      * to add custom bundle caching code and support for the OFBiz custom XML
      * properties file format.

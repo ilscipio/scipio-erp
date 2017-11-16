@@ -599,7 +599,7 @@
                                     <widgets>
                                         <screenlet>
                                         	<include-screen name="EditAcctgPreferences"/>
-                                            <include-screen name="EditGLTree"/>
+                                            <include-screen name="EditGLAccountTree"/>
                                             <include-screen name="EditFiscalPeriods"/>
                                             <include-screen name="EditJournals"/>
                                         </screenlet>
@@ -650,10 +650,10 @@
             </widgets>           
         </section>
     </screen>
-    <screen name="EditGLTree">
+    <screen name="EditGLAccountTree">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/>                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
             </actions>
             <widgets>
             	<section>
@@ -665,7 +665,7 @@
 		            </condition>
 		            <widgets>
 						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLTree.ftl"/></html></platform-specific>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
 						</screenlet>
 		            </widgets>
             	</section>

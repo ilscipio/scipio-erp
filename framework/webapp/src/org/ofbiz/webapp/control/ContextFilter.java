@@ -124,6 +124,24 @@ public class ContextFilter implements Filter {
 
         // Debug.logInfo("Running ContextFilter.doFilter", module);
 
+        // SCIPIO: 2017: new special forwarding mode for root controller URI requests
+        // NOTE: this requires that ContextFilter responds to FORWARD dispatcher, otherwise multitenant will not be init
+        // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
+        String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
+        if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
+            // previous filter may request custom forwards using _SCP_FWDROOTURIS_
+            @SuppressWarnings("unchecked")
+            Set<String> customRootRedirects = (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_");
+            Map<String, ?> reqUris = getControllerRequestUriMap(httpRequest);
+            String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
+            String firstPathElem = RequestLinkUtil.getFirstPathElem(servletAndPathInfo);
+            if (reqUris.containsKey(firstPathElem) || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
+                RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
+                rd.forward(request, response);
+                return;
+            }
+        }
+        
         // ----- Servlet Object Setup -----
 
         // set the ServletContext in the request for future use
@@ -151,24 +169,6 @@ public class ContextFilter implements Filter {
                 }
             }
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");
-        }
-
-        // SCIPIO: 2017: new special forwarding mode for root controller URI requests
-        // NOTE: this requires that ContextFilter responds to FORWARD dispatcher, otherwise multitenant will not be init
-        // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
-        String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
-        if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
-            // previous filter may request custom forwards using _SCP_FWDROOTURIS_
-            @SuppressWarnings("unchecked")
-            Set<String> customRootRedirects = (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_");
-            Map<String, ?> reqUris = getControllerRequestUriMap(httpRequest);
-            String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
-            String firstPathElem = RequestLinkUtil.getFirstPathElem(servletAndPathInfo);
-            if (reqUris.containsKey(firstPathElem) || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
-                RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
-                rd.forward(request, response);
-                return;
-            }
         }
         
         // ----- Context Security -----

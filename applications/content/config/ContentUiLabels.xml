@@ -7722,8 +7722,8 @@
         <value xml:lang="de">Sitemaps erstellen</value>
     </property>
     <property key="ContentGenerateSitemapsInfo">
-        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files.</value>
-        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Sie werden an den in den Konfigurationsdateien sitemaps.properties angegebenen Speicherorten generiert.</value>
+        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
+        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Sie werden an den in den Konfigurationsdateien sitemaps.properties angegebenen Speicherorten generiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
     </property>
     <property key="ContentGenerateSeoUrlInfo">
         <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>

@@ -122,7 +122,7 @@ under the License.
         </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images</param-value>
+            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps</param-value>
         </init-param>
         <init-param>
             <!-- SCIPIO: Set this to Y to automatically forward root requests that match controller URIs to

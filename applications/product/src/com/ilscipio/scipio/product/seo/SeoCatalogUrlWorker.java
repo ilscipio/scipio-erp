@@ -75,6 +75,7 @@ import com.ilscipio.scipio.util.SeoStringUtil;
  * <li>{@link org.ofbiz.product.category.CatalogUrlFilter#makeCatalogAltLink}</li>
  * <li>{@link org.ofbiz.product.category.CatalogUrlServlet#makeCatalogLink}</li>
  * </ul>
+ * FIXME: makeXxxUrlPath methods do not respect useCache flag
  */
 @SuppressWarnings("serial")
 public class SeoCatalogUrlWorker implements Serializable {
@@ -456,14 +457,14 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Convert list of categoryIds to formatted alt url names.
      */
-    public List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail) {
+    public List<String> getCategoryUrlTrailNames(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, boolean useCache) {
         if (trail == null || trail.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trail.size());
         ListIterator<String> trailIt = trail.listIterator();
         while(trailIt.hasNext()) {
             String productCategoryId = trailIt.next();
             if ("TOP".equals(productCategoryId)) continue;
-            String catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategoryId, !trailIt.hasNext());
+            String catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategoryId, !trailIt.hasNext(), useCache);
             if (catName != null) catNames.add(catName);
         }
         return catNames;
@@ -472,11 +473,13 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Reads ALTERNATIVE_URL for category and locale from DB and builds config-specified alt url path part.
      * Fallback on ID.
+     * FIXME: ContentWrapper does not respect useCache flag!
      */
-    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, boolean last) {
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, boolean last, boolean useCache) {
         String catName = null;
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
+            // FIXME: ContentWrapper does not respect useCache flag!
             String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
             if (altUrl != null) {
                 // FIXME: effective locale might not be same as "locale" variable!
@@ -510,14 +513,14 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Reads ALTERNATIVE_URL for category and locale from DB and builds config-specified alt url path part.
      * Fallback on ID.
      */
-    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, boolean last) {
+    public String getCategoryUrlTrailName(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, boolean last, boolean useCache) {
         String catName = null;
         if (productCategoryId != null) {
             try {
                 GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory")
-                            .where("productCategoryId", productCategoryId).cache(true).queryOne();
+                            .where("productCategoryId", productCategoryId).cache(useCache).queryOne();
                 if (productCategory != null) {
-                    catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, last);
+                    catName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, last, useCache);
                 } else {
                     ; // NOTE: this is possible due to cache and delays and such
                 }
@@ -624,10 +627,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
         //trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
         trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, webSiteId, currentCatalogId);
-        List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
+        List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, true);
         
         // NOTE: pass null productCategory because already resolved in trailNames
-        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, contextPath);
+        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, contextPath, true);
         
         // append view index
         if (UtilValidate.isNotEmpty(viewIndex)) {
@@ -669,7 +672,8 @@ public class SeoCatalogUrlWorker implements Serializable {
      * NOTE: productCategory may be null, in which case assume already resolved as part of trailNames. 
      * Assumes trailNames already valid.
      */
-    public StringBuilder makeCategoryUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue productCategory, List<String> trailNames, String contextPath) {
+    public StringBuilder makeCategoryUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, 
+            GenericValue productCategory, List<String> trailNames, String contextPath, boolean useCache) {
         StringBuilder urlBuilder = new StringBuilder();
         if (contextPath != null) {
             urlBuilder.append(contextPath);
@@ -695,7 +699,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
         
         if (productCategory != null) {
-            String catTrailName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, true);
+            String catTrailName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, true, useCache);
             if (catTrailName != null) {
                 if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
                     urlBuilder.append("/");
@@ -750,10 +754,10 @@ public class SeoCatalogUrlWorker implements Serializable {
             //    trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
             //}
             trail = makeFullProductUrlTrail(delegator, trail, product, webSiteId, currentCatalogId);
-            trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail);
+            trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, true);
         }
         
-        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, contextPath);
+        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, contextPath, true);
         
         return urlBuilder.toString();
     }
@@ -762,8 +766,9 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Builds the core product URL path.
      * NOTE: product may be null, in which case assume already resolved as part of trailNames. 
      * Assumes trailNames already valid.
+     * FIXME: ContentWrapper does not respect useCache flag!
      */
-    public StringBuilder makeProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product, List<String> trailNames, String contextPath) {
+    public StringBuilder makeProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product, List<String> trailNames, String contextPath, boolean useCache) {
         StringBuilder urlBuilder = new StringBuilder();
         if (contextPath != null) {
             urlBuilder.append(contextPath);
@@ -805,6 +810,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             // append product name
             // FIXME: effective locale might not be same as "locale" variable!
             String productId = product.getString("productId");
+            // FIXME: ContentWrapper does not respect useCache flag!
             String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"), 
                     locale, CatalogUrlType.PRODUCT);
             if (UtilValidate.isNotEmpty(alternativeUrl)) {

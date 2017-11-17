@@ -479,12 +479,13 @@ public abstract class SeoCatalogServices {
                 if (productStore == null) return ServiceUtil.returnError("store not found: " + productStoreId);
                 
                 prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
-                        .filterByDate().cache(useCache).queryList();
+                        .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
             }
             
             for(GenericValue prodCatalog : prodCatalogList) {
                 List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate().cache(useCache).queryList();
+                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate()
+                        .orderBy("sequenceNum").cache(useCache).queryList();
                 generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProduct, doCategory, useCache);
             }
         } catch(Exception e) {
@@ -583,9 +584,9 @@ public abstract class SeoCatalogServices {
             List<GenericValue> categoryAssocList, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
             GenericValue category = null;
-            if (categoryAssoc.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
+            if ("ProductCategoryRollup".equals(categoryAssoc.getEntityName())) {
                 category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
-            } else if (categoryAssoc.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
+            } else if ("ProdCatalogCategory".equals(categoryAssoc.getEntityName())) {
                 category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
             }
             if (category == null) {

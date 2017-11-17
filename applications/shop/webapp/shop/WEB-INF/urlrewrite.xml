@@ -11,7 +11,7 @@
     </outbound-rule>
     <outbound-rule>
         <condition type="attribute" name="urlFilter.outUrlWebapp.isSameContext" operator="equal">false</condition>
-          <from>.*</from>
+        <from>.*</from>
         <to last="true">-</to>
     </outbound-rule>
 

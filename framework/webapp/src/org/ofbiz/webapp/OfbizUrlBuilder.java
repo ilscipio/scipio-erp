@@ -278,6 +278,15 @@ public final class OfbizUrlBuilder {
     }
 
     /**
+     * SCIPIO: Builds a partial URL - including the scheme and host, but not the servlet path or resource.
+     * Does NOT consult controller. useSSL false by default.
+     * Added 2017-11-17.
+     */
+    public boolean buildHostPart(Appendable buffer, Boolean useSSL) throws WebAppConfigurationException, IOException {
+        return buildHostPart(buffer, null, useSSL, false);
+    }
+    
+    /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
      * 
      * @param buffer

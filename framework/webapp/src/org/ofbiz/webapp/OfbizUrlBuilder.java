@@ -207,14 +207,17 @@ public final class OfbizUrlBuilder {
     public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
         // SCIPIO: support Boolean
         useSSL = Boolean.TRUE.equals(useSSL); // default false
-        controller = !Boolean.FALSE.equals(useSSL); // default true
+        controller = !Boolean.FALSE.equals(controller); // default true // SCIPIO: re-fixed 2017-11-17
         
         boolean makeSecure = useSSL;
-        String[] pathElements = url.split("/");
-        String requestMapUri = pathElements[0];
-        int queryIndex = requestMapUri.indexOf("?");
-        if (queryIndex != -1) {
-            requestMapUri = requestMapUri.substring(0, queryIndex);
+        String requestMapUri = null;
+        if (url != null) { // SCIPIO: added null check
+            String[] pathElements = url.split("/");
+            requestMapUri = pathElements[0];
+            int queryIndex = requestMapUri.indexOf("?");
+            if (queryIndex != -1) {
+                requestMapUri = requestMapUri.substring(0, queryIndex);
+            }
         }
         RequestMap requestMap = null;
         // SCIPIO: only lookup if controller lookup requested

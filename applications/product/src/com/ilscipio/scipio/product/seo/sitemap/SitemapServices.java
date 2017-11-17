@@ -1,6 +1,5 @@
 package com.ilscipio.scipio.product.seo.sitemap;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -46,27 +44,18 @@ public abstract class SitemapServices {
 
             GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
             if (productStore == null) return ServiceUtil.returnError("store not found: " + productStoreId);
+
+            SitemapConfig config = SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId);
+            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, config, productStore, useCache);
             
-            String defaultLocaleString = productStore.getString("defaultLocaleString");
-            Locale defaultLocale = UtilMisc.parseLocale(defaultLocaleString);
-            
-            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, defaultLocale, useCache);
-            
-            List<GenericValue> prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
-                    .filterByDate().cache(useCache).queryList();
-            
-            for(GenericValue prodCatalog : prodCatalogList) {
-                List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate().cache(useCache).queryList();
-                sitemapWorker.buildSitemapDeep(catalogCategories);
-            }
+            sitemapWorker.buildSitemapDeepForProductStore(productStore);
             
             sitemapWorker.commitSitemapsAndIndex();
             
             UrlGenStats stats = sitemapWorker.getStats();
             String dirMsg = "";
-            if (sitemapWorker != null && sitemapWorker.getConfig().getSitemapDir() != null) {
-                dirMsg = " (" + sitemapWorker.getConfig().getSitemapDir() + ")";
+            if (sitemapWorker != null) {
+                dirMsg = " (" + sitemapWorker.getFullSitemapDir() + ")";
             }
             // TODO: LOCALIZE
             String resultMsg = "Generated sitemaps for website '" + webSiteId + "': " + stats.toMsg(locale) + dirMsg;
@@ -75,12 +64,8 @@ public abstract class SitemapServices {
         } catch (Exception e) {
             String dirMsg = "";
             if (sitemapWorker != null) {
-                if (sitemapWorker.getConfig().getSitemapDir() != null) {
-                    dirMsg += " (" + sitemapWorker.getConfig().getSitemapDir() + ")";
-                }
-                if (sitemapWorker.getStats() != null) {
-                    dirMsg += " (" + sitemapWorker.getStats().toMsg(locale) + ")";
-                }
+                dirMsg = " (" + sitemapWorker.getFullSitemapDir() + " - "
+                        + sitemapWorker.getStats().toMsg(locale) + ")";
             }
             // TODO: LOCALIZE
             String message = "Error generating sitemaps for web site '" + webSiteId + "'" + dirMsg + ": " + e.getMessage();

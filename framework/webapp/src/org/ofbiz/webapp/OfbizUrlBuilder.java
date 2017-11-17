@@ -134,6 +134,31 @@ public final class OfbizUrlBuilder {
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
+    
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
+     * 
+     * @param webSiteId Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder fromWebSiteId(String webSiteId, Delegator delegator) throws WebAppConfigurationException, 
+        IOException, SAXException, GenericEntityException, IllegalArgumentException {
+        WebappInfo webAppInfo = null;
+        WebSiteProperties webSiteProps = null;
+        if (webSiteId != null && !webSiteId.isEmpty()) {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return from(webAppInfo, webSiteProps, delegator);
+    }
 
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;

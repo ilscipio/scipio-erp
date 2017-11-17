@@ -68,15 +68,15 @@ public class UrlRewriteConf {
      * Use urlrewritefilter rules to convert urls - emulates urlrewritefilter - just like the original url would be
      * TODO: REVIEW: 2017: urlrewritefilter internals may have changed...
      */
-    public String processOutboundUrl(String originalUrl) {
-        String rewriteUrl = originalUrl;
+    public String processOutboundUrl(String url) {
+        String rewriteUrl = url;
 
         // Taken over from urlrewritefilter
         if (Debug.verboseOn()) {
-            Debug.logVerbose("urlrewrite: processing outbound url for " + originalUrl, module);
+            Debug.logVerbose("urlrewrite: processing outbound url for " + url, module);
         }
 
-        if (originalUrl == null) {
+        if (url == null) {
             return "";
         }
 

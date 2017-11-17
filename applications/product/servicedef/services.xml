@@ -2355,7 +2355,7 @@ under the License.
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>Slightly faster iterating if true, but not recommended</description>
+            <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
     
@@ -2370,26 +2370,28 @@ under the License.
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>Slightly faster iterating if true, but not recommended</description>
+            <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
     
     <service name="generateWebsiteAlternativeUrlSitemapFiles" engine="java" 
         location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateWebsiteAlternativeUrlSitemapFiles" 
         transaction-timeout="72000" max-retry="1">
-        <description>Creates sitemaps in filesystem using product/category alternative URLs, for WebSite</description>
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for WebSite, using configurations from sitemaps.properties</description>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>Slightly faster iterating if true, but not recommended</description>
+            <description>May be slightly faster iterating if true, but not recommended
+                WARN/FIXME: 2017-11-17: value of this flag is not fully honored at this time</description>
         </attribute>
     </service>
     
     <service name="generateAllAlternativeUrlSitemapFiles" engine="java" 
         location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateAllAlternativeUrlSitemapFiles" 
         transaction-timeout="72000" max-retry="1">
-        <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled</description>
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled, using configurations from sitemaps.properties</description>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>Slightly faster iterating if true, but not recommended</description>
+            <description>May be slightly faster iterating if true, but not recommended
+                WARN/FIXME: 2017-11-17: value of this flag is not fully honored at this time</description>
         </attribute>
     </service>
     

@@ -618,6 +618,8 @@ under the License.
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
+                <!-- 2017-11: fallback -->
+                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>

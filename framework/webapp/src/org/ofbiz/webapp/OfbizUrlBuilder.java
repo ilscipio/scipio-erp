@@ -137,6 +137,7 @@ public final class OfbizUrlBuilder {
     
     /**
      * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
+     * Added 2017-11.
      * 
      * @param webSiteId Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite

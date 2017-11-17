@@ -17,6 +17,10 @@ import org.tuckey.web.filters.urlrewrite.OutboundRule;
 /**
  * Wrapper to help interact with urlrewrite.xml files.
  * Avoids reloading the urlrewrite.xml file for every single URL.
+ * <p>
+ * FIXME: processOutboundUrl does not acurately reproduce urlrewritefilter behavior; only some
+ * elements of rules are recognized (best-effort) - so any urlrewrite.xml files too complex
+ * may produce different results than if processed by urlrewritefilter itself!
  */
 public class UrlRewriteConf {
 
@@ -125,7 +129,7 @@ public class UrlRewriteConf {
             if ("-".equals(replacement)) {
                 matched = m.find();
             } else {
-                // CAN'T DO THIS - must test if actually matched for isLast()
+                // CAN'T DO THIS - must test if actually matched, for isLast()
                 //rewriteUrl = m.replaceAll(outboundRule.getTo());
                 m.reset();
                 matched = m.find();

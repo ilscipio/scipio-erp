@@ -2,10 +2,8 @@ package com.ilscipio.scipio.product.seo.sitemap;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,17 +12,14 @@ import java.util.Locale;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
-import org.tuckey.web.filters.urlrewrite.Conf;
-import org.tuckey.web.filters.urlrewrite.OutboundRule;
 
+import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
 import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
@@ -39,17 +34,18 @@ public class SitemapWorker {
 
     public static final String module = SitemapWorker.class.getName();
     
-    @Deprecated
-    private static final String URL_HYPHEN = "-";
-    
     protected final Delegator delegator;
     protected final LocalDispatcher dispatcher;
+    protected final Locale locale;
     protected final String webSiteId;
+    protected final String contextPath;
     protected final SitemapConfig config;
-    protected final Locale defaultLocale;
+    protected final SeoCatalogUrlWorker urlWorker;
     protected final boolean useCache;
     
-    private static final String logPrefix = "Seo: Sitemap: ";
+    static final String logPrefix = "Seo: Sitemap: ";
+    
+    protected UrlRewriteConf urlRewriteConf;
     
     protected UrlGenStats stats = null;
     protected WebSitemapGenerator productWsg = null;
@@ -61,21 +57,31 @@ public class SitemapWorker {
     protected long productSitemapFileIndex = 0;
     protected long categorySitemapFileIndex = 0;
     
-    public SitemapWorker(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, SitemapConfig config,
-            Locale defaultLocale, boolean useCache) throws GeneralException, IOException, URISyntaxException {
+    protected SitemapWorker(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, SitemapConfig config,
+            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, boolean useCache) throws GeneralException, IOException, URISyntaxException {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        this.locale = locale;
         this.webSiteId = webSiteId;
+        this.contextPath = contextPath;
         this.config = config;
-        this.defaultLocale = defaultLocale;
+        this.urlWorker = urlWorker;
+        this.urlRewriteConf = urlRewriteConf;
         this.useCache = useCache;
         reset();
     }
 
-    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, Locale defaultLocale, boolean useCache) throws GeneralException, IOException, URISyntaxException {
-        return new SitemapWorker(delegator, dispatcher, webSiteId, 
-                SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId),
-                defaultLocale,
+    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, Locale locale, boolean useCache) throws GeneralException, IOException, URISyntaxException {
+        SitemapConfig config = SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId);
+        String contextPath = config.getContextPath();
+        UrlRewriteConf urlRewriteConf = null;
+        if (config.getUrlConfPath() != null) {
+            urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
+        }
+        return new SitemapWorker(delegator, dispatcher, locale, webSiteId,
+                contextPath, config,
+                SeoCatalogUrlWorker.getInstance(delegator, webSiteId),
+                urlRewriteConf,
                 useCache);
     }
 
@@ -84,7 +90,7 @@ public class SitemapWorker {
     }
     
     public void reset() throws IOException, URISyntaxException {
-        this.stats = new UrlGenStats(config.doProduct, config.doCategory);
+        this.stats = new UrlGenStats(config.doProduct, config.doCategory, false);
         this.productWsg = null;
         this.categoryWsg = null;
         this.productSitemapFiles = new ArrayList<>();
@@ -99,37 +105,57 @@ public class SitemapWorker {
         return stats;
     }
     
+    protected String getContextPath() {
+        return contextPath;
+    }
+    
+    /**
+     * Gets cached conf.
+     * Avoids reloading the urlrewrite.xml file for every single URL.
+     */
+    protected UrlRewriteConf getUrlRewriteConf() {
+        return urlRewriteConf;
+    }
+    
     protected WebSitemapGenerator getSitemapGenerator(String filePrefix) throws IOException, URISyntaxException {
         File myDir = new File(FlexibleLocation.resolveLocation(config.sitemapDir).toURI());
         myDir.mkdirs();
-        return WebSitemapGenerator.builder(config.baseUrl, myDir).fileNamePrefix(filePrefix).dateFormat(config.dateFormat).gzip(true).build();
+        return WebSitemapGenerator.builder(config.baseUrl, myDir).fileNamePrefix(filePrefix).dateFormat(config.dateFormat).gzip("gzip".equals(config.getCompress())).build();
     }
     
     public void buildSitemapDeep(List<GenericValue> productCategories) throws GeneralException, IOException, URISyntaxException {
-        buildSitemapDeepInternal(productCategories);
+        buildSitemapDeepInternal(productCategories, new ArrayList<String>());
     }
     
-    protected void buildSitemapDeepInternal(List<GenericValue> productCategories) throws GeneralException, IOException {
-        for (GenericValue productCategory : productCategories) {
+    protected void buildSitemapDeepInternal(List<GenericValue> categoryAssocList, List<String> trailNames) throws GeneralException, IOException {
+        for (GenericValue categoryAssoc : categoryAssocList) {
             GenericValue category = null;
-            if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
-                category = productCategory.getRelatedOne("CurrentProductCategory", useCache);
-            } else if (productCategory.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
-                category = productCategory.getRelatedOne("ProductCategory", useCache);
+            if (categoryAssoc.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
+                category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
+            } else if (categoryAssoc.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
+                category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
             }
-            if (category != null) {
-                // self
-                if (config.doCategory) {
-                    buildSitemapCategory(category);
-                }
-                
+            if (category == null) {
+                Debug.logError(getLogMsgPrefix()+"Schema error: Could not get related ProductCategory for: " + categoryAssoc, module);
+                continue;
+            }
+            
+            // self
+            if (config.doCategory) {
+                buildSitemapCategory(category, trailNames);
+            }
+            
+            // NOTE: this is non-last - cannot reuse the one determined in previous call
+            String trailName = urlWorker.getCategoryUrlTrailName(delegator, dispatcher, locale, category, false);       
+            trailNames.add(trailName); // no need copy, just remove after
+            try {
                 // child cats (recursive)
                 List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
                         .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
                 if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                    buildSitemapDeepInternal(childProductCategoryRollups);
+                    buildSitemapDeepInternal(childProductCategoryRollups, trailNames);
                 }
-
+    
                 // products
                 if (config.doProduct) {
                     List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
@@ -138,86 +164,74 @@ public class SitemapWorker {
                     if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                         for (GenericValue productCategoryMember : productCategoryMembers) {
                             GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
-                            buildSitemapProduct(product, false);
+                            buildSitemapProduct(product, trailNames);
                         }
                     }
                 }
+            } finally {
+                trailNames.remove(trailNames.size() - 1);
             }
         }
     }
     
-    protected void buildSitemapCategory(GenericValue productCategory) throws GeneralException, IOException {
+    protected void buildSitemapCategory(GenericValue productCategory, List<String> trailNames) throws GeneralException, IOException {
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
+            String url = urlWorker.makeCategoryUrlPath(delegator, dispatcher, locale, productCategory, trailNames, getContextPath()).toString();
             
-            // FIXME: TOTAL REWRITE NEEDED
+            url = (config.baseUrl != null ? config.baseUrl : "") + applyUrlRewriteRules(url);
             
-            String categoryName = productCategory.getString("categoryName"); //CategoryContentWrapper.getProductCategoryContentAsText(category, "CATEGORY_NAME", defaultLocale, dispatcher);
-            if(categoryName != null){
-                String catName=categoryName.replaceAll(" ",URL_HYPHEN).replaceAll(",", "");
-                StringBuilder urlBuilder = new StringBuilder("/");
-                urlBuilder.append(catName);
-                urlBuilder.append(URL_HYPHEN);
-                urlBuilder.append(productCategoryId);
-                String url = urlBuilder.toString();                     
-                String rewriteUrl = applyUrlRewriteRules(url);
-                if(Debug.verboseOn())Debug.logInfo("Created url " + rewriteUrl, module);
-                WebSitemapUrl sitemapUrl = new WebSitemapUrl.Options(rewriteUrl).build();
-                
-                addCategoryUrl(sitemapUrl);
-                
-                stats.categorySuccess++;
-            } else {
-                Debug.logWarning(getMsgLogPrefix()+"Category '" + productCategoryId + "' has no name; skipping", module);
-                stats.categorySkipped++;
-            }
+            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Creating category url: " + url, module);
+            
+            WebSitemapUrl sitemapUrl = new WebSitemapUrl.Options(url).build();
+            
+            addCategoryUrl(sitemapUrl);
+            stats.categorySuccess++;
         } catch(Exception e) {
             stats.categoryError++;
-            Debug.logError(e.getMessage(), getErrorLogPrefix() + "cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
         }
     }
     
-    protected void buildSitemapProduct(GenericValue product, boolean doChildProducts) throws GeneralException, IOException {
+    protected void buildSitemapProduct(GenericValue product, List<String> trailNames) throws GeneralException, IOException {
         String productId = product.getString("productId");
         try {
+            String url = urlWorker.makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, getContextPath()).toString();
             
-            // FIXME: TOTAL REWRITE NEEDED
+            url = (config.baseUrl != null ? config.baseUrl : "") + applyUrlRewriteRules(url);
             
-            ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, defaultLocale, "text/plain");
-            String url = null; //CatalogUrlSeoTransform.makeProductUrl("/",
-                    //null, product.getString("productId"),
-                    //wrapper.get("PRODUCT_NAME").toString(), null, null);
-            String rewriteUrl = applyUrlRewriteRules(url);
-            if (Debug.verboseOn()) Debug.logVerbose(getMsgLogPrefix()+"Created url " + rewriteUrl, module);
-            Date lastModifiedDate = new Date(product.getTimestamp("lastModifiedDate").getTime());
-            WebSitemapUrl productUrl = new WebSitemapUrl.Options(rewriteUrl)
-                    .lastMod(lastModifiedDate).build();
+            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Creating product url: " + url, module);
+            
+            Timestamp lastModifiedDateTs = product.getTimestamp("lastModifiedDate");
+            Date lastModifiedDate = lastModifiedDateTs != null ? new Date(lastModifiedDateTs.getTime()) : null;
+                    
+            WebSitemapUrl.Options opts = new WebSitemapUrl.Options(url);
+            if (lastModifiedDate != null) opts = opts.lastMod(lastModifiedDate);
+            WebSitemapUrl productUrl = opts.build();
             
             addProductUrl(productUrl);
-            
             stats.productSuccess++;
             
-            // TODO?: is there need to do variants? 
+            // TODO?: is there need to do variants (not explicitly associated to category)? 
             // usually don't want to advertise the variants unless attached to category for some reason?...
-            //if (doChildProducts) {  
+            //if (config.doChildProduct) {  
             //}
         } catch(Exception e) {
-            stats.categoryError++;
-            Debug.logError(e.getMessage(), getErrorLogPrefix() + "cannot build URL for product '" + productId + "': " + e.getMessage(), module);
+            stats.productError++;
+            Debug.logError(getLogErrorPrefix() + "Cannot build URL for product '" + productId + "': " + e.getMessage(), module);
         } 
     }
     
     protected void addProductUrl(WebSitemapUrl url) throws IOException, URISyntaxException {
-        if (productUrlCount > config.sizemapSize) {
+        if (config.sizemapSize != null && productUrlCount > config.sizemapSize) {
             commitProductSitemap();
-            productWsg = null;
         }
         
         if (productWsg == null) {
             productWsg = getSitemapGenerator(config.productFilePrefix);
             productUrlCount = 0;
             productSitemapFileIndex++;
-            Debug.logInfo(getMsgLogPrefix()+"Building product sitemap file number " + productSitemapFileIndex, module);
+            Debug.logInfo(getLogMsgPrefix()+"Building product sitemap file number " + productSitemapFileIndex, module);
         }
         
         productWsg.addUrl(url);
@@ -225,16 +239,15 @@ public class SitemapWorker {
     }
     
     protected void addCategoryUrl(WebSitemapUrl url) throws IOException, URISyntaxException {
-        if (categoryUrlCount > config.sizemapSize) {
+        if (config.sizemapSize != null && categoryUrlCount > config.sizemapSize) {
             commitCategorySitemap();
-            categoryWsg = null;
         }
         
         if (categoryWsg == null) {
             categoryWsg = getSitemapGenerator(config.categoryFilePrefix);
             categoryUrlCount = 0;
             categorySitemapFileIndex++;
-            Debug.logInfo(getMsgLogPrefix()+"Building category sitemap file number " + categorySitemapFileIndex, module);
+            Debug.logInfo(getLogMsgPrefix()+"Building category sitemap file number " + categorySitemapFileIndex, module);
         }
         
         categoryWsg.addUrl(url);
@@ -242,15 +255,17 @@ public class SitemapWorker {
     }
     
     protected void commitProductSitemap() {
-        Debug.logInfo(getMsgLogPrefix()+"Writing product sitemap file number " + productSitemapFileIndex + " (" + productUrlCount + " entries)", module);
+        Debug.logInfo(getLogMsgPrefix()+"Writing product sitemap file number " + productSitemapFileIndex + " (" + productUrlCount + " entries)", module);
         productWsg.write();
         productSitemapFiles.add(config.productFilePrefix + productSitemapFileIndex + "." + config.sitemapExtension);
+        productWsg = null;
     }
     
     protected void commitCategorySitemap() {
-        Debug.logInfo(getMsgLogPrefix()+"Writing category sitemap file number " + productSitemapFileIndex + " (" + categoryUrlCount + " entries)", module);
-        productWsg.write();
+        Debug.logInfo(getLogMsgPrefix()+"Writing category sitemap file number " + categorySitemapFileIndex + " (" + categoryUrlCount + " entries)", module);
+        categoryWsg.write();
         categorySitemapFiles.add(config.categoryFilePrefix + categorySitemapFileIndex + "." + config.sitemapExtension);
+        categoryWsg = null;
     }
     
     public void commitSitemaps() {
@@ -279,7 +294,7 @@ public class SitemapWorker {
     }
 
     public void generateSitemapIndex(List<String> siteMapLists) throws IOException, URISyntaxException {
-        Debug.logInfo(getMsgLogPrefix()+"Writing index '" + config.sitemapIndexFile, module);
+        Debug.logInfo(getLogMsgPrefix()+"Writing index '" + config.sitemapIndexFile, module);
 
         File myDir = new File(FlexibleLocation.resolveLocation(config.sitemapDir).toURI());
         myDir.mkdirs();
@@ -288,7 +303,7 @@ public class SitemapWorker {
         try {
             myFile.createNewFile();
         } catch (IOException e) {
-            Debug.logInfo(getMsgLogPrefix()+"Index file '" + myFile.toString() + "' may already exist; replacing", module);
+            Debug.logInfo(getLogMsgPrefix()+"Index file '" + myFile.toString() + "' may already exist; replacing", module);
             // ignore if file already exists
         }
         
@@ -298,193 +313,33 @@ public class SitemapWorker {
         }
         sig.write();
         
-        Debug.logInfo(getMsgLogPrefix()+"Done writing index " + config.sitemapIndexFile, module);
+        Debug.logInfo(getLogMsgPrefix()+"Done writing index '" + config.sitemapIndexFile + "'", module);
     }
 
     /**
-     * Use tuckey rules to convert urls - just like the original url would be
-     * TODO: REVIEW: 2017: tuckey internals may have changed...
+     * Use urlrewritefilter rules to convert urls - emulates urlrewritefilter - just like the original url would be
+     * TODO: REVIEW: 2017: urlrewritefilter internals may have changed...
      */
-    public String applyUrlRewriteRules(String originalUrl) {
-        if (config.urlConfPath == null) return originalUrl;
-        
-        String rewriteUrl = originalUrl;
-
-        // Taken over from Tuckey UrlRewriter
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("processing outbound url for " + originalUrl, module);
-        }
-
-        if (originalUrl == null) {
-            return "";
-        }
-
-        // load config
-        URL confUrl;
-        InputStream inputStream = null;
-        try {
-            confUrl = FlexibleLocation.resolveLocation(config.urlConfPath);
-
-            inputStream = confUrl.openStream();
-            // attempt to retrieve from location other than local WEB-INF
-
-            if (inputStream == null) {
-                Debug.logError(getErrorLogPrefix()+"Unable to find urlrewrite conf file at " + config.urlConfPath, module);
-            } else {
-                Conf conf = new Conf(null, inputStream, config.urlConfPath,
-                        confUrl.toString(), false);
-
-                @SuppressWarnings("unchecked")
-                final List<OutboundRule> outboundRules = conf.getOutboundRules();
-                for (int i = 0; i < outboundRules.size(); i++) {
-                    final OutboundRule outboundRule = (OutboundRule) outboundRules
-                            .get(i);
-
-                    rewriteUrl = rewriteUrl.replaceAll(outboundRule.getFrom(),
-                            outboundRule.getTo());
-
-                    if (rewriteUrl != null) {
-                        // means this rule has matched
-                        if (Debug.verboseOn()) {
-                            Debug.logVerbose(getMsgLogPrefix()+"\"" + outboundRule.getDisplayName() + "\" matched", module);
-                        }
-                        if (outboundRule.isLast()) {
-                            if (Debug.verboseOn()) {
-                                Debug.logVerbose(getMsgLogPrefix()+"rule is last", module);
-                            }
-                            // there can be no more matches on this request
-                            break;
-                        }
-                    }
-                }
-
-            }
-        } catch (MalformedURLException e) {
-            Debug.logError(e, getErrorLogMsg(e), module);
-        } catch (IOException e) {
-            Debug.logError(e, getErrorLogMsg(e), module);
-        } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (IOException e) {
-            }
-        }
-
-        return config.baseUrl + rewriteUrl;
-    }
-
-    /**
-     * Returns canonical Url for a product (Example: https://www.ilscipio.com/product/my-product-PD1000)
-     */
-    protected String getCanonicalProductUrl(Delegator delegator, LocalDispatcher dispatcher, String productId) {
-        String canonicalProductUrl = null;
-        try {
-            GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), true);
-            if (product != null) {
-                ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, defaultLocale, "text/html");
-                String url = null; //CatalogUrlSeoTransform.makeProductUrl("/", null, product.getString("productId"), wrapper.get("PRODUCT_NAME").toString(), null, null);
-                canonicalProductUrl = applyUrlRewriteRules(url);
-            }
-        }
-        catch (GenericEntityException e) {
-            Debug.logError(e, getErrorLogPrefix() + e.getMessage(), module);
-        }
-        return canonicalProductUrl;
-    }
-
-    /**
-     * Returns canonical Url path for a product
-     * (Example: /product/my-product-PD1000)
-     */
-    protected String getCanonicalProductUrlPath(Delegator delegator, LocalDispatcher dispatcher, String productId) {
-        return getCanonicalProductUrlPath(delegator, dispatcher, productId).replace(config.baseUrl, "");
-    }
-
-    
-    /**
-     * Generate product sitemaps
-     * @param siteMapId The id of the sitemap to be returned
-     * @param productList GenericValue List of all products that are to be added
-     * @return sitemap path
-     * */
-    @Deprecated
-    String generateProductSitemap(int sitemapId, List<GenericValue> productList) {
-        List<WebSitemapUrl> urlList = new ArrayList<WebSitemapUrl>();
-        
-        try {
-            if (productList.size() > 0) {
-                for (GenericValue product : productList) {
-                    ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, defaultLocale, "text/plain");
-                    String url = null; //CatalogUrlSeoTransform.makeProductUrl("/",
-                            //null, product.getString("productId"),
-                            //wrapper.get("PRODUCT_NAME").toString(), null, null);
-                    String rewriteUrl = applyUrlRewriteRules(url);
-                    if(Debug.verboseOn())Debug.logVerbose("Created url " + rewriteUrl, module);
-                    Date lastModifiedDate = new Date(product.getTimestamp("lastModifiedDate").getTime());
-                    WebSitemapUrl productUrl = new WebSitemapUrl.Options(rewriteUrl)
-                            .lastMod(lastModifiedDate).build();
-                    urlList.add(productUrl);
-                }
-                
-                writeSitemap(urlList, config.productFilePrefix + sitemapId);
-            }
-
-        } catch (Exception e) {
-            Debug.logError(e, getErrorLogMsg(e), module);
-        }
-        return config.productFilePrefix + sitemapId + "." + config.sitemapExtension;
+    public String applyUrlRewriteRules(String url) {
+        if (url == null) return "";
+        UrlRewriteConf urlRewriteConf = getUrlRewriteConf();
+        if (urlRewriteConf == null) return url;
+        return urlRewriteConf.processOutboundUrl(url);
     }
     
-    /**
-     * Generate Category sitemaps
-     * @param siteMapId The id of the sitemap to be returned
-     * @param categoryList GenericValue List of all categories that are to be added
-     * */
-    @Deprecated
-    String generateCategorySitemap(int sitemapId, List<GenericValue> categoryList) {
-        List<WebSitemapUrl> urlList = new ArrayList<WebSitemapUrl>();
-        
-        try {
-            if (categoryList.size() > 0) {
-                for (GenericValue category : categoryList) {
-                    String currentCategoryId = category.getString("productCategoryId");
-                    String categoryName = null; //CategoryContentWrapper.getProductCategoryContentAsText(category, "CATEGORY_NAME", defaultLocale, dispatcher);
-                    if(categoryName != null){
-                        String catName=categoryName.replaceAll(" ",URL_HYPHEN).replaceAll(",", "");
-                        StringBuilder urlBuilder = new StringBuilder("/");
-                        urlBuilder.append(catName);
-                        urlBuilder.append(URL_HYPHEN);
-                        urlBuilder.append(currentCategoryId);
-                        String url = urlBuilder.toString();                     
-                        String rewriteUrl = applyUrlRewriteRules(url);
-                        if(Debug.verboseOn())Debug.logInfo("Created url " + rewriteUrl, module);
-                        WebSitemapUrl sitemapUrl = new WebSitemapUrl.Options(rewriteUrl).build();
-                        urlList.add(sitemapUrl);
-                    }
-                }
-                
-                writeSitemap(urlList, config.categoryFilePrefix + sitemapId);
-            }
-
-        } catch (Exception e) {
-            Debug.logError(e, getErrorLogMsg(e), module);
-        }
-        return config.categoryFilePrefix + sitemapId + "." + config.sitemapExtension;
-    }
-    
-    protected String getMsgLogPrefix() {
+    protected String getLogMsgPrefix() {
         return logPrefix+"Website '" + webSiteId + "': ";
     }
     
-    protected String getErrorLogPrefix() {
+    protected String getLogErrorPrefix() {
         return logPrefix+"Error generating sitemap for website '" + webSiteId + "': ";
     }
     
-    protected String getErrorLogMsg(Throwable t) {
-        return getErrorLogPrefix() + t.getMessage();
+    protected String getLogErrorMsg(Throwable t) {
+        return getLogErrorPrefix() + t.getMessage();
     }
     
-    // TODO: use a util
+    // TODO: use a util and delete this
     private static String concatPaths(String... parts) {
         StringBuilder sb = new StringBuilder();
         for(String part : parts) {

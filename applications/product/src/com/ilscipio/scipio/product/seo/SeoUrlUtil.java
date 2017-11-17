@@ -72,6 +72,7 @@ public class SeoUrlUtil {
     public static class UrlGenStats {
         public final boolean doProducts;
         public final boolean doCategory;
+        public final boolean useSkipped;
         
         public int productSuccess = 0;
         public int productSkipped = 0;
@@ -81,33 +82,38 @@ public class SeoUrlUtil {
         public int categoryError = 0;
         public int categorySkipped = 0;
 
-        public UrlGenStats(boolean doProducts, boolean doCategory) {
+        public UrlGenStats(boolean doProducts, boolean doCategory, boolean useSkipped) {
             this.doProducts = doProducts;
             this.doCategory = doCategory;
+            this.useSkipped = useSkipped;
+        }
+        
+        public UrlGenStats(boolean doProducts, boolean doCategory) {
+            this(doProducts, doCategory, true);
         }
 
         public boolean hasError() {
             return productError > 0 || categoryError > 0;
         }
         
-        public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList, boolean showSkipped) {
+        public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList) {
             if (doProducts) {
                 msgList.add("Products updated: " + productSuccess);
-                if (showSkipped) msgList.add("Products skipped: " + productSkipped);
+                if (useSkipped) msgList.add("Products skipped: " + productSkipped);
                 if (productError > 0) errMsgList.add("Products failed: " + productError);
             }
             
             if (doCategory) {
                 msgList.add("Categories updated: " + categorySuccess);
-                if (showSkipped) msgList.add("Categories skipped: " + categorySkipped);
+                if (useSkipped) msgList.add("Categories skipped: " + categorySkipped);
                 if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
             }
         }
         
-        public String toMsg(Locale locale, boolean showSkipped) {
+        public String toMsg(Locale locale) {
             List<String> msgList = new ArrayList<>();
             List<String> errMsgList = new ArrayList<>();
-            toMsgLists(locale, msgList, errMsgList, showSkipped);
+            toMsgLists(locale, msgList, errMsgList);
             
             List<String> allMsgs = new ArrayList<>();
             allMsgs.addAll(msgList);
@@ -115,13 +121,9 @@ public class SeoUrlUtil {
             return StringUtils.join(allMsgs, "; ");
         }
         
-        public Map<String, Object> toServiceResult(Locale locale, boolean showSkipped, boolean useFailure) {
-            String msg = toMsg(locale, showSkipped);
-            return hasError() ? (useFailure ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnError(msg)) : ServiceUtil.returnSuccess(msg);
+        public Map<String, Object> toServiceResultSuccessFailure(String msg) {
+            return hasError() ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
         }
-        
-        public Map<String, Object> toServiceResultSuccessFailure(Locale locale, boolean showSkipped) {
-            return toServiceResult(locale, showSkipped, true);
-        }
+
     }
 }

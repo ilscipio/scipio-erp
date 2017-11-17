@@ -29,6 +29,8 @@ public class SitemapConfig implements Serializable {
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
     
+    private static final String logPrefix = SitemapWorker.logPrefix;
+    
     private static class StaticConfigHolder {
         // TODO?: in future could have DB config
         private static final Map<String, SitemapConfig> staticConfigs = Collections.unmodifiableMap(readStaticConfigsFromProperties());
@@ -36,6 +38,7 @@ public class SitemapConfig implements Serializable {
     
     protected final String urlConfPath;
     protected final String baseUrl;
+    protected final String contextPath;
     protected final String sitemapDir;
     protected final String sitemapSubdir;
     protected final String sitemapExtension;
@@ -46,26 +49,37 @@ public class SitemapConfig implements Serializable {
     protected final Integer indexSize;
     protected final boolean doProduct;
     protected final boolean doCategory;
+    // TODO?: REVIEW: I don't see a reason to implement this for sitemaps yet...
+    // see SitemapWorker#buildSitemapProduct
+    protected final boolean doChildProduct = false;
     
     protected final W3CDateFormat dateFormat;
+    protected final String compress;
     
     public SitemapConfig(Map<String, Object> map) {
         this.urlConfPath = asNormString(map.get("urlConfPath"));
         this.baseUrl = asNormString(map.get("baseUrl"));
+        this.contextPath = asNormString(map.get("contextPath"));
         this.sitemapDir = asNormString(map.get("sitemapDir"));
         this.sitemapSubdir = asNormString(map.get("sitemapSubDir"));
         this.sitemapExtension = asNormString(map.get("sitemapExtension"));
         this.sitemapIndexFile = asNormString(map.get("sitemapIndexFile"));
         this.productFilePrefix = asNormString(map.get("productFilePrefix"));
         this.categoryFilePrefix = asNormString(map.get("categoryFilePrefix"));
-        this.sizemapSize = asInteger(map.get("sizemapSize"), DEFAULT_SITEMAP_SIZE);
-        this.indexSize = asInteger(map.get("indexSize"), DEFAULT_SITEMAP_SIZE);
+        Integer sizemapSize = asInteger(map.get("sizemapSize"), DEFAULT_SITEMAP_SIZE);
+        if (sizemapSize <= 0) sizemapSize = null; // explicit -1 means don't limit
+        this.sizemapSize = sizemapSize;
+        Integer indexSize = asInteger(map.get("indexSize"), DEFAULT_SITEMAP_SIZE);
+        if (indexSize <= 0) indexSize = null; // explicit -1 means don't limit
+        this.indexSize = indexSize;
         this.doProduct = asBoolean(map.get("doProduct"), true);
         this.doCategory = asBoolean(map.get("doCategory"), true);
         
         W3CDateFormat dateFormat = new W3CDateFormat(Pattern.DAY); // FIXME: unhardcode
-        dateFormat.setTimeZone(TimeZone.getTimeZone("CET")); // FIXME: unhardcode
+        dateFormat.setTimeZone(TimeZone.getTimeZone(asNormString(map.get("timeZone"), "CET")));
         this.dateFormat = dateFormat;
+        
+        this.compress = asNormString(map.get("compress"), "gzip");
     }
     
     public static SitemapConfig getSitemapConfigForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId) {
@@ -83,14 +97,15 @@ public class SitemapConfig implements Serializable {
             Enumeration<URL> resources = loader.getResources(SITEMAPCONFIGS_RESOURCE + ".properties");
             while (resources.hasMoreElements()) {
                 URL propertyURL = resources.nextElement();
-                Debug.logInfo("Seo: Sitemap: loading properties: " + propertyURL, module);
+                Debug.logInfo(logPrefix+"loading properties: " + propertyURL, module);
                 Properties props = UtilProperties.getProperties(propertyURL);
                 if (UtilValidate.isEmpty(props)) {
-                    Debug.logError("Seo: Sitemap: Unable to locate properties file " + propertyURL, module);
+                    Debug.logError(logPrefix+"Unable to locate properties file " + propertyURL, module);
                 } else {
                     Map<String, Map<String, Object>> webSiteConfigs = new HashMap<>();
                     UtilProperties.extractPropertiesWithPrefixAndId(webSiteConfigs, props, "sitemap.");
                     for(Map.Entry<String, Map<String, Object>> entry : webSiteConfigs.entrySet()) {
+                        Debug.logInfo(logPrefix+"Read config for website '" + entry.getKey() + "': " + entry.getValue().toString(), module);
                         configs.put(entry.getKey(), new SitemapConfig(entry.getValue()));
                     }
                 }
@@ -144,6 +159,10 @@ public class SitemapConfig implements Serializable {
     public String getBaseUrl() {
         return baseUrl;
     }
+    
+    public String getContextPath() {
+        return contextPath;
+    }
 
     public String getSitemapDir() {
         return sitemapDir;
@@ -187,5 +206,13 @@ public class SitemapConfig implements Serializable {
 
     public W3CDateFormat getDateFormat() {
         return dateFormat;
+    }
+
+    public boolean isDoChildProduct() {
+        return doChildProduct;
+    }
+
+    public String getCompress() {
+        return compress;
     }
 }

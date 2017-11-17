@@ -31,8 +31,8 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.util.SeoStringUtil;
 import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
+import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
  * SCIPIO: SEO catalog services.
@@ -41,6 +41,8 @@ import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
 public abstract class SeoCatalogServices {
 
     public static final String module = SeoCatalogServices.class.getName();
+    
+    private static final String logPrefix = "Seo: ";
     
     protected SeoCatalogServices() {
     }
@@ -82,7 +84,7 @@ public abstract class SeoCatalogServices {
                     replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
-            Debug.logError(e, message, module);
+            Debug.logError(e, logPrefix+message, module);
             return ServiceUtil.returnError(message);
         }
     }
@@ -188,7 +190,7 @@ public abstract class SeoCatalogServices {
                     productCategory, replaceExisting, removeOldLocales, moment);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
-            Debug.logError(e, message, module);
+            Debug.logError(e, logPrefix+message, module);
             return ServiceUtil.returnError(message);
         }
     }
@@ -487,11 +489,13 @@ public abstract class SeoCatalogServices {
             }
         } catch(Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
-            Debug.logError(e, "Seo: " + message, module);
+            Debug.logError(e, logPrefix+message, module);
             return ServiceUtil.returnError(message);
         }
         
-        return stats.toServiceResultSuccessFailure(locale, true);
+        String resultMsg = stats.toMsg(locale);
+        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
+        return stats.toServiceResultSuccessFailure(resultMsg);
     }
     
     /**
@@ -529,7 +533,7 @@ public abstract class SeoCatalogServices {
                 }
             } catch (Exception e) {
                 String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, "Seo: " + message, module);
+                Debug.logError(e, logPrefix+message, module);
                 return ServiceUtil.returnError(message);
             } finally {
                 if (productIt != null) {
@@ -552,7 +556,7 @@ public abstract class SeoCatalogServices {
                 }
             } catch (Exception e) {
                 String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, "Seo: " + message, module);
+                Debug.logError(e, logPrefix+message, module);
                 return ServiceUtil.returnError(message);
             } finally {
                 if (productCategoryIt != null) {
@@ -569,43 +573,48 @@ public abstract class SeoCatalogServices {
         //if (doContent) {
         //}
         
-        return stats.toServiceResultSuccessFailure(locale, true);
+        String resultMsg = stats.toMsg(locale);
+        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
+        return stats.toServiceResultSuccessFailure(resultMsg);
     }
     
     // recursive helper, rewritten from getTreeCategories
     private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, UrlGenStats stats,
-            List<GenericValue> productCategories, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
-        for (GenericValue productCategory : productCategories) {
+            List<GenericValue> categoryAssocList, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
+        for (GenericValue categoryAssoc : categoryAssocList) {
             GenericValue category = null;
-            if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
-                category = productCategory.getRelatedOne("CurrentProductCategory", useCache);
-            } else if (productCategory.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
-                category = productCategory.getRelatedOne("ProductCategory", useCache);
+            if (categoryAssoc.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
+                category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
+            } else if (categoryAssoc.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
+                category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
             }
-            if (category != null) {
-                // self
-                if (doCategory) {
-                    generateCategoryAltUrls(dctx, context, category, stats, useCache);
-                }
-                
-                // child cats (recursive)
-                List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                    generateCategoryAltUrlsDeep(dctx, context, stats, 
-                            childProductCategoryRollups, doProduct, doCategory, useCache);
-                }
+            if (category == null) {
+                Debug.logError(logPrefix+"Schema error: Could not get related ProductCategory for: " + categoryAssoc, module);
+                continue;
+            }
+            
+            // self
+            if (doCategory) {
+                generateCategoryAltUrls(dctx, context, category, stats, useCache);
+            }
+            
+            // child cats (recursive)
+            List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
+                    .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
+            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
+                generateCategoryAltUrlsDeep(dctx, context, stats, 
+                        childProductCategoryRollups, doProduct, doCategory, useCache);
+            }
 
-                // products
-                if (doProduct) {
-                    List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
-                            .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                            .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                    if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                        for (GenericValue productCategoryMember : productCategoryMembers) {
-                            GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
-                            generateProductAltUrls(dctx, context, product, stats, true, useCache);
-                        }
+            // products
+            if (doProduct) {
+                List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
+                        .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
+                        .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
+                if (UtilValidate.isNotEmpty(productCategoryMembers)) {
+                    for (GenericValue productCategoryMember : productCategoryMembers) {
+                        GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
+                        generateProductAltUrls(dctx, context, product, stats, true, useCache);
                     }
                 }
             }
@@ -627,7 +636,7 @@ public abstract class SeoCatalogServices {
                 stats.categorySkipped++;
             }
         } else {
-            Debug.logError("Scipio: Seo: Error generating alternative links for category '" 
+            Debug.logError(logPrefix+"Error generating alternative links for category '" 
                     + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             stats.categoryError++;
         }
@@ -656,7 +665,7 @@ public abstract class SeoCatalogServices {
                 stats.productSkipped++;
             }
         } else {
-            Debug.logError("Scipio: Seo: Error generating alternative links for product '" 
+            Debug.logError(logPrefix+"Error generating alternative links for product '" 
                     + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             stats.productError++;
         }
@@ -695,7 +704,7 @@ public abstract class SeoCatalogServices {
         }
         catch (Exception ex) {
             String message = "Cannot determine products.";
-            Debug.logError(ex, message, module);
+            Debug.logError(ex, logPrefix+message, module);
             return ServiceUtil.returnError(message);
         }
 
@@ -759,10 +768,9 @@ public abstract class SeoCatalogServices {
                 productContent.put("sequenceNum", new Long(1));
                 // delegator.create(productContent, false);
                 productContent.create();
-            }
-            catch (Exception ex) {
+            } catch (Exception e) {
                 String message = "Error while generating alternative links.";
-                Debug.logError(ex, message, module);
+                Debug.logError(e, logPrefix+message, module);
                 return ServiceUtil.returnError(message);
             }
         }

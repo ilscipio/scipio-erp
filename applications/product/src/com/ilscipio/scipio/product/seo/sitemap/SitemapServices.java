@@ -15,6 +15,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
+
 /**
  * TODO: LOCALIZE messages
  */
@@ -22,7 +24,7 @@ public abstract class SitemapServices {
 
     public static final String module = SitemapServices.class.getName();
     
-    protected static final String logPrefix = "Seo: Sitemap: ";
+    private static final String logPrefix = SitemapWorker.logPrefix;
     
     protected SitemapServices() {
     }
@@ -34,6 +36,7 @@ public abstract class SitemapServices {
         Locale locale = (Locale) context.get("locale");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
 
+        SitemapWorker sitemapWorker = null;
         try {
             // TODO: LOCALIZE
             GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
@@ -47,7 +50,7 @@ public abstract class SitemapServices {
             String defaultLocaleString = productStore.getString("defaultLocaleString");
             Locale defaultLocale = UtilMisc.parseLocale(defaultLocaleString);
             
-            SitemapWorker sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, defaultLocale, useCache);
+            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, defaultLocale, useCache);
             
             List<GenericValue> prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
                     .filterByDate().cache(useCache).queryList();
@@ -60,47 +63,27 @@ public abstract class SitemapServices {
             
             sitemapWorker.commitSitemapsAndIndex();
             
-            return sitemapWorker.getStats().toServiceResultSuccessFailure(locale, false);
-            
-            /* OLD CODE - TODO: REDO 
-            // now let's fetch all products
-            List<GenericValue> products = delegator.findList("Product", null, UtilMisc.toSet("productId", "lastModifiedDate"), null, null, false);
-            int numDocs = products.size();
-
-            Debug.logInfo("Found " + numDocs + " products. Generating product sitemaps....", module);
-
-            List<String> siteMapLists = new ArrayList<String>();
-            for (int i = 0; i < products.size(); i += sitemapSize) {
-                List<GenericValue> subList = products.subList(i, i + Math.min(sitemapSize, products.size() - i));
-
-                Debug.logInfo("Generating sitemap document for product-entries " + i
-                        + " to " + (i + Math.min(sitemapSize, products.size() - i)) + ".", module);
-                String entry = sitemapWorker.generateProductSitemap(i, subList);
-                Debug.logInfo("Generated sitemap " + entry, module);
-                siteMapLists.add(entry);
+            UrlGenStats stats = sitemapWorker.getStats();
+            String dirMsg = "";
+            if (sitemapWorker != null && sitemapWorker.getConfig().getSitemapDir() != null) {
+                dirMsg = " (" + sitemapWorker.getConfig().getSitemapDir() + ")";
             }
-
-            List<GenericValue> categories = delegator.findList("ProductCategoryRollup", null, UtilMisc.toSet("productCategoryId"), null, null, false);
-            int numCategories = 0;
-            if (categories != null) {
-                numCategories = categories.size();
-            }
-
-            Debug.logInfo("Found " + numCategories + " categories. Generating product sitemaps....", module);
-            for (int i = 0; i < categories.size(); i += sitemapSize) {
-                List<GenericValue> subList = categories.subList(i, i + Math.min(sitemapSize, categories.size() - i));
-
-                Debug.logInfo("Generating sitemap document for category-entries " + i + " to "
-                        + (i + Math.min(sitemapSize, categories.size() - i)) + ".", module);
-                String entry = sitemapWorker.generateCategorySitemap(i, subList);
-                Debug.logInfo("Generated sitemap " + entry, module);
-                siteMapLists.add(entry);
-            }
-            
-            sitemapWorker.generateSitemapIndex(siteMapLists);
-            */
+            // TODO: LOCALIZE
+            String resultMsg = "Generated sitemaps for website '" + webSiteId + "': " + stats.toMsg(locale) + dirMsg;
+            Debug.logInfo(logPrefix+resultMsg, module);
+            return stats.toServiceResultSuccessFailure(resultMsg);
         } catch (Exception e) {
-            String message = "Error generating sitemap for web site '" + webSiteId + "':" + e.getMessage();
+            String dirMsg = "";
+            if (sitemapWorker != null) {
+                if (sitemapWorker.getConfig().getSitemapDir() != null) {
+                    dirMsg += " (" + sitemapWorker.getConfig().getSitemapDir() + ")";
+                }
+                if (sitemapWorker.getStats() != null) {
+                    dirMsg += " (" + sitemapWorker.getStats().toMsg(locale) + ")";
+                }
+            }
+            // TODO: LOCALIZE
+            String message = "Error generating sitemaps for web site '" + webSiteId + "'" + dirMsg + ": " + e.getMessage();
             Debug.logError(e, logPrefix + message, module);
             return ServiceUtil.returnError(message);
         }
@@ -111,7 +94,7 @@ public abstract class SitemapServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         int success = 0;
-        int error = 0;
+        int fail = 0;
 
         for(Map.Entry<String, SitemapConfig> entry : SitemapConfig.getAllSitemapConfigs(delegator, dispatcher).entrySet()) {
             String webSiteId = entry.getKey();
@@ -120,18 +103,19 @@ public abstract class SitemapServices {
                 servCtx.put("webSiteId", webSiteId);
                 Map<String, Object> servResult = dispatcher.runSync("generateWebsiteAlternativeUrlSitemapFiles", servCtx, -1 , true);
                 if (ServiceUtil.isSuccess(servResult)) success++;
-                else error++;
+                else fail++;
             } catch(Exception e) {
-                String message = "Error generating sitemap for web site '" + webSiteId + "':" + e.getMessage();
+                String message = "Error generating sitemap for web site '" + webSiteId + "': " + e.getMessage();
                 Debug.logError(e, logPrefix + message, module);
-                error++;
+                fail++;
             }
         }
         
-        // TODO: LOCALIZE
-        if (error > 0) {
-            return ServiceUtil.returnFailure(success + " website sitemaps updated; " + error + " failed");
+        if (fail > 0) {
+            // TODO: LOCALIZE
+            return ServiceUtil.returnFailure(success + " website sitemaps updated; " + fail + " failed");
         } else {
+            // TODO: LOCALIZE
             return ServiceUtil.returnSuccess(success + " website sitemaps updated");
         }
     }

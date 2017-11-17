@@ -305,4 +305,10 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
+    <!-- SCIPIO: new -->
+    <form name="CreateWebsiteSitemaps" type="single" target="generateSitemapFilesForWebsite">
+        <field name="webSiteId"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
 </forms>

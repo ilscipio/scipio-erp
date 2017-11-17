@@ -1852,6 +1852,13 @@ under the License.
         <response name="success" type="view" value="WebSiteSEO"/>
         <response name="error" type="view" value="WebSiteSEO"/>
     </request-map>
+    <request-map uri="generateSitemapFilesForWebsite">
+        <security https="true" auth="true"/>
+        <!-- SCIPIO: new sitemap service -->
+        <event type="service" invoke="generateWebsiteAlternativeUrlSitemapFiles"/>
+        <response name="success" type="view" value="WebSiteSEO"/>
+        <response name="error" type="view" value="WebSiteSEO"/>
+    </request-map>
     <!--  WebSiteContactList -->
     <request-map uri="WebSiteContactList">
         <security https="true" auth="true"/>

@@ -366,7 +366,7 @@ under the License.
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleWebSiteSEO}">
-                            <label style="common-msg-info" text="${uiLabelMap.ContentGenerateSeoUrlInfo}"/>
+                            <label style="common-msg-info" text="${uiLabelMap.ContentGenerateSeoUrlInfo} ${uiLabelMap.ContentGenerateSeoUrlInfoMayChangeUrls}"/>
                             <include-form name="CreateWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
                         </screenlet>
                         <!-- SCIPIO: new: sitemap generation -->

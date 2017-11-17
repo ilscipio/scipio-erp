@@ -7729,4 +7729,8 @@
         <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
         <value xml:lang="de">Dadurch werden automatisch alternative URLs aus Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration generiert.</value>
     </property>
+    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
+        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
+        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
+    </property>
 </resource>

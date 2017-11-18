@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +57,16 @@ import com.ilscipio.scipio.product.seo.UrlProcessors.UrlProcessor;
  * to remove the completely needless sync code.
  */
 public class SeoConfig {
+    
     private static final String module = SeoConfig.class.getName();
+    
+    public static final String SEO_CONFIG_FILENAME = "SeoConfig.xml";
+    public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";
+    
+    /**
+     * DEV NOTE: compile with this true to force the SeoConfigs to reload constantly.
+     */
+    static final boolean DEBUG_FORCERELOAD = false;
     
     static {
         // TODO?: unhardcode via properties?
@@ -64,20 +74,20 @@ public class SeoConfig {
     }
     
     /**
-     * SCIPIO: default config holder - eliminates the need for synchronized/volatile/etc. - faster.
+     * SCIPIO: default/common configs holder - eliminates the need for synchronized/volatile/etc. - faster.
      */
-    private static class SeoConfigDefault {
-        private static final SeoConfig INSTANCE = readDefaultConfig();
+    private static class CommonSeoConfigs {
+        private static final SeoConfig INSTANCE = readDefaultCommonConfig();
+        private static final SeoConfig EMPTY = new SeoConfig();
     }
     
+    private final String webSiteId; // NOTE: null for common/default instance
     private final boolean isInitialed;
-    private final boolean categoryUrlEnabled;
+    private final boolean seoUrlEnabled;
     private final boolean categoryNameEnabled;
-    private final String categoryUrlSuffix;
+    private final String seoUrlSuffix;
     private final Pattern regexpIfMatch;
     private final boolean useUrlRegexp;
-    //private final boolean jSessionIdAnonEnabled;
-    //private final boolean jSessionIdUserEnabled;
     private final Map<String, String> seoReplacements;
     private final Map<String, Pattern> seoPatterns;
     private final Map<String, String> forwardReplacements;
@@ -98,71 +108,36 @@ public class SeoConfig {
     private final boolean categoryNameAppendIdLast; // SCIPIO: new 2017
     private final boolean productNameAppendId; // SCIPIO: new 2017
     private final boolean handleImplicitRequests;
-    private final boolean implicitRequestNameMatchesOnly; // default true => safer
+    private final boolean implicitRequestNameMatchesOnly;
     private final boolean generateImplicitCategoryUrl; 
     private final boolean generateImplicitProductUrl;
-    private final boolean allowTargetOutsideCatalog = true; // TODO: unhardcode
-    private final boolean allowInvalidCategoryPathElements = true; // TODO: unhardcode (but this is much better true)
-    private final boolean allowAltUrlSuffix = true; // TODO: unhardcode
-    private final String productAltUrlSuffix = "-p"; // LEGACY fallback - TODO: unhardcode
-    private final String categoryAltUrlSuffix = "-c"; // LEGACY fallback - TODO: unhardcode
-    private final ClosestTrailResolver.ResolverType newUrlTrailResolver = ClosestTrailResolver.ResolverType.NONCONSEC_ANYPART; // TODO: unhardcode
+    private final boolean generateImplicitProductUrlNoCat;
+    private final boolean allowTargetOutsideCatalog;
+    private final boolean allowInvalidCategoryPathElements;
+    private final boolean generateProductAltUrlSuffix;
+    private final boolean generateCategoryAltUrlSuffix;
+    private final boolean handleAltUrlSuffix;
+    private final String productAltUrlSuffix;
+    private final String categoryAltUrlSuffix;
+    private final ClosestTrailResolver.ResolverType newUrlTrailResolver;
     
-    public static final String DEFAULT_REGEXP = "^.*/.*$";
-    public static final String ELEMENT_REGEXPIFMATCH = "regexpifmatch";
-    public static final String ELEMENT_URL_CONFIG = "url-config";
-    public static final String ELEMENT_DESCRIPTION = "description";
-    public static final String ELEMENT_FORWARD = "forward";
-    public static final String ELEMENT_SEO = "seo";
-    public static final String ELEMENT_URLPATTERN = "url-pattern";
-    public static final String ELEMENT_REPLACEMENT = "replacement";
-    public static final String ELEMENT_RESPONSECODE = "responsecode";
-    public static final String ELEMENT_JSESSIONID = "jsessionid";
-    public static final String ELEMENT_ANONYMOUS = "anonymous";
-    public static final String ELEMENT_VALUE = "value";
-    public static final String ELEMENT_USER = "user";
-    public static final String ELEMENT_EXCEPTIONS = "exceptions";
-    public static final String ELEMENT_CHAR_FILTERS = "char-filters";
-    public static final String ELEMENT_CHAR_FILTER = "char-filter";
-    public static final String ELEMENT_CHARACTER_PATTERN = "character-pattern";
-    public static final String ELEMENT_CATEGORY_URL = "category-url";
-    public static final String ELEMENT_ALLOWED_CONTEXT_PATHS = "allowed-context-paths";
-    public static final String ELEMENT_CATEGORY_NAME = "category-name";
-    public static final String ELEMENT_CATEGORY_URL_SUFFIX = "category-url-suffix";
-    public static final String SEO_CONFIG_FILENAME = "SeoConfig.xml";
-    public static final int DEFAULT_RESPONSECODE = HttpServletResponse.SC_MOVED_PERMANENTLY;
-    public static final String DEFAULT_ANONYMOUS_VALUE = "disable";
-    public static final String DEFAULT_USER_VALUE = "disable";
-    public static final String DEFAULT_CATEGORY_URL_VALUE = "enable";
-    public static final String DEFAULT_CATEGORY_NAME_VALUE = "disable";
-    public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";
-    
-    public static final String ELEMENT_CATEGORY_NAME_MAX_LENGTH = "category-name-max-length";
-    public static final String ELEMENT_PRODUCT_NAME_MAX_LENGTH = "product-name-max-length";
-    public static final String ELEMENT_NAMES_LOCALE_OVERRIDE = "names-locale-override";
-    public static final String ELEMENT_CATEGORY_NAME_SEPARATE_PATH_ELEM = "category-name-separate-path-elem";
-    public static final String ELEMENT_CATEGORY_NAME_APPEND_ID = "category-name-append-id";
-    public static final String ELEMENT_CATEGORY_NAME_APPEND_ID_LAST = "category-name-append-id-last";
-    public static final String ELEMENT_PRODUCT_NAME_APPEND_ID = "product-name-append-id";
-    public static final String ELEMENT_HANDLE_IMPLICIT_REQUESTS = "handle-implicit-requests";
-    public static final String ELEMENT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY = "implicit-request-name-matches-only";
-    public static final String ELEMENT_GENERATE_IMPLICIT_CATEGORY_URL = "generate-implicit-category-url";
-    public static final String ELEMENT_GENERATE_IMPLICIT_PRODUCT_URL = "generate-implicit-product-url";
-    
-    public static final String DEFAULT_CATEGORY_NAME_SEPARATE_PATH_ELEM_VALUE = "disable";
-    public static final String DEFAULT_CATEGORY_NAME_APPEND_ID_VALUE = "disable";
-    public static final String DEFAULT_CATEGORY_NAME_APPEND_ID_LAST_VALUE = "disable";
-    public static final String DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE = "disable";
-    public static final String DEFAULT_HANDLE_IMPLICIT_REQUESTS_VALUE = "disable";
-    public static final String DEFAULT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY_VALUE = "enable";
-    public static final String DEFAULT_GENERATE_IMPLICIT_CATEGORY_URL_VALUE = "disable";
-    public static final String DEFAULT_GENERATE_IMPLICIT_PRODUCT_URL_VALUE = "disable";
+    private final int defaultResponseCode;
+    private final int defaultRedirectResponseCode;
+
+    /**
+     * SCIPIO: Returns the default common config.
+     */
+    public static SeoConfig getCommonConfig() {
+        if (DEBUG_FORCERELOAD) return readDefaultCommonConfig();
+        else return CommonSeoConfigs.INSTANCE;
+    }
     
     /**
-     * SCIPIO: Returns the default or common config.
+     * SCIPIO: Returns default empty constructor config, in other words static/hardcoded defaults; 
+     * no file is read.
      */
-    public static SeoConfig getDefaultConfig() {
-        return SeoConfigDefault.INSTANCE;
+    public static SeoConfig getDefaultEmptyConfig() {
+        return CommonSeoConfigs.EMPTY;
     }
     
     /**
@@ -171,17 +146,48 @@ public class SeoConfig {
      */
     public static SeoConfig getConfig(Delegator delegator, String webSiteId) {
         // TODO?: possible website-specific stuff in future
-        return getDefaultConfig();
+        return getCommonConfig();
     }
     
-    protected SeoConfig(boolean isInitialed) {        
-        boolean categoryUrlEnabled = true;
+    /**
+     * SCIPIO: Force create config - for debugging only!
+     */
+    public static SeoConfig createConfig(Delegator delegator, String webSiteId) {
+        // TODO?: possible website-specific stuff in future
+        return readDefaultCommonConfig();
+    }
+
+    protected SeoConfig() {        
+        this(null, null, null, null, true);
+    }
+    
+    protected SeoConfig(String webSiteId, boolean isInitialed) {        
+        this(webSiteId, null, null, null, isInitialed);
+    }
+    
+    public SeoConfig(String webSiteId, Element rootElement, Document configDoc) {
+        this(webSiteId, rootElement, configDoc, "document", true);
+    }
+    
+    public SeoConfig(String webSiteId, Element rootElement, Document configDoc, String srcInfo) {
+        this(webSiteId, rootElement, configDoc, srcInfo, true);
+    }
+    
+    /**
+     * Complete XML core constructor.
+     * <p>
+     * if rootElement==null or isInitialed==false, skips construction and builds default instance instead;
+     * to avoid a bunch of copy paste in the other constructor.
+     */
+    protected SeoConfig(String webSiteId, Element rootElem, Document configDoc, String srcInfo, boolean isInitialed) {
+        this.webSiteId = webSiteId; // may be null for common/default
+        
+        // DEFAULT VALUES
+        boolean seoUrlEnabled = true;
         boolean categoryNameEnabled = false;
-        String categoryUrlSuffix = null;
+        String seoUrlSuffix = null;
         Pattern regexpIfMatch = null;
         boolean useUrlRegexp = false;
-        //boolean jSessionIdAnonEnabled = false;
-        //boolean jSessionIdUserEnabled = false;
         Map<String, String> seoReplacements = new HashMap<>();
         Map<String, Pattern> seoPatterns = new HashMap<>();
         Map<String, String> forwardReplacements = new HashMap<>();
@@ -197,6 +203,7 @@ public class SeoConfig {
         Integer categoryNameMaxLength = null;
         Integer productNameMaxLength = null;
         Locale namesLocaleOverride = null;
+        
         boolean categoryNameSeparatePathElem = false;
         boolean categoryNameAppendId = false;
         boolean categoryNameAppendIdLast = false;
@@ -205,14 +212,265 @@ public class SeoConfig {
         boolean implicitRequestNameMatchesOnly = true; // default true => safer
         boolean generateImplicitCategoryUrl = false; 
         boolean generateImplicitProductUrl = false;
+        boolean generateImplicitProductUrlNoCat = false;
         
-        this.categoryUrlEnabled = categoryUrlEnabled;
+        boolean allowTargetOutsideCatalog = true;
+        boolean allowInvalidCategoryPathElements = true;
+        boolean generateProductAltUrlSuffix = false;
+        boolean generateCategoryAltUrlSuffix = false;
+        boolean handleAltUrlSuffix = true;
+        String productAltUrlSuffix = "-p";
+        String categoryAltUrlSuffix = "-c";
+        ClosestTrailResolver.ResolverType newUrlTrailResolver = ClosestTrailResolver.ResolverType.NONCONSEC_ANYPART;
+        
+        int defaultResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
+        int defaultRedirectResponseCode = HttpServletResponse.SC_MOVED_PERMANENTLY;
+                
+        if (rootElem != null && isInitialed) {
+        
+            String regexIfMatch = UtilXml.childElementValue(rootElem, "regexpifmatch", "^.*/.*$");
+            Debug.logInfo("Parsing regexpifmatch: " + regexIfMatch, module);
+            try {
+                regexpIfMatch = Pattern.compile(regexIfMatch);
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error while parsing: " + regexIfMatch, module);
+            }
+    
+            // parse category-url element
+            try {
+                Element catUrlElem = UtilXml.firstChildElement(rootElem, "seo-url");
+                Debug.logInfo("Parsing seo-url [" + (catUrlElem != null) + "]:", module);
+                if (catUrlElem != null) {
+                    seoUrlEnabled = booleanSetting(catUrlElem, "state", true);
+                    if (seoUrlEnabled) {
+                        String allowedContextValue = UtilXml.childElementValue(catUrlElem, "allowed-context-paths", null);
+                        if ("*".equals(allowedContextValue) || "/*".equals(allowedContextValue)) {
+                            allowedContextPaths = null; // no restrict
+                        } else {
+                            allowedContextPaths = new HashSet<>();
+                            if (UtilValidate.isNotEmpty(allowedContextValue)) {
+                                List<String> allowedContextPathList = StringUtil.split(allowedContextValue, ALLOWED_CONTEXT_PATHS_SEPERATOR);
+                                for (String path : allowedContextPathList) {
+                                    if (UtilValidate.isNotEmpty(path)) {
+                                        path = path.trim();
+                                        if (!allowedContextPaths.contains(path)) {
+                                            allowedContextPaths.add(path);
+                                            Debug.logInfo("  allowed-context-paths: " + path, module);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        categoryNameEnabled = booleanSetting(catUrlElem, "category-name", categoryNameEnabled);
+    
+                        seoUrlSuffix = UtilXml.childElementValue(catUrlElem, "category-url-suffix", null);
+                        if (UtilValidate.isNotEmpty(seoUrlSuffix)) {
+                            seoUrlSuffix = seoUrlSuffix.trim();
+                            if (seoUrlSuffix.contains("/")) {
+                                seoUrlSuffix = null;
+                            }
+                        }
+                        Debug.logInfo("  category-url-suffix: " + seoUrlSuffix, module);
+                        
+                        categoryNameMaxLength = integerSetting(catUrlElem, "category-name-max-length", null, false);
+                        productNameMaxLength = integerSetting(catUrlElem, "product-name-max-length", null, false);
+                        namesLocaleOverride = localeSetting(catUrlElem, "names-locale-override", null);
+                        
+                        categoryNameSeparatePathElem = booleanSetting(catUrlElem, "category-name-separate-path-elem", categoryNameSeparatePathElem);
+                        categoryNameAppendId = booleanSetting(catUrlElem, "category-name-append-id", categoryNameAppendId);
+                        categoryNameAppendIdLast = booleanSetting(catUrlElem, "category-name-append-id-last", categoryNameAppendIdLast);
+                        productNameAppendId = booleanSetting(catUrlElem, "product-name-append-id", productNameAppendId); // SCIPIO: 2017: new
+                        handleImplicitRequests = booleanSetting(catUrlElem, "handle-implicit-requests", handleImplicitRequests);
+                        implicitRequestNameMatchesOnly = booleanSetting(catUrlElem, "implicit-request-name-matches-only", implicitRequestNameMatchesOnly);
+                        generateImplicitCategoryUrl = booleanSetting(catUrlElem, "generate-implicit-category-url", generateImplicitCategoryUrl);
+                        generateImplicitProductUrl = booleanSetting(catUrlElem, "generate-implicit-product-url", generateImplicitProductUrl);
+                        generateImplicitProductUrlNoCat = booleanSetting(catUrlElem, "generate-implicit-product-url-nocat", generateImplicitProductUrlNoCat);
+                                
+                        allowTargetOutsideCatalog = booleanSetting(catUrlElem, "allow-target-outside-catalog", allowTargetOutsideCatalog);
+                        allowInvalidCategoryPathElements = booleanSetting(catUrlElem, "allow-invalid-category-path-elems", allowInvalidCategoryPathElements);
+                        generateProductAltUrlSuffix = booleanSetting(catUrlElem, "generate-product-alt-url-suffix", generateProductAltUrlSuffix);
+                        generateCategoryAltUrlSuffix = booleanSetting(catUrlElem, "generate-category-alt-url-suffix", generateCategoryAltUrlSuffix);
+                        handleAltUrlSuffix = booleanSetting(catUrlElem, "handle-alt-url-suffix", handleAltUrlSuffix);
+                        productAltUrlSuffix = stringSetting(catUrlElem, "product-alt-url-suffix", productAltUrlSuffix, falseBooleanSettingValues());
+                        categoryAltUrlSuffix = stringSetting(catUrlElem, "category-alt-url-suffix", categoryAltUrlSuffix, falseBooleanSettingValues());
+                        
+                        String newUrlTrailResolverName = stringSetting(catUrlElem, "new-url-trail-resolver", newUrlTrailResolver.getName());
+                        newUrlTrailResolver = ClosestTrailResolver.ResolverType.fromNameOrDefault(newUrlTrailResolverName, newUrlTrailResolver);
+                    }
+                }
+            } catch (NullPointerException e) {
+                // no "category-url" element
+                Debug.logWarning("No category-url element found in " + srcInfo, module);
+            }
+            
+            // parse url-config(s) elements
+            try {
+                NodeList urlConfigsElems = rootElem.getElementsByTagName("url-configs");
+                Debug.logInfo("Parsing url-configs", module);
+                for (int k = 0; k < urlConfigsElems.getLength(); k++) {
+                    Element urlConfigsElem = (Element) urlConfigsElems.item(k);
+                
+                    if (k == 0) {
+                        defaultResponseCode = integerSetting(urlConfigsElem, "default-response-code", defaultResponseCode, false);
+                        defaultRedirectResponseCode = integerSetting(urlConfigsElem, "default-redirect-response-code", defaultRedirectResponseCode, false);
+                    }
+
+                    NodeList configs = urlConfigsElem.getElementsByTagName("url-config");
+                    Debug.logInfo("Parsing url-config", module);
+                    for (int j = 0; j < configs.getLength(); j++) {
+                        Element config = (Element) configs.item(j);
+                        String urlpattern = UtilXml.childElementValue(config, "url-pattern", null);
+                        if (UtilValidate.isEmpty(urlpattern)) {
+                            continue;
+                        }
+                        Debug.logInfo("  url-pattern: " + urlpattern, module);
+                        Pattern pattern;
+                        try {
+                            pattern = Pattern.compile(urlpattern);
+                            seoPatterns.put(urlpattern, pattern);
+                        } catch (Exception e) {
+                            Debug.logWarning("Error while creating parttern for seo url-pattern: " + urlpattern, module);
+                            continue;
+                        }
+                        
+                        // construct seo patterns
+                        Element seo = UtilXml.firstChildElement(config, "seo");
+                        if (UtilValidate.isNotEmpty(seo)) {
+                            String replacement = UtilXml.childElementValue(seo, "replacement", null);
+                            if (UtilValidate.isNotEmpty(replacement)) {
+                                seoReplacements.put(urlpattern, replacement);
+                                Debug.logInfo("    seo replacement: " + replacement, module);
+                            }
+                        }
+        
+                        // construct forward patterns
+                        Element forward = UtilXml.firstChildElement(config, "forward");
+                        if (UtilValidate.isNotEmpty(forward)) {
+                            String replacement = UtilXml.childElementValue(forward, "replacement", null);
+                            String responseCode = UtilXml.childElementValue(forward,
+                                    "responsecode", String.valueOf(defaultResponseCode));
+                            if (UtilValidate.isNotEmpty(replacement)) {
+                                forwardReplacements.put(urlpattern, replacement);
+                                Debug.logInfo("    forward replacement: " + replacement, module);
+                                if (UtilValidate.isNotEmpty(responseCode)) {
+                                    Integer responseCodeInt = defaultResponseCode;
+                                    try {
+                                        responseCodeInt = Integer.valueOf(responseCode);
+                                    } catch (NumberFormatException nfe) {
+                                        Debug.logWarning(nfe, "Error while parsing response code number: " + responseCode, module);
+                                    }
+                                    forwardResponseCodes.put(urlpattern, responseCodeInt);
+                                    Debug.logInfo("    forward responsecode: " + responseCodeInt, module);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+                Debug.logWarning("No url-config(s) element found in " + srcInfo, module);
+            }
+    
+            // parse char-filters elements
+            try {
+                NodeList charFiltersNodes = rootElem.getElementsByTagName("char-filters");
+                for (int j = 0; j < charFiltersNodes.getLength(); j++) {
+                    Element parentNode = (Element) charFiltersNodes.item(j);
+                    String charFiltersName = parentNode.getAttribute("name");
+                    Debug.logInfo("Parsing " + "char-filters" + " set '" + charFiltersName + "': ", module);
+                    
+                    List<CharFilter> charFilters = new ArrayList<>();
+                    
+                    NodeList nameFilterNodes = parentNode.getElementsByTagName("char-filter");
+                    for (int i = 0; i < nameFilterNodes.getLength(); i++) {
+                        Element element = (Element) nameFilterNodes.item(i);
+                        String charaterPattern = UtilXml.childElementValue(element, "character-pattern", null);
+                        String replacement = UtilXml.childElementValue(element, "replacement", null);
+                        if (UtilValidate.isNotEmpty(charaterPattern) && UtilValidate.isNotEmpty(replacement)) {
+                            try {
+                                charFilters.add(CharFilter.compile(charaterPattern, replacement));
+                                Debug.logInfo("  character-pattern: " + charaterPattern, module);
+                                Debug.logInfo("  replacement: " + replacement, module);
+                            } catch (Exception e) {
+                                // skip this filter (character-pattern replacement) if any error happened
+                                Debug.logError(e, "Error parsing character-pattern: " + charaterPattern + ": " + e.getMessage(), module);
+                            }
+                        } else {
+                            Debug.logError("Missing character-pattern or replacement in char-filter element", module);
+                        }
+                    }
+                    charFiltersMap.put(charFiltersName, charFilters);
+                }
+            } catch (NullPointerException e) {
+                Debug.logInfo("No char-filter element found in " + srcInfo, module);
+            }
+            
+            try {
+                NodeList urlProcessorsNodes = rootElem.getElementsByTagName("url-processors");
+                for (int j = 0; j < urlProcessorsNodes.getLength(); j++) {
+                    Element parentNode = (Element) urlProcessorsNodes.item(j);
+                    String urlProcessorsType = parentNode.getAttribute("type");
+                    Debug.logInfo("Parsing url-processors set '" + urlProcessorsType + "': ", module);
+                    
+                    List<UrlProcessor> processorList = new ArrayList<>();
+                    
+                    NodeList processorNodes = parentNode.getElementsByTagName("processor");
+                    for (int i = 0; i < processorNodes.getLength(); i++) {
+                        Element element = (Element) processorNodes.item(i);
+                        
+                        String type = element.getAttribute("type");
+                        String value = UtilXml.elementValue(element);
+                        
+                        if (UtilValidate.isNotEmpty(type) && UtilValidate.isNotEmpty(value)) {
+                            Debug.logInfo("  processor type '" + type + "': " + value, module);
+                            try {
+                                UrlProcessor processor;
+                                if ("static-method".equals(type)) {
+                                    processor = StaticMethodUrlProcessor.getProcessor(value);
+                                } else if ("char-filters".equals(type)) {
+                                    List<CharFilter> charFilters = charFiltersMap.get(value);
+                                    if (charFilters == null) {
+                                        throw new IllegalArgumentException("unknown char-filters set name: " + value);
+                                    }
+                                    processor = CharFilterUrlProcessor.getProcessor(charFilters);
+                                } else {
+                                    throw new UnsupportedOperationException("unknown processor type: " + type);
+                                }
+                                if (processor != null) {
+                                    processorList.add(processor);
+                                }
+                            } catch (Exception e) {
+                                Debug.logError(e, "Error parsing processor: " + value + ": " + e.getMessage(), module);
+                            }
+                        } else {
+                            Debug.logError("Missing type attribute or value in processor element", module);
+                        }
+                    }
+                    urlProcessors.put(urlProcessorsType, UrlProcessors.createProcessors(processorList));
+                }
+            } catch (NullPointerException e) {
+                Debug.logWarning("No url-processors element found in " + srcInfo, module);
+            }
+            
+            // required
+            altUrlGenProcessors = urlProcessors.get("alt-url-gen");
+            if (altUrlGenProcessors == null) {
+                altUrlGenProcessors = UrlProcessors.getDummyProcessors();
+                urlProcessors.put("alt-url-gen", altUrlGenProcessors);
+            }
+            
+            if (seoReplacements.keySet().isEmpty()) {
+                useUrlRegexp = false;
+            } else {
+                useUrlRegexp = true;
+            }
+        }
+        
+        this.seoUrlEnabled = seoUrlEnabled;
         this.categoryNameEnabled = categoryNameEnabled;
-        this.categoryUrlSuffix = categoryUrlSuffix;
+        this.seoUrlSuffix = seoUrlSuffix;
         this.regexpIfMatch = regexpIfMatch;
         this.useUrlRegexp = useUrlRegexp;
-        //this.jSessionIdAnonEnabled = jSessionIdAnonEnabled;
-        //this.jSessionIdUserEnabled = jSessionIdUserEnabled;
         this.seoReplacements = seoReplacements;
         this.seoPatterns = seoPatterns;
         this.forwardReplacements = forwardReplacements;
@@ -235,352 +493,24 @@ public class SeoConfig {
         this.implicitRequestNameMatchesOnly = implicitRequestNameMatchesOnly;
         this.generateImplicitCategoryUrl = generateImplicitCategoryUrl;
         this.generateImplicitProductUrl = generateImplicitProductUrl;
+        this.generateImplicitProductUrlNoCat = generateImplicitProductUrlNoCat;
+        
+        this.allowTargetOutsideCatalog = allowTargetOutsideCatalog;
+        this.allowInvalidCategoryPathElements = allowInvalidCategoryPathElements;
+        this.generateProductAltUrlSuffix = generateProductAltUrlSuffix;
+        this.generateCategoryAltUrlSuffix = generateCategoryAltUrlSuffix;
+        this.handleAltUrlSuffix = handleAltUrlSuffix;
+        this.productAltUrlSuffix = productAltUrlSuffix;
+        this.categoryAltUrlSuffix = categoryAltUrlSuffix;
+        this.newUrlTrailResolver = newUrlTrailResolver;
+        
+        this.defaultResponseCode = defaultResponseCode;
+        this.defaultRedirectResponseCode = defaultRedirectResponseCode;
         
         this.isInitialed = isInitialed;
     }
     
-    public SeoConfig(Element rootElement, Document configDoc) {
-        this(rootElement, configDoc, "document");
-    }
-    
-    public SeoConfig(Element rootElement, Document configDoc, String srcInfo) {
-        boolean categoryUrlEnabled = true;
-        boolean categoryNameEnabled = false;
-        String categoryUrlSuffix = null;
-        Pattern regexpIfMatch = null;
-        boolean useUrlRegexp = false;
-        //boolean jSessionIdAnonEnabled = false;
-        //boolean jSessionIdUserEnabled = false;
-        Map<String, String> seoReplacements = new HashMap<>();
-        Map<String, Pattern> seoPatterns = new HashMap<>();
-        Map<String, String> forwardReplacements = new HashMap<>();
-        Map<String, Integer> forwardResponseCodes = new HashMap<>();
-        Map<String, UrlProcessors> urlProcessors = new HashMap<>();
-        UrlProcessors altUrlGenProcessors = UrlProcessors.getDummyProcessors();
-        Map<String, List<CharFilter>> charFiltersMap = new HashMap<>();
-        List<Pattern> userExceptionPatterns = new ArrayList<>();
-        Set<String> allowedContextPaths = null;
-        Map<String, String> specialProductIds = new HashMap<>();
-       
-        // SCIPIO: new additions
-        Integer categoryNameMaxLength = null;
-        Integer productNameMaxLength = null;
-        Locale namesLocaleOverride = null;
-        boolean categoryNameSeparatePathElem = false;
-        boolean categoryNameAppendId = false;
-        boolean categoryNameAppendIdLast = false;
-        boolean productNameAppendId = false; // SCIPIO: new 2017
-        boolean handleImplicitRequests = false;
-        boolean implicitRequestNameMatchesOnly = true; // default true => safer
-        boolean generateImplicitCategoryUrl = false; 
-        boolean generateImplicitProductUrl = false; 
-        
-        String regexIfMatch = UtilXml.childElementValue(rootElement, ELEMENT_REGEXPIFMATCH, DEFAULT_REGEXP);
-        Debug.logInfo("Parsing " + regexIfMatch, module);
-        try {
-            regexpIfMatch = Pattern.compile(regexIfMatch);
-        } catch (Exception e1) {
-            Debug.logWarning(e1, "Error while parsing " + regexIfMatch, module);
-        }
-
-        // parse category-url element
-        try {
-            Element categoryUrlElement = UtilXml.firstChildElement(rootElement, ELEMENT_CATEGORY_URL);
-            Debug.logInfo("Parsing " + ELEMENT_CATEGORY_URL + " [" + (categoryUrlElement != null) + "]:", module);
-            if (categoryUrlElement != null) {
-                
-                categoryUrlEnabled = booleanSetting(categoryUrlElement, ELEMENT_VALUE, DEFAULT_CATEGORY_URL_VALUE);
-                
-                if (categoryUrlEnabled) {
-                    
-                    String allowedContextValue = UtilXml.childElementValue(categoryUrlElement, ELEMENT_ALLOWED_CONTEXT_PATHS, null);
-                    allowedContextPaths = new HashSet<>();
-                    if (UtilValidate.isNotEmpty(allowedContextValue)) {
-                        List<String> allowedContextPathList = StringUtil.split(allowedContextValue, ALLOWED_CONTEXT_PATHS_SEPERATOR);
-                        for (String path : allowedContextPathList) {
-                            if (UtilValidate.isNotEmpty(path)) {
-                                path = path.trim();
-                                if (!allowedContextPaths.contains(path)) {
-                                    allowedContextPaths.add(path);
-                                    Debug.logInfo("  " + ELEMENT_ALLOWED_CONTEXT_PATHS + ": " + path, module);
-                                }
-                            }
-                        }
-                    }
-                    
-                    categoryNameEnabled = booleanSetting(categoryUrlElement, ELEMENT_CATEGORY_NAME, DEFAULT_CATEGORY_NAME_VALUE);
-
-                    categoryUrlSuffix = UtilXml.childElementValue(categoryUrlElement, ELEMENT_CATEGORY_URL_SUFFIX, null);
-                    if (UtilValidate.isNotEmpty(categoryUrlSuffix)) {
-                        categoryUrlSuffix = categoryUrlSuffix.trim();
-                        if (categoryUrlSuffix.contains("/")) {
-                            categoryUrlSuffix = null;
-                        }
-                    }
-                    Debug.logInfo("  " + ELEMENT_CATEGORY_URL_SUFFIX + ": " + categoryUrlSuffix, module);
-                    
-                    categoryNameMaxLength = integerSetting(categoryUrlElement, ELEMENT_CATEGORY_NAME_MAX_LENGTH, (String) null, false);
-                    productNameMaxLength = integerSetting(categoryUrlElement, ELEMENT_PRODUCT_NAME_MAX_LENGTH, (String) null, false);
-                    namesLocaleOverride = localeSetting(categoryUrlElement, ELEMENT_NAMES_LOCALE_OVERRIDE, null);
-                    
-                    categoryNameSeparatePathElem = booleanSetting(categoryUrlElement, ELEMENT_CATEGORY_NAME_SEPARATE_PATH_ELEM, DEFAULT_CATEGORY_NAME_SEPARATE_PATH_ELEM_VALUE);
-                    categoryNameAppendId = booleanSetting(categoryUrlElement, ELEMENT_CATEGORY_NAME_APPEND_ID, DEFAULT_CATEGORY_NAME_APPEND_ID_VALUE);
-                    categoryNameAppendIdLast = booleanSetting(categoryUrlElement, ELEMENT_CATEGORY_NAME_APPEND_ID_LAST, DEFAULT_CATEGORY_NAME_APPEND_ID_LAST_VALUE);
-                    productNameAppendId = booleanSetting(categoryUrlElement, ELEMENT_PRODUCT_NAME_APPEND_ID, DEFAULT_PRODUCT_NAME_APPEND_ID_VALUE); // SCIPIO: 2017: new
-                    handleImplicitRequests = booleanSetting(categoryUrlElement, ELEMENT_HANDLE_IMPLICIT_REQUESTS, DEFAULT_HANDLE_IMPLICIT_REQUESTS_VALUE);
-                    implicitRequestNameMatchesOnly = booleanSetting(categoryUrlElement, ELEMENT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY, DEFAULT_IMPLICIT_REQUEST_NAME_MATCHES_ONLY_VALUE);
-                    generateImplicitCategoryUrl = booleanSetting(categoryUrlElement, ELEMENT_GENERATE_IMPLICIT_CATEGORY_URL, DEFAULT_GENERATE_IMPLICIT_CATEGORY_URL_VALUE);
-                    generateImplicitProductUrl = booleanSetting(categoryUrlElement, ELEMENT_GENERATE_IMPLICIT_PRODUCT_URL, DEFAULT_GENERATE_IMPLICIT_PRODUCT_URL_VALUE);
-                }
-            }
-        } catch (NullPointerException e) {
-            // no "category-url" element
-            Debug.logWarning("No category-url element found in " + srcInfo, module);
-        }
-
-        // parse jsessionid element
-        /*
-        try {
-            Element jSessionId = UtilXml.firstChildElement(rootElement, ELEMENT_JSESSIONID);
-            Debug.logInfo("Parsing " + ELEMENT_JSESSIONID + " [" + (jSessionId != null) + "]:", module);
-            if (jSessionId != null) {
-                Element anonymous = UtilXml.firstChildElement(jSessionId, ELEMENT_ANONYMOUS);
-                if (anonymous != null) {
-                    String anonymousValue = UtilXml.childElementValue(anonymous, ELEMENT_VALUE, DEFAULT_ANONYMOUS_VALUE);
-                    if (DEFAULT_ANONYMOUS_VALUE.equalsIgnoreCase(anonymousValue)) {
-                        jSessionIdAnonEnabled = false;
-                    } else {
-                        jSessionIdAnonEnabled = true;
-                    }
-                } else {
-                    jSessionIdAnonEnabled = Boolean.valueOf(DEFAULT_ANONYMOUS_VALUE).booleanValue();
-                }
-                Debug.logInfo("  " + ELEMENT_ANONYMOUS + ": " + jSessionIdAnonEnabled, module);
-                
-                Element user = UtilXml.firstChildElement(jSessionId, ELEMENT_USER);
-                if (user != null) {
-                    String userValue = UtilXml.childElementValue(user, ELEMENT_VALUE, DEFAULT_USER_VALUE);
-                    if (DEFAULT_USER_VALUE.equalsIgnoreCase(userValue)) {
-                        jSessionIdUserEnabled = false;
-                    } else {
-                        jSessionIdUserEnabled = true;
-                    }
-
-                    Element exceptions = UtilXml.firstChildElement(user, ELEMENT_EXCEPTIONS);
-                    if (exceptions != null) {
-                        Debug.logInfo("  " + ELEMENT_EXCEPTIONS + ": ", module);
-                        List<? extends Element> exceptionUrlPatterns = UtilXml.childElementList(exceptions, ELEMENT_URLPATTERN);
-                        for (int i = 0; i < exceptionUrlPatterns.size(); i++) {
-                            Element element = exceptionUrlPatterns.get(i);
-                            String urlpattern = element.getTextContent();
-                            if (UtilValidate.isNotEmpty(urlpattern)) {
-                                try {
-                                    Pattern pattern = Pattern.compile(urlpattern);
-                                    userExceptionPatterns.add(pattern);
-                                    Debug.logInfo("    " + ELEMENT_URLPATTERN + ": " + urlpattern, module);
-                                } catch (Exception e) {
-                                    Debug.logWarning("Can NOT parse " + urlpattern + " in element " + ELEMENT_URLPATTERN + " of " + ELEMENT_EXCEPTIONS + ". Error: " + e.getMessage(), module);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    jSessionIdUserEnabled = Boolean.valueOf(DEFAULT_USER_VALUE).booleanValue();
-                }
-                Debug.logInfo("  " + ELEMENT_USER + ": " + jSessionIdUserEnabled, module);
-            }
-        } catch (NullPointerException e) {
-            Debug.logWarning("No jsessionid element found in " + srcInfo, module);
-        }
-        */
-        
-        // parse url-config elements
-        try {
-            NodeList configs = rootElement.getElementsByTagName(ELEMENT_URL_CONFIG);
-            Debug.logInfo("Parsing " + ELEMENT_URL_CONFIG, module);
-            for (int j = 0; j < configs.getLength(); j++) {
-                Element config = (Element) configs.item(j);
-                String urlpattern = UtilXml.childElementValue(config, ELEMENT_URLPATTERN, null);
-                if (UtilValidate.isEmpty(urlpattern)) {
-                    continue;
-                }
-                Debug.logInfo("  " + ELEMENT_URLPATTERN + ": " + urlpattern, module);
-                Pattern pattern;
-                try {
-                    pattern = Pattern.compile(urlpattern);
-                    seoPatterns.put(urlpattern, pattern);
-                } catch (Exception e) {
-                    Debug.logWarning("Error while creating parttern for seo url-pattern: " + urlpattern, module);
-                    continue;
-                }
-                
-                // construct seo patterns
-                Element seo = UtilXml.firstChildElement(config, ELEMENT_SEO);
-                if (UtilValidate.isNotEmpty(seo)) {
-                    String replacement = UtilXml.childElementValue(seo, ELEMENT_REPLACEMENT, null);
-                    if (UtilValidate.isNotEmpty(replacement)) {
-                        seoReplacements.put(urlpattern, replacement);
-                        Debug.logInfo("    " + ELEMENT_SEO + " " + ELEMENT_REPLACEMENT + ": " + replacement, module);
-                    }
-                }
-
-                // construct forward patterns
-                Element forward = UtilXml.firstChildElement(config, ELEMENT_FORWARD);
-                if (UtilValidate.isNotEmpty(forward)) {
-                    String replacement = UtilXml.childElementValue(forward, ELEMENT_REPLACEMENT, null);
-                    String responseCode = UtilXml.childElementValue(forward,
-                            ELEMENT_RESPONSECODE, String.valueOf(DEFAULT_RESPONSECODE));
-                    if (UtilValidate.isNotEmpty(replacement)) {
-                        forwardReplacements.put(urlpattern, replacement);
-                        Debug.logInfo("    " + ELEMENT_FORWARD + " " + ELEMENT_REPLACEMENT + ": " + replacement, module);
-                        if (UtilValidate.isNotEmpty(responseCode)) {
-                            Integer responseCodeInt = DEFAULT_RESPONSECODE;
-                            try {
-                                responseCodeInt = Integer.valueOf(responseCode);
-                            } catch (NumberFormatException nfe) {
-                                Debug.logWarning(nfe, "Error while parsing response code number: " + responseCode, module);
-                            }
-                            forwardResponseCodes.put(urlpattern, responseCodeInt);
-                            Debug.logInfo("    " + ELEMENT_FORWARD + " " + ELEMENT_RESPONSECODE + ": " + responseCodeInt, module);
-                        }
-                    }
-                }
-            }
-        } catch (NullPointerException e) {
-            // no "url-config" element
-            Debug.logWarning("No " + ELEMENT_URL_CONFIG + " element found in " + srcInfo, module);
-        }
-
-        // parse char-filters elements
-        try {
-            NodeList charFiltersNodes = rootElement.getElementsByTagName(ELEMENT_CHAR_FILTERS);
-            for (int j = 0; j < charFiltersNodes.getLength(); j++) {
-                Element parentNode = (Element) charFiltersNodes.item(j);
-                String charFiltersName = parentNode.getAttribute("name");
-                Debug.logInfo("Parsing " + ELEMENT_CHAR_FILTERS + " set '" + charFiltersName + "': ", module);
-                
-                List<CharFilter> charFilters = new ArrayList<>();
-                
-                NodeList nameFilterNodes = parentNode.getElementsByTagName(ELEMENT_CHAR_FILTER);
-                for (int i = 0; i < nameFilterNodes.getLength(); i++) {
-                    Element element = (Element) nameFilterNodes.item(i);
-                    String charaterPattern = UtilXml.childElementValue(element, ELEMENT_CHARACTER_PATTERN, null);
-                    String replacement = UtilXml.childElementValue(element, ELEMENT_REPLACEMENT, null);
-                    if (UtilValidate.isNotEmpty(charaterPattern) && UtilValidate.isNotEmpty(replacement)) {
-                        try {
-                            charFilters.add(CharFilter.compile(charaterPattern, replacement));
-                            Debug.logInfo("  " + ELEMENT_CHARACTER_PATTERN + ": " + charaterPattern, module);
-                            Debug.logInfo("  " + ELEMENT_REPLACEMENT + ": " + replacement, module);
-                        } catch (Exception e) {
-                            // skip this filter (character-pattern replacement) if any error happened
-                            Debug.logError(e, "Error parsing " + ELEMENT_CHARACTER_PATTERN + ": " + charaterPattern + ": " + e.getMessage(), module);
-                        }
-                    } else {
-                        Debug.logError("Missing " + ELEMENT_CHARACTER_PATTERN + " or " + ELEMENT_REPLACEMENT + " in char-filter element", module);
-                    }
-                }
-                charFiltersMap.put(charFiltersName, charFilters);
-            }
-        } catch (NullPointerException e) {
-            // no "char-filters" element
-            Debug.logWarning("No " + ELEMENT_CHAR_FILTER + " element found in " + srcInfo, module);
-        }
-        
-        try {
-            NodeList urlProcessorsNodes = rootElement.getElementsByTagName("url-processors");
-            for (int j = 0; j < urlProcessorsNodes.getLength(); j++) {
-                Element parentNode = (Element) urlProcessorsNodes.item(j);
-                String urlProcessorsType = parentNode.getAttribute("type");
-                Debug.logInfo("Parsing url-processors set '" + urlProcessorsType + "': ", module);
-                
-                List<UrlProcessor> processorList = new ArrayList<>();
-                
-                NodeList processorNodes = parentNode.getElementsByTagName("processor");
-                for (int i = 0; i < processorNodes.getLength(); i++) {
-                    Element element = (Element) processorNodes.item(i);
-                    
-                    String type = element.getAttribute("type");
-                    String value = UtilXml.elementValue(element);
-                    
-                    if (UtilValidate.isNotEmpty(type) && UtilValidate.isNotEmpty(value)) {
-                        Debug.logInfo("  processor type '" + type + "': " + value, module);
-                        try {
-                            UrlProcessor processor;
-                            if ("static-method".equals(type)) {
-                                processor = StaticMethodUrlProcessor.getProcessor(value);
-                            } else if ("char-filters".equals(type)) {
-                                List<CharFilter> charFilters = charFiltersMap.get(value);
-                                if (charFilters == null) {
-                                    throw new IllegalArgumentException("unknown char-filters set name: " + value);
-                                }
-                                processor = CharFilterUrlProcessor.getProcessor(charFilters);
-                            } else {
-                                throw new UnsupportedOperationException("unknown processor type: " + type);
-                            }
-                            if (processor != null) {
-                                processorList.add(processor);
-                            }
-                        } catch (Exception e) {
-                            Debug.logError(e, "Error parsing processor: " + value + ": " + e.getMessage(), module);
-                        }
-                    } else {
-                        Debug.logError("Missing type attribute or value in processor element", module);
-                    }
-                }
-                urlProcessors.put(urlProcessorsType, UrlProcessors.createProcessors(processorList));
-            }
-        } catch (NullPointerException e) {
-            // no "char-filters" element
-            Debug.logWarning("No " + ELEMENT_CHAR_FILTER + " element found in " + srcInfo, module);
-        }
-        
-        // required
-        altUrlGenProcessors = urlProcessors.get("alt-url-gen");
-        if (altUrlGenProcessors == null) {
-            altUrlGenProcessors = UrlProcessors.getDummyProcessors();
-            urlProcessors.put("alt-url-gen", altUrlGenProcessors);
-        }
-        
-        if (seoReplacements.keySet().isEmpty()) {
-            useUrlRegexp = false;
-        } else {
-            useUrlRegexp = true;
-        }
-        
-        this.categoryUrlEnabled = categoryUrlEnabled;
-        this.categoryNameEnabled = categoryNameEnabled;
-        this.categoryUrlSuffix = categoryUrlSuffix;
-        this.regexpIfMatch = regexpIfMatch;
-        this.useUrlRegexp = useUrlRegexp;
-        //this.jSessionIdAnonEnabled = jSessionIdAnonEnabled;
-        //this.jSessionIdUserEnabled = jSessionIdUserEnabled;
-        this.seoReplacements = seoReplacements;
-        this.seoPatterns = seoPatterns;
-        this.forwardReplacements = forwardReplacements;
-        this.forwardResponseCodes = forwardResponseCodes;
-        this.charFiltersMap = charFiltersMap;
-        this.urlProcessors = urlProcessors;
-        this.altUrlGenProcessors = altUrlGenProcessors;
-        this.userExceptionPatterns = userExceptionPatterns;
-        this.allowedContextPaths = allowedContextPaths;
-        this.specialProductIds = specialProductIds;
-
-        this.categoryNameMaxLength = categoryNameMaxLength;
-        this.productNameMaxLength = productNameMaxLength;
-        this.namesLocaleOverride = namesLocaleOverride;
-        this.categoryNameSeparatePathElem = categoryNameSeparatePathElem;
-        this.categoryNameAppendId = categoryNameAppendId;
-        this.categoryNameAppendIdLast = categoryNameAppendIdLast;
-        this.productNameAppendId = productNameAppendId;
-        this.handleImplicitRequests = handleImplicitRequests;
-        this.implicitRequestNameMatchesOnly = implicitRequestNameMatchesOnly;
-        this.generateImplicitCategoryUrl = generateImplicitCategoryUrl;
-        this.generateImplicitProductUrl = generateImplicitProductUrl;
-        
-        this.isInitialed = true;
-    }
-    
-    private static SeoConfig readDefaultConfig() {
+    private static SeoConfig readDefaultCommonConfig() {
         FileInputStream configFileIS = null;
         SeoConfig config = null;
         try {
@@ -588,7 +518,7 @@ public class SeoConfig {
             Document configDoc = UtilXml.readXmlDocument(seoConfigFilename, false);
             Element rootElement = configDoc.getDocumentElement();
 
-            config = new SeoConfig(rootElement, configDoc, seoConfigFilename.toString());
+            config = new SeoConfig(null, rootElement, configDoc, seoConfigFilename.toString());
         } catch (SAXException e) {
             Debug.logError(e, module);
         } catch (ParserConfigurationException e) {
@@ -604,9 +534,16 @@ public class SeoConfig {
                 }
             }
         }
-        return config != null ? config : new SeoConfig(false);
+        return config != null ? config : new SeoConfig(null, false);
     }
 
+    /**
+     * webSiteId for this config, or null if this is the common/default/central config.
+     */
+    public String getWebSiteId() {
+        return webSiteId;
+    }
+    
     /**
      * Check whether the configuration file has been read successfully.
      * 
@@ -636,50 +573,32 @@ public class SeoConfig {
     
     /**
      * Check whether category url is enabled.
-     * 
-     * @return a boolean value to indicate whether category url is enabled.
      */
-    public boolean isCategoryUrlEnabledStatic() {
-        return categoryUrlEnabled;
+    public boolean isSeoUrlEnabledStatic() {
+        return seoUrlEnabled;
     }
 
     /**
      * SCIPIO: 2017: check if category URL enabled for context path and webSiteId.
-     * 
-     * @return a boolean value to indicate whether the web site is enabled.
      */
-    public boolean isCategoryUrlEnabled(String contextPath, String webSiteId) {
-        return categoryUrlEnabled && 
-            (WebsiteSeoConfig.isSeoEnabled(webSiteId)) && allowedContextPaths.contains(normContextPath(contextPath));
+    public boolean isSeoUrlEnabled(String contextPath, String webSiteId) {
+        return seoUrlEnabled && 
+            (WebsiteSeoConfig.isSeoEnabled(webSiteId)) && 
+            (allowedContextPaths == null || allowedContextPaths.contains(normContextPath(contextPath)));
     }
     
     /**
      * SCIPIO: 2017: check if category URL enabled for webSiteId.
-     * 
-     * @return a boolean value to indicate whether the web site is enabled.
      */
-    public boolean isCategoryUrlEnabledForWebsite(String webSiteId) {
-        return categoryUrlEnabled && WebsiteSeoConfig.isSeoEnabled(webSiteId);
+    public boolean isSeoUrlEnabledForWebsite(String webSiteId) {
+        return seoUrlEnabled && WebsiteSeoConfig.isSeoEnabled(webSiteId);
     }
     
     /**
      * Check whether the context path is enabled.
-     * @deprecated SCIPIO: 2017: use {@link #isCategoryUrlEnabledForContextPath}.
-     * 
-     * @return a boolean value to indicate whether the context path is enabled.
      */
-    @Deprecated
-    public boolean isCategoryUrlEnabled(String contextPath) {
-        return isCategoryUrlEnabledForContextPath(contextPath);
-    }
-    
-    /**
-     * Check whether the context path is enabled.
-     * 
-     * @return a boolean value to indicate whether the context path is enabled.
-     */
-    public boolean isCategoryUrlEnabledForContextPath(String contextPath) {
-        return categoryUrlEnabled && allowedContextPaths.contains(normContextPath(contextPath));
+    public boolean isSeoUrlEnabledForContextPath(String contextPath) {
+        return seoUrlEnabled && (allowedContextPaths == null || allowedContextPaths.contains(normContextPath(contextPath)));
     }
     
     private String normContextPath(String contextPath) {
@@ -691,7 +610,7 @@ public class SeoConfig {
     }
 
     /**
-     * Check whether category name is enabled.
+     * Check whether category name/trail is enabled for products.
      * 
      * @return a boolean value to indicate whether category name is enabled.
      */
@@ -704,33 +623,16 @@ public class SeoConfig {
      * 
      * @return String category url suffix.
      */
-    public String getCategoryUrlSuffix() {
-        return categoryUrlSuffix;
+    public String getSeoUrlSuffix() {
+        return seoUrlSuffix;
     }
-
-//    /**
-//     * Check whether jsessionid is enabled for anonymous.
-//     * 
-//     * @return a boolean value to indicate whether jsessionid is enabled for anonymous.
-//     */
-//    public boolean isJSessionIdAnonEnabled() {
-//        return jSessionIdAnonEnabled;
-//    }
-//
-//    /**
-//     * Check whether jsessionid is enabled for user.
-//     * 
-//     * @return a boolean value to indicate whether jsessionid is enabled for user.
-//     */
-//    public boolean isJSessionIdUserEnabled() {
-//        return jSessionIdUserEnabled;
-//    }
 
     /**
      * Get user exception url pattern configures.
-     * 
+     * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
      * @return user exception url pattern configures (java.util.List<Pattern>)
      */
+    @Deprecated
     public List<Pattern> getUserExceptionPatterns() {
         return userExceptionPatterns;
     }
@@ -743,16 +645,18 @@ public class SeoConfig {
     }
     
     /**
-     * Returns the processors for going-into-db SEO alt URLs.
+     * Returns the processors for "alt-url-gen" type, in other
+     * words the processors for the generation of SEO alternative
+     * URLS headed into the DB.
      */
     public UrlProcessors getAltUrlGenProcessors() {
         return altUrlGenProcessors;
     }
 
     /**
-     * Get the named set of char filters.
+     * Get the named set of char filters, as list.
      * 
-     * @return char filters (java.util.Map<String, String>)
+     * @return char filters
      */
     public List<CharFilter> getCharFilters(String charFiltersSetName) {
         return charFiltersMap.get(charFiltersSetName);
@@ -760,36 +664,40 @@ public class SeoConfig {
     
     /**
      * Get seo url pattern configures.
-     * 
+     * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
      * @return seo url pattern configures (java.util.Map<String, Pattern>)
      */
+    @Deprecated
     public Map<String, Pattern> getSeoPatterns() {
         return seoPatterns;
     }
 
     /**
      * Get seo replacement configures.
-     * 
+     * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
      * @return seo replacement configures (java.util.Map<String, String>)
      */
+    @Deprecated
     public Map<String, String> getSeoReplacements() {
         return seoReplacements;
     }
 
     /**
      * Get forward replacement configures.
-     * 
+     * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
      * @return forward replacement configures (java.util.Map<String, String>)
      */
+    @Deprecated
     public Map<String, String> getForwardReplacements() {
         return forwardReplacements;
     }
 
     /**
      * Get forward response codes.
-     * 
+     * @deprecated 2017-11-18: TODO: REVIEW: any further use for this? (un-deprecate if one found)
      * @return forward response code configures (java.util.Map<String, Integer>)
      */
+    @Deprecated
     public Map<String, Integer> getForwardResponseCodes() {
         return forwardResponseCodes;
     }
@@ -797,6 +705,7 @@ public class SeoConfig {
     /**
      * Check whether a product id is in the special list. If we cannot get a product from a lower cased
      * or upper cased product id, then it's special.
+     * @deprecated 2017: always returns false
      * 
      * @return boolean to indicate whether the product id is special.
      */
@@ -807,7 +716,7 @@ public class SeoConfig {
 
     /**
      * Add a special product id to the special list.
-     * SCIPIO: 2017: this now throws an exception - the config should not be modifiable publicly
+     * @deprecated SCIPIO: 2017: now throws UnsupportedOperationException - the config should not be modifiable publicly
      * anymore at this time.
      * 
      * @param productId a product id get from database.
@@ -833,7 +742,7 @@ public class SeoConfig {
     
     /**
      * Get a product id is in the special list.
-     * 
+     * @deprecated 2017: always returns false
      * @return String of the original product id
      */
     @Deprecated
@@ -841,16 +750,14 @@ public class SeoConfig {
         return specialProductIds.get(productId);
     }
     
-    
     public Integer getCategoryNameMaxLength() {
         return categoryNameMaxLength;
     }
     
     public String limitCategoryNameLength(String categoryName) {
-        if (categoryNameMaxLength != null && categoryName != null) {
-            if (categoryName.length() > categoryNameMaxLength) {
-                return categoryName.substring(0, categoryNameMaxLength);
-            }
+        if (categoryNameMaxLength != null && categoryName != null && 
+                categoryName.length() > categoryNameMaxLength) {
+            return categoryName.substring(0, categoryNameMaxLength);
         }
         return categoryName;
     }
@@ -860,14 +767,21 @@ public class SeoConfig {
     }
     
     public String limitProductNameLength(String productName) {
-        if (productNameMaxLength != null && productName != null) {
-            if (productName.length() > productNameMaxLength) {
-                return productName.substring(0, productNameMaxLength);
-            }
+        if (productNameMaxLength != null && productName != null && 
+                productName.length() > productNameMaxLength) {
+            return productName.substring(0, productNameMaxLength);
         }
         return productName;
     }
     
+    /**
+     * @deprecated should not be needed anymore (2017-11-18); the generated
+     * ALTERNATIVE_URL locales simply copy over the locales from the PRODUCT_NAME 
+     * and CATEGORY_NAME localized simple text content.
+     * <p>
+     * NOTE: sitemaps.properties has its own locale override.
+     */
+    @Deprecated
     public Locale getNamesLocaleOverride() {
         return namesLocaleOverride;
     }
@@ -883,10 +797,7 @@ public class SeoConfig {
     public boolean isCategoryNameAppendIdLast() {
         return categoryNameAppendIdLast;
     }
-    
-    /**
-     * SCIPIO: new 2017
-     */
+
     public boolean isProductNameAppendId() {
         return productNameAppendId;
     }
@@ -906,6 +817,10 @@ public class SeoConfig {
     public boolean isGenerateImplicitProductUrl() {
         return generateImplicitProductUrl;
     }
+    
+    public boolean isGenerateImplicitProductUrlNoCat() {
+        return generateImplicitProductUrlNoCat;
+    }
        
     /**
      * If true, the target product/category will set the productId/productCategoryId
@@ -920,88 +835,131 @@ public class SeoConfig {
      * If false, a valid target product/category but with an invalid category path
      * will not register as a valid link; if true it will be mapped using a default
      * trail.
-     * WARN: LEAVE TRUE FOR NOW: more user-friendly and faster.
+     * Almost always better if left true.
      */
     public boolean isAllowInvalidCategoryPathElements() {
         return allowInvalidCategoryPathElements;
     }
     
-    /**
-     * If true, the filter will accept old alt-url generated links, for backward compat.
-     */
-    public boolean isAllowAltUrlSuffix() {
-        return allowAltUrlSuffix;
+    public boolean isGenerateProductAltUrlSuffix() {
+        return generateProductAltUrlSuffix && productAltUrlSuffix != null;
     }
     
-    public boolean isAllowProductAltUrlSuffix() {
-        return allowAltUrlSuffix && productAltUrlSuffix != null;
+    public boolean isGenerateCategoryAltUrlSuffix() {
+        return generateCategoryAltUrlSuffix && categoryAltUrlSuffix != null;
+    }
+    
+    /**
+     * If true, the filter will accept suffixed alt-url generated links;
+     * implemented for backward compatibility, but can be used for other reasons.
+     */
+    public boolean isHandleAltUrlSuffix() {
+        return handleAltUrlSuffix;
+    }
+    
+    public boolean isHandleProductAltUrlSuffix() {
+        return handleAltUrlSuffix && productAltUrlSuffix != null;
     }
 
-    public boolean isAllowCategoryAltUrlSuffix() {
-        return allowAltUrlSuffix && categoryAltUrlSuffix != null;
+    public boolean isHandleCategoryAltUrlSuffix() {
+        return handleAltUrlSuffix && categoryAltUrlSuffix != null;
     }
 
     /**
-     * The legacy alt url product suffix.
+     * The alt url product suffix, legacy "-p".
      */
     public String getProductAltUrlSuffix() {
         return productAltUrlSuffix;
     }
 
     /**
-     * The legacy alt url category suffix.
+     * The alt url category suffix, legacy "-c".
      */
     public String getCategoryAltUrlSuffix() {
         return categoryAltUrlSuffix;
     }
 
+    /**
+     * When generating links, the algorithm to use to pick best category rollup trail/path from the hint/breadcrumb trail.
+     */
     public ClosestTrailResolver.ResolverType getNewUrlTrailResolver() {
         return newUrlTrailResolver;
     }
     
+    /**
+     * Default preferred response code for url-configs and things that resemble url-configs.
+     * NOTE: avoid this from external - ambiguous - probably want {@link #getDefaultRedirectResponseCode()} instead.
+     */
+    public int getDefaultResponseCode() {
+        return defaultResponseCode;
+    }
+
+    /**
+     * Default redirect response, usually 301 for SEO URLs.
+     */
+    public int getDefaultRedirectResponseCode() {
+        return defaultRedirectResponseCode;
+    }
+    
     // HELPERS
     
+    static String stringSetting(Element parentElement, String settingName, String defaultValue, Set<String> specialNullValues) {
+        String value = UtilXml.childElementValue(parentElement, settingName, defaultValue);
+        if (value == null || value.isEmpty()) value = defaultValue;
+        Debug.logInfo("  " + settingName + ": " + value, module);
+        if (specialNullValues.contains(value)) return null;
+        return value;
+    }
+    
+    static String stringSetting(Element parentElement, String settingName, String defaultValue) {
+        return stringSetting(parentElement, settingName, defaultValue, Collections.<String>emptySet());
+    }
+    
+    private static final Set<String> falseBooleanSettingValues = UtilMisc.unmodifiableHashSet(
+            "false", "N", "disable", "disabled"
+    );
+    
+    static Set<String> falseBooleanSettingValues() {
+        return falseBooleanSettingValues;
+    }
+    
     /**
-     * SCIPIO: Boolean check for enable/disable features.
-     * Now allows shorter flags.
+     * SCIPIO: Boolean check for enable/disable features, supports old and new standard values.
      */
     static Boolean booleanSetting(String value, Boolean defaultValue) {
-        if ("enable".equalsIgnoreCase(value) || "enabled".equalsIgnoreCase(value)) return true;
-        else if ("disable".equalsIgnoreCase(value) || "disabled".equalsIgnoreCase(value)) return false;
+        if ("enable".equals(value) || "enabled".equals(value)) return true;
+        else if ("disable".equals(value) || "disabled".equals(value)) return false;
         else {
             Boolean result = UtilMisc.booleanValueVersatile(value);
             if (result != null) return result;
             return defaultValue;
         }
     }
-
+    
     static Boolean booleanSetting(String value) {
         return booleanSetting(value, (Boolean) null);
     }
     
-    static Boolean booleanSetting(String value, String defaultValue) {
-        return booleanSetting(value, booleanSetting(defaultValue));
-    }
-    
-    static Boolean booleanSetting(Element parentElement, String settingName, String defaultValue) {
-        String strValue = UtilXml.childElementValue(parentElement, settingName, defaultValue);
+    static Boolean booleanSetting(Element parentElement, String settingName, Boolean defaultValue) {
+        String strValue = UtilXml.childElementValue(parentElement, settingName, (defaultValue != null) ? defaultValue.toString() : null);
         Boolean value = booleanSetting(strValue);
         if (value == null && strValue != null && strValue.length() > 0) {
-            Debug.logError("Invalid value for '" + settingName + "' setting: " + strValue + " (should be 'enable'/'disable' or 'true'/'false')", module);
+            Debug.logError("Invalid value for '" + settingName + "' setting: " + strValue + " (should be 'true'/'false' or 'enable'/'disable')", module);
         }
-        if (value == null) value = booleanSetting(defaultValue);
+        if (value == null) value = defaultValue;
         Debug.logInfo("  " + settingName + ": " + value, module);
         return value;
     }
+
     
-    static Integer integerSetting(Element parentElement, String settingName, String defaultValue, boolean allowNegative) {
+    static Integer integerSetting(Element parentElement, String settingName, Integer defaultValue, boolean allowNegative) {
         Integer value = null;
-        String strValue = UtilXml.childElementValue(parentElement, settingName, defaultValue);
+        String strValue = UtilXml.childElementValue(parentElement, settingName, defaultValue != null ? defaultValue.toString() : null);
         if (UtilValidate.isNotEmpty(strValue)) {
             try {
                 value = Integer.parseInt(strValue);
                 if (!allowNegative && value < 0) {
-                    value = (defaultValue != null) ? Integer.parseInt(defaultValue) : null;
+                    value = (defaultValue != null) ? defaultValue : null;
                 }
             } catch(Exception e) {
                 Debug.logError(e, "Couldn't parse " + settingName + ": " + e.getMessage(), module);

@@ -120,7 +120,9 @@ public abstract class SeoCatalogServices {
         if (UtilValidate.isNotEmpty(altUrlContent)) {
             if (!replaceExisting) {
                 Map<String, Object> result = ServiceUtil.returnSuccess();
-                result.put("productUpdated", Boolean.FALSE);
+                result.put("numUpdated", (int) 0);
+                result.put("numSkipped", (int) 1);
+                result.put("numError", (int) 0);
                 return result;
             }
             productContent = altUrlContent.get(0);

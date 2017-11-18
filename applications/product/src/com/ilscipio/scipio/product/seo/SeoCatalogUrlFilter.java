@@ -82,7 +82,8 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     protected boolean seoUrlEnabled = true;
     protected boolean debug = false;
 
-    protected static SeoCatalogUrlWorker urlWorker = null;
+    // NOTE: this must not be static anymore (2017-11-18)
+    protected SeoCatalogUrlWorker urlWorker = null;
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -113,6 +114,11 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         if (seoUrlEnabled) {
             
+            if (SeoConfig.DEBUG_FORCERELOAD) { // force reload the worker and config
+                Delegator delegator = getDelegatorForControl(request, request.getServletContext());
+                urlWorker = SeoCatalogUrlWorker.createInstanceDeep(delegator, config.getServletContext().getInitParameter("webSiteId"));
+            }
+            
             // TODO: REVIEW: it's possible some of the "always-run" calls below (such as prepareRequestAlways)
             // should actually run again even after forward...
             if (!Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR))) {
@@ -123,7 +129,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                 String path = getMatchablePath(request); 
                 
                 if (UtilValidate.isNotEmpty(path)) {
-                    if (urlWorker.getConfig().isCategoryUrlEnabledForContextPath(request.getContextPath())) {
+                    if (urlWorker.getConfig().isSeoUrlEnabledForContextPath(request.getContextPath())) {
                         getCatalogTopCategory(request); // TODO: REVIEW
                         boolean forwarded = matchSeoCatalogUrlAndForward(request, response, delegator, path);
                         if (forwarded) return;
@@ -290,7 +296,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         return null;
     }
 
-    private static String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
+    private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
         Locale locale = UtilHttp.getLocale(request);
         return urlWorker.makeCatalogLink(delegator, urlInfo, locale);
     }
@@ -422,7 +428,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         if (foundMatch) {
             if (responseCodeInt == null) {
-                response.setStatus(SeoConfig.DEFAULT_RESPONSECODE);
+                response.setStatus(config.getDefaultRedirectResponseCode());
             } else {
                 response.setStatus(responseCodeInt.intValue());
             }

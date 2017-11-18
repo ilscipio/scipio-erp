@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
@@ -50,10 +51,19 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Category Content Worker: gets category content to display
+ * <p>
+ * SCIPIO: Notable changes:
+ * <ul>
+ * <li>backported category.content cache due to heavy reliance on this wrapper (2017-11-17)</li>
+ * <li>backported second fallback on entity fields due to consistency issues with other wrappers (2017-11-17)</li>
+ * <li>getProductCategoryContentAsText no longer returns null due to consistency issues with other wrappers (2017-11-17)</li>
+ * </ul>
  */
 public class CategoryContentWrapper implements ContentWrapper {
 
     public static final String module = CategoryContentWrapper.class.getName();
+    public static final String SEPARATOR = "::";    // cache key separator
+    private static final UtilCache<String, String> categoryContentCache = UtilCache.createUtilCache("category.content", true); // use soft reference to free up memory if needed
 
     protected LocalDispatcher dispatcher;
     protected GenericValue productCategory;
@@ -101,16 +111,26 @@ public class CategoryContentWrapper implements ContentWrapper {
 
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
+        
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        String cacheKey = prodCatContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productCategory.get("productCategoryId") + SEPARATOR + encoderType + SEPARATOR + delegator;
         try {
-            Writer outWriter = new StringWriter();
-            getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter);
-            String outString = outWriter.toString();
-            if (outString.length() > 0) {
-                return encoder.encode(outString);
-            } else {
-                return null;
+            String cachedValue = categoryContentCache.get(cacheKey);
+            if (cachedValue != null) {
+                return cachedValue;
             }
+            Writer outWriter = new StringWriter();
+            getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, false);
+            String outString = outWriter.toString();
+            if (UtilValidate.isEmpty(outString)) {
+                outString = productCategory.getModelEntity().isField(candidateFieldName) ? productCategory.getString(candidateFieldName): "";
+                outString = outString == null? "" : outString;
+            }
+            outString = encoder.encode(outString);
+            if (categoryContentCache != null) {
+                categoryContentCache.put(cacheKey, outString);
+            }
+            return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering CategoryContent, inserting empty String", module);
             return productCategory.getString(candidateFieldName);
@@ -121,6 +141,10 @@ public class CategoryContentWrapper implements ContentWrapper {
     }
 
     public static void getProductCategoryContentAsText(String productCategoryId, GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
+        getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, true);
+    }
+    
+    public static void getProductCategoryContentAsText(String productCategoryId, GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
         if (productCategoryId == null && productCategory != null) {
             productCategoryId = productCategory.getString("productCategoryId");
         }
@@ -141,7 +165,7 @@ public class CategoryContentWrapper implements ContentWrapper {
         ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
         if (categoryModel.isField(candidateFieldName)) {
             if (productCategory == null) {
-                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
+                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache(cache).queryOne();
             }
             if (productCategory != null) {
                 String candidateValue = productCategory.getString(candidateFieldName);
@@ -152,7 +176,7 @@ public class CategoryContentWrapper implements ContentWrapper {
             }
         }
 
-        List<GenericValue> categoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).orderBy("-fromDate").cache(true).queryList();
+        List<GenericValue> categoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).orderBy("-fromDate").cache(cache).queryList();
         categoryContentList = EntityUtil.filterByDate(categoryContentList);
         
         GenericValue categoryContent = null;
@@ -161,7 +185,7 @@ public class CategoryContentWrapper implements ContentWrapper {
         if ( sessionLocale == null ) sessionLocale = fallbackLocale;
         // look up all content found for locale
         for( GenericValue currentContent: categoryContentList ) {
-            GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", currentContent.getString("contentId")).cache().queryOne();
+            GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", currentContent.getString("contentId")).cache(cache).queryOne();
             if ( sessionLocale.equals(content.getString("localeString")) ) {
               // valid locale found
               categoryContent = currentContent;
@@ -176,7 +200,7 @@ public class CategoryContentWrapper implements ContentWrapper {
             Map<String, Object> inContext = FastMap.newInstance();
             inContext.put("productCategory", productCategory);
             inContext.put("categoryContent", categoryContent);
-            ContentWorker.renderContentAsText(dispatcher, delegator, categoryContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, true);
+            ContentWorker.renderContentAsText(dispatcher, delegator, categoryContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
         }
     }
     
@@ -186,7 +210,7 @@ public class CategoryContentWrapper implements ContentWrapper {
      * DEV NOTE: LOGIC DUPLICATED FROM getProductContentAsText ABOVE - PLEASE KEEP IN SYNC.
      * Added 2017-09-05.
      */
-    public static String getEntityFieldValue(GenericValue productCategory, String prodCatContentTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache) throws GeneralException, IOException {
+    public static String getEntityFieldValue(GenericValue productCategory, String prodCatContentTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean cache) throws GeneralException, IOException {
         if (delegator == null) {
             delegator = productCategory.getDelegator();
         }

@@ -13,7 +13,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.product.seo.SeoUrlUtil.UrlGenStats;
+import com.ilscipio.scipio.product.seo.UrlGenStats;
 
 /**
  * TODO: LOCALIZE messages

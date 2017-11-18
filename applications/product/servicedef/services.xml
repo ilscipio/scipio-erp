@@ -2281,14 +2281,21 @@ under the License.
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
         <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
         <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
-        <attribute name="productId" mode="IN" type="String" optional="false"/>
-        <attribute name="product" mode="IN" type="GenericValue" optional="true">
-            <description>optimization</description>
+        <!-- can pass either productId or product instance or GenericPk -->
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="product" mode="IN" type="GenericEntity" optional="true"/>
+        <attribute name="doChildProducts" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true and virtual, also updates the variants (NOTE: parent and children done in the same transaction)</description>
+        </attribute>
+        <attribute name="includeVariant" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>Does NOT apply self, only consulted if doChildProducts true (need mostly for consistency with callers)</description>
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
-        <attribute name="productUpdated" mode="OUT" type="Boolean" optional="true"/>
+        <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numError" mode="OUT" type="Integer" optional="true"/>
     </service>
     
     <service name="generateProductAlternativeUrls" engine="java" auth="true"
@@ -2304,10 +2311,9 @@ under the License.
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
         <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
         <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
-        <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
-        <attribute name="productCategory" mode="IN" type="GenericValue" optional="true">
-            <description>optimization</description>
-        </attribute>
+        <!-- can pass either productCategoryId or productCategory instance or GenericPk -->
+        <attribute name="productCategoryId" mode="IN" type="String" optional="true"/>
+        <attribute name="productCategory" mode="IN" type="GenericEntity" optional="true"/>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>

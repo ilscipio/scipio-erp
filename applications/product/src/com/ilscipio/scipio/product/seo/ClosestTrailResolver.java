@@ -50,6 +50,11 @@ public abstract class ClosestTrailResolver implements Serializable {
         public static ResolverType fromName(String name) {
             return nameMap.get(name);
         }
+        
+        public static ResolverType fromNameOrDefault(String name, ResolverType defaultValue) {
+            ResolverType resolver = nameMap.get(name);
+            return (resolver != null) ? resolver : defaultValue;
+        }
     }
     
     /**

@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentLangUtil;
+import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -120,12 +121,12 @@ public class ProductPromoContentWrapper implements ContentWrapper {
             return null;
         }
 
-        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(productPromoContentTypeId);
         /* caching: there is one cache created, "product.promo.content"  Each productPromo's content is cached with a key of
          * contentTypeId::locale::mimeType::productPromoId, or whatever the SEPARATOR is defined above to be.
          */
-        String cacheKey = productPromoContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productPromo.get("productPromoId") + SEPARATOR + encoderType + SEPARATOR + delegator;
+        String cacheKey = productPromoContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productPromo.get("productPromoId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator;
         try {
             String cachedValue = productPromoContentCache.get(cacheKey);
             if (cachedValue != null) {

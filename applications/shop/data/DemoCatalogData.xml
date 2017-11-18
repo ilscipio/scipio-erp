@@ -553,8 +553,10 @@ under the License.
     <ElectronicText dataResourceId="DRSW-1006-2-ALTEN" textData="license-tool-plus-gpl"/>
     <ElectronicText dataResourceId="SW-1006-3-ALT" textData="license-tool-plus-bsd"/>
     <ElectronicText dataResourceId="DRSW-1006-3-ALTEN" textData="license-tool-plus-bsd"/>
-    <ElectronicText dataResourceId="SW-1006-3-ALT" textData="license-tool-plus-mit"/>
-    <ElectronicText dataResourceId="DRSW-1006-3-ALTEN" textData="license-tool-plus-mit"/>
+    <ElectronicText dataResourceId="SW-1006-4-ALT" textData="license-tool-plus-mit"/>
+    <ElectronicText dataResourceId="DRSW-1006-4-ALTEN" textData="license-tool-plus-mit"/>
+    <ElectronicText dataResourceId="SW-1006-5-ALT" textData="license-tool-plus-asl"/>
+    <ElectronicText dataResourceId="DRSW-1006-5-ALTEN" textData="license-tool-plus-asl"/>
     <ElectronicText dataResourceId="CD-2002-ALT" textData="u2-greatest-hits"/>
     <ElectronicText dataResourceId="DRCD-2002-ALTEN" textData="u2-greatest-hits"/>
     <ElectronicText dataResourceId="CAM-2644-ALT" textData="nikon-analog-camera"/>

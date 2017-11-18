@@ -149,13 +149,13 @@
     </request-map>
     <request-map uri="setupCreateGlAccount">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="service" invoke="createGlAccount"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
     <request-map uri="setupUpdateGlAccount">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="service" invoke="updateGlAccount"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
@@ -177,7 +177,18 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    
+    <request-map uri="setupCreateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setupUpdatePartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
     
     <!-- Facility step -->
     <request-map uri="setupFacility">
@@ -392,6 +403,14 @@
     <request-map uri="getProductExtendedData">
         <security https="true" auth="true"/>
         <event type="service" invoke="getProductExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- accounting tree ajax requests -->
+    <request-map uri="getGlAccountExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getGlAccountAndAssocs"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>

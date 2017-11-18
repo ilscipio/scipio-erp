@@ -493,5 +493,8 @@ public class CategoryServices {
         if (Boolean.TRUE.equals(context.get("getViewsByTypeAndLocale"))) {
             result.put("viewsByTypeAndLocale", CategoryWorker.splitContentLocalizedSimpleTextContentAssocViewsByLocale(viewsByType));
         }
+        if (Boolean.TRUE.equals(context.get("getTextByTypeAndLocale"))) {
+            result.put("textByTypeAndLocale", CategoryWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
+        }
     }
 }

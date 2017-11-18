@@ -27,11 +27,13 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -41,6 +43,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -569,9 +572,8 @@ public class CategoryWorker {
             try {
                 List<EntityCondition> rolllupConds = FastList.newInstance();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-                rolllupConds.add(EntityUtil.getFilterByDateExpr());
                 List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum")
-                        .cache(true).queryList();
+                        .filterByDate().cache(true).queryList();
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     // add only categories that belong to the top category to
                     // trail
@@ -609,8 +611,7 @@ public class CategoryWorker {
             List<EntityCondition> rolllupConds = FastList.newInstance();
             rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return !rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -640,8 +641,7 @@ public class CategoryWorker {
         try {
             List<EntityCondition> rolllupConds = FastList.newInstance();
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -672,8 +672,8 @@ public class CategoryWorker {
             List<EntityCondition> conds = FastList.newInstance();
             conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             conds.add(EntityCondition.makeCondition("productId", productId));
-            conds.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).cache(true).queryList();
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
+                    .where(conds).filterByDate().cache(true).queryList();
             return !productCategoryMembers.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -830,13 +830,14 @@ public class CategoryWorker {
         if (typeIdCondList.size() > 0) {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
-        if (filterByDate != null) {
-            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-        }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
         
-        List<GenericValue> prodCatContentList = delegator.findList("ProductCategoryContentAndElectronicText", 
-                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        EntityQuery query = EntityQuery.use(delegator).from("ProductCategoryContentAndElectronicText")
+                .where(condList).orderBy("-fromDate").cache(useCache);
+        if (filterByDate != null) {
+            query = query.filterByDate(filterByDate);
+        }
+        List<GenericValue> prodCatContentList = query.queryList();
         for(GenericValue prodCatContent : prodCatContentList) {
             String prodCatContentTypeId = prodCatContent.getString("prodCatContentTypeId");
             if (fieldMap.containsKey(prodCatContentTypeId)) {
@@ -850,13 +851,13 @@ public class CategoryWorker {
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-            if (filterByDate != null) {
-                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-            }
             condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
-            
+            query = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
+                    .where(condList).orderBy("-fromDate").cache(useCache);
+            if (filterByDate != null) {
+                query = query.filterByDate(filterByDate);
+            }
+            List<GenericValue> contentAssocList = query.queryList();
             List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
             valueList.add(prodCatContent);
             valueList.addAll(contentAssocList);
@@ -891,5 +892,159 @@ public class CategoryWorker {
         
         return viewsByTypeAndLocale;
     }
-     
+    
+    /**
+     * SCIPIO: rearranges a viewsByType map into textByTypeAndLocale map.
+     * Logs warnings if multiple records for same locales.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Map<String, String>> extractContentLocalizedSimpleTextDataByLocale(Map<String, List<GenericValue>> viewsByType) {
+        Map<String, Map<String, String>> textDataByTypeAndLocale = new HashMap<>();
+        
+        for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
+            Map<String, String> textDataByLocale = new HashMap<>();
+            for(GenericValue view : entry.getValue()) {
+                String localeString = view.getString("localeString");
+                if (textDataByLocale.containsKey(localeString)) {
+                    Debug.logWarning("splitContentLocalizedSimpleTextContentAssocViewsByLocale: multiple eligible records found"
+                            + " for localeString '" + localeString + "'; using first found only (this may cause unexpected texts to appear)."
+                            + " Offending value: " + view.toString(), module);
+                    continue;
+                }
+                textDataByLocale.put(localeString, view.getString("textData"));
+            }
+            textDataByTypeAndLocale.put(entry.getKey(), textDataByLocale);
+        }
+        
+        return textDataByTypeAndLocale;
+    }
+    
+    /**
+     * SCIPIO: Makes a request parameter name prefix for special simple-text content field handling services.
+     * (used by catalog tree)
+     */
+    public static String makeLocalizedSimpleTextContentFieldStringParamPrefix(String basePrefix, String typeId, int index) {
+        return basePrefix + typeId + "." + index + ".";
+    }
+    
+    /**
+     * SCIPIO: Parses request parameters whose names follow {@link #makeLocalizedSimpleTextContentFieldStringParamPrefix},
+     * If basePrefix null the entries are assumed to have been extracted such that they no longer have the basePrefix.
+     * If allowPreparsed true any non-param entries are found their lists crush the params with same type keys.
+     * @return map of type IDs to lists of maps
+     */
+    public static Map<String, List<Map<String, Object>>> parseLocalizedSimpleTextContentFieldParams(Map<String, Object> entries, String basePrefix, boolean allowPreparsed) {
+        Map<String, List<Map<String, Object>>> typeMap = new HashMap<>();
+        if (entries != null) {
+            Map<String, List<Map<String, Object>>> preparsedTypeMap = new HashMap<>();
+            // indexes will be out of order, so we have to use ugly map of integer and sort after
+            Map<String, Map<Integer, Map<String, Object>>> typeIndexMap = new HashMap<>();
+            
+            if (basePrefix != null && basePrefix.isEmpty()) basePrefix = null;
+            
+            for(Map.Entry<String, Object> entry : entries.entrySet()) {
+                String name = entry.getKey();
+                
+                if (basePrefix != null) {
+                    if (name.startsWith(basePrefix)) name = name.substring(basePrefix.length());
+                    else continue;
+                }
+                
+                Object value = entry.getValue();
+                if (name.contains(".")) {
+                    String[] parts = StringUtils.split(name, ".", 3);
+                    if (parts.length < 3 || parts[0].isEmpty() || parts[2].isEmpty()) throw new IllegalArgumentException("invalid composed content field key: " + name);
+                    
+                    String typeId = parts[0];
+                    int index = Integer.parseInt(parts[1]);
+                    String mapKey = parts[2];
+                    
+                    Map<Integer, Map<String, Object>> indexMap = typeIndexMap.get(typeId);
+                    if (indexMap == null) {
+                        indexMap = new HashMap<>();
+                        Map<String, Object> entryData = new HashMap<>();
+                        entryData.put(mapKey, value);
+                        indexMap.put(index, entryData);
+                        typeIndexMap.put(typeId, indexMap);
+                    } else {
+                        Map<String, Object> entryData = indexMap.get(index);
+                        if (entryData == null) {
+                            entryData = new HashMap<>();
+                            indexMap.put(index, entryData);
+                        } 
+                        entryData.put(mapKey, value);
+                    }
+                } else if (allowPreparsed) {
+                    preparsedTypeMap.put(name, UtilGenerics.<Map<String, Object>>checkList(value));
+                }
+            }
+            
+            // get as sorted lists
+            // TODO: optimize better
+            for(Map.Entry<String, Map<Integer, Map<String, Object>>> entry : typeIndexMap.entrySet()) {
+                List<Integer> indexes = new ArrayList<>(entry.getValue().keySet());
+                Collections.sort(indexes);
+                
+                List<Map<String, Object>> entryDataList = new ArrayList<>(indexes.size());
+                for(int index : indexes) {
+                    entryDataList.add(entry.getValue().get(index));
+                }
+                
+                typeMap.put(entry.getKey(), entryDataList);
+            }
+            
+            typeMap.putAll(preparsedTypeMap);
+        }
+        return typeMap;
+    }
+    
+    /**
+     * SCIPIO: Returns all rollups for a category.
+     * Imported from SolrCategoryUtil, 2017-11-09.
+     */
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, boolean useCache) {
+        List<List<String>> trailElements = new ArrayList<>();
+        try {
+            // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
+            List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().cache(useCache).queryList();
+            if (UtilValidate.isNotEmpty(productCategoryRollups)) {
+                // For each parent cat, get its trails recursively and add our own
+                for (GenericValue productCategoryRollup : productCategoryRollups) {
+                    String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                    List<List<String>> parentTrails = getCategoryRollupTrails(delegator, parentProductCategoryId, useCache);
+                    for (List<String> trail : parentTrails) {
+                        // WARN: modifying the parent trail in-place for speed
+                        trail.add(productCategoryId);
+                        trailElements.add(trail);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot generate trail from product category '" + productCategoryId + "'", module);
+        }
+        if (trailElements.isEmpty()) {
+            List<String> trailElement = new ArrayList<>();
+            trailElement.add(productCategoryId);
+            trailElements.add(trailElement);
+        }
+        return trailElements;
+    }
+    
+    /**
+     * SCIPIO: Returns all rollups for a category that have the given top categories.
+     * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
+     * Added 2017-11-09.
+     */
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
+        if (topCategoryIds == null) return trails;
+        List<List<String>> filtered = new ArrayList<>(trails.size());
+        for(List<String> trail : trails) {
+            if (!trail.isEmpty() && topCategoryIds.contains(trail.get(0))) {
+                filtered.add(trail);
+            }
+        }
+        return filtered;
+    }
 }

@@ -1846,7 +1846,16 @@ under the License.
     </request-map>
     <request-map uri="generateMissingSeoUrlForWebsite">
         <security https="true" auth="true"/>
-        <event type="service" invoke="generateMissingSeoUrlForWebsite"/>
+        <!-- SCIPIO: replaced service
+        <event type="service" invoke="generateMissingSeoUrlForWebsite"/>-->
+        <event type="service" invoke="generateWebsiteAlternativeUrls"/>
+        <response name="success" type="view" value="WebSiteSEO"/>
+        <response name="error" type="view" value="WebSiteSEO"/>
+    </request-map>
+    <request-map uri="generateSitemapFilesForWebsite">
+        <security https="true" auth="true"/>
+        <!-- SCIPIO: new sitemap service -->
+        <event type="service" invoke="generateWebsiteAlternativeUrlSitemapFiles"/>
         <response name="success" type="view" value="WebSiteSEO"/>
         <response name="error" type="view" value="WebSiteSEO"/>
     </request-map>

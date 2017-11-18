@@ -48,6 +48,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
@@ -1425,13 +1426,14 @@ nextProd:
         if (typeIdCondList.size() > 0) {
             condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
         }
-        if (filterByDate != null) {
-            condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-        }
         condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
         
-        List<GenericValue> productContentList = delegator.findList("ProductContentAndElectronicText", 
-                EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+        EntityQuery query = EntityQuery.use(delegator).from("ProductContentAndElectronicText") 
+                .where(condList).orderBy("-fromDate").cache(useCache);
+        if (filterByDate != null) {
+            query = query.filterByDate(filterByDate);
+        }
+        List<GenericValue> productContentList = query.queryList();
         for(GenericValue productContent : productContentList) {
             String productContentTypeId = productContent.getString("productContentTypeId");
             if (fieldMap.containsKey(productContentTypeId)) {
@@ -1445,12 +1447,13 @@ nextProd:
             condList = new ArrayList<>();
             condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
             condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-            if (filterByDate != null) {
-                condList.add(EntityUtil.getFilterByDateExpr(filterByDate));
-            }
             condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
-            List<GenericValue> contentAssocList = delegator.findList("ContentAssocToElectronicText", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("fromDate DESC"), null, useCache);
+            
+            query = EntityQuery.use(delegator).from("ContentAssocToElectronicText").where(condList).orderBy("-fromDate").cache(useCache);
+            if (filterByDate != null) {
+                query = query.filterByDate(filterByDate);
+            }
+            List<GenericValue> contentAssocList = query.queryList();
             
             List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
             valueList.add(productContent);
@@ -1459,5 +1462,30 @@ nextProd:
         }
         
         return fieldMap;
+    }
+    
+    /**
+     * SCIPIO: Returns all rollups for a product that have the given top categories.
+     * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
+     * Added 2017-11-09.
+     */
+    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Set<String> topCategoryIds, boolean useCache) {
+        List<GenericValue> prodCatMembers;
+        try {
+            prodCatMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
+                    .where("productId", productId).orderBy("-fromDate").filterByDate().cache(useCache).queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError("Cannot generate trail from product '" + productId + "'", productId);
+            return new ArrayList<>();
+        }
+        if (prodCatMembers.size() == 0) return new ArrayList<>();
+        
+        List<List<String>> possibleTrails = null;
+        for(GenericValue prodCatMember : prodCatMembers) {
+            List<List<String>> trails = CategoryWorker.getCategoryRollupTrails(delegator, prodCatMember.getString("productCategoryId"), topCategoryIds, useCache);
+            if (possibleTrails == null) possibleTrails = trails;
+            else possibleTrails.addAll(trails);
+        }
+        return possibleTrails;
     }
 }

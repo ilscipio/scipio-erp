@@ -326,6 +326,49 @@ under the License.
         <key-map field-name="dataResourceId"/>
       </view-link>
     </view-entity>
+    <!-- SCIPIO: 2017-11-08: same as ProductCategoryContentAndElectronicText but skips DataResource for performance -->
+    <view-entity entity-name="ProductCategoryContentAndElecTextShort"
+                package-name="org.ofbiz.product.category"
+                title="ProductCategoryContent and ElectronicText Required Short View">
+      <member-entity entity-alias="PCC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PCC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PCC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-11-08: new partially optimized entity that goes from ProductCategoryContent to ContentAssoc to ElectronicText, skipping some intermediates -->
+    <view-entity entity-name="ProductCategoryContentAssocAndElecTextShort"
+                package-name="org.ofbiz.product.category"
+                title="ProductCategoryContent and ContentAssoc and ElectronicText Required Short View">
+      <member-entity entity-alias="PCC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="TOCO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PCC">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="TOCO"/>
+      <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+      <view-link entity-alias="PCC" rel-entity-alias="CA">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CA" rel-entity-alias="TOCO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductCategoryContentType"
             package-name="org.ofbiz.product.category"
             default-resource-name="ProductEntityLabels"
@@ -3059,6 +3102,49 @@ under the License.
         <key-map field-name="dataResourceId"/>
       </view-link>
       <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- 2017-11-08: same as ProductContentAndElectronicText but skips some entities where possible -->
+    <view-entity entity-name="ProductContentAndElecTextShort"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And ElectronicText Required Short View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-11-08: new partially optimized entity that goes from ProductContent to ContentAssoc to ElectronicText, skipping some intermediates -->
+    <view-entity entity-name="ProductContentAssocAndElecTextShort"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And ContentAssoc And ElectronicText Required Short View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="TOCO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PC">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="TOCO"/>
+      <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+      <view-link entity-alias="PC" rel-entity-alias="CA">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CA" rel-entity-alias="TOCO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
         <key-map field-name="dataResourceId"/>
       </view-link>
     </view-entity>

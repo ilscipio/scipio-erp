@@ -39,6 +39,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentLangUtil;
+import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -239,15 +240,15 @@ public class WorkEffortContentWrapper implements ContentWrapper {
             return null;
         }
 
-        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
         String cacheKey;
         if (contentId != null) {
             cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId");
+                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
         } else {
             cacheKey = workEffortContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId");
+                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
         }
 
         try {

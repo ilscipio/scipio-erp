@@ -24,8 +24,16 @@ under the License.
     <vendor>Ilscipio</vendor>
     <version>1.0</version>
 
-    <service name="setupDummy" engine="interface">
-        <description>Dummy interface definition - remove when a real service is added</description>
+    <service name="setupUpdatePartyAcctgPreference" default-entity-name="PartyAcctgPreference" engine="java" auth="true"
+    	location="com.ilscipio.scipio.accounting.ledger.AcctgAdminServices" invoke="updatePartyAcctgPreference">
+    	<description>
+    		SCIPIO: Update accounting preferences for a party (organization). This is a Scipio custom service based on the accounting updatePartyAcctgPreference service 
+    		intended for the setup component. The default one doesn't let update almost any of the fields, which from a point of view of a setup application is quite weird.
+    		In any case, We should determine with care, what can be updated and in which circumstances. 
+    	</description>
+        <permission-service service-name="acctgPrefPermissionCheck" main-action="UPDATE"/>
+    	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+    	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
     </service>
 
 </services>

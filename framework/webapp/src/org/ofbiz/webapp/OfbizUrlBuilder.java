@@ -134,6 +134,32 @@ public final class OfbizUrlBuilder {
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
+    
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
+     * Added 2017-11.
+     * 
+     * @param webSiteId Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder fromWebSiteId(String webSiteId, Delegator delegator) throws WebAppConfigurationException, 
+        IOException, SAXException, GenericEntityException, IllegalArgumentException {
+        WebappInfo webAppInfo = null;
+        WebSiteProperties webSiteProps = null;
+        if (webSiteId != null && !webSiteId.isEmpty()) {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return from(webAppInfo, webSiteProps, delegator);
+    }
 
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
@@ -181,14 +207,17 @@ public final class OfbizUrlBuilder {
     public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
         // SCIPIO: support Boolean
         useSSL = Boolean.TRUE.equals(useSSL); // default false
-        controller = !Boolean.FALSE.equals(useSSL); // default true
+        controller = !Boolean.FALSE.equals(controller); // default true // SCIPIO: re-fixed 2017-11-17
         
         boolean makeSecure = useSSL;
-        String[] pathElements = url.split("/");
-        String requestMapUri = pathElements[0];
-        int queryIndex = requestMapUri.indexOf("?");
-        if (queryIndex != -1) {
-            requestMapUri = requestMapUri.substring(0, queryIndex);
+        String requestMapUri = null;
+        if (url != null) { // SCIPIO: added null check
+            String[] pathElements = url.split("/");
+            requestMapUri = pathElements[0];
+            int queryIndex = requestMapUri.indexOf("?");
+            if (queryIndex != -1) {
+                requestMapUri = requestMapUri.substring(0, queryIndex);
+            }
         }
         RequestMap requestMap = null;
         // SCIPIO: only lookup if controller lookup requested
@@ -248,6 +277,15 @@ public final class OfbizUrlBuilder {
         return buildHostPart(buffer, url, useSSL, true);
     }
 
+    /**
+     * SCIPIO: Builds a partial URL - including the scheme and host, but not the servlet path or resource.
+     * Does NOT consult controller. useSSL false by default.
+     * Added 2017-11-17.
+     */
+    public boolean buildHostPart(Appendable buffer, Boolean useSSL) throws WebAppConfigurationException, IOException {
+        return buildHostPart(buffer, null, useSSL, false);
+    }
+    
     /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
      * 

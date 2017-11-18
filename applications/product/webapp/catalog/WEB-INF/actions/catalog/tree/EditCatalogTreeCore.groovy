@@ -38,6 +38,23 @@ if (isEventError == null) isEventError = context.isError;
 if (isEventError == null) isEventError = false;
 context.ectIsEventError = isEventError;
 
+objectLocalizedFields = context.ectObjectLocalizedFields;
+if (!objectLocalizedFields) {
+    objectLocalizedFields = [
+        category: [
+            fieldNames: ["categoryName", "description", "longDescription"],
+            typeNames: ["CATEGORY_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ],
+        product: [
+            fieldNames: ["productName", "description", "longDescription"],
+            typeNames: ["PRODUCT_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
+            typeNameListStr: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]'
+        ] 
+    ];
+}
+context.ectObjectLocalizedFields = objectLocalizedFields;
+
 getSetStringParam = { paramName ->
     def value = context[paramName];
     if (value == null) value = parameters[paramName] as String;
@@ -232,3 +249,10 @@ for (productStoreCatalog in productStoreCatalogs) {
 treeMenuHelper.addAll(treeMenuData)
 context.treeMenuData = treeMenuHelper;
 
+// SPECIAL: method to convert the stringified localized field submitted parameters (contentField_),
+// so user input is not lost on event error
+// FIXME?: shouldn't run on every call, but doesn't matter yet
+if (parameters.simpleTextViewsByType == null) {
+    parameters.simpleTextViewsByType = org.ofbiz.product.category.CategoryWorker.parseLocalizedSimpleTextContentFieldParams(parameters, "contentField_", false);
+}
+if (DEBUG) Debug.logInfo("parsed parameters.simpleTextViewsByType: " + parameters.simpleTextViewsByType, module);

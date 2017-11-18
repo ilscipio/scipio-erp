@@ -1,11 +1,12 @@
-<#-- SCIPIO: SETUP interactive catalog tree implementation 
+<#-- SCIPIO: SETUP interactive catalog tree implementation -
+    links the tree actions to the setup forms.
     FIXME: dialog messages are not html-escaped currently - only the substituted parts are,
         so the labels should only contain simple characters for now... -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS - <strong>SERVICES TEMPORARILY RE-BROKEN 2017-10-24</strong></@alert>
+<@alert type="warning">WARNING: WORK-IN-PROGRESS - <strong>SERVICES NOT FULLY TESTED 2017-10-27 - DELETION MAY BE DANGEROUS</strong></@alert>
 
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
@@ -13,6 +14,7 @@
             adjust field visibility for top vs nested cat -->
         refreshScfFieldVisibility(form);
         
+        <#-- update the bottom Save/Save & Continue/Skip menu target -->
         setupControlMenu.setSubmitFormId(form.prop('id'));
     };
 </@script>
@@ -20,12 +22,27 @@
 <#assign ectCallbacks = {
     "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
 }>
+<#-- LIST OF ALL "show" FORMS -->
 <#assign ectAllHideShowFormIds = [
     "ect-newcatalog", "ect-editcatalog", "ect-addcatalog",
     "ect-newcategory", "ect-editcategory", "ect-addcategory",
     "ect-newproduct", "ect-editproduct", "ect-addproduct"
 ]>
 
+<#-- SPECIAL CONFIRM MESSAGE OPTIONS -->
+<#-- TODO: REVIEW: unclear if value="all" is appropriate for these (DANGEROUS?) -->
+<#macro ectDeleteCategoryConfirmFields args={}>
+    <@field type="checkbox" name="deleteContentRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedContentRecords
+        checked=true/>
+</#macro>
+<#macro ectDeleteProductConfirmFields args={}>
+    <@field type="checkbox" name="deleteContentRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedContentRecords
+        checked=true/>
+    <@field type="checkbox" name="deleteAssocProductRecursive" value="all" altValue="none" label=uiLabelMap.ProductDeleteAssociatedChildProducts
+        checked=true/>
+</#macro>
+
+<#-- ACTION PROPERTIES, links tree actions to setup forms -->
 <#assign ectActionProps = {
     "default": {
         "newcatalog": {
@@ -65,7 +82,8 @@
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
+            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentNote'),
             "id": "ect-removecatalog-form"
         },
         "newcategory": {
@@ -118,7 +136,9 @@
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
+            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentNote'),
+            "confirmFields": ectDeleteCategoryConfirmFields,
             "id": "ect-removecategory-form"
         },
         "newcategory": {
@@ -183,7 +203,9 @@
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordPermanentParam'),
+            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentParam'),
+            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentNote'),
+            "confirmFields": ectDeleteProductConfirmFields,
             "id": "ect-removeproduct-form"
         },
         "manage": {
@@ -196,10 +218,12 @@
     }
 }>
 
+<#-- RENDERS SETUP FORMS -->
 <#macro ectPostTreeArea extraArgs...>
     <@render type="screen" resource=setupCatalogForms.location name=setupCatalogForms.name/>
 </#macro>
 
+<#-- RENDERS DISPLAY OPTIONS -->
 <#macro ectExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
     <@form action=makeOfbizUrl("setupCatalog") method="get">
@@ -213,5 +237,5 @@
   </@section>
 </#macro>
 
-<#-- CORE INCLUDE -->
+<#-- CORE TREE INCLUDE -->
 <#include "component://product/webapp/catalog/catalog/tree/EditCatalogTreeCore.ftl">

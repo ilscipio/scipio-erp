@@ -84,9 +84,8 @@
         <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
         <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
 
-        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true>
-            <#-- TODO: LOCALIZED VERSIONS OF productName/description/longDescription (complex) -->
-            <@field type="display">(${uiLabelMap.CommonNone})</@field>
+        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true class="+ect-locfields-cnt">
+            <@ectLocalizedFields objectType="product" params=params/>
         </@fieldset>
       </#if>
     </@form>
@@ -144,7 +143,9 @@
       <@field type="hidden" name="isDeleteProduct" value="Y"/><#-- for our screens -->
       <@field type="hidden" name="deleteRecordAndRelated" value=isDeleteRecord?string("true", "false")/><#-- for Versatile service -->
       <@field type="hidden" name="deleteAssocMode" value="" class="+ect-inputfield"/><#-- for Versatile service -->
-      
+      <@field type="hidden" name="deleteContentRecursive" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+      <@field type="hidden" name="deleteAssocProductRecursive" value="" class="+ect-inputfield"/><#-- for Versatile service -->
+
       <@field type="hidden" name="productStoreId" value="" class="+ect-inputfield"/>
       <@field type="hidden" name="prodCatalogId" value="" class="+ect-inputfield"/>
       

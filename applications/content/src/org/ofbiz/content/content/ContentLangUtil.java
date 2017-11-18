@@ -12,10 +12,14 @@ public class ContentLangUtil {
     private static final UrlContentSanitizer urlContentSanitizer = new UrlContentSanitizer();
 
     public static interface ContentSanitizer extends UtilCodec.SimpleEncoder {
-        
+        String getLang();
     }
     
     public static class RawContentSanitizer implements ContentSanitizer {
+        @Override
+        public String getLang() {
+            return "raw";
+        }
         @Override
         public String encode(String original) {
             return UtilCodec.getRawEncoder().encode(original);
@@ -23,6 +27,10 @@ public class ContentLangUtil {
     }
     
     public static class UrlContentSanitizer implements ContentSanitizer {
+        @Override
+        public String getLang() {
+            return "url";
+        }
         @Override
         public String encode(String original) {
             // TODO?: Here we would URL-encode the parameters (ONLY)
@@ -46,7 +54,11 @@ public class ContentLangUtil {
      * during freemarker/screen rendering.
      */
     public static ContentSanitizer getContentWrapperSanitizer(String lang) {
-        return getEarlySanitizer(lang);
+        if ("url".equals(lang)) {
+            return urlContentSanitizer;
+        } else {
+            return rawContentSanitizer;
+        }
     }
     
     public static ContentSanitizer getEarlySanitizer(String lang) {

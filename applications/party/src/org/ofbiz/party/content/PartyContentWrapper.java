@@ -41,6 +41,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
+import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
@@ -145,15 +146,15 @@ public class PartyContentWrapper implements ContentWrapper {
             return null;
         }
         
-        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
         String cacheKey;
         if (contentId != null) {
             cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + party.get("partyId");
+                    CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
         } else {
             cacheKey = partyContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + party.get("partyId");
+                    CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
         }
 
         try {

@@ -167,6 +167,17 @@
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
+    
+    <!-- SCIPIO: 2017-10-30: New service which can work recursively -->
+    <service name="removeContentAndRelatedRecursiveTo" default-entity-name="Content" engine="simple"
+            location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="removeContentAndRelatedRecursiveTo" auth="true">
+        <description>SCIPIO: Remove Content and related entities and recursively removes the "to" ("child") associated Content records</description>
+        <permission-service service-name="genericContentPermission" main-action="DELETE"/>
+        <implements service="removeContentAndRelated"/>
+        <attribute mode="IN" name="recursiveTarget" optional="true" type="String" default-value="all">
+            <description>Controls which related Content (To) to recursively remove: "all", "active" (non-expired)</description>
+        </attribute>
+    </service>
 
     <!-- TODO: old permission service; being replaced with genericContentPermission -->
     <service name="checkContentPermission"

@@ -32,9 +32,11 @@ context.userPartyId = userPartyId;
 
 if (context.userParty) {
     userInfo = [:];
-    userInfo.putAll(context.userParty);
-    userInfo.putAll(userData.userUserLogin);
-    userInfo.putAll(userData.userPerson);
+    userInfo.putAll(context.userParty);    
+    if (userData.userUserLogin)
+        userInfo.putAll(userData.userUserLogin);
+    if (userData.userPerson)    
+        userInfo.putAll(userData.userPerson);
 
     partyRole = EntityUtil.getFirst(delegator.findByAnd("PartyRole", ["partyId" : userParty.partyId], null, false));
     context.userPartyRole = partyRole;

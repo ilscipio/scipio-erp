@@ -17,6 +17,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -255,11 +256,8 @@ abstract class ContactMechPurposeInfo {
         }
         
         public static PartyContactMechPurposeInfo forParty(Delegator delegator, LocalDispatcher dispatcher, String partyId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<EntityCondition> condList = new ArrayList<>();
-            condList.add(EntityCondition.makeCondition("partyId", partyId));
-            condList.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> partyContactMechPurposeList = delegator.findList("PartyContactMechPurpose", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
+            List<GenericValue> partyContactMechPurposeList = EntityQuery.use(delegator).from("PartyContactMechPurpose")
+                    .where("partyId", partyId).filterByDate().cache(useCache).queryList();
             return fromPartyContactMechPurposeList(partyId, partyContactMechPurposeList, logPrefix);
         }
         
@@ -303,12 +301,9 @@ abstract class ContactMechPurposeInfo {
 
         private GenericValue getPartyContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<EntityCondition> condList = new ArrayList<>();
-                condList.add(EntityCondition.makeCondition("contactMechId", contactMechId));
-                condList.add(EntityCondition.makeCondition("partyId", partyId));
-                condList.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> pcmList = delegator.findList("PartyContactMech", EntityCondition.makeCondition(condList, EntityOperator.AND),
-                        null, SetupDataUtil.getDefaultContactOrderBy(), null, useCache);
+                List<GenericValue> pcmList = EntityQuery.use(delegator).from("PartyContactMech")
+                        .where("contactMechId", contactMechId, "partyId", partyId).filterByDate()
+                        .orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
                 if (pcmList.size() > 0) {
                     GenericValue result = pcmList.get(0);
                     if (pcmList.size() > 2) {
@@ -340,11 +335,8 @@ abstract class ContactMechPurposeInfo {
         }
         
         public static FacilityContactMechPurposeInfo forFacility(Delegator delegator, LocalDispatcher dispatcher, String facilityId, boolean useCache, String logPrefix) throws GenericEntityException {
-            List<EntityCondition> condList = new ArrayList<>();
-            condList.add(EntityCondition.makeCondition("facilityId", facilityId));
-            condList.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> facilityContactMechPurposeList = delegator.findList("FacilityContactMechPurpose", 
-                    EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
+            List<GenericValue> facilityContactMechPurposeList = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
+                    .where("facilityId", facilityId).filterByDate().cache(useCache).queryList();
             return fromFacilityContactMechPurposeList(facilityId, facilityContactMechPurposeList, logPrefix);
         }
         
@@ -388,12 +380,8 @@ abstract class ContactMechPurposeInfo {
         
         private GenericValue getFacilityContactMechById(Delegator delegator, String contactMechId, boolean useCache) throws GenericEntityException {
             if (UtilValidate.isNotEmpty(contactMechId)) {
-                List<EntityCondition> condList = new ArrayList<>();
-                condList.add(EntityCondition.makeCondition("contactMechId", contactMechId));
-                condList.add(EntityCondition.makeCondition("facilityId", facilityId));
-                condList.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> pcmList = delegator.findList("FacilityContactMech", EntityCondition.makeCondition(condList, EntityOperator.AND),
-                        null, SetupDataUtil.getDefaultContactOrderBy(), null, useCache);
+                List<GenericValue> pcmList = EntityQuery.use(delegator).from("FacilityContactMech")
+                        .where("contactMechId", contactMechId, "facilityId", facilityId).filterByDate().orderBy(SetupDataUtil.getDefaultContactOrderBy()).cache(useCache).queryList();
                 if (pcmList.size() > 0) {
                     GenericValue result = pcmList.get(0);
                     if (pcmList.size() > 2) {

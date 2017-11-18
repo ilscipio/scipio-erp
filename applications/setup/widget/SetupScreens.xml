@@ -560,8 +560,25 @@
                 
                 <set field="isCreateForm" type="Boolean" value="${context.topGlAccountId == null}"/><!-- FIXME -->
                 <!-- <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" /> -->
-                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateAccounting' : 'setupCreateAccounting'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateGlAccount' : 'setupCreateGlAccount'}" />
                 <set field="submitFormId" value="EditAccounting"/>
+                
+                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
+                
+                <set field="newGlAccountIdFormId" value="setupAccounting-newGlAccount"/>
+                <set field="newGlAccountLinkHref" value="javascript:jQuery('#${newGlAccountFormId}').submit();void(0);"/>
+
+                <if>
+                    <condition><not><if-true field="glSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>                       
+                    </then>
+                    <else>
+                    	<set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
+                    </else>
+                </if>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -577,26 +594,24 @@
                                 <section>
                                     <condition>
                                         <!-- don't show tree until at least one topGlAccountId created -->
-                                        <not><if-empty field="glAccountList"/></not>
+                                        <not><if-empty field="topGlAccountId"/></not>
                                     </condition>
                                     <widgets>
                                         <screenlet>
-                                            <include-screen name="EditGLTree"/>
+                                        	<include-screen name="EditAcctgPreferences"/>
+                                            <include-screen name="EditGLAccountTree"/>
+                                            <include-screen name="EditFiscalPeriods"/>
+                                            <include-screen name="EditJournals"/>
                                         </screenlet>
                                     </widgets>
-                                </section>
-                                <section>
-                                    <condition>
-                                        <if-true field="glSelected"/>
-                                    </condition>
-                                    <widgets>
-                                        <screenlet>                                            
+                                    <fail-widgets>
+                                    	<screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
                                             </platform-specific>
                                         </screenlet>
-                                    </widgets>
-                                </section>
+                                    </fail-widgets>
+                                </section>                              
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.AccountingCreatePermissionError}</label>
@@ -619,28 +634,89 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditGLTree">
+    <screen name="EditAcctgPreferences">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLTree.groovy"/>                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
             </actions>
             <widgets>
             	<section>
-            		 <condition>
-		                <and>
-		                    <not><if-empty field="topGlAccountId"/></not>
-		                    <not><if-empty field="accountMaps"/></not>
-		                </and>
-		            </condition>
 		            <widgets>
-						<screenlet>                       
-						    <platform-specific><html><html-template location="component://accounting/webapp/accounting/ledger/accountsTree.ftl"/></html></platform-specific>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
 						</screenlet>
 		            </widgets>
             	</section>
             </widgets>           
         </section>
     </screen>
+    <screen name="EditGLAccountTree">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+            		 <condition>
+		                <and>
+		                    <not><if-empty field="topGlAccountId"/></not>
+		                    <not><if-empty field="treeMenuData"/></not>
+		                </and>
+		            </condition>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="SetupGlAccountForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditFiscalPeriods">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="EditJournals">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    
     
     <screen name="SetupFacility">
         <section>
@@ -716,6 +792,8 @@
                 
                 <set field="setupCatalogForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupCatalogForms.name" value="SetupCatalogForms"/>
+                
+                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpEctCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

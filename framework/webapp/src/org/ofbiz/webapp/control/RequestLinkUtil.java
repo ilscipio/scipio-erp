@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -353,5 +354,99 @@ public abstract class RequestLinkUtil {
             String uri, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, Boolean fullPath, Boolean secure, Boolean encode) {
         RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
         return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
+    }
+    
+    /**
+     * Returns {@link javax.servlet.http.HttpServletRequest#getRequestURL} + query string.
+     */
+    public static String getFullRequestURL(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+        if (request.getQueryString() != null) url.append("?").append(request.getQueryString());
+        return url.toString();
+    }
+    
+    /**
+     * Attemps to rebuild the URL that was requested by the client, before any forwards, but with support
+     * for specifying the protocol and port.
+     * This is a custom coded version of {@link #getFullOriginalURL}.
+     */
+    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response, Boolean secure, boolean includeQueryString) {
+        // NOTE: derived from Tomcat 8 implementation of getRequestURL
+        StringBuffer url = new StringBuffer();
+        String scheme; 
+        int port;
+        if (secure != null) {
+            scheme = secure ? "https" : "http";
+            port = -1;
+            try {
+                WebSiteProperties props = WebSiteProperties.from(request);
+                String portStr = secure ? props.getHttpsPort() : props.getHttpPort();
+                if (portStr != null && !portStr.isEmpty()) {
+                    port = Integer.parseInt(portStr);
+                }
+            } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
+                // If the entity engine is throwing exceptions, then there is no point in continuing.
+                Debug.logError(e, "rebuildOriginalRequestURL: Exception thrown while getting web site properties http/https port: " + e.getMessage(), module);
+            }
+            if (port < 0) {
+                port = secure ? 443 : 80;
+            }
+        } else {
+            scheme = request.getScheme();
+            port = request.getServerPort();
+        }
+        if (port < 0) {
+            port = 80;
+        }
+        url.append(scheme);
+        url.append("://");
+        url.append(request.getServerName());
+        if ((scheme.equals("http") && (port != 80))
+            || (scheme.equals("https") && (port != 443))) {
+            url.append(':');
+            url.append(port);
+        }
+        
+        String requestURI = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
+        String queryString = (String) request.getAttribute(RequestDispatcher.FORWARD_QUERY_STRING);
+        if (requestURI == null) { // NOTE: must use this test for the queryString too
+            requestURI = request.getRequestURI();
+            queryString = request.getQueryString();
+        }
+        url.append(requestURI);
+        if (includeQueryString && queryString != null) {
+            url.append("?").append(queryString);
+        }
+        return url.toString();
+    }
+    
+    public static String getServletAndPathInfo(HttpServletRequest request) {
+        if (request.getPathInfo() != null) return request.getServletPath() + request.getPathInfo();
+        else return request.getServletPath();
+    }
+    
+    /**
+     * Returns the first path elem after the slash, or null if empty or root request.
+     * WARN: assumes the first char is a slash - meant for servlet API methods: getServletPath(), getPathInfo().
+     */
+    public static String getFirstPathElem(String path) {
+        if (path == null || path.length() <= 1) return null;
+        
+        int secondSlashIndex = path.indexOf('/', 1);
+        if (secondSlashIndex >= 1) {
+            path = path.substring(1, secondSlashIndex);
+        } else {
+            path = path.substring(1);
+        }
+        
+        return path;
+    }
+    
+    public static String getFirstPathInfoElem(HttpServletRequest request) {
+        return getFirstPathElem(request.getPathInfo());
+    }
+    
+    public static String getFirstServletAndPathInfoElem(HttpServletRequest request) {
+        return getFirstPathElem(getServletAndPathInfo(request));
     }
 }

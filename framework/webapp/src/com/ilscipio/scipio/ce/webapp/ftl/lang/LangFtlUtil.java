@@ -1465,6 +1465,9 @@ public abstract class LangFtlUtil {
     
     /**
      * Returns the given model as string, bypassing auto-escaping done by EscapingModels.
+     * <p>
+     * WARN (TODO?: REVIEW?): this can crash when model is CollectionModel or MapModel, childs of TemplateScalarModel.
+     * we let it crash because non-strict typing may be dangerous and hide errors...
      * 
      * @see org.ofbiz.webapp.ftl.EscapingModel
      */

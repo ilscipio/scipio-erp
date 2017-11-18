@@ -236,12 +236,23 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="typeGenerate" title="Generate Type">
-            <check all-checked="false">
+        <field name="typeGenerate" title="${uiLabelMap.ContentGenerateType}">
+            <check all-checked="true"><!-- SCIPIO: changed to true because only have two basic all-checked="false" -->
                 <option key="category" description="Category"/>
                 <option key="product" description="Product"/>
-                <option key="content" description="Content"/>
+                <!--<option key="content" description="Content"/> SCIPIO: TODO?: future -->
             </check>
+        </field>
+        <!-- SCIPIO: new options (2017-11) 
+            TODO: REVIEW: the defaults are destructive... but most likely what users want -->
+        <field name="replaceExisting" title="${uiLabelMap.ContentReplaceExisting}">
+            <check key="true" alt-key="false" all-checked="true"/>
+        </field>
+        <field name="removeOldLocales" title="${uiLabelMap.ContentRemoveOldLocales}">
+            <check key="true" alt-key="false" all-checked="true"/>
+        </field>
+        <field name="includeVariant" title="${uiLabelMap.ContentIncludeVariantProducts}">
+            <check key="true" alt-key="false" all-checked="true"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
@@ -293,5 +304,11 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
+    </form>
+    
+    <!-- SCIPIO: new -->
+    <form name="CreateWebsiteSitemaps" type="single" target="generateSitemapFilesForWebsite">
+        <field name="webSiteId"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -7632,8 +7632,9 @@
         <value xml:lang="zh">网站内容</value>
         <value xml:lang="zh_TW">網站內容</value>
     </property>
-    <property key="PageTitleWebSiteSEO">
-        <value xml:lang="en">Generate Missing SEO URLs</value>
+    <property key="PageTitleWebSiteSEO"><!-- SCIPIO: changed -->
+        <value xml:lang="en">Generate SEO URLs</value>
+        <value xml:lang="de">SEO-URLs generieren</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
         <value xml:lang="pt">Gerar URLs faltantes para SEO</value>
         <value xml:lang="vi">Sinh lại các URL dành cho SEO bị thiếu</value>
@@ -7699,5 +7700,37 @@
     <property key="ContentNewContent">
         <value xml:lang="de">Neuer Inhalt</value>
         <value xml:lang="en">New Content</value>
+    </property>
+    <property key="ContentGenerateType">
+        <value xml:lang="de">Typ generieren</value>
+        <value xml:lang="en">Generate Type</value>
+    </property>
+    <property key="ContentReplaceExisting">
+        <value xml:lang="de">Bestehende ersetzen</value>
+        <value xml:lang="en">Replace Existing</value>
+    </property>
+    <property key="ContentRemoveOldLocales">
+        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
+        <value xml:lang="en">Remove Old Locales</value>
+    </property>
+    <property key="ContentIncludeVariantProducts">
+        <value xml:lang="de">Inklusive Variantenprodukte</value>
+        <value xml:lang="en">Include Variant Products</value>
+    </property>
+    <property key="ContentGenerateSitemaps">
+        <value xml:lang="en">Generate Sitemaps</value>
+        <value xml:lang="de">Sitemaps erstellen</value>
+    </property>
+    <property key="ContentGenerateSitemapsInfo">
+        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
+        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Sie werden an den in den Konfigurationsdateien sitemaps.properties angegebenen Speicherorten generiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
+    </property>
+    <property key="ContentGenerateSeoUrlInfo">
+        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
+        <value xml:lang="de">Dadurch werden automatisch alternative URLs aus Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration generiert.</value>
+    </property>
+    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
+        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
+        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
     </property>
 </resource>

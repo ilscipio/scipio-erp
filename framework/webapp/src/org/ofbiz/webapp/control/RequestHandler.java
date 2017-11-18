@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,6 +54,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -340,14 +342,19 @@ public class RequestHandler {
             // need to be then we need the session cookie to be created via an http response (rather than https)
             // so we'll redirect to an unsecure request
             } else if (forceHttpSession && request.isSecure() && session.isNew() && !requestMap.securityHttps) {
-                StringBuilder urlBuf = new StringBuilder();
-                urlBuf.append(request.getPathInfo());
-                if (request.getQueryString() != null) {
-                    urlBuf.append("?").append(request.getQueryString());
-                }
-                // SCIPIO: Call proper method for this
-                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
-                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
+                // SCIPIO: 2017-11-13: Preliminary patch to try to ensure the redirected URL is as close as possible
+                // to the original incoming URL. We must not use getPathInfo because it gets changed across forwards.
+                // TODO: REVIEW: I am NOT sending this through URL encoding for now; the idea is to reflect exactly
+                // the original URL, so it's very unlikely we want this to be filtered in any way.
+                String newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, false, true);
+//                StringBuilder urlBuf = new StringBuilder();
+//                urlBuf.append(request.getPathInfo());
+//                if (request.getQueryString() != null) {
+//                    urlBuf.append("?").append(request.getQueryString());
+//                }
+//                // SCIPIO: Call proper method for this
+//                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
+//                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
                     callRedirect(newUrl, response, request, statusCodeString);
                     return;
@@ -966,6 +973,11 @@ public class RequestHandler {
         String errorpage = null;
         try {
             errorpage = getControllerConfig().getErrorpage();
+            // SCIPIO: 2017-11-14: now supports flexible expressions contains ServletContext attributes
+            Map<String, Object> exprCtx = new HashMap<>();
+            exprCtx.putAll(UtilHttp.getServletContextMap(request));
+            exprCtx.putAll(UtilHttp.getAttributeMap(request));
+            errorpage = FlexibleStringExpander.expandString(errorpage, exprCtx);
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
         }
@@ -2341,5 +2353,49 @@ public class RequestHandler {
      */
     public String getCharset() {
         return charset;
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletRequest request) {
+        return getControlServletPath(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization - HOWEVER, it may not accessible
+     * from filter/servlet initialization!
+     * NOTE: If request is available, always call the {@link #getControlServletPath(ServletRequest)} overload instead!
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_SERVPATH_");
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletRequest request) {
+        return getControlServletMapping(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_MAPPING_");
     }
 }

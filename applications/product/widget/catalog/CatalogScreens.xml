@@ -273,6 +273,7 @@ under the License.
         <section>
             <actions>
                 <set field="productStoreId" from-field="productStoreId"/>
+                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpEctCommon.js" global="true"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">

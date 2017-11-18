@@ -1513,7 +1513,7 @@ public abstract class SetupWorker implements Serializable {
         }
         
         private static final StepParamInfo accountingStepParamInfo =
-                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet()); // "productStoreId", "userPartyId"
+                StepParamInfo.fromRequiredAndOptional(nameSet("orgPartyId"), nameSet("topGlAccountId")); // "productStoreId", "userPartyId"
         protected class AccountingStepState extends CommonStepState {
             public AccountingStepState(StaticStepState partial) { super(partial); }
             
@@ -1770,6 +1770,21 @@ public abstract class SetupWorker implements Serializable {
                         }
                         
                         return facilityId;
+                    }
+                });
+                
+                map.put("topGlAccountId", new ParamValidator() {
+                    @Override
+                    public Object getValidatedParam(RequestSetupWorker setupWorker, String paramName, Object value) {
+                        String topGlAccountId = null;
+                        
+                        // NOTE: the value gets implicitly passed here (confusing), so not using the value arg
+                        Map<String, Object> accountingStepData = setupWorker.getStepState("accounting").getStepData();
+                        if (accountingStepData.get("topGlAccount") != null) {
+                            topGlAccountId = (String) accountingStepData.get("topGlAccountId");
+                        }
+                        
+                        return topGlAccountId;
                     }
                 });
                 

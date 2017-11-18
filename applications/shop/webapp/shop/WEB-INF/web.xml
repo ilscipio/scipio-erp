@@ -50,7 +50,7 @@ under the License.
             frequently switch between http and https.
         </description>
         <param-name>forceHttpSession</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
     <context-param>
         <description>
@@ -60,35 +60,48 @@ under the License.
         <param-value>true</param-value>
     </context-param>
 
+    <!-- HTML Compression - enable this in production (disable for debugging)
+    <context-param>
+        <description>Remove unnecessary whitespace from HTML output.</description>
+        <param-name>compressHTML</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    -->
+
+    <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
+        NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>
-        <display-name>SimpleRedirectFilter</display-name>
-        <filter-name>SimpleRedirectFilter</filter-name>
-        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <!-- Uncomment this to make rules editable at runtime
         <init-param>
-            <param-name>matchPattern</param-name>
-            <param-value>^/ecommerce$</param-value>
+            <param-name>confReloadCheckInterval</param-name>
+            <param-value>0</param-value>
+        </init-param>-->
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>log4j</param-value>
         </init-param>
         <init-param>
-            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
-                if false, matches only context path</description>
-            <param-name>matchFullPath</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>replacement</param-name>
-            <param-value>/shop</param-value>
-        </init-param>
-        <init-param>
-            <param-name>usePermanentRedirect</param-name>
+            <param-name>statusEnabled</param-name>
             <param-value>true</param-value>
         </init-param>
     </filter>
+    <filter>
+        <display-name>SeoCatalogUrlFilter</display-name>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
+        <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
+        <!-- SCIPIO: Set this to true to enable advanced SEO URLs; if false, delegates to the regular CatalogUrlFilter. -->
+        <init-param><param-name>seoUrlEnabled</param-name><param-value>false</param-value></init-param>
+    </filter>
+    <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
     <filter>
         <display-name>CatalogUrlFilter</display-name>
         <filter-name>CatalogUrlFilter</filter-name>
         <filter-class>org.ofbiz.product.category.CatalogUrlFilter</filter-class>
         <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
-    </filter>
+    </filter>-->
     <filter>
         <display-name>ContentUrlFilter</display-name>
         <filter-name>ContentUrlFilter</filter-name>
@@ -109,24 +122,48 @@ under the License.
         </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images</param-value>
+            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps</param-value>
+        </init-param>
+        <init-param>
+            <!-- SCIPIO: Set this to Y to automatically forward root requests that match controller URIs to
+                the controller, e.g. "/main" -> "/control/main".
+                NOTE: If enabled you likely want to uncomment the CONTROL-SERVLET-STRIPPING RULES in urlrewrite.xml.
+                Together these emulate having root control URI without changing the ControlServlet mapping (problematic).
+                FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping -->
+            <param-name>forwardRootControllerUris</param-name>
+            <param-value>N</param-value>
         </init-param>
     </filter>
     <filter-mapping>
-        <filter-name>SimpleRedirectFilter</filter-name>
+        <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>    
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!-- SCIPIO: the stock CatalogUrlFilter is contained in the SeoCatalogUrlFilter.
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>-->
     <filter-mapping>
         <filter-name>ContentUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher><!-- SCIPIO: 2017-11-01: required for previous filter forwards to work  -->
     </filter-mapping>
 
     <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
@@ -162,6 +199,8 @@ under the License.
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- SCIPIO: NOTE: It is possible to map ControlServlet to root here (/*), but is problematic -
+        alternatively can enable forwardRootControllerUris in ContextFilter above and uncomment the outbound-rules in rewrite.xml. -->
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
@@ -172,6 +211,7 @@ under the License.
         <url-pattern>/select/*</url-pattern>
     </servlet-mapping>
     -->
+    <!-- SCIPIO: NOTE: If you enable seoUrlEnabled, it's recommended to comment this mapping out, but not obligatory -->
     <servlet-mapping>
         <servlet-name>CatalogUrlServlet</servlet-name>
         <url-pattern>/products/*</url-pattern>

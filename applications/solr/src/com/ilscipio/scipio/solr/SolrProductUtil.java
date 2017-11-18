@@ -392,10 +392,8 @@ public abstract class SolrProductUtil {
             List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
             
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
-            EntityCondition cond = EntityCondition.makeCondition(EntityCondition.makeCondition("productId", productId),
-                        EntityOperator.AND,
-                        EntityUtil.getFilterByDateExpr());
-            List<GenericValue> categories = delegator.findList("ProductCategoryMember", cond, null, null, null, useCache);
+            List<GenericValue> categories = EntityQuery.use(delegator).from("ProductCategoryMember").where("productId", productId)
+                    .filterByDate().cache(useCache).queryList();
             Set<String> productCategoryIds = new LinkedHashSet<>();
             SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
             
@@ -403,10 +401,8 @@ public abstract class SolrProductUtil {
             if (UtilValidate.isNotEmpty(productVariantAssocs)) {
                 for(GenericValue productVariantAssoc : productVariantAssocs) {
                     String virtualProductId = productVariantAssoc.getString("productId");
-                    cond = EntityCondition.makeCondition(EntityCondition.makeCondition("productId", virtualProductId),
-                            EntityOperator.AND,
-                            EntityUtil.getFilterByDateExpr());
-                    List<GenericValue> virtualCategories = delegator.findList("ProductCategoryMember", cond, null, null, null, useCache);
+                    List<GenericValue> virtualCategories = EntityQuery.use(delegator).from("ProductCategoryMember")
+                            .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
                     SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
                 }
             }

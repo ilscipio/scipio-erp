@@ -481,7 +481,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         try {
             // FIXME: ContentWrapper does not respect useCache flag!
             String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
-            if (altUrl != null) {
+            if (UtilValidate.isNotEmpty(altUrl)) {
                 // FIXME: effective locale might not be same as "locale" variable!
                 altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY);
                 if (!altUrl.isEmpty()) {

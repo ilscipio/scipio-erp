@@ -90,9 +90,9 @@ public class CategoryHelper {
                 productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", categoryId).cache().queryOne();
                 if (productCategory != null) {
                     String categoryName = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "raw");
-                    info.put("categoryName", categoryName);
+                    info.put("categoryName", UtilValidate.isNotEmpty(categoryName) ? categoryName : null);
                     String description = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "raw");
-                    info.put("description", description);
+                    info.put("description", UtilValidate.isNotEmpty(description) ? description : null);
     
                     if (UtilValidate.isNotEmpty(categoryName)) {
                         info.put("displayName", categoryName);

@@ -184,7 +184,7 @@ public abstract class SeoCatalogServices {
                 List<GenericValue> variantAssocList = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc")
                         .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(useCache).queryList();
                 if (variantAssocList.size() > 0) {
-                    Debug.logInfo(logPrefix+"generateProductAlternativeUrls: virtual product '" + productId 
+                    if (Debug.infoOn()) Debug.logInfo(logPrefix+"generateProductAlternativeUrls: virtual product '" + productId 
                             + "' has " + variantAssocList.size() + " variants for alternative URL generation", module);
                                         
                     for(GenericValue variantAssoc : variantAssocList) {

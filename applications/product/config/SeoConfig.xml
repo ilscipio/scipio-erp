@@ -107,8 +107,19 @@
     </url-configs>
     -->
 
+    <!-- Method used to build the SEO alternative URL before it is stored in DB as ALTERNATIVE_URL. 
+        NOTE: Contrary to stock ofbiz, the entire processing is done prior to storage in DB -
+            processing upon lookup must be avoided entirely to allow sane DB queries. -->
+    <url-processors type="alt-url-gen">
+        <!-- url-processor defines a static method that takes a String and returns a String -->
+        <processor type="static-method">com.ilscipio.scipio.util.SeoStringUtil#constructSeoName</processor>
+        <processor type="char-filters">default</processor>
+        <!-- The legacy CatalogUrlFilter post-filter - may be good to leave for compatibility and extra safety -->
+        <processor type="static-method">org.ofbiz.common.UrlServletHelper#invalidCharacter</processor>
+    </url-processors>
+    
     <!-- Note: These could be done URLRewriteFilter but might be advantage to have regexp specific to prod/catalog links -->
-    <char-filters>
+    <char-filters name="default">
         <char-filter>
             <character-pattern>\u00fc</character-pattern>
             <replacement>ue</replacement>

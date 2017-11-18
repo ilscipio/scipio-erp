@@ -392,23 +392,17 @@ public class SeoCatalogUrlWorker implements Serializable {
         
         @Override
         public String convertNameToDbAltUrl(String name, Locale locale, CatalogUrlType entityType) {
-            name = SeoStringUtil.constructSeoName(name);
-
-            // TODO: REVIEW
-            name = SeoUrlUtil.replaceSpecialCharsUrl(name, getConfig().getCharFilters());
-
-            // TODO: REVIEW
-            name = UrlServletHelper.invalidCharacter(name); // (stock ofbiz)
             
+            String url = getConfig().getAltUrlGenProcessors().processUrl(name);
+                    
             if (entityType == CatalogUrlType.PRODUCT) {
-                name = getConfig().limitProductNameLength(name);
+                url = getConfig().limitProductNameLength(url);
             } else if (entityType == CatalogUrlType.CATEGORY) {
-                name = getConfig().limitCategoryNameLength(name);
+                url = getConfig().limitCategoryNameLength(url);
             }
 
-            return name;
+            return url;
         }
-        
 
         @Override
         public String convertIdToDbAltUrl(String id, Locale locale, CatalogUrlType entityType) {

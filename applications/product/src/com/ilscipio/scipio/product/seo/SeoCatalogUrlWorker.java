@@ -42,7 +42,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -134,13 +133,16 @@ public class SeoCatalogUrlWorker implements Serializable {
      * *****************************************************
      */
 
-    protected SeoCatalogUrlWorker() {
-        this.config = SeoConfig.getDefaultConfig();
+    protected SeoCatalogUrlWorker(SeoConfig config) {
+        this.config = config;
         this.configResourceName = DEFAULT_CONFIG_RESOURCE;
-        this.urlSuffix = config.getCategoryUrlSuffix() != null ? config.getCategoryUrlSuffix() : "";
+        this.urlSuffix = config.getSeoUrlSuffix() != null ? config.getSeoUrlSuffix() : "";
         this.catalogUrlBuilder = new SeoCatalogUrlBuilder();
         this.catalogAltUrlBuilder = new SeoCatalogAltUrlBuilder();
         this.catalogAltUrlSanitizer = new SeoCatalogAltUrlSanitizer();
+    }
+    protected SeoCatalogUrlWorker() {
+        this(SeoConfig.getCommonConfig());
     }
 
     /**
@@ -156,7 +158,8 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returns an instance that is UNABLE to perform website-specific operations.
      */
     public static SeoCatalogUrlWorker getDefaultInstance(Delegator delegator) {
-        return DEFAULT_INSTANCE;
+        if (SeoConfig.DEBUG_FORCERELOAD) return createInstanceDeep(delegator, null);
+        else return DEFAULT_INSTANCE;
     }
 
     /**
@@ -177,11 +180,29 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
     public static SeoCatalogUrlWorker getInstanceIfEnabled(HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-        if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+        if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
         // TODO: should return different builder depending on store and config
         return getDefaultInstance(delegator);
     }
 
+    /**
+     * Force create new instance - for debugging only!
+     * <p>
+     * TODO: currently only returns default instance, inevitably this will change.
+     */
+    public static SeoCatalogUrlWorker createInstance(Delegator delegator, String webSiteId) {
+        return new SeoCatalogUrlWorker();
+    }
+    
+    /**
+     * Force create new instance deep - for debugging only!
+     * <p>
+     * TODO: currently only returns default instance, inevitably this will change.
+     */
+    public static SeoCatalogUrlWorker createInstanceDeep(Delegator delegator, String webSiteId) {
+        return new SeoCatalogUrlWorker(SeoConfig.createConfig(delegator, webSiteId));
+    }
+    
     /**
      * Boilerplate factory that returns builder instances for the CatalogUrlFilter/CatalogUrlServlet builder registry.
      * Methods return null if SEO not enabled for the webSiteId/contextPath.
@@ -193,13 +214,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         @Override
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
                 Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfig.getDefaultConfig().isCategoryUrlEnabled(contextPath, webSiteId)) return null;
+            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogAltUrlBuilder();
         }
     }
@@ -673,43 +694,33 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(contextPath);
         }
 
-        boolean explicitCategoryRequest = false;
-        if (!(getConfig().isHandleImplicitRequests() && getConfig().isGenerateImplicitCategoryUrl())) {
-            explicitCategoryRequest = true;
-        }
-        if (explicitCategoryRequest) {
-            if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(getCategoryServletPathName(locale));
+        SeoConfig config = getConfig();
+        
+        // DEV NOTE: I removed getConfig().isHandleImplicitRequests() check from here because was inconsistent and not really needed or wanted
+        boolean explicitCategoryRequest = !config.isGenerateImplicitCategoryUrl();
+        
+        if (explicitCategoryRequest && !config.isGenerateCategoryAltUrlSuffix()) {
+            appendSlashAndValue(urlBuilder, getCategoryServletPathName(locale));
         }
         
         // NOTE: this loop includes the productCategoryId itself
-        for(String trailName : trailNames) {
-            if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(trailName);
-        }
+        appendSlashAndValue(urlBuilder, trailNames);
         
         if (productCategory != null) {
             String catTrailName = getCategoryUrlTrailName(delegator, dispatcher, locale, productCategory, true, useCache);
             if (catTrailName != null) {
-                if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                    urlBuilder.append("/");
-                }
-                urlBuilder.append(catTrailName);
+                appendSlashAndValue(urlBuilder, catTrailName);
             }
         }
         
-        // 2017: TRY to omit this
-        //if (!explicitCategoryRequest) {
-        //    urlBuilder.append("-c");
-        //}
-        
-        if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
-            urlBuilder.append(getUrlSuffix());
+        // legacy category alt url suffix ("-c") 
+        if (explicitCategoryRequest && config.isGenerateCategoryAltUrlSuffix()) {
+            urlBuilder.append(config.getCategoryAltUrlSuffix());
         }
+        
+        // general URL suffix/extension (".html")
+        checkAddUrlSuffix(urlBuilder);
+        
         return urlBuilder;
     }
     
@@ -768,49 +779,47 @@ public class SeoCatalogUrlWorker implements Serializable {
             urlBuilder.append(contextPath);
         }
         
-        boolean explicitProductRequest = false;
-        if (!(getConfig().isHandleImplicitRequests() && getConfig().isGenerateImplicitProductUrl())) {
-            explicitProductRequest = true;
-        } else if (trailNames.size() == 0) {
-            // 2017: TODO: REVIEW:
-            // SCIPIO: We only support(ed) omitting product request if a category name is also present
-            explicitProductRequest = true;
+        SeoConfig config = getConfig();
+        
+        int catCount = trailNames.size();
+        if (product == null && catCount > 0) catCount--; // product already in trail 
+        
+        boolean explicitProductRequest;
+        // DEV NOTE: I removed config.isHandleImplicitRequests() check from here because was inconsistent and not really needed or wanted
+        if (catCount > 0) {
+            explicitProductRequest = !config.isGenerateImplicitProductUrl();
+        } else {
+            // NOTE: in old code, seo only support(ed) implicit request if there was at least one category
+            explicitProductRequest = !config.isGenerateImplicitProductUrlNoCat();
         }
-        if (explicitProductRequest) {
-            if (urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(getProductServletPathName(locale));
+
+        if (explicitProductRequest && !config.isGenerateProductAltUrlSuffix()) {
+            appendSlashAndValue(urlBuilder, getProductServletPathName(locale));
         }
         
         // append category names
-        for(String trailName : trailNames) {
-            if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-                urlBuilder.append("/");
-            }
-            urlBuilder.append(trailName);
+        if (config.isCategoryNameEnabled()) {
+            appendSlashAndValue(urlBuilder, trailNames);
         }
-
-        // 2017-11-08: NOT SUPPORTED: could only theoretically work if chose different character than hyphen
-        //if (!trailNames.isEmpty() && !SeoConfigUtil.isCategoryNameSeparatePathElem()) {
-        //    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
-        //} else {
-        if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
-            urlBuilder.append("/");
-        }
-        //}
         
         if (product != null) {
+            // 2017-11-08: NOT SUPPORTED: could only theoretically work if chose different character than hyphen
+            //if (!trailNames.isEmpty() && !SeoConfigUtil.isCategoryNameSeparatePathElem()) {
+            //    urlBuilder.append(SeoStringUtil.URL_HYPHEN);
+            //} else {
+            ensureTrailingSlash(urlBuilder);
+            //}
+            
             // append product name
-            // FIXME: effective locale might not be same as "locale" variable!
             String productId = product.getString("productId");
             // FIXME: ContentWrapper does not respect useCache flag!
-            String alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw"), 
-                    locale, CatalogUrlType.PRODUCT);
+            String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw");
+            // FIXME: effective locale might not be same as "locale" variable!
+            alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT);
             if (UtilValidate.isNotEmpty(alternativeUrl)) {
                 urlBuilder.append(alternativeUrl);
                 
-                if (getConfig().isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
+                if (config.isProductNameAppendId() && UtilValidate.isNotEmpty(productId)) {
                     urlBuilder.append(SeoStringUtil.URL_HYPHEN);
                     urlBuilder.append(getCatalogAltUrlSanitizer().convertIdToLiveAltUrl(productId, locale, CatalogUrlType.PRODUCT));
                 }
@@ -820,16 +829,22 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
         }
         
-        // 2017: TRY to omit this
-        //if (!explicitProductRequest) {
-        //    urlBuilder.append("-p");
-        //}
-        
-        if (!urlBuilder.toString().endsWith("/") && UtilValidate.isNotEmpty(getUrlSuffix())) {
-            urlBuilder.append(getUrlSuffix());
+        // legacy product alt url suffix ("-p")
+        if (explicitProductRequest && config.isGenerateProductAltUrlSuffix()) {
+            urlBuilder.append(config.getProductAltUrlSuffix());
         }
         
+        // general URL suffix/extension (".html")
+        checkAddUrlSuffix(urlBuilder);
+        
         return urlBuilder;
+    }
+    
+    protected void checkAddUrlSuffix(StringBuilder sb) {
+        String urlSuffix = getUrlSuffix();
+        if (UtilValidate.isNotEmpty(urlSuffix) && (sb.length() > 0) && (sb.charAt(sb.length() - 1) != '/')) {
+            sb.append(getUrlSuffix());
+        }
     }
 
     
@@ -956,11 +971,11 @@ public class SeoCatalogUrlWorker implements Serializable {
                 pathElements.remove(0);
             } else {
                 // LEGACY suffix support for backward compat with published links
-                if (config.isAllowProductAltUrlSuffix() && lastPathElem.endsWith(config.getProductAltUrlSuffix())) {
+                if (config.isHandleProductAltUrlSuffix() && lastPathElem.endsWith(config.getProductAltUrlSuffix())) {
                     explicitProductRequest = true;
                     lastPathElem = lastPathElem.substring(0, lastPathElem.length() - config.getProductAltUrlSuffix().length());
                     pathElements.set(pathElements.size() - 1, lastPathElem);
-                } else if (config.isAllowCategoryAltUrlSuffix() && lastPathElem.endsWith(config.getCategoryAltUrlSuffix())) {
+                } else if (config.isHandleCategoryAltUrlSuffix() && lastPathElem.endsWith(config.getCategoryAltUrlSuffix())) {
                     explicitCategoryRequest = true;
                     lastPathElem = lastPathElem.substring(0, lastPathElem.length() - config.getProductAltUrlSuffix().length());
                     pathElements.set(pathElements.size() - 1, lastPathElem);
@@ -1864,6 +1879,28 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
         }
         return -1;
+    }
+    
+    static void ensureTrailingSlash(StringBuilder sb) {
+        if (sb.length() == 0 || sb.charAt(sb.length() - 1) != '/') {
+            sb.append("/");
+        }
+    }
+    
+    static void appendSlashAndValue(StringBuilder sb, String value) {
+        if (sb.length() == 0 || sb.charAt(sb.length() - 1) != '/') {
+            sb.append("/");
+        }
+        sb.append(value);
+    }
+    
+    static void appendSlashAndValue(StringBuilder sb, Collection<String> values) {
+        for(String value : values) {
+            if (sb.length() == 0 || sb.charAt(sb.length() - 1) != '/') {
+                sb.append("/");
+            }
+            sb.append(value);
+        }
     }
     
     /**

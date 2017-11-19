@@ -40,6 +40,11 @@ import org.xml.sax.SAXException;
 
 /**
  * OFBiz URL builder.
+ * <p>
+ * SCIPIO: Some noteworthy changes:
+ * <ul>
+ * <li>Controller is now optional (no exceptions for webapps with no controller) (added 2017-11-18).</li>
+ * </ul>
  */
 public final class OfbizUrlBuilder {
 
@@ -58,7 +63,7 @@ public final class OfbizUrlBuilder {
         if (builder == null) {
             WebSiteProperties webSiteProps = WebSiteProperties.from(request);
             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
-            ControllerConfig config = ConfigXMLReader.getControllerConfig(url);
+            ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
             String contextPath = request.getContextPath();
             builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
@@ -94,8 +99,8 @@ public final class OfbizUrlBuilder {
                     webSiteProps = WebSiteProperties.from(webSiteValue);
                 }
             }
-            config = ConfigXMLReader.getControllerConfig(webAppInfo);
-            servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            config = ConfigXMLReader.getControllerConfig(webAppInfo, true); // SCIPIO: 2017-11-18: controller now optional
+            servletPath = WebAppUtil.getControlServletPath(webAppInfo, true); // SCIPIO: 2017-11-18: ControlServlet now optional
             contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {
@@ -126,8 +131,8 @@ public final class OfbizUrlBuilder {
         String contextPath = null;
         if (webAppInfo != null) {
             Assert.notNull("delegator", delegator);
-            config = ConfigXMLReader.getControllerConfig(webAppInfo);
-            servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            config = ConfigXMLReader.getControllerConfig(webAppInfo, true); // SCIPIO: 2017-11-18: controller now optional
+            servletPath = WebAppUtil.getControlServletPath(webAppInfo, true); // SCIPIO: 2017-11-18: ControlServlet now optional
             contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {

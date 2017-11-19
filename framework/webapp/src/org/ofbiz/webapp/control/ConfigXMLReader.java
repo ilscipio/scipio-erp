@@ -138,6 +138,17 @@ public class ConfigXMLReader {
         File configFile = new File(filePath);
         return getControllerConfig(configFile.toURI().toURL());
     }
+    
+    /**
+     * SCIPIO: Overload that supports optional loading.
+     * Added 2017-11-18.
+     */
+    public static ControllerConfig getControllerConfig(WebappInfo webAppInfo, boolean optional) throws WebAppConfigurationException, MalformedURLException {
+        Assert.notNull("webAppInfo", webAppInfo);
+        String filePath = webAppInfo.getLocation().concat(controllerXmlFileName);
+        File configFile = new File(filePath);
+        return getControllerConfig(configFile.toURI().toURL(), optional);
+    }
 
     public static ControllerConfig getControllerConfig(URL url) throws WebAppConfigurationException {
         ControllerConfig controllerConfig = controllerCache.get(url);

@@ -82,17 +82,19 @@ public final class WebAppUtil {
      * in the web application's <code>web.xml</code> file.
      * 
      * @param webAppInfo
+     * @param optional SCIPIO: if true, return null if not found; otherwise throw IllegalArgumentException (added 2017-11-18)
      * @throws IOException
      * @throws SAXException
      */
-    public static String getControlServletPath(WebappInfo webAppInfo) throws IOException, SAXException {
+    public static String getControlServletPath(WebappInfo webAppInfo, boolean optional) throws IOException, SAXException {
         Assert.notNull("webAppInfo", webAppInfo);
         // SCIPIO: Go through cache first. No need to synchronize, doesn't matter.
         String res = controlServletPathWebappInfoCache.get(webAppInfo.getContextRoot()); // key on context root (global unique)
         if (res != null) {
             // We take empty string to mean lookup found nothing
             if (res.isEmpty()) {
-                throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
+                if (optional) return null; // SCIPIO
+                else throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
             }
             else {
                 return res;
@@ -117,7 +119,8 @@ public final class WebAppUtil {
             if (servletMapping == null) {
                 // SCIPIO: empty string means we did lookup and failed
                 controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), "");
-                throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
+                if (optional) return null; // SCIPIO
+                else throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
             }
             servletMapping = servletMapping.replace("*", "");
             String servletPath = webAppInfo.contextRoot.concat(servletMapping);
@@ -125,6 +128,19 @@ public final class WebAppUtil {
             controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), servletPath);
             return servletPath;
         }
+    }
+    
+    /**
+     * Returns the control servlet path. The path consists of the web application's mount-point
+     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * in the web application's <code>web.xml</code> file.
+     * 
+     * @param webAppInfo
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static String getControlServletPath(WebappInfo webAppInfo) throws IOException, SAXException, IllegalArgumentException {
+        return getControlServletPath(webAppInfo, false);
     }
     
     /**

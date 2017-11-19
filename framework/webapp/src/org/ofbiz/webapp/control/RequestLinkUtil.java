@@ -449,4 +449,26 @@ public abstract class RequestLinkUtil {
     public static String getFirstServletAndPathInfoElem(HttpServletRequest request) {
         return getFirstPathElem(getServletAndPathInfo(request));
     }
+    
+    /**
+     * Simple reusable check for <code>X-Forwarded-Proto</code> HTTPS header.
+     * Does NOT include <code>request.isSecure()</code> check, do separate.
+     * Added 2017-11-18.
+     */
+    public static boolean isForwardedSecure(HttpServletRequest request) {
+        String forwardedProto = request.getHeader("X-Forwarded-Proto");
+        return UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
+    }
+    
+    /**
+     * Abstracted secure flag check. Currently checks:
+     * <ul>
+     * <li><code>X-Forwarded-Proto</code> HTTPS header <strong>OR</strong></li>
+     * <li><code>request.isSecure()</code></li>
+     * </ul>
+     * Added 2017-11-18.
+     */
+    public static boolean isEffectiveSecure(HttpServletRequest request) {
+        return request.isSecure() || isForwardedSecure(request);
+    }
 }

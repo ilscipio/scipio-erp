@@ -293,6 +293,106 @@ public abstract class RequestLinkUtil {
         }
     }
     
+    /**
+     * SCIPIO: Rudimentarily builds host part of link, from request, as requested secure or not (or using current if null).
+     * This overload uses the CURRENT WebSite in request to determine the host, unless explicit is passed, in which case that one is used.
+     * Simple wrapper around {@link org.ofbiz.webapp.OfbizUrlBuilder#buildHostPart(Appendable, Boolean)}.
+     * Added 2017-11-18.
+     * 
+     * @param request the request, containing the current webSiteId
+     * @param webSiteId optional explicit target webSiteId
+     * @param secure if explicit true or false, creates https or http link, respectively; otherwise auto-determines from request ("current")
+     */
+    public static String buildLinkHostPart(HttpServletRequest request, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+        StringBuilder newURL = new StringBuilder();
+        OfbizUrlBuilder builder;
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            builder = getExplicitOfbizUrlBuilder((Delegator) request.getAttribute("delegator"), webSiteId);
+        } else {
+            try {
+                builder = OfbizUrlBuilder.from(request);
+            } catch (GenericEntityException e) {
+                throw new IOException(e);
+            }
+        }
+        if (secure == null) secure = RequestLinkUtil.isEffectiveSecure(request);
+        builder.buildHostPart(newURL, secure);
+        return newURL.toString();
+    }
+    
+    private static OfbizUrlBuilder getExplicitOfbizUrlBuilder(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
+        WebappInfo webAppInfo;
+        try {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        }
+        try {
+            return OfbizUrlBuilder.from(webAppInfo, delegator);
+        } catch (SAXException e) {
+            throw new IOException(e);
+        } catch (GenericEntityException e) {
+            throw new IOException(e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Rudimentarily builds host part of link, from request, as requested secure or not (no automatic logic). 
+     * Same as {@link #buildLinkHostPart(HttpServletRequest, String, Boolean)} but throws no exceptions and returns null instead.
+     * Added 2017-11-18.
+     */
+    public static String buildLinkHostPartSafe(HttpServletRequest request, String webSiteId, Boolean secure) {
+        try {
+            return buildLinkHostPart(request, webSiteId, secure);
+        } catch (Exception e) {
+            Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
+            return null; // null may allow default value operators to work in other langs
+        }
+    }
+    
+    /**
+     * SCIPIO: Rudimentarily builds host part of link, statically, as requested secure or not (no automatic logic). 
+     * This overload uses the explicit WebSite in request to determine the host, or the system defaults (url.properties) if no webSiteId passed.
+     * Simple wrapper around {@link org.ofbiz.webapp.OfbizUrlBuilder#buildHostPart(Appendable, Boolean)}.
+     * Added 2017-11-18.
+     * 
+     * @param delegator the delegator
+     * @param webSiteId optional explicit target webSiteId
+     * @param secure if explicit true or false, creates https or http link, respectively; if null, uses a configured or common default
+     */
+    public static String buildLinkHostPart(Delegator delegator, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+        StringBuilder newURL = new StringBuilder();
+        OfbizUrlBuilder builder;
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            builder = getExplicitOfbizUrlBuilder(delegator, webSiteId);
+        } else {
+            try {
+                // this will make a builder that uses default system web site properties
+                builder = OfbizUrlBuilder.from(null, null, delegator);
+            } catch (SAXException e) {
+                throw new IOException(e);
+            } catch (GenericEntityException e) {
+                throw new IOException(e);
+            }
+        }
+        builder.buildHostPart(newURL, secure);
+        return newURL.toString();
+    }
+    
+    /**
+     * SCIPIO: Rudimentarily builds host part of link, statically, as requested secure or not (no automatic logic). 
+     * Same as {@link #buildLinkHostPart(Delegator, String, Boolean)} but throws no exceptions and returns null instead.
+     * Added 2017-11-18.
+     */
+    public static String buildLinkHostPartSafe(Delegator delegator, String webSiteId, Boolean secure) {
+        try {
+            return buildLinkHostPart(delegator, webSiteId, secure);
+        } catch (Exception e) {
+            Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
+            return null; // null may allow default value operators to work in other langs
+        }
+    }
+    
     public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
         WebappInfo webAppInfo;
         try {
@@ -448,5 +548,27 @@ public abstract class RequestLinkUtil {
     
     public static String getFirstServletAndPathInfoElem(HttpServletRequest request) {
         return getFirstPathElem(getServletAndPathInfo(request));
+    }
+    
+    /**
+     * Simple reusable check for <code>X-Forwarded-Proto</code> HTTPS header.
+     * Does NOT include <code>request.isSecure()</code> check, do separate.
+     * Added 2017-11-18.
+     */
+    public static boolean isForwardedSecure(HttpServletRequest request) {
+        String forwardedProto = request.getHeader("X-Forwarded-Proto");
+        return UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
+    }
+    
+    /**
+     * Abstracted secure flag check. Currently checks:
+     * <ul>
+     * <li><code>X-Forwarded-Proto</code> HTTPS header <strong>OR</strong></li>
+     * <li><code>request.isSecure()</code></li>
+     * </ul>
+     * Added 2017-11-18.
+     */
+    public static boolean isEffectiveSecure(HttpServletRequest request) {
+        return request.isSecure() || isForwardedSecure(request);
     }
 }

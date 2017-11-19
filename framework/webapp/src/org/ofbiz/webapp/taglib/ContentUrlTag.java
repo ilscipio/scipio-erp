@@ -25,6 +25,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -84,10 +85,8 @@ public class ContentUrlTag {
         } else {
             webSite = WebSiteWorker.getWebSite(request);
         }
-        String forwardedProto = request.getHeader("X-Forwarded-Proto");
-        boolean isForwardedSecure = UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
-        boolean isSecure = request.isSecure() || isForwardedSecure;
-        appendContentPrefix(webSite, isSecure, urlBuffer);
+        // SCIPIO: 2017-11-18: Factored out dispersed secure checks into RequestLinkUtil:
+        appendContentPrefix(webSite, RequestLinkUtil.isEffectiveSecure(request), urlBuffer);
     }
     
     /**

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -211,7 +212,7 @@ public final class OfbizUrlBuilder {
         
         boolean makeSecure = useSSL;
         String requestMapUri = null;
-        if (url != null) { // SCIPIO: added null check
+        if (UtilValidate.isNotEmpty(url)) { // SCIPIO: added null check
             String[] pathElements = url.split("/");
             requestMapUri = pathElements[0];
             int queryIndex = requestMapUri.indexOf("?");

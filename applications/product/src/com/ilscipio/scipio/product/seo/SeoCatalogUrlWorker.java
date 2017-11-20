@@ -1161,8 +1161,9 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
     
     protected AltUrlMatchInfo findMultiMatchBestMatch(Delegator delegator, AltUrlPartResults matches, boolean isCategory, List<String> pathElements, Set<String> topCategoryIds) throws GenericEntityException {
+        List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true);
         List<String> pathCategoryIds = null;
-        
+
         AltUrlPartInfo bestMatch = null;
         List<List<String>> bestMatchTrails = null;
         List<String> bestPathCategoryIds = null; // NOTE: this contains the target category itself at end
@@ -1173,26 +1174,33 @@ public class SeoCatalogUrlWorker implements Serializable {
             } else {
                 nextMatchTrails = getProductRollupTrails(delegator, nextMatch.getId(), topCategoryIds);
             }
-            if (nextMatchTrails.size() > 1) {
+            if (nextMatchTrails.size() > 0) {
                 if (pathElements.size() > 0) {
-                    List<AltUrlPartResults> resolvedPathElems = extractCandidateAltUrlCategoryIdsCached(delegator, pathElements, false, true);
                     if (isCategory) {
                         // SPECIAL: for category, we have to re-add ourselves at the end for checking purposes
                         resolvedPathElems.add(nextMatch.getAsResult());
                     }
-                    List<String> nextPathCategoryIds = findBestTrailForUrlPathElems(delegator, nextMatchTrails, resolvedPathElems);
-                    // here, nextPathCategoryIds returned is always equal size or longer than pathElements.
-                    // the best pathCategoryIds is actually the shortest one, because it's closest to pathElements.
-                    if (bestMatch == null || (nextPathCategoryIds != null && 
-                        ((bestPathCategoryIds == null) || 
-                        (nextPathCategoryIds.size() < bestPathCategoryIds.size()) ||
-                        (nextPathCategoryIds.size() == bestPathCategoryIds.size() && nextMatch.isMorePreciseThan(bestMatch))))) {
-                        bestMatch = nextMatch;
-                        bestMatchTrails = nextMatchTrails;
-                        bestPathCategoryIds = nextPathCategoryIds;
-                        // special case: we won't find better than this (with out current algos)
-                        if (nextMatch.isFullMatch() && (nextPathCategoryIds != null && nextPathCategoryIds.size() == (pathElements.size()+1))) {
-                            break;
+                    try {
+                        List<String> nextPathCategoryIds = findBestTrailForUrlPathElems(delegator, nextMatchTrails, resolvedPathElems);
+                        if (nextPathCategoryIds != null) {
+                            // here, nextPathCategoryIds returned is always equal size or longer than pathElements.
+                            // the best pathCategoryIds is actually the shortest one, because it's closest to pathElements.
+                            if (bestMatch == null || (nextPathCategoryIds != null && 
+                                ((bestPathCategoryIds == null) || 
+                                (nextPathCategoryIds.size() < bestPathCategoryIds.size()) ||
+                                (nextPathCategoryIds.size() == bestPathCategoryIds.size() && nextMatch.isMorePreciseThan(bestMatch))))) {
+                                bestMatch = nextMatch;
+                                bestMatchTrails = nextMatchTrails;
+                                bestPathCategoryIds = nextPathCategoryIds;
+                                // special case: we won't find better than this (with out current algos)
+                                if (nextMatch.isFullMatch() && (nextPathCategoryIds != null && nextPathCategoryIds.size() == (pathElements.size()+1))) {
+                                    break;
+                                }
+                            }
+                        }
+                    } finally {
+                        if (isCategory) {
+                            resolvedPathElems.remove(resolvedPathElems.size() - 1);
                         }
                     }
                 } else {
@@ -1215,8 +1223,9 @@ public class SeoCatalogUrlWorker implements Serializable {
             } else {
                 pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
             }
+            return new AltUrlMatchInfo(bestMatch, pathCategoryIds);
         }
-        return new AltUrlMatchInfo(bestMatch, pathCategoryIds);
+        return null;
     }
     
     /**
@@ -1558,7 +1567,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
     
     public List<AltUrlPartResults> extractCandidateAltUrlCategoryIdsCached(Delegator delegator, Collection<String> altUrls, boolean exactOnly, boolean allowIdOnly) throws GenericEntityException {
-        List<AltUrlPartResults> result = new ArrayList<>(altUrls.size());
+        List<AltUrlPartResults> result = new ArrayList<>();
         for(String altUrl : altUrls) {
             result.add(extractCandidateAltUrlCategoryIdCached(delegator, altUrl, exactOnly, allowIdOnly));
         }

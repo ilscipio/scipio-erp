@@ -25,6 +25,7 @@
     <SurveyQuestionAppl surveyId="1100" surveyQuestionId="1100" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
 
     <!-- settings -->
+    <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
     <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="DEPOSIT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
         purchaseSurveyId="1100" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
 
@@ -33,7 +34,17 @@
     
     <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="STORE_CREDIT_ACCT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
         purchaseSurveyId="1100" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
+    -->
+    <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="DEPOSIT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
+        accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
 
+    <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="REPLENISH_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
+        accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
+    
+    <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="STORE_CREDIT_ACCT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
+        accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
+    
+    
     <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="ofbFaAuthorize" paymentCustomMethodId="FIN_AUTH_OFBIZ"/>
     <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="ofbFaRelease" paymentCustomMethodId="FIN_RELEASE_OFBIZ"/>
     <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="ofbFaCapture" paymentCustomMethodId="FIN_CAPTURE_OFBIZ"/>
@@ -77,8 +88,10 @@
     <ProductFeatureAppl productId="FA-001-O" productFeatureId="2104" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="2"/>
 
     <!-- survey appl -->
+    <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
     <ProductStoreSurveyAppl productStoreSurveyId="1100" productStoreId="ScipioShop" surveyApplTypeId="CART_ADD" surveyId="1100" productId="FA-001" fromDate="2003-11-24 16:00:02.467" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl" lastUpdatedStamp="2003-12-04 21:40:23.27" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
-
+    -->
+    
     <!-- fulfillment service -->
     <Content contentId="FA_ACTIVATION" customMethodId="FIN_PURCH_OFBIZ"/>
 

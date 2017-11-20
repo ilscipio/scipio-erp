@@ -136,25 +136,27 @@ under the License.
     <ProductCategory categoryName="Test Cross Sell Category" longDescription="Test Cross Sell Category" 
         productCategoryId="TSTCSL" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
-    <!-- Catalog-category associations -->
+    <!-- Catalog-category associations 
+        SCIPIO: NOTE: 2017-11: The sequenceNum is important for some functions (SEO URLs, sitemap, etc.),
+            so it should be set to the right priority/order for display, even if the shop may or may not show in this order. -->
     
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
-    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
-    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
-    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="02" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="PROMOTIONS" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+        sequenceNum="10" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
     <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_BEST_SELL" fromDate="2010-01-01 12:00:00.0" 
-        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BEST_SELL"/>
+        sequenceNum="20" prodCatalogCategoryTypeId="PCCT_BEST_SELL"/>
+    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_SEARCH" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="50" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD1" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="61" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+    <ProdCatalogCategory prodCatalogId="DemoCatalog" productCategoryId="CATALOG1_QUICKADD2" fromDate="2001-05-13 12:00:00.0"
+        sequenceNum="62" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
     
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="ELTRN-100" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="01" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
     <ProdCatalogCategory prodCatalogId="TestCatalog" productCategoryId="TSTLTDADMIN" fromDate="2001-05-13 12:00:00.0"
-        sequenceNum="01" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
+        sequenceNum="20" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
 
 
     <!-- Category rollup/hierarchy -->

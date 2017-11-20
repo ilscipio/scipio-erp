@@ -88,6 +88,7 @@ public class SitemapWorker {
         this.webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
         this.useCache = useCache;
         this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getLocation());
+        getSitemapDirFile(); // test this for exception
         reset();
     }
 
@@ -171,9 +172,14 @@ public class SitemapWorker {
     }
     
     protected File getSitemapDirFile() throws IOException, URISyntaxException {
-        URL url = FlexibleLocation.resolveLocation(getFullSitemapDir());
-        if (url == null) throw new MalformedURLException("Cannot resolve location: " + getFullSitemapDir());
-        return new File(url.toURI());
+        String fullSitemapDir = getFullSitemapDir();
+        try {
+            URL url = FlexibleLocation.resolveLocation(fullSitemapDir);
+            if (url == null) throw new MalformedURLException("Cannot resolve location: " + getFullSitemapDir());
+            return new File(url.toURI());
+        } catch(Exception e) {
+            throw new IOException("Error resolving sitemap directory: " + fullSitemapDir + ": " + e.getMessage(), e);
+        }
     }
     
     protected WebSitemapGenerator getSitemapGenerator(String filePrefix) throws IOException, URISyntaxException {

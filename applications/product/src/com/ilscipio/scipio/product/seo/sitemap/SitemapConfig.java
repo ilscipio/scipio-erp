@@ -3,6 +3,7 @@ package com.ilscipio.scipio.product.seo.sitemap;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -354,8 +355,8 @@ public class SitemapConfig implements Serializable {
             return sitemapDir;
         } else {
             String result = concatPaths(webappDir, sitemapDir);
-            if (!result.contains("://")) result = "file://"+result;
-            return result;
+            if (result.contains("://")) return result;
+            else return Paths.get(result).toUri().toString();
         }
     }
     

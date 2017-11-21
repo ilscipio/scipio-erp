@@ -28,17 +28,18 @@ under the License.
     <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${getLabel('PageTitleError')!}</@heading>
 
         ${getLabel('CommonFollowingErrorsOccurred')}
+                        <ol>
         <#if errorMessage?has_content>
-                        ${rawString(errorMessage)}
+                        <li>${rawString(errorMessage)}</li>
         </#if>
         <#if errorMessageList?has_content>
-                        <ol>
+                        
             <#list errorMessageList as errorMsg>
                           <li>${rawString(errorMsg)}</li>
             </#list>
-                        </ol>
+                        
         </#if>
-
+                        </ol>
   </@section>
   </@cell>
 </@row>

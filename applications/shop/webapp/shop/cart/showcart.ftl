@@ -67,9 +67,9 @@ function setAlternateGwp(field) {
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
 <#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-  <#assign continueLink = "product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
+  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0))/></#assign>
 <#else>
-  <#assign continueLink = "main">
+  <#assign continueLink = makeOfbizUrl("main")>
 </#if>
 
 
@@ -322,7 +322,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell columns=3>
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
             </@menu>
         </@cell>
         <@cell columns=9 class="${styles.text_right!}">
@@ -338,7 +338,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell>
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
             </@menu>
         </@cell>
     </@row>

@@ -15035,7 +15035,7 @@
         <value xml:lang="zh_TW">退貨細項細項</value>
     </property>
     <property key="PageTitleReturnList">
-        <value xml:lang="de">Liste der Retouren</value>
+        <value xml:lang="de">Retouren-Liste</value>
         <value xml:lang="en">Return List</value>
         <value xml:lang="es">Lista de devoluciones</value>
         <value xml:lang="fr">Liste des retours</value>
@@ -15051,7 +15051,7 @@
         <value xml:lang="zh_TW">退貨清單</value>
     </property>
     <property key="PageTitleShoppingListItem">
-        <value xml:lang="de">Einkaufliste Artikel</value>
+        <value xml:lang="de">Einkauflisten-Artikel</value>
         <value xml:lang="en">Shopping List Item</value>
         <value xml:lang="it">Riga lista d'acquisto</value>
         <value xml:lang="ja">買い物リストアイテム</value>
@@ -15061,7 +15061,7 @@
         <value xml:lang="zh_TW">送貨清單細項</value>
     </property>
     <property key="PageTitleShowAllPromotions">
-        <value xml:lang="de">Alle Aktionen anzeigen</value>
+        <value xml:lang="de">Alle Aktionenen anzeigen</value>
         <value xml:lang="en">Show All Promotions</value>
         <value xml:lang="es">Mostrar las promociones</value>
         <value xml:lang="fr">Montrer toutes les promotions</value>
@@ -15096,7 +15096,7 @@
     </property>
     <property key="PageTitleSplitItemsForShipping">
         <value xml:lang="da">Opdel varer til forsendelse</value>
-        <value xml:lang="de">Positionen aufteilen für Versand</value>
+        <value xml:lang="de">Positionen für den Versand aufteilen</value>
         <value xml:lang="en">Split Items For Shipping</value>
         <value xml:lang="es">Dividir Artículos para envío</value>
         <value xml:lang="fr">Dissocier les articles lors de l'expédition</value>
@@ -15144,7 +15144,7 @@
         <value xml:lang="zh_TW">租賃</value>
     </property>
     <property key="OrderIncludeCountry">
-        <value xml:lang="de">Schließen Land</value>
+        <value xml:lang="de">Länderverfügbarkeit</value>
         <value xml:lang="en">Include Country</value>
         <value xml:lang="fr">Pays inclus</value>
     </property>
@@ -15155,11 +15155,11 @@
     </property>
     <!-- SCIPIO: TODO: Localize -->
     <property key="OrderNoShipMethodAvailable">
-        <value xml:lang="de">Keine Versandmethoden.</value>
+        <value xml:lang="de">Keine Versandmethoden verfügbar.</value>
         <value xml:lang="en">No shipping methods available.</value>
     </property>
     <property key="OrderMayNotProceedWithOrder">
-        <value xml:lang="de">Sie können nicht in der Lage sein, mit dieser Bestellung fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
+        <value xml:lang="de">Sie können die Bestellung nicht fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
         <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
     </property>
     <property key="OrderShippingMethod">
@@ -15186,29 +15186,29 @@
         <value xml:lang="ro">Toate Promotiile </value>
     </property>
     <property key="OrderSaveToAccount">
-        <value xml:lang="de">Sparen zu berücksichtigen</value>
+        <value xml:lang="de">Im Konto speichern</value>
         <value xml:lang="en">Save to account</value>
     </property>
     <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being
         DO NOT REUSE these for now. -->
     <property key="OrderPaymentDescOffline">
-        <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder Zahlungsanweisung.</value>
+        <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder per Überweisung.</value>
         <value xml:lang="en">Pay using mail-in check or money order.</value>
     </property>
     <property key="OrderPaymentDescCOD">
-        <value xml:lang="de">Achten Sie bei der Lieferung Ihrer Position (en).</value>
+        <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>
     </property>
     <property key="OrderPaymentDescPaypal">
-        <value xml:lang="de">Bezahlen extern mit Paypal. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="de">Externe PayPal Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with Paypal externally. You will be redirected back to review your order afterward.</value>
     </property>
     <property key="OrderPaymentDescWorldpay">
-        <value xml:lang="de">Bezahlen extern mit Worldpay. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="de">Externe WorldPay Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with Worldpay externally. You will be redirected back to review your order afterward.</value>
     </property>
     <property key="OrderPaymentDescIdeal">
-        <value xml:lang="de">Bezahlen extern mit iDEAL. Sie werden Ihre Bestellung später umgeleitet zurück zu überprüfen.</value>
+        <value xml:lang="de">Externe iDEAL Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with iDEAL externally. You will be redirected back to review your order afterward.</value>
     </property>
     <property key="OrderConfirmOrder">
@@ -15224,7 +15224,7 @@
         <value xml:lang="en">Cart</value>
     </property>
     <property key="OrderOrderItemCancelled">
-        <value xml:lang="de">Auftragsposition wurde abgebrochen.</value>
+        <value xml:lang="de">Auftragsposition wurde zurückgesetzt.</value>
         <value xml:lang="en">Order item has been cancelled.</value>
     </property>
     <property key="OrderGrossSales">

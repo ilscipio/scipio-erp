@@ -93,6 +93,7 @@ public class SitemapWorker {
     }
 
     public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, SitemapConfig config, GenericValue productStore, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
+        if (config == null) throw new IOException("no valid sitemap config for website '" + webSiteId + "'");
         String sitemapContextPath = config.getSitemapContextPath();
         if (sitemapContextPath == null) {
             sitemapContextPath = config.getDefaultContextPath(delegator);

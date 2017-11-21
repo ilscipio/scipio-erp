@@ -970,6 +970,21 @@ under the License.
                 <set field="titleProperty" value="PageTitleError" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
                 <set field="isErrorPage" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: this is for when 404 in web.xml sent by ContextFilter -->
+                <script lang="groovy"><![CDATA[
+                    filterRequestUriError = request.getAttribute("filterRequestUriError");
+                    if (filterRequestUriError) {
+                        errMsg = org.ofbiz.base.util.UtilProperties.getMessage("CommonErrorUiLabels", "CommonServerRequestUrlNotFound",
+                            [requestUrl:filterRequestUriError], context.locale);
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(errMsg);
+                    }
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

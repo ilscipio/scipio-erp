@@ -193,4 +193,9 @@
         <value xml:lang="en">Missing field: ${missingFieldName}</value>
         <value xml:lang="fr">Champ manquant: ${missingFieldName}</value>
     </property>
+    <property key="CommonServerRequestUrlNotFound">
+        <value xml:lang="de">Die angeforderte URL ${requestUrl} wurde auf diesem Server nicht gefunden.</value>
+        <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
+        <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
+    </property>
 </resource>

@@ -26,19 +26,23 @@ under the License.
   <@cell class="${styles.grid_large!}10 ${styles.grid_large!}centered" last=true id="error">
   <@section>
     <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${getLabel('PageTitleError')!}</@heading>
-
+      <#if errorMessage?has_content || errorMessageList?has_content>
         ${getLabel('CommonFollowingErrorsOccurred')}
+                        <ol>
         <#if errorMessage?has_content>
-                        ${rawString(errorMessage)}
+                        <li>${rawString(errorMessage)}</li>
         </#if>
         <#if errorMessageList?has_content>
-                        <ol>
+                        
             <#list errorMessageList as errorMsg>
                           <li>${rawString(errorMsg)}</li>
             </#list>
-                        </ol>
+                        
         </#if>
-
+                        </ol>
+      <#else>
+        ${getLabel('CommonErrorOccurredContactSupport')}
+      </#if>
   </@section>
   </@cell>
 </@row>

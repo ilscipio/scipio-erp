@@ -239,6 +239,8 @@ under the License.
 
     <error-page>
         <error-code>404</error-code>
-        <location>/error/404.jsp</location>
+        <!-- SCIPIO: try nicer formatted error page
+        <location>/error/404.jsp</location>-->
+        <location>/control/error</location>
     </error-page>
 </web-app>

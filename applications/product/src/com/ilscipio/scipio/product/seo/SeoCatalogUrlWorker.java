@@ -988,6 +988,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         if (pathElements.size() > 0) lastPathElem = pathElements.get(pathElements.size() - 1);
+        else lastPathElem = null;
         
         if (UtilValidate.isNotEmpty(lastPathElem)) {
             pathElements.remove(pathElements.size() - 1);

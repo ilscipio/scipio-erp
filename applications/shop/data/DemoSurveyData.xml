@@ -104,9 +104,11 @@ under the License.
     <SurveyQuestionOption surveyQuestionId="1041" surveyOptionSeqId="00001" description="Right Hand" sequenceNum="1"/>
     <SurveyQuestionOption surveyQuestionId="1041" surveyOptionSeqId="00002" description="Left Hand" sequenceNum="2"/>
 
+    <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
     <ProductStoreSurveyAppl productStoreSurveyId="1000" productStoreId="ScipioShop" surveyApplTypeId="CART_ADD" surveyId="1000" productCategoryId="GC-101" fromDate="2003-11-24 16:00:02.467" surveyTemplate="component://content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1001" productStoreId="ScipioShop" surveyApplTypeId="CART_ADD" surveyId="1001" productCategoryId="GC-102" fromDate="2003-11-24 16:00:51.693" surveyTemplate="component://content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1002" productStoreId="ScipioShop" surveyApplTypeId="CUSTOMER_PROFILE" surveyId="1002" fromDate="2003-12-05 19:22:40.925" surveyTemplate="component://content/template/survey/genericsurvey.ftl" resultTemplate="component://shop/templates/survey/genericresult.ftl" sequenceNum="1"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1003" productStoreId="ScipioShop" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1003" fromDate="2003-12-05 19:22:40.925" surveyTemplate="component://shop/templates/survey/minisurvey.ftl" resultTemplate="component://shop/templates/survey/miniresult.ftl" sequenceNum="1"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1004" productStoreId="ScipioShop" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1004" fromDate="2003-12-05 19:22:40.925" surveyTemplate="component://shop/templates/survey/minisurvey.ftl" resultTemplate="component://shop/templates/survey/miniresult.ftl" sequenceNum="1"/>
+    -->
 </entity-engine-xml>

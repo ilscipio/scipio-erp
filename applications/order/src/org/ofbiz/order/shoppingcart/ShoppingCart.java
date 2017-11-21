@@ -974,10 +974,14 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (index < 0) return;
         if (cartLines.size() <= index) return;
         // SCIPIO: Removing cart item from subscriptions map, if exists
-        if (cartSubscriptionItems.containsKey(cartLines.get(index).getProductId())) {
-            cartSubscriptionItems.remove(cartLines.get(index).getProductId());
+        ShoppingCartItem item = cartLines.get(index);
+        String prodId = item.getProductId();
+        if (UtilValidate.isNotEmpty(cartSubscriptionItems) 
+                && UtilValidate.isNotEmpty(prodId) 
+                && cartSubscriptionItems.containsKey(prodId)) {
+            cartSubscriptionItems.remove(prodId);
         }
-        ShoppingCartItem item = cartLines.remove(index);
+        item = cartLines.remove(index);
         
 
         // set quantity to 0 to trigger necessary events, but skip price calc and inventory checks

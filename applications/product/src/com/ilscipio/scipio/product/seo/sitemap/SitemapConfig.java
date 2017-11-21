@@ -172,15 +172,19 @@ public class SitemapConfig implements Serializable {
                     UtilProperties.extractPropertiesWithPrefixAndId(webSiteConfigs, props, "sitemap.");
                     for(Map.Entry<String, Map<String, Object>> entry : webSiteConfigs.entrySet()) {
                         Debug.logInfo(logPrefix+"Read config for website '" + entry.getKey() + "': " + entry.getValue().toString(), module);
-                        configs.put(entry.getKey(), new SitemapConfig(entry.getValue(), entry.getKey()));
+                        try {
+                            configs.put(entry.getKey(), new SitemapConfig(entry.getValue(), entry.getKey()));
+                        } catch(Exception e) {
+                            Debug.logError(e, logPrefix+"Unable to read sitemap config for website '" + entry.getKey() + "': " + e.getMessage(), module);
+                        }
                     }
                 }
             }
             for(Map.Entry<String, SitemapConfig> entry : configs.entrySet()) {
-                Debug.logInfo("Seo: Sitemap: Found sitemap config for website: " + entry.getKey(), module);
+                Debug.logInfo(logPrefix+"Found sitemap config for website: " + entry.getKey(), module);
             }
         } catch (Exception e) {
-            Debug.logError(e, "Seo: Sitemap: Could not load list of sitemap.properties", module);
+            Debug.logError(e, logPrefix+"Could not load list of sitemap.properties", module);
         }
         return configs;
     }

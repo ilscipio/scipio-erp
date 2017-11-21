@@ -1912,7 +1912,7 @@ under the License.
     <view-map name="quickAnonEftInfo" type="screen" page="component://shop/widget/OrderScreens.xml#quickAnonEftInfo"/>
 
     <!-- Customer Info Views -->
-    <view-map name="survey" type="screen" page="component://shop/widget/CustomerScreens.xml#survey"/>
+    <view-map name="survey" type="screen" page="component://shop/widget/CustomerScreens.xml#customersurvey"/>
     <view-map name="newcustomer" type="screen" page="component://shop/widget/CustomerScreens.xml#newcustomer"/>
 
     <view-map name="viewprofile" type="screen" page="component://shop/widget/CustomerScreens.xml#viewprofile"/>

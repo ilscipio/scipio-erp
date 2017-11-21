@@ -988,6 +988,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         if (pathElements.size() > 0) lastPathElem = pathElements.get(pathElements.size() - 1);
+        else lastPathElem = null;
         
         if (UtilValidate.isNotEmpty(lastPathElem)) {
             pathElements.remove(pathElements.size() - 1);
@@ -1188,14 +1189,16 @@ public class SeoCatalogUrlWorker implements Serializable {
                             if (bestMatch == null || (nextPathCategoryIds != null && 
                                 ((bestPathCategoryIds == null) || 
                                 (nextPathCategoryIds.size() < bestPathCategoryIds.size()) ||
-                                (nextPathCategoryIds.size() == bestPathCategoryIds.size() && nextMatch.isMorePreciseThan(bestMatch))))) {
+                                (nextPathCategoryIds.size() == bestPathCategoryIds.size() && 
+                                        isFirstTrailIsBetterMatchThanSecondTopCatPrecision(nextMatch, nextPathCategoryIds, bestMatch, bestPathCategoryIds, topCategoryIds))))) {
                                 bestMatch = nextMatch;
                                 bestMatchTrails = nextMatchTrails;
                                 bestPathCategoryIds = nextPathCategoryIds;
-                                // special case: we won't find better than this (with out current algos)
-                                if (nextMatch.isFullMatch() && (nextPathCategoryIds != null && nextPathCategoryIds.size() == (pathElements.size()+1))) {
-                                    break;
-                                }
+                                // not sure about this anymore... better omit
+                                //// special case: we won't find better than this (with out current algos)
+                                //if (nextMatch.isFullMatch() && (nextPathCategoryIds != null && nextPathCategoryIds.size() == (pathElements.size()+1))) {
+                                //    break;
+                                //}
                             }
                         }
                     } finally {
@@ -1204,12 +1207,14 @@ public class SeoCatalogUrlWorker implements Serializable {
                         }
                     }
                 } else {
-                    if (nextMatch.isMorePreciseThan(bestMatch)) {
+                    List<String> nextPathCategoryIds = getFirstTopTrail(nextMatchTrails, topCategoryIds);
+                    if (bestMatch == null || isFirstTrailIsBetterMatchThanSecondTopCatPrecision(nextMatch, nextPathCategoryIds, bestMatch, bestPathCategoryIds, topCategoryIds)) {
                         bestMatch = nextMatch;
                         bestMatchTrails = nextMatchTrails;
-                        bestPathCategoryIds = null; // done below
-                        // special case: we won't find better than this
-                        if (nextMatch.isFullMatch()) break; 
+                        bestPathCategoryIds = nextPathCategoryIds;
+                        // not sure about this anymore... better omit
+                        //// special case: we won't find better than this
+                        //if (nextMatch.isFullMatch()) break; 
                     }
                 }
             }
@@ -1217,16 +1222,53 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (bestMatch != null) {
             if (pathElements.size() > 0) {
                 pathCategoryIds = bestPathCategoryIds;
+                // NOTE: I don't think this ever gets called, leaving here just in case
                 if (pathCategoryIds == null && getConfig().isAllowInvalidCategoryPathElements()) {
                     pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
                 }
             } else {
-                pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
+                // now do this during iteration, otherwise we can't do the priority properly
+                //pathCategoryIds = getFirstTopTrail(bestMatchTrails, topCategoryIds);
             }
             return new AltUrlMatchInfo(bestMatch, pathCategoryIds);
         }
         return null;
     }
+    
+    /**
+     * Does top cat check and precision check, but assumes size was already checked.
+     */
+    private boolean isFirstTrailIsBetterMatchThanSecondTopCatPrecision(AltUrlPartInfo firstMatch, List<String> firstTrail, AltUrlPartInfo secondMatch, List<String> secondTrail, Set<String> topCategoryIds) {
+        if (UtilValidate.isNotEmpty(firstTrail)) {
+            if (UtilValidate.isNotEmpty(secondTrail)) {
+                // 1) prefer the trail that is lower ProdCatalogCategory sequenceNum
+                String firstTopCatId = firstTrail.get(0);
+                String secondTopCatId = secondTrail.get(0);
+                if (!firstTopCatId.equals(secondTopCatId)) {
+                    for(String topCatId : topCategoryIds) {
+                        // first to hit returns
+                        if (firstTopCatId.equals(topCatId)) {
+                            return true;
+                        } else if (secondTopCatId.equals(topCatId)) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                return true;
+            }
+        } else {
+            if (UtilValidate.isNotEmpty(secondTrail)) {
+                return false;
+            } else {
+                ;
+            }
+        }
+        // fallback on precision check
+        return firstMatch.isMorePreciseThan(secondMatch);
+    }
+    
+    
     
     /**
      * Checks if matches suffix and has starting slash; removes starting and ending slashes.
@@ -1847,6 +1889,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     /**
      * Returns the first trail having the topCategory which is the earliest possible in the topCategoryIds list,
      * or null if none of them.
+     * Prefers lower ProdCatalogCategory sequenceNum.
      */
     protected static List<String> getFirstTopTrail(List<List<String>> possibleTrails, Collection<String> topCategoryIds) {
         for(String topCategoryId : topCategoryIds) { // usually just one iteration

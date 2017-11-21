@@ -5179,7 +5179,7 @@
     <!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
     <property key="PartyCreateNewBillingAddress">
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
-        <value xml:lang="de">Legen Sie eine neue Rechnungsadresse</value>
+        <value xml:lang="de">Neue Rechnungsadresse anlegen</value>
         <value xml:lang="en">Create a new billing address</value>
         <value xml:lang="es">Crear una nueva dirección de facturación</value>
         <value xml:lang="fr">Créer une adresse de facturation</value>

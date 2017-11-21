@@ -7689,7 +7689,7 @@
         <value xml:lang="it">SEO Sito Web</value>
     </property>
     <property key="ContentWebAppUiDeprecated">
-        <value xml:lang="de">Die ältere Content-Webanwendung-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
+        <value xml:lang="de">Die ältere CMS-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
         <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
     </property>
     <property key="FormFieldTitle_visualThemeSelectorScript">
@@ -7723,11 +7723,11 @@
     </property>
     <property key="ContentGenerateSitemapsInfo">
         <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
-        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Sie werden an den in den Konfigurationsdateien sitemaps.properties angegebenen Speicherorten generiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
+        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
     </property>
     <property key="ContentGenerateSeoUrlInfo">
         <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
-        <value xml:lang="de">Dadurch werden automatisch alternative URLs aus Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration generiert.</value>
+        <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
     </property>
     <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
         <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>

@@ -67,7 +67,7 @@ function setAlternateGwp(field) {
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
 <#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0))/></#assign>
+  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0)) rawParams=true/></#assign>
 <#else>
   <#assign continueLink = makeOfbizUrl("main")>
 </#if>

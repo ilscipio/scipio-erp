@@ -1790,6 +1790,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                     if (pathInfo.startsWith(productReqPath)) {
                         if (pathInfo.length() > productReqPath.length()) {
                             Map<String, String> params = extractParamsFromRest(pathInfo, productReqPath.length());
+                            if (params == null) return null;
                             String productId = params.remove("product_id");
                             if (productId == null) {
                                 productId = params.remove("productId");
@@ -1810,6 +1811,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                     } else if (pathInfo.startsWith(categoryReqPath)) {
                         if (pathInfo.length() > categoryReqPath.length()) {
                             Map<String, String> params = extractParamsFromRest(pathInfo, categoryReqPath.length());
+                            if (params == null) return null;
                             String categoryId = params.remove("category_id");
                             if (categoryId == null) {
                                 categoryId = params.remove("productCategoryId");
@@ -1860,7 +1862,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 //            colonString = pathInfo.substring(colonIndex, index);
 //            queryString = pathInfo.substring(index + 1);
         } else {
-            return new HashMap<>();
+            return null;
         }
         Map<String, String> params = extractParamsFromQueryString(queryString);
         if (colonString != null) params.put("colonString", colonString);

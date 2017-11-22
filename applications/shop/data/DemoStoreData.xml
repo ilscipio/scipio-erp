@@ -48,6 +48,9 @@ under the License.
     <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLLL03" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
     <FacilityLocationGeoPoint facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL04" geoPointId="9000" fromDate="2009-01-09 00:00:00.000"/>
 
+    <!-- SCIPIO: NOTE: 2017-11-22: isContentReference="Y" is needed in multi-store setting to ensure that it is
+        this store's defaultLocaleString that is used for its associated products instead of an alternate locale store's defaultLocaleString;
+        in particular solr reindex will now use this (though the default lang can overridden globally in solrconfig.properties) -->
     <ProductStore productStoreId="ScipioShop" storeName="SCIPIO Shop" companyName="ilscipio GmbH" title="SCIPIO"
         subtitle="Modern eCommerce" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
         inventoryFacilityId="ScipioShopWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
@@ -58,7 +61,8 @@ under the License.
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
         storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="FOUNDATION_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+        visualThemeId="FOUNDATION_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"
+        isContentReference="Y"/>
 
     <!-- <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="testRandomAuthorize"/> -->
     <ProductStorePaymentSetting productStoreId="ScipioShop" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor" paymentCustomMethodId="CC_AUTH_ALWAYSAPPROV"/>

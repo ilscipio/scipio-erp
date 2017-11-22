@@ -4,10 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -37,19 +34,9 @@ public abstract class SitemapServices {
         SitemapWorker sitemapWorker = null;
         try {
             // TODO: LOCALIZE
-            GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
-            if (webSiteId == null) return ServiceUtil.returnError("web site not found: " + webSiteId);
-            String productStoreId = webSite.getString("productStoreId");
-            if (UtilValidate.isEmpty(productStoreId)) return ServiceUtil.returnError("web site has no product store: " + webSiteId);
-
-            GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
-            if (productStore == null) return ServiceUtil.returnError("store not found: " + productStoreId);
-
-            SitemapConfig config = SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId);
-            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, config, productStore, useCache);
             
-            sitemapWorker.buildSitemapDeepForProductStore(productStore);
-            
+            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, useCache);
+            sitemapWorker.buildSitemapDeepForProductStore();
             sitemapWorker.commitSitemapsAndIndex();
             
             UrlGenStats stats = sitemapWorker.getStats();

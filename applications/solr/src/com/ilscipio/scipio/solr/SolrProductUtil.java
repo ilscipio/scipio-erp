@@ -39,6 +39,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -447,7 +448,9 @@ public abstract class SolrProductUtil {
             dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
-            GenericValue productStore = EntityUtil.getFirst(productStores);
+            // NOTE: we skip the isContentReference warning if there's a forced locale.
+            GenericValue productStore = ProductStoreWorker.getContentReferenceStoreOrFirst(productStores, 
+                    (SolrLocaleUtil.getConfiguredForceDefaultLocale(delegator) == null) ? ("product '" + productId + "'") : null);
             List<Locale> locales = SolrLocaleUtil.getConfiguredLocales(productStore);
             Locale defaultProductLocale = SolrLocaleUtil.getConfiguredDefaultLocale(productStore);
             

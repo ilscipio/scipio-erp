@@ -6037,4 +6037,14 @@
         <value xml:lang="de">XML-Datei hochladen</value>
         <value xml:lang="fr">Télécharger fichier XML</value>
     </property>
+    <property key="WebtoolsTestLabel">
+        <value xml:lang="en">Test Label</value>
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
+        <value xml:lang="en">Test Label</value>
+    </property>
+    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
+        <value xml:lang="de">Testetikett</value>
+    </property>
 </resource>

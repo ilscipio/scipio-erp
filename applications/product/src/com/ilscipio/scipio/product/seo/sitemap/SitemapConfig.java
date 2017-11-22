@@ -316,13 +316,17 @@ public class SitemapConfig implements Serializable {
         return locales;
     }
     
-    public List<Locale> getLocalesOrDefault(GenericValue productStore) {
-        return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(productStore)) : locales;
+    public List<Locale> getLocalesOrDefault(GenericValue webSite, GenericValue productStore) {
+        return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(webSite, productStore)) : locales;
     }
     
-    public Locale getDefaultLocale(GenericValue productStore) {
+    public Locale getDefaultLocale(GenericValue webSite, GenericValue productStore) {
         if (locales.size() > 0) return locales.get(0);
         else if (productStore != null) {
+            // TODO?: future? there is no defaultLocaleString on WebSite yet, but it makes so much
+            // sense I thought I had already done it!
+//            Locale locale = UtilMisc.parseLocale(webSite.getString("defaultLocaleString"));
+//            if (locale != null) return locale;
             Locale locale = UtilMisc.parseLocale(productStore.getString("defaultLocaleString"));
             return locale != null ? locale : Locale.getDefault();
         } else {

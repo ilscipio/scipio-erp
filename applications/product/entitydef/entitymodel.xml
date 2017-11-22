@@ -3972,6 +3972,9 @@ under the License.
     <!-- SCIPIO: New fields for ProductStore -->
     <extend-entity entity-name="ProductStore">
       <field name="reqPayMethForFreeOrders" type="indicator"><description>SCIPIO: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
+      <field name="isContentReference" type="indicator"><description>SCIPIO: Default N. If set to Y, this store's defaultLocaleString 
+        (and potentially other settings) is considered the default for its member content records (product/category content, etc.).
+        This is used in multi-store setting by Solr to determine which defaultLocaleString should be used for fields and content that have no localeString and associated to multiple stores.</description></field>
     </extend-entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"
